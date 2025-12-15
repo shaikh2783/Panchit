@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 /// Product Model - نموذج المنتج
 /// 
 /// يمثل منتج في السوق مع جميع تفاصيله.
-/// المنتجات هي منشورات من نوع 'product' في نظام Sngine.
+/// المنتجات هي منشورات من نوع 'product' في نظام Panchit.
 /// 
 /// الاستخدام:
 /// ```dart

@@ -64,7 +64,7 @@ class AppConfig {
     return Uri.parse(buffer.toString());
   }
 }
-/// Update these placeholders with the actual values from your Sngine installation.
+/// Update these placeholders with the actual values from your Panchit installation.
 AppConfig appConfig = _initializeAppConfig();
 AppConfig _initializeAppConfig() {
   // محاولة الحصول على البيانات من cfgP

@@ -48,7 +48,7 @@ class AudioTestPage extends StatelessWidget {
             // اختبار الـ Widget الأساسي
             PostAudioWidget(
               audio: testAudio,
-              authorName: 'Ameen Hamed',
+              authorName: 'Panchit',
               mediaResolver: (String path) {
                 return Uri.parse('https://www.panchit.com/content/uploads/$path');
               },

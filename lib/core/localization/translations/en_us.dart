@@ -48,7 +48,7 @@ const Map<String, String> enUS = {
   'invalid_email': 'Please enter a valid email address',
   'invalid_url': 'Please enter a valid URL (http/https)',
   'username_alphanumeric': 'Username can only contain letters, numbers, and underscores',
-  'account_created_successfully': 'Account created successfully! Welcome to Sngine! 🎉',
+  'account_created_successfully': 'Account created successfully! Welcome to Panchit! 🎉',
   'registration_failed': 'Registration failed. Please try again.',
   'email_username_required': 'Email or username is required',
   // Getting Started
@@ -649,4 +649,6 @@ const Map<String, String> enUS = {
   'my_boosted_pages': 'My Boosted Pages',
   'no_boosted_posts': 'No boosted posts',
   'no_boosted_pages': 'No boosted pages',
+  'review':'Review'
+
 };

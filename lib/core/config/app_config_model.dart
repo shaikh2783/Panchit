@@ -124,7 +124,7 @@ class UiSettings {
   });
   factory UiSettings.fromJson(Map<String, dynamic> json) {
     return UiSettings(
-      appName: json['app_name']?.toString() ?? 'Sngine',
+      appName: json['app_name']?.toString() ?? 'Panchit',
       appDescription: json['app_description']?.toString() ?? '',
       logo: json['logo']?.toString(),
       favicon: json['favicon']?.toString(),

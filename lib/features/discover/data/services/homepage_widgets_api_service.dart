@@ -81,10 +81,10 @@ class HomepageWidgetsApiService {
           'users': [
             {
               'user_id': 1,
-              'username': 'ameen',
-              'firstname': 'Ameen',
-              'lastname': 'Hamed',
-              'fullname': 'Ameen Hamed',
+              'username': 'Panchit',
+              'firstname': 'Panchit',
+              'lastname': 'Panchit',
+              'fullname': 'Panchit',
               'picture': 'https://www.panchit.com/content/themes/default/images/blank_profile_male.png',
               'verified': true,
               'subscribed': true
@@ -96,7 +96,7 @@ class HomepageWidgetsApiService {
           'title': 'Trending',
           'hashtags': [
             {
-              'hashtag': '#ameen',
+              'hashtag': '#Panchit',
               'frequency': 5,
               'posts_count': 1
             },

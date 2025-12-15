@@ -303,7 +303,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  'التقييمات (${_currentPost.reviewsCountFormatted})',
+                  ' (${_currentPost.reviewsCountFormatted}) Review',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -324,14 +324,14 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'ميزة التقييمات قيد التطوير',
+                      'The ratings feature is under development',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: Colors.grey[600],
                       ),
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'سيتم إضافة عرض التقييمات وإمكانية إضافة تقييم جديد قريباً',
+                      'The ratings display and the ability to add a new rating will be added soon',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Colors.grey[500],
                       ),

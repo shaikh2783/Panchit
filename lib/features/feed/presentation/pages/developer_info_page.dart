@@ -14,7 +14,7 @@ class DeveloperInfoPage extends StatelessWidget {
         slivers: [
           // App Bar with gradient
           SliverAppBar(
-            expandedHeight: 200,
+            expandedHeight: 220,
             pinned: true,
             elevation: 0,
             backgroundColor: Colors.transparent,
@@ -69,7 +69,7 @@ class DeveloperInfoPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 12),
                       const Text(
-                        'Ameen Hamed',
+                        'Panchit',
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -79,7 +79,7 @@ class DeveloperInfoPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Flutter Developer',
+                        'Software Developer Company',
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.white.withOpacity(0.85),
@@ -147,7 +147,7 @@ class DeveloperInfoPage extends StatelessWidget {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          'A complete social networking platform built with Flutter, featuring real-time updates, live streaming, and advanced social features.',
+                          'India’s Own Social Media | #VocalForLocal & #AtmaNirbharBharat',
                           style: theme.textTheme.bodyMedium?.copyWith(
                             height: 1.6,
                             color: theme.colorScheme.onSurface.withOpacity(0.7),
@@ -172,11 +172,11 @@ class DeveloperInfoPage extends StatelessWidget {
                   _ContactCard(
                     icon: Iconsax.sms,
                     title: 'Email',
-                    subtitle: 'amenaaa93@gmail.com',
+                    subtitle: 'mail@panchit.com',
                     gradient: const [Color(0xFFEF5350), Color(0xFFE53935)],
                     onTap: () => _launchEmail(context),
                   ),
-                  const SizedBox(height: 12),
+                  /*const SizedBox(height: 12),
                   // WhatsApp Contact Card
                   _ContactCard(
                     icon: Iconsax.message,
@@ -193,7 +193,7 @@ class DeveloperInfoPage extends StatelessWidget {
                     subtitle: 'Flutter Crafters',
                     gradient: const [Color(0xFF42A5F5), Color(0xFF1E88E5)],
                     onTap: () => _launchTelegram(context),
-                  ),
+                  ),*/
                   const SizedBox(height: 32),
                   // Footer
                   Center(

@@ -1,6 +1,5 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 import 'package:snginepro/core/network/api_client.dart';
@@ -259,7 +258,7 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.white.withOpacity(0.2),
+                              color: Colors.white.withValues(alpha: 0.2),
                               blurRadius: 4,
                               spreadRadius: 1,
                             ),
@@ -358,7 +357,7 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
                   borderRadius: BorderRadius.circular(28),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
+                      color: Colors.black.withValues(alpha: 0.2),
                       blurRadius: 25,
                       spreadRadius: 3,
                       offset: const Offset(0, 8),
@@ -373,7 +372,7 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
               ),
               const SizedBox(height: 16),
               const Text(
-                'Sngine',
+                'Panchit',
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
@@ -399,18 +398,18 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
     return Container(
       decoration: BoxDecoration(
         color: isDark 
-            ? const Color(0xFF0F1419).withOpacity(0.95)
+            ? const Color(0xFF0F1419).withValues(alpha: 0.95)
             : Colors.white,
         borderRadius: BorderRadius.circular(32),
         border: Border.all(
           color: isDark
-              ? const Color(0xFF2D3748).withOpacity(0.5)
-              : Colors.white.withOpacity(0.3),
+              ? const Color(0xFF2D3748).withValues(alpha: 0.5)
+              : Colors.white.withValues(alpha: 0.3),
           width: 1.5,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.3 : 0.15),
+            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.15),
             blurRadius: 30,
             spreadRadius: 5,
             offset: const Offset(0, 10),
@@ -441,7 +440,7 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
           style: TextStyle(
             fontSize: 14,
             color: isDark 
-                ? Colors.white.withOpacity(0.7)
+                ? Colors.white.withValues(alpha: 0.7)
                 : const Color(0xFF4A5568),
             fontWeight: FontWeight.w400,
           ),
@@ -454,10 +453,10 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFFEF4444).withOpacity(0.2),
+        color: const Color(0xFFEF4444).withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: const Color(0xFFEF4444).withOpacity(0.4),
+          color: const Color(0xFFEF4444).withValues(alpha: 0.4),
           width: 1,
         ),
       ),
@@ -557,8 +556,8 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
                     ? Icons.visibility_off_outlined
                     : Icons.visibility_outlined,
                 color: isDark
-                    ? Colors.white.withOpacity(0.7)
-                    : const Color(0xFF5B86E5).withOpacity(0.8),
+                    ? Colors.white.withValues(alpha: 0.7)
+                    : const Color(0xFF5B86E5).withValues(alpha: 0.8),
               ),
               onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
             ),
@@ -580,8 +579,8 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
                     ? Icons.visibility_off_outlined
                     : Icons.visibility_outlined,
                 color: isDark
-                    ? Colors.white.withOpacity(0.7)
-                    : const Color(0xFF5B86E5).withOpacity(0.8),
+                    ? Colors.white.withValues(alpha: 0.7)
+                    : const Color(0xFF5B86E5).withValues(alpha: 0.8),
               ),
               onPressed: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
             ),
@@ -634,20 +633,20 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
           icon,
           size: 20,
           color: isDark 
-              ? Colors.white.withOpacity(0.7)
-              : const Color(0xFF5B86E5).withOpacity(0.8),
+              ? Colors.white.withValues(alpha: 0.7)
+              : const Color(0xFF5B86E5).withValues(alpha: 0.8),
         ),
         suffixIcon: suffixIcon,
         labelStyle: TextStyle(
           color: isDark 
-              ? Colors.white.withOpacity(0.7)
+              ? Colors.white.withValues(alpha: 0.7)
               : const Color(0xFF4A5568),
           fontSize: 13,
           fontWeight: FontWeight.w500,
         ),
         hintStyle: TextStyle(
           color: isDark
-              ? Colors.white.withOpacity(0.3)
+              ? Colors.white.withValues(alpha: 0.3)
               : const Color(0xFF718096),
           fontSize: 13,
         ),
@@ -724,15 +723,15 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
               Icons.wc_rounded,
               size: 20,
               color: isDark 
-                  ? Colors.white.withOpacity(0.7)
-                  : const Color(0xFF5B86E5).withOpacity(0.8),
+                  ? Colors.white.withValues(alpha: 0.7)
+                  : const Color(0xFF5B86E5).withValues(alpha: 0.8),
             ),
             const SizedBox(width: 12),
             Text(
               '${'gender'.tr} (${'optional'.tr})',
               style: TextStyle(
                 color: isDark 
-                    ? Colors.white.withOpacity(0.7)
+                    ? Colors.white.withValues(alpha: 0.7)
                     : const Color(0xFF4A5568),
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
@@ -745,7 +744,7 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
               child: CircularProgressIndicator(
                 strokeWidth: 2,
                 valueColor: AlwaysStoppedAnimation(
-                  isDark ? Colors.white.withOpacity(0.7) : const Color(0xFF5B86E5),
+                  isDark ? Colors.white.withValues(alpha: 0.7) : const Color(0xFF5B86E5),
                 ),
               ),
             ),
@@ -754,19 +753,20 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
       );
     }
     return DropdownButtonFormField<String>(
-      value: _selectedGender,
+      isExpanded: true,
+      initialValue: _selectedGender,
       decoration: InputDecoration(
         labelText: '${'gender'.tr} (${'optional'.tr})',
         prefixIcon: Icon(
           Icons.wc_rounded,
           size: 20,
           color: isDark 
-              ? Colors.white.withOpacity(0.7)
-              : const Color(0xFF5B86E5).withOpacity(0.8),
+              ? Colors.white.withValues(alpha: 0.7)
+              : const Color(0xFF5B86E5).withValues(alpha: 0.8),
         ),
         labelStyle: TextStyle(
           color: isDark 
-              ? Colors.white.withOpacity(0.7)
+              ? Colors.white.withValues(alpha: 0.7)
               : const Color(0xFF4A5568),
           fontSize: 13,
           fontWeight: FontWeight.w500,
@@ -834,12 +834,12 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
             Icons.cake_outlined,
             size: 20,
             color: isDark 
-                ? Colors.white.withOpacity(0.7)
-                : const Color(0xFF5B86E5).withOpacity(0.8),
+                ? Colors.white.withValues(alpha: 0.7)
+                : const Color(0xFF5B86E5).withValues(alpha: 0.8),
           ),
           labelStyle: TextStyle(
             color: isDark 
-                ? Colors.white.withOpacity(0.7)
+                ? Colors.white.withValues(alpha: 0.7)
                 : const Color(0xFF4A5568),
             fontSize: 13,
             fontWeight: FontWeight.w500,
@@ -882,7 +882,7 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
           style: TextStyle(
             color: _selectedBirthdate == null
                 ? (isDark
-                    ? Colors.white.withOpacity(0.3)
+                    ? Colors.white.withValues(alpha: 0.3)
                     : const Color(0xFF718096))
                 : (isDark ? Colors.white : const Color(0xFF1A202C)),
             fontSize: 15,
@@ -905,7 +905,7 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF5B86E5).withOpacity(0.4),
+            color: const Color(0xFF5B86E5).withValues(alpha: 0.4),
             blurRadius: 18,
             spreadRadius: 0,
             offset: const Offset(0, 6),
@@ -959,7 +959,7 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
         Expanded(
           child: Divider(
             color: isDark
-                ? Colors.white.withOpacity(0.1)
+                ? Colors.white.withValues(alpha: 0.1)
                 : const Color(0xFFE2E8F0),
             thickness: 1,
           ),
@@ -970,7 +970,7 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
             'OR',
             style: TextStyle(
               color: isDark
-                  ? Colors.white.withOpacity(0.5)
+                  ? Colors.white.withValues(alpha: 0.5)
                   : const Color(0xFF718096),
               fontSize: 11,
               fontWeight: FontWeight.w600,
@@ -981,7 +981,7 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
         Expanded(
           child: Divider(
             color: isDark
-                ? Colors.white.withOpacity(0.1)
+                ? Colors.white.withValues(alpha: 0.1)
                 : const Color(0xFFE2E8F0),
             thickness: 1,
           ),
@@ -997,7 +997,7 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
           'already_have_account'.tr,
           style: TextStyle(
             color: isDark
-                ? Colors.white.withOpacity(0.7)
+                ? Colors.white.withValues(alpha: 0.7)
                 : const Color(0xFF4A5568),
             fontSize: 13,
           ),
@@ -1039,7 +1039,7 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
           '© 2025 Panchit. All rights reserved.',
           style: TextStyle(
             color: isDark
-                ? Colors.white.withOpacity(0.4)
+                ? Colors.white.withValues(alpha: 0.4)
                 : const Color(0xFF718096),
             fontSize: 11,
           ),

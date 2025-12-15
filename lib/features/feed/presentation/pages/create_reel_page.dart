@@ -78,7 +78,7 @@ class _CreateReelPageState extends State<CreateReelPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('✅ تم رفع الفيديو بنجاح'),
+            content: Text('✅ Video uploaded successfully'),
             backgroundColor: Colors.green,
           ),
         );
@@ -90,7 +90,7 @@ class _CreateReelPageState extends State<CreateReelPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('❌ فشل رفع الفيديو: $e'),
+            content: Text('❌ Video upload failed: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -101,7 +101,7 @@ class _CreateReelPageState extends State<CreateReelPage> {
     if (_uploadedVideo == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('⚠️ يرجى اختيار فيديو أولاً'),
+          content: Text('⚠️ Please select a video first'),
           backgroundColor: Colors.orange,
         ),
       );
@@ -141,19 +141,19 @@ class _CreateReelPageState extends State<CreateReelPage> {
           Navigator.pop(context, true); // Return true to refresh reels
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('🎉 تم نشر الريل بنجاح!'),
+              content: Text('🎉 The reel has been successfully deployed!'),
               backgroundColor: Colors.green,
             ),
           );
         }
       } else {
-        throw Exception(response.message ?? 'فشل إنشاء الريل');
+        throw Exception(response.message ?? 'Failure to build the railway');
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('❌ فشل نشر الريل: $e'),
+            content: Text('❌ Real deployment failed: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -182,7 +182,7 @@ class _CreateReelPageState extends State<CreateReelPage> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'إنشاء ريل',
+          'Building Rail',
           style: TextStyle(
             color: isDark ? Colors.white : Colors.black,
             fontSize: 20,
@@ -194,7 +194,7 @@ class _CreateReelPageState extends State<CreateReelPage> {
             TextButton(
               onPressed: _createReel,
               child: const Text(
-                'نشر',
+                'to publish',
                 style: TextStyle(
                   color: Color(0xFFE1306C),
                   fontSize: 16,
@@ -233,7 +233,7 @@ class _CreateReelPageState extends State<CreateReelPage> {
           ),
           const SizedBox(height: 24),
           Text(
-            'اختر فيديو للريل',
+            'Choose a video for Reel',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -244,7 +244,7 @@ class _CreateReelPageState extends State<CreateReelPage> {
           ElevatedButton.icon(
             onPressed: _pickVideo,
             icon: const Icon(Icons.video_library),
-            label: const Text('اختيار فيديو'),
+            label: const Text('Select video'),
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFE1306C),
               foregroundColor: Colors.white,
@@ -296,7 +296,7 @@ class _CreateReelPageState extends State<CreateReelPage> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          'جاري رفع الفيديو... ${(_uploadProgress * 100).toInt()}%',
+                        'Video uploading...${(_uploadProgress * 100).toInt()}%',
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
@@ -339,7 +339,7 @@ class _CreateReelPageState extends State<CreateReelPage> {
             maxLines: 3,
             textAlign: TextAlign.right,
             decoration: InputDecoration(
-              hintText: 'أضف وصف للريل...',
+              hintText: 'Add a description of the reel...',
               hintStyle: TextStyle(
                 color: isDark ? Colors.grey[600] : Colors.grey[400],
               ),

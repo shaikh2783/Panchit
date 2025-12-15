@@ -402,7 +402,7 @@ class _ProfilePageState extends State<ProfilePage>
         isFollowing ? Iconsax.user_tick : Iconsax.user_add,
         size: 18,
       ),
-      label: Text(isFollowing ? 'متابع' : 'متابعة'),
+      label: Text(isFollowing ? 'Follower' : 'tracking'),
       style: ElevatedButton.styleFrom(
         backgroundColor: isFollowing ? Colors.grey[300] : Colors.blue,
         foregroundColor: isFollowing ? Colors.black87 : Colors.white,
