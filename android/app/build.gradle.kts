@@ -15,9 +15,9 @@ val keystoreProperties = Properties().apply {
 }
 
 android {
-    namespace = "com.panchit.www"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    namespace = "com.example.snginepro"
+    compileSdk = 36
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -34,7 +34,7 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 24  // OneSignal requires minSdk 24
-        targetSdk = flutter.targetSdkVersion
+        targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
         
@@ -80,8 +80,13 @@ android {
 }
 
 dependencies {
-    implementation("com.google.android.play:core:1.10.3")
+    // For Flutter deferred components / dynamic features
+    implementation("com.google.android.play:feature-delivery:2.1.0")
+    implementation("com.google.android.play:feature-delivery-ktx:2.1.0")
+    implementation("com.google.android.gms:play-services-tasks:18.2.0")
 }
+
+
 
 flutter {
     source = "../.."

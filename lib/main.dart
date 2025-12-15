@@ -18,14 +18,11 @@ List cfgP = [
   {"docs": ameen},
 ];
 List GetSetList = [];
-// ✅ دالة عامة للحصول على endpoints من البيانات المشفرة
-// مع دعم تعيين المفاتيح القديمة إلى الجديدة
 String configCfgP(String key) {
   try {
     if (cfgP.isEmpty || cfgP[0] is! Map) {
       throw Exception('cfgP is not initialized');
     }
-    // قراءة خريطة تعيين المفاتيح من البيانات المشفرة
     final keyMappings = cfgP[0]['key_mappings'];
     String actualKey = key;
     if (keyMappings is Map && keyMappings.containsKey(key)) {
@@ -43,7 +40,6 @@ String configCfgP(String key) {
     return '';
   }
 }
-// Protect against duplicate initialization/listener registration
 bool _oneSignalInitialized = false;
 bool _oneSignalHandlersSet = false;
 Future<void> main() async {
@@ -122,7 +118,6 @@ void _setupNotificationHandlers() {
     }
     _lastClickedId = event.notification.notificationId;
     _lastClickTime = now;
-    // معالجة التنقل من البيانات الإضافية + رابط التشغيل (launchURL)
     final additional = event.notification.additionalData;
     final launchUrl = event.notification.launchUrl;
     final data = <String, dynamic>{
@@ -134,7 +129,6 @@ void _setupNotificationHandlers() {
     }
     NotificationNavigationService.handleNotification(data);
   });
-  // Handle notification received in foreground
   OneSignal.Notifications.addForegroundWillDisplayListener((event) {
     
     // Prevent default display to avoid duplicates, then display exactly once
