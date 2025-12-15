@@ -15,7 +15,7 @@ val keystoreProperties = Properties().apply {
 }
 
 android {
-    namespace = "com.example.snginepro"
+    namespace = "com.panchit.www"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
