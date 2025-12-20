@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import '../../../../core/network/api_client.dart';
@@ -40,11 +41,11 @@ class _EditPostPageState extends State<EditPostPage> {
       Provider.of<ApiClient>(context, listen: false),
     );
     // Convert possible HTML text (e.g., <a> #hashtag </a>, <br>) to plain text for editing.
-    final original = widget.post.text ?? '';
+    final original = widget.post.text;
     final plain = _toPlainText(original);
     _textController = TextEditingController(text: plain);
     _selectedPrivacy =
-        (widget.post.privacy?.isNotEmpty ?? false) ? widget.post.privacy : 'public';
+        (widget.post.privacy.isNotEmpty) ? widget.post.privacy : 'public';
     _textController.addListener(_checkForChanges);
   }
   /// Convert simple HTML to plain text safely (no inline regex flags).
@@ -54,7 +55,7 @@ class _EditPostPageState extends State<EditPostPage> {
     t = t.replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), '\n');
     // 2) <a ...>inner</a> -> inner
     t = t.replaceAllMapped(
-      RegExp(r'<a[^>]*>(.*?)<\/a>', caseSensitive: false, dotAll: true),
+      RegExp(r'<a[^>]*>(.*?)</a>', caseSensitive: false, dotAll: true),
       (m) => m.group(1) ?? '',
     );
     // 3) Strip any remaining tags
@@ -70,8 +71,8 @@ class _EditPostPageState extends State<EditPostPage> {
     return t.trimRight();
   }
   void _checkForChanges() {
-    final hasTextChanged = _textController.text.trim() != _toPlainText(widget.post.text ?? '');
-    final hasPrivacyChanged = _selectedPrivacy != (widget.post.privacy ?? 'public');
+    final hasTextChanged = _textController.text.trim() != _toPlainText(widget.post.text);
+    final hasPrivacyChanged = _selectedPrivacy != (widget.post.privacy);
     if (mounted) setState(() => _hasChanges = hasTextChanged || hasPrivacyChanged);
   }
   Future<void> _saveChanges() async {
@@ -122,10 +123,10 @@ class _EditPostPageState extends State<EditPostPage> {
         widget.onPostUpdated?.call(updatedPost);
         Navigator.pop(context, updatedPost);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Post updated successfully'), backgroundColor: Colors.green),
+           SnackBar(content: Text('post_update_success'.tr), backgroundColor: Colors.green),
         );
       } else {
-        _showError(result['message']?.toString() ?? 'Failed to update the post.');
+        _showError(result['message']?.toString() ?? 'post_update_failed'.tr);
       }
     } catch (e) {
       _showError(e.toString());
@@ -146,11 +147,11 @@ class _EditPostPageState extends State<EditPostPage> {
     final shouldLeave = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Discard changes?'),
-        content: const Text('You have unsaved changes. Do you want to discard them and go back?'),
+        title:  Text('discard_changes'.tr),
+        content:  Text('unsaved_changes_confirm'.tr),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Discard')),
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child:  Text('cancel'.tr)),
+          TextButton(onPressed: () => Navigator.pop(ctx, true), child:  Text('discard'.tr)),
         ],
       ),
     );
@@ -177,11 +178,11 @@ class _EditPostPageState extends State<EditPostPage> {
               ),
             ),
             const SizedBox(height: 12),
-            const Padding(
+             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text('Who can see this post?',
+                child: Text('who_can_see_post'.tr,
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
               ),
             ),
@@ -230,14 +231,14 @@ class _EditPostPageState extends State<EditPostPage> {
               if (ok && mounted) Navigator.pop(context);
             },
           ),
-          title: const Text('Edit post', style: TextStyle(fontWeight: FontWeight.w600)),
+          title:  Text('edit_post'.tr, style: TextStyle(fontWeight: FontWeight.w600)),
           actions: [
             TextButton(
               onPressed: canSave ? _saveChanges : null,
               child: _isLoading
                   ? const SizedBox(
                       width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
-                  : const Text('Save', style: TextStyle(fontWeight: FontWeight.w600)),
+                  :  Text('save'.tr, style: TextStyle(fontWeight: FontWeight.w600)),
             ),
           ],
         ),
@@ -264,14 +265,14 @@ class _EditPostPageState extends State<EditPostPage> {
                           textAlignVertical: TextAlignVertical.top,
                           textAlign: TextAlign.start,
                           style: const TextStyle(fontSize: 16, height: 1.5),
-                          decoration: const InputDecoration(
-                            hintText: "What's on your mind?",
+                          decoration:  InputDecoration(
+                            hintText: "whats_on_your_mind".tr,
                             border: InputBorder.none,
                             isCollapsed: true,
                           ),
                           validator: (val) {
                             final t = val?.trim() ?? '';
-                            if (t.isEmpty) return 'Post text can’t be empty.';
+                            if (t.isEmpty) return 'post_text_empty.'.tr;
                             return null;
                           },
                         ),
@@ -284,8 +285,8 @@ class _EditPostPageState extends State<EditPostPage> {
                       child: ListTile(
                         leading: Icon(_privacyIcons[_selectedPrivacy], size: 22),
                         title:
-                            const Text('Privacy', style: TextStyle(fontWeight: FontWeight.w600)),
-                        subtitle: Text(_privacyOptions[_selectedPrivacy] ?? 'Public'),
+                             Text('privacy'.tr, style: TextStyle(fontWeight: FontWeight.w600)),
+                        subtitle: Text(_privacyOptions[_selectedPrivacy] ?? 'public'.tr),
                         trailing: const Icon(Iconsax.arrow_down_1, size: 18),
                         onTap: _openPrivacyPicker,
                       ),
@@ -296,7 +297,7 @@ class _EditPostPageState extends State<EditPostPage> {
                         children: [
                           const Icon(Icons.info_outline, size: 16),
                           const SizedBox(width: 6),
-                          Text('You have unsaved changes',
+                          Text('unsaved_changes'.tr,
                               style: TextStyle(color: Theme.of(context).hintColor)),
                         ],
                       ),
@@ -328,14 +329,14 @@ class _EditPostPageState extends State<EditPostPage> {
                               final ok = await _confirmLeaveIfUnsaved();
                               if (ok && mounted) Navigator.pop(context);
                             },
-                      child: const Text('Cancel'),
+                      child:  Text('cancel'.tr),
                     ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: ElevatedButton(
                       onPressed: canSave ? _saveChanges : null,
-                      child: const Text('Save changes'),
+                      child:  Text('save_changes'.tr),
                     ),
                   ),
                 ],
@@ -366,7 +367,7 @@ class _Card extends StatelessWidget {
             blurRadius: 12,
             spreadRadius: 0,
             offset: const Offset(0, 4),
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
           ),
         ],
       ),

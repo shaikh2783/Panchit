@@ -75,7 +75,7 @@ class _MenuPageState extends State<MenuPage> {
         scrolledUnderElevation: 0,
         titleSpacing: 16,
         title: Text(
-          'Menu', // 'القائمة'
+          'menu'.tr, // 'القائمة'
           style: theme.textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.w800,
             color: onBg,
@@ -85,7 +85,7 @@ class _MenuPageState extends State<MenuPage> {
         actions: [
           const ThemeToggleButton(),
           IconButton(
-            tooltip: 'Settings', // 'الإعدادات'
+            tooltip: 'settings'.tr, // 'الإعدادات'
             icon: const Icon(Iconsax.settings),
             onPressed: () {
               HapticFeedback.selectionClick();
@@ -145,8 +145,8 @@ class _MenuPageState extends State<MenuPage> {
                       color: Color(0xFF1E88E5),
                     ),
                     const SizedBox(width: 8),
-                    const Text(
-                      'Feed',
+                     Text(
+                      'feed'.tr,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -161,7 +161,7 @@ class _MenuPageState extends State<MenuPage> {
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF1E88E5).withOpacity(0.1),
+                        color: const Color(0xFF1E88E5).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: const Text(
@@ -200,8 +200,8 @@ class _MenuPageState extends State<MenuPage> {
                   boxShadow: [
                     BoxShadow(
                       color: Get.isDarkMode
-                          ? Colors.black.withOpacity(0.3)
-                          : Colors.grey.withOpacity(0.1),
+                          ? Colors.black.withValues(alpha: 0.3)
+                          : Colors.grey.withValues(alpha: 0.1),
                       spreadRadius: 0,
                       blurRadius: 10,
                       offset: const Offset(0, 2),
@@ -222,7 +222,7 @@ class _MenuPageState extends State<MenuPage> {
                     if (AppSettings.enableNewsFeed)
                       _FeedItem(
                         icon: Iconsax.home,
-                        label: 'News Feed',
+                        label: 'news_feed'.tr,
                         gradient: const [Color(0xFF64B5F6), Color(0xFF1E88E5)],
                         onTap: () {
                           _hapticTap();
@@ -237,13 +237,13 @@ class _MenuPageState extends State<MenuPage> {
                     if (AppSettings.enableRecentUpdates)
                       _FeedItem(
                         icon: Iconsax.refresh,
-                        label: 'Recent Updates',
+                        label: 'recent_updates'.tr,
                         gradient: const [Color(0xFF81C784), Color(0xFF43A047)],
                         onTap: () {
                           _hapticTap();
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Recent Updates - Coming Soon'),
+                             SnackBar(
+                              content: Text('recent_updates_coming_soon'.tr),
                             ),
                           );
                         },
@@ -251,13 +251,13 @@ class _MenuPageState extends State<MenuPage> {
                     if (AppSettings.enablePopularPosts)
                       _FeedItem(
                         icon: Iconsax.trend_up,
-                        label: 'Popular Posts',
+                        label: 'popular_posts'.tr,
                         gradient: const [Color(0xFFFFB74D), Color(0xFFF57C00)],
                         onTap: () {
                           _hapticTap();
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Popular Posts - Coming Soon'),
+                             SnackBar(
+                              content: Text('popular_posts_coming_soon'.tr),
                             ),
                           );
                         },
@@ -265,13 +265,13 @@ class _MenuPageState extends State<MenuPage> {
                     if (AppSettings.enableDiscoverPosts)
                       _FeedItem(
                         icon: Iconsax.discover,
-                        label: 'Discover Posts',
+                        label: 'discover_posts'.tr,
                         gradient: const [Color(0xFF26A69A), Color(0xFF00897B)],
                         onTap: () {
                           _hapticTap();
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Discover Posts - Coming Soon'),
+                             SnackBar(
+                              content: Text('discover_posts_coming_soon'.tr),
                             ),
                           );
                         },
@@ -307,8 +307,8 @@ class _MenuPageState extends State<MenuPage> {
                       color: Color(0xFF42A5F5),
                     ),
                     const SizedBox(width: 8),
-                    const Text(
-                      'Mine',
+                     Text(
+                      'mine'.tr,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -323,7 +323,7 @@ class _MenuPageState extends State<MenuPage> {
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF42A5F5).withOpacity(0.1),
+                        color: const Color(0xFF42A5F5).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: const Text(
@@ -362,8 +362,8 @@ class _MenuPageState extends State<MenuPage> {
                   boxShadow: [
                     BoxShadow(
                       color: Get.isDarkMode
-                          ? Colors.black.withOpacity(0.3)
-                          : Colors.grey.withOpacity(0.1),
+                          ? Colors.black.withValues(alpha: 0.3)
+                          : Colors.grey.withValues(alpha: 0.1),
                       spreadRadius: 0,
                       blurRadius: 10,
                       offset: const Offset(0, 2),
@@ -384,7 +384,7 @@ class _MenuPageState extends State<MenuPage> {
                     if (AppSettings.enableMyBlogs)
                       _FeedItem(
                         icon: Iconsax.document_text,
-                        label: 'My Blogs',
+                        label: 'my_blogs'.tr,
                         gradient: const [Color(0xFF90CAF9), Color(0xFF42A5F5)],
                         onTap: () {
                           _hapticTap();
@@ -399,13 +399,13 @@ class _MenuPageState extends State<MenuPage> {
                     if (AppSettings.enableMyProducts)
                       _FeedItem(
                         icon: Iconsax.shopping_bag,
-                        label: 'My Products',
+                        label: 'my_products'.tr,
                         gradient: const [Color(0xFFE1BEE7), Color(0xFF8E24AA)],
                         onTap: () {
                           _hapticTap();
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('My Products - Coming Soon'),
+                             SnackBar(
+                              content: Text('my_products_coming_soon'.tr),
                             ),
                           );
                         },
@@ -413,7 +413,7 @@ class _MenuPageState extends State<MenuPage> {
                     if (AppSettings.enableMyFunding)
                       _FeedItem(
                         icon: Iconsax.money_send,
-                        label: 'My Funding',
+                        label: 'my_funding'.tr,
                         gradient: const [Color(0xFFFFC1CC), Color(0xFFE91E63)],
                         onTap: () {
                           _hapticTap();
@@ -429,7 +429,7 @@ class _MenuPageState extends State<MenuPage> {
                     if (AppSettings.enableMyOffers)
                       _FeedItem(
                         icon: Iconsax.tag,
-                        label: 'My Offers',
+                        label: 'my_offers'.tr,
                         gradient: const [Color(0xFFFF8A65), Color(0xFFEF6C00)],
                         onTap: () {
                           _hapticTap();
@@ -445,7 +445,7 @@ class _MenuPageState extends State<MenuPage> {
                     if (AppSettings.enableMyJobs)
                       _FeedItem(
                         icon: Iconsax.briefcase,
-                        label: 'my_jobs',
+                        label: 'my_jobs'.tr,
                         gradient: const [Color(0xFFA5D6A7), Color(0xFF2E7D32)],
                         onTap: () {
                           _hapticTap();
@@ -461,7 +461,7 @@ class _MenuPageState extends State<MenuPage> {
                     if (AppSettings.enableMyCourses)
                       _FeedItem(
                         icon: Iconsax.book,
-                        label: 'My Courses',
+                        label: 'my_courses'.tr,
                         gradient: const [Color(0xFF80CBC4), Color(0xFF00695C)],
                         onTap: () {
                           _hapticTap();
@@ -476,13 +476,13 @@ class _MenuPageState extends State<MenuPage> {
                     if (AppSettings.enableSaved)
                       _FeedItem(
                         icon: Iconsax.bookmark,
-                        label: 'Saved',
+                        label: 'saved'.tr,
                         gradient: const [Color(0xFFE57373), Color(0xFFC62828)],
                         onTap: () {
                           _hapticTap();
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Saved - Coming Soon'),
+                             SnackBar(
+                              content: Text('saved_coming_soon'.tr),
                             ),
                           );
                         },
@@ -490,13 +490,13 @@ class _MenuPageState extends State<MenuPage> {
                     if (AppSettings.enableScheduled)
                       _FeedItem(
                         icon: Iconsax.timer_1,
-                        label: 'Scheduled',
+                        label: 'scheduled'.tr,
                         gradient: const [Color(0xFFB0BEC5), Color(0xFF607D8B)],
                         onTap: () {
                           _hapticTap();
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Scheduled - Coming Soon'),
+                             SnackBar(
+                              content: Text('scheduled_coming_soon'.tr),
                             ),
                           );
                         },
@@ -504,13 +504,13 @@ class _MenuPageState extends State<MenuPage> {
                     if (AppSettings.enableMemories)
                       _FeedItem(
                         icon: Iconsax.archive,
-                        label: 'Memories',
+                        label: 'memories'.tr,
                         gradient: const [Color(0xFFCE93D8), Color(0xFF6A1B9A)],
                         onTap: () {
                           _hapticTap();
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Memories - Coming Soon'),
+                             SnackBar(
+                              content: Text('memories_coming_soon'.tr),
                             ),
                           );
                         },
@@ -546,8 +546,8 @@ class _MenuPageState extends State<MenuPage> {
                       color: Color(0xFFF57F17),
                     ),
                     const SizedBox(width: 8),
-                    const Text(
-                      'Advertising',
+                     Text(
+                      'advertising'.tr,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -562,7 +562,7 @@ class _MenuPageState extends State<MenuPage> {
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF57F17).withOpacity(0.1),
+                        color: const Color(0xFFF57F17).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: const Text(
@@ -601,8 +601,8 @@ class _MenuPageState extends State<MenuPage> {
                   boxShadow: [
                     BoxShadow(
                       color: Get.isDarkMode
-                          ? Colors.black.withOpacity(0.3)
-                          : Colors.grey.withOpacity(0.1),
+                          ? Colors.black.withValues(alpha: 0.3)
+                          : Colors.grey.withValues(alpha: 0.1),
                       spreadRadius: 0,
                       blurRadius: 10,
                       offset: const Offset(0, 2),
@@ -623,7 +623,7 @@ class _MenuPageState extends State<MenuPage> {
                     if (AppSettings.enableWallet)
                       _FeedItem(
                         icon: Iconsax.wallet_3,
-                        label: 'Wallet',
+                        label: 'wallet'.tr,
                         gradient: const [Color(0xFF4FC3F7), Color(0xFF0288D1)],
                         onTap: () {
                           _hapticTap();
@@ -638,7 +638,7 @@ class _MenuPageState extends State<MenuPage> {
                     if (AppSettings.enableAdsCampaigns)
                       _FeedItem(
                         icon: Iconsax.chart,
-                        label: 'ads_campaigns_title',
+                        label: 'ads_campaigns_title'.tr,
                         gradient: const [Color(0xFFFFD54F), Color(0xFFF57F17)],
                         onTap: () {
                           _hapticTap();
@@ -648,7 +648,7 @@ class _MenuPageState extends State<MenuPage> {
                     if (AppSettings.enablePremiumPackages)
                       _FeedItem(
                         icon: Iconsax.crown,
-                        label: 'Premium Packages',
+                        label: 'premium_packages'.tr,
                         gradient: const [Color(0xFF7E57C2), Color(0xFF5E35B1)],
                         onTap: () {
                           _hapticTap();
@@ -663,13 +663,13 @@ class _MenuPageState extends State<MenuPage> {
                     if (AppSettings.enableBoosted)
                       _FeedItem(
                         icon: Iconsax.flash,
-                        label: 'Boosted',
+                        label: 'boosted'.tr,
                         gradient: const [Color(0xFFFFD54F), Color(0xFFF57F17)],
                         onTap: () {
                           _hapticTap();
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Boosted - Coming Soon'),
+                             SnackBar(
+                              content: Text('boosted_coming_soon'.tr),
                             ),
                           );
                         },
@@ -677,7 +677,7 @@ class _MenuPageState extends State<MenuPage> {
                     if (AppSettings.enableBoostedPosts)
                       _FeedItem(
                         icon: Iconsax.note,
-                        label: 'Boosted Posts',
+                        label: 'boosted_posts'.tr,
                         gradient: const [Color(0xFFAED581), Color(0xFF8BC34A)],
                         onTap: () {
                           _hapticTap();
@@ -691,7 +691,7 @@ class _MenuPageState extends State<MenuPage> {
                     if (AppSettings.enableBoostedPages)
                       _FeedItem(
                         icon: Iconsax.document,
-                        label: 'Boosted Pages',
+                        label: 'boosted_pages'.tr,
                         gradient: const [Color(0xFFBA68C8), Color(0xFF8E24AA)],
                         onTap: () {
                           _hapticTap();
@@ -733,8 +733,8 @@ class _MenuPageState extends State<MenuPage> {
                       color: Color(0xFF009688),
                     ),
                     const SizedBox(width: 8),
-                    const Text(
-                      'Explore',
+                     Text(
+                      'explore'.tr,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -749,7 +749,7 @@ class _MenuPageState extends State<MenuPage> {
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF009688).withOpacity(0.1),
+                        color: const Color(0xFF009688).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: const Text(
@@ -788,8 +788,8 @@ class _MenuPageState extends State<MenuPage> {
                   boxShadow: [
                     BoxShadow(
                       color: Get.isDarkMode
-                          ? Colors.black.withOpacity(0.3)
-                          : Colors.grey.withOpacity(0.1),
+                          ? Colors.black.withValues(alpha: 0.3)
+                          : Colors.grey.withValues(alpha: 0.1),
                       spreadRadius: 0,
                       blurRadius: 10,
                       offset: const Offset(0, 2),
@@ -808,7 +808,7 @@ class _MenuPageState extends State<MenuPage> {
                           Expanded(
                             child: _FeedItem(
                               icon: Iconsax.people,
-                              label: 'People',
+                              label: 'people'.tr,
                               gradient: const [
                                 Color(0xFF4DB6AC),
                                 Color(0xFF009688),
@@ -816,8 +816,8 @@ class _MenuPageState extends State<MenuPage> {
                               onTap: () {
                                 _hapticTap();
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('People - Coming Soon'),
+                                   SnackBar(
+                                    content: Text('people_coming_soon'.tr),
                                   ),
                                 );
                               },
@@ -831,7 +831,7 @@ class _MenuPageState extends State<MenuPage> {
                           Expanded(
                             child: _FeedItem(
                               icon: Iconsax.document,
-                              label: 'Pages',
+                              label: 'pages'.tr,
                               gradient: const [
                                 Color(0xFF9FA8DA),
                                 Color(0xFF3949AB),
@@ -854,7 +854,7 @@ class _MenuPageState extends State<MenuPage> {
                           Expanded(
                             child: _FeedItem(
                               icon: Iconsax.layer,
-                              label: 'Groups',
+                              label: 'groups'.tr,
                               gradient: const [
                                 Color(0xFF26C6DA),
                                 Color(0xFF00ACC1),
@@ -885,7 +885,7 @@ class _MenuPageState extends State<MenuPage> {
                         if (AppSettings.enableEvents)
                           _FeedItem(
                             icon: Iconsax.calendar_1,
-                            label: 'Events',
+                            label: 'events'.tr,
                             gradient: const [
                               Color(0xFFF48FB1),
                               Color(0xFFD81B60),
@@ -903,7 +903,7 @@ class _MenuPageState extends State<MenuPage> {
                         if (AppSettings.enableMarket)
                           _FeedItem(
                             icon: Iconsax.shopping_cart,
-                            label: 'Market',
+                            label: 'market_title'.tr,
                             gradient: const [
                               Color(0xFF66BB6A),
                               Color(0xFF388E3C),
@@ -921,7 +921,7 @@ class _MenuPageState extends State<MenuPage> {
                         if (AppSettings.enableReels)
                           _FeedItem(
                             icon: Iconsax.video_play,
-                            label: 'Reels',
+                            label: 'reels'.tr,
                             gradient: const [
                               Color(0xFFFF8A65),
                               Color(0xFFD84315),
@@ -941,7 +941,7 @@ class _MenuPageState extends State<MenuPage> {
                         if (AppSettings.enableWatch)
                           _FeedItem(
                             icon: Iconsax.play,
-                            label: 'Watch',
+                            label: 'watch'.tr,
                             gradient: const [
                               Color(0xFF64B5F6),
                               Color(0xFF1976D2),
@@ -949,8 +949,8 @@ class _MenuPageState extends State<MenuPage> {
                             onTap: () {
                               _hapticTap();
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Watch - Coming Soon'),
+                                 SnackBar(
+                                  content: Text('watch_coming_soon'.tr),
                                 ),
                               );
                             },
@@ -958,7 +958,7 @@ class _MenuPageState extends State<MenuPage> {
                         if (AppSettings.enableBlogs)
                           _FeedItem(
                             icon: Iconsax.document_text,
-                            label: 'My Blogs',
+                            label: 'my_blogs'.tr,
                             gradient: const [
                               Color(0xFFBA68C8),
                               Color(0xFF8E24AA),
@@ -976,7 +976,7 @@ class _MenuPageState extends State<MenuPage> {
                         if (AppSettings.enableFunding)
                           _FeedItem(
                             icon: Iconsax.money_send,
-                            label: 'funding',
+                            label: 'funding'.tr,
                             gradient: const [
                               Color(0xFFFFC1CC),
                               Color(0xFFE91E63),
@@ -994,7 +994,7 @@ class _MenuPageState extends State<MenuPage> {
                         if (AppSettings.enableOffers)
                           _FeedItem(
                             icon: Iconsax.tag,
-                            label: 'Offers',
+                            label: 'offers'.tr,
                             gradient: const [
                               Color(0xFFFFB74D),
                               Color(0xFFF57C00),
@@ -1012,7 +1012,7 @@ class _MenuPageState extends State<MenuPage> {
                         if (AppSettings.enableJobs)
                           _FeedItem(
                             icon: Iconsax.briefcase,
-                            label: 'jobs',
+                            label: 'jobs'.tr,
                             gradient: const [
                               Color(0xFFA5D6A7),
                               Color(0xFF2E7D32),
@@ -1030,7 +1030,7 @@ class _MenuPageState extends State<MenuPage> {
                         if (AppSettings.enableCourses)
                           _FeedItem(
                             icon: Iconsax.book,
-                            label: 'Courses',
+                            label: 'courses'.tr,
                             gradient: const [
                               Color(0xFF80CBC4),
                               Color(0xFF00695C),
@@ -1048,7 +1048,7 @@ class _MenuPageState extends State<MenuPage> {
                         if (AppSettings.enableForums)
                           _FeedItem(
                             icon: Iconsax.message_question,
-                            label: 'Forums',
+                            label: 'forums'.tr,
                             gradient: const [
                               Color(0xFF90CAF9),
                               Color(0xFF1E88E5),
@@ -1056,8 +1056,8 @@ class _MenuPageState extends State<MenuPage> {
                             onTap: () {
                               _hapticTap();
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Forums - Coming Soon'),
+                                 SnackBar(
+                                  content: Text('forums_coming_soon'.tr),
                                 ),
                               );
                             },
@@ -1065,7 +1065,7 @@ class _MenuPageState extends State<MenuPage> {
                         if (AppSettings.enableMovies)
                           _FeedItem(
                             icon: Iconsax.video_square,
-                            label: 'Movies',
+                            label: 'movies'.tr,
                             gradient: const [
                               Color(0xFFB39DDB),
                               Color(0xFF5E35B1),
@@ -1073,8 +1073,8 @@ class _MenuPageState extends State<MenuPage> {
                             onTap: () {
                               _hapticTap();
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Movies - Coming Soon'),
+                                 SnackBar(
+                                  content: Text('movies_coming_soon'.tr),
                                 ),
                               );
                             },
@@ -1082,7 +1082,7 @@ class _MenuPageState extends State<MenuPage> {
                         if (AppSettings.enableGames)
                           _FeedItem(
                             icon: Iconsax.game,
-                            label: 'Games',
+                            label: 'games'.tr,
                             gradient: const [
                               Color(0xFFAED581),
                               Color(0xFF689F38),
@@ -1090,8 +1090,8 @@ class _MenuPageState extends State<MenuPage> {
                             onTap: () {
                               _hapticTap();
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Games - Coming Soon'),
+                                 SnackBar(
+                                  content: Text('games_coming_soon'.tr),
                                 ),
                               );
                             },
@@ -1099,7 +1099,7 @@ class _MenuPageState extends State<MenuPage> {
                         if (AppSettings.enableDevelopers)
                           _FeedItem(
                             icon: Iconsax.code,
-                            label: 'Developers',
+                            label: 'developers'.tr,
                             gradient: const [
                               Color(0xFF424242),
                               Color(0xFF212121),
@@ -1107,8 +1107,8 @@ class _MenuPageState extends State<MenuPage> {
                             onTap: () {
                               _hapticTap();
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Developers - Coming Soon'),
+                                 SnackBar(
+                                  content: Text('developers_coming_soon'.tr),
                                 ),
                               );
                             },
@@ -1116,7 +1116,7 @@ class _MenuPageState extends State<MenuPage> {
                         if (AppSettings.enableMerits)
                           _FeedItem(
                             icon: Iconsax.medal_star,
-                            label: 'Merits',
+                            label: 'merits'.tr,
                             gradient: const [
                               Color(0xFFFFD700),
                               Color(0xFFFF8F00),
@@ -1124,8 +1124,8 @@ class _MenuPageState extends State<MenuPage> {
                             onTap: () {
                               _hapticTap();
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Merits - Coming Soon'),
+                                 SnackBar(
+                                  content: Text('merits_coming_soon'.tr),
                                 ),
                               );
                             },
@@ -1178,9 +1178,9 @@ class _GlassySearch extends StatelessWidget {
           width: 1,
         ),
       ),
-      child: const TextField(
+      child:  TextField(
         decoration: InputDecoration(
-          hintText: 'Search…', // 'بحث…'
+          hintText: '${'Search'.tr}…', // 'بحث…'
           prefixIcon: Icon(Iconsax.search_normal),
           border: InputBorder.none,
           contentPadding: EdgeInsets.symmetric(
@@ -1325,7 +1325,7 @@ class _ExplorePill extends StatelessWidget {
             height: 44,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              color: Colors.white.withOpacity(0.15),
+              color: Colors.white.withValues(alpha: 0.15),
             ),
             child: Icon(icon, color: Colors.white),
           ),
@@ -1350,7 +1350,7 @@ class _ExplorePill extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.9),
+                      color: Colors.white.withValues(alpha: 0.9),
                       fontSize: 12,
                     ),
                   ),
@@ -1383,20 +1383,20 @@ class _LogoutButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(Radii.large),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFFE53935).withOpacity(0.28),
+              color: const Color(0xFFE53935).withValues(alpha: 0.28),
               blurRadius: 14,
               spreadRadius: 1,
               offset: const Offset(0, 6),
             ),
           ],
         ),
-        child: const Row(
+        child:  Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Iconsax.logout, color: Colors.white, size: 22),
             SizedBox(width: 10),
             Text(
-              'Sign Out', // 'تسجيل الخروج'
+              'sign_out'.tr, // 'تسجيل الخروج'
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 15.5,
@@ -1414,14 +1414,14 @@ class _LogoutButton extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Sign Out'), // 'تسجيل الخروج'
-        content: const Text(
-          'Are you sure you want to sign out?',
+        title:  Text('sign_out'.tr), // 'تسجيل الخروج'
+        content:  Text(
+          'sign_out_confirm'.tr,
         ), // 'هل أنت متأكد أنك تريد تسجيل الخروج؟'
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'), // 'إلغاء'
+            child:  Text('cancel'.tr), // 'إلغاء'
           ),
           ElevatedButton(
             onPressed: () {
@@ -1429,7 +1429,7 @@ class _LogoutButton extends StatelessWidget {
               _performLogout(context);
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Sign Out'), // 'تسجيل الخروج'
+            child:  Text('sign_out'.tr), // 'تسجيل الخروج'
           ),
         ],
       ),
@@ -1447,8 +1447,8 @@ class _LogoutButton extends StatelessWidget {
       if (context.mounted) Navigator.pop(context); // close loader
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Signed out successfully'), // 'تم تسجيل الخروج بنجاح'
+           SnackBar(
+            content: Text('sign_out_success'.tr), // 'تم تسجيل الخروج بنجاح'
             backgroundColor: Colors.green,
           ),
         );
@@ -1527,7 +1527,7 @@ class _UserProfileCard extends StatelessWidget {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.20),
+                          color: Colors.black.withValues(alpha: 0.20),
                           blurRadius: 14,
                           offset: const Offset(0, 6),
                         ),
@@ -1565,10 +1565,10 @@ class _UserProfileCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'View your profile', // 'عرض ملفك الشخصي'
+                          'view_profile'.tr, // 'عرض ملفك الشخصي'
                           style: TextStyle(
                             fontSize: 13,
-                            color: Colors.white.withOpacity(0.92),
+                            color: Colors.white.withValues(alpha: 0.92),
                           ),
                         ),
                       ],
@@ -1583,7 +1583,7 @@ class _UserProfileCard extends StatelessWidget {
               ),
             ),
             const Divider(color: Colors.white30, height: 1, thickness: 1),
-            const Padding(
+             Padding(
               padding: EdgeInsets.fromLTRB(
                 Spacing.lg,
                 Spacing.lg,
@@ -1595,17 +1595,17 @@ class _UserProfileCard extends StatelessWidget {
                 children: [
                   _StatItem(
                     count: '97.8k',
-                    label: 'Points',
+                    label: 'points'.tr,
                     color: Color(0xFFE040FB),
                   ), // 'النقاط'
                   _StatItem(
                     count: '172',
-                    label: 'Followers',
+                    label: 'followers'.tr,
                     color: Color(0xFF29B6F6),
                   ), // 'المتابعون'
                   _StatItem(
                     count: '0',
-                    label: 'Following',
+                    label: 'following'.tr,
                     color: Color(0xFFFFA726),
                   ), // 'متابع'
                 ],
@@ -1648,7 +1648,7 @@ class _StatItem extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           label,
-          style: TextStyle(color: Colors.white.withOpacity(0.85), fontSize: 12),
+          style: TextStyle(color: Colors.white.withValues(alpha: 0.85), fontSize: 12),
         ),
       ],
     );
@@ -1686,8 +1686,8 @@ class _ShortcutCardState extends State<_ShortcutCard> {
           borderRadius: BorderRadius.circular(Radii.large),
           child: InkWell(
             borderRadius: BorderRadius.circular(Radii.large),
-            splashColor: Colors.white.withOpacity(0.08),
-            highlightColor: Colors.white.withOpacity(0.04),
+            splashColor: Colors.white.withValues(alpha: 0.08),
+            highlightColor: Colors.white.withValues(alpha: 0.04),
             onTapDown: (_) => setState(() => _isPressed = true),
             onTapCancel: () => setState(() => _isPressed = false),
             onTap: () {

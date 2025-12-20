@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:snginepro/features/auth/application/auth_notifier.dart';
@@ -32,7 +33,7 @@ class PostMenuBottomSheet extends StatelessWidget {
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.4 : 0.15),
+            color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.15),
             blurRadius: 20,
             offset: const Offset(0, -5),
           ),
@@ -48,7 +49,7 @@ class PostMenuBottomSheet extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  theme.primaryColor.withOpacity(0.6),
+                  theme.primaryColor.withValues(alpha: 0.6),
                   theme.primaryColor,
                 ],
               ),
@@ -68,15 +69,15 @@ class PostMenuBottomSheet extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: isDark 
-                  ? Colors.white.withOpacity(0.1)
-                  : Colors.black.withOpacity(0.05),
+                  ? Colors.white.withValues(alpha: 0.1)
+                  : Colors.black.withValues(alpha: 0.05),
                 width: 1,
               ),
               boxShadow: [
                 BoxShadow(
                   color: isDark 
-                    ? Colors.black.withOpacity(0.2)
-                    : Colors.black.withOpacity(0.04),
+                    ? Colors.black.withValues(alpha: 0.2)
+                    : Colors.black.withValues(alpha: 0.04),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -90,12 +91,12 @@ class PostMenuBottomSheet extends StatelessWidget {
                     gradient: LinearGradient(
                       colors: [
                         theme.primaryColor,
-                        theme.primaryColor.withOpacity(0.8)
+                        theme.primaryColor.withValues(alpha: 0.8)
                       ],
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: theme.primaryColor.withOpacity(0.3),
+                        color: theme.primaryColor.withValues(alpha: 0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
                       ),
@@ -131,7 +132,7 @@ class PostMenuBottomSheet extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Post options',
+                        'post_options'.tr,
                         style: TextStyle(
                           fontSize: 14,
                           color: isDark ? Colors.grey[400] : Colors.grey[600],
@@ -153,8 +154,8 @@ class PostMenuBottomSheet extends StatelessWidget {
                   _buildMenuItem(
                     context: context,
                     icon: post.isSaved ? Iconsax.archive_minus : Iconsax.archive_add,
-                    title: post.isSaved ? 'Unsave post' : 'Save post',
-                    subtitle: post.isSaved ? 'Remove from your saved items' : 'Add this to your saved items',
+                    title: post.isSaved ? 'unsave_post'.tr : 'save_post'.tr,
+                    subtitle: post.isSaved ? 'remove_from_saved'.tr : 'add_to_saved'.tr,
                     onTap: () {
                       final action = post.isSaved ? PostAction.unsavePost : PostAction.savePost;
                       Navigator.pop(context);
@@ -165,8 +166,8 @@ class PostMenuBottomSheet extends StatelessWidget {
                   _buildMenuItem(
                     context: context,
                     icon: Iconsax.link,
-                    title: 'Copy link',
-                    subtitle: 'Copy link to this post',
+                    title: 'copy_link'.tr,
+                    subtitle: 'copy_post_link'.tr,
                     onTap: () {
                       Navigator.pop(context);
                       // TODO: Copy link functionality
@@ -176,8 +177,8 @@ class PostMenuBottomSheet extends StatelessWidget {
                   _buildMenuItem(
                     context: context,
                     icon: post.isHidden ? Iconsax.eye : Iconsax.eye_slash,
-                    title: post.isHidden ? 'Show post' : 'Hide post',
-                    subtitle: post.isHidden ? 'Show this post again' : 'See fewer posts like this',
+                    title: post.isHidden ? 'show_post'.tr : 'hide_post'.tr,
+                    subtitle: post.isHidden ? 'show_post_again'.tr : 'see_fewer_posts'.tr,
                     onTap: () {
                       Navigator.pop(context);
                       onAction(post.isHidden ? PostAction.unhidePost : PostAction.hidePost);
@@ -188,8 +189,8 @@ class PostMenuBottomSheet extends StatelessWidget {
                     _buildMenuItem(
                       context: context,
                       icon: Iconsax.flag,
-                      title: 'Report post',
-                      subtitle: 'I\'m concerned about this post',
+                      title: 'report_post'.tr,
+                      subtitle: 'concerned_about_post'.tr,
                       isWarning: true,
                       onTap: () async {
                         Navigator.pop(context);
@@ -226,9 +227,9 @@ class PostMenuBottomSheet extends StatelessWidget {
                                       ),
                                     ),
                                     const SizedBox(width: 12),
-                                    const Expanded(
+                                     Expanded(
                                       child: Text(
-                                        'Thank you for your report. We\'ll review it shortly.',
+                                        'report_thanks'.tr,
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w500,
@@ -249,14 +250,14 @@ class PostMenuBottomSheet extends StatelessWidget {
                           }
                         } catch (e) {
                           if (context.mounted) {
-                            String errorMessage = 'Failed to submit report';
+                            String errorMessage = 'report_failed'.tr;
                             // Handle specific error messages
                             if (e.toString().contains('already reported')) {
-                              errorMessage = 'You have already reported this post before';
+                              errorMessage = 'already_reported'.tr;
                             } else if (e.toString().contains('network')) {
-                              errorMessage = 'Network error. Please check your connection';
+                              errorMessage = 'network_error'.tr;
                             } else if (e.toString().contains('server')) {
-                              errorMessage = 'Server error. Please try again later';
+                              errorMessage = 'server_error'.tr;
                             }
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
@@ -309,7 +310,7 @@ class PostMenuBottomSheet extends StatelessWidget {
                         gradient: LinearGradient(
                           colors: [
                             Colors.transparent,
-                            isDark ? Colors.white.withOpacity(0.1) : Colors.grey.withOpacity(0.3),
+                            isDark ? Colors.white.withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.3),
                             Colors.transparent,
                           ],
                         ),
@@ -320,8 +321,8 @@ class PostMenuBottomSheet extends StatelessWidget {
                     _buildMenuItem(
                       context: context,
                       icon: post.isPinned ? Iconsax.archive_tick : Iconsax.archive,
-                      title: post.isPinned ? 'Unpin from profile' : 'Pin to profile',
-                      subtitle: post.isPinned ? 'Remove from top of your profile' : 'Pin to top of your profile',
+                      title: post.isPinned ? 'unpin_from_profile'.tr : 'pin_to_profile'.tr,
+                      subtitle: post.isPinned ? 'remove_from_top_profile'.tr : 'pin_to_top_profile'.tr,
                       onTap: () {
                         final action = post.isPinned ? PostAction.unpinPost : PostAction.pinPost;
                         Navigator.pop(context);
@@ -332,8 +333,8 @@ class PostMenuBottomSheet extends StatelessWidget {
                     _buildMenuItem(
                       context: context,
                       icon: post.commentsDisabled ? Iconsax.message_add : Iconsax.message_minus,
-                      title: post.commentsDisabled ? 'Turn on commenting' : 'Turn off commenting',
-                      subtitle: post.commentsDisabled ? 'Allow people to comment' : 'Prevent people from commenting',
+                      title: post.commentsDisabled ? 'turn_on_commenting'.tr : 'turn_off_commenting'.tr,
+                      subtitle: post.commentsDisabled ? 'allow_comments'.tr : 'prevent_commenting'.tr,
                       onTap: () {
                         Navigator.pop(context);
                         onAction(post.commentsDisabled ? PostAction.enableComments : PostAction.disableComments);
@@ -343,8 +344,8 @@ class PostMenuBottomSheet extends StatelessWidget {
                     _buildMenuItem(
                       context: context,
                       icon: Iconsax.edit,
-                      title: 'Edit post',
-                      subtitle: 'Change your post content',
+                      title: 'edit_post'.tr,
+                      subtitle: 'change_post_content'.tr,
                       onTap: () {
                         Navigator.pop(context);
                         onAction(PostAction.editPost);
@@ -354,10 +355,10 @@ class PostMenuBottomSheet extends StatelessWidget {
                     _buildMenuItem(
                       context: context,
                       icon: post.forAdult ? Iconsax.shield_tick : Iconsax.warning_2,
-                      title: post.forAdult ? 'Unmark as adult content' : 'Mark as adult content',
+                      title: post.forAdult ? 'unmark_adult_content'.tr : 'mark_adult_content'.tr,
                       subtitle: post.forAdult 
-                          ? 'Remove 18+ label and blur from photos' 
-                          : 'Mark as 18+ and blur all photos',
+                          ? 'remove_18_label'.tr
+                          : 'mark_18_and_blur'.tr,
                       isWarning: !post.forAdult,
                       onTap: () {
                         Navigator.pop(context);
@@ -368,8 +369,8 @@ class PostMenuBottomSheet extends StatelessWidget {
                     _buildMenuItem(
                       context: context,
                       icon: Iconsax.trash,
-                      title: 'Delete post',
-                      subtitle: 'Permanently remove this post',
+                      title: 'delete_post'.tr,
+                      subtitle: 'delete_post_permanently'.tr,
                       isWarning: true,
                       onTap: () {
                         Navigator.pop(context);
@@ -408,15 +409,15 @@ class PostMenuBottomSheet extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isDark 
-            ? Colors.white.withOpacity(0.1)
-            : Colors.black.withOpacity(0.05),
+            ? Colors.white.withValues(alpha: 0.1)
+            : Colors.black.withValues(alpha: 0.05),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
             color: isDark 
-              ? Colors.black.withOpacity(0.2)
-              : Colors.black.withOpacity(0.04),
+              ? Colors.black.withValues(alpha: 0.2)
+              : Colors.black.withValues(alpha: 0.04),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -437,14 +438,14 @@ class PostMenuBottomSheet extends StatelessWidget {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: isWarning 
-                        ? [Colors.red, Colors.red.withOpacity(0.8)]
-                        : [theme.primaryColor, theme.primaryColor.withOpacity(0.8)],
+                        ? [Colors.red, Colors.red.withValues(alpha: 0.8)]
+                        : [theme.primaryColor, theme.primaryColor.withValues(alpha: 0.8)],
                     ),
                     borderRadius: BorderRadius.circular(14),
                     boxShadow: [
                       BoxShadow(
                         color: (isWarning ? Colors.red : theme.primaryColor)
-                            .withOpacity(0.3),
+                            .withValues(alpha: 0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
                       ),
@@ -477,7 +478,7 @@ class PostMenuBottomSheet extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 14,
                           color: isWarning 
-                            ? Colors.red.withOpacity(0.8)
+                            ? Colors.red.withValues(alpha: 0.8)
                             : (isDark ? Colors.grey[400] : Colors.grey[600]),
                         ),
                       ),
@@ -538,7 +539,7 @@ class PostMenuBottomSheet extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.1),
+                color: Colors.red.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
@@ -549,7 +550,7 @@ class PostMenuBottomSheet extends StatelessWidget {
             ),
             const SizedBox(width: 12),
             Text(
-              'Delete Post',
+              'delete_post'.tr,
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -559,7 +560,7 @@ class PostMenuBottomSheet extends StatelessWidget {
           ],
         ),
         content: Text(
-          'Are you sure you want to delete this post? This action cannot be undone.',
+          'delete_post_confirm'.tr,
           style: TextStyle(
             fontSize: 16,
             color: isDark ? Colors.grey[300] : Colors.grey[600],
@@ -570,15 +571,15 @@ class PostMenuBottomSheet extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: isDark 
+                colors: isDark
                   ? [const Color(0xFF3A3A3A), const Color(0xFF2F2F2F)]
                   : [Colors.grey[100]!, Colors.white],
               ),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: isDark 
-                  ? Colors.white.withOpacity(0.1)
-                  : Colors.grey.withOpacity(0.3),
+                color: isDark
+                  ? Colors.white.withValues(alpha: 0.1)
+                  : Colors.grey.withValues(alpha: 0.3),
               ),
             ),
             child: TextButton(
@@ -590,7 +591,7 @@ class PostMenuBottomSheet extends StatelessWidget {
                 ),
               ),
               child: Text(
-                'Cancel',
+                'cancel'.tr,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -608,7 +609,7 @@ class PostMenuBottomSheet extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.red.withOpacity(0.3),
+                  color: Colors.red.withValues(alpha: 0.3),
                   blurRadius: 8,
                   offset: const Offset(0, 4),
                 ),
@@ -625,8 +626,8 @@ class PostMenuBottomSheet extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              child: const Text(
-                'Delete',
+              child:  Text(
+                'delete'.tr,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'dart:ui';
 import 'package:provider/provider.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
@@ -303,7 +301,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  ' (${_currentPost.reviewsCountFormatted}) Review',
+                  ' (${_currentPost.reviewsCountFormatted})${"review".tr}',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -492,7 +490,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child:  Text('cancel'.tr),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
@@ -869,7 +867,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
         ),
         boxShadow: [
           BoxShadow(
-            color: theme.colorScheme.primary.withOpacity(0.1),
+            color: theme.colorScheme.primary.withValues(alpha: 0.1),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -886,13 +884,13 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    theme.colorScheme.primary.withOpacity(0.15),
-                    theme.colorScheme.tertiary.withOpacity(0.15),
+                    theme.colorScheme.primary.withValues(alpha: 0.15),
+                    theme.colorScheme.tertiary.withValues(alpha: 0.15),
                   ],
                 ),
                 border: Border(
                   bottom: BorderSide(
-                    color: theme.colorScheme.primary.withOpacity(0.2),
+                    color: theme.colorScheme.primary.withValues(alpha: 0.2),
                     width: 1,
                   ),
                 ),
@@ -902,7 +900,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.primary.withOpacity(0.2),
+                      color: theme.colorScheme.primary.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(
@@ -924,7 +922,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                   Icon(
                     Iconsax.arrow_right_3,
                     size: 16,
-                    color: theme.colorScheme.primary.withOpacity(0.6),
+                    color: theme.colorScheme.primary.withValues(alpha: 0.6),
                   ),
                 ],
               ),
@@ -988,7 +986,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                             begin: Alignment.bottomCenter,
                             end: Alignment.topCenter,
                             colors: [
-                              Colors.black.withOpacity(0.6),
+                              Colors.black.withValues(alpha: 0.6),
                               Colors.transparent,
                             ],
                           ),
@@ -1006,7 +1004,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.3),
+                              color: Colors.black.withValues(alpha: 0.3),
                               blurRadius: 8,
                             ),
                           ],
@@ -1046,10 +1044,10 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                       margin: const EdgeInsets.only(bottom: 16),
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: theme.colorScheme.outline.withOpacity(0.2),
+                          color: theme.colorScheme.outline.withValues(alpha: 0.2),
                         ),
                       ),
                       child: Row(
@@ -1061,7 +1059,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: theme.colorScheme.primary.withOpacity(0.3),
+                                color: theme.colorScheme.primary.withValues(alpha: 0.3),
                                 width: 2,
                               ),
                             ),
@@ -1137,7 +1135,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                           Icon(
                             Iconsax.arrow_right_3,
                             size: 20,
-                            color: theme.colorScheme.primary.withOpacity(0.6),
+                            color: theme.colorScheme.primary.withValues(alpha: 0.6),
                           ),
                         ],
                       ),
@@ -1184,7 +1182,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: theme.colorScheme.primary.withOpacity(0.4),
+                            color: theme.colorScheme.primary.withValues(alpha: 0.4),
                             blurRadius: 12,
                             offset: const Offset(0, 4),
                           ),
@@ -1248,15 +1246,15 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
   String _getAdTypeLabel() {
     switch (_currentPost.adsType) {
       case 'page':
-        return 'Page';
+        return 'page'.tr;
       case 'group':
-        return 'Group';
+        return 'group'.tr;
       case 'event':
-        return 'Event';
+        return 'event'.tr;
       case 'post':
-        return 'Post';
+        return 'post'.tr;
       default:
-        return 'Link';
+        return 'link'.tr;
     }
   }
   // Handle boost/unboost action
@@ -1539,7 +1537,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                               Container(
                                 padding: const EdgeInsets.all(2),
                                 decoration: BoxDecoration(
-                                  color: theme.colorScheme.secondary.withOpacity(0.1),
+                                  color: theme.colorScheme.secondary.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: Icon(
@@ -1570,20 +1568,20 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                               TimeAgo.formatFromString(_currentPost.publishedAt, isEnglish: true),
                               style: theme.textTheme.bodySmall?.copyWith(
                                     color: theme.colorScheme.onSurface
-                                        .withOpacity(0.6),
+                                        .withValues(alpha: 0.6),
                                   ),
                             ),
                             const SizedBox(width: 6),
                             Text('·',
                                 style: theme.textTheme.bodySmall?.copyWith(
                                     color: theme.colorScheme.onSurface
-                                        .withOpacity(0.5))),
+                                        .withValues(alpha: 0.5))),
                             const SizedBox(width: 6),
                             Icon(
                               _privacyIcon(_currentPost.privacy),
                               size: 14,
                               color:
-                                  theme.colorScheme.onSurface.withOpacity(0.6),
+                                  theme.colorScheme.onSurface.withValues(alpha: 0.6),
                             ),
                             // إضافة مؤشر المنشور المثبت
                             if (_currentPost.isPinned) ...[
@@ -1591,7 +1589,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                               Text('·',
                                   style: theme.textTheme.bodySmall?.copyWith(
                                       color: theme.colorScheme.onSurface
-                                          .withOpacity(0.5))),
+                                          .withValues(alpha: 0.5))),
                               const SizedBox(width: 6),
                               Icon(
                                 Iconsax.bookmark,
@@ -1605,7 +1603,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                               Text('·',
                                   style: theme.textTheme.bodySmall?.copyWith(
                                       color: theme.colorScheme.onSurface
-                                          .withOpacity(0.5))),
+                                          .withValues(alpha: 0.5))),
                               const SizedBox(width: 6),
                               Container(
                                 padding: const EdgeInsets.symmetric(
@@ -1649,7 +1647,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                               Text('·',
                                   style: theme.textTheme.bodySmall?.copyWith(
                                       color: theme.colorScheme.onSurface
-                                          .withOpacity(0.5))),
+                                          .withValues(alpha: 0.5))),
                               const SizedBox(width: 6),
                               Icon(
                                 Iconsax.share,
@@ -1663,7 +1661,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                               Text('·',
                                   style: theme.textTheme.bodySmall?.copyWith(
                                       color: theme.colorScheme.onSurface
-                                          .withOpacity(0.5))),
+                                          .withValues(alpha: 0.5))),
                               const SizedBox(width: 6),
                               Icon(
                                 Iconsax.document_text,
@@ -1677,7 +1675,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                               Text('·',
                                   style: theme.textTheme.bodySmall?.copyWith(
                                       color: theme.colorScheme.onSurface
-                                          .withOpacity(0.5))),
+                                          .withValues(alpha: 0.5))),
                               const SizedBox(width: 6),
                               Icon(
                                 Iconsax.dollar_circle,
@@ -1691,7 +1689,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                               Text('·',
                                   style: theme.textTheme.bodySmall?.copyWith(
                                       color: theme.colorScheme.onSurface
-                                          .withOpacity(0.5))),
+                                          .withValues(alpha: 0.5))),
                               const SizedBox(width: 6),
                               Icon(
                                 Iconsax.flash,
@@ -1714,7 +1712,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                               Text('·',
                                   style: theme.textTheme.bodySmall?.copyWith(
                                       color: theme.colorScheme.onSurface
-                                          .withOpacity(0.5))),
+                                          .withValues(alpha: 0.5))),
                               const SizedBox(width: 6),
                               Icon(
                                 Iconsax.dollar_circle,
@@ -1732,7 +1730,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                   onPressed: () => _showPostMenu(context),
                   splashRadius: 20,
                   icon: Icon(Iconsax.more,
-                      color: theme.colorScheme.onSurface.withOpacity(0.55)),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.55)),
                 ),
               ],
             ),
@@ -1907,7 +1905,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                             Text(
                               _currentPost.reactionsCountFormatted,
                               style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurface.withOpacity(0.6),
+                                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -1923,15 +1921,15 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                 Text(
                   '${_currentPost.reviewsCountFormatted} Reviews',
                   style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.6),
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                 ),
                 const SizedBox(width: 12),
                 if (_currentPost.viewsCount > 0) ...[
                   Text(
-                    '${_currentPost.viewsCountFormatted} Views',
+                    _currentPost.viewsCountFormatted +"views".tr,
                     style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withOpacity(0.6),
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
                   ),
                   const SizedBox(width: 12),
@@ -1939,14 +1937,14 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                 Text(
                   '${_currentPost.commentsCountFormatted} ${'comments'.tr}',
                   style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.6),
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                 ),
                 const SizedBox(width: 12),
                 Text(
                   '${_currentPost.sharesCountFormatted} Shares',
                   style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.6),
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                 ),
               ],
@@ -2009,7 +2007,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                   // زر Share يظهر دائماً
                   _SimpleActionButton(
                     icon: Iconsax.share,
-                    label: 'Share',
+                    label: 'share'.tr,
                     onTap: () {
                       // TODO: إضافة وظيفة المشاركة
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -2091,7 +2089,7 @@ class _Avatar extends StatelessWidget {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
+                    color: Colors.black.withValues(alpha: 0.2),
                     offset: const Offset(0, 1),
                     blurRadius: 2,
                   ),
@@ -2214,7 +2212,7 @@ class _PostActionState extends State<_PostAction> with SingleTickerProviderState
         : null;
     final String actionLabel = reactionModel?.title ?? 'Like'; // تغيير "أعجبني" إلى "Like" للاتساق
     final Color actionColor = reactionModel?.colorValue ??
-        Theme.of(context).colorScheme.onSurface.withOpacity(0.65);
+        Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.65);
     return AnimatedBuilder(
       animation: _animationController,
       builder: (context, child) {
@@ -2311,7 +2309,7 @@ class _SimpleActionButton extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(icon,
-                color: theme.colorScheme.onSurface.withOpacity(opacity), 
+                color: theme.colorScheme.onSurface.withValues(alpha: opacity),
                 size: 20),
             if(label != null) ...[
               const SizedBox(width: 4),
@@ -2320,7 +2318,7 @@ class _SimpleActionButton extends StatelessWidget {
                   label!,
                   style: theme.textTheme.labelMedium?.copyWith(
                         fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.onSurface.withOpacity(opacity),
+                        color: theme.colorScheme.onSurface.withValues(alpha: opacity),
                         fontSize: 12,
                       ),
                   overflow: TextOverflow.ellipsis,
@@ -2563,12 +2561,12 @@ class _PhotosGrid extends StatelessWidget {
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
                       child: Container(
-                        color: Colors.black.withOpacity(0.1),
+                        color: Colors.black.withValues(alpha: 0.1),
                         child: Center(
                           child: Icon(
                             Icons.visibility_off,
                             size: 48,
-                            color: Colors.white.withOpacity(0.8),
+                            color: Colors.white.withValues(alpha: 0.8),
                           ),
                         ),
                       ),
@@ -2683,7 +2681,7 @@ class _PhotosGrid extends StatelessWidget {
   void _showPhotoViewer(BuildContext context, int initialIndex, {bool forAdult = false}) {
     showDialog(
       context: context,
-      barrierColor: Colors.black.withOpacity(0.8),
+      barrierColor: Colors.black.withValues(alpha: 0.8),
       builder: (context) {
         return Dialog.fullscreen(
           backgroundColor: Colors.black,
@@ -2711,12 +2709,12 @@ class _PhotosGrid extends StatelessWidget {
                             child: BackdropFilter(
                               filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
                               child: Container(
-                                color: Colors.black.withOpacity(0.1),
+                                color: Colors.black.withValues(alpha: 0.1),
                                 child: Center(
                                   child: Icon(
                                     Icons.visibility_off,
                                     size: 48,
-                                    color: Colors.white.withOpacity(0.8),
+                                    color: Colors.white.withValues(alpha: 0.8),
                                   ),
                                 ),
                               ),
@@ -2784,7 +2782,7 @@ class _PollWidget extends StatelessWidget {
                       widthFactor: percentage,
                       child: Container(
                         height: 44, // ارتفاع ثابت لضمان التناسق
-                        color: theme.colorScheme.primary.withOpacity(0.1),
+                        color: theme.colorScheme.primary.withValues(alpha: 0.1),
                       ),
                     ),
                     // Layer 2: المحتوى
@@ -2830,7 +2828,7 @@ class _PollWidget extends StatelessWidget {
         Text(
           '$totalVotes ${totalVotes == 1 ? 'Vote' : 'Votes'}',
           style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.6),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
               ),
         ),
       ],
@@ -2847,7 +2845,7 @@ class _LinkWidget extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
-          color: theme.colorScheme.outline.withOpacity(0.3),
+          color: theme.colorScheme.outline.withValues(alpha: 0.3),
         ),
         borderRadius: BorderRadius.circular(12),
       ),
@@ -2868,7 +2866,7 @@ class _LinkWidget extends StatelessWidget {
                     imageUrl: link.sourceThumbnail!,
                     fit: BoxFit.cover,
                     placeholder: (context, url) => Container(
-                      color: theme.colorScheme.surfaceVariant,
+                      color: theme.colorScheme.surfaceContainerHighest,
                       child: Center(
                         child: Icon(
                           Iconsax.link,
@@ -2878,7 +2876,7 @@ class _LinkWidget extends StatelessWidget {
                       ),
                     ),
                     errorWidget: (context, url, error) => Container(
-                      color: theme.colorScheme.surfaceVariant,
+                      color: theme.colorScheme.surfaceContainerHighest,
                       child: Center(
                         child: Icon(
                           Iconsax.link,
@@ -2913,7 +2911,7 @@ class _LinkWidget extends StatelessWidget {
                     Text(
                       link.sourceText,
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.7),
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                       ),
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
@@ -2996,7 +2994,7 @@ class _ArticleWidget extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(
-            color: theme.colorScheme.outline.withOpacity(0.3),
+            color: theme.colorScheme.outline.withValues(alpha: 0.3),
           ),
           borderRadius: BorderRadius.circular(12),
         ),
@@ -3028,7 +3026,7 @@ class _ArticleWidget extends StatelessWidget {
                   imageUrl: blog.cover!,
                   fit: BoxFit.cover,
                   placeholder: (context, url) => Container(
-                    color: theme.colorScheme.surfaceVariant,
+                    color: theme.colorScheme.surfaceContainerHighest,
                     child: Center(
                       child: Icon(
                         Iconsax.document_text,
@@ -3038,7 +3036,7 @@ class _ArticleWidget extends StatelessWidget {
                     ),
                   ),
                   errorWidget: (context, url, error) => Container(
-                    color: theme.colorScheme.surfaceVariant,
+                    color: theme.colorScheme.surfaceContainerHighest,
                     child: Center(
                       child: Icon(
                         Iconsax.document_text,
@@ -3070,7 +3068,7 @@ class _ArticleWidget extends StatelessWidget {
                   Text(
                     blog.textSnippet!,
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.7),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                     ),
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
@@ -3115,7 +3113,7 @@ class _SharedPostWidget extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
-          color: theme.colorScheme.outline.withOpacity(0.3),
+          color: theme.colorScheme.outline.withValues(alpha: 0.3),
         ),
         borderRadius: BorderRadius.circular(12),
       ),
@@ -3165,7 +3163,7 @@ class _SharedPostWidget extends StatelessWidget {
                       Text(
                         TimeAgo.formatFromString(originPost.publishedAt, isEnglish: true),
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withOpacity(0.6),
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
                       ),
                     ],
@@ -3239,7 +3237,7 @@ class _EventWidget extends StatelessWidget {
           color: isDark ? const Color(0xFF2A2A2A) : Colors.grey[50],
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isDark ? Colors.white.withOpacity(0.1) : Colors.grey.withOpacity(0.2),
+            color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.2),
             width: 1,
           ),
         ),
@@ -3282,7 +3280,7 @@ class _EventWidget extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.primary.withOpacity(0.1),
+                        color: theme.colorScheme.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(
@@ -3311,14 +3309,14 @@ class _EventWidget extends StatelessWidget {
                                 Icon(
                                   Icons.location_on_outlined,
                                   size: 16,
-                                  color: theme.colorScheme.onSurface.withOpacity(0.6),
+                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                                 ),
                                 const SizedBox(width: 4),
                                 Expanded(
                                   child: Text(
                                     event.eventLocation!,
                                     style: theme.textTheme.bodySmall?.copyWith(
-                                      color: theme.colorScheme.onSurface.withOpacity(0.6),
+                                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                                     ),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -3340,7 +3338,7 @@ class _EventWidget extends StatelessWidget {
                     color: isDark ? const Color(0xFF333333) : Colors.white,
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
-                      color: isDark ? Colors.white.withOpacity(0.1) : Colors.grey.withOpacity(0.2),
+                      color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.2),
                     ),
                   ),
                   child: Row(
@@ -3365,7 +3363,7 @@ class _EventWidget extends StatelessWidget {
                               Text(
                                 'to ${_formatEventDate(event.eventEndDate)}',
                                 style: theme.textTheme.bodySmall?.copyWith(
-                                  color: theme.colorScheme.onSurface.withOpacity(0.6),
+                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                                 ),
                               ),
                             ],
@@ -3391,14 +3389,14 @@ class _EventWidget extends StatelessWidget {
                   children: [
                     _EventStat(
                       icon: Icons.star_outline,
-                      label: 'Interested',
+                      label: 'interested_button'.tr,
                       count: event.formattedInterestedCount,
                       color: Colors.orange,
                     ),
                     const SizedBox(width: 16),
                     _EventStat(
                       icon: Icons.check_circle_outline,
-                      label: 'Going',
+                      label: 'going_events'.tr,
                       count: event.formattedGoingCount,
                       color: Colors.green,
                     ),
@@ -3414,7 +3412,7 @@ class _EventWidget extends StatelessWidget {
                           // TODO: تنفيذ عرض تفاصيل الحدث
                         },
                         icon: const Icon(Icons.info_outline, size: 18),
-                        label: const Text('Details'),
+                        label:  Text('details'.tr),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: theme.colorScheme.primary,
                           foregroundColor: Colors.white,
@@ -3434,7 +3432,7 @@ class _EventWidget extends StatelessWidget {
                           event.iJoined ? Icons.check_circle : Icons.star_outline,
                           size: 18,
                         ),
-                        label: Text(event.iJoined ? 'Joined' : 'Interested'),
+                        label: Text(event.iJoined ? 'Joined' : 'interested'.tr),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: theme.colorScheme.primary,
                           side: BorderSide(color: theme.colorScheme.primary),
@@ -3510,7 +3508,7 @@ class _EventStat extends StatelessWidget {
             Text(
               label,
               style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.6),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
               ),
             ),
           ],
@@ -3536,8 +3534,8 @@ class _FundingWidget extends StatelessWidget {
         gradient: LinearGradient(
           colors: isDark
               ? [
-                  Colors.green.shade900.withOpacity(0.2),
-                  Colors.green.shade800.withOpacity(0.1),
+                  Colors.green.shade900.withValues(alpha: 0.2),
+                  Colors.green.shade800.withValues(alpha: 0.1),
                 ]
               : [
                   Colors.green.shade50,
@@ -3549,14 +3547,14 @@ class _FundingWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isDark
-              ? Colors.green.withOpacity(0.4)
-              : Colors.green.withOpacity(0.3),
+              ? Colors.green.withValues(alpha: 0.4)
+              : Colors.green.withValues(alpha: 0.3),
         ),
         boxShadow: [
           BoxShadow(
             color: isDark
-                ? Colors.black.withOpacity(0.3)
-                : Colors.green.withOpacity(0.1),
+                ? Colors.black.withValues(alpha: 0.3)
+                : Colors.green.withValues(alpha: 0.1),
             offset: const Offset(0, 2),
             blurRadius: 8,
             spreadRadius: 0,
@@ -3584,7 +3582,7 @@ class _FundingWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.green.withOpacity(0.3),
+                        color: Colors.green.withValues(alpha: 0.3),
                         offset: const Offset(0, 2),
                         blurRadius: 6,
                       ),
@@ -3656,7 +3654,7 @@ class _FundingWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.green.withOpacity(0.3),
+                            color: Colors.green.withValues(alpha: 0.3),
                             offset: const Offset(0, 2),
                             blurRadius: 4,
                           ),
@@ -3719,7 +3717,7 @@ class _FundingWidget extends StatelessWidget {
                   child: _FundingStatCard(
                     icon: Icons.monetization_on_rounded,
                     value: '\$${_formatMoney(funding.remainingAmount)}',
-                    label: 'Remaining',
+                    label: 'remaining'.tr,
                     color: isDark ? Colors.orange.shade400 : Colors.orange.shade600,
                     isDark: isDark,
                   ),
@@ -3763,7 +3761,7 @@ class _FundingWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   elevation: isDark ? 8 : 4,
-                  shadowColor: Colors.green.withOpacity(0.5),
+                  shadowColor: Colors.green.withValues(alpha: 0.5),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -3797,7 +3795,7 @@ class _FundingWidget extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                   color: isDark
-                      ? Colors.green.shade800.withOpacity(0.3)
+                      ? Colors.green.shade800.withValues(alpha: 0.3)
                       : Colors.green.shade100,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
@@ -3866,25 +3864,25 @@ class _FundingStatCard extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isDark
-            ? color.withOpacity(0.15)
-            : color.withOpacity(0.1),
+            ? color.withValues(alpha: 0.15)
+            : color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isDark
-              ? color.withOpacity(0.4)
-              : color.withOpacity(0.3),
+              ? color.withValues(alpha: 0.4)
+              : color.withValues(alpha: 0.3),
         ),
         boxShadow: isDark
             ? [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
+                  color: Colors.black.withValues(alpha: 0.2),
                   offset: const Offset(0, 2),
                   blurRadius: 4,
                 ),
               ]
             : [
                 BoxShadow(
-                  color: color.withOpacity(0.1),
+                  color: color.withValues(alpha: 0.1),
                   offset: const Offset(0, 2),
                   blurRadius: 6,
                 ),
@@ -3899,7 +3897,7 @@ class _FundingStatCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               boxShadow: [
                 BoxShadow(
-                  color: color.withOpacity(0.3),
+                  color: color.withValues(alpha: 0.3),
                   offset: const Offset(0, 2),
                   blurRadius: 4,
                 ),
@@ -3926,8 +3924,8 @@ class _FundingStatCard extends StatelessWidget {
             label,
             style: theme.textTheme.bodySmall?.copyWith(
               color: isDark
-                  ? theme.colorScheme.onSurface.withOpacity(0.7)
-                  : theme.colorScheme.onSurface.withOpacity(0.6),
+                  ? theme.colorScheme.onSurface.withValues(alpha: 0.7)
+                  : theme.colorScheme.onSurface.withValues(alpha: 0.6),
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -3961,8 +3959,8 @@ class _OfferWidget extends StatelessWidget {
           gradient: LinearGradient(
             colors: isDark
                 ? [
-                    Colors.orange.shade900.withOpacity(0.2),
-                    Colors.orange.shade800.withOpacity(0.1),
+                    Colors.orange.shade900.withValues(alpha: 0.2),
+                    Colors.orange.shade800.withValues(alpha: 0.1),
                   ]
                 : [
                     Colors.orange.shade50,
@@ -3974,14 +3972,14 @@ class _OfferWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isDark
-                ? Colors.orange.withOpacity(0.4)
-                : Colors.orange.withOpacity(0.3),
+                ? Colors.orange.withValues(alpha: 0.4)
+                : Colors.orange.withValues(alpha: 0.3),
           ),
           boxShadow: [
             BoxShadow(
               color: isDark
-                  ? Colors.black.withOpacity(0.3)
-                  : Colors.orange.withOpacity(0.1),
+                  ? Colors.black.withValues(alpha: 0.3)
+                  : Colors.orange.withValues(alpha: 0.1),
               offset: const Offset(0, 2),
               blurRadius: 8,
               spreadRadius: 0,
@@ -4033,7 +4031,7 @@ class _OfferWidget extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.orange.withOpacity(0.3),
+                              color: Colors.orange.withValues(alpha: 0.3),
                               offset: const Offset(0, 2),
                               blurRadius: 6,
                             ),
@@ -4093,7 +4091,7 @@ class _OfferWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.orange.withOpacity(0.3),
+                            color: Colors.orange.withValues(alpha: 0.3),
                             offset: const Offset(0, 2),
                             blurRadius: 4,
                           ),
@@ -4138,7 +4136,7 @@ class _OfferWidget extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         elevation: isDark ? 8 : 4,
-                        shadowColor: Colors.orange.withOpacity(0.5),
+                        shadowColor: Colors.orange.withValues(alpha: 0.5),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -4259,7 +4257,7 @@ class _ColoredTextWidgetState extends State<_ColoredTextWidget> with AutomaticKe
     );
   }  /// بناء النص مع محاذاة مركزية مثالية
   Widget _buildCenteredText() {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: HtmlTextWidget(
         htmlContent: widget.htmlContent,
@@ -4326,8 +4324,8 @@ class _LiveWidget extends StatelessWidget {
         gradient: LinearGradient(
           colors: isDark
               ? [
-                  Colors.red.shade900.withOpacity(0.3),
-                  Colors.red.shade800.withOpacity(0.1),
+                  Colors.red.shade900.withValues(alpha: 0.3),
+                  Colors.red.shade800.withValues(alpha: 0.1),
                 ]
               : [
                   Colors.red.shade50,
@@ -4339,15 +4337,15 @@ class _LiveWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: live.isActive 
-              ? Colors.red.withOpacity(0.6)
-              : Colors.grey.withOpacity(0.3),
+              ? Colors.red.withValues(alpha: 0.6)
+              : Colors.grey.withValues(alpha: 0.3),
           width: live.isActive ? 2 : 1,
         ),
         boxShadow: [
           BoxShadow(
             color: live.isActive 
-                ? Colors.red.withOpacity(0.2)
-                : Colors.black.withOpacity(0.1),
+                ? Colors.red.withValues(alpha: 0.2)
+                : Colors.black.withValues(alpha: 0.1),
             offset: const Offset(0, 2),
             blurRadius: 8,
             spreadRadius: 0,
@@ -4413,7 +4411,7 @@ class _LiveWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
+                        color: Colors.black.withValues(alpha: 0.3),
                         offset: const Offset(0, 1),
                         blurRadius: 4,
                       ),
@@ -4451,11 +4449,11 @@ class _LiveWidget extends StatelessWidget {
                     width: 64,
                     height: 64,
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.7),
+                      color: Colors.black.withValues(alpha: 0.7),
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.3),
+                          color: Colors.black.withValues(alpha: 0.3),
                           offset: const Offset(0, 2),
                           blurRadius: 8,
                         ),
@@ -4525,7 +4523,7 @@ class _LiveWidget extends StatelessWidget {
                     child: ElevatedButton.icon(
                       onPressed: () => _joinLiveStream(context),
                       icon: const Icon(Iconsax.video_play),
-                      label: const Text('Watch Live'),
+                      label:  Text('Watch Live'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
                         foregroundColor: Colors.white,
@@ -4644,7 +4642,7 @@ class _BoostActionButton extends StatelessWidget {
                   size: 18,
                   color: isBoosted 
                       ? const Color(0xFFFF8C00) // Orange for boosted
-                      : theme.colorScheme.onSurface.withOpacity(0.7),
+                      : theme.colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
               const SizedBox(width: 4),
               Text(
@@ -4652,7 +4650,7 @@ class _BoostActionButton extends StatelessWidget {
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: isBoosted
                       ? const Color(0xFFFF8C00)
-                      : theme.colorScheme.onSurface.withOpacity(0.7),
+                      : theme.colorScheme.onSurface.withValues(alpha: 0.7),
                   fontWeight: isBoosted ? FontWeight.w600 : FontWeight.normal,
                 ),
               ),

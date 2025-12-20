@@ -20,7 +20,7 @@ class SettingsPage extends StatelessWidget {
         backgroundColor: Colors.transparent,
         centerTitle: true,
         title: Text(
-          'Settings', // 'الإعدادات'
+          'settings'.tr,
           style: theme.textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.w800,
             letterSpacing: 0.1,
@@ -30,7 +30,7 @@ class SettingsPage extends StatelessWidget {
           // Quick theme toggle button
           GetBuilder<ThemeController>(
             builder: (controller) => IconButton(
-              tooltip: controller.isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode',
+              tooltip: controller.isDarkMode ? 'switch_to_light_mode'.tr : 'Switch to Dark Mode',
               onPressed: () {
                 HapticFeedback.selectionClick();
                 controller.toggleTheme();
@@ -60,16 +60,16 @@ class SettingsPage extends StatelessWidget {
         children: [
           // Header (glassy)
           const _GlassHeader(
-            title: 'Customize Your Experience', // 'تخصيص تجربتك'
-            subtitle: 'Manage privacy, notifications, and your account', // 'إدارة الخصوصية والإشعارات وحسابك'
+            title: 'customize_experience',
+            subtitle: 'manage_privacy_notifications_account',
           ),
           const SizedBox(height: 20),
           // Privacy & Security
-          const _SectionTitle('Privacy & Security'), // 'الخصوصية والأمان'
+          const _SectionTitle('privacy_security'), // 'الخصوصية والأمان'
           const SizedBox(height: 10),
           _SettingsTile(
-            title: 'Privacy Settings', // 'إعدادات الخصوصية'
-            subtitle: 'Control who can see your information', // 'تحكم في من يمكنه رؤية معلوماتك'
+            title: 'privacy_settings'.tr, // 'إعدادات الخصوصية'
+            subtitle: 'control_info_visibility'.tr, // 'تحكم في من يمكنه رؤية معلوماتك'
             icon: Icons.lock_rounded,
             gradient: const [Color(0xFF64B5F6), Color(0xFF1E88E5)],
             onTap: () {
@@ -81,52 +81,52 @@ class SettingsPage extends StatelessWidget {
             },
           ),
           _SettingsTile(
-            title: 'Blocked Users', // 'المحظورون'
-            subtitle: 'Manage blocked users', // 'إدارة المستخدمين المحظورين'
+            title: 'blocked_users'.tr, // 'المحظورون'
+            subtitle: 'manage_blocked_users'.tr, // 'إدارة المستخدمين المحظورين'
             icon: Icons.block_rounded,
             gradient: const [Color(0xFFEF5350), Color(0xFFE53935)],
             onTap: () {
               HapticFeedback.lightImpact();
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Coming Soon')), // 'قريباً'
+                 SnackBar(content: Text('coming_soon'.tr)), // 'قريباً'
               );
             },
           ),
           const SizedBox(height: 22),
           // Account
-          const _SectionTitle('Account'), // 'الحساب'
+          const _SectionTitle('account'), // 'الحساب'
           const SizedBox(height: 10),
           _SettingsTile(
-            title: 'Account Information', // 'معلومات الحساب'
-            subtitle: 'View and edit your account', // 'عرض وتعديل حسابك'
+            title: 'account_information'.tr, // 'معلومات الحساب'
+            subtitle: 'view_edit_account'.tr, // 'عرض وتعديل حسابك'
             icon: Icons.person_rounded,
             gradient: const [Color(0xFF81C784), Color(0xFF43A047)],
             onTap: () {
               HapticFeedback.lightImpact();
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Coming Soon')), // 'قريباً'
+                 SnackBar(content: Text('coming_soon'.tr)), // 'قريباً'
               );
             },
           ),
           _SettingsTile(
-            title: 'Password', // 'كلمة المرور'
-            subtitle: 'Change your password', // 'تغيير كلمة المرور'
+            title: 'password'.tr, // 'كلمة المرور'
+            subtitle: 'change_password'.tr, // 'تغيير كلمة المرور'
             icon: Icons.key_rounded,
             gradient: const [Color(0xFFFFB74D), Color(0xFFF57C00)],
             onTap: () {
               HapticFeedback.lightImpact();
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Coming Soon')), // 'قريباً'
+                 SnackBar(content: Text('coming_soon'.tr)), // 'قريباً'
               );
             },
           ),
           const SizedBox(height: 22),
           // Notifications
-          const _SectionTitle('Notifications'), // 'الإشعارات'
+          const _SectionTitle('notifications'), // 'الإشعارات'
           const SizedBox(height: 10),
           _SettingsTile(
-            title: 'Notification Settings', // 'إعدادات الإشعارات'
-            subtitle: 'Manage alerts and notifications', // 'إدارة التنبيهات والإشعارات'
+            title: 'notification_settings'.tr, // 'إعدادات الإشعارات'
+            subtitle: 'manage_alerts_notifications'.tr, // 'إدارة التنبيهات والإشعارات'
             icon: Icons.notifications_rounded,
             gradient: const [Color(0xFF9575CD), Color(0xFF5E35B1)],
             onTap: () {
@@ -141,11 +141,11 @@ class SettingsPage extends StatelessWidget {
           ),
           const SizedBox(height: 22),
           // Storage & Cache
-          const _SectionTitle('Storage & Cache'), // 'التخزين والكاش'
+          const _SectionTitle('storage_cache'), // 'التخزين والكاش'
           const SizedBox(height: 10),
           _SettingsTile(
-            title: 'Cache Settings', // 'إعدادات الكاش'
-            subtitle: 'Manage video cache and storage', // 'إدارة كاش الفيديو والتخزين'
+            title: 'cache_settings'.tr, // 'إعدادات الكاش'
+            subtitle: 'manage_video_cache_storage'.tr, // 'إدارة كاش الفيديو والتخزين'
             icon: Icons.storage_rounded,
             gradient: const [Color(0xFF29B6F6), Color(0xFF0288D1)],
             onTap: () {
@@ -155,25 +155,25 @@ class SettingsPage extends StatelessWidget {
           ),
           const SizedBox(height: 22),
           // Application
-          const _SectionTitle('Application'), // 'التطبيق'
+          const _SectionTitle('application'), // 'التطبيق'
           const SizedBox(height: 10),
           _SettingsTile(
-            title: 'Theme', // 'المظهر'
-            subtitle: 'Light / Dark mode', // 'الوضع الفاتح / الداكن'
+            title: 'theme'.tr, // 'المظهر'
+            subtitle: 'light_dark_mode'.tr, // 'الوضع الفاتح / الداكن'
             icon: Icons.brightness_6_rounded,
             gradient: const [Color(0xFF6A1B9A), Color(0xFF8E24AA)],
             onTap: () => _showThemeSheet(context),
           ),
           _SettingsTile(
-            title: 'Language', // 'اللغة'
-            subtitle: 'English / Arabic', // 'English / العربية'
+            title: 'language'.tr, // 'اللغة'
+            subtitle: 'English / Arabic / Hindi / Gujarati...', // 'English / العربية'
             icon: Icons.language_rounded,
             gradient: const [Color(0xFF4DB6AC), Color(0xFF00897B)],
             onTap: () => _showLanguageSheet(context),
           ),
           _SettingsTile(
-            title: 'Developer Info', // 'معلومات المطور'
-            subtitle: 'Contact & Support', // 'التواصل والدعم'
+            title: 'developer_info'.tr, // 'معلومات المطور'
+            subtitle: 'contact_support'.tr, // 'التواصل والدعم'
             icon: Icons.code_rounded,
             gradient: [
               if (isDark) const Color(0xFFB0BEC5) else const Color(0xFF90A4AE),
@@ -189,11 +189,11 @@ class SettingsPage extends StatelessWidget {
           ),
           const SizedBox(height: 22),
           // Support
-          const _SectionTitle('Support'), // 'الدعم'
+          const _SectionTitle('support'), // 'الدعم'
           const SizedBox(height: 10),
           _SettingsTile(
-            title: 'Report an Issue', // 'الإبلاغ عن مشكلة'
-            subtitle: 'Send video of the problem', // 'إرسال فيديو للمشكلة'
+            title: 'report_issue'.tr, // 'الإبلاغ عن مشكلة'
+            subtitle: 'send_video_problem'.tr, // 'إرسال فيديو للمشكلة'
             icon: Icons.bug_report_rounded,
             gradient: const [Color(0xFFFF7043), Color(0xFFE64A19)],
             onTap: () {
@@ -205,26 +205,26 @@ class SettingsPage extends StatelessWidget {
             },
           ),
           _SettingsTile(
-            title: 'Help Center', // 'مركز المساعدة'
-            subtitle: 'FAQs and support', // 'الأسئلة الشائعة والدعم'
+            title: 'help_center'.tr, // 'مركز المساعدة'
+            subtitle: 'faqs_support'.tr, // 'الأسئلة الشائعة والدعم'
             icon: Icons.help_center_rounded,
             gradient: const [Color(0xFF7986CB), Color(0xFF3F51B5)],
             onTap: () {
               HapticFeedback.lightImpact();
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Coming Soon')), // 'قريباً'
+                 SnackBar(content: Text('coming_soon'.tr)), // 'قريباً'
               );
             },
           ),
           _SettingsTile(
-            title: 'Terms & Policies', // 'الشروط والسياسات'
-            subtitle: 'Terms of Service and Privacy Policy', // 'شروط الخدمة وسياسة الخصوصية'
+            title: 'terms_policies'.tr, // 'الشروط والسياسات'
+            subtitle: 'terms_service_privacy'.tr, // 'شروط الخدمة وسياسة الخصوصية'
             icon: Icons.description_rounded,
             gradient: const [Color(0xFFA1887F), Color(0xFF6D4C41)],
             onTap: () {
               HapticFeedback.lightImpact();
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Coming Soon')), // 'قريباً'
+                 SnackBar(content: Text('coming_soon'.tr)), // 'قريباً'
               );
             },
           ),
@@ -235,54 +235,66 @@ class SettingsPage extends StatelessWidget {
   }
   // ---------- Helpers ----------
   void _showLanguageSheet(BuildContext context) {
-    final localizationController = Get.find<LocalizationController>();
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       showDragHandle: true,
       backgroundColor: Theme.of(context).colorScheme.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (ctx) => Padding(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            GetBuilder<LocalizationController>(
-              builder: (controller) => _LanguageTile(
-                title: 'English',
-                subtitle: 'Full English interface (LTR)', // 'واجهة إنجليزية كاملة (LTR)'
-                isSelected: controller.isEnglish,
-                onTap: () {
-                  HapticFeedback.selectionClick();
-                  localizationController.changeLocale('en');
-                  Navigator.pop(ctx);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('language_switch_success'.tr)),
+      builder: (ctx) {
+        final maxHeight = MediaQuery.of(ctx).size.height * 0.7;
+
+        return SizedBox(
+          height: maxHeight, // ✅ max height
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+            child: GetBuilder<LocalizationController>(
+              builder: (controller) => ListView(
+                physics: const BouncingScrollPhysics(),
+                children: controller.languages.map((lang) {
+                  final selected = controller.isSelected(lang);
+
+                  return ListTile(
+                    leading: Text(lang.flag, style: const TextStyle(fontSize: 22)),
+                    title: Text(
+                      lang.native,
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleSmall
+                          ?.copyWith(fontWeight: FontWeight.w700),
+                    ),
+                    subtitle: Text(
+                      lang.name,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    trailing: selected
+                        ? Icon(Icons.check_circle,
+                        color: Theme.of(context).colorScheme.primary)
+                        : const Icon(Icons.chevron_right_rounded),
+                    onTap: () {
+                      HapticFeedback.selectionClick();
+                      controller.changeLanguage(lang);
+                      Navigator.pop(ctx);
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('language_switch_success'.tr),
+                          duration: const Duration(milliseconds: 900),
+                        ),
+                      );
+                    },
                   );
-                },
+                }).toList(),
               ),
             ),
-            GetBuilder<LocalizationController>(
-              builder: (controller) => _LanguageTile(
-                title: 'العربية', // 'Arabic'
-                subtitle: 'واجهة عربية كاملة (RTL)', // 'Full Arabic interface (RTL)'
-                isSelected: controller.isArabic,
-                onTap: () {
-                  HapticFeedback.selectionClick();
-                  localizationController.changeLocale('ar');
-                  Navigator.pop(ctx);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('language_switch_success'.tr)),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
+
   void _showThemeSheet(BuildContext context) {
     final themeController = Get.find<ThemeController>();
     showModalBottomSheet(
@@ -372,7 +384,7 @@ class _GlassHeader extends StatelessWidget {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.12),
+                  color: Colors.black.withValues(alpha: 0.12),
                   blurRadius: 12,
                   offset: const Offset(0, 6),
                 ),
@@ -386,7 +398,7 @@ class _GlassHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start, // LTR
               children: [
                 Text(
-                  title,
+                  title.tr,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w800,
                     letterSpacing: 0.1,
@@ -394,9 +406,9 @@ class _GlassHeader extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  subtitle,
+                  subtitle.tr,
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.textTheme.bodySmall?.color?.withOpacity(0.8),
+                    color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.8),
                   ),
                 ),
               ],
@@ -425,7 +437,7 @@ class _SectionTitle extends StatelessWidget {
         ),
         const SizedBox(width: 8),
         Text(
-          title,
+          title.tr,
           style: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.w800,
             letterSpacing: 0.1,
@@ -458,13 +470,13 @@ class _SettingsTile extends StatelessWidget {
         color: theme.colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 14,
             offset: const Offset(0, 6),
           ),
         ],
         border: Border.all(
-          color: theme.dividerColor.withOpacity(0.06),
+          color: theme.dividerColor.withValues(alpha: 0.06),
           width: 1,
         ),
       ),
@@ -472,8 +484,8 @@ class _SettingsTile extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(14),
-          splashColor: theme.colorScheme.primary.withOpacity(0.06),
-          highlightColor: theme.colorScheme.primary.withOpacity(0.03),
+          splashColor: theme.colorScheme.primary.withValues(alpha: 0.06),
+          highlightColor: theme.colorScheme.primary.withValues(alpha: 0.03),
           onTap: () {
             HapticFeedback.lightImpact();
             onTap();
@@ -503,7 +515,7 @@ class _SettingsTile extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.textTheme.bodySmall?.color?.withOpacity(0.7),
+                          color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
                         ),
                       ),
                     ],
@@ -511,7 +523,7 @@ class _SettingsTile extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Icon(Icons.chevron_right_rounded, // LTR arrow
-                    size: 24, color: theme.iconTheme.color?.withOpacity(0.6)),
+                    size: 24, color: theme.iconTheme.color?.withValues(alpha: 0.6)),
               ],
             ),
           ),
@@ -534,55 +546,13 @@ class _GradientIconBadge extends StatelessWidget {
         gradient: LinearGradient(colors: gradient),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.10),
+            color: Colors.black.withValues(alpha: 0.10),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
         ],
       ),
       child: Icon(icon, color: Colors.white),
-    );
-  }
-}
-class _LanguageTile extends StatelessWidget {
-  const _LanguageTile({
-    required this.title,
-    required this.subtitle,
-    required this.onTap,
-    this.isSelected = false,
-  });
-  final String title;
-  final String subtitle;
-  final VoidCallback onTap;
-  final bool isSelected;
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return ListTile(
-      leading: Icon(
-        Icons.language_rounded,
-        color: isSelected ? theme.primaryColor : null,
-      ),
-      title: Text(
-        title,
-        style: theme.textTheme.titleSmall?.copyWith(
-          fontWeight: FontWeight.w700,
-          color: isSelected ? theme.primaryColor : null,
-        ),
-      ),
-      subtitle: Text(
-        subtitle,
-        style: theme.textTheme.bodySmall?.copyWith(
-          color: isSelected 
-              ? theme.primaryColor.withValues(alpha: 0.75)
-              : theme.textTheme.bodySmall?.color?.withValues(alpha: 0.75),
-        ),
-      ),
-      trailing: Icon(
-        isSelected ? Icons.check_circle : Icons.chevron_right_rounded,
-        color: isSelected ? theme.primaryColor : null,
-      ),
-      onTap: onTap,
     );
   }
 }

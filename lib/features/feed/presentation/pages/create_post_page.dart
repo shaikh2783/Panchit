@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:collection/collection.dart';
@@ -453,7 +454,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
             onPressed: _isLoading ? null : _createPost,
             child: _isLoading
                 ? const CircularProgressIndicator(color: Colors.white)
-                : const Text('Post', style: TextStyle(color: Colors.white)),
+                :  Text('post'.tr, style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -482,7 +483,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
                   fontWeight: FontWeight.w500,
                 ),
                 decoration: InputDecoration.collapsed(
-                  hintText: 'What\'s on your mind?',
+                  hintText: 'whats_on_your_mind'.tr,
                   hintStyle: TextStyle(
                     color: _selectedColoredPattern != null 
                         ? Colors.white70 

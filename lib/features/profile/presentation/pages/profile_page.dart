@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:snginepro/features/profile/data/services/profile_api_service.dart';
 import 'package:snginepro/features/profile/application/bloc/profile_posts_bloc.dart';
@@ -314,10 +315,10 @@ class _ProfilePageState extends State<ProfilePage>
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _buildHeaderStat('Posts', stats.posts),
-                  _buildHeaderStat('Photos', stats.photos),
-                  _buildHeaderStat('Friends', stats.friends),
-                  _buildHeaderStat('Followers', stats.followers),
+                  _buildHeaderStat('posts'.tr, stats.posts),
+                  _buildHeaderStat('photos'.tr, stats.photos),
+                  _buildHeaderStat('friends'.tr, stats.friends),
+                  _buildHeaderStat('followers'.tr, stats.followers),
                 ],
               ),
             ],
@@ -362,11 +363,11 @@ class _ProfilePageState extends State<ProfilePage>
           // زر متابعة
           Expanded(child: _buildFollowButton(relationship)),
           const SizedBox(width: 8),
-          _buildSecondaryButton(Iconsax.message, 'Message', () {
+          _buildSecondaryButton(Iconsax.message, 'messages'.tr, () {
             /* open chat */
           }),
           const SizedBox(width: 8),
-          _buildSecondaryButton(Iconsax.more, 'More', _showMoreOptions),
+          _buildSecondaryButton(Iconsax.more, 'show_more'.tr, _showMoreOptions),
         ],
       ),
     );
@@ -402,7 +403,7 @@ class _ProfilePageState extends State<ProfilePage>
         isFollowing ? Iconsax.user_tick : Iconsax.user_add,
         size: 18,
       ),
-      label: Text(isFollowing ? 'Follower' : 'tracking'),
+      label: Text(isFollowing ? 'follower'.tr : 'Tracking'),
       style: ElevatedButton.styleFrom(
         backgroundColor: isFollowing ? Colors.grey[300] : Colors.blue,
         foregroundColor: isFollowing ? Colors.black87 : Colors.white,
@@ -459,12 +460,12 @@ class _ProfilePageState extends State<ProfilePage>
           children: [
             ListTile(
               leading: const Icon(Iconsax.danger),
-              title: const Text('Block'),
+              title:  Text('block'.tr),
               onTap: () => Navigator.pop(context),
             ),
             ListTile(
               leading: const Icon(Iconsax.flag),
-              title: const Text('Report'),
+              title:  Text('report'.tr),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(
@@ -481,7 +482,7 @@ class _ProfilePageState extends State<ProfilePage>
             ),
             ListTile(
               leading: const Icon(Iconsax.share),
-              title: const Text('Share Profile'),
+              title:  Text('Share Profile'),
               onTap: () => Navigator.pop(context),
             ),
           ],
@@ -505,13 +506,13 @@ class _ProfilePageState extends State<ProfilePage>
       child: TabBar(
         controller: _tabController,
         isScrollable: true,
-        tabs: const [
-          Tab(icon: Icon(Iconsax.document_text), text: 'Posts'),
-          Tab(icon: Icon(Iconsax.info_circle), text: 'About'),
-          Tab(icon: Icon(Iconsax.gallery), text: 'Photos'),
-          Tab(icon: Icon(Iconsax.video_play), text: 'Videos'),
-          Tab(icon: Icon(Iconsax.people), text: 'Friends'),
-          Tab(icon: Icon(Iconsax.more_square), text: 'More'),
+        tabs:  [
+          Tab(icon: Icon(Iconsax.document_text), text: 'posts'.tr),
+          Tab(icon: Icon(Iconsax.info_circle), text: 'about'.tr),
+          Tab(icon: Icon(Iconsax.gallery), text: 'photos'.tr),
+          Tab(icon: Icon(Iconsax.video_play), text: 'videos'.tr),
+          Tab(icon: Icon(Iconsax.people), text: 'friends'.tr),
+          Tab(icon: Icon(Iconsax.more_square), text: 'more'.tr),
         ],
       ),
     );
@@ -655,7 +656,7 @@ class _ProfilePageState extends State<ProfilePage>
       children: [
         if ((profile.about ?? '').isNotEmpty) ...[
           _InfoCard(
-            title: 'About',
+            title: 'about'.tr,
             icon: Iconsax.info_circle,
             children: [
               Text(
@@ -668,34 +669,34 @@ class _ProfilePageState extends State<ProfilePage>
         ],
         if (hasWork) ...[
           _InfoCard(
-            title: 'Work',
+            title: 'work'.tr,
             icon: Iconsax.briefcase,
             children: [
               if ((profile.work.title ?? '').isNotEmpty)
-                _buildInfoRow(Iconsax.award, 'Position', profile.work.title!),
+                _buildInfoRow(Iconsax.award, 'position'.tr, profile.work.title!),
               if ((profile.work.place ?? '').isNotEmpty)
-                _buildInfoRow(Iconsax.building, 'Company', profile.work.place!),
+                _buildInfoRow(Iconsax.building, 'company'.tr, profile.work.place!),
               if ((profile.work.website ?? '').isNotEmpty)
-                _buildInfoRow(Iconsax.link, 'Website', profile.work.website!),
+                _buildInfoRow(Iconsax.link, 'website'.tr, profile.work.website!),
             ],
           ),
           const SizedBox(height: 16),
         ],
         if (hasLocation) ...[
           _InfoCard(
-            title: 'Location',
+            title: 'location'.tr,
             icon: Iconsax.location,
             children: [
               if ((profile.location.currentCity ?? '').isNotEmpty)
                 _buildInfoRow(
                   Iconsax.location_tick,
-                  'Lives in',
+                  'lives_in'.tr,
                   profile.location.currentCity!,
                 ),
               if ((profile.location.hometown ?? '').isNotEmpty)
                 _buildInfoRow(
                   Iconsax.home_2,
-                  'From',
+                  'from'.tr,
                   profile.location.hometown!,
                 ),
             ],
@@ -704,25 +705,25 @@ class _ProfilePageState extends State<ProfilePage>
         ],
         if (hasEducation) ...[
           _InfoCard(
-            title: 'Education',
+            title: 'education'.tr,
             icon: Iconsax.book,
             children: [
               if ((profile.education.school ?? '').isNotEmpty)
                 _buildInfoRow(
                   Iconsax.building_3,
-                  'School',
+                  'school'.tr,
                   profile.education.school!,
                 ),
               if ((profile.education.major ?? '').isNotEmpty)
                 _buildInfoRow(
                   Iconsax.teacher,
-                  'Major',
+                  'major'.tr,
                   profile.education.major!,
                 ),
               if ((profile.education.classYear ?? '').isNotEmpty)
                 _buildInfoRow(
                   Iconsax.calendar_1,
-                  'Class of',
+                  'class_of'.tr,
                   profile.education.classYear!,
                 ),
             ],
@@ -730,19 +731,19 @@ class _ProfilePageState extends State<ProfilePage>
           const SizedBox(height: 16),
         ],
         _InfoCard(
-          title: 'Details',
+          title: 'details'.tr,
           icon: Iconsax.user,
           children: [
             if (profile.country != null)
-              _buildInfoRow(Iconsax.global, 'Country', profile.country!.name),
+              _buildInfoRow(Iconsax.global, 'country'.tr, profile.country!.name),
             if ((profile.gender).isNotEmpty)
               _buildInfoRow(
                 Iconsax.user,
-                'Gender',
+                'gender'.tr,
                 profile.gender == 'male' ? 'Male' : 'Female',
               ),
             if ((profile.birthDate ?? '').isNotEmpty)
-              _buildInfoRow(Iconsax.cake, 'Birthday', profile.birthDate!),
+              _buildInfoRow(Iconsax.cake, 'birthday'.tr, profile.birthDate!),
           ],
         ),
       ],
@@ -827,11 +828,11 @@ class _ProfilePageState extends State<ProfilePage>
   }
   // Other tabs
   Widget _buildPhotosTab() =>
-      const Center(child: Text('Photos coming soon...'));
+       Center(child: Text('photos_coming_soon'.tr));
   Widget _buildVideosTab() =>
-      const Center(child: Text('Videos coming soon...'));
+       Center(child: Text('videos_coming_soon'.tr));
   Widget _buildFriendsTab() =>
-      const Center(child: Text('Friends coming soon...'));
+       Center(child: Text('friends_coming_soon'.tr));
   Widget _buildMoreTab(UserProfile profile) {
     final socialLinks = _profileData!.socialLinks;
     final hasLinks = socialLinks.values.any((v) => (v ?? '').isNotEmpty);
@@ -840,49 +841,49 @@ class _ProfilePageState extends State<ProfilePage>
       children: [
         if (hasLinks)
           _InfoCard(
-            title: 'Social Links',
+            title: 'social_links'.tr,
             icon: Iconsax.global,
             children: [
               if ((socialLinks['website'] ?? '').isNotEmpty)
                 _buildSocialLink(
-                  'Website',
+                  'website'.tr,
                   Iconsax.language_circle,
                   socialLinks['website']!,
                 ),
               if ((socialLinks['facebook'] ?? '').isNotEmpty)
                 _buildSocialLink(
-                  'Facebook',
+                  'facebook'.tr,
                   Iconsax.facebook,
                   socialLinks['facebook']!,
                 ),
               if ((socialLinks['x'] ?? '').isNotEmpty)
                 _buildSocialLink(
-                  'X (Twitter)',
+                  'x_twitter'.tr,
                   Iconsax.hashtag,
                   socialLinks['x']!,
                 ),
               if ((socialLinks['instagram'] ?? '').isNotEmpty)
                 _buildSocialLink(
-                  'Instagram',
+                  'instagram'.tr,
                   Iconsax.instagram,
                   socialLinks['instagram']!,
                 ),
               if ((socialLinks['youtube'] ?? '').isNotEmpty)
                 _buildSocialLink(
-                  'YouTube',
+                  'youtube'.tr,
                   Iconsax.video,
                   socialLinks['youtube']!,
                 ),
               if ((socialLinks['linkedin'] ?? '').isNotEmpty)
                 _buildSocialLink(
-                  'LinkedIn',
+                  'linkedin'.tr,
                   Iconsax.briefcase,
                   socialLinks['linkedin']!,
                 ),
             ],
           )
         else
-          const Center(child: Text('No social links')),
+           Center(child: Text('no_social_links'.tr)),
       ],
     );
   }

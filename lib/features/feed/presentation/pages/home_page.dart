@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snginepro/core/config/app_config.dart';
 import 'package:snginepro/features/auth/application/auth_notifier.dart';
@@ -108,7 +107,7 @@ class _HomePageState extends State<HomePage> {
                 color: isDark ? const Color(0xFF2A2A2A) : Colors.white,
                 boxShadow: [
                   BoxShadow(
-                    color: isDark ? Colors.black26 : Colors.grey.withOpacity(0.2),
+                    color: isDark ? Colors.black26 : Colors.grey.withValues(alpha:0.2),
                     blurRadius: 20,
                     spreadRadius: 2,
                   ),
@@ -152,7 +151,7 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 40.0),
           child: Card(
             elevation: isDark ? 8 : 4,
-            shadowColor: isDark ? Colors.black54 : Colors.grey.withOpacity(0.3),
+            shadowColor: isDark ? Colors.black54 : Colors.grey.withValues(alpha:0.3),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
@@ -186,7 +185,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.red.withOpacity(0.3),
+                          color: Colors.red.withValues(alpha:0.3),
                           blurRadius: 20,
                           spreadRadius: 2,
                         ),
@@ -227,7 +226,7 @@ class _HomePageState extends State<HomePage> {
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.blue.withOpacity(0.3),
+                          color: Colors.blue.withValues(alpha:0.3),
                           blurRadius: 8,
                           offset: const Offset(0, 4),
                         ),
@@ -289,7 +288,7 @@ class _HomePageState extends State<HomePage> {
                   color: isDark ? const Color(0xFF2A2A2A) : Colors.white,
                   boxShadow: [
                     BoxShadow(
-                      color: isDark ? Colors.black26 : Colors.grey.withOpacity(0.2),
+                      color: isDark ? Colors.black26 : Colors.grey.withValues(alpha:0.2),
                       blurRadius: 20,
                       spreadRadius: 2,
                     ),
@@ -341,7 +340,7 @@ class _HomePageState extends State<HomePage> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   elevation: 4,
-                  shadowColor: Theme.of(context).colorScheme.primary.withOpacity(0.4),
+                  shadowColor: Theme.of(context).colorScheme.primary.withValues(alpha:0.4),
                 ),
               ),
             ],
@@ -365,8 +364,8 @@ class _HomePageState extends State<HomePage> {
         : const Color(0xFFF8F9FA),
       appBar: AppBar(
         backgroundColor: isDark 
-          ? const Color(0xFF1A1A1A).withOpacity(0.95)
-          : Colors.white.withOpacity(0.95),
+          ? const Color(0xFF1A1A1A).withValues(alpha:0.95)
+          : Colors.white.withValues(alpha:0.95),
         elevation: 0,
         shadowColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
@@ -379,19 +378,19 @@ class _HomePageState extends State<HomePage> {
               end: Alignment.bottomCenter,
               colors: isDark 
                 ? [
-                    const Color(0xFF1A1A1A).withOpacity(0.98),
-                    const Color(0xFF0A0A0A).withOpacity(0.95),
+                    const Color(0xFF1A1A1A).withValues(alpha:0.98),
+                    const Color(0xFF0A0A0A).withValues(alpha:0.95),
                   ]
                 : [
-                    Colors.white.withOpacity(0.98),
-                    const Color(0xFFF8F9FA).withOpacity(0.95),
+                    Colors.white.withValues(alpha:0.98),
+                    const Color(0xFFF8F9FA).withValues(alpha:0.95),
                   ],
             ),
             boxShadow: [
               BoxShadow(
                 color: isDark 
-                  ? Colors.black.withOpacity(0.3)
-                  : Colors.black.withOpacity(0.05),
+                  ? Colors.black.withValues(alpha:0.3)
+                  : Colors.black.withValues(alpha:0.05),
                 blurRadius: 12,
                 offset: const Offset(0, 2),
               ),
@@ -405,12 +404,12 @@ class _HomePageState extends State<HomePage> {
               height: 40,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [cs.primary, cs.primary.withOpacity(0.8)],
+                  colors: [cs.primary, cs.primary.withValues(alpha:0.8)],
                 ),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: cs.primary.withOpacity(0.3),
+                    color: cs.primary.withValues(alpha:0.3),
                     blurRadius: 8,
                     offset: const Offset(0, 4),
                   ),
@@ -549,7 +548,7 @@ class _HomePageState extends State<HomePage> {
                                       BoxShadow(
                                         color: isDark 
                                           ? Colors.black26 
-                                          : Colors.grey.withOpacity(0.15),
+                                          : Colors.grey.withValues(alpha:0.15),
                                         blurRadius: 12,
                                         spreadRadius: 1,
                                       ),
@@ -606,8 +605,8 @@ class _AppBarAction extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: isDark 
-              ? Colors.black.withOpacity(0.4)
-              : Colors.black.withOpacity(0.08),
+              ? Colors.black.withValues(alpha:0.4)
+              : Colors.black.withValues(alpha:0.08),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -626,8 +625,8 @@ class _AppBarAction extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(
                 color: isDark 
-                  ? Colors.white.withOpacity(0.1)
-                  : Colors.black.withOpacity(0.05),
+                  ? Colors.white.withValues(alpha:0.1)
+                  : Colors.black.withValues(alpha:0.05),
                 width: 1,
               ),
             ),
@@ -665,13 +664,13 @@ class _StoriesRail extends StatelessWidget {
         gradient: LinearGradient(
           colors: [
             cs.surface,
-            cs.surface.withOpacity(0.95),
+            cs.surface.withValues(alpha:0.95),
           ],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
         border: Border(
-          bottom: BorderSide(color: cs.outlineVariant.withOpacity(0.25)),
+          bottom: BorderSide(color: cs.outlineVariant.withValues(alpha:0.25)),
         ),
       ),
       padding: const EdgeInsets.symmetric(vertical: 12),
@@ -727,7 +726,7 @@ class _CreateStoryCard extends StatelessWidget {
                   child: DecoratedBox(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [Colors.black.withOpacity(0.6), Colors.transparent],
+                        colors: [Colors.black.withValues(alpha:0.6), Colors.transparent],
                         begin: Alignment.topCenter,
                         end: Alignment.center,
                       ),
@@ -738,7 +737,7 @@ class _CreateStoryCard extends StatelessWidget {
                   child: DecoratedBox(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [Colors.black.withOpacity(0.6), Colors.transparent],
+                        colors: [Colors.black.withValues(alpha:0.6), Colors.transparent],
                         begin: Alignment.bottomCenter,
                         end: Alignment.center,
                       ),
@@ -763,11 +762,11 @@ class _CreateStoryCard extends StatelessWidget {
                   right: 0,
                   child: Container(
                     height: 52,
-                    color: cs.surface.withOpacity(0.92),
+                    color: cs.surface.withValues(alpha: 0.92),
                     alignment: Alignment.bottomCenter,
                     padding: const EdgeInsets.only(bottom: 8),
                     child: Text(
-                      'Create Story',
+                      'create_story'.tr,
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
                             fontWeight: FontWeight.w800,
                           ),
@@ -811,7 +810,7 @@ class _StoryCard extends StatelessWidget {
                   child: DecoratedBox(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [Colors.black.withOpacity(0.55), Colors.transparent],
+                        colors: [Colors.black.withValues(alpha:0.55), Colors.transparent],
                         begin: Alignment.topCenter,
                         end: Alignment.center,
                       ),
@@ -822,7 +821,7 @@ class _StoryCard extends StatelessWidget {
                   child: DecoratedBox(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [Colors.black.withOpacity(0.55), Colors.transparent],
+                        colors: [Colors.black.withValues(alpha:0.55), Colors.transparent],
                         begin: Alignment.bottomCenter,
                         end: Alignment.center,
                       ),
@@ -884,22 +883,22 @@ class _ComposerCard extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         gradient: LinearGradient(
-          colors: isDark 
+          colors: isDark
             ? [const Color(0xFF2A2A2A), const Color(0xFF1F1F1F)]
             : [Colors.white, const Color(0xFFF8F9FA)],
         ),
         boxShadow: [
           BoxShadow(
-            color: isDark 
-              ? Colors.black.withOpacity(0.3)
-              : Colors.black.withOpacity(0.06),
+            color: isDark
+              ? Colors.black.withValues(alpha:0.3)
+              : Colors.black.withValues(alpha:0.06),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
           BoxShadow(
-            color: isDark 
-              ? Colors.black.withOpacity(0.1)
-              : Colors.black.withOpacity(0.02),
+            color: isDark
+              ? Colors.black.withValues(alpha:0.1)
+              : Colors.black.withValues(alpha:0.02),
             blurRadius: 6,
             offset: const Offset(0, 1),
           ),
@@ -915,12 +914,12 @@ class _ComposerCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: cs.primary.withOpacity(0.2),
+                      color: cs.primary.withValues(alpha:0.2),
                       width: 2,
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: cs.primary.withOpacity(0.1),
+                        color: cs.primary.withValues(alpha:0.1),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -943,31 +942,31 @@ class _ComposerCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: isDark 
+                          colors: isDark
                             ? [const Color(0xFF3A3A3A), const Color(0xFF2F2F2F)]
                             : [const Color(0xFFF5F5F5), const Color(0xFFEEEEEE)],
                         ),
                         border: Border.all(
-                          color: isDark 
-                            ? Colors.white.withOpacity(0.1)
-                            : Colors.black.withOpacity(0.08),
+                          color: isDark
+                            ? Colors.white.withValues(alpha:0.1)
+                            : Colors.black.withValues(alpha:0.08),
                           width: 1,
                         ),
                         borderRadius: BorderRadius.circular(28),
                         boxShadow: [
                           BoxShadow(
-                            color: isDark 
-                              ? Colors.black.withOpacity(0.2)
-                              : Colors.black.withOpacity(0.04),
+                            color: isDark
+                              ? Colors.black.withValues(alpha: 0.2)
+                              : Colors.black.withValues(alpha: 0.04),
                             blurRadius: 4,
                             offset: const Offset(0, 2),
                           ),
                         ],
                       ),
                       child: Text(
-                        "What's on your mind, $displayName?",
+                        "${"whats_on_your_mind".tr}$displayName?",
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: isDark 
+                              color: isDark
                                 ? Colors.grey[400]
                                 : Colors.grey[600],
                               fontWeight: FontWeight.w500,
@@ -985,7 +984,7 @@ class _ComposerCard extends StatelessWidget {
                 gradient: LinearGradient(
                   colors: [
                     Colors.transparent,
-                    (isDark ? Colors.white : Colors.black).withOpacity(0.1),
+                    (isDark ? Colors.white : Colors.black).withValues(alpha:0.1),
                     Colors.transparent,
                   ],
                 ),
@@ -998,7 +997,7 @@ class _ComposerCard extends StatelessWidget {
                 _ComposerAction(
                   icon: Icons.videocam_rounded,
                   color: const Color(0xFFF02849),
-                  label: 'Live',
+                  label: 'live'.tr,
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -1008,15 +1007,15 @@ class _ComposerCard extends StatelessWidget {
                     );
                   },
                 ),
-                const _ComposerAction(
+                 _ComposerAction(
                   icon: Icons.photo_library_rounded,
                   color: Color(0xFF45BD62),
-                  label: 'Photo',
+                  label: 'photos'.tr,
                 ),
-                const _ComposerAction(
+                 _ComposerAction(
                   icon: Icons.flag_rounded,
                   color: Color(0xFF1877F2),
-                  label: 'Event',
+                  label: 'event'.tr,
                 ),
               ],
             ),
@@ -1054,8 +1053,8 @@ class _ComposerAction extends StatelessWidget {
           boxShadow: [
             BoxShadow(
               color: isDark 
-                ? Colors.black.withOpacity(0.2)
-                : Colors.black.withOpacity(0.04),
+                ? Colors.black.withValues(alpha:0.2)
+                : Colors.black.withValues(alpha:0.04),
               blurRadius: 6,
               offset: const Offset(0, 2),
             ),
@@ -1075,11 +1074,11 @@ class _ComposerAction extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: color.withOpacity(0.1),
+                      color: color.withValues(alpha:0.1),
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: color.withOpacity(0.2),
+                          color: color.withValues(alpha:0.2),
                           blurRadius: 4,
                           offset: const Offset(0, 2),
                         ),

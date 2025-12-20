@@ -8,7 +8,6 @@ import '../controllers/discover_controller.dart';
 import '../../data/services/homepage_widgets_api_service.dart';
 import '../../../../core/config/app_config.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-/// Discover content and recommendations page
 class DiscoverPage extends StatefulWidget {
   const DiscoverPage({super.key});
   @override
