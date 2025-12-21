@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -127,7 +128,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
           }
         }
         // عرض رسالة نجاح
-        _showSuccessMessage('انضممت للبث المباشر بنجاح!');
+        _showSuccessMessage('live_join_success'.tr);
       } else {
         setState(() {
           _isStreamEnded = true;
@@ -135,11 +136,11 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
         if (result['error_type'] == 'stream_ended') {
           _showStreamEndedMessage();
         } else {
-          _showJoinFailedMessage(result['message'] ?? 'فشل في الانضمام للبث');
+          _showJoinFailedMessage(result['message'] ?? 'live_join_failed'.tr);
         }
       }
     } catch (e) {
-      _showJoinFailedMessage('خطأ في الاتصال: ${e.toString()}');
+      _showJoinFailedMessage('${'connection_error'.tr}: ${e.toString()}');
     }
   }
   // عرض رسالة نجاح
@@ -162,8 +163,8 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
   // عرض رسالة انتهاء البث
   void _showStreamEndedMessage() {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('انتهى البث المباشر'),
+       SnackBar(
+        content: Text('live_ended'.tr),
         backgroundColor: Colors.red,
         duration: Duration(seconds: 3),
       ),
@@ -173,11 +174,11 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
   void _showJoinFailedMessage(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('فشل في الانضمام للبث: $message'),
+        content: Text('${'live_join_failed_again'.tr}$message'),
         backgroundColor: Colors.orange,
         duration: const Duration(seconds: 5),
         action: SnackBarAction(
-          label: 'إعادة المحاولة',
+          label: 'retry'.tr,
           onPressed: _joinLiveStream,
         ),
       ),
@@ -287,20 +288,20 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Colors.black.withOpacity(0.8),
-            Colors.black.withOpacity(0.6),
+            Colors.black.withValues(alpha: 0.8),
+            Colors.black.withValues(alpha: 0.6),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: Colors.white.withOpacity(0.3),
+          color: Colors.white.withValues(alpha: 0.3),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
+            color: Colors.black.withValues(alpha: 0.3),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -355,7 +356,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
               Text(
                 'مشاهد',
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.8),
+                  color: Colors.white.withValues(alpha: 0.8),
                   fontSize: 12,
                 ),
               ),
@@ -368,7 +369,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
                     valueColor: AlwaysStoppedAnimation(
-                      Colors.white.withOpacity(0.6),
+                      Colors.white.withValues(alpha: 0.6),
                     ),
                   ),
                 ),
@@ -471,7 +472,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
         uid: widget.uid,
       );
       if (!joined) {
-        throw Exception('فشل في الانضمام للقناة - تحقق من معرف القناة والتوكن');
+        throw Exception('channel_join_failed'.tr);
       }
       setState(() {
         _isLoading = false;
@@ -523,7 +524,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
     // إظهار رسالة خطأ للمستخدم
     setState(() {
       _hasError = true;
-      _errorMessage = 'يجب السماح بالوصول للكاميرا والمايكروفون لمشاهدة البث المباشر';
+      _errorMessage = 'camera_mic_required_message'.tr;
     });
     // إظهار حوار تعليمات
     await Future.delayed(Duration(milliseconds: 500));
@@ -540,7 +541,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
           children: [
             Icon(Icons.security, color: Colors.orange),
             SizedBox(width: 8),
-            Text('صلاحيات مطلوبة'),
+            Text('permissions_required_title'.tr),
           ],
         ),
         content: Column(
@@ -548,7 +549,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'لمشاهدة البث المباشر، نحتاج للوصول إلى:',
+              'permissions_required_description'.tr,
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
             SizedBox(height: 12),
@@ -556,7 +557,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
               children: [
                 Icon(Icons.videocam, color: Colors.blue, size: 20),
                 SizedBox(width: 8),
-                Text('الكاميرا - لعرض الفيديو'),
+                Text('camera_permission'.tr),
               ],
             ),
             SizedBox(height: 8),
@@ -564,20 +565,19 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
               children: [
                 Icon(Icons.mic, color: Colors.green, size: 20),
                 SizedBox(width: 8),
-                Text('المايكروفون - للصوت'),
+                Text('microphone_permission'.tr),
               ],
             ),
             SizedBox(height: 16),
             Container(
               padding: EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.orange.withOpacity(0.1),
+                color: Colors.orange.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.orange.withOpacity(0.3)),
+                border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
               ),
               child: Text(
-                '⚠️ يبدو أن الصلاحيات مرفوضة نهائياً. '
-                'يجب تفعيلها يدوياً من إعدادات التطبيق.',
+                'permissions_permanently_denied'.tr,
                 style: TextStyle(
                   fontSize: 13,
                   color: Colors.orange[800],
@@ -592,7 +592,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
               Navigator.of(context).pop();
               Navigator.of(context).pop(); // العودة للصفحة السابقة
             },
-            child: Text('إلغاء'),
+            child: Text('cancel'.tr),
           ),
           ElevatedButton.icon(
             onPressed: () async {
@@ -626,7 +626,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                 SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    'فعّل الكاميرا والمايكروفون ثم ارجع للتطبيق',
+                   'enable_camera_mic_instruction'.tr,
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
@@ -635,7 +635,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
             backgroundColor: Colors.blue,
             duration: Duration(seconds: 5),
             action: SnackBarAction(
-              label: 'حاول مجدداً',
+              label: 'try_again'.tr,
               textColor: Colors.white,
               onPressed: () {
                 // إعادة تهيئة Agora
@@ -677,7 +677,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
               ),
               const SizedBox(height: 16),
               Text(
-                'فشل في الاتصال بالبث',
+                'live_connection_failed'.tr,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -685,7 +685,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
               ),
               const SizedBox(height: 8),
               Text(
-                _errorMessage ?? 'حدث خطأ غير متوقع',
+                _errorMessage ?? 'unexpected_error'.tr,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
@@ -701,7 +701,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                         Navigator.of(context).pop();
                       },
                       icon: const Icon(Iconsax.arrow_left_2),
-                      label: const Text('رجوع'),
+                      label:  Text('back'.tr),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -717,7 +717,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                         _initializeAgora();
                       },
                       icon: const Icon(Iconsax.refresh),
-                      label: const Text('إعادة محاولة'),
+                      label:  Text('retry'.tr),
                     ),
                   ),
                 ],
@@ -743,7 +743,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
               ),
             ),
             child: Container(
-              color: Colors.black.withOpacity(0.5),
+              color: Colors.black.withValues(alpha: 0.5),
             ),
           ),
         // مؤشر التحميل
@@ -762,7 +762,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: Colors.red.withOpacity(0.3),
+                          color: Colors.red.withValues(alpha: 0.3),
                           width: 3,
                         ),
                       ),
@@ -786,11 +786,11 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.7),
+                  color: Colors.black.withValues(alpha: 0.7),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  'الاتصال بالبث المباشر...',
+                  'connecting_live'.tr,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -802,7 +802,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.5),
+                  color: Colors.black.withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
@@ -822,7 +822,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
           left: 16,
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.5),
+              color: Colors.black.withValues(alpha: 0.5),
               shape: BoxShape.circle,
             ),
             child: IconButton(
@@ -890,7 +890,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
               top: 0,
               bottom: 0,
               right: 0,
-              child: Container(
+              child: SizedBox(
                 width: 320,
                 child: (widget.postId ?? widget.liveId) != null 
                   ? LiveStreamBlocProvider(
@@ -942,13 +942,13 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
             Icon(
               Iconsax.video,
               size: 80,
-              color: Colors.white.withOpacity(0.5),
+              color: Colors.white.withValues(alpha: 0.5),
             ),
             const SizedBox(height: 16),
             Text(
-              'انتظار بدء البث...',
+              'waiting_for_live'.tr,
               style: TextStyle(
-                color: Colors.white.withOpacity(0.7),
+                color: Colors.white.withValues(alpha: 0.7),
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
               ),
@@ -957,7 +957,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
             Text(
               widget.broadcasterName,
               style: TextStyle(
-                color: Colors.white.withOpacity(0.5),
+                color: Colors.white.withValues(alpha: 0.5),
                 fontSize: 14,
               ),
             ),
@@ -987,7 +987,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
+                  color: Colors.black.withValues(alpha: 0.3),
                   offset: const Offset(0, 2),
                   blurRadius: 6,
                 ),
@@ -1005,8 +1005,8 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                   ),
                 ),
                 const SizedBox(width: 6),
-                const Text(
-                  'LIVE',
+                 Text(
+                  'live'.tr,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 12,
@@ -1021,7 +1021,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.5),
+              color: Colors.black.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -1034,7 +1034,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  '${_currentViewers}',
+                  '$_currentViewers',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 12,
@@ -1057,7 +1057,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
           end: Alignment.bottomCenter,
           colors: [
             Colors.transparent,
-            Colors.black.withOpacity(0.8),
+            Colors.black.withValues(alpha: 0.8),
           ],
         ),
       ),
@@ -1069,7 +1069,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.5),
+              color: Colors.black.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Row(
@@ -1107,8 +1107,8 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                     color: Colors.red,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Text(
-                    'FOLLOW',
+                  child:  Text(
+                    'FOLLOW'.tr,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 9,
@@ -1131,7 +1131,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                   width: 50,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.8),
+                    color: Colors.red.withValues(alpha: 0.8),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
@@ -1154,7 +1154,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                         width: 45,
                         height: 45,
                         decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.6),
+                          color: Colors.black.withValues(alpha: 0.6),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -1174,7 +1174,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                       width: 45,
                       height: 45,
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.6),
+                        color: Colors.black.withValues(alpha: 0.6),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
@@ -1194,9 +1194,9 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                   width: 50,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: _showChat 
-                        ? Colors.blue.withOpacity(0.8)
-                        : Colors.black.withOpacity(0.6),
+                    color: _showChat
+                        ? Colors.blue.withValues(alpha: 0.8)
+                        : Colors.black.withValues(alpha: 0.6),
                     shape: BoxShape.circle,
                   ),
                   child: Stack(

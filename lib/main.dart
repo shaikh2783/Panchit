@@ -46,7 +46,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
     await ImageGrids(); // تحميل الصور الافتراضية
   final posts = await SharedP.Get('posts');
-  await postsconst(posts);
+  postsconst(posts);
   // Load SharedPreferences
   final sharedPreferences = await SharedPreferences.getInstance();
   // Initialize API Client
@@ -90,6 +90,7 @@ Future<void> _initializeOneSignal(ApiClient apiClient) async {
     _setupNotificationHandlers();
     _oneSignalInitialized = true;
   } catch (e) {
+
   }
 }
 /// Setup notification click and receive handlers
@@ -107,17 +108,17 @@ void _setupNotificationHandlers() {
   });
   // Handle notification opened (clicked)
   // Deduplicate rapid repeated clicks from the same notification
-  String? _lastClickedId;
-  DateTime? _lastClickTime;
+  String? lastClickedId;
+  DateTime? lastClickTime;
   OneSignal.Notifications.addClickListener((event) {
     final now = DateTime.now();
-    if (_lastClickedId == event.notification.notificationId &&
-        _lastClickTime != null &&
-        now.difference(_lastClickTime!).inMilliseconds < 800) {
+    if (lastClickedId == event.notification.notificationId &&
+        lastClickTime != null &&
+        now.difference(lastClickTime!).inMilliseconds < 800) {
       return;
     }
-    _lastClickedId = event.notification.notificationId;
-    _lastClickTime = now;
+    lastClickedId = event.notification.notificationId;
+    lastClickTime = now;
     final additional = event.notification.additionalData;
     final launchUrl = event.notification.launchUrl;
     final data = <String, dynamic>{

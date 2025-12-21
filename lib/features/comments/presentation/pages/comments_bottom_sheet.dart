@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:record/record.dart';
@@ -58,16 +59,20 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
     if (_selectedImage != null) {
       try {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Uploading image...')),
-          );
+          try {
+            ScaffoldMessenger.of(context).showSnackBar(
+               SnackBar(content: Text('Uploading'.tr)),
+            );
+          } catch (e, s) {
+            print(s);
+          }
         }
         final apiService = context.read<CommentsApiService>();
         imagePath = await apiService.uploadImage(_selectedImage!);
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to upload image: $e')),
+            SnackBar(content: Text('${'upload_image_failed'} $e')),
           );
         }
         return;
@@ -78,7 +83,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
       try {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Uploading voice recording...')),
+             SnackBar(content: Text('uploading_voice'.tr)),
           );
         }
         final apiService = context.read<CommentsApiService>();
@@ -86,7 +91,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to upload recording: $e')),
+            SnackBar(content: Text('${'upload_voice_failed'} $e')),
           );
         }
         return;
@@ -159,7 +164,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
           _recordingStartTime = null;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Voice recording saved')),
+           SnackBar(content: Text('voice_saved'.tr)),
         );
       }
     } else {
@@ -185,15 +190,15 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
         } catch (e) {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Failed to start recording: $e')),
+              SnackBar(content: Text('${'start_recording_failed'.tr} $e')),
             );
           }
         }
       } else {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Please grant microphone permission from settings'),
+             SnackBar(
+              content: Text('mic_permission_settings'.tr),
             ),
           );
         }
@@ -299,7 +304,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                 child: Row(
                   children: [
                     Text(
-                      'Comments',
+                      'comments'.tr,
                       style: theme.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -336,14 +341,14 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                 ),
                                 const SizedBox(height: 16),
                                 Text(
-                                  'Error loading comments',
+                                  'load_comments_error'.tr,
                                   style: theme.textTheme.bodyLarge,
                                 ),
                                 const SizedBox(height: 8),
                                 ElevatedButton(
                                   onPressed: () => commentsNotifier
                                       .fetchComments(widget.postId),
-                                  child: const Text('Retry'),
+                                  child:  Text('retry'.tr),
                                 ),
                               ],
                             ),
@@ -361,7 +366,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                     ),
                                     const SizedBox(height: 16),
                                     Text(
-                                      'No comments yet',
+                                      'no_comments'.tr,
                                       style: theme.textTheme.bodyLarge
                                           ?.copyWith(
                                         color: theme.colorScheme.onSurface
@@ -370,7 +375,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      'Be the first to comment',
+                                      'no_comments'.tr,
                                       style: theme.textTheme.bodySmall
                                           ?.copyWith(
                                         color: theme.colorScheme.onSurface
@@ -467,8 +472,8 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                                 ),
                                                 label: Text(
                                                   isExpanded
-                                                      ? 'Hide replies'
-                                                      : 'Show ${comment.repliesCount} ${comment.repliesCount == 1 ? 'reply' : 'replies'}',
+                                                      ? 'hide_replies'.tr
+                                                      : 'Show ${comment.repliesCount} ${comment.repliesCount == 1 ? 'reply'.tr : 'replies'}',
                                                   style: theme
                                                       .textTheme.bodySmall,
                                                 ),
@@ -527,7 +532,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                                                   5,
                                                                   total),
                                                           child: Text(
-                                                            'Show more replies (${total - visible})',
+                                                            '${'show_more_replies'.tr} (${total - visible})',
                                                             style: theme
                                                                 .textTheme
                                                                 .bodySmall,
@@ -577,7 +582,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                'Replying to ${_replyingToComment!.authorName}',
+                                '#${'replying_to'.tr} ${_replyingToComment!.authorName}',
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: theme.colorScheme.primary,
                                 ),
@@ -657,7 +662,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Voice recording',
+                                    'voice_recording'.tr,
                                     style: theme.textTheme.bodyMedium
                                         ?.copyWith(
                                       fontWeight: FontWeight.bold,
@@ -665,7 +670,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                     ),
                                   ),
                                   Text(
-                                    'Ready to send',
+                                    'ready_to_send'.tr,
                                     style: theme.textTheme.bodySmall
                                         ?.copyWith(
                                       color: theme.colorScheme.onSurface
@@ -710,7 +715,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              'Recording... ${_formatDuration(_recordingDuration)}',
+                              '${'recording'.tr} ${_formatDuration(_recordingDuration)}',
                               style: const TextStyle(
                                 color: Colors.red,
                                 fontWeight: FontWeight.bold,
@@ -763,8 +768,8 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                               onSubmitted: (_) => _handleSendComment(),
                               decoration: InputDecoration(
                                 hintText: _replyingToComment != null
-                                    ? 'Write your reply...'
-                                    : 'Write a comment...',
+                                    ? 'write_reply'.tr
+                                    : 'write_comment'.tr,
                                 hintStyle: theme.textTheme.bodyMedium
                                     ?.copyWith(
                                         color: theme.colorScheme.onSurface
@@ -926,7 +931,7 @@ class _CommentTile extends StatelessWidget {
                               const SizedBox(width: 6),
                               Expanded(
                                 child: Text(
-                                  'Voice message',
+                                  'voice_message'.tr,
                                   style: theme.textTheme.bodySmall,
                                 ),
                               ),
@@ -979,7 +984,7 @@ class _CommentTile extends StatelessWidget {
                               Text(
                                 isLiked && comment.iReaction != null
                                     ? _getReactionText(comment.iReaction!)
-                                    : 'Like',
+                                    : 'like'.tr,
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   fontWeight:
                                       isLiked ? FontWeight.w700 : FontWeight.w500,
@@ -998,7 +1003,7 @@ class _CommentTile extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 6, vertical: 2),
                           child: Text(
-                            'Reply',
+                            'reply'.tr,
                             style: theme.textTheme.bodySmall,
                           ),
                         ),
@@ -1063,7 +1068,7 @@ class _CommentTile extends StatelessWidget {
   }
   String _getReactionText(String reaction) {
     final reactionModel = ReactionsService.instance.getReactionByName(reaction);
-    return reactionModel?.title ?? 'Like';
+    return reactionModel?.title ?? 'like'.tr;
   }
   Color? _getReactionColor(String? reaction) {
     if (reaction == null) return Colors.blue;

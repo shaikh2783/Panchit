@@ -301,7 +301,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  ' (${_currentPost.reviewsCountFormatted})${"review".tr}',
+                  ' (${_currentPost.reviewsCountFormatted})${'review'.tr}',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -322,14 +322,14 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'The ratings feature is under development',
+                      'ratings_under_development'.tr,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: Colors.grey[600],
                       ),
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'The ratings display and the ability to add a new rating will be added soon',
+                      'ratings_coming_soon'.tr,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Colors.grey[500],
                       ),
@@ -376,7 +376,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  'Send a Tip',
+                  'send_tip'.tr,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -400,13 +400,13 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Send a tip to ${_currentPost.authorName}',
+                      '${'send_tip_to'.tr} ${_currentPost.authorName}',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     Text(
-                      'Show your appreciation for this content',
+                      'appreciation_message'.tr,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Colors.grey[600],
                       ),
@@ -429,14 +429,14 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'Tip feature coming soon!',
+                      'tip_feature_coming_soon'.tr,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: Colors.grey[600],
                       ),
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'We\'re working on implementing the tipping system to support content creators.',
+                      'tip_feature_description'.tr,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Colors.grey[500],
                       ),
@@ -475,17 +475,11 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(isMarkingAsAdult ? '🔞 Mark as Adult Content?' : 'Remove 18+ Label?'),
+        title: Text(isMarkingAsAdult ? 'mark_as_adult_title'.tr : 'remove_adult_title'.tr),
         content: Text(
           isMarkingAsAdult
-              ? 'This will:\n'
-                '• Add 18+ label to your post\n'
-                '• Apply blur to all photos\n'
-                '• Require age verification to view'
-              : 'This will:\n'
-                '• Remove 18+ label\n'
-                '• Remove blur from photos\n'
-                '• Make content visible to everyone',
+              ? 'mark_as_adult_description'.tr
+              : 'remove_adult_description'.tr,
         ),
         actions: [
           TextButton(
@@ -497,7 +491,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
             style: ElevatedButton.styleFrom(
               backgroundColor: isMarkingAsAdult ? Colors.orange : Colors.blue,
             ),
-            child: Text(isMarkingAsAdult ? 'Mark as 18+' : 'Remove 18+'),
+            child: Text(isMarkingAsAdult ? 'mark_18'.tr : 'remove_18'.tr),
           ),
         ],
       ),
@@ -516,7 +510,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                   child: CircularProgressIndicator(strokeWidth: 2),
                 ),
                 const SizedBox(width: 16),
-                Text(isMarkingAsAdult ? 'Marking as adult content...' : 'Removing 18+ label...'),
+                Text(isMarkingAsAdult ? 'marking_adult'.tr : 'removing_18'.tr),
               ],
             ),
             duration: const Duration(seconds: 2),
@@ -548,8 +542,8 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                   Expanded(
                     child: Text(
                       isMarkingAsAdult
-                          ? '✅ Post marked as 18+ and photos blurred'
-                          : '✅ 18+ label removed',
+                          ? 'adult_mark_success'.tr
+                          : 'adult_remove_success'.tr,
                     ),
                   ),
                 ],
@@ -744,9 +738,9 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
   String _getLiveActionText(Post post) {
     if (post.postType == 'live') {
       if (post.isActiveLive) {
-        return 'is live now';
+        return 'is_live_now'.tr;
       } else {
-        return 'was live';
+        return 'was_live'.tr;
       }
     }
     return '';
@@ -911,7 +905,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'Sponsored',
+                    'sponsored'.tr,
                     style: theme.textTheme.labelMedium?.copyWith(
                       color: theme.colorScheme.primary,
                       fontWeight: FontWeight.w600,
@@ -1295,15 +1289,14 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
           showDialog(
             context: context,
             builder: (dialogContext) => AlertDialog(
-              title: const Text('🔒 اشتراك مطلوب'),
-              content: const Text(
-                'تحتاج إلى الاشتراك في باقة لتتمكن من تعزيز المنشورات.\n'
-                'هل تريد الذهاب إلى صفحة الباقات؟',
+              title:  Text('subscription_required'.tr),
+              content:  Text(
+                'subscription_required_message'.tr,
               ),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(dialogContext),
-                  child: const Text('إلغاء'),
+                  child:  Text('cancel'.tr),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -1318,7 +1311,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFE1306C),
                   ),
-                  child: const Text('عرض الباقات'),
+                  child:  Text('view_packages'.tr),
                 ),
               ],
             ),
@@ -1630,7 +1623,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                                         ),
                                       ),
                                     Text(
-                                      _currentPost.isActiveLive ? 'LIVE' : 'ENDED',
+                                      _currentPost.isActiveLive ? 'live'.tr : 'ended'.tr,
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 8,
@@ -1698,7 +1691,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                               ),
                               const SizedBox(width: 2),
                               Text(
-                                'Promoted',
+                                'promoted'.tr,
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: Colors.orange,
                                   fontWeight: FontWeight.w600,
@@ -1887,7 +1880,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                           type: 'post',
                           id: _currentPost.id,
                           reactionStats: _currentPost.reactionBreakdown.isEmpty 
-                            ? {'like': _currentPost.reactionsCount} 
+                            ? {'like'.tr: _currentPost.reactionsCount}
                             : _currentPost.reactionBreakdown,
                         );
                       },
@@ -1919,7 +1912,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                 const Spacer(),
                 // عرض إحصائيات متقدمة - Reviews يظهر للجميع
                 Text(
-                  '${_currentPost.reviewsCountFormatted} Reviews',
+                  '${_currentPost.reviewsCountFormatted} ${'reviews'.tr}',
                   style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
@@ -1942,7 +1935,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  '${_currentPost.sharesCountFormatted} Shares',
+                  '${_currentPost.sharesCountFormatted} ${'share'.tr}',
                   style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
@@ -1991,7 +1984,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                   // زر Reviews يظهر لجميع المنشورات
                   _SimpleActionButton(
                     icon: Iconsax.star,
-                    label: 'Review',
+                    label: 'review'.tr,
                     onTap: () => _showReviewsBottomSheet(context),
                   ),
                   const SizedBox(width: 8),
@@ -1999,7 +1992,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                   if (_currentPost.tipsEnabled) ...[
                     _SimpleActionButton(
                       icon: Iconsax.dollar_circle,
-                      label: 'Tip',
+                      label: 'tip'.tr,
                       onTap: () => _showTipBottomSheet(context),
                     ),
                     const SizedBox(width: 8),
@@ -2011,8 +2004,8 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                     onTap: () {
                       // TODO: إضافة وظيفة المشاركة
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Share feature coming soon!'),
+                         SnackBar(
+                          content: Text('share_feature_coming_soon'.tr),
                           behavior: SnackBarBehavior.floating,
                         ),
                       );
@@ -2210,7 +2203,7 @@ class _PostActionState extends State<_PostAction> with SingleTickerProviderState
     final reactionModel = postData.myReaction != null
         ? ReactionsService.instance.getReactionByName(postData.myReaction!)
         : null;
-    final String actionLabel = reactionModel?.title ?? 'Like'; // تغيير "أعجبني" إلى "Like" للاتساق
+    final String actionLabel = reactionModel?.title ?? 'like'.tr; // تغيير "أعجبني" إلى "Like" للاتساق
     final Color actionColor = reactionModel?.colorValue ??
         Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.65);
     return AnimatedBuilder(
@@ -2223,9 +2216,9 @@ class _PostActionState extends State<_PostAction> with SingleTickerProviderState
               // إذا كان هناك تفاعل حالياً، قم بإزالته، وإلا أضف like
               final currentReaction = postData.myReaction;
               if (currentReaction != null) {
-                _handleReaction('remove'); // إزالة التفاعل الحالي
+                _handleReaction('remove'.tr); // إزالة التفاعل الحالي
               } else {
-                _handleReaction('like'); // إضافة إعجاب
+                _handleReaction('like'.tr); // إضافة إعجاب
               }
             },
             onLongPress: _showReactionsPicker,
@@ -2961,7 +2954,7 @@ class _LinkWidget extends StatelessWidget {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('فشل في فتح الرابط: ${e.toString()}'),
+          content: Text('${'failed_open_link'.tr}${e.toString()}'),
           backgroundColor: Colors.red,
         ),
       );
@@ -3085,7 +3078,7 @@ class _ArticleWidget extends StatelessWidget {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      blog.categoryName ?? 'Article',
+                      blog.categoryName ?? 'blog_post'.tr,
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.primary,
                         fontWeight: FontWeight.w500,
@@ -3432,7 +3425,7 @@ class _EventWidget extends StatelessWidget {
                           event.iJoined ? Icons.check_circle : Icons.star_outline,
                           size: 18,
                         ),
-                        label: Text(event.iJoined ? 'Joined' : 'interested'.tr),
+                        label: Text(event.iJoined ? 'joined'.tr : 'interested'.tr),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: theme.colorScheme.primary,
                           side: BorderSide(color: theme.colorScheme.primary),
@@ -3612,7 +3605,7 @@ class _FundingWidget extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Goal: \$${_formatMoney(funding.amount)}',
+                        '${'goal'.tr}: \$${_formatMoney(funding.amount)}',
                         style: theme.textTheme.bodyLarge?.copyWith(
                           color: isDark
                               ? Colors.green.shade400
@@ -3634,7 +3627,7 @@ class _FundingWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Raised: \$${_formatMoney(funding.raisedAmount)}',
+                      '${'raised'.tr}: \$${_formatMoney(funding.raisedAmount)}',
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: isDark
@@ -3774,7 +3767,7 @@ class _FundingWidget extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      funding.isGoalReached ? 'Goal Reached!' : 'Donate Now',
+                      funding.isGoalReached ? 'goal_reached'.tr : 'donate_now'.tr,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -3816,7 +3809,7 @@ class _FundingWidget extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      'Thank you to all supporters!',
+                      'thank_you_supporters!'.tr,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: isDark
                             ? Colors.green.shade400
@@ -4147,7 +4140,7 @@ class _OfferWidget extends StatelessWidget {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            'View Offer',
+                            'view_offer'.tr,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -4167,17 +4160,17 @@ class _OfferWidget extends StatelessWidget {
   }
   String _getDiscountText() {
     if (offer.isPercentDiscount && offer.discountPercent != null) {
-      return '${offer.discountPercent}% OFF';
+      return '${offer.discountPercent}% ${'off'.tr}';
     } else if (offer.isAmountDiscount && offer.discountAmount != null) {
-      return '\$${offer.discountAmount!.toStringAsFixed(0)} OFF';
+      return '\$${offer.discountAmount!.toStringAsFixed(0)} ${'off'.tr}';
     } else if (offer.isBuyGetDiscount && offer.buyX != null && offer.getY != null) {
-      return 'Buy ${offer.buyX} Get ${offer.getY}';
+      return '${'buy'.tr} ${offer.buyX} ${'get'.tr} ${offer.getY}';
     } else if (offer.isSpendGetOff && offer.spendX != null && offer.amountY != null) {
-      return 'Spend \$${offer.spendX!.toStringAsFixed(0)} Get \$${offer.amountY!.toStringAsFixed(0)} OFF';
+      return '${'spend'.tr} \$${offer.spendX!.toStringAsFixed(0)} ${'get'.tr} \$${offer.amountY!.toStringAsFixed(0)} ${'off'.tr}';
     } else if (offer.isFreeShipping) {
-      return 'FREE SHIPPING';
+      return 'free_shipping'.tr;
     }
-    return 'Special Offer';
+    return 'special_offer'.tr;
   }
 }
 /// Widget لعرض النص مع خلفية ملونة أو منقوشة
@@ -4431,7 +4424,7 @@ class _LiveWidget extends StatelessWidget {
                           ),
                         ),
                       Text(
-                        live.isActive ? 'LIVE' : 'ENDED',
+                        live.isActive ? 'live'.tr : 'ended'.tr,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 10,
@@ -4487,8 +4480,8 @@ class _LiveWidget extends StatelessWidget {
                     Expanded(
                       child: Text(
                         live.isActive 
-                            ? '$authorName is live now'
-                            : '$authorName was live',
+                            ? '$authorName${'is_live_now'.tr}'
+                            : '$authorName${'was_live'.tr}',
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: live.isActive ? Colors.red : null,
@@ -4507,7 +4500,7 @@ class _LiveWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      'Channel: ${live.agoraChannelName.substring(0, 8)}...',
+                      '${'channel'.tr}: ${live.agoraChannelName.substring(0, 8)}...',
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                         fontFamily: 'monospace',
@@ -4523,7 +4516,7 @@ class _LiveWidget extends StatelessWidget {
                     child: ElevatedButton.icon(
                       onPressed: () => _joinLiveStream(context),
                       icon: const Icon(Iconsax.video_play),
-                      label:  Text('Watch Live'),
+                      label:  Text('watch_live'.tr),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
                         foregroundColor: Colors.white,
@@ -4543,7 +4536,7 @@ class _LiveWidget extends StatelessWidget {
                         live.liveRecorded ? Iconsax.video_play : Iconsax.close_circle,
                       ),
                       label: Text(
-                        live.liveRecorded ? 'Watch Recording' : 'Recording Unavailable',
+                        live.liveRecorded ? 'watch_recording'.tr : 'recording_unavailable'.tr,
                       ),
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 12),
@@ -4561,7 +4554,6 @@ class _LiveWidget extends StatelessWidget {
     );
   }
   void _joinLiveStream(BuildContext context) {
-    // فتح صفحة مشاهدة البث المباشر مع API integration
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -4573,19 +4565,16 @@ class _LiveWidget extends StatelessWidget {
           thumbnailUrl: live.videoThumbnail != null
               ? mediaResolver(live.videoThumbnail!).toString()
               : null,
-          // إضافة postId للتكامل مع API - استخدام postId المُمرر
           postId: postId,
-          // إبقاء liveId للتوافق مع النسخة السابقة
           liveId: live.liveId.toString(),
         ),
       ),
     );
   }
   void _watchRecording(BuildContext context) {
-    // TODO: تنفيذ مشاهدة التسجيل
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Recording playback feature coming soon!'),
+       SnackBar(
+        content: Text('recording_coming_soon'.tr),
         backgroundColor: Colors.blue,
       ),
     );
