@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:snginepro/core/theme/design_tokens.dart';
+import 'package:get/get.dart';
+
 class WalletInlineMessage extends StatelessWidget {
   const WalletInlineMessage({
     super.key,
@@ -8,9 +10,11 @@ class WalletInlineMessage extends StatelessWidget {
     required this.isError,
     this.onRetry,
   });
+
   final String message;
   final bool isError;
   final VoidCallback? onRetry;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -20,6 +24,7 @@ class WalletInlineMessage extends StatelessWidget {
     final foreground = isError
         ? theme.colorScheme.error
         : theme.colorScheme.onSurfaceVariant;
+
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: Spacing.md,
@@ -44,12 +49,13 @@ class WalletInlineMessage extends StatelessWidget {
             ),
           ),
           if (onRetry != null)
-            TextButton(onPressed: onRetry, child: const Text('Retry')),
+            TextButton(onPressed: onRetry, child: Text('retry_button'.tr)),
         ],
       ),
     );
   }
 }
+
 class WalletErrorView extends StatelessWidget {
   const WalletErrorView({
     super.key,
@@ -57,9 +63,11 @@ class WalletErrorView extends StatelessWidget {
     required this.errorDetails,
     required this.onRetry,
   });
+
   final String message;
   final String errorDetails;
   final VoidCallback onRetry;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -82,21 +90,24 @@ class WalletErrorView extends StatelessWidget {
         const SizedBox(height: Spacing.sm),
         FilledButton.icon(
           icon: const Icon(Iconsax.refresh, size: 18),
-          label: const Text('Retry'),
+          label: Text('retry_button'.tr),
           onPressed: onRetry,
         ),
       ],
     );
   }
 }
+
 class WalletEmptyState extends StatelessWidget {
   const WalletEmptyState({
     super.key,
     required this.icon,
     required this.message,
   });
+
   final IconData icon;
   final String message;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -112,8 +123,10 @@ class WalletEmptyState extends StatelessWidget {
     );
   }
 }
+
 class WalletLoadMoreIndicator extends StatelessWidget {
   const WalletLoadMoreIndicator({super.key});
+
   @override
   Widget build(BuildContext context) {
     return const Padding(
@@ -122,6 +135,7 @@ class WalletLoadMoreIndicator extends StatelessWidget {
     );
   }
 }
+
 class WalletActionButton extends StatelessWidget {
   const WalletActionButton({
     super.key,
@@ -129,9 +143,11 @@ class WalletActionButton extends StatelessWidget {
     required this.label,
     required this.onTap,
   });
+
   final IconData icon;
   final String label;
   final VoidCallback onTap;
+
   @override
   Widget build(BuildContext context) {
     return FilledButton.tonalIcon(
@@ -141,10 +157,13 @@ class WalletActionButton extends StatelessWidget {
     );
   }
 }
+
 class WalletStatusBadge extends StatelessWidget {
   const WalletStatusBadge({super.key, required this.text, required this.color});
+
   final String text;
   final Color color;
+
   @override
   Widget build(BuildContext context) {
     return Container(

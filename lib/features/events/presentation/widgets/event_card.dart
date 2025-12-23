@@ -4,18 +4,22 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:snginepro/features/events/data/models/event.dart';
 import 'package:intl/intl.dart';
+
 class EventCard extends StatelessWidget {
   final Event event;
   final VoidCallback? onTap;
+
   const EventCard({
     super.key,
     required this.event,
     this.onTap,
   });
+
   @override
   Widget build(BuildContext context) {
     final isDark = Get.isDarkMode;
     final theme = Get.theme;
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       elevation: isDark ? 2 : 1,
@@ -56,6 +60,7 @@ class EventCard extends StatelessWidget {
                   ),
                 ),
               ),
+
             // Event Details
             Padding(
               padding: const EdgeInsets.all(16),
@@ -72,6 +77,7 @@ class EventCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 12),
+
                   // Date & Time
                   Row(
                     children: [
@@ -92,6 +98,7 @@ class EventCard extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 8),
+
                   // Location
                   if (event.eventLocation != null && event.eventLocation!.isNotEmpty)
                     Row(
@@ -115,6 +122,7 @@ class EventCard extends StatelessWidget {
                       ],
                     ),
                   const SizedBox(height: 12),
+
                   // Organizer Info
                   Row(
                     children: [
@@ -131,6 +139,7 @@ class EventCard extends StatelessWidget {
                             : null,
                       ),
                       const SizedBox(width: 8),
+
                       // Organizer Name
                       Expanded(
                         child: Column(
@@ -165,6 +174,7 @@ class EventCard extends StatelessWidget {
                           ],
                         ),
                       ),
+
                       // Members Count
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -205,6 +215,7 @@ class EventCard extends StatelessWidget {
       ),
     );
   }
+
   String _formatEventDate(DateTime startDate, DateTime endDate) {
     try {
       if (startDate.year == endDate.year &&

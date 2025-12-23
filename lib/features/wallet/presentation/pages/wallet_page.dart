@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
+
 import 'package:snginepro/core/theme/design_tokens.dart';
 import 'package:snginepro/features/wallet/application/bloc/wallet_action_cubit.dart';
 import 'package:snginepro/features/wallet/application/bloc/wallet_overview_bloc.dart';
@@ -19,11 +21,14 @@ import 'package:snginepro/features/wallet/presentation/widgets/wallet_action_she
 import 'package:snginepro/features/wallet/presentation/widgets/wallet_shared_widgets.dart';
 import 'package:snginepro/features/wallet/presentation/widgets/wallet_summary_section.dart';
 import 'package:snginepro/features/wallet/presentation/widgets/wallet_tabs.dart';
+
 class WalletPage extends StatelessWidget {
   const WalletPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final repository = Provider.of<WalletRepository>(context, listen: false);
+
     return MultiBlocProvider(
       providers: [
         BlocProvider<WalletOverviewBloc>(
@@ -47,14 +52,18 @@ class WalletPage extends StatelessWidget {
     );
   }
 }
+
 class _WalletView extends StatefulWidget {
   const _WalletView();
+
   @override
   State<_WalletView> createState() => _WalletViewState();
 }
+
 class _WalletViewState extends State<_WalletView> {
   late final ScrollController _transactionsController;
   late final ScrollController _paymentsController;
+
   @override
   void initState() {
     super.initState();
@@ -62,6 +71,7 @@ class _WalletViewState extends State<_WalletView> {
       ..addListener(_onTransactionsScroll);
     _paymentsController = ScrollController()..addListener(_onPaymentsScroll);
   }
+
   @override
   void dispose() {
     _transactionsController
@@ -72,6 +82,7 @@ class _WalletViewState extends State<_WalletView> {
       ..dispose();
     super.dispose();
   }
+
   void _onTransactionsScroll() {
     if (!_transactionsController.hasClients) return;
     if (_transactionsController.position.extentAfter < 240) {
@@ -80,12 +91,14 @@ class _WalletViewState extends State<_WalletView> {
       );
     }
   }
+
   void _onPaymentsScroll() {
     if (!_paymentsController.hasClients) return;
     if (_paymentsController.position.extentAfter < 240) {
       context.read<WalletPaymentsBloc>().add(const LoadMoreWalletPayments());
     }
   }
+
   void _handleRefreshTap() {
     HapticFeedback.lightImpact();
     _refreshOverview();
@@ -94,9 +107,11 @@ class _WalletViewState extends State<_WalletView> {
     );
     context.read<WalletPaymentsBloc>().add(const RefreshWalletPayments());
   }
+
   void _refreshOverview() {
     context.read<WalletOverviewBloc>().add(const RefreshWalletOverview());
   }
+
   Future<void> _refreshTransactions() async {
     _refreshOverview();
     context.read<WalletTransactionsBloc>().add(
@@ -104,10 +119,12 @@ class _WalletViewState extends State<_WalletView> {
     );
     await Future<void>.delayed(const Duration(milliseconds: 400));
   }
+
   Future<void> _refreshPayments() async {
     context.read<WalletPaymentsBloc>().add(const RefreshWalletPayments());
     await Future<void>.delayed(const Duration(milliseconds: 400));
   }
+
   Future<void> _openActionSheet(
     WalletSummary summary,
     WalletActionType action,
@@ -123,15 +140,17 @@ class _WalletViewState extends State<_WalletView> {
         );
       },
     );
+
     if (!mounted || result == null) {
       return;
     }
+
     if (result.success) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
             result.message.isEmpty
-                ? 'Wallet updated successfully'
+                ? 'operation_successful'.tr
                 : result.message,
           ),
         ),
@@ -150,16 +169,17 @@ class _WalletViewState extends State<_WalletView> {
       );
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Wallet'),
+          title: Text('wallet_page_title'.tr),
           actions: [
             IconButton(
-              tooltip: 'Refresh',
+              tooltip: 'refresh'.tr,
               icon: const Icon(Iconsax.refresh),
               onPressed: _handleRefreshTap,
             ),
@@ -176,20 +196,23 @@ class _WalletViewState extends State<_WalletView> {
                     child: WalletSummarySkeleton(),
                   );
                 }
+
                 if (state.errorMessage != null && state.summary == null) {
                   return Padding(
                     padding: const EdgeInsets.all(Spacing.lg),
                     child: WalletErrorView(
-                      message: 'Unable to load wallet overview',
+                      message: 'failed_to_load'.tr,
                       errorDetails: state.errorMessage!,
                       onRetry: _refreshOverview,
                     ),
                   );
                 }
+
                 final summary = state.summary;
                 if (summary == null) {
                   return const SizedBox.shrink();
                 }
+
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(
                     Spacing.lg,
@@ -208,11 +231,11 @@ class _WalletViewState extends State<_WalletView> {
               },
             ),
             const Divider(height: 1),
-            const TabBar(
-              labelPadding: EdgeInsets.symmetric(vertical: Spacing.sm),
+            TabBar(
+              labelPadding: const EdgeInsets.symmetric(vertical: Spacing.sm),
               tabs: [
-                Tab(text: 'Transactions'),
-                Tab(text: 'Payments'),
+                Tab(text: 'transactions'.tr),
+                Tab(text: 'payments'.tr),
               ],
             ),
             const Divider(height: 1),

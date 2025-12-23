@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:snginepro/features/feed/data/models/post_audio.dart';
 import 'package:snginepro/features/feed/presentation/widgets/post_audio_widget.dart';
+
 /// مثال لاختبار PostAudioWidget
 void main() {
   runApp(const AudioTestApp());
 }
+
 class AudioTestApp extends StatelessWidget {
   const AudioTestApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -17,8 +20,10 @@ class AudioTestApp extends StatelessWidget {
     );
   }
 }
+
 class AudioTestPage extends StatelessWidget {
   const AudioTestPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     // بيانات وهمية للاختبار
@@ -32,6 +37,7 @@ class AudioTestPage extends StatelessWidget {
       size: 2500000, // 2.5 MB
       fileExtension: 'mp3',
     );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Audio Widget Test'),
@@ -45,18 +51,21 @@ class AudioTestPage extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
+            
             // اختبار الـ Widget الأساسي
             PostAudioWidget(
               audio: testAudio,
-              authorName: 'Panchit',
+              authorName: 'Ameen Hamed',
               mediaResolver: (String path) {
-                return Uri.parse('https://www.panchit.com/content/uploads/$path');
+                return Uri.parse('https://sngine.fluttercrafters.com/content/uploads/$path');
               },
               showWaveform: true,
               showProgress: true,
               autoPlay: false,
             ),
+            
             const SizedBox(height: 30),
+            
             // اختبار بدون waveform
             const Text(
               'Without Waveform',
@@ -70,13 +79,15 @@ class AudioTestPage extends StatelessWidget {
               ),
               authorName: 'Test User',
               mediaResolver: (String path) {
-                return Uri.parse('https://www.panchit.com/content/uploads/$path');
+                return Uri.parse('https://sngine.fluttercrafters.com/content/uploads/$path');
               },
               showWaveform: false,
               showProgress: true,
               autoPlay: false,
             ),
+            
             const SizedBox(height: 30),
+            
             // اختبار بصيغة مختلفة
             const Text(
               'Different Format (M4A)',
@@ -92,12 +103,13 @@ class AudioTestPage extends StatelessWidget {
               ),
               authorName: 'Another User',
               mediaResolver: (String path) {
-                return Uri.parse('https://www.panchit.com/content/uploads/$path');
+                return Uri.parse('https://sngine.fluttercrafters.com/content/uploads/$path');
               },
               showWaveform: true,
               showProgress: true,
               autoPlay: false,
             ),
+            
             const SizedBox(height: 50),
           ],
         ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/models/reaction_model.dart';
 import '../../../../core/services/reactions_service.dart';
+
 /// قائمة التفاعلات المتعددة (مثل فيسبوك)
 /// تعرض التفاعلات المحملة من الكاش
 class ReactionsMenu extends StatelessWidget {
@@ -9,11 +10,14 @@ class ReactionsMenu extends StatelessWidget {
     super.key,
     required this.onReact,
   });
+
   final Function(String reactionName) onReact;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final reactions = ReactionsService.instance.getReactions();
+
     return Container(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
@@ -43,17 +47,21 @@ class ReactionsMenu extends StatelessWidget {
     );
   }
 }
+
 /// زر تفاعل واحد
 class _ReactionButton extends StatelessWidget {
   const _ReactionButton({
     required this.reaction,
     required this.onTap,
   });
+
   final ReactionModel reaction;
   final VoidCallback onTap;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(20),

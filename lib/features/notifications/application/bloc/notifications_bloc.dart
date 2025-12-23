@@ -3,31 +3,47 @@ import 'package:snginepro/core/bloc/base_bloc.dart';
 import 'package:snginepro/core/network/api_exception.dart';
 import 'package:snginepro/features/notifications/data/models/notification.dart';
 import 'package:snginepro/features/notifications/domain/notifications_repository.dart';
+
 // Events
 abstract class NotificationsEvent extends BaseEvent {}
+
 class LoadNotificationsEvent extends NotificationsEvent {}
+
 class LoadMoreNotificationsEvent extends NotificationsEvent {}
+
 class RefreshNotificationsEvent extends NotificationsEvent {}
+
 class MarkNotificationAsReadEvent extends NotificationsEvent {
   final String notificationId;
+
   MarkNotificationAsReadEvent(this.notificationId);
+
   @override
   List<Object?> get props => [notificationId];
 }
+
 class MarkAllNotificationsAsReadEvent extends NotificationsEvent {}
+
 class ClearAllNotificationsEvent extends NotificationsEvent {}
+
 class DeleteNotificationEvent extends NotificationsEvent {
   final String notificationId;
+
   DeleteNotificationEvent(this.notificationId);
+
   @override
   List<Object?> get props => [notificationId];
 }
+
 class UpdateNotificationSettingsEvent extends NotificationsEvent {
   final Map<String, bool> settings;
+
   UpdateNotificationSettingsEvent(this.settings);
+
   @override
   List<Object?> get props => [settings];
 }
+
 // States
 abstract class NotificationsState extends BaseState {
   const NotificationsState({
@@ -39,11 +55,13 @@ abstract class NotificationsState extends BaseState {
     this.isLoadingMore = false,
     this.currentOffset = 0,
   });
+
   final List<NotificationModel> notifications;
   final int unreadCount;
   final bool hasMore;
   final bool isLoadingMore;
   final int currentOffset;
+
   @override
   List<Object?> get props => [
         ...super.props,
@@ -54,9 +72,11 @@ abstract class NotificationsState extends BaseState {
         currentOffset,
       ];
 }
+
 class NotificationsInitial extends NotificationsState {
   const NotificationsInitial();
 }
+
 class NotificationsLoading extends NotificationsState {
   const NotificationsLoading({
     super.notifications,
@@ -65,6 +85,7 @@ class NotificationsLoading extends NotificationsState {
     super.currentOffset,
   }) : super(isLoading: true);
 }
+
 class NotificationsLoadingMore extends NotificationsState {
   const NotificationsLoadingMore({
     required super.notifications,
@@ -73,6 +94,7 @@ class NotificationsLoadingMore extends NotificationsState {
     required super.currentOffset,
   }) : super(isLoadingMore: true);
 }
+
 class NotificationsLoaded extends NotificationsState {
   const NotificationsLoaded({
     required super.notifications,
@@ -81,6 +103,7 @@ class NotificationsLoaded extends NotificationsState {
     required super.currentOffset,
   });
 }
+
 class NotificationsError extends NotificationsState {
   const NotificationsError(
     String message, {
@@ -90,8 +113,10 @@ class NotificationsError extends NotificationsState {
     super.currentOffset,
   }) : super(errorMessage: message);
 }
+
 class NotificationMarkedAsRead extends NotificationsState {
   final String notificationId;
+
   const NotificationMarkedAsRead({
     required this.notificationId,
     required super.notifications,
@@ -99,9 +124,11 @@ class NotificationMarkedAsRead extends NotificationsState {
     required super.hasMore,
     required super.currentOffset,
   });
+
   @override
   List<Object?> get props => [...super.props, notificationId];
 }
+
 class AllNotificationsMarkedAsRead extends NotificationsState {
   const AllNotificationsMarkedAsRead({
     required super.notifications,
@@ -109,8 +136,10 @@ class AllNotificationsMarkedAsRead extends NotificationsState {
     required super.currentOffset,
   }) : super(unreadCount: 0);
 }
+
 class NotificationDeleted extends NotificationsState {
   final String notificationId;
+
   const NotificationDeleted({
     required this.notificationId,
     required super.notifications,
@@ -118,12 +147,15 @@ class NotificationDeleted extends NotificationsState {
     required super.hasMore,
     required super.currentOffset,
   });
+
   @override
   List<Object?> get props => [...super.props, notificationId];
 }
+
 class NotificationsCleared extends NotificationsState {
   const NotificationsCleared() : super(unreadCount: 0);
 }
+
 // Bloc
 class NotificationsBloc extends BaseBloc<NotificationsEvent, NotificationsState> {
   NotificationsBloc(this._repository) : super(const NotificationsInitial()) {
@@ -136,8 +168,10 @@ class NotificationsBloc extends BaseBloc<NotificationsEvent, NotificationsState>
     on<DeleteNotificationEvent>(_onDeleteNotification);
     on<UpdateNotificationSettingsEvent>(_onUpdateNotificationSettings);
   }
+
   final NotificationsRepository _repository;
   static const int _limit = 20;
+
   Future<void> _onLoadNotifications(
     LoadNotificationsEvent event,
     Emitter<NotificationsState> emit,
@@ -148,11 +182,13 @@ class NotificationsBloc extends BaseBloc<NotificationsEvent, NotificationsState>
       hasMore: state.hasMore,
       currentOffset: state.currentOffset,
     ));
+
     try {
       final response = await _repository.getNotifications(
         offset: 0,
         limit: _limit,
       );
+
       emit(NotificationsLoaded(
         notifications: response.data.notifications,
         unreadCount: response.data.unreadCount,
@@ -177,22 +213,26 @@ class NotificationsBloc extends BaseBloc<NotificationsEvent, NotificationsState>
       ));
     }
   }
+
   Future<void> _onLoadMoreNotifications(
     LoadMoreNotificationsEvent event,
     Emitter<NotificationsState> emit,
   ) async {
     if (state.isLoadingMore || !state.hasMore) return;
+
     emit(NotificationsLoadingMore(
       notifications: state.notifications,
       unreadCount: state.unreadCount,
       hasMore: state.hasMore,
       currentOffset: state.currentOffset,
     ));
+
     try {
       final response = await _repository.getNotifications(
         offset: state.currentOffset,
         limit: _limit,
       );
+
       emit(NotificationsLoaded(
         notifications: [...state.notifications, ...response.data.notifications],
         unreadCount: response.data.unreadCount,
@@ -209,6 +249,7 @@ class NotificationsBloc extends BaseBloc<NotificationsEvent, NotificationsState>
       ));
     }
   }
+
   Future<void> _onRefreshNotifications(
     RefreshNotificationsEvent event,
     Emitter<NotificationsState> emit,
@@ -218,6 +259,7 @@ class NotificationsBloc extends BaseBloc<NotificationsEvent, NotificationsState>
         offset: 0,
         limit: _limit,
       );
+
       emit(NotificationsLoaded(
         notifications: response.data.notifications,
         unreadCount: response.data.unreadCount,
@@ -234,12 +276,14 @@ class NotificationsBloc extends BaseBloc<NotificationsEvent, NotificationsState>
       ));
     }
   }
+
   Future<void> _onMarkNotificationAsRead(
     MarkNotificationAsReadEvent event,
     Emitter<NotificationsState> emit,
   ) async {
     try {
       await _repository.markNotificationRead(int.parse(event.notificationId));
+
       // Update the notification in the list
       final updatedNotifications = state.notifications.map((notification) {
         if (notification.notificationId.toString() == event.notificationId) {
@@ -247,10 +291,12 @@ class NotificationsBloc extends BaseBloc<NotificationsEvent, NotificationsState>
         }
         return notification;
       }).toList();
+
       // Calculate new unread count
       final newUnreadCount = updatedNotifications
           .where((notification) => !notification.seen)
           .length;
+
       emit(NotificationMarkedAsRead(
         notificationId: event.notificationId,
         notifications: updatedNotifications,
@@ -268,16 +314,19 @@ class NotificationsBloc extends BaseBloc<NotificationsEvent, NotificationsState>
       ));
     }
   }
+
   Future<void> _onMarkAllNotificationsAsRead(
     MarkAllNotificationsAsReadEvent event,
     Emitter<NotificationsState> emit,
   ) async {
     try {
       await _repository.markAllNotificationsRead();
+
       // Mark all notifications as read
       final updatedNotifications = state.notifications
           .map((notification) => notification.copyWith(seen: true))
           .toList();
+
       emit(AllNotificationsMarkedAsRead(
         notifications: updatedNotifications,
         hasMore: state.hasMore,
@@ -293,6 +342,7 @@ class NotificationsBloc extends BaseBloc<NotificationsEvent, NotificationsState>
       ));
     }
   }
+
   Future<void> _onClearAllNotifications(
     ClearAllNotificationsEvent event,
     Emitter<NotificationsState> emit,
@@ -305,6 +355,7 @@ class NotificationsBloc extends BaseBloc<NotificationsEvent, NotificationsState>
       currentOffset: 0,
     ));
   }
+
   Future<void> _onDeleteNotification(
     DeleteNotificationEvent event,
     Emitter<NotificationsState> emit,
@@ -313,10 +364,12 @@ class NotificationsBloc extends BaseBloc<NotificationsEvent, NotificationsState>
     final updatedNotifications = state.notifications
         .where((notification) => notification.notificationId.toString() != event.notificationId)
         .toList();
+
     // Calculate new unread count
     final newUnreadCount = updatedNotifications
         .where((notification) => !notification.seen)
         .length;
+
     emit(NotificationDeleted(
       notificationId: event.notificationId,
       notifications: updatedNotifications,
@@ -325,6 +378,7 @@ class NotificationsBloc extends BaseBloc<NotificationsEvent, NotificationsState>
       currentOffset: state.currentOffset - 1,
     ));
   }
+
   Future<void> _onUpdateNotificationSettings(
     UpdateNotificationSettingsEvent event,
     Emitter<NotificationsState> emit,

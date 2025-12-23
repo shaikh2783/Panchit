@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+
 import 'package:snginepro/core/config/app_config.dart';
 import 'package:snginepro/core/theme/app_colors.dart';
 import 'package:snginepro/features/feed/data/models/post.dart';
@@ -18,51 +21,64 @@ import 'package:snginepro/features/pages/presentation/pages/page_admins_page.dar
 import 'package:snginepro/features/pages/presentation/pages/page_verification_request_page.dart';
 import 'package:snginepro/features/pages/presentation/pages/page_update_pictures_page.dart';
 import 'package:snginepro/features/agora/presentation/pages/professional_live_stream_wrapper.dart';
+
 class PageProfilePage extends StatefulWidget {
   // Constructor للاستخدام مع PageModel كامل (الاستخدام الحالي)
   const PageProfilePage({super.key, required this.page}) : pageId = null;
+
   // Constructor للاستخدام مع pageId فقط (للإشعارات وما شابه)
   const PageProfilePage.fromId({super.key, required int pageId})
     : page = null,
       pageId = pageId;
+
   final PageModel? page;
   final int? pageId;
+
   @override
   State<PageProfilePage> createState() => _PageProfilePageState();
 }
+
 class _PageProfilePageState extends State<PageProfilePage>
     with SingleTickerProviderStateMixin {
   // Page info
   PageModel? _currentPage; // تغيير إلى nullable
   bool _isLoadingPageInfo = false;
+
   // Tabs
   late TabController _tabController;
   static const int _idxTimeline = 0;
+
   @override
   void initState() {
     super.initState();
+
     // إذا تم تمرير PageModel كامل، استخدمه
     if (widget.page != null) {
       _currentPage = widget.page;
     }
     // وإلا، سيكون null وسنجلب البيانات من pageId
+
     _tabController = TabController(length: 6, vsync: this);
+
     _loadPageInfo();
     if (_currentPage != null) {
       _loadInitialPosts();
     }
   }
+
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
   }
+
   // ---------- Data ----------
   Future<void> _loadPageInfo() async {
     if (_isLoadingPageInfo) return;
     setState(() => _isLoadingPageInfo = true);
     try {
       final repo = context.read<PagesRepository>();
+
       // تحديد pageId بناءً على المصدر
       int pageId;
       if (widget.page != null) {
@@ -72,17 +88,20 @@ class _PageProfilePageState extends State<PageProfilePage>
       } else {
         throw Exception('لا يوجد page أو pageId');
       }
+
       final updated = await repo.fetchPageInfo(pageId: pageId);
       setState(() {
         _currentPage = updated;
         _isLoadingPageInfo = false;
       });
+
       // جلب المنشورات بعد تحميل بيانات الصفحة
       _loadInitialPosts();
     } catch (e) {
       setState(() => _isLoadingPageInfo = false);
     }
   }
+
   Future<void> _loadInitialPosts() async {
     if (_currentPage == null)
       return; // لا نستطيع تحميل المنشورات بدون بيانات الصفحة
@@ -90,14 +109,17 @@ class _PageProfilePageState extends State<PageProfilePage>
       LoadPagePostsEvent(_currentPage!.id.toString()),
     );
   }
+
   Future<void> _onRefresh() async {
     await Future.wait([
       _loadPageInfo(),
       // _loadInitialPosts() سيتم استدعاؤها تلقائياً من _loadPageInfo()
     ]);
   }
+
   void _openCreatePost() {
     if (_currentPage == null) return;
+
     Navigator.of(context)
         .push(
           MaterialPageRoute(
@@ -113,20 +135,25 @@ class _PageProfilePageState extends State<PageProfilePage>
           _loadInitialPosts();
         });
   }
+
   void _handleReactionChanged(String postId, String reaction) async {
     // تحديث التفاعل في PagePostsBloc
     context.read<PagePostsBloc>().add(
       ReactToPostInPageEvent(int.parse(postId), reaction),
     );
+
     // تحديث التفاعل في PostsBloc العام إذا كان موجوداً
     context.read<PostsBloc>().add(
       ReactToPostEvent(int.parse(postId), reaction),
     );
   }
+
   Future<void> _toggleLikePage() async {
     if (_currentPage == null) return;
+
     final currentLikeStatus = _currentPage!.iLike;
     final pageId = _currentPage!.id;
+
     // تحديث UI فوراً
     setState(() {
       _currentPage = PageModel(
@@ -161,6 +188,7 @@ class _PageProfilePageState extends State<PageProfilePage>
         vkontakte: _currentPage!.vkontakte,
       );
     });
+
     try {
       final repo = context.read<PagesRepository>();
       await repo.toggleLikePage(pageId, currentLikeStatus);
@@ -208,15 +236,18 @@ class _PageProfilePageState extends State<PageProfilePage>
       );
     }
   }
+
   // ---------- Build ----------
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final mediaAsset = context.read<AppConfig>().mediaAsset;
+
     // إذا لم يتم تحميل بيانات الصفحة بعد، أظهر loading
     if (_currentPage == null) {
       return Scaffold(body: const Center(child: CircularProgressIndicator()));
     }
+
     return Scaffold(
       floatingActionButton:
           _currentPage!.iAdmin && _tabController.index == _idxTimeline
@@ -249,7 +280,7 @@ class _PageProfilePageState extends State<PageProfilePage>
                 if (_currentPage!.iAdmin)
                   IconButton(
                     icon: const Icon(Iconsax.camera),
-                    tooltip: 'Update Pictures',
+                    tooltip: 'page_update_pictures_title'.tr,
                     onPressed: () async {
                       final result = await Navigator.push(
                         context,
@@ -268,7 +299,7 @@ class _PageProfilePageState extends State<PageProfilePage>
                 if (_currentPage!.iAdmin)
                   IconButton(
                     icon: const Icon(Iconsax.setting_2),
-                    tooltip: 'Page Settings',
+                    tooltip: 'page_settings'.tr,
                     onPressed: () async {
                       final result = await Navigator.push(
                         context,
@@ -323,9 +354,9 @@ class _PageProfilePageState extends State<PageProfilePage>
                               ),
                             ),
                             const SizedBox(width: 6),
-                            const Text(
-                              'بث مباشر',
-                              style: TextStyle(
+                            Text(
+                              'live_stream'.tr,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
@@ -413,6 +444,7 @@ class _PageProfilePageState extends State<PageProfilePage>
                   final error = state is PagePostsErrorState
                       ? state.message
                       : null;
+
                   return NotificationListener<ScrollNotification>(
                     onNotification: (ScrollNotification scrollInfo) {
                       // تحقق من الوصول لنهاية القائمة
@@ -421,6 +453,7 @@ class _PageProfilePageState extends State<PageProfilePage>
                         final remaining =
                             scrollInfo.metrics.maxScrollExtent -
                             scrollInfo.metrics.pixels;
+
                         if (hasMore && !isLoadingMore) {
                           context.read<PagePostsBloc>().add(
                             LoadMorePagePostsEvent(),
@@ -480,8 +513,10 @@ class _PageProfilePageState extends State<PageProfilePage>
       ),
     );
   }
+
   void _navigateToLiveStream(BuildContext context) {
     if (_currentPage == null) return;
+
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => ProfessionalLiveStreamWrapper(
@@ -493,6 +528,7 @@ class _PageProfilePageState extends State<PageProfilePage>
     );
   }
 }
+
 // ===================== Header with Stats =====================
 class _HeaderWithStats extends StatelessWidget {
   const _HeaderWithStats({
@@ -507,11 +543,13 @@ class _HeaderWithStats extends StatelessWidget {
   final VoidCallback onCreatePost;
   final VoidCallback onLikePressed;
   final int postsCount;
+
   String _fmt(int n) {
     if (n >= 1000000) return '${(n / 1000000).toStringAsFixed(1)}M';
     if (n >= 1000) return '${(n / 1000).toStringAsFixed(1)}K';
     return '$n';
   }
+
   @override
   Widget build(BuildContext context) {
     final hasCover = page.cover.isNotEmpty;
@@ -540,6 +578,7 @@ class _HeaderWithStats extends StatelessWidget {
                         ),
                       ),
                     ),
+
               // top gradient
               Container(
                 decoration: BoxDecoration(
@@ -555,6 +594,7 @@ class _HeaderWithStats extends StatelessWidget {
                   ),
                 ),
               ),
+
               // page avatar + name + badges
               Positioned(
                 left: 16,
@@ -660,6 +700,7 @@ class _HeaderWithStats extends StatelessWidget {
             ],
           ),
         ),
+
         // Stats Section
         Container(
           color: Theme.of(context).cardColor,
@@ -671,18 +712,19 @@ class _HeaderWithStats extends StatelessWidget {
                 children: [
                   _Stat(
                     icon: Iconsax.like_1,
-                    label: 'Likes',
+                    label: 'likes_label'.tr,
                     value: _fmt(page.likes),
                   ),
                   const _VSeparator(),
                   _Stat(
                     icon: Iconsax.document,
-                    label: 'Posts',
+                    label: 'posts_label'.tr,
                     value: _fmt(postsCount),
                   ),
                   const Spacer(),
                 ],
               ),
+              
               // Buttons Row (if any)
               if ((page.actionText.isNotEmpty && page.actionUrl.isNotEmpty) || !page.iAdmin) ...[
                 const SizedBox(height: 12),
@@ -746,16 +788,18 @@ class _HeaderWithStats extends StatelessWidget {
                           ),
                         ),
                       ),
+                    
                     // Spacing between buttons
                     if ((page.actionText.isNotEmpty && page.actionUrl.isNotEmpty) && !page.iAdmin)
                       const SizedBox(width: 12),
+                    
                     // Like Button (only for non-admins)
                     if (!page.iAdmin)
                       Expanded(
                         child: FilledButton.icon(
                           onPressed: onLikePressed,
                           icon: Icon(page.iLike ? Iconsax.heart_add : Iconsax.heart),
-                          label: Text(page.iLike ? 'Liked' : 'Like'),
+                          label: Text(page.iLike ? 'page_liked_button'.tr : 'page_like_button'.tr),
                         ),
                       ),
                   ],
@@ -767,6 +811,7 @@ class _HeaderWithStats extends StatelessWidget {
       ],
     );
   }
+
   Color _getActionButtonColor(String colorName) {
     switch (colorName.toLowerCase()) {
       case 'success':
@@ -783,6 +828,7 @@ class _HeaderWithStats extends StatelessWidget {
         return AppColors.primary;
     }
   }
+
   LinearGradient _getActionButtonGradient(String colorName) {
     final color = _getActionButtonColor(colorName);
     return LinearGradient(
@@ -792,10 +838,12 @@ class _HeaderWithStats extends StatelessWidget {
     );
   }
 }
+
 // ===================== Tabs Header Delegate =====================
 class _TabsHeaderDelegate extends SliverPersistentHeaderDelegate {
   const _TabsHeaderDelegate({required this.tabController});
   final TabController tabController;
+
   @override
   Widget build(
     BuildContext context,
@@ -809,30 +857,35 @@ class _TabsHeaderDelegate extends SliverPersistentHeaderDelegate {
         controller: tabController,
         isScrollable: true,
         labelPadding: const EdgeInsets.symmetric(horizontal: 16),
-        tabs: const [
-          Tab(icon: Icon(Iconsax.activity), text: 'Timeline'),
-          Tab(icon: Icon(Iconsax.info_circle), text: 'About'),
-          Tab(icon: Icon(Iconsax.image), text: 'Photos'),
-          Tab(icon: Icon(Iconsax.video), text: 'Videos'),
-          Tab(icon: Icon(Iconsax.star), text: 'Reviews'),
-          Tab(icon: Icon(Iconsax.calendar), text: 'Events'),
+        tabs: [
+          Tab(icon: const Icon(Iconsax.activity), text: 'page_tab_timeline'.tr),
+          Tab(icon: const Icon(Iconsax.info_circle), text: 'page_tab_about'.tr),
+          Tab(icon: const Icon(Iconsax.image), text: 'page_tab_photos'.tr),
+          Tab(icon: const Icon(Iconsax.video), text: 'page_tab_videos'.tr),
+          Tab(icon: const Icon(Iconsax.star), text: 'page_tab_reviews'.tr),
+          Tab(icon: const Icon(Iconsax.calendar), text: 'page_tab_events'.tr),
         ],
       ),
     );
   }
+
   @override
   double get maxExtent => 60;
+
   @override
   double get minExtent => 60;
+
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
       false;
 }
+
 class _Stat extends StatelessWidget {
   const _Stat({required this.icon, required this.label, required this.value});
   final IconData icon;
   final String label;
   final String value;
+
   @override
   Widget build(BuildContext context) {
     final onSurf = Theme.of(context).colorScheme.onSurface.withOpacity(0.75);
@@ -852,6 +905,7 @@ class _Stat extends StatelessWidget {
     );
   }
 }
+
 class _VSeparator extends StatelessWidget {
   const _VSeparator();
   @override
@@ -864,7 +918,9 @@ class _VSeparator extends StatelessWidget {
     );
   }
 }
+
 // ===================== Tabs =====================
+
 // -- Timeline
 class _TimelineTab extends StatelessWidget {
   const _TimelineTab({
@@ -877,6 +933,7 @@ class _TimelineTab extends StatelessWidget {
     required this.onReactionChanged,
     required this.onRefresh,
   });
+
   final List<Post> posts;
   final bool isLoading;
   final bool isLoadingMore;
@@ -885,6 +942,7 @@ class _TimelineTab extends StatelessWidget {
   final VoidCallback onRetry;
   final void Function(String postId, String reaction) onReactionChanged;
   final Future<void> Function() onRefresh;
+
   @override
   Widget build(BuildContext context) {
     if (isLoading && posts.isEmpty) {
@@ -896,10 +954,11 @@ class _TimelineTab extends StatelessWidget {
     if (posts.isEmpty) {
       return const _EmptyState(
         icon: Iconsax.document,
-        title: 'No posts yet',
-        subtitle: 'Posts published by this page will appear here.',
+        title: 'page_no_posts_title',
+        subtitle: 'page_no_posts_subtitle',
       );
     }
+
     return RefreshIndicator(
       onRefresh: onRefresh,
       child: ListView.builder(
@@ -940,6 +999,7 @@ class _TimelineTab extends StatelessWidget {
     );
   }
 }
+
 // -- Photos
 class _PhotosTab extends StatelessWidget {
   const _PhotosTab({
@@ -950,6 +1010,7 @@ class _PhotosTab extends StatelessWidget {
   final List<Post> posts;
   final Uri Function(String) mediaAsset;
   final Future<void> Function() onRefresh;
+
   @override
   Widget build(BuildContext context) {
     final photos = posts
@@ -959,8 +1020,8 @@ class _PhotosTab extends StatelessWidget {
     if (photos.isEmpty) {
       return const _EmptyState(
         icon: Iconsax.image,
-        title: 'No photos',
-        subtitle: 'Photos posted by this page will appear here.',
+        title: 'page_no_photos_title',
+        subtitle: 'page_no_photos_subtitle',
       );
     }
     return RefreshIndicator(
@@ -984,6 +1045,7 @@ class _PhotosTab extends StatelessWidget {
     );
   }
 }
+
 // -- Videos
 class _VideosTab extends StatelessWidget {
   const _VideosTab({
@@ -994,16 +1056,18 @@ class _VideosTab extends StatelessWidget {
   final List<Post> posts;
   final Uri Function(String) mediaAsset;
   final Future<void> Function() onRefresh;
+
   @override
   Widget build(BuildContext context) {
     final vids = posts.where((p) => p.isVideoPost && p.video != null).toList();
     if (vids.isEmpty) {
       return const _EmptyState(
         icon: Iconsax.video,
-        title: 'No videos',
-        subtitle: 'Videos posted by this page will appear here.',
+        title: 'page_no_videos_title',
+        subtitle: 'page_no_videos_subtitle',
       );
     }
+
     return RefreshIndicator(
       onRefresh: onRefresh,
       child: GridView.builder(
@@ -1053,34 +1117,40 @@ class _VideosTab extends StatelessWidget {
     );
   }
 }
+
 // -- Reviews (placeholder)
 class _ReviewsTab extends StatelessWidget {
   const _ReviewsTab();
+
   @override
   Widget build(BuildContext context) {
     return const _EmptyState(
       icon: Iconsax.star,
-      title: 'No reviews yet',
-      subtitle: 'When users leave reviews, you\'ll see them here.',
+      title: 'page_no_reviews_title',
+      subtitle: 'page_no_reviews_subtitle',
     );
   }
 }
+
 // -- Events (placeholder)
 class _EventsTab extends StatelessWidget {
   const _EventsTab();
+
   @override
   Widget build(BuildContext context) {
     return const _EmptyState(
       icon: Iconsax.calendar,
-      title: 'No events',
-      subtitle: 'Events created by this page will appear here.',
+      title: 'page_no_events_title',
+      subtitle: 'page_no_events_subtitle',
     );
   }
 }
+
 // ===================== About Tab =====================
 class _AboutTab extends StatelessWidget {
   const _AboutTab({required this.page});
   final PageModel page;
+
   @override
   Widget build(BuildContext context) {
     final hasDescription = page.description.isNotEmpty;
@@ -1090,6 +1160,7 @@ class _AboutTab extends StatelessWidget {
     final hasLocation = page.location.isNotEmpty;
     final hasActionButton =
         page.actionText.isNotEmpty && page.actionUrl.isNotEmpty;
+
     final hasSocialLinks =
         page.facebook.isNotEmpty ||
         page.twitter.isNotEmpty ||
@@ -1097,6 +1168,7 @@ class _AboutTab extends StatelessWidget {
         page.instagram.isNotEmpty ||
         page.linkedin.isNotEmpty ||
         page.vkontakte.isNotEmpty;
+
     final hasAnyInfo =
         hasDescription ||
         hasWebsite ||
@@ -1105,24 +1177,26 @@ class _AboutTab extends StatelessWidget {
         hasLocation ||
         hasActionButton ||
         hasSocialLinks;
+
     if (!hasAnyInfo) {
       return const _EmptyState(
         icon: Iconsax.info_circle,
-        title: 'No information',
-        subtitle: 'Page information will appear here when available.',
+        title: 'page_no_info_title',
+        subtitle: 'page_no_info_subtitle',
       );
     }
+
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
         // Description
         if (hasDescription) ...[
           _InfoSection(
-            title: 'About',
+            title: 'about_section_title'.tr,
             children: [
               _InfoItem(
                 icon: Iconsax.document_text,
-                label: 'Description',
+                label: 'description'.tr,
                 value: page.description,
                 isMultiline: true,
               ),
@@ -1130,28 +1204,29 @@ class _AboutTab extends StatelessWidget {
           ),
           const SizedBox(height: 16),
         ],
+
         // Contact Information
         if (hasWebsite || hasCompany || hasPhone || hasLocation) ...[
           _InfoSection(
-            title: 'Contact Information',
+            title: 'contact_information_title'.tr,
             children: [
               if (hasCompany)
                 _InfoItem(
                   icon: Iconsax.building,
-                  label: 'Company',
+                  label: 'profile_company'.tr,
                   value: page.company,
                 ),
               if (hasWebsite)
                 _InfoItem(
                   icon: Iconsax.global,
-                  label: 'Website',
+                  label: 'profile_website'.tr,
                   value: page.website,
                   isLink: true,
                 ),
               if (hasPhone)
                 _InfoItem(
                   icon: Iconsax.call,
-                  label: 'Phone',
+                  label: 'phone'.tr,
                   value: page.phone,
                   isLink: true,
                   linkPrefix: 'tel:',
@@ -1159,13 +1234,14 @@ class _AboutTab extends StatelessWidget {
               if (hasLocation)
                 _InfoItem(
                   icon: Iconsax.location,
-                  label: 'Location',
+                  label: 'location'.tr,
                   value: page.location,
                 ),
             ],
           ),
           const SizedBox(height: 16),
         ],
+
         // Action Button
         if (hasActionButton) ...[
           _InfoSection(
@@ -1216,6 +1292,7 @@ class _AboutTab extends StatelessWidget {
           ),
           const SizedBox(height: 16),
         ],
+
         // Social Links
         if (hasSocialLinks) ...[
           _InfoSection(
@@ -1228,7 +1305,7 @@ class _AboutTab extends StatelessWidget {
                   if (page.facebook.isNotEmpty)
                     _SocialButton(
                       icon: Icons.facebook,
-                      label: 'Facebook',
+                      label: 'facebook_link'.tr,
                       color: const Color(0xFF1877F2),
                       url: page.facebook,
                     ),
@@ -1236,35 +1313,35 @@ class _AboutTab extends StatelessWidget {
                     _SocialButton(
                       icon:
                           Icons.flutter_dash, // Using as Twitter/X placeholder
-                      label: 'Twitter',
+                      label: 'twitter_link'.tr,
                       color: const Color(0xFF1DA1F2),
                       url: page.twitter,
                     ),
                   if (page.youtube.isNotEmpty)
                     _SocialButton(
                       icon: Icons.play_circle_fill,
-                      label: 'YouTube',
+                      label: 'youtube_link'.tr,
                       color: const Color(0xFFFF0000),
                       url: page.youtube,
                     ),
                   if (page.instagram.isNotEmpty)
                     _SocialButton(
                       icon: Icons.camera_alt,
-                      label: 'Instagram',
+                      label: 'instagram_link'.tr,
                       color: const Color(0xFFE4405F),
                       url: page.instagram,
                     ),
                   if (page.linkedin.isNotEmpty)
                     _SocialButton(
                       icon: Icons.business,
-                      label: 'LinkedIn',
+                      label: 'linkedin_link'.tr,
                       color: const Color(0xFF0A66C2),
                       url: page.linkedin,
                     ),
                   if (page.vkontakte.isNotEmpty)
                     _SocialButton(
                       icon: Icons.people,
-                      label: 'VK',
+                      label: 'vk_link'.tr,
                       color: const Color(0xFF0077FF),
                       url: page.vkontakte,
                     ),
@@ -1276,6 +1353,7 @@ class _AboutTab extends StatelessWidget {
       ],
     );
   }
+
   Color _getActionButtonColor(String colorName) {
     switch (colorName.toLowerCase()) {
       case 'success':
@@ -1292,6 +1370,7 @@ class _AboutTab extends StatelessWidget {
         return AppColors.primary;
     }
   }
+
   LinearGradient _getActionButtonGradient(String colorName) {
     final color = _getActionButtonColor(colorName);
     return LinearGradient(
@@ -1301,10 +1380,12 @@ class _AboutTab extends StatelessWidget {
     );
   }
 }
+
 class _InfoSection extends StatelessWidget {
   const _InfoSection({required this.title, required this.children});
   final String title;
   final List<Widget> children;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -1342,6 +1423,7 @@ class _InfoSection extends StatelessWidget {
     );
   }
 }
+
 class _InfoItem extends StatelessWidget {
   const _InfoItem({
     required this.icon,
@@ -1351,12 +1433,14 @@ class _InfoItem extends StatelessWidget {
     this.isLink = false,
     this.linkPrefix = '',
   });
+
   final IconData icon;
   final String label;
   final String value;
   final bool isMultiline;
   final bool isLink;
   final String linkPrefix;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -1417,6 +1501,7 @@ class _InfoItem extends StatelessWidget {
     );
   }
 }
+
 class _SocialButton extends StatelessWidget {
   const _SocialButton({
     required this.icon,
@@ -1424,10 +1509,12 @@ class _SocialButton extends StatelessWidget {
     required this.color,
     required this.url,
   });
+
   final IconData icon;
   final String label;
   final Color color;
   final String url;
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -1460,6 +1547,7 @@ class _SocialButton extends StatelessWidget {
     );
   }
 }
+
 // ===================== Shared UI =====================
 class _EmptyState extends StatelessWidget {
   const _EmptyState({
@@ -1470,6 +1558,7 @@ class _EmptyState extends StatelessWidget {
   final IconData icon;
   final String title;
   final String subtitle;
+
   @override
   Widget build(BuildContext context) {
     final onSurf = Theme.of(context).colorScheme.onSurface.withOpacity(0.6);
@@ -1481,10 +1570,10 @@ class _EmptyState extends StatelessWidget {
           children: [
             Icon(icon, size: 56, color: onSurf),
             const SizedBox(height: 12),
-            Text(title, style: Theme.of(context).textTheme.titleMedium),
+            Text(title.tr, style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 6),
             Text(
-              subtitle,
+              subtitle.tr,
               textAlign: TextAlign.center,
               style: TextStyle(color: onSurf),
             ),
@@ -1494,10 +1583,12 @@ class _EmptyState extends StatelessWidget {
     );
   }
 }
+
 class _ErrorState extends StatelessWidget {
   const _ErrorState({required this.message, required this.onRetry});
   final String message;
   final VoidCallback onRetry;
+
   @override
   Widget build(BuildContext context) {
     final onSurf = Theme.of(context).colorScheme.onSurface.withOpacity(0.65);
@@ -1509,12 +1600,12 @@ class _ErrorState extends StatelessWidget {
           children: [
             Icon(Iconsax.info_circle, size: 56, color: onSurf),
             const SizedBox(height: 12),
-            Text(message, textAlign: TextAlign.center),
+            Text(message.tr, textAlign: TextAlign.center),
             const SizedBox(height: 12),
             FilledButton.icon(
               onPressed: onRetry,
               icon: const Icon(Iconsax.refresh),
-              label: const Text('Retry'),
+              label: Text('retry_button'.tr),
             ),
           ],
         ),
@@ -1522,6 +1613,7 @@ class _ErrorState extends StatelessWidget {
     );
   }
 }
+
 // ==================== Admin Actions Bar ====================
 class _AdminActionsBar extends StatelessWidget {
   const _AdminActionsBar({
@@ -1530,14 +1622,17 @@ class _AdminActionsBar extends StatelessWidget {
     required this.onManageAdmins,
     required this.onRequestVerification,
   });
+
   final PageModel page;
   final VoidCallback onInviteFriends;
   final VoidCallback onManageAdmins;
   final VoidCallback onRequestVerification;
+
   @override
   Widget build(BuildContext context) {
     // عرض زر التوثيق فقط إذا لم تكن الصفحة موثقة
     final showVerificationButton = !page.verified;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
@@ -1557,7 +1652,7 @@ class _AdminActionsBar extends StatelessWidget {
               Expanded(
                 child: _ActionButton(
                   icon: Iconsax.user_add,
-                  label: 'Invite Friends',
+                  label: 'invite_friends_label'.tr,
                   gradient: const LinearGradient(
                     colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
                   ),
@@ -1569,7 +1664,7 @@ class _AdminActionsBar extends StatelessWidget {
               Expanded(
                 child: _ActionButton(
                   icon: Icons.admin_panel_settings,
-                  label: 'Manage Admins',
+                  label: 'manage_admins_label'.tr,
                   gradient: const LinearGradient(
                     colors: [Color(0xFFFF6B6B), Color(0xFFEE5A6F)],
                   ),
@@ -1588,7 +1683,7 @@ class _AdminActionsBar extends StatelessWidget {
               width: double.infinity,
               child: _ActionButton(
                 icon: Icons.verified,
-                label: 'Request Verification',
+                label: 'request_verification_title'.tr,
                 gradient: const LinearGradient(
                   colors: [Color(0xFF4A90E2), Color(0xFF357ABD)],
                 ),
@@ -1601,6 +1696,7 @@ class _AdminActionsBar extends StatelessWidget {
     );
   }
 }
+
 class _ActionButton extends StatelessWidget {
   const _ActionButton({
     required this.icon,
@@ -1608,10 +1704,12 @@ class _ActionButton extends StatelessWidget {
     required this.gradient,
     required this.onTap,
   });
+
   final IconData icon;
   final String label;
   final Gradient gradient;
   final VoidCallback onTap;
+
   @override
   Widget build(BuildContext context) {
     return Container(

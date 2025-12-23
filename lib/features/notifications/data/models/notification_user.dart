@@ -4,6 +4,7 @@ class NotificationUser {
   final String picture;
   final bool verified;
   final String type;
+
   NotificationUser({
     required this.id,
     required this.name,
@@ -11,6 +12,7 @@ class NotificationUser {
     required this.verified,
     required this.type,
   });
+
   factory NotificationUser.fromJson(Map<String, dynamic> json) {
     return NotificationUser(
       id: json['id'] as int,
@@ -20,6 +22,7 @@ class NotificationUser {
       type: json['type'] as String,
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

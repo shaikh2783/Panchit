@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../features/profile/presentation/pages/profile_page.dart';
+
 class ProfileWithBothButtonsExample extends StatelessWidget {
   const ProfileWithBothButtonsExample({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

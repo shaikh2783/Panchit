@@ -1,16 +1,17 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:dotted_border/dotted_border.dart';
+
 import '../../data/models/user_profile_model.dart';
 import '../../data/models/profile_update_models.dart';
 import '../../data/services/profile_update_service.dart';
 import '../../data/services/countries_service.dart';
 import '../../../../core/network/api_client.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 /// ---------- Gradient Icon ----------
 class GradientIcon extends StatelessWidget {
   const GradientIcon(
@@ -19,9 +20,11 @@ class GradientIcon extends StatelessWidget {
     this.size = 24.0,
     required this.gradient,
   });
+
   final IconData icon;
   final double size;
   final Gradient gradient;
+
   @override
   Widget build(BuildContext context) {
     return ShaderMask(
@@ -31,6 +34,7 @@ class GradientIcon extends StatelessWidget {
     );
   }
 }
+
 /// ---------- App Gradients ----------
 class AppGradients {
   static const LinearGradient basic = LinearGradient(
@@ -70,38 +74,47 @@ class AppGradients {
   );
   static const LinearGradient save = basic;
 }
+
 /// ---------- Screen ----------
 class ProfileEditPage extends StatefulWidget {
   const ProfileEditPage({super.key, required this.profile});
   final UserProfile profile;
+
   @override
   State<ProfileEditPage> createState() => _ProfileEditPageState();
 }
+
 class _ProfileEditPageState extends State<ProfileEditPage>
     with SingleTickerProviderStateMixin {
   late final TabController _tab;
   late final ProfileUpdateService _updateService;
   late final CountriesService _countriesService;
   final ImagePicker _imagePicker = ImagePicker();
+
   // Forms
   final _formBasic = GlobalKey<FormState>();
   final _formWork = GlobalKey<FormState>();
   final _formLoc = GlobalKey<FormState>();
   final _formEdu = GlobalKey<FormState>();
   final _formSocial = GlobalKey<FormState>();
+
   // Controllers
   late final TextEditingController _firstname;
   late final TextEditingController _lastname;
   late final TextEditingController _bio;
   late final TextEditingController _website;
+
   late final TextEditingController _workTitle;
   late final TextEditingController _workPlace;
   late final TextEditingController _workUrl;
+
   late final TextEditingController _city;
   late final TextEditingController _hometown;
+
   late final TextEditingController _eduMajor;
   late final TextEditingController _eduSchool;
   late final TextEditingController _eduClass;
+
   late final TextEditingController _facebook;
   late final TextEditingController _twitter;
   late final TextEditingController _youtube;
@@ -109,34 +122,42 @@ class _ProfileEditPageState extends State<ProfileEditPage>
   late final TextEditingController _linkedin;
   late final TextEditingController _twitch;
   late final TextEditingController _vkontakte;
+
   // State
   File? _selectedProfileImage;
   File? _selectedCoverImage;
   bool _isLoading = false;
   bool _loadingCountries = false;
   List<CountryData> _countries = [];
+
   String? _selectedGender; // male/female/other
   DateTime? _selectedBirthDate;
   String? _selectedRelationship;
   String? _selectedCountryId;
+
   @override
   void initState() {
     super.initState();
     _tab = TabController(length: 6, vsync: this);
     _updateService = ProfileUpdateService(context.read<ApiClient>());
     _countriesService = CountriesService(context.read<ApiClient>());
+
     _firstname = TextEditingController(text: widget.profile.firstName);
     _lastname = TextEditingController(text: widget.profile.lastName);
     _bio = TextEditingController(text: widget.profile.about);
     _website = TextEditingController(text: widget.profile.website);
+
     _workTitle = TextEditingController(text: widget.profile.work.title);
     _workPlace = TextEditingController(text: widget.profile.work.place);
     _workUrl = TextEditingController(text: widget.profile.work.website);
+
     _city = TextEditingController(text: widget.profile.location.currentCity);
     _hometown = TextEditingController(text: widget.profile.location.hometown);
+
     _eduMajor = TextEditingController(text: widget.profile.education.major);
     _eduSchool = TextEditingController(text: widget.profile.education.school);
     _eduClass = TextEditingController(text: widget.profile.education.classYear);
+
     _facebook = TextEditingController(text: widget.profile.socialLinks.facebook ?? '');
     _twitter = TextEditingController(text: widget.profile.socialLinks.x ?? '');
     _youtube = TextEditingController(text: widget.profile.socialLinks.youtube ?? '');
@@ -144,6 +165,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
     _linkedin = TextEditingController(text: widget.profile.socialLinks.linkedin ?? '');
     _twitch = TextEditingController(text: widget.profile.socialLinks.twitch ?? '');
     _vkontakte = TextEditingController(text: widget.profile.socialLinks.vkontakte ?? '');
+
     // gender mapping
     final g = widget.profile.gender;
     if (g == '1') _selectedGender = 'male';
@@ -153,20 +175,25 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       final gl = g.toLowerCase();
       if (['male', 'female', 'other'].contains(gl)) _selectedGender = gl;
     }
+
     if (widget.profile.country?.id != null) {
       _selectedCountryId = widget.profile.country!.id.toString();
     }
+
     final rel = widget.profile.relationship?.toLowerCase() ?? '';
     if ([
       'single','relationship','married','complicated','separated','divorced','widowed',
     ].contains(rel)) {
       _selectedRelationship = rel;
     }
+
     if (widget.profile.birthDate?.isNotEmpty == true) {
       try { _selectedBirthDate = DateTime.parse(widget.profile.birthDate!); } catch (_) {}
     }
+
     _loadCountries();
   }
+
   @override
   void dispose() {
     _tab.dispose();
@@ -191,6 +218,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
     _vkontakte.dispose();
     super.dispose();
   }
+
   Future<void> _loadCountries() async {
     setState(() => _loadingCountries = true);
     try {
@@ -203,6 +231,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       if (mounted) setState(() => _loadingCountries = false);
     }
   }
+
   // ---------- Save handlers ----------
   Future<void> _saveBasicInfo() async {
     if (!_formBasic.currentState!.validate()) return;
@@ -217,6 +246,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
         final p = widget.profile.birthDate!.split('-');
         if (p.length == 3) { birthYear = p[0]; birthMonth = p[1]; birthDay = p[2]; }
       }
+
       String? genderValue;
       if (_selectedGender == 'male') genderValue = '1';
       else if (_selectedGender == 'female') genderValue = '2';
@@ -224,6 +254,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       else if (_selectedGender != null) {
         genderValue = widget.profile.gender == 'male' ? '1' : '2';
       }
+
       final req = BasicInfoUpdateRequest(
         firstname: _firstname.text.trim(),
         lastname: _lastname.text.trim(),
@@ -236,6 +267,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
         biography: _bio.text.trim(),
         website: _website.text.trim(),
       );
+
       final res = await _updateService.updateBasicInfo(req);
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(res.message)));
@@ -247,6 +279,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       if (mounted) setState(() => _isLoading = false);
     }
   }
+
   Future<void> _saveWorkInfo() async {
     if (!_formWork.currentState!.validate()) return;
     setState(() => _isLoading = true);
@@ -267,6 +300,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       if (mounted) setState(() => _isLoading = false);
     }
   }
+
   Future<void> _saveLocation() async {
     if (!_formLoc.currentState!.validate()) return;
     setState(() => _isLoading = true);
@@ -286,6 +320,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       if (mounted) setState(() => _isLoading = false);
     }
   }
+
   Future<void> _saveEducation() async {
     if (!_formEdu.currentState!.validate()) return;
     setState(() => _isLoading = true);
@@ -306,6 +341,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       if (mounted) setState(() => _isLoading = false);
     }
   }
+
   Future<void> _saveSocialLinks() async {
     if (!_formSocial.currentState!.validate()) return;
     setState(() => _isLoading = true);
@@ -330,6 +366,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       if (mounted) setState(() => _isLoading = false);
     }
   }
+
   // ---------- Image picker sheet ----------
   Future<File?> _pickImageSheet({
     required double maxW,
@@ -393,6 +430,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
     );
     return picked;
   }
+
   Widget _pickTile({
     required IconData icon,
     required String label,
@@ -409,9 +447,9 @@ class _ProfileEditPageState extends State<ProfileEditPage>
             width: 74,
             height: 74,
             decoration: BoxDecoration(
-              gradient: gradient.withValues(0.12),
+              gradient: gradient.withOpacity(0.12),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: gradient.colors.first.withValues(alpha: 0.35), width: 1.5),
+              border: Border.all(color: gradient.colors.first.withOpacity(0.35), width: 1.5),
             ),
             child: Center(child: GradientIcon(icon, size: 30, gradient: gradient)),
           ),
@@ -421,6 +459,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       ),
     );
   }
+
   // ---------- Uploaders ----------
   Future<void> _uploadProfilePicture() async {
     if (_selectedProfileImage == null) return;
@@ -438,6 +477,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       if (mounted) setState(() => _isLoading = false);
     }
   }
+
   Future<void> _uploadCoverPhoto() async {
     if (_selectedCoverImage == null) return;
     setState(() => _isLoading = true);
@@ -454,12 +494,14 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       if (mounted) setState(() => _isLoading = false);
     }
   }
+
   // ---------- Password dialog ----------
   void _showPasswordChangeDialog() {
     final current = TextEditingController();
     final newer = TextEditingController();
     final confirm = TextEditingController();
     bool obC = true, obN = true, obK = true;
+
     showDialog(
       context: context,
       builder: (_) => StatefulBuilder(
@@ -469,22 +511,22 @@ class _ProfileEditPageState extends State<ProfileEditPage>
             children: [
               const GradientIcon(Iconsax.key, gradient: AppGradients.password),
               const SizedBox(width: 8),
-               Text('change_password'.tr),
+              const Text('Change Password'),
             ],
           ),
           content: SingleChildScrollView(
             child: Column(
               children: [
-                _pwdField('current_password'.tr, current, obC, () => setS(() => obC = !obC)),
+                _pwdField('Current Password', current, obC, () => setS(() => obC = !obC)),
                 const SizedBox(height: 12),
-                _pwdField('new_password'.tr, newer, obN, () => setS(() => obN = !obN)),
+                _pwdField('New Password (≥ 6)', newer, obN, () => setS(() => obN = !obN)),
                 const SizedBox(height: 12),
-                _pwdField('confirm_password'.tr, confirm, obK, () => setS(() => obK = !obK)),
+                _pwdField('Confirm Password', confirm, obK, () => setS(() => obK = !obK)),
               ],
             ),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child:  Text('cancel'.tr)),
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
@@ -498,17 +540,17 @@ class _ProfileEditPageState extends State<ProfileEditPage>
                 onPressed: () async {
                   if (current.text.isEmpty) {
                     ScaffoldMessenger.of(context)
-                        .showSnackBar( SnackBar(content: Text('enter_current_password'.tr)));
+                        .showSnackBar(const SnackBar(content: Text('Please enter your current password')));
                     return;
                   }
                   if (newer.text.length < 6) {
                     ScaffoldMessenger.of(context)
-                        .showSnackBar( SnackBar(content: Text('password_too_short'.tr)));
+                        .showSnackBar(const SnackBar(content: Text('New password is too short')));
                     return;
                   }
                   if (newer.text != confirm.text) {
                     ScaffoldMessenger.of(context)
-                        .showSnackBar( SnackBar(content: Text('passwords_do_not_match'.tr)));
+                        .showSnackBar(const SnackBar(content: Text('Passwords do not match')));
                     return;
                   }
                   Navigator.pop(context);
@@ -531,7 +573,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
                     if (mounted) setState(() => _isLoading = false);
                   }
                 },
-                child:  Text('change'.tr),
+                child: const Text('Change'),
               ),
             ),
           ],
@@ -539,6 +581,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       ),
     );
   }
+
   Widget _pwdField(
     String label,
     TextEditingController controller,
@@ -560,6 +603,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       ),
     );
   }
+
   // ---------- Decorations & Fields ----------
   InputDecoration _decoration(
     String label, {
@@ -585,6 +629,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
     );
   }
+
   Widget _field({
     required TextEditingController controller,
     required String label,
@@ -602,6 +647,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       decoration: _decoration(label, icon: icon, gradient: gradient),
     );
   }
+
   Widget _socialField(TextEditingController c, String label, IconData icon) {
     return TextFormField(
       controller: c,
@@ -610,6 +656,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       ),
     );
   }
+
   Widget _saveButton({required VoidCallback onPressed, required String label}) {
     final cs = Theme.of(context).colorScheme;
     return Container(
@@ -617,7 +664,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(100),
         gradient: AppGradients.save,
-        boxShadow: [BoxShadow(color: cs.primary.withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 4))],
+        boxShadow: [BoxShadow(color: cs.primary.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 4))],
       ),
       child: FilledButton.icon(
         onPressed: _isLoading ? null : onPressed,
@@ -634,6 +681,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       ),
     );
   }
+
   CountryData? _getCountryById(String? id) {
     if (id == null) return null;
     for (final c in _countries) {
@@ -641,14 +689,16 @@ class _ProfileEditPageState extends State<ProfileEditPage>
     }
     return null;
   }
+
   Widget _countryPicker(ColorScheme cs) {
     final selected = _getCountryById(_selectedCountryId);
     final selectedName = selected?.countryName;
+
     return InkWell(
       onTap: _loadingCountries ? null : _openCountrySheet,
       borderRadius: BorderRadius.circular(12),
       child: InputDecorator(
-        decoration: _decoration('country'.tr, icon: Iconsax.global, gradient: AppGradients.location)
+        decoration: _decoration('Country', icon: Iconsax.global, gradient: AppGradients.location)
             .copyWith(contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8)),
         child: Row(
           children: [
@@ -668,10 +718,12 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       ),
     );
   }
+
   Future<void> _openCountrySheet() async {
     String query = '';
     CountryData? selected;
     final cs = Theme.of(context).colorScheme;
+
     await showModalBottomSheet(
       context: context,
       showDragHandle: true,
@@ -694,7 +746,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
                 children: [
                   TextField(
                     decoration: InputDecoration(
-                      hintText: 'search_country'.tr,
+                      hintText: 'Search for a country…',
                       prefixIcon: const Icon(Iconsax.search_normal_1, size: 20),
                       filled: true,
                       fillColor: cs.surfaceContainerHighest,
@@ -748,10 +800,12 @@ class _ProfileEditPageState extends State<ProfileEditPage>
         );
       },
     );
+
     if (selected != null) {
       setState(() => _selectedCountryId = selected!.countryId.toString());
     }
   }
+
   // ---------- UI ----------
   @override
   Widget build(BuildContext context) {
@@ -760,7 +814,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       children: [
         Scaffold(
           appBar: AppBar(
-            title:  Text('edit_profile'.tr),
+            title: const Text('Edit Profile'),
             elevation: 0,
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight(48),
@@ -776,13 +830,13 @@ class _ProfileEditPageState extends State<ProfileEditPage>
                     insets: const EdgeInsets.symmetric(horizontal: 16),
                   ),
                   labelStyle: const TextStyle(fontWeight: FontWeight.w700),
-                  tabs:  [
-                    Tab(icon: GradientIcon(Iconsax.user_edit, gradient: AppGradients.basic), text: 'basic'.tr),
-                    Tab(icon: GradientIcon(Iconsax.briefcase, gradient: AppGradients.work), text: 'work'.tr),
-                    Tab(icon: GradientIcon(Iconsax.location, gradient: AppGradients.location), text: 'location'.tr),
-                    Tab(icon: GradientIcon(Iconsax.book, gradient: AppGradients.education), text: 'education'.tr),
-                    Tab(icon: GradientIcon(Iconsax.global, gradient: AppGradients.social), text: 'social'.tr),
-                    Tab(icon: GradientIcon(Iconsax.gallery, gradient: AppGradients.photos), text: 'photos'.tr),
+                  tabs: const [
+                    Tab(icon: GradientIcon(Iconsax.user_edit, gradient: AppGradients.basic), text: 'Basic'),
+                    Tab(icon: GradientIcon(Iconsax.briefcase, gradient: AppGradients.work), text: 'Work'),
+                    Tab(icon: GradientIcon(Iconsax.location, gradient: AppGradients.location), text: 'Location'),
+                    Tab(icon: GradientIcon(Iconsax.book, gradient: AppGradients.education), text: 'Education'),
+                    Tab(icon: GradientIcon(Iconsax.global, gradient: AppGradients.social), text: 'Social'),
+                    Tab(icon: GradientIcon(Iconsax.gallery, gradient: AppGradients.photos), text: 'Photos'),
                   ],
                 ),
               ),
@@ -802,12 +856,13 @@ class _ProfileEditPageState extends State<ProfileEditPage>
         ),
         if (_isLoading)
           Container(
-            color: Colors.black.withValues(alpha: 0.12),
+            color: Colors.black.withOpacity(0.12),
             child: const Center(child: CircularProgressIndicator()),
           ),
       ],
     );
   }
+
   // ---------- Tabs ----------
   Widget _tabBasic(ColorScheme cs) {
     return SingleChildScrollView(
@@ -820,27 +875,27 @@ class _ProfileEditPageState extends State<ProfileEditPage>
           children: [
             _field(
               controller: _firstname,
-              label: 'first_name'.tr,
+              label: 'First Name',
               icon: Iconsax.user_edit,
               gradient: AppGradients.basic,
-              validator: (v) => v!.trim().isEmpty ? 'first_name_required'.tr : null,
+              validator: (v) => v!.trim().isEmpty ? 'First name is required' : null,
             ),
             const SizedBox(height: 12),
             _field(
               controller: _lastname,
-              label: 'last_name'.tr,
+              label: 'Last Name',
               icon: Iconsax.user_octagon,
               gradient: AppGradients.basic,
-              validator: (v) => v!.trim().isEmpty ? 'last_name_required'.tr : null,
+              validator: (v) => v!.trim().isEmpty ? 'Last name is required' : null,
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
               value: _selectedGender,
-              decoration: _decoration('gender'.tr, icon: Iconsax.woman, gradient: AppGradients.basic),
-              items:  [
-                DropdownMenuItem(value: 'male', child: Text('male'.tr)),
-                DropdownMenuItem(value: 'female', child: Text('female'.tr)),
-                DropdownMenuItem(value: 'other', child: Text('other'.tr)),
+              decoration: _decoration('Gender', icon: Iconsax.woman, gradient: AppGradients.basic),
+              items: const [
+                DropdownMenuItem(value: 'male', child: Text('Male')),
+                DropdownMenuItem(value: 'female', child: Text('Female')),
+                DropdownMenuItem(value: 'other', child: Text('Other')),
               ],
               onChanged: (v) => setState(() => _selectedGender = v),
             ),
@@ -857,7 +912,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
               },
               borderRadius: BorderRadius.circular(12),
               child: InputDecorator(
-                decoration: _decoration('birthdate'.tr, icon: Iconsax.cake, gradient: AppGradients.basic)
+                decoration: _decoration('Birthdate', icon: Iconsax.cake, gradient: AppGradients.basic)
                     .copyWith(contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8)),
                 child: Row(
                   children: [
@@ -865,7 +920,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
                       child: Text(
                         _selectedBirthDate != null
                             ? '${_selectedBirthDate!.day}/${_selectedBirthDate!.month}/${_selectedBirthDate!.year}'
-                            : 'select_birth_date'.tr,
+                            : 'Select birth date',
                         style: TextStyle(
                           fontSize: 16,
                           color: _selectedBirthDate != null ? cs.onSurface : cs.onSurfaceVariant,
@@ -880,15 +935,15 @@ class _ProfileEditPageState extends State<ProfileEditPage>
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
               value: _selectedRelationship,
-              decoration: _decoration('relationship_status'.tr, icon: Iconsax.heart, gradient: AppGradients.basic),
-              items:  [
-                DropdownMenuItem(value: 'single', child: Text('single'.tr)),
-                DropdownMenuItem(value: 'relationship', child: Text('in_relationship'.tr)),
-                DropdownMenuItem(value: 'married', child: Text('married'.tr)),
-                DropdownMenuItem(value: 'complicated', child: Text('its_complicated'.tr)),
-                DropdownMenuItem(value: 'separated', child: Text('separated'.tr)),
-                DropdownMenuItem(value: 'divorced', child: Text('divorced'.tr)),
-                DropdownMenuItem(value: 'widowed', child: Text('widowed'.tr)),
+              decoration: _decoration('Relationship Status', icon: Iconsax.heart, gradient: AppGradients.basic),
+              items: const [
+                DropdownMenuItem(value: 'single', child: Text('Single')),
+                DropdownMenuItem(value: 'relationship', child: Text('In a relationship')),
+                DropdownMenuItem(value: 'married', child: Text('Married')),
+                DropdownMenuItem(value: 'complicated', child: Text('It\'s complicated')),
+                DropdownMenuItem(value: 'separated', child: Text('Separated')),
+                DropdownMenuItem(value: 'divorced', child: Text('Divorced')),
+                DropdownMenuItem(value: 'widowed', child: Text('Widowed')),
               ],
               onChanged: (v) => setState(() => _selectedRelationship = v),
             ),
@@ -897,7 +952,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
             const SizedBox(height: 12),
             _field(
               controller: _bio,
-              label: 'about_you'.tr,
+              label: 'About you',
               icon: Iconsax.note_text,
               gradient: AppGradients.basic,
               maxLines: 3,
@@ -905,7 +960,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
             const SizedBox(height: 12),
             _field(
               controller: _website,
-              label: 'website'.tr,
+              label: 'Website',
               icon: Iconsax.link,
               gradient: AppGradients.basic,
               keyboardType: TextInputType.url,
@@ -914,16 +969,16 @@ class _ProfileEditPageState extends State<ProfileEditPage>
                 if (t.isEmpty) return null;
                 final uri = Uri.tryParse(t);
                 final ok = uri != null && (uri.hasScheme && uri.host.isNotEmpty);
-                return ok ? null : 'invalid_url'.tr;
+                return ok ? null : 'Invalid URL';
               },
             ),
             const SizedBox(height: 20),
-            _saveButton(onPressed: _saveBasicInfo, label: 'save'.tr),
+            _saveButton(onPressed: _saveBasicInfo, label: 'Save'),
             const SizedBox(height: 12),
             OutlinedButton.icon(
               onPressed: _showPasswordChangeDialog,
               icon: const GradientIcon(Iconsax.key, gradient: AppGradients.password, size: 20),
-              label:  Text('change_password'.tr),
+              label: const Text('Change Password'),
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
@@ -934,6 +989,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       ),
     );
   }
+
   Widget _tabWork(ColorScheme cs) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -944,33 +1000,34 @@ class _ProfileEditPageState extends State<ProfileEditPage>
           children: [
             _field(
               controller: _workTitle,
-              label: 'job_title'.tr,
+              label: 'Job Title',
               icon: Iconsax.briefcase,
               gradient: AppGradients.work,
-              validator: (v) => v!.trim().isEmpty ? 'enter_job_title'.tr : null,
+              validator: (v) => v!.trim().isEmpty ? 'Enter job title' : null,
             ),
             const SizedBox(height: 12),
             _field(
               controller: _workPlace,
-              label: 'company'.tr,
+              label: 'Company',
               icon: Iconsax.building,
               gradient: AppGradients.work,
             ),
             const SizedBox(height: 12),
             _field(
               controller: _workUrl,
-              label: 'company_website'.tr,
+              label: 'Company Website',
               icon: Iconsax.link,
               gradient: AppGradients.work,
               keyboardType: TextInputType.url,
             ),
-             SizedBox(height: 20),
-            _saveButton(onPressed: _saveWorkInfo, label: 'save'.tr),
+            const SizedBox(height: 20),
+            _saveButton(onPressed: _saveWorkInfo, label: 'Save'),
           ],
         ),
       ),
     );
   }
+
   Widget _tabLocation(ColorScheme cs) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -981,24 +1038,25 @@ class _ProfileEditPageState extends State<ProfileEditPage>
           children: [
             _field(
               controller: _city,
-              label: 'current_city'.tr,
+              label: 'Current City',
               icon: Iconsax.location_tick,
               gradient: AppGradients.location,
             ),
             const SizedBox(height: 12),
             _field(
               controller: _hometown,
-              label: 'hometown'.tr,
+              label: 'Hometown',
               icon: Iconsax.home_2,
               gradient: AppGradients.location,
             ),
-             SizedBox(height: 20),
-            _saveButton(onPressed: _saveLocation, label: 'save'.tr),
+            const SizedBox(height: 20),
+            _saveButton(onPressed: _saveLocation, label: 'Save'),
           ],
         ),
       ),
     );
   }
+
   Widget _tabEducation(ColorScheme cs) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -1009,31 +1067,32 @@ class _ProfileEditPageState extends State<ProfileEditPage>
           children: [
             _field(
               controller: _eduMajor,
-              label: 'major'.tr,
+              label: 'Major',
               icon: Iconsax.book_1,
               gradient: AppGradients.education,
             ),
             const SizedBox(height: 12),
             _field(
               controller: _eduSchool,
-              label: 'educational_institution'.tr,
+              label: 'Educational Institution',
               icon: Iconsax.building,
               gradient: AppGradients.education,
             ),
             const SizedBox(height: 12),
             _field(
               controller: _eduClass,
-              label: 'graduation_year'.tr,
+              label: 'Graduation Year',
               icon: Iconsax.calendar_1,
               gradient: AppGradients.education,
             ),
-             SizedBox(height: 20),
-            _saveButton(onPressed: _saveEducation, label: 'save'.tr),
+            const SizedBox(height: 20),
+            _saveButton(onPressed: _saveEducation, label: 'Save'),
           ],
         ),
       ),
     );
   }
+
   Widget _tabSocial(ColorScheme cs) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -1042,26 +1101,27 @@ class _ProfileEditPageState extends State<ProfileEditPage>
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Column(
           children: [
-            _socialField(_facebook, 'facebook'.tr, Iconsax.facebook),
+            _socialField(_facebook, 'Facebook', Iconsax.facebook),
             const SizedBox(height: 12),
-            _socialField(_twitter, 'x_twitter'.tr, Iconsax.presention_chart),
+            _socialField(_twitter, 'Twitter/X', Iconsax.presention_chart),
             const SizedBox(height: 12),
-            _socialField(_youtube, 'youtube'.tr, Iconsax.video_play),
+            _socialField(_youtube, 'YouTube', Iconsax.video_play),
             const SizedBox(height: 12),
-            _socialField(_instagram, 'instagram'.tr, Iconsax.instagram),
+            _socialField(_instagram, 'Instagram', Iconsax.instagram),
             const SizedBox(height: 12),
-            _socialField(_linkedin, 'linkedin'.tr, Iconsax.briefcase),
+            _socialField(_linkedin, 'LinkedIn', Iconsax.briefcase),
             const SizedBox(height: 12),
-            _socialField(_twitch, 'twitch'.tr, Iconsax.game),
+            _socialField(_twitch, 'Twitch', Iconsax.game),
             const SizedBox(height: 12),
-            _socialField(_vkontakte, 'vkontakte'.tr, Iconsax.user_square),
+            _socialField(_vkontakte, 'VKontakte', Iconsax.user_square),
             const SizedBox(height: 20),
-            _saveButton(onPressed: _saveSocialLinks, label: 'save'.tr),
+            _saveButton(onPressed: _saveSocialLinks, label: 'Save'),
           ],
         ),
       ),
     );
   }
+
   Widget _tabPhotos(ColorScheme cs) {
     final coverFallback = widget.profile.cover;
     return SingleChildScrollView(
@@ -1069,7 +1129,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text('profile_picture'.tr, style: Theme.of(context).textTheme.titleLarge),
+          Text('Profile Picture', style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 16),
           Center(
             child: SizedBox(
@@ -1084,7 +1144,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
                       gradient: AppGradients.photos,
                       boxShadow: [
                         BoxShadow(
-                          color: AppGradients.photos.colors.first.withValues(alpha: 0.3),
+                          color: AppGradients.photos.colors.first.withOpacity(0.3),
                           blurRadius: 15,
                           offset: const Offset(0, 5),
                         ),
@@ -1127,7 +1187,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
             ),
           ),
           const SizedBox(height: 32),
-          Text('cover_photo'.tr, style: Theme.of(context).textTheme.titleLarge),
+          Text('Cover Photo', style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 16),
           GestureDetector(
             onTap: _pickCoverImage,
@@ -1149,6 +1209,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
                         child: Padding(
                           padding: const EdgeInsets.all(16),
                           child: DottedBorder(
+                          
                             child: Container(
                               width: double.infinity,
                               height: double.infinity,
@@ -1158,7 +1219,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
                                 children: [
                                   const GradientIcon(Iconsax.gallery_add, size: 48, gradient: AppGradients.photos),
                                   const SizedBox(height: 12),
-                                  Text('add_cover_photo'.tr,
+                                  Text('Tap to add a cover photo',
                                       style: TextStyle(color: cs.onSurfaceVariant)),
                                 ],
                               ),
@@ -1192,12 +1253,14 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       ),
     );
   }
+
   Future<void> _pickCoverImage() async {
     final file = await _pickImageSheet(maxW: 1920, maxH: 1080);
     if (file == null) return;
     setState(() => _selectedCoverImage = file);
     await _uploadCoverPhoto();
   }
+
   Future<void> _pickProfileImage() async {
     final file = await _pickImageSheet(maxW: 1024, maxH: 1024);
     if (file == null) return;
@@ -1205,11 +1268,12 @@ class _ProfileEditPageState extends State<ProfileEditPage>
     await _uploadProfilePicture();
   }
 }
+
 /// ---------- LinearGradient helpers ----------
 extension LinearGradientOpacity on LinearGradient {
-  LinearGradient withValues(double opacity) {
+  LinearGradient withOpacity(double opacity) {
     return LinearGradient(
-      colors: colors.map((c) => c.withValues(alpha: opacity)).toList(),
+      colors: colors.map((c) => c.withOpacity(opacity)).toList(),
       begin: begin,
       end: end,
       stops: stops,

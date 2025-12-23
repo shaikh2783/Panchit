@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 /// Modern stat item widget with icon and gradient
 class ModernStatItem extends StatelessWidget {
   const ModernStatItem({
@@ -9,11 +10,13 @@ class ModernStatItem extends StatelessWidget {
     required this.color,
     required this.isDark,
   });
+
   final IconData icon;
   final String count;
   final String label;
   final Color color;
   final bool isDark;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -56,6 +59,7 @@ class ModernStatItem extends StatelessWidget {
     );
   }
 }
+
 /// Modern button widget with gradient and animations
 class ModernButton extends StatelessWidget {
   const ModernButton({
@@ -67,12 +71,14 @@ class ModernButton extends StatelessWidget {
     required this.color,
     required this.isDark,
   });
+
   final VoidCallback onPressed;
   final IconData icon;
   final String label;
   final bool isPrimary;
   final Color color;
   final bool isDark;
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -145,6 +151,7 @@ class ModernButton extends StatelessWidget {
     );
   }
 }
+
 /// Posts section header with modern design
 class ModernSectionHeader extends StatelessWidget {
   const ModernSectionHeader({
@@ -152,8 +159,10 @@ class ModernSectionHeader extends StatelessWidget {
     required this.title,
     required this.isDark,
   });
+
   final String title;
   final bool isDark;
+
   @override
   Widget build(BuildContext context) {
     return Container(

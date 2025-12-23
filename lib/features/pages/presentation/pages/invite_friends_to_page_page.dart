@@ -2,27 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/network/api_client.dart';
-import '../../../groups/data/models/invitable_friend.dart';
+import '../../data/models/invitable_friend.dart';
 import '../../data/services/page_invitations_service.dart';
 import '../../data/models/page.dart';
+
 class InviteFriendsToPagePage extends StatefulWidget {
   final PageModel page;
+
   const InviteFriendsToPagePage({super.key, required this.page});
+
   @override
   State<InviteFriendsToPagePage> createState() =>
       _InviteFriendsToPagePageState();
 }
+
 class _InviteFriendsToPagePageState extends State<InviteFriendsToPagePage> {
   final ScrollController _scrollController = ScrollController();
   late final PageInvitationsService _invitationsService;
+
   List<InvitableFriend> _friends = [];
   bool _isLoading = false;
   bool _isLoadingMore = false;
   bool _hasMore = true;
   int _offset = 0;
+
   // تتبع الدعوات
   final Set<String> _invitingUsers = {};
   final Set<String> _invitedUsers = {};
+
   @override
   void initState() {
     super.initState();
@@ -30,11 +37,13 @@ class _InviteFriendsToPagePageState extends State<InviteFriendsToPagePage> {
     _loadFriends();
     _scrollController.addListener(_onScroll);
   }
+
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
+
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent * 0.9) {
@@ -43,18 +52,22 @@ class _InviteFriendsToPagePageState extends State<InviteFriendsToPagePage> {
       }
     }
   }
+
   Future<void> _loadFriends() async {
     if (_isLoading) return;
+
     setState(() {
       _isLoading = true;
       _offset = 0;
       _friends.clear();
     });
+
     try {
       final friends = await _invitationsService.getInvitableFriends(
         pageId: widget.page.id,
         offset: 0,
       );
+
       setState(() {
         _friends = friends;
         _offset = friends.length;
@@ -63,6 +76,7 @@ class _InviteFriendsToPagePageState extends State<InviteFriendsToPagePage> {
       });
     } catch (e) {
       setState(() => _isLoading = false);
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -73,14 +87,18 @@ class _InviteFriendsToPagePageState extends State<InviteFriendsToPagePage> {
       }
     }
   }
+
   Future<void> _loadMoreFriends() async {
     if (_isLoadingMore || !_hasMore) return;
+
     setState(() => _isLoadingMore = true);
+
     try {
       final friends = await _invitationsService.getInvitableFriends(
         pageId: widget.page.id,
         offset: _offset,
       );
+
       setState(() {
         _friends.addAll(friends);
         _offset += friends.length;
@@ -91,22 +109,27 @@ class _InviteFriendsToPagePageState extends State<InviteFriendsToPagePage> {
       setState(() => _isLoadingMore = false);
     }
   }
+
   Future<void> _inviteFriend(InvitableFriend friend) async {
     if (_invitingUsers.contains(friend.userId) ||
         _invitedUsers.contains(friend.userId)) {
       return;
     }
+
     setState(() => _invitingUsers.add(friend.userId));
+
     try {
       final success = await _invitationsService.inviteFriend(
         pageId: widget.page.id,
         userId: int.parse(friend.userId),
       );
+
       if (success) {
         setState(() {
           _invitingUsers.remove(friend.userId);
           _invitedUsers.add(friend.userId);
         });
+
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -118,6 +141,7 @@ class _InviteFriendsToPagePageState extends State<InviteFriendsToPagePage> {
         }
       } else {
         setState(() => _invitingUsers.remove(friend.userId));
+
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -129,6 +153,7 @@ class _InviteFriendsToPagePageState extends State<InviteFriendsToPagePage> {
       }
     } catch (e) {
       setState(() => _invitingUsers.remove(friend.userId));
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -139,6 +164,7 @@ class _InviteFriendsToPagePageState extends State<InviteFriendsToPagePage> {
       }
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -161,10 +187,12 @@ class _InviteFriendsToPagePageState extends State<InviteFriendsToPagePage> {
       body: RefreshIndicator(onRefresh: _loadFriends, child: _buildBody()),
     );
   }
+
   Widget _buildBody() {
     if (_isLoading) {
       return Center(child: CircularProgressIndicator());
     }
+
     if (_friends.isEmpty) {
       return Center(
         child: Column(
@@ -186,6 +214,7 @@ class _InviteFriendsToPagePageState extends State<InviteFriendsToPagePage> {
         ),
       );
     }
+
     return ListView.builder(
       controller: _scrollController,
       padding: EdgeInsets.all(16),
@@ -199,9 +228,11 @@ class _InviteFriendsToPagePageState extends State<InviteFriendsToPagePage> {
             ),
           );
         }
+
         final friend = _friends[index];
         final isInviting = _invitingUsers.contains(friend.userId);
         final isInvited = _invitedUsers.contains(friend.userId);
+
         return Card(
           margin: EdgeInsets.only(bottom: 12),
           child: ListTile(
@@ -224,12 +255,12 @@ class _InviteFriendsToPagePageState extends State<InviteFriendsToPagePage> {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                 ),
-                if (friend.isVerified)
+                if (friend.userVerified)
                   Padding(
                     padding: EdgeInsets.only(right: 4),
                     child: Icon(Icons.verified, color: Colors.blue, size: 18),
                   ),
-                if (friend.isSubscribed)
+                if (friend.userSubscribed)
                   Padding(
                     padding: EdgeInsets.only(right: 4),
                     child: Icon(Icons.stars, color: Colors.amber, size: 18),

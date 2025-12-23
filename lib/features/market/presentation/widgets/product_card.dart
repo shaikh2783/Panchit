@@ -3,22 +3,26 @@ import 'package:get/get.dart';
 import '../../../../core/theme/ui_constants.dart';
 import '../../data/models/models.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 /// Product Card Widget - بطاقة المنتج
 /// 
 /// عرض المنتج في شكل بطاقة مع الصورة والسعر والاسم
 class ProductCard extends StatelessWidget {
   final Product product;
   final VoidCallback onTap;
+
   const ProductCard({
     Key? key,
     required this.product,
     required this.onTap,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final isDark = Get.isDarkMode;
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    
     return Card(
       color: UI.surfaceCard(context),
       elevation: 2,
@@ -52,6 +56,7 @@ class ProductCard extends StatelessWidget {
                           )
                         : _buildPlaceholder(),
                   ),
+
                   // Status Badge
                   if (!product.isAvailable)
                     Positioned(
@@ -76,6 +81,7 @@ class ProductCard extends StatelessWidget {
                         ),
                       ),
                     ),
+
                   // Digital Badge
                   if (product.isDigital)
                     Positioned(
@@ -113,6 +119,7 @@ class ProductCard extends StatelessWidget {
                 ],
               ),
             ),
+
             // Product Info
             Expanded(
               flex: 2,
@@ -132,7 +139,9 @@ class ProductCard extends StatelessWidget {
                         color: isDark ? Colors.white : Colors.black87,
                       ),
                     ),
+                    
                     const Spacer(),
+
                     // Price & Stock
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -146,6 +155,7 @@ class ProductCard extends StatelessWidget {
                             color: scheme.primary,
                           ),
                         ),
+
                         // Stock indicator
                         if (product.quantity > 0 && product.quantity <= 5)
                           Container(
@@ -168,6 +178,7 @@ class ProductCard extends StatelessWidget {
                           ),
                       ],
                     ),
+
                     // Condition
                     if (product.condition.isNotEmpty)
                       Padding(
@@ -189,6 +200,7 @@ class ProductCard extends StatelessWidget {
       ),
     );
   }
+
   Widget _buildPlaceholder() {
     return Center(
       child: Icon(

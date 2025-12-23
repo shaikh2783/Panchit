@@ -1,22 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+
 import '../../../core/network/api_client.dart';
 import '../data/api_service/live_stream_api_service.dart';
 import '../bloc/live_comments_bloc.dart';
+
 /// Provider للـ Blocs الخاصة بالبث المباشر
 class LiveStreamBlocProvider extends StatelessWidget {
   final Widget child;
   final String liveId;
+
   const LiveStreamBlocProvider({
     Key? key,
     required this.child,
     required this.liveId,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     // استخدام ApiClient المصادق من dependency injection
     final apiService = LiveStreamApiService(context.read<ApiClient>());
+
     return MultiBlocProvider(
       providers: [
         // Live Comments Bloc
@@ -25,6 +30,7 @@ class LiveStreamBlocProvider extends StatelessWidget {
             apiService: apiService,
           ),
         ),
+        
         // Live Stats Bloc
         BlocProvider(
           create: (context) => LiveStatsBloc(
@@ -36,15 +42,18 @@ class LiveStreamBlocProvider extends StatelessWidget {
     );
   }
 }
+
 /// Widget مساعد لإنشاء Provider للبث المباشر
 class LiveStreamPage extends StatelessWidget {
   final String liveId;
   final Widget Function(BuildContext context) builder;
+
   const LiveStreamPage({
     Key? key,
     required this.liveId,
     required this.builder,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return LiveStreamBlocProvider(
@@ -55,14 +64,17 @@ class LiveStreamPage extends StatelessWidget {
     );
   }
 }
+
 /// Mixin لتسهيل الوصول إلى Live Blocs
 mixin LiveStreamBlocsMixin {
   LiveCommentsBloc getLiveCommentsBloc(BuildContext context) {
     return context.read<LiveCommentsBloc>();
   }
+
   LiveStatsBloc getLiveStatsBloc(BuildContext context) {
     return context.read<LiveStatsBloc>();
   }
+
   void startLiveComments(BuildContext context, String liveId) {
     getLiveCommentsBloc(context).add(
       LoadLiveComments(postId: liveId),
@@ -71,9 +83,11 @@ mixin LiveStreamBlocsMixin {
       StartLiveCommentsPolling(postId: liveId),
     );
   }
+
   void stopLiveComments(BuildContext context) {
     getLiveCommentsBloc(context).add(StopLiveCommentsPolling());
   }
+
   void startLiveStats(BuildContext context, String liveId) {
     getLiveStatsBloc(context).add(
       LoadLiveStats(liveId: liveId),
@@ -82,9 +96,11 @@ mixin LiveStreamBlocsMixin {
       StartLiveStatsPolling(liveId: liveId),
     );
   }
+
   void stopLiveStats(BuildContext context) {
     getLiveStatsBloc(context).add(StopLiveStatsPolling());
   }
+
   void addLiveComment(BuildContext context, String liveId, String text) {
     getLiveCommentsBloc(context).add(
       AddLiveComment(
@@ -93,6 +109,7 @@ mixin LiveStreamBlocsMixin {
       ),
     );
   }
+
   void reactToComment(BuildContext context, String commentId, String reactionType) {
     getLiveCommentsBloc(context).add(
       ReactToLiveComment(

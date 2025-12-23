@@ -3,15 +3,20 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:get/get.dart';
+
 import 'package:snginepro/core/theme/design_tokens.dart';
 import 'package:snginepro/features/wallet/application/bloc/wallet_action_cubit.dart';
 import 'package:snginepro/features/wallet/data/models/wallet_summary.dart';
 import 'package:snginepro/features/wallet/domain/wallet_repository.dart';
 import 'package:snginepro/features/wallet/presentation/widgets/paypal_payment_handler.dart';
 import 'package:snginepro/features/wallet/presentation/widgets/wallet_shared_widgets.dart';
+
 class WalletRechargePage extends StatelessWidget {
   const WalletRechargePage({super.key, required this.summary});
+
   final WalletSummary summary;
+
   @override
   Widget build(BuildContext context) {
     final repository = Provider.of<WalletRepository>(context, listen: false);
@@ -21,18 +26,23 @@ class WalletRechargePage extends StatelessWidget {
     );
   }
 }
+
 class _WalletRechargeView extends StatefulWidget {
   const _WalletRechargeView({required this.summary});
+
   final WalletSummary summary;
+
   @override
   State<_WalletRechargeView> createState() => _WalletRechargeViewState();
 }
+
 class _WalletRechargeViewState extends State<_WalletRechargeView> {
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
   final _referenceController = TextEditingController();
   final _noteController = TextEditingController();
   String? _selectedMethod;
+
   @override
   void dispose() {
     _amountController.dispose();
@@ -40,24 +50,29 @@ class _WalletRechargeViewState extends State<_WalletRechargeView> {
     _noteController.dispose();
     super.dispose();
   }
+
   String get _currencySymbol {
     final wallet = widget.summary.wallet;
     return wallet.currencySymbol.isNotEmpty
         ? wallet.currencySymbol
         : wallet.currency;
   }
+
   void _submitRecharge() {
     if (!_formKey.currentState!.validate()) {
       return;
     }
+
     if (_selectedMethod == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please select a payment method')),
       );
       return;
     }
+
     final amount = double.tryParse(_amountController.text.trim()) ?? 0;
     final note = _noteController.text.trim();
+
     // Check if PayPal is selected
     if (_selectedMethod?.toLowerCase() == 'paypal') {
       _processPayPalPayment(amount, note);
@@ -72,10 +87,12 @@ class _WalletRechargeViewState extends State<_WalletRechargeView> {
       );
     }
   }
+
   void _processPayPalPayment(double amount, String note) {
     final currency = widget.summary.wallet.currency.isNotEmpty
         ? widget.summary.wallet.currency
         : 'USD';
+
     PayPalPaymentHandler.processPayment(
       context: context,
       amount: amount,
@@ -85,6 +102,7 @@ class _WalletRechargeViewState extends State<_WalletRechargeView> {
         // Extract transaction ID from PayPal response
         final transactionId = PayPalPaymentHandler.extractTransactionId(params);
         final payerId = PayPalPaymentHandler.extractPayerId(params);
+
         // Call recharge API with PayPal transaction details
         context.read<WalletActionCubit>().recharge(
           amount: amount,
@@ -92,6 +110,7 @@ class _WalletRechargeViewState extends State<_WalletRechargeView> {
           reference: transactionId.isNotEmpty ? transactionId : payerId,
           note: note.isEmpty ? 'PayPal Payment' : '$note - PayPal Payment',
         );
+
         Navigator.of(context).pop();
       },
       onError: (error) {
@@ -111,13 +130,15 @@ class _WalletRechargeViewState extends State<_WalletRechargeView> {
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final availableMethods = widget.summary.wallet.paymentMethods;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Recharge Wallet'),
+        title: Text('recharge_wallet_title'.tr),
         leading: IconButton(
           icon: const Icon(Iconsax.arrow_left_2),
           onPressed: () => Navigator.of(context).pop(),
@@ -142,6 +163,7 @@ class _WalletRechargeViewState extends State<_WalletRechargeView> {
             );
             Navigator.of(context).pop(state.result);
           }
+
           if (state.status == WalletActionStatus.failure &&
               state.errorMessage != null) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -156,6 +178,7 @@ class _WalletRechargeViewState extends State<_WalletRechargeView> {
           final isProcessing =
               state.status == WalletActionStatus.inProgress &&
               state.lastAction == WalletActionType.recharge;
+
           return Form(
             key: _formKey,
             child: ListView(
@@ -191,6 +214,7 @@ class _WalletRechargeViewState extends State<_WalletRechargeView> {
                   ),
                 ),
                 const SizedBox(height: Spacing.xl),
+
                 // Amount Input
                 Text(
                   'Recharge Amount',
@@ -222,6 +246,7 @@ class _WalletRechargeViewState extends State<_WalletRechargeView> {
                   },
                 ),
                 const SizedBox(height: Spacing.xl),
+
                 // Payment Methods Section
                 Text(
                   'Select Payment Method',
@@ -269,6 +294,7 @@ class _WalletRechargeViewState extends State<_WalletRechargeView> {
                     ),
                   ),
                 const SizedBox(height: Spacing.lg),
+
                 // Optional Fields
                 Text(
                   'Additional Information (Optional)',
@@ -299,6 +325,7 @@ class _WalletRechargeViewState extends State<_WalletRechargeView> {
                   ),
                 ),
                 const SizedBox(height: Spacing.xl),
+
                 // Error Message
                 if (state.status == WalletActionStatus.failure &&
                     state.errorMessage != null)
@@ -309,6 +336,7 @@ class _WalletRechargeViewState extends State<_WalletRechargeView> {
                       isError: true,
                     ),
                   ),
+
                 // Submit Button
                 FilledButton(
                   onPressed: isProcessing ? null : _submitRecharge,
@@ -354,15 +382,18 @@ class _WalletRechargeViewState extends State<_WalletRechargeView> {
     );
   }
 }
+
 class _PaymentMethodCard extends StatelessWidget {
   const _PaymentMethodCard({
     required this.method,
     required this.isSelected,
     required this.onTap,
   });
+
   final String method;
   final bool isSelected;
   final VoidCallback? onTap;
+
   IconData _getIconForMethod(String method) {
     final lower = method.toLowerCase();
     if (lower.contains('paypal')) return Iconsax.wallet;
@@ -373,6 +404,7 @@ class _PaymentMethodCard extends StatelessWidget {
     }
     return Iconsax.wallet_money;
   }
+
   String _formatMethodName(String method) {
     if (method.isEmpty) return method;
     return method
@@ -383,11 +415,13 @@ class _PaymentMethodCard extends StatelessWidget {
         })
         .join(' ');
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final icon = _getIconForMethod(method);
     final displayName = _formatMethodName(method);
+
     return Card(
       elevation: isSelected ? 4 : 1,
       shape: RoundedRectangleBorder(

@@ -9,11 +9,14 @@ import '../../domain/blog_repository.dart';
 import '../widgets/article_card.dart';
 import 'blog_post_page.dart';
 import 'blog_create_page.dart';
+
 class BlogListPage extends StatefulWidget {
   const BlogListPage({super.key});
+
   @override
   State<BlogListPage> createState() => _BlogListPageState();
 }
+
 class _BlogListPageState extends State<BlogListPage> {
   final TextEditingController _search = TextEditingController();
   List<BlogCategory> _categories = [];
@@ -25,12 +28,14 @@ class _BlogListPageState extends State<BlogListPage> {
   int _offset = 0;
   final int _limit = 20;
   late BlogRepository _repo;
+
   @override
   void initState() {
     super.initState();
     _repo = context.read<BlogRepository>();
     _load();
   }
+
   Future<void> _load({bool refresh = false}) async {
     setState(() {
       if (refresh) {
@@ -41,6 +46,7 @@ class _BlogListPageState extends State<BlogListPage> {
       _loading = _posts.isEmpty;
       _loadingMore = !refresh && _posts.isNotEmpty;
     });
+
     try {
       final cats = _categories.isEmpty ? await _repo.getCategories() : _categories;
       final newPosts = await _repo.getPosts(
@@ -70,9 +76,11 @@ class _BlogListPageState extends State<BlogListPage> {
       );
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    
     return Scaffold(
       backgroundColor: UI.surfacePage(context),
       floatingActionButton: FloatingActionButton(
@@ -199,6 +207,7 @@ class _BlogListPageState extends State<BlogListPage> {
                 },
               ),
             ),
+
           Expanded(
             child: _loading
                 ? GridView.builder(
@@ -279,6 +288,7 @@ class _BlogListPageState extends State<BlogListPage> {
       ),
     );
   }
+
   Widget _buildCategoryChip(
     BuildContext context, {
     required String label,
@@ -287,6 +297,7 @@ class _BlogListPageState extends State<BlogListPage> {
     required VoidCallback onTap,
   }) {
     final scheme = Theme.of(context).colorScheme;
+    
     return Padding(
       padding: EdgeInsets.only(right: UI.sm),
       child: Material(
@@ -336,6 +347,7 @@ class _BlogListPageState extends State<BlogListPage> {
       ),
     );
   }
+
   IconData _getCategoryIcon(String categoryName) {
     final name = categoryName.toLowerCase();
     if (name.contains('tech') || name.contains('technology')) return Iconsax.cpu_copy;

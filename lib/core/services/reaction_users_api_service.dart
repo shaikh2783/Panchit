@@ -1,9 +1,12 @@
 import 'package:snginepro/core/models/reaction_user_model.dart';
 import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/main.dart' show configCfgP;
+
 class ReactionUsersApiService {
   final ApiClient _apiClient;
+
   ReactionUsersApiService(this._apiClient);
+
   /// Get users who reacted to a post/photo/comment
   /// 
   /// [type] - 'post', 'photo', or 'comment'
@@ -26,6 +29,7 @@ class ReactionUsersApiService {
           'offset': offset.toString(),
         },
       );
+
       if (response['status'] == 'success') {
         return ReactionUsersResponse.fromJson(response);
       } else {
@@ -35,6 +39,7 @@ class ReactionUsersApiService {
       rethrow;
     }
   }
+
   /// Get users who reacted to a post
   Future<ReactionUsersResponse> getPostReactionUsers({
     required int postId,
@@ -48,6 +53,7 @@ class ReactionUsersApiService {
       offset: offset,
     );
   }
+
   /// Get users who reacted to a photo
   Future<ReactionUsersResponse> getPhotoReactionUsers({
     required int photoId,
@@ -61,6 +67,7 @@ class ReactionUsersApiService {
       offset: offset,
     );
   }
+
   /// Get users who reacted to a comment
   Future<ReactionUsersResponse> getCommentReactionUsers({
     required int commentId,

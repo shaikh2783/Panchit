@@ -11,11 +11,14 @@ import '../widgets/article_card.dart';
 import 'blog_create_page.dart';
 import 'blog_post_page.dart';
 import 'blog_edit_page.dart';
+
 class MyBlogsPage extends StatefulWidget {
   const MyBlogsPage({super.key});
+
   @override
   State<MyBlogsPage> createState() => _MyBlogsPageState();
 }
+
 class _MyBlogsPageState extends State<MyBlogsPage> {
   List<BlogPost> _posts = [];
   bool _loading = true;
@@ -27,18 +30,21 @@ class _MyBlogsPageState extends State<MyBlogsPage> {
   final _scrollController = ScrollController();
   final _searchCtrl = TextEditingController();
   String _searchQuery = '';
+
   @override
   void initState() {
     super.initState();
     _load();
     _scrollController.addListener(_onScroll);
   }
+
   @override
   void dispose() {
     _scrollController.dispose();
     _searchCtrl.dispose();
     super.dispose();
   }
+
   void _onScroll() {
     if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
       if (!_loadingMore && _hasMore) {
@@ -46,6 +52,7 @@ class _MyBlogsPageState extends State<MyBlogsPage> {
       }
     }
   }
+
   Future<void> _load() async {
     setState(() {
       _loading = true;
@@ -84,6 +91,7 @@ class _MyBlogsPageState extends State<MyBlogsPage> {
       }
     }
   }
+
   Future<void> _loadMore() async {
     if (_loadingMore || !_hasMore) return;
     setState(() => _loadingMore = true);
@@ -111,15 +119,18 @@ class _MyBlogsPageState extends State<MyBlogsPage> {
       if (mounted) setState(() => _loadingMore = false);
     }
   }
+
   void _onSearch(String query) {
     _searchQuery = query;
     _load();
   }
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final currentUserId = int.tryParse(
         context.read<AuthNotifier>().currentUser?['user_id']?.toString() ?? '');
+
     return Scaffold(
       backgroundColor: UI.surfacePage(context),
       appBar: AppBar(
@@ -167,6 +178,7 @@ class _MyBlogsPageState extends State<MyBlogsPage> {
               onSubmitted: _onSearch,
             ),
           ),
+
           // Content
           Expanded(
             child: _loading
@@ -278,9 +290,11 @@ class _MyBlogsPageState extends State<MyBlogsPage> {
       ),
     );
   }
+
   void _editPost(BlogPost post) {
     Get.to(() => const BlogEditPage(), arguments: post)?.then((_) => _load());
   }
+
   Future<void> _confirmDelete(BlogPost post) async {
     final confirm = await Get.dialog<bool>(
       AlertDialog(
@@ -305,6 +319,7 @@ class _MyBlogsPageState extends State<MyBlogsPage> {
       await _deletePost(post);
     }
   }
+
   Future<void> _deletePost(BlogPost post) async {
     try {
       Get.dialog(
@@ -325,6 +340,7 @@ class _MyBlogsPageState extends State<MyBlogsPage> {
       Get.snackbar('error'.tr, e.toString());
     }
   }
+
   Widget _buildSkeleton() {
     return ListView.separated(
       padding: EdgeInsets.all(UI.lg),

@@ -7,11 +7,14 @@ import '../widgets/boost_info_card.dart';
 import '../../../feed/domain/posts_repository.dart';
 import '../../../feed/data/models/post.dart';
 import '../../../feed/presentation/widgets/post_card.dart';
+
 class BoostedPostsPage extends StatefulWidget {
   const BoostedPostsPage({super.key});
+
   @override
   State<BoostedPostsPage> createState() => _BoostedPostsPageState();
 }
+
 class _BoostedPostsPageState extends State<BoostedPostsPage> {
   final ScrollController _scrollController = ScrollController();
   List<Post> _posts = [];
@@ -22,17 +25,20 @@ class _BoostedPostsPageState extends State<BoostedPostsPage> {
   bool _subscriptionRequired = false;
   int _offset = 0;
   final int _limit = 20;
+
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
     _loadBoostedPosts();
   }
+
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
+
   void _onScroll() {
     if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
       if (!_isLoadingMore && _pagination != null && _pagination!.hasMore) {
@@ -40,18 +46,23 @@ class _BoostedPostsPageState extends State<BoostedPostsPage> {
       }
     }
   }
+
   Future<void> _loadBoostedPosts() async {
     if (_isLoading) return;
+    
     setState(() {
       _isLoading = true;
       _offset = 0;
       _posts.clear();
       _subscriptionRequired = false;
     });
+
     try {
       final boostRepository = context.read<BoostRepository>();
       final postsRepository = context.read<PostsRepository>();
+      
       final response = await boostRepository.getBoostedPosts(offset: _offset, limit: _limit);
+      
       // جلب تفاصيل كل منشور معزز
       final List<Post> fullPosts = [];
       for (var postData in response.posts) {
@@ -59,12 +70,14 @@ class _BoostedPostsPageState extends State<BoostedPostsPage> {
           final postId = postData['post_id'] is String 
               ? int.parse(postData['post_id']) 
               : postData['post_id'] as int;
+          
           final postDetails = await postsRepository.fetchPost(postId);
           final post = Post.fromJson(postDetails);
           fullPosts.add(post);
         } catch (e) {
         }
       }
+      
       if (mounted) {
         setState(() {
           _posts = fullPosts;
@@ -79,11 +92,13 @@ class _BoostedPostsPageState extends State<BoostedPostsPage> {
         if (errorMessage.contains('post_text') || errorMessage.contains('Unknown column')) {
           errorMessage = 'خطأ في الخادم: Backend API يحتاج إلى تحديث\n(use "text" instead of "post_text")';
         }
+
         final requiresSub = errorMessage.contains('SUBSCRIPTION_REQUIRED') ||
             errorMessage.contains('subscribe to a package');
         if (requiresSub) {
           setState(() => _subscriptionRequired = true);
         }
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(requiresSub ? 'You need to subscribe to view boosted posts' : '${'error'.tr}: $errorMessage'),
@@ -98,13 +113,18 @@ class _BoostedPostsPageState extends State<BoostedPostsPage> {
       }
     }
   }
+
   Future<void> _loadMore() async {
     if (_isLoadingMore || _subscriptionRequired) return;
+
     setState(() => _isLoadingMore = true);
+
     try {
       final boostRepository = context.read<BoostRepository>();
       final postsRepository = context.read<PostsRepository>();
+      
       final response = await boostRepository.getBoostedPosts(offset: _offset, limit: _limit);
+      
       // جلب تفاصيل كل منشور معزز
       final List<Post> newPosts = [];
       for (var postData in response.posts) {
@@ -112,12 +132,14 @@ class _BoostedPostsPageState extends State<BoostedPostsPage> {
           final postId = postData['post_id'] is String 
               ? int.parse(postData['post_id']) 
               : postData['post_id'] as int;
+          
           final postDetails = await postsRepository.fetchPost(postId);
           final post = Post.fromJson(postDetails);
           newPosts.add(post);
         } catch (e) {
         }
       }
+      
       if (mounted) {
         setState(() {
           _posts.addAll(newPosts);
@@ -131,11 +153,13 @@ class _BoostedPostsPageState extends State<BoostedPostsPage> {
         if (errorMessage.contains('post_text') || errorMessage.contains('Unknown column')) {
           errorMessage = 'خطأ في الخادم: Backend API يحتاج إلى تحديث';
         }
+
         final requiresSub = errorMessage.contains('SUBSCRIPTION_REQUIRED') ||
             errorMessage.contains('subscribe to a package');
         if (requiresSub) {
           setState(() => _subscriptionRequired = true);
         }
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(requiresSub ? 'You need to subscribe to view boosted posts' : '${'error'.tr}: $errorMessage'),
@@ -149,9 +173,11 @@ class _BoostedPostsPageState extends State<BoostedPostsPage> {
       }
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    
     return Scaffold(
       backgroundColor: theme.brightness == Brightness.dark 
           ? theme.scaffoldBackgroundColor 
@@ -204,6 +230,7 @@ class _BoostedPostsPageState extends State<BoostedPostsPage> {
                       boostLimit: _boostInfo!.boostLimit,
                       canBoostMore: _boostInfo!.canBoostMore,
                     ),
+
                   // Posts List
                   Expanded(
                     child: _posts.isEmpty
@@ -239,6 +266,7 @@ class _BoostedPostsPageState extends State<BoostedPostsPage> {
                                   ),
                                 );
                               }
+
                               return PostCard(post: _posts[index]);
                             },
                           ),

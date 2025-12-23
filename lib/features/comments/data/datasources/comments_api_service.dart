@@ -3,9 +3,12 @@ import 'package:snginepro/main.dart' show configCfgP;
 import 'dart:io';
 import '../models/comment.dart';
 import '../models/comments_response.dart';
+
 class CommentsApiService {
   final ApiClient _client;
+
   CommentsApiService(this._client);
+
   /// Get comments for a post with pagination
   Future<CommentsResponse> getPostComments(
     int postId, {
@@ -21,6 +24,7 @@ class CommentsApiService {
           'limit': limit.toString(),
         },
       );
+
       if (response['status'] == 'success') {
         return CommentsResponse.fromJson(response);
       } else {
@@ -30,6 +34,7 @@ class CommentsApiService {
       rethrow;
     }
   }
+
   /// Create a new comment on a post
   Future<CommentModel> createComment({
     required int postId,
@@ -47,14 +52,17 @@ class CommentsApiService {
           'voice_note': voiceNote ?? '',
         },
       );
+
       if (response['error'] == true) {
         throw Exception(response['message'] ?? 'Failed to create comment');
       }
+
       return CommentModel.fromJson(response['comment']);
     } catch (e) {
       rethrow;
     }
   }
+
   /// Get replies for a comment with pagination
   Future<RepliesResponse> getCommentReplies(
     int commentId, {
@@ -70,6 +78,7 @@ class CommentsApiService {
           'limit': limit.toString(),
         },
       );
+
       if (response['status'] == 'success') {
         return RepliesResponse.fromJson(response);
       } else {
@@ -79,6 +88,7 @@ class CommentsApiService {
       rethrow;
     }
   }
+
   /// Create a reply to a comment
   Future<CommentModel> createReply({
     required int commentId,
@@ -96,6 +106,7 @@ class CommentsApiService {
           'voice_note': voiceNote ?? '',
         },
       );
+
       if (response['status'] == 'success') {
         return CommentModel.fromJson(response['data']['reply']);
       } else {
@@ -105,6 +116,7 @@ class CommentsApiService {
       rethrow;
     }
   }
+
   /// React to a comment (like, love, haha, yay, wow, sad, angry, remove)
   Future<void> reactToComment({
     required int commentId,
@@ -118,6 +130,7 @@ class CommentsApiService {
           'reaction': reaction,
         },
       );
+
       if (response['status'] != 'success') {
         throw Exception(response['message'] ?? 'Failed to react to comment');
       }
@@ -125,6 +138,7 @@ class CommentsApiService {
       rethrow;
     }
   }
+
   /// Edit an existing comment
   Future<Map<String, dynamic>> editComment({
     required int commentId,
@@ -138,14 +152,17 @@ class CommentsApiService {
           'text': newText,
         },
       );
+
       if (response['status'] != 'success') {
         throw Exception(response['message'] ?? 'Failed to edit comment');
       }
+
       return response['data']['comment'];
     } catch (e) {
       rethrow;
     }
   }
+
   /// Delete a comment
   Future<void> deleteComment(int commentId) async {
     try {
@@ -155,6 +172,7 @@ class CommentsApiService {
           'comment_id': commentId,
         },
       );
+
       if (response['status'] != 'success') {
         throw Exception(response['message'] ?? 'Failed to delete comment');
       }
@@ -162,6 +180,7 @@ class CommentsApiService {
       rethrow;
     }
   }
+
   /// Upload image file and get the path
   Future<String> uploadImage(File imageFile) async {
     try {
@@ -171,6 +190,7 @@ class CommentsApiService {
         filePath: imageFile.path,
         fileFieldName: 'file',
       );
+
       if (response['status'] == 'success') {
         // Return the source path (not the full URL)
         return response['data']['source'] ?? '';
@@ -181,6 +201,7 @@ class CommentsApiService {
       rethrow;
     }
   }
+
   /// Upload audio file and get the path
   Future<String> uploadAudio(File audioFile) async {
     try {
@@ -190,6 +211,7 @@ class CommentsApiService {
         filePath: audioFile.path,
         fileFieldName: 'file',
       );
+
       if (response['status'] == 'success') {
         // Return the source path (not the full URL)
         return response['data']['source'] ?? '';

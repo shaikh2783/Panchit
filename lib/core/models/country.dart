@@ -1,14 +1,17 @@
 import 'package:equatable/equatable.dart';
+
 /// نموذج الدولة
 class Country extends Equatable {
   final String countryId;
   final String countryName;
   final String countryCode;
+
   const Country({
     required this.countryId,
     required this.countryName,
     required this.countryCode,
   });
+
   factory Country.fromJson(Map<String, dynamic> json) {
     return Country(
       countryId: json['country_id']?.toString() ?? '',
@@ -16,6 +19,7 @@ class Country extends Equatable {
       countryCode: json['country_code']?.toString() ?? '',
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'country_id': countryId,
@@ -23,6 +27,7 @@ class Country extends Equatable {
       'country_code': countryCode,
     };
   }
+
   @override
   List<Object?> get props => [countryId, countryName, countryCode];
 }

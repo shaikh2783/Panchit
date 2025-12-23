@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 Color walletStatusColor(String status) {
   final lower = status.toLowerCase();
   if (lower.contains('pending')) {
@@ -14,12 +15,14 @@ Color walletStatusColor(String status) {
   }
   return Colors.blueGrey;
 }
+
 String walletFormatDate(DateTime date) {
   final local = date.toLocal();
   String twoDigits(int value) => value.toString().padLeft(2, '0');
   return '${local.year}-${twoDigits(local.month)}-${twoDigits(local.day)} '
       '${twoDigits(local.hour)}:${twoDigits(local.minute)}';
 }
+
 DateTime walletDateTimeFromTimestamp(int timestamp) {
   if (timestamp == 0) {
     return DateTime.now();

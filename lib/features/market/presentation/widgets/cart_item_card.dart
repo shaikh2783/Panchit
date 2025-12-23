@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../../core/theme/ui_constants.dart';
 import '../../data/models/models.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 /// Cart Item Card Widget - بطاقة منتج في السلة
 /// 
 /// عرض منتج في السلة مع إمكانية تعديل الكمية أو الحذف
@@ -10,12 +11,14 @@ class CartItemCard extends StatelessWidget {
   final CartItem item;
   final Function(int) onQuantityChanged;
   final VoidCallback onRemove;
+
   const CartItemCard({
     Key? key,
     required this.item,
     required this.onQuantityChanged,
     required this.onRemove,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -45,7 +48,9 @@ class CartItemCard extends StatelessWidget {
                     : _buildImagePlaceholder(),
               ),
             ),
+
             const SizedBox(width: 12),
+
             // Product Info
             Expanded(
               child: Column(
@@ -61,7 +66,9 @@ class CartItemCard extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
+
                   const SizedBox(height: 4),
+
                   // Seller
                   Row(
                     children: [
@@ -80,7 +87,9 @@ class CartItemCard extends StatelessWidget {
                       ),
                     ],
                   ),
+
                   const SizedBox(height: 8),
+
                   // Price & Quantity Controls
                   Row(
                     children: [
@@ -93,11 +102,14 @@ class CartItemCard extends StatelessWidget {
                           color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
+
                       const Spacer(),
+
                       // Quantity Controls
                       _buildQuantityControls(context),
                     ],
                   ),
+
                   // Total for this item
                   if (item.quantity > 1)
                     Padding(
@@ -113,6 +125,7 @@ class CartItemCard extends StatelessWidget {
                 ],
               ),
             ),
+
             // Remove Button
             IconButton(
               icon: const Icon(Icons.delete_outline, color: Colors.red),
@@ -124,6 +137,7 @@ class CartItemCard extends StatelessWidget {
       ),
     );
   }
+
   Widget _buildImagePlaceholder() {
     return Center(
       child: Icon(
@@ -133,6 +147,7 @@ class CartItemCard extends StatelessWidget {
       ),
     );
   }
+
   Widget _buildQuantityControls(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
@@ -156,6 +171,7 @@ class CartItemCard extends StatelessWidget {
               ),
             ),
           ),
+
           // Quantity
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -167,6 +183,7 @@ class CartItemCard extends StatelessWidget {
               ),
             ),
           ),
+
           // Increase
           InkWell(
             onTap: () => onQuantityChanged(item.quantity + 1),
@@ -183,6 +200,7 @@ class CartItemCard extends StatelessWidget {
       ),
     );
   }
+
   void _showRemoveDialog(BuildContext context) {
     showDialog(
       context: context,

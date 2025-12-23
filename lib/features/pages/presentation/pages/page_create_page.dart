@@ -2,38 +2,49 @@ import 'package:flutter/material.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
+
 import 'package:snginepro/core/theme/app_colors.dart';
 import 'package:snginepro/features/pages/domain/pages_repository.dart';
 import 'package:snginepro/features/pages/data/models/page_category.dart';
 import 'package:snginepro/core/data/models/country.dart';
 import 'package:snginepro/core/data/models/language.dart';
 import 'package:snginepro/core/network/api_exception.dart';
+
 class PageCreatePage extends StatefulWidget {
   const PageCreatePage({super.key});
+
   @override
   State<PageCreatePage> createState() => _PageCreatePageState();
 }
+
 class _PageCreatePageState extends State<PageCreatePage> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _usernameController = TextEditingController();
   final _descriptionController = TextEditingController();
+
   int? _selectedCategory;
   int? _selectedCountry;
   int? _selectedLanguage;
+
   bool _isLoading = false;
+
   // Dynamic data from API
   List<PageCategory> _categories = [];
   bool _isLoadingCategories = false;
+  
   List<Country> _countries = [];
   bool _isLoadingCountries = false;
+  
   List<Language> _languages = [];
   bool _isLoadingLanguages = false;
+
   @override
   void initState() {
     super.initState();
     _loadAllData();
   }
+
   Future<void> _loadAllData() async {
     await Future.wait([
       _loadCategories(),
@@ -41,6 +52,7 @@ class _PageCreatePageState extends State<PageCreatePage> {
       _loadLanguages(),
     ]);
   }
+
   Future<void> _loadCategories() async {
     setState(() => _isLoadingCategories = true);
     try {
@@ -61,6 +73,7 @@ class _PageCreatePageState extends State<PageCreatePage> {
       }
     }
   }
+
   Future<void> _loadCountries() async {
     setState(() => _isLoadingCountries = true);
     try {
@@ -81,6 +94,7 @@ class _PageCreatePageState extends State<PageCreatePage> {
       }
     }
   }
+
   Future<void> _loadLanguages() async {
     setState(() => _isLoadingLanguages = true);
     try {
@@ -101,6 +115,7 @@ class _PageCreatePageState extends State<PageCreatePage> {
       }
     }
   }
+
   @override
   void dispose() {
     _titleController.dispose();
@@ -108,10 +123,12 @@ class _PageCreatePageState extends State<PageCreatePage> {
     _descriptionController.dispose();
     super.dispose();
   }
+
   Future<void> _createPage() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
+
     if (_selectedCategory == null) {
       _showError('Please select a category. If categories are still loading, please wait.');
       return;
@@ -124,7 +141,9 @@ class _PageCreatePageState extends State<PageCreatePage> {
       _showError('Please select a language. If languages are still loading, please wait.');
       return;
     }
+
     setState(() => _isLoading = true);
+
     try {
       final repository = context.read<PagesRepository>();
       final page = await repository.createPage(
@@ -137,7 +156,9 @@ class _PageCreatePageState extends State<PageCreatePage> {
             ? _descriptionController.text.trim()
             : null,
       );
+
       if (!mounted) return;
+
       Get.back(result: page);
       Get.snackbar(
         'Success',
@@ -159,6 +180,7 @@ class _PageCreatePageState extends State<PageCreatePage> {
       }
     }
   }
+
   void _showError(String message) {
     Get.snackbar(
       'Error',
@@ -169,15 +191,17 @@ class _PageCreatePageState extends State<PageCreatePage> {
       duration: const Duration(seconds: 3),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       backgroundColor: isDark
           ? AppColors.backgroundDark
           : AppColors.backgroundLight,
       appBar: AppBar(
-        title: const Text('Create Page'),
+        title: Text('create_page_title'.tr),
         backgroundColor: isDark
             ? AppColors.surfaceDark
             : AppColors.surfaceLight,
@@ -234,6 +258,7 @@ class _PageCreatePageState extends State<PageCreatePage> {
               textInputAction: TextInputAction.next,
             ),
             const SizedBox(height: 16),
+
             // Username
             TextFormField(
               controller: _usernameController,
@@ -263,6 +288,7 @@ class _PageCreatePageState extends State<PageCreatePage> {
               textInputAction: TextInputAction.next,
             ),
             const SizedBox(height: 16),
+
             // Category
             _isLoadingCategories
                 ? Container(
@@ -295,7 +321,7 @@ class _PageCreatePageState extends State<PageCreatePage> {
                       filled: true,
                       fillColor: isDark ? AppColors.surfaceDark : Colors.grey[50],
                     ),
-                    hint: const Text('Select category'),
+                    hint: Text('select_category_placeholder'.tr),
                     items: _categories.map((category) {
                       return DropdownMenuItem<int>(
                         value: category.categoryId,
@@ -307,6 +333,7 @@ class _PageCreatePageState extends State<PageCreatePage> {
                     },
                   ),
             const SizedBox(height: 16),
+
             // Country
             _isLoadingCountries
                 ? Container(
@@ -339,7 +366,7 @@ class _PageCreatePageState extends State<PageCreatePage> {
                       filled: true,
                       fillColor: isDark ? AppColors.surfaceDark : Colors.grey[50],
                     ),
-                    hint: const Text('Select country'),
+                    hint: Text('select_country_placeholder'.tr),
                     items: _countries.map((country) {
                       return DropdownMenuItem<int>(
                         value: country.countryId,
@@ -351,6 +378,7 @@ class _PageCreatePageState extends State<PageCreatePage> {
                     },
                   ),
             const SizedBox(height: 16),
+
             // Language
             _isLoadingLanguages
                 ? Container(
@@ -383,7 +411,7 @@ class _PageCreatePageState extends State<PageCreatePage> {
                       filled: true,
                       fillColor: isDark ? AppColors.surfaceDark : Colors.grey[50],
                     ),
-                    hint: const Text('Select language'),
+                    hint: Text('select_language_placeholder'.tr),
                     items: _languages.map((language) {
                       return DropdownMenuItem<int>(
                         value: language.languageId,
@@ -395,6 +423,7 @@ class _PageCreatePageState extends State<PageCreatePage> {
                     },
                   ),
             const SizedBox(height: 16),
+
             // Description
             TextFormField(
               controller: _descriptionController,
@@ -413,6 +442,7 @@ class _PageCreatePageState extends State<PageCreatePage> {
               textInputAction: TextInputAction.done,
             ),
             const SizedBox(height: 24),
+
             // Info card
             Container(
               padding: const EdgeInsets.all(16),

@@ -21,6 +21,7 @@ class CommentModel {
   final bool canEdit;
   final bool canDelete;
   final String textPlain;
+
   CommentModel({
     required this.commentId,
     required this.nodeId,
@@ -45,6 +46,7 @@ class CommentModel {
     required this.canDelete,
     required this.textPlain,
   });
+
   factory CommentModel.fromJson(Map<String, dynamic> json) {
     return CommentModel(
       commentId: json['comment_id']?.toString() ?? '',
@@ -87,6 +89,7 @@ class CommentModel {
       textPlain: json['text_plain']?.toString() ?? json['text']?.toString() ?? '',
     );
   }
+
   static Map<String, int> _parseReactions(dynamic reactions) {
     if (reactions == null) {
       return {
@@ -99,9 +102,11 @@ class CommentModel {
         'angry': 0,
       };
     }
+
     final Map<String, dynamic> reactionsMap = reactions is Map 
         ? Map<String, dynamic>.from(reactions)
         : {};
+
     return {
       'like': int.tryParse(reactionsMap['like']?.toString() ?? '0') ?? 0,
       'love': int.tryParse(reactionsMap['love']?.toString() ?? '0') ?? 0,
@@ -112,6 +117,7 @@ class CommentModel {
       'angry': int.tryParse(reactionsMap['angry']?.toString() ?? '0') ?? 0,
     };
   }
+
   Map<String, dynamic> toJson() {
     return {
       'comment_id': commentId,
@@ -138,6 +144,7 @@ class CommentModel {
       'text_plain': textPlain,
     };
   }
+
   CommentModel copyWith({
     String? commentId,
     String? nodeId,

@@ -19,41 +19,52 @@ import 'package:snginepro/features/feed/data/datasources/posts_api_service.dart'
 import 'package:snginepro/features/feed/data/models/upload_file_data.dart';
 import 'package:snginepro/core/network/api_client.dart';
 import 'package:intl/intl.dart';
+
 class EventDetailPage extends StatefulWidget {
   final int eventId;
+
   const EventDetailPage({
     super.key,
     required this.eventId,
   });
+
   @override
   State<EventDetailPage> createState() => _EventDetailPageState();
 }
+
 class _EventDetailPageState extends State<EventDetailPage> {
   Event? _currentEvent;
   List<Post> _posts = [];
   bool _isLoadingPosts = false;
   bool _hasMorePosts = true;
   final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
+
     // تنظيف البيانات القديمة
     _currentEvent = null;
     _posts.clear();
     _isLoadingPosts = false;
     _hasMorePosts = true;
+
     // Always load event details from API using eventId
     context.read<EventsBloc>().add(FetchEventDetailsEvent(widget.eventId));
+
     // Load event posts
     context
         .read<EventsBloc>()
         .add(FetchEventPostsEvent(eventId: widget.eventId, refresh: true));
+
     // Setup scroll listener for pagination
     _scrollController.addListener(_onScroll);
   }
+
   @override
   void didUpdateWidget(EventDetailPage oldWidget) {
     super.didUpdateWidget(oldWidget);
+    
     // If eventId changed, reload everything
     if (oldWidget.eventId != widget.eventId) {
       setState(() {
@@ -62,16 +73,19 @@ class _EventDetailPageState extends State<EventDetailPage> {
         _hasMorePosts = true;
         _isLoadingPosts = false;
       });
+      
       // Load new event
       context.read<EventsBloc>().add(FetchEventDetailsEvent(widget.eventId));
       context.read<EventsBloc>().add(FetchEventPostsEvent(eventId: widget.eventId));
     }
   }
+
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
+
   void _onScroll() {
     if (_scrollController.position.pixels >=
             _scrollController.position.maxScrollExtent * 0.9 &&
@@ -81,9 +95,11 @@ class _EventDetailPageState extends State<EventDetailPage> {
       setState(() => _isLoadingPosts = true);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Get.theme;
+
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       floatingActionButton: _buildCreatePostFAB(),
@@ -104,6 +120,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
               _hasMorePosts = state.hasMore;
               _isLoadingPosts = false;
             });
+            
           } else if (state is EventJoined) {
             Get.snackbar(
               'success'.tr,
@@ -191,6 +208,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
       ),
     );
   }
+
   Widget _buildLoadingState() {
     return Center(
       child: Column(
@@ -210,9 +228,11 @@ class _EventDetailPageState extends State<EventDetailPage> {
       ),
     );
   }
+
   Widget _buildAppBar() {
     final event = _currentEvent!;
     final isDark = Get.isDarkMode;
+
     return SliverAppBar(
       expandedHeight: 250,
       pinned: true,
@@ -307,6 +327,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
                     builder: (_) => CreateEventPage(event: _currentEvent),
                   ),
                 );
+                
                 // Reload event details if it was updated
                 if (result == true && _currentEvent != null) {
                   context
@@ -358,9 +379,11 @@ class _EventDetailPageState extends State<EventDetailPage> {
       ],
     );
   }
+
   Widget _buildEventInfo() {
     final event = _currentEvent!;
     final theme = Get.theme;
+
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -374,6 +397,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
             ),
           ),
           const SizedBox(height: 16),
+
           // Date & Time
           _buildInfoRow(
             icon: Iconsax.calendar_1,
@@ -386,6 +410,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
               title: 'end_date'.tr,
               value: _formatDateTime(event.eventEndDate),
             ),
+
           // Location
           if (event.eventLocation != null && event.eventLocation!.isNotEmpty)
             _buildInfoRow(
@@ -393,12 +418,14 @@ class _EventDetailPageState extends State<EventDetailPage> {
               title: 'event_location'.tr,
               value: event.eventLocation!,
             ),
+
           // Online/In-person
           _buildInfoRow(
             icon: event.eventIsOnline ? Iconsax.video : Iconsax.people,
             title: event.eventIsOnline ? 'Online Event' : 'In-Person Event',
             value: '',
           ),
+
           // Privacy
           _buildInfoRow(
             icon: Iconsax.shield_tick,
@@ -407,9 +434,11 @@ class _EventDetailPageState extends State<EventDetailPage> {
                 ? 'privacy_public'.tr
                 : 'privacy_private'.tr,
           ),
+
           const SizedBox(height: 16),
           const Divider(),
           const SizedBox(height: 16),
+
           // Organizer
           Row(
             children: [
@@ -458,6 +487,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
               ),
             ],
           ),
+
           // Description
           if (event.eventDescription != null &&
               event.eventDescription!.isNotEmpty) ...[
@@ -476,6 +506,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
               style: theme.textTheme.bodyMedium,
             ),
           ],
+
           // Stats
           const SizedBox(height: 16),
           const Divider(),
@@ -505,6 +536,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
       ),
     );
   }
+
   Widget _buildInfoRow({
     required IconData icon,
     required String title,
@@ -512,6 +544,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
   }) {
     final theme = Get.theme;
     final isDark = Get.isDarkMode;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
@@ -547,6 +580,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
       ),
     );
   }
+
   Widget _buildStatCard({
     required IconData icon,
     required String label,
@@ -555,6 +589,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
   }) {
     final isDark = Get.isDarkMode;
     final theme = Get.theme;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -581,9 +616,11 @@ class _EventDetailPageState extends State<EventDetailPage> {
       ),
     );
   }
+
   Widget _buildActionButtons() {
     final event = _currentEvent!;
     final theme = Get.theme;
+
     if (event.iAdmin) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -600,6 +637,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
                           builder: (_) => CreateEventPage(event: _currentEvent),
                         ),
                       );
+                      
                       // Reload event details if it was updated
                       if (result == true && _currentEvent != null) {
                         context
@@ -656,6 +694,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
         ),
       );
     }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -695,12 +734,14 @@ class _EventDetailPageState extends State<EventDetailPage> {
       ),
     );
   }
+
   Widget _buildPostsList() {
     if (_posts.isEmpty && _isLoadingPosts) {
       return const SliverFillRemaining(
         child: Center(child: CircularProgressIndicator()),
       );
     }
+
     if (_posts.isEmpty) {
       return SliverFillRemaining(
         child: Center(
@@ -729,6 +770,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
         ),
       );
     }
+
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
@@ -775,9 +817,11 @@ class _EventDetailPageState extends State<EventDetailPage> {
       ),
     );
   }
+
   String _formatDateTime(DateTime dateTime) {
     return DateFormat('EEEE, MMM dd, yyyy • hh:mm a').format(dateTime);
   }
+
   void _handleJoinEvent(String action) {
     context.read<EventsBloc>().add(
           JoinEventEvent(
@@ -786,9 +830,11 @@ class _EventDetailPageState extends State<EventDetailPage> {
           ),
         );
   }
+
   void _handleLeaveEvent() {
     context.read<EventsBloc>().add(LeaveEventEvent(widget.eventId));
   }
+
   void _showDeleteConfirmation() {
     Get.dialog(
       AlertDialog(
@@ -815,11 +861,13 @@ class _EventDetailPageState extends State<EventDetailPage> {
       ),
     );
   }
+
   /// Build FAB for creating posts (only for joined members)
   Widget? _buildCreatePostFAB() {
     if (_currentEvent == null || !_currentEvent!.iJoined) {
       return null;
     }
+
     return FloatingActionButton.extended(
       onPressed: _openCreatePost,
       icon: const Icon(Iconsax.edit),
@@ -828,9 +876,11 @@ class _EventDetailPageState extends State<EventDetailPage> {
       foregroundColor: Colors.white,
     );
   }
+
   /// Open create post page for this event
   void _openCreatePost() {
     if (_currentEvent == null) return;
+    
     Navigator.of(context)
         .push(MaterialPageRoute(
           builder: (_) => CreatePostPageModern(
@@ -850,14 +900,17 @@ class _EventDetailPageState extends State<EventDetailPage> {
               .add(FetchEventPostsEvent(eventId: widget.eventId));
         });
   }
+
   /// اختيار وتحديث غلاف الفعالية
   Future<void> _updateEventCover() async {
     if (_currentEvent == null) return;
+
     final picker = ImagePicker();
     final image = await picker.pickImage(
       source: ImageSource.gallery,
       imageQuality: 85,
     );
+
     if (image != null) {
       try {
         // عرض loading
@@ -865,6 +918,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
           const Center(child: CircularProgressIndicator()),
           barrierDismissible: false,
         );
+
         // رفع الصورة أولاً
         final apiClient = context.read<ApiClient>();
         final apiService = PostsApiService(apiClient);
@@ -872,9 +926,13 @@ class _EventDetailPageState extends State<EventDetailPage> {
           File(image.path),
           type: FileUploadType.photo,
         );
+
         // إغلاق loading
         if (Get.isDialogOpen ?? false) Get.back();
+
+
         if (uploadResult != null) {
+          
           if (mounted) {
             // إرسال source للـ API
             context.read<EventsBloc>().add(UpdateEventCoverEvent(
@@ -895,6 +953,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
       } catch (e) {
         // إغلاق loading
         if (Get.isDialogOpen ?? false) Get.back();
+        
         Get.snackbar(
           'error'.tr,
           'failed_to_upload_image'.tr,
@@ -905,14 +964,17 @@ class _EventDetailPageState extends State<EventDetailPage> {
       }
     }
   }
+
   /// اختيار وتحديث صورة الفعالية
   Future<void> _updateEventPicture() async {
     if (_currentEvent == null) return;
+
     final picker = ImagePicker();
     final image = await picker.pickImage(
       source: ImageSource.gallery,
       imageQuality: 85,
     );
+
     if (image != null) {
       try {
         // عرض loading
@@ -920,6 +982,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
           const Center(child: CircularProgressIndicator()),
           barrierDismissible: false,
         );
+
         // رفع الصورة أولاً
         final apiClient = context.read<ApiClient>();
         final apiService = PostsApiService(apiClient);
@@ -927,9 +990,12 @@ class _EventDetailPageState extends State<EventDetailPage> {
           File(image.path),
           type: FileUploadType.photo,
         );
+
         // إغلاق loading
         if (Get.isDialogOpen ?? false) Get.back();
+
         if (uploadResult != null) {
+          
           if (mounted) {
             // إرسال source للـ API
             context.read<EventsBloc>().add(UpdateEventPictureEvent(
@@ -949,6 +1015,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
       } catch (e) {
         // إغلاق loading
         if (Get.isDialogOpen ?? false) Get.back();
+        
         Get.snackbar(
           'error'.tr,
           'failed_to_upload_image'.tr,

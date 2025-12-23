@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+
 /// Order User Model - معلومات المستخدم (بائع أو مشتري)
 class OrderUser extends Equatable {
   final String userId;
@@ -6,6 +7,7 @@ class OrderUser extends Equatable {
   final String userFirstname;
   final String userLastname;
   final String userPicture;
+
   const OrderUser({
     required this.userId,
     required this.userName,
@@ -13,6 +15,7 @@ class OrderUser extends Equatable {
     required this.userLastname,
     required this.userPicture,
   });
+
   factory OrderUser.fromJson(Map<String, dynamic> json) {
     return OrderUser(
       userId: json['user_id']?.toString() ?? '',
@@ -22,6 +25,7 @@ class OrderUser extends Equatable {
       userPicture: json['user_picture']?.toString() ?? '',
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'user_id': userId,
@@ -31,7 +35,9 @@ class OrderUser extends Equatable {
       'user_picture': userPicture,
     };
   }
+
   String get fullName => '$userFirstname $userLastname'.trim();
+
   @override
   List<Object?> get props => [
         userId,

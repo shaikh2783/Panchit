@@ -14,6 +14,7 @@ class PostCourse {
     this.candidatesCount = 0,
     this.iOwner = false,
   });
+
   final String courseId;
   final String postId;
   final String title;
@@ -27,6 +28,7 @@ class PostCourse {
   final bool available;
   final int candidatesCount;
   final bool iOwner;
+
   bool get isFree => fees == null || fees == '0' || fees!.isEmpty;
   bool get hasStarted {
     if (startDate == null) return false;
@@ -37,6 +39,7 @@ class PostCourse {
       return false;
     }
   }
+  
   bool get hasEnded {
     if (endDate == null) return false;
     try {
@@ -46,7 +49,9 @@ class PostCourse {
       return false;
     }
   }
+
   bool get isOngoing => hasStarted && !hasEnded;
+
   factory PostCourse.fromJson(Map<String, dynamic> json) {
     return PostCourse(
       courseId: json['course_id']?.toString() ?? '',
@@ -66,6 +71,7 @@ class PostCourse {
       iOwner: json['i_owner'] == true || json['i_owner'] == 1 || json['i_owner'] == '1',
     );
   }
+
   static PostCourse? maybeFromJson(dynamic json) {
     if (json == null) return null;
     if (json is! Map<String, dynamic>) return null;
@@ -76,6 +82,7 @@ class PostCourse {
       return null;
     }
   }
+
   Map<String, dynamic> toJson() {
     return {
       'course_id': courseId,
@@ -94,6 +101,7 @@ class PostCourse {
     };
   }
 }
+
 class CourseCurrency {
   CourseCurrency({
     required this.currencyId,
@@ -104,6 +112,7 @@ class CourseCurrency {
     this.isDefault = false,
     this.enabled = true,
   });
+
   final String currencyId;
   final String name;
   final String code;
@@ -111,6 +120,7 @@ class CourseCurrency {
   final String dir; // 'left' or 'right'
   final bool isDefault;
   final bool enabled;
+
   factory CourseCurrency.fromJson(Map<String, dynamic> json) {
     return CourseCurrency(
       currencyId: json['currency_id']?.toString() ?? '',
@@ -122,6 +132,7 @@ class CourseCurrency {
       enabled: json['enabled']?.toString() == '1' || json['enabled'] == true,
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'currency_id': currencyId,

@@ -9,12 +9,15 @@ import 'dart:io';
 import '../widgets/campaign_form_field.dart';
 import '../widgets/campaign_date_picker.dart';
 import '../widgets/campaign_image_upload.dart';
+
 class CreateCampaignPage extends StatefulWidget {
   const CreateCampaignPage({super.key, this.initialCampaign});
   final Map<String, dynamic>? initialCampaign; // when provided, page works in edit mode
+
   @override
   State<CreateCampaignPage> createState() => _CreateCampaignPageState();
 }
+
 class _CreateCampaignPageState extends State<CreateCampaignPage> {
   final _formKey = GlobalKey<FormState>();
   final _titleCtrl = TextEditingController();
@@ -40,6 +43,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
   int? _campaignId; // edit mode id
   final _startDateCtrl = TextEditingController();
   final _endDateCtrl = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -93,6 +97,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
       _entityIdCtrl.text = (init['ads_page_id'] ?? init['ads_group_id'] ?? init['ads_event_id'] ?? '')?.toString() ?? '';
     }
   }
+
   @override
   void dispose() {
     _titleCtrl.dispose();
@@ -106,6 +111,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
     _endDateCtrl.dispose();
     super.dispose();
   }
+
   Future<void> _uploadImage() async {
     if (_selectedImageFile == null) return;
     setState(() => _uploading = true);
@@ -141,6 +147,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
       if (mounted) setState(() => _uploading = false);
     }
   }
+
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     // Additional validations per requirements
@@ -284,10 +291,12 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
       if (mounted) setState(() => _submitting = false);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    
     return Scaffold(
       backgroundColor: isDark ? theme.scaffoldBackgroundColor : Colors.grey.shade50,
       appBar: AppBar(
@@ -309,6 +318,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
               isUploading: _uploading,
             ),
             const SizedBox(height: 24),
+            
             // Ad Content Section
             CampaignSectionTitle(
               title: 'ads_content'.tr,
@@ -331,6 +341,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
               maxLines: 3,
             ),
             const SizedBox(height: 24),
+            
             // Campaign Details Section
             CampaignSectionTitle(
               title: 'campaign_details'.tr,
@@ -415,6 +426,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
               validator: (v) => (v == null || v.trim().isEmpty) ? 'required'.tr : null,
             ),
             const SizedBox(height: 24),
+            
             // Schedule Section
             CampaignSectionTitle(
               title: 'campaign_schedule'.tr,
@@ -466,6 +478,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
               ],
             ),
             const SizedBox(height: 24),
+            
             // Targeting Section
             CampaignSectionTitle(
               title: 'audience_targeting'.tr,
@@ -505,6 +518,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
               ],
             ),
             const SizedBox(height: 32),
+            
             // Submit Button
             Container(
               height: 56,
@@ -513,12 +527,12 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                 gradient: LinearGradient(
                   colors: [
                     theme.colorScheme.primary,
-                    theme.colorScheme.primary.withValues(alpha: 0.8),
+                    theme.colorScheme.primary.withOpacity(0.8),
                   ],
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                    color: theme.colorScheme.primary.withOpacity(0.3),
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),

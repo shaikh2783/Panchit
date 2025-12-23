@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import '../../../../core/network/api_client.dart';
 import '../../data/models/report_reason.dart';
 import '../../data/services/reports_api_service.dart';
+
 /// صفحة الإبلاغ عن المحتوى
 class ReportContentPage extends StatefulWidget {
   final ReportContentType contentType;
   final String contentId;
   final String? contentTitle;
   final String? contentAuthor;
+
   const ReportContentPage({
     super.key,
     required this.contentType,
@@ -17,37 +20,44 @@ class ReportContentPage extends StatefulWidget {
     this.contentTitle,
     this.contentAuthor,
   });
+
   @override
   State<ReportContentPage> createState() => _ReportContentPageState();
 }
+
 class _ReportContentPageState extends State<ReportContentPage> {
   late ReportsApiService _reportsService;
   ReportReason? _selectedReason;
   final _messageController = TextEditingController();
   bool _isSubmitting = false;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _reportsService = ReportsApiService(context.read<ApiClient>());
   }
+
   @override
   void dispose() {
     _messageController.dispose();
     super.dispose();
   }
+
   Future<void> _submitReport() async {
     if (_selectedReason == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select a reason for reporting'),
+         SnackBar(
+          content: Text('please_select_reason'.tr),
           backgroundColor: Colors.orange,
         ),
       );
       return;
     }
+
     setState(() {
       _isSubmitting = true;
     });
+
     try {
       switch (widget.contentType) {
         case ReportContentType.post:
@@ -72,11 +82,12 @@ class _ReportContentPageState extends State<ReportContentPage> {
           );
           break;
       }
+
       if (mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Report submitted successfully. Thank you for helping keep our community safe.'),
+           SnackBar(
+            content: Text('report_submitted_success'.tr),
             backgroundColor: Colors.green,
             duration: Duration(seconds: 4),
           ),
@@ -86,7 +97,7 @@ class _ReportContentPageState extends State<ReportContentPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to submit report: ${e.toString()}'),
+            content: Text('report_submit_error'.trParams({'error': e.toString()})),
             backgroundColor: Colors.red,
           ),
         );
@@ -99,13 +110,15 @@ class _ReportContentPageState extends State<ReportContentPage> {
       }
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final contentTypeText = _getContentTypeText();
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Report $contentTypeText'),
+        title: Text('report_title_dialog'.trParams({'contentType': contentTypeText})),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -160,7 +173,9 @@ class _ReportContentPageState extends State<ReportContentPage> {
                       ],
                     ),
                   ),
+
                   const SizedBox(height: 24),
+
                   // Content info
                   if (widget.contentTitle != null || widget.contentAuthor != null) ...[
                     Text(
@@ -206,6 +221,7 @@ class _ReportContentPageState extends State<ReportContentPage> {
                     ),
                     const SizedBox(height: 24),
                   ],
+
                   // Reason selection
                   Text(
                     'Why are you reporting this $contentTypeText?',
@@ -214,9 +230,12 @@ class _ReportContentPageState extends State<ReportContentPage> {
                     ),
                   ),
                   const SizedBox(height: 12),
+
                   // Reason options
                   ...ReportReasons.reasons.map((reason) => _buildReasonOption(reason)).toList(),
+
                   const SizedBox(height: 24),
+
                   // Additional message
                   Text(
                     'Additional details (optional)',
@@ -242,6 +261,7 @@ class _ReportContentPageState extends State<ReportContentPage> {
               ),
             ),
           ),
+
           // Submit button
           Container(
             padding: const EdgeInsets.all(16),
@@ -291,9 +311,11 @@ class _ReportContentPageState extends State<ReportContentPage> {
       ),
     );
   }
+
   Widget _buildReasonOption(ReportReason reason) {
     final theme = Theme.of(context);
     final isSelected = _selectedReason == reason;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       child: InkWell(
@@ -358,6 +380,7 @@ class _ReportContentPageState extends State<ReportContentPage> {
       ),
     );
   }
+
   String _getContentTypeText() {
     switch (widget.contentType) {
       case ReportContentType.post:
@@ -369,6 +392,7 @@ class _ReportContentPageState extends State<ReportContentPage> {
     }
   }
 }
+
 /// نوع المحتوى المراد الإبلاغ عنه
 enum ReportContentType {
   post,

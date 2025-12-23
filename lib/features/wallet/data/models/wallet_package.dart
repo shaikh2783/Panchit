@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+
 class WalletPackage extends Equatable {
   const WalletPackage({
     required this.id,
@@ -18,6 +19,7 @@ class WalletPackage extends Equatable {
     this.billingPlans,
     this.subscription,
   });
+
   final int id;
   final String name;
   final double price;
@@ -34,6 +36,7 @@ class WalletPackage extends Equatable {
   final WalletPackagePermissions? permissions;
   final Map<String, dynamic>? billingPlans;
   final WalletPackageSubscription? subscription;
+
   factory WalletPackage.fromJson(Map<String, dynamic> json) {
     final features = _parseFeatures(json['features']);
     return WalletPackage(
@@ -73,6 +76,7 @@ class WalletPackage extends Equatable {
           : null,
     );
   }
+
   String get formattedPrice {
     final formattedAmount = _formatAmount(price);
     final symbol = currencySymbol.isNotEmpty ? currencySymbol : currency;
@@ -84,14 +88,23 @@ class WalletPackage extends Equatable {
     }
     return '$symbol$formattedAmount';
   }
+
   bool get hasPeriod => period != null;
+
   bool get isCurrentPlan => subscription?.isCurrentlyActive ?? false;
+
   bool get wasPurchased => subscription != null;
+
   bool get isSubscriptionExpired => subscription?.isExpired ?? false;
+
   bool get canRenew => wasPurchased && !isCurrentPlan;
+
   String? get subscriptionStatusLabel => subscription?.statusLabel;
+
   String? get subscriptionSecondaryLabel => subscription?.secondaryStatusLabel;
+
   String? get subscriptionPurchasedLabel => subscription?.purchasedOnLabel;
+
   @override
   List<Object?> get props => [
     id,
@@ -112,6 +125,7 @@ class WalletPackage extends Equatable {
     subscription,
   ];
 }
+
 class WalletPackagePermissions extends Equatable {
   const WalletPackagePermissions({
     this.groupId,
@@ -120,11 +134,13 @@ class WalletPackagePermissions extends Equatable {
     this.affiliates,
     this.points,
   });
+
   final int? groupId;
   final String? groupTitle;
   final Map<String, bool> capabilities;
   final Map<String, dynamic>? affiliates;
   final Map<String, dynamic>? points;
+
   factory WalletPackagePermissions.fromJson(Map<String, dynamic> json) {
     final rawCapabilities = json['capabilities'];
     final parsedCapabilities = <String, bool>{};
@@ -133,6 +149,7 @@ class WalletPackagePermissions extends Equatable {
         parsedCapabilities[key] = _toBool(value);
       });
     }
+
     return WalletPackagePermissions(
       groupId: _toNullableInt(json['group_id']),
       groupTitle: _nullableString(json['group_title']),
@@ -149,7 +166,9 @@ class WalletPackagePermissions extends Equatable {
           : null,
     );
   }
+
   bool get hasCapabilities => capabilities.isNotEmpty;
+
   @override
   List<Object?> get props => [
     groupId,
@@ -159,6 +178,7 @@ class WalletPackagePermissions extends Equatable {
     points,
   ];
 }
+
 class WalletPackageSubscription extends Equatable {
   const WalletPackageSubscription({
     required this.isActive,
@@ -168,12 +188,14 @@ class WalletPackageSubscription extends Equatable {
     this.expiresAt,
     this.expiresInSeconds,
   });
+
   final bool isActive;
   final bool isExpired;
   final bool isLifetime;
   final DateTime? subscribedAt;
   final DateTime? expiresAt;
   final int? expiresInSeconds;
+
   factory WalletPackageSubscription.fromJson(Map<String, dynamic> json) {
     return WalletPackageSubscription(
       isActive: _toBool(json['is_active']),
@@ -184,7 +206,9 @@ class WalletPackageSubscription extends Equatable {
       expiresInSeconds: _toNullableInt(json['expires_in_seconds']),
     );
   }
+
   bool get isCurrentlyActive => isActive && !isExpired;
+
   String? get statusLabel {
     if (isCurrentlyActive) {
       return 'Current package';
@@ -197,6 +221,7 @@ class WalletPackageSubscription extends Equatable {
     }
     return null;
   }
+
   String? get secondaryStatusLabel {
     if (isCurrentlyActive) {
       if (isLifetime) {
@@ -221,18 +246,21 @@ class WalletPackageSubscription extends Equatable {
     }
     return null;
   }
+
   String? get purchasedOnLabel {
     if (subscribedAt == null) {
       return null;
     }
     return _formatDate(subscribedAt!, includeTime: true);
   }
+
   String? get expiryLabel {
     if (expiresAt == null) {
       return null;
     }
     return _formatDate(expiresAt!, includeTime: true);
   }
+
   @override
   List<Object?> get props => [
     isActive,
@@ -243,30 +271,37 @@ class WalletPackageSubscription extends Equatable {
     expiresInSeconds,
   ];
 }
+
 class WalletPackagePeriod extends Equatable {
   const WalletPackagePeriod({required this.number, required this.type});
+
   final int number;
   final String type;
+
   factory WalletPackagePeriod.fromJson(Map<String, dynamic> json) {
     return WalletPackagePeriod(
       number: _toInt(json['number']),
       type: _toString(json['type']),
     );
   }
+
   static WalletPackagePeriod? tryParse(Object? value) {
     if (value is Map<String, dynamic>) {
       return WalletPackagePeriod.fromJson(value);
     }
     return null;
   }
+
   String get label {
     final normalized = type.toLowerCase();
     final plural = _pluralize(normalized, number);
     return '$number $plural';
   }
+
   @override
   List<Object?> get props => [number, type];
 }
+
 int _toInt(Object? value, {int fallback = 0}) {
   if (value is int) return value;
   if (value is num) return value.toInt();
@@ -275,6 +310,7 @@ int _toInt(Object? value, {int fallback = 0}) {
   }
   return fallback;
 }
+
 int? _toNullableInt(Object? value) {
   if (value == null) return null;
   if (value is int) return value;
@@ -284,6 +320,7 @@ int? _toNullableInt(Object? value) {
   }
   return null;
 }
+
 double _toDouble(Object? value, {double fallback = 0}) {
   if (value is num) return value.toDouble();
   if (value is String) {
@@ -291,15 +328,18 @@ double _toDouble(Object? value, {double fallback = 0}) {
   }
   return fallback;
 }
+
 String _toString(Object? value, {String fallback = ''}) {
   if (value == null) return fallback;
   return value.toString();
 }
+
 String? _nullableString(Object? value) {
   if (value == null) return null;
   final string = value.toString();
   return string.isEmpty ? null : string;
 }
+
 bool _toBool(Object? value) {
   if (value is bool) return value;
   if (value is num) return value != 0;
@@ -309,6 +349,7 @@ bool _toBool(Object? value) {
   }
   return false;
 }
+
 Map<String, dynamic> _parseFeatures(Object? value) {
   if (value is Map<String, dynamic>) {
     return Map<String, dynamic>.unmodifiable(value);
@@ -322,6 +363,7 @@ Map<String, dynamic> _parseFeatures(Object? value) {
   }
   return const {};
 }
+
 DateTime? _parseDateTime(Object? value) {
   if (value == null) {
     return null;
@@ -344,6 +386,7 @@ DateTime? _parseDateTime(Object? value) {
   }
   return null;
 }
+
 String _formatDate(DateTime value, {bool includeTime = false}) {
   final local = value.toLocal();
   final date =
@@ -357,12 +400,14 @@ String _formatDate(DateTime value, {bool includeTime = false}) {
       '${local.hour.toString().padLeft(2, '0')}:${local.minute.toString().padLeft(2, '0')}';
   return '$date $time';
 }
+
 String _formatAmount(double value) {
   if (value == value.truncateToDouble()) {
     return value.toStringAsFixed(0);
   }
   return value.toStringAsFixed(2);
 }
+
 String _pluralize(String word, int count) {
   if (count == 1) return word;
   switch (word) {

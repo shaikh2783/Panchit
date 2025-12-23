@@ -3,11 +3,14 @@ import 'package:get/get.dart';
 import '../../data/models/order.dart';
 import '../../domain/market_repository.dart';
 import 'order_details_page.dart';
+
 class OrdersListPage extends StatefulWidget {
   const OrdersListPage({super.key});
+
   @override
   State<OrdersListPage> createState() => _OrdersListPageState();
 }
+
 class _OrdersListPageState extends State<OrdersListPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   late MarketRepository _repository;
@@ -15,25 +18,30 @@ class _OrdersListPageState extends State<OrdersListPage> with SingleTickerProvid
   List<Order> _myOrders = [];
   List<Order> _mySalesOrders = [];
   String? _error;
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _loadOrders();
   }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _repository = Get.find<MarketRepository>();
   }
+
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
   }
+
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
+
     if (difference.inDays == 0) {
       return 'اليوم';
     } else if (difference.inDays == 1) {
@@ -44,15 +52,18 @@ class _OrdersListPageState extends State<OrdersListPage> with SingleTickerProvid
       return '${date.day}/${date.month}/${date.year}';
     }
   }
+
   Future<void> _loadOrders() async {
     setState(() {
       _isLoading = true;
       _error = null;
     });
+
     try {
       // Load both my orders (as buyer) and sales orders (as seller)
       final myOrders = await _repository.getBuyerOrders();
       final salesOrders = await _repository.getSellerOrders();
+      
       setState(() {
         _myOrders = myOrders;
         _mySalesOrders = salesOrders;
@@ -65,6 +76,7 @@ class _OrdersListPageState extends State<OrdersListPage> with SingleTickerProvid
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,6 +122,7 @@ class _OrdersListPageState extends State<OrdersListPage> with SingleTickerProvid
                 ),
     );
   }
+
   Widget _buildErrorWidget() {
     return Center(
       child: Column(
@@ -152,10 +165,12 @@ class _OrdersListPageState extends State<OrdersListPage> with SingleTickerProvid
       ),
     );
   }
+
   Widget _buildOrdersList(List<Order> orders, bool isSalesOrders) {
     if (orders.isEmpty) {
       return _buildEmptyState(isSalesOrders);
     }
+
     return RefreshIndicator(
       onRefresh: _loadOrders,
       child: ListView.builder(
@@ -168,6 +183,7 @@ class _OrdersListPageState extends State<OrdersListPage> with SingleTickerProvid
       ),
     );
   }
+
   Widget _buildEmptyState(bool isSalesOrders) {
     return Center(
       child: Column(
@@ -201,6 +217,7 @@ class _OrdersListPageState extends State<OrdersListPage> with SingleTickerProvid
       ),
     );
   }
+
   Widget _buildOrderCard(Order order, bool isSalesOrder) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -241,6 +258,7 @@ class _OrdersListPageState extends State<OrdersListPage> with SingleTickerProvid
                 ],
               ),
               const SizedBox(height: 12),
+              
               // Order date
               Row(
                 children: [
@@ -260,6 +278,7 @@ class _OrdersListPageState extends State<OrdersListPage> with SingleTickerProvid
                 ],
               ),
               const SizedBox(height: 8),
+              
               // Buyer/Seller info  
               if (isSalesOrder) ...[
                 Row(
@@ -298,7 +317,9 @@ class _OrdersListPageState extends State<OrdersListPage> with SingleTickerProvid
                   ],
                 ),
               ],
+              
               const Divider(height: 24),
+              
               // Order total
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -326,10 +347,12 @@ class _OrdersListPageState extends State<OrdersListPage> with SingleTickerProvid
       ),
     );
   }
+
   Widget _buildStatusBadge(String status) {
     Color backgroundColor;
     Color textColor;
     String displayText;
+
     switch (status.toLowerCase()) {
       case 'pending':
         backgroundColor = Colors.orange.withOpacity(0.2);
@@ -361,6 +384,7 @@ class _OrdersListPageState extends State<OrdersListPage> with SingleTickerProvid
         textColor = Colors.grey;
         displayText = status;
     }
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(

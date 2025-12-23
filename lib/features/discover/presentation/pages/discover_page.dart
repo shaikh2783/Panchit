@@ -2,44 +2,55 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:snginepro/features/pages/presentation/pages/page_profile_page.dart';
-import 'package:snginepro/features/groups/presentation/pages/group_page.dart';
 import 'package:snginepro/features/profile/presentation/pages/profile_page.dart';
 import '../controllers/discover_controller.dart';
 import '../../data/services/homepage_widgets_api_service.dart';
 import '../../../../core/config/app_config.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
+/// Discover content and recommendations page
 class DiscoverPage extends StatefulWidget {
   const DiscoverPage({super.key});
+
   @override
   State<DiscoverPage> createState() => _DiscoverPageState();
 }
+
 class _DiscoverPageState extends State<DiscoverPage> {
   late final DiscoverController controller;
+
   /// Build image URL correctly
   String _buildImageUrl(String imageUrl) {
     // If the URL is already complete, return it as is
     if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
       return imageUrl;
     }
+
     // If the URL has a domain but no protocol
     if (imageUrl.contains('sngine.fluttercrafters.com')) {
       return 'https://$imageUrl';
     }
+
     // Build the URL using appConfig
     return appConfig.mediaAsset(imageUrl).toString();
   }
+
   /// Navigate to the user profile page
   void _navigateToUserProfile(int userId, String username) {
+
     Get.to(ProfilePage(userId: userId,username: username,));
   }
+
   /// Navigate to a page profile with pageId only
   void _navigateToPageById(int pageId, [String? pageName]) {
     Get.to(() => PageProfilePage.fromId(pageId: pageId));
   }
+
   /// Navigate to the group profile
   void _navigateToGroup(String groupId, String groupName) {
-    Get.to(() => GroupPage.byId(groupId: int.tryParse(groupId) ?? 0));
+    // Get.to(() => GroupPage.byId(groupId: int.tryParse(groupId) ?? 0));
   }
+
   /// Navigate to the event details page
   void _navigateToEvent(String eventId, String eventName) {
     // Perform navigation to the event details page
@@ -48,14 +59,17 @@ class _DiscoverPageState extends State<DiscoverPage> {
       arguments: {'eventId': eventId, 'eventName': eventName},
     );
   }
+
   @override
   void initState() {
     super.initState();
     controller = Get.put(DiscoverController());
   }
+
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Get.isDarkMode;
+
     return Scaffold(
       backgroundColor: isDarkMode
           ? const Color(0xFF121212)
@@ -100,11 +114,13 @@ class _DiscoverPageState extends State<DiscoverPage> {
             child: CircularProgressIndicator(color: Colors.blue),
           );
         }
+
         if (controller.errorMessage.isNotEmpty) {
           // Determine error type
           bool isAuthError =
               controller.errorMessage.toLowerCase().contains('log in') ||
               controller.errorMessage.toLowerCase().contains('authenticated');
+
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -151,10 +167,12 @@ class _DiscoverPageState extends State<DiscoverPage> {
             ),
           );
         }
+
         final widgets = controller.widgets;
         if (widgets == null) {
           return Center(child: Text('no_data'.tr));
         }
+
         return RefreshIndicator(
           onRefresh: controller.refresh,
           child: SingleChildScrollView(
@@ -166,51 +184,66 @@ class _DiscoverPageState extends State<DiscoverPage> {
                 if (widgets.meritsBalance != null &&
                     widgets.meritsBalance!.enabled)
                   _buildMeritsSection(widgets.meritsBalance!),
+
                 if (widgets.meritsBalance != null &&
                     widgets.meritsBalance!.enabled)
                   const SizedBox(height: 24),
+
                 // Pro Users Section
                 if (widgets.proUsers != null && widgets.proUsers!.enabled)
                   _buildProUsersSection(widgets.proUsers!),
+
                 if (widgets.proUsers != null && widgets.proUsers!.enabled)
                   const SizedBox(height: 24),
+
                 // Pro Pages Section
                 if (widgets.proPages != null && widgets.proPages!.enabled)
                   _buildProPagesSection(widgets.proPages!),
+
                 if (widgets.proPages != null && widgets.proPages!.enabled)
                   const SizedBox(height: 24),
+
                 // Trending Section
                 if (widgets.trendingHashtags != null &&
                     widgets.trendingHashtags!.enabled)
                   _buildTrendingSection(widgets.trendingHashtags!),
+
                 if (widgets.trendingHashtags != null &&
                     widgets.trendingHashtags!.enabled)
                   const SizedBox(height: 24),
+
                 // Suggested Friends Section
                 if (widgets.suggestedFriends != null &&
                     widgets.suggestedFriends!.enabled)
                   _buildSuggestedFriendsSection(widgets.suggestedFriends!),
+
                 if (widgets.suggestedFriends != null &&
                     widgets.suggestedFriends!.enabled)
                   const SizedBox(height: 24),
+
                 // Suggested Pages Section
                 if (widgets.suggestedPages != null &&
                     widgets.suggestedPages!.enabled)
                   _buildSuggestedPagesSection(widgets.suggestedPages!),
+
                 if (widgets.suggestedPages != null &&
                     widgets.suggestedPages!.enabled)
                   const SizedBox(height: 24),
+
                 // Suggested Groups Section
                 if (widgets.suggestedGroups != null &&
                     widgets.suggestedGroups!.enabled)
                   _buildSuggestedGroupsSection(widgets.suggestedGroups!),
+
                 if (widgets.suggestedGroups != null &&
                     widgets.suggestedGroups!.enabled)
                   const SizedBox(height: 24),
+
                 // Suggested Events Section
                 if (widgets.suggestedEvents != null &&
                     widgets.suggestedEvents!.enabled)
                   _buildSuggestedEventsSection(widgets.suggestedEvents!),
+
                  SizedBox(height: Get.height *0.10),
               ],
             ),
@@ -219,6 +252,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
       }),
     );
   }
+
   /// Build merits balance section
   Widget _buildMeritsSection(MeritsBalanceWidget widget) {
     return Container(
@@ -288,6 +322,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
       ),
     );
   }
+
   Widget _buildMeritsStat(String labelKey, int value) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -311,9 +346,11 @@ class _DiscoverPageState extends State<DiscoverPage> {
       ],
     );
   }
+
   /// Build featured users section
   Widget _buildProUsersSection(ProUsersWidget widget) {
     final isDarkMode = Get.isDarkMode;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -324,7 +361,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
         ),
         const SizedBox(height: 12),
         SizedBox(
-          height: Get.height *0.31,
+          height: Get.height * 0.32,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -351,7 +388,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     children: [
                       // Cover area with gradient
                       Container(
-                        height: 60,
+                        height: 50,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
@@ -536,9 +573,11 @@ class _DiscoverPageState extends State<DiscoverPage> {
       ],
     );
   }
+
   /// Build featured pages section
   Widget _buildProPagesSection(ProPagesWidget widget) {
     final isDarkMode = Get.isDarkMode;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -549,7 +588,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
         ),
         const SizedBox(height: 12),
         SizedBox(
-               height: Get.height *0.25,
+          height: Get.height *0.28,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -619,146 +658,144 @@ class _DiscoverPageState extends State<DiscoverPage> {
                         ),
                       ),
                       // Page content
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Column(
-                            children: [
-                              // Page picture positioned to overlap
-                              Transform.translate(
-                                offset: const Offset(0, -25),
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: isDarkMode
-                                              ? const Color(0xFF1A1A1A)
-                                              : Colors.white,
-                                          width: 3,
-                                        ),
-                                      ),
-                                      child: CircleAvatar(
-                                        radius: 28,
-                                        backgroundImage:
-                                            page.pagePicture != null
-                                            ? CachedNetworkImageProvider(
-                                                _buildImageUrl(
-                                                  page.pagePicture!,
-                                                ),
-                                              )
-                                            : null,
-                                        backgroundColor: Colors.indigo
-                                            .withValues(alpha: 0.1),
-                                        child: page.pagePicture == null
-                                            ? Icon(
-                                                Iconsax.building,
-                                                color: Colors.indigo,
-                                                size: 20,
-                                              )
-                                            : null,
-                                      ),
-                                    ),
-                                    if (page.pageVerified)
-                                      Positioned(
-                                        right: 0,
-                                        bottom: 0,
-                                        child: Container(
-                                          padding: const EdgeInsets.all(3),
-                                          decoration: BoxDecoration(
-                                            color: Colors.blue,
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                              color: isDarkMode
-                                                  ? const Color(0xFF1A1A1A)
-                                                  : Colors.white,
-                                              width: 2,
-                                            ),
-                                          ),
-                                          child: const Icon(
-                                            Iconsax.verify,
-                                            color: Colors.white,
-                                            size: 10,
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                              // Page info
-                              Expanded(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      page.pageTitle,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 14,
+                      Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // Page picture positioned to overlap
+                            Transform.translate(
+                              offset: const Offset(0, -25),
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
                                         color: isDarkMode
-                                            ? Colors.white
-                                            : Colors.grey[900],
+                                            ? const Color(0xFF1A1A1A)
+                                            : Colors.white,
+                                        width: 3,
                                       ),
-                                      textAlign: TextAlign.center,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                    const SizedBox(height: 4),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Iconsax.heart,
-                                          size: 12,
-                                          color: Colors.grey[600],
-                                        ),
-                                        const SizedBox(width: 4),
-                                        Text(
-                                          '${page.pageLikes} likes',
-                                          style: TextStyle(
-                                            color: Colors.grey[600],
-                                            fontSize: 11,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
+                                    child: CircleAvatar(
+                                      radius: 28,
+                                      backgroundImage:
+                                          page.pagePicture != null
+                                          ? CachedNetworkImageProvider(
+                                              _buildImageUrl(
+                                                page.pagePicture!,
+                                              ),
+                                            )
+                                          : null,
+                                      backgroundColor: Colors.indigo
+                                          .withValues(alpha: 0.1),
+                                      child: page.pagePicture == null
+                                          ? Icon(
+                                              Iconsax.building,
+                                              color: Colors.indigo,
+                                              size: 20,
+                                            )
+                                          : null,
                                     ),
-                                    const SizedBox(height: 8),
-                                    SizedBox(
-                                      width: double.infinity,
-                                      child: ElevatedButton(
-                                        onPressed: () => _navigateToPageById(
-                                          page.pageId
-                                        ),
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.indigo,
-                                          foregroundColor: Colors.white,
-                                          elevation: 0,
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 6,
-                                          ),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              8,
-                                            ),
+                                  ),
+                                  if (page.pageVerified)
+                                    Positioned(
+                                      right: 0,
+                                      bottom: 0,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(3),
+                                        decoration: BoxDecoration(
+                                          color: Colors.blue,
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                            color: isDarkMode
+                                                ? const Color(0xFF1A1A1A)
+                                                : Colors.white,
+                                            width: 2,
                                           ),
                                         ),
-                                        child: Text(
-                                          'visit_page_button'.tr,
-                                          style: const TextStyle(
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.w600,
-                                          ),
+                                        child: const Icon(
+                                          Iconsax.verify,
+                                          color: Colors.white,
+                                          size: 10,
                                         ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                            // Page info
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  page.pageTitle,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 14,
+                                    color: isDarkMode
+                                        ? Colors.white
+                                        : Colors.grey[900],
+                                  ),
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 4),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Iconsax.heart,
+                                      size: 12,
+                                      color: Colors.grey[600],
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      '${page.pageLikes} likes',
+                                      style: TextStyle(
+                                        color: Colors.grey[600],
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w500,
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
-                            ],
-                          ),
+                                const SizedBox(height: 8),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    onPressed: () => _navigateToPageById(
+                                      page.pageId
+
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.indigo,
+                                      foregroundColor: Colors.white,
+                                      elevation: 0,
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 6,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                          8,
+                                        ),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'visit_page_button'.tr,
+                                      style: const TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -771,9 +808,11 @@ class _DiscoverPageState extends State<DiscoverPage> {
       ],
     );
   }
+
   /// Build trending hashtags section
   Widget _buildTrendingSection(TrendingHashtagsWidget widget) {
     final isDarkMode = Get.isDarkMode;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -801,6 +840,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
               final index = entry.key;
               final hashtag = entry.value;
               final isLast = index == widget.hashtags.length - 1;
+
               return Material(
                 color: Colors.transparent,
                 child: InkWell(
@@ -905,6 +945,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
       ],
     );
   }
+
   Color _getTrendingColor(int index) {
     switch (index) {
       case 0:
@@ -917,9 +958,11 @@ class _DiscoverPageState extends State<DiscoverPage> {
         return Colors.blue;
     }
   }
+
   /// Build suggested friends section
   Widget _buildSuggestedFriendsSection(SuggestedFriendsWidget widget) {
     final isDarkMode = Get.isDarkMode;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -930,7 +973,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
         ),
         const SizedBox(height: 12),
         SizedBox(
-              height: Get.height *0.27,
+          height: Get.height *0.32,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -1058,7 +1101,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Text(
-                                  '${person.mutualFriendsCount} ${'mutual_friends_label'.tr}',
+                                  '${person.mutualFriendsCount} mutual',
                                   style: TextStyle(
                                     color: Colors.blue[700],
                                     fontSize: 11,
@@ -1113,9 +1156,11 @@ class _DiscoverPageState extends State<DiscoverPage> {
       ],
     );
   }
+
   /// Build suggested pages section
   Widget _buildSuggestedPagesSection(SuggestedPagesWidget widget) {
     final isDarkMode = Get.isDarkMode;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1125,7 +1170,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
           subtitleKey: 'pages_to_discover_subtitle',
         ),
         const SizedBox(height: 12),
-        SizedBox(
+        Container(
         height: Get.height *0.26,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -1288,9 +1333,11 @@ class _DiscoverPageState extends State<DiscoverPage> {
       ],
     );
   }
+
   /// Build suggested groups section
   Widget _buildSuggestedGroupsSection(SuggestedGroupsWidget widget) {
     final isDarkMode = Get.isDarkMode;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1300,7 +1347,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
           subtitleKey: 'groups_to_join_subtitle',
         ),
         const SizedBox(height: 12),
-        SizedBox(
+        Container(
         height: Get.height *0.3,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -1351,6 +1398,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                           ),
                         ),
                       ),
+
                       // Group Avatar overlapping cover
                       Transform.translate(
                         offset: const Offset(0, -20),
@@ -1377,6 +1425,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                           ),
                         ),
                       ),
+
                       // Group Info
                       Padding(
                         padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
@@ -1396,6 +1445,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                               overflow: TextOverflow.ellipsis,
                             ),
                             const SizedBox(height: 6),
+
                             // Privacy indicator
                             Container(
                               padding: const EdgeInsets.symmetric(
@@ -1419,7 +1469,9 @@ class _DiscoverPageState extends State<DiscoverPage> {
                                 ),
                               ),
                             ),
+
                             const SizedBox(height: 8),
+
                             // Members count
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -1440,7 +1492,9 @@ class _DiscoverPageState extends State<DiscoverPage> {
                                 ),
                               ],
                             ),
+
                             const SizedBox(height: 12),
+
                             // Join button
                             SizedBox(
                               width: double.infinity,
@@ -1484,9 +1538,11 @@ class _DiscoverPageState extends State<DiscoverPage> {
       ],
     );
   }
+
   /// Build suggested events section
   Widget _buildSuggestedEventsSection(SuggestedEventsWidget widget) {
     final isDarkMode = Get.isDarkMode;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1496,7 +1552,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
           subtitleKey: 'events_to_attend_subtitle',
         ),
         const SizedBox(height: 12),
-        SizedBox(
+        Container(
           height: Get.height *0.28,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -1549,6 +1605,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                           ),
                         ),
                       ),
+
                       // Event Info
                       Padding(
                         padding: const EdgeInsets.all(16),
@@ -1587,7 +1644,9 @@ class _DiscoverPageState extends State<DiscoverPage> {
                                 ],
                               ),
                             ),
+
                             const SizedBox(height: 10),
+
                             // Event Title
                             Text(
                               event.eventTitle,
@@ -1601,7 +1660,9 @@ class _DiscoverPageState extends State<DiscoverPage> {
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
+
                             const SizedBox(height: 6),
+
                             // Event Location
                             if (event.eventLocation != null &&
                                 event.eventLocation!.isNotEmpty)
@@ -1627,7 +1688,9 @@ class _DiscoverPageState extends State<DiscoverPage> {
                                   ),
                                 ],
                               ),
+
                             const SizedBox(height: 10),
+
                             // Going count and button
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1673,9 +1736,11 @@ class _DiscoverPageState extends State<DiscoverPage> {
       ],
     );
   }
+
   /// Build section header
   Widget _buildSectionHeader(String title, {String? subtitleKey, String? titleKey}) {
     final isDarkMode = Get.isDarkMode;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       child: Row(

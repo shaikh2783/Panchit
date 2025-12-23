@@ -1,9 +1,12 @@
 import 'package:flutter/foundation.dart';
 import '../data/models/comment.dart';
 import '../domain/comments_repository.dart';
+
 class RepliesNotifier extends ChangeNotifier {
   final CommentsRepository _repository;
+
   RepliesNotifier(this._repository);
+
   // State for each comment's replies
   final Map<String, List<CommentModel>> _repliesMap = {};
   final Map<String, bool> _isLoadingMap = {};
@@ -12,6 +15,7 @@ class RepliesNotifier extends ChangeNotifier {
   final Map<String, int> _offsetMap = {};
   final Map<String, bool> _hasMoreMap = {};
   final int _limit = 10;
+
   // Getters
   List<CommentModel> getReplies(String commentId) => _repliesMap[commentId] ?? [];
   bool isLoading(String commentId) => _isLoadingMap[commentId] ?? false;
@@ -19,20 +23,25 @@ class RepliesNotifier extends ChangeNotifier {
   String? getError(String commentId) => _errorMap[commentId];
   bool hasMore(String commentId) => _hasMoreMap[commentId] ?? true;
   int getRepliesCount(String commentId) => _repliesMap[commentId]?.length ?? 0;
+
   // Fetch initial replies
   Future<void> fetchReplies(int commentId) async {
     final commentIdStr = commentId.toString();
+    
     if (_isLoadingMap[commentIdStr] == true) return;
+
     _isLoadingMap[commentIdStr] = true;
     _errorMap[commentIdStr] = null;
     _offsetMap[commentIdStr] = 0;
     notifyListeners();
+
     try {
       final response = await _repository.getCommentReplies(
         commentId,
         offset: 0,
         limit: _limit,
       );
+
       _repliesMap[commentIdStr] = response.replies;
       _hasMoreMap[commentIdStr] = response.hasMore;
       _offsetMap[commentIdStr] = response.replies.length;
@@ -45,22 +54,27 @@ class RepliesNotifier extends ChangeNotifier {
       notifyListeners();
     }
   }
+
   // Load more replies
   Future<void> loadMoreReplies(int commentId) async {
     final commentIdStr = commentId.toString();
+    
     if (_isLoadingMoreMap[commentIdStr] == true || 
         _hasMoreMap[commentIdStr] == false ||
         _isLoadingMap[commentIdStr] == true) {
       return;
     }
+
     _isLoadingMoreMap[commentIdStr] = true;
     notifyListeners();
+
     try {
       final response = await _repository.getCommentReplies(
         commentId,
         offset: _offsetMap[commentIdStr] ?? 0,
         limit: _limit,
       );
+
       final currentReplies = _repliesMap[commentIdStr] ?? [];
       _repliesMap[commentIdStr] = [...currentReplies, ...response.replies];
       _hasMoreMap[commentIdStr] = response.hasMore;
@@ -72,6 +86,7 @@ class RepliesNotifier extends ChangeNotifier {
       notifyListeners();
     }
   }
+
   // Create a reply
   Future<CommentModel?> createReply({
     required int commentId,
@@ -86,11 +101,13 @@ class RepliesNotifier extends ChangeNotifier {
         image: image,
         voiceNote: voiceNote,
       );
+
       // Add to the beginning of the list
       final commentIdStr = commentId.toString();
       final currentReplies = _repliesMap[commentIdStr] ?? [];
       _repliesMap[commentIdStr] = [newReply, ...currentReplies];
       notifyListeners();
+
       return newReply;
     } catch (e) {
       final commentIdStr = commentId.toString();
@@ -99,6 +116,7 @@ class RepliesNotifier extends ChangeNotifier {
       return null;
     }
   }
+
   // React to a reply (optimistic update)
   Future<void> reactToReply({
     required String parentCommentId,
@@ -107,18 +125,23 @@ class RepliesNotifier extends ChangeNotifier {
   }) async {
     final replies = _repliesMap[parentCommentId];
     if (replies == null) return;
+
     // Find reply index
     final index = replies.indexWhere((r) => r.commentId == replyId);
     if (index == -1) return;
+
     // Store old state for rollback
     final oldReply = replies[index];
+
     // Optimistic update (same logic as comment reaction)
     final wasReacted = oldReply.iReact;
     final oldReaction = oldReply.iReaction;
+
     Map<String, int> newReactions = Map.from(oldReply.reactions);
     bool newIReact = false;
     String? newIReaction;
     int newTotal = oldReply.reactionsTotalCount;
+
     if (reaction == 'remove') {
       if (wasReacted && oldReaction != null) {
         newReactions[oldReaction] = (newReactions[oldReaction] ?? 1) - 1;
@@ -135,6 +158,7 @@ class RepliesNotifier extends ChangeNotifier {
       newIReact = true;
       newIReaction = reaction;
     }
+
     replies[index] = oldReply.copyWith(
       reactions: newReactions,
       reactionsTotalCount: newTotal,
@@ -142,6 +166,7 @@ class RepliesNotifier extends ChangeNotifier {
       iReaction: newIReaction,
     );
     notifyListeners();
+
     // Make API call
     try {
       await _repository.reactToComment(
@@ -155,6 +180,7 @@ class RepliesNotifier extends ChangeNotifier {
       notifyListeners();
     }
   }
+
   // Edit a reply
   Future<bool> editReply({
     required String parentCommentId,
@@ -166,6 +192,7 @@ class RepliesNotifier extends ChangeNotifier {
         commentId: int.parse(replyId),
         newText: newText,
       );
+
       // Update reply in list with the returned comment data
       final replies = _repliesMap[parentCommentId];
       if (replies != null) {
@@ -176,6 +203,7 @@ class RepliesNotifier extends ChangeNotifier {
           notifyListeners();
         }
       }
+
       return true;
     } catch (e) {
       _errorMap[parentCommentId] = e.toString();
@@ -183,6 +211,7 @@ class RepliesNotifier extends ChangeNotifier {
       return false;
     }
   }
+
   // Delete a reply
   Future<bool> deleteReply({
     required String parentCommentId,
@@ -190,12 +219,14 @@ class RepliesNotifier extends ChangeNotifier {
   }) async {
     try {
       await _repository.deleteComment(int.parse(replyId));
+
       // Remove from list
       final replies = _repliesMap[parentCommentId];
       if (replies != null) {
         replies.removeWhere((r) => r.commentId == replyId);
         notifyListeners();
       }
+
       return true;
     } catch (e) {
       _errorMap[parentCommentId] = e.toString();
@@ -203,6 +234,7 @@ class RepliesNotifier extends ChangeNotifier {
       return false;
     }
   }
+
   // Clear replies for a comment
   void clearReplies(String commentId) {
     _repliesMap.remove(commentId);
@@ -213,6 +245,7 @@ class RepliesNotifier extends ChangeNotifier {
     _hasMoreMap.remove(commentId);
     notifyListeners();
   }
+
   // Reset all state
   void reset() {
     _repliesMap.clear();

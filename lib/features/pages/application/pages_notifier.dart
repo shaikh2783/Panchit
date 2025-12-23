@@ -2,35 +2,47 @@ import 'package:flutter/foundation.dart';
 import 'package:snginepro/core/network/api_exception.dart';
 import 'package:snginepro/features/pages/data/models/page.dart';
 import 'package:snginepro/features/pages/domain/pages_repository.dart';
+
 enum PagesTab {
   myPages,
   likedPages,
   suggestedPages,
 }
+
 class PagesNotifier extends ChangeNotifier {
   PagesNotifier(this._repository);
+
   final PagesRepository _repository;
+
   final List<PageModel> _myPages = [];
   final List<PageModel> _likedPages = [];
   final List<PageModel> _suggestedPages = [];
+
   bool _isLoadingMyPages = false;
   bool _isLoadingLikedPages = false;
   bool _isLoadingSuggestedPages = false;
+
   String? _errorMyPages;
   String? _errorLikedPages;
   String? _errorSuggestedPages;
+
   PagesTab _currentTab = PagesTab.myPages;
+
   // Getters
   List<PageModel> get myPages => List.unmodifiable(_myPages);
   List<PageModel> get likedPages => List.unmodifiable(_likedPages);
   List<PageModel> get suggestedPages => List.unmodifiable(_suggestedPages);
+
   bool get isLoadingMyPages => _isLoadingMyPages;
   bool get isLoadingLikedPages => _isLoadingLikedPages;
   bool get isLoadingSuggestedPages => _isLoadingSuggestedPages;
+
   String? get errorMyPages => _errorMyPages;
   String? get errorLikedPages => _errorLikedPages;
   String? get errorSuggestedPages => _errorSuggestedPages;
+
   PagesTab get currentTab => _currentTab;
+
   bool get isLoading {
     switch (_currentTab) {
       case PagesTab.myPages:
@@ -41,6 +53,7 @@ class PagesNotifier extends ChangeNotifier {
         return _isLoadingSuggestedPages;
     }
   }
+
   String? get error {
     switch (_currentTab) {
       case PagesTab.myPages:
@@ -51,6 +64,7 @@ class PagesNotifier extends ChangeNotifier {
         return _errorSuggestedPages;
     }
   }
+
   List<PageModel> get currentPages {
     switch (_currentTab) {
       case PagesTab.myPages:
@@ -61,10 +75,12 @@ class PagesNotifier extends ChangeNotifier {
         return suggestedPages;
     }
   }
+
   void setTab(PagesTab tab) {
     if (_currentTab == tab) return;
     _currentTab = tab;
     notifyListeners();
+
     // Auto-load if empty
     switch (tab) {
       case PagesTab.myPages:
@@ -80,11 +96,13 @@ class PagesNotifier extends ChangeNotifier {
         break;
     }
   }
+
   Future<void> loadMyPages() async {
     if (_isLoadingMyPages) return;
     _isLoadingMyPages = true;
     _errorMyPages = null;
     notifyListeners();
+
     try {
       final pages = await _repository.fetchMyPages();
       _myPages
@@ -99,11 +117,13 @@ class PagesNotifier extends ChangeNotifier {
       notifyListeners();
     }
   }
+
   Future<void> loadLikedPages() async {
     if (_isLoadingLikedPages) return;
     _isLoadingLikedPages = true;
     _errorLikedPages = null;
     notifyListeners();
+
     try {
       final pages = await _repository.fetchLikedPages();
       _likedPages
@@ -118,11 +138,13 @@ class PagesNotifier extends ChangeNotifier {
       notifyListeners();
     }
   }
+
   Future<void> loadSuggestedPages({int limit = 10}) async {
     if (_isLoadingSuggestedPages) return;
     _isLoadingSuggestedPages = true;
     _errorSuggestedPages = null;
     notifyListeners();
+
     try {
       final pages = await _repository.fetchSuggestedPages(limit: limit);
       _suggestedPages
@@ -130,7 +152,6 @@ class PagesNotifier extends ChangeNotifier {
         ..addAll(pages);
     } on ApiException catch (e) {
       _errorSuggestedPages = e.message;
-      
     } catch (e) {
       _errorSuggestedPages = 'Failed to load suggested pages';
     } finally {
@@ -138,6 +159,7 @@ class PagesNotifier extends ChangeNotifier {
       notifyListeners();
     }
   }
+
   Future<void> refresh() async {
     switch (_currentTab) {
       case PagesTab.myPages:
@@ -148,9 +170,11 @@ class PagesNotifier extends ChangeNotifier {
         return loadSuggestedPages();
     }
   }
+
   Future<void> toggleLikePage(PageModel page) async {
     try {
       await _repository.toggleLikePage(page.id, page.iLike);
+      
       // Update local state optimistically
       if (page.iLike) {
         // Remove from liked pages
@@ -173,6 +197,7 @@ class PagesNotifier extends ChangeNotifier {
         );
         _likedPages.add(updatedPage);
       }
+      
       // Update in suggested pages if present
       final suggIdx = _suggestedPages.indexWhere((p) => p.id == page.id);
       if (suggIdx != -1) {
@@ -192,6 +217,7 @@ class PagesNotifier extends ChangeNotifier {
           iLike: !p.iLike,
         );
       }
+      
       notifyListeners();
     } catch (e) {
       // Could show snackbar error here

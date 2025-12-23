@@ -1,10 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snginepro/core/bloc/base_bloc.dart';
+
 import '../../data/models/wallet_paginated.dart';
 import '../../data/models/wallet_payment.dart';
 import '../../domain/wallet_repository.dart';
 import 'wallet_payments_event.dart';
 import 'wallet_payments_state.dart';
+
 class WalletPaymentsBloc
     extends BaseBloc<WalletPaymentsEvent, WalletPaymentsState> {
   WalletPaymentsBloc(this._repository) : super(const WalletPaymentsState()) {
@@ -12,7 +14,9 @@ class WalletPaymentsBloc
     on<LoadMoreWalletPayments>(_onLoadMorePayments);
     on<RefreshWalletPayments>(_onRefreshPayments);
   }
+
   final WalletRepository _repository;
+
   Future<void> _onLoadPayments(
     LoadWalletPayments event,
     Emitter<WalletPaymentsState> emit,
@@ -28,6 +32,7 @@ class WalletPaymentsBloc
         isLoadingMore: false,
       ),
     );
+
     try {
       final result = await _repository.fetchPayments(
         offset: 0,
@@ -38,6 +43,7 @@ class WalletPaymentsBloc
       emit(state.copyWith(isLoading: false, errorMessage: error.toString()));
     }
   }
+
   Future<void> _onLoadMorePayments(
     LoadMoreWalletPayments event,
     Emitter<WalletPaymentsState> emit,
@@ -45,13 +51,17 @@ class WalletPaymentsBloc
     if (!state.hasMore || state.isLoadingMore) {
       return;
     }
+
     emit(state.copyWith(isLoadingMore: true, errorMessage: null));
+
     try {
       final result = await _repository.fetchPayments(
         offset: state.offset,
         limit: state.limit,
       );
+
       final updated = state.payments + result.items;
+
       emit(
         state.copyWith(
           payments: updated,
@@ -67,6 +77,7 @@ class WalletPaymentsBloc
       );
     }
   }
+
   Future<void> _onRefreshPayments(
     RefreshWalletPayments event,
     Emitter<WalletPaymentsState> emit,
@@ -89,6 +100,7 @@ class WalletPaymentsBloc
       emit(state.copyWith(isLoading: false, errorMessage: error.toString()));
     }
   }
+
   WalletPaymentsState _stateFromResult(
     WalletPaginatedResult<WalletPayment> result,
   ) {
@@ -102,6 +114,7 @@ class WalletPaymentsBloc
       offset: nextOffset,
     );
   }
+
   int _calculateNextOffset(
     WalletPaginatedResult<WalletPayment> result,
     int cumulativeLength,

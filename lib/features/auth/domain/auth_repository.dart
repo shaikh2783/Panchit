@@ -1,8 +1,11 @@
 import 'package:snginepro/features/auth/data/datasources/auth_api_service.dart';
 import 'package:snginepro/features/auth/data/models/auth_response.dart';
+
 class AuthRepository {
   AuthRepository(this._apiService);
+
   final AuthApiService _apiService;
+
   Future<AuthResponse> signIn({
     required String identity,
     required String password,
@@ -14,6 +17,7 @@ class AuthRepository {
       deviceType: deviceType,
     );
   }
+
   Future<AuthResponse> signUp({
     required String firstName,
     required String lastName,
@@ -32,6 +36,28 @@ class AuthRepository {
       password: password,
       gender: gender,
       birthdate: birthdate,
+      deviceType: deviceType,
+    );
+  }
+
+  Future<AuthResponse> signInWithGoogle({
+    required String googleId,
+    required String email,
+    String? firstName,
+    String? lastName,
+    String? picture,
+    String? username,
+    String? idToken,
+    String deviceType = 'A',
+  }) {
+    return _apiService.signInWithGoogle(
+      googleId: googleId,
+      email: email,
+      firstName: firstName,
+      lastName: lastName,
+      picture: picture,
+      username: username,
+      idToken: idToken,
       deviceType: deviceType,
     );
   }

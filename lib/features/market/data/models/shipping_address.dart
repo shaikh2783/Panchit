@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+
 /// Shipping Address Model - عنوان الشحن
 class ShippingAddress extends Equatable {
   final String name;
@@ -8,6 +9,7 @@ class ShippingAddress extends Equatable {
   final String? city;
   final String? zip;
   final String? country;
+
   const ShippingAddress({
     required this.name,
     required this.phone,
@@ -17,6 +19,7 @@ class ShippingAddress extends Equatable {
     this.zip,
     this.country,
   });
+
   factory ShippingAddress.fromJson(Map<String, dynamic> json) {
     return ShippingAddress(
       name: json['name']?.toString() ?? '',
@@ -28,6 +31,7 @@ class ShippingAddress extends Equatable {
       country: json['country']?.toString(),
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'name': name,
@@ -39,6 +43,7 @@ class ShippingAddress extends Equatable {
       if (country != null) 'country': country,
     };
   }
+
   ShippingAddress copyWith({
     String? name,
     String? phone,
@@ -58,6 +63,7 @@ class ShippingAddress extends Equatable {
       country: country ?? this.country,
     );
   }
+
   @override
   List<Object?> get props => [name, phone, location, address, city, zip, country];
 }

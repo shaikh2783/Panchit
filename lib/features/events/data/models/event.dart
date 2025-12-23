@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+
 /// نموذج الفعالية (Event)
 class Event extends Equatable {
   final int eventId;
@@ -24,6 +25,7 @@ class Event extends Equatable {
   final String? adminFirstName;
   final String? adminLastName;
   final String? adminPicture;
+
   const Event({
     required this.eventId,
     required this.eventTitle,
@@ -49,9 +51,11 @@ class Event extends Equatable {
     this.adminLastName,
     this.adminPicture,
   });
+
   factory Event.fromJson(Map<String, dynamic> json) {
     // Handle stats object if it exists
     final stats = json['stats'] as Map<String, dynamic>?;
+    
     return Event(
       eventId: int.parse(json['event_id'].toString()),
       eventTitle: json['event_title'].toString(),
@@ -87,6 +91,7 @@ class Event extends Equatable {
       adminPicture: json['admin_picture']?.toString(),
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'event_id': eventId,
@@ -114,11 +119,14 @@ class Event extends Equatable {
       'admin_picture': adminPicture,
     };
   }
+
   String get adminFullName {
     if (adminFirstName == null && adminLastName == null) return '';
     return '${adminFirstName ?? ''} ${adminLastName ?? ''}'.trim();
   }
+
   bool get isVerified => adminPicture != null && adminPicture!.isNotEmpty;
+
   @override
   List<Object?> get props => [
         eventId,

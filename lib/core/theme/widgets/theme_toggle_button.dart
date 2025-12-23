@@ -2,15 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:snginepro/core/theme/app_colors.dart';
 import 'package:snginepro/core/theme/theme_controller.dart';
+
 /// زر تبديل بين الوضع الفاتح والداكن
 /// يمكن وضعه في AppBar أو أي مكان في التطبيق
 class ThemeToggleButton extends StatelessWidget {
   const ThemeToggleButton({super.key});
+
   @override
   Widget build(BuildContext context) {
     final ThemeController themeController = Get.find();
+
     return Obx(() {
       final isDark = themeController.isDarkMode;
+      
       return IconButton(
         icon: AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
@@ -31,6 +35,7 @@ class ThemeToggleButton extends StatelessWidget {
         ),
         onPressed: () async {
           await themeController.toggleTheme();
+          
           // إظهار رسالة قصيرة
           Get.snackbar(
             '',
@@ -63,14 +68,18 @@ class ThemeToggleButton extends StatelessWidget {
     });
   }
 }
+
 /// زر Switch لتبديل الثيم - مناسب للإعدادات
 class ThemeToggleSwitch extends StatelessWidget {
   const ThemeToggleSwitch({super.key});
+
   @override
   Widget build(BuildContext context) {
     final ThemeController themeController = Get.find();
+
     return Obx(() {
       final isDark = themeController.isDarkMode;
+      
       return SwitchListTile(
         title: const Text('الوضع الداكن'),
         subtitle: Text(
@@ -89,14 +98,18 @@ class ThemeToggleSwitch extends StatelessWidget {
     });
   }
 }
+
 /// قائمة خيارات الثيم - مناسبة للإعدادات
 class ThemeModeSelector extends StatelessWidget {
   const ThemeModeSelector({super.key});
+
   @override
   Widget build(BuildContext context) {
     final ThemeController themeController = Get.find();
+
     return Obx(() {
       final isDark = themeController.isDarkMode;
+      
       return Column(
         children: [
           RadioListTile<bool>(
@@ -130,14 +143,18 @@ class ThemeModeSelector extends StatelessWidget {
     });
   }
 }
+
 /// زر عائم لتبديل الثيم
 class ThemeToggleFAB extends StatelessWidget {
   const ThemeToggleFAB({super.key});
+
   @override
   Widget build(BuildContext context) {
     final ThemeController themeController = Get.find();
+
     return Obx(() {
       final isDark = themeController.isDarkMode;
+      
       return FloatingActionButton(
         mini: true,
         backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,

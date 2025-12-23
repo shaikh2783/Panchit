@@ -11,19 +11,24 @@ import '../../../../core/network/api_client.dart';
 import '../../../auth/application/auth_notifier.dart';
 import '../../../feed/data/datasources/posts_api_service.dart';
 import '../../../feed/data/models/upload_file_data.dart';
+
 class ReportBugPage extends StatefulWidget {
   const ReportBugPage({super.key});
+
   @override
   State<ReportBugPage> createState() => _ReportBugPageState();
 }
+
 class _ReportBugPageState extends State<ReportBugPage> {
   final _picker = ImagePicker();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
+  
   File? _videoFile;
   CachedVideoPlayerPlus? _videoController;
   bool _isLoading = false;
   bool _isSubmitting = false;
+
   @override
   void dispose() {
     _titleController.dispose();
@@ -31,17 +36,21 @@ class _ReportBugPageState extends State<ReportBugPage> {
     _videoController?.controller.dispose();
     super.dispose();
   }
+
   Future<void> _pickVideo(ImageSource source) async {
     try {
       final pickedFile = await _picker.pickVideo(
         source: source,
         maxDuration: const Duration(minutes: 2), // Max 2 minutes
       );
+
       if (pickedFile != null) {
         setState(() {
           _isLoading = true;
         });
+
         final file = File(pickedFile.path);
+        
         // Check file size (max 50MB)
         final fileSize = await file.length();
         if (fileSize > 50 * 1024 * 1024) {
@@ -53,17 +62,21 @@ class _ReportBugPageState extends State<ReportBugPage> {
           });
           return;
         }
+
         _videoController?.controller.dispose();
         _videoController?.dispose();
         _videoController = CachedVideoPlayerPlus.file(
           file,
         );
+        
         await _videoController!.initialize();
         await _videoController!.controller.setLooping(true);
+        
         setState(() {
           _videoFile = file;
           _isLoading = false;
         });
+
         HapticFeedback.mediumImpact();
       }
     } catch (e) {
@@ -75,8 +88,10 @@ class _ReportBugPageState extends State<ReportBugPage> {
       }
     }
   }
+
   void _showVideoSourceDialog() {
     final theme = Theme.of(context);
+    
     showModalBottomSheet(
       context: context,
       backgroundColor: theme.colorScheme.surface,
@@ -133,34 +148,45 @@ class _ReportBugPageState extends State<ReportBugPage> {
       ),
     );
   }
+
   Future<void> _submitReport() async {
     if (_titleController.text.trim().isEmpty) {
       _showErrorSnackBar('Please enter a title for the issue');
       return;
     }
+
     if (_videoFile == null) {
       _showErrorSnackBar('Please attach a video showing the issue');
       return;
     }
+
     setState(() {
       _isSubmitting = true;
     });
+
     try {
       // Get user info and check authentication
       final auth = context.read<AuthNotifier>();
+      
       if (!auth.isAuthenticated || auth.authToken == null) {
         throw Exception('You must be logged in to submit a bug report');
       }
+      
       final userName = auth.currentUser?['user_name'] ?? 
                        auth.currentUser?['user_firstname'] ?? 
                        'Unknown User';
       final userEmail = auth.currentUser?['user_email'] ?? 'no-email@example.com';
       final userId = auth.currentUser?['user_id']?.toString() ?? 'unknown';
+      
+      
       // Step 1: Upload video file
       final apiClient = Get.find<ApiClient>();
+      
       // Ensure API client has the auth token
       apiClient.updateAuthToken(auth.authToken);
+      
       final postsService = PostsApiService(apiClient);
+      
       final uploadedVideo = await postsService.uploadFile(
         _videoFile!,
         type: FileUploadType.video,
@@ -168,10 +194,14 @@ class _ReportBugPageState extends State<ReportBugPage> {
           final progress = (sent / total * 100).toStringAsFixed(1);
         },
       );
+
       if (uploadedVideo == null) {
         throw Exception('Failed to upload video');
       }
+
+
       // Step 2: Send report data via email using simple-send
+      
       final emailBodyHtml = '''
 <!DOCTYPE html>
 <html>
@@ -199,6 +229,7 @@ class _ReportBugPageState extends State<ReportBugPage> {
         <p><span class="label">Email:</span> $userEmail</p>
         <p><span class="label">User ID:</span> $userId</p>
       </div>
+      
       <div class="section">
         <h3>📋 Issue Details</h3>
         <p><span class="label">Title:</span> ${_titleController.text.trim()}</p>
@@ -207,12 +238,14 @@ class _ReportBugPageState extends State<ReportBugPage> {
         <p><span class="label">App Version:</span> 1.0.0</p>
         <p><span class="label">Reported at:</span> ${DateTime.now().toString()}</p>
       </div>
+      
       <div class="section">
         <h3>🎥 Video Evidence</h3>
         <p><a href="${uploadedVideo.url}" class="video-link">📹 Watch Video</a></p>
         ${uploadedVideo.thumb != null ? '<p><img src="${uploadedVideo.thumb}" alt="Video Thumbnail" style="max-width: 100%; border-radius: 8px;"></p>' : ''}
         <p><span class="label">Video URL:</span> ${uploadedVideo.url}</p>
       </div>
+      
       <div class="footer">
         <p>This bug report was automatically generated from Panchit mobile app.</p>
       </div>
@@ -221,6 +254,7 @@ class _ReportBugPageState extends State<ReportBugPage> {
 </body>
 </html>
 ''';
+
       await apiClient.post(
         'data/email/simple-send',
         body: {
@@ -229,8 +263,11 @@ class _ReportBugPageState extends State<ReportBugPage> {
           'subtype': 'html',
         },
       );
+
+
       if (mounted) {
         HapticFeedback.heavyImpact();
+        
         // Show success dialog
         showDialog(
           context: context,
@@ -313,6 +350,7 @@ class _ReportBugPageState extends State<ReportBugPage> {
       }
     }
   }
+
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -325,9 +363,11 @@ class _ReportBugPageState extends State<ReportBugPage> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
@@ -390,7 +430,9 @@ class _ReportBugPageState extends State<ReportBugPage> {
                     ],
                   ),
                 ),
+
                 const SizedBox(height: 24),
+
                 // Title Field
                 Text(
                   'Issue Title',
@@ -427,7 +469,9 @@ class _ReportBugPageState extends State<ReportBugPage> {
                   ),
                   maxLength: 100,
                 ),
+
                 const SizedBox(height: 16),
+
                 // Description Field (Optional)
                 Text(
                   'Additional Details (Optional)',
@@ -465,7 +509,9 @@ class _ReportBugPageState extends State<ReportBugPage> {
                   ),
                   maxLength: 500,
                 ),
+
                 const SizedBox(height: 16),
+
                 // Video Section
                 Text(
                   'Video (Required)',
@@ -474,6 +520,7 @@ class _ReportBugPageState extends State<ReportBugPage> {
                   ),
                 ),
                 const SizedBox(height: 8),
+
                 if (_videoFile == null)
                   // Upload Video Button
                   InkWell(
@@ -619,10 +666,12 @@ class _ReportBugPageState extends State<ReportBugPage> {
                       ),
                     ],
                   ),
+
                 const SizedBox(height: 100),
               ],
             ),
           ),
+
           // Submit Button
           Positioned(
             bottom: 0,
@@ -670,6 +719,7 @@ class _ReportBugPageState extends State<ReportBugPage> {
               ),
             ),
           ),
+
           // Loading Overlay
           if (_isLoading)
             Container(
@@ -683,6 +733,7 @@ class _ReportBugPageState extends State<ReportBugPage> {
     );
   }
 }
+
 // Video Source Option Widget
 class _VideoSourceOption extends StatelessWidget {
   final IconData icon;
@@ -690,6 +741,7 @@ class _VideoSourceOption extends StatelessWidget {
   final String subtitle;
   final List<Color> gradient;
   final VoidCallback onTap;
+
   const _VideoSourceOption({
     required this.icon,
     required this.title,
@@ -697,9 +749,11 @@ class _VideoSourceOption extends StatelessWidget {
     required this.gradient,
     required this.onTap,
   });
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Material(

@@ -1,8 +1,12 @@
 import '../data/services/boost_api_service.dart';
+
 class BoostRepository {
   final BoostApiService _apiService;
+
   BoostRepository(this._apiService);
+
   // ==================== Posts ====================
+
   Future<BoostResult> boostPost(int postId) async {
     try {
       final response = await _apiService.boostPost(postId);
@@ -11,6 +15,7 @@ class BoostRepository {
       throw BoostException(_parseError(e));
     }
   }
+
   Future<BoostResult> unboostPost(int postId) async {
     try {
       final response = await _apiService.unboostPost(postId);
@@ -19,6 +24,7 @@ class BoostRepository {
       throw BoostException(_parseError(e));
     }
   }
+
   Future<BoostedPostsResponse> getBoostedPosts({
     int offset = 0,
     int limit = 10,
@@ -33,7 +39,9 @@ class BoostRepository {
       throw BoostException(_parseError(e));
     }
   }
+
   // ==================== Pages ====================
+
   Future<BoostResult> boostPage(int pageId) async {
     try {
       final response = await _apiService.boostPage(pageId);
@@ -42,6 +50,7 @@ class BoostRepository {
       throw BoostException(_parseError(e));
     }
   }
+
   Future<BoostResult> unboostPage(int pageId) async {
     try {
       final response = await _apiService.unboostPage(pageId);
@@ -50,6 +59,7 @@ class BoostRepository {
       throw BoostException(_parseError(e));
     }
   }
+
   Future<BoostedPagesResponse> getBoostedPages({
     int offset = 0,
     int limit = 10,
@@ -64,6 +74,7 @@ class BoostRepository {
       throw BoostException(_parseError(e));
     }
   }
+
   String _parseError(dynamic error) {
     if (error is Map) {
       final message = error['message']?.toString();
@@ -78,13 +89,16 @@ class BoostRepository {
     return error?.toString() ?? 'Unknown error';
   }
 }
+
 // ==================== Models ====================
+
 class BoostResult {
   final bool success;
   final String message;
   final bool? boosted;
   final int? remainingBoosts;
   final bool? canBoostMore;
+
   BoostResult({
     required this.success,
     required this.message,
@@ -92,6 +106,7 @@ class BoostResult {
     this.remainingBoosts,
     this.canBoostMore,
   });
+
   factory BoostResult.fromJson(Map<String, dynamic> json) {
     final data = json['data'] as Map<String, dynamic>?;
     return BoostResult(
@@ -105,21 +120,26 @@ class BoostResult {
     );
   }
 }
+
 class BoostedPostsResponse {
   final List<Map<String, dynamic>> posts;
   final PaginationInfo pagination;
   final BoostInfo boostInfo;
+
   BoostedPostsResponse({
     required this.posts,
     required this.pagination,
     required this.boostInfo,
   });
+
   factory BoostedPostsResponse.fromJson(Map<String, dynamic> json) {
     final data = json['data'] as Map<String, dynamic>? ?? {};
+    
     // Handle pagination at root level of data
     final total = data['total'] != null ? int.tryParse(data['total'].toString()) ?? 0 : 0;
     final limit = data['limit'] != null ? int.tryParse(data['limit'].toString()) ?? 10 : 10;
     final offset = data['offset'] != null ? int.tryParse(data['offset'].toString()) ?? 0 : 0;
+    
     return BoostedPostsResponse(
       posts: (data['posts'] as List?)?.cast<Map<String, dynamic>>() ?? [],
       pagination: PaginationInfo(
@@ -137,21 +157,26 @@ class BoostedPostsResponse {
     );
   }
 }
+
 class BoostedPagesResponse {
   final List<Map<String, dynamic>> pages;
   final PaginationInfo pagination;
   final BoostInfo boostInfo;
+
   BoostedPagesResponse({
     required this.pages,
     required this.pagination,
     required this.boostInfo,
   });
+
   factory BoostedPagesResponse.fromJson(Map<String, dynamic> json) {
     final data = json['data'] as Map<String, dynamic>? ?? {};
+    
     // Handle pagination at root level of data
     final total = data['total'] != null ? int.tryParse(data['total'].toString()) ?? 0 : 0;
     final limit = data['limit'] != null ? int.tryParse(data['limit'].toString()) ?? 10 : 10;
     final offset = data['offset'] != null ? int.tryParse(data['offset'].toString()) ?? 0 : 0;
+    
     return BoostedPagesResponse(
       pages: (data['pages'] as List?)?.cast<Map<String, dynamic>>() ?? [],
       pagination: PaginationInfo(
@@ -169,17 +194,20 @@ class BoostedPagesResponse {
     );
   }
 }
+
 class PaginationInfo {
   final int total;
   final int limit;
   final int offset;
   final bool hasMore;
+
   PaginationInfo({
     required this.total,
     required this.limit,
     required this.offset,
     required this.hasMore,
   });
+
   factory PaginationInfo.fromJson(Map<String, dynamic> json) {
     return PaginationInfo(
       total: int.tryParse(json['total']?.toString() ?? '0') ?? 0,
@@ -189,17 +217,20 @@ class PaginationInfo {
     );
   }
 }
+
 class BoostInfo {
   final bool canBoostMore;
   final int remainingBoosts;
   final int boostLimit;
   final int boostedCount;
+
   BoostInfo({
     required this.canBoostMore,
     required this.remainingBoosts,
     required this.boostLimit,
     required this.boostedCount,
   });
+
   factory BoostInfo.fromJson(Map<String, dynamic> json) {
     return BoostInfo(
       canBoostMore: json['can_boost_more'] == true || json['can_boost_more'] == 1,
@@ -209,9 +240,11 @@ class BoostInfo {
     );
   }
 }
+
 class BoostException implements Exception {
   final String message;
   BoostException(this.message);
+
   @override
   String toString() => message;
 }

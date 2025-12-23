@@ -3,26 +3,34 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/live_comments_bloc.dart';
 import '../../data/api_service/live_stream_api_service.dart';
 import '../../../../core/network/api_client.dart';
+
 /// صفحة اختبار الـ polling للتعليقات
 class TestCommentsPollingPage extends StatefulWidget {
   final String liveId;
+  
   const TestCommentsPollingPage({Key? key, required this.liveId}) : super(key: key);
+
   @override
   State<TestCommentsPollingPage> createState() => _TestCommentsPollingPageState();
 }
+
 class _TestCommentsPollingPageState extends State<TestCommentsPollingPage> {
   late LiveCommentsBloc _commentsBloc;
   final TextEditingController _commentController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     _commentsBloc = LiveCommentsBloc(
       apiService: LiveStreamApiService(context.read<ApiClient>()),
     );
+    
     // تحميل التعليقات وبدء الـ polling
     _commentsBloc.add(LoadLiveComments(postId: widget.liveId));
     _commentsBloc.add(StartLiveCommentsPolling(postId: widget.liveId));
+    
   }
+
   @override
   void dispose() {
     _commentsBloc.add(StopLiveCommentsPolling());
@@ -30,6 +38,7 @@ class _TestCommentsPollingPageState extends State<TestCommentsPollingPage> {
     _commentController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,6 +99,7 @@ class _TestCommentsPollingPageState extends State<TestCommentsPollingPage> {
                 );
               },
             ),
+            
             // قائمة التعليقات
             Expanded(
               child: BlocBuilder<LiveCommentsBloc, LiveCommentsState>(
@@ -97,6 +107,7 @@ class _TestCommentsPollingPageState extends State<TestCommentsPollingPage> {
                   if (state is LiveCommentsLoading) {
                     return const Center(child: CircularProgressIndicator());
                   }
+                  
                   if (state is LiveCommentsError) {
                     return Center(
                       child: Column(
@@ -125,6 +136,7 @@ class _TestCommentsPollingPageState extends State<TestCommentsPollingPage> {
                       ),
                     );
                   }
+                  
                   if (state is LiveCommentsLoaded) {
                     if (state.comments.isEmpty) {
                       return Center(
@@ -147,6 +159,7 @@ class _TestCommentsPollingPageState extends State<TestCommentsPollingPage> {
                         ),
                       );
                     }
+                    
                     return ListView.builder(
                       reverse: true,
                       itemCount: state.comments.length,
@@ -175,10 +188,12 @@ class _TestCommentsPollingPageState extends State<TestCommentsPollingPage> {
                       },
                     );
                   }
+                  
                   return const Center(child: Text('جاري التحضير...'));
                 },
               ),
             ),
+            
             // حقل إضافة تعليق
             Container(
               padding: const EdgeInsets.all(12),
@@ -213,6 +228,7 @@ class _TestCommentsPollingPageState extends State<TestCommentsPollingPage> {
       ),
     );
   }
+
   void _addComment() {
     final text = _commentController.text.trim();
     if (text.isNotEmpty) {
@@ -224,6 +240,7 @@ class _TestCommentsPollingPageState extends State<TestCommentsPollingPage> {
     }
   }
 }
+
 /// دالة لفتح صفحة الاختبار
 void openTestCommentsPolling(BuildContext context, String liveId) {
   Navigator.of(context).push(

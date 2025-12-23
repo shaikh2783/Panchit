@@ -3,28 +3,36 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/live_comments_bloc.dart';
 import '../../data/models/live_stream_models.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 class LiveCommentsWidget extends StatefulWidget {
   final String liveId;
+
   const LiveCommentsWidget({
     Key? key,
     required this.liveId,
   }) : super(key: key);
+
   @override
   State<LiveCommentsWidget> createState() => _LiveCommentsWidgetState();
 }
+
 class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
     with TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
+  
   late AnimationController _slideController;
   late Animation<Offset> _slideAnimation;
+
   @override
   void initState() {
     super.initState();
+    
     _slideController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
+    
     _slideAnimation = Tween<Offset>(
       begin: const Offset(1.0, 0.0),
       end: Offset.zero,
@@ -32,8 +40,10 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
       parent: _slideController,
       curve: Curves.easeOut,
     ));
+
     _slideController.forward();
   }
+
   @override
   void dispose() {
     _scrollController.dispose();
@@ -41,6 +51,7 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
     _slideController.dispose();
     super.dispose();
   }
+
   void _scrollToBottom() {
     if (_scrollController.hasClients) {
       _scrollController.animateTo(
@@ -50,6 +61,7 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
       );
     }
   }
+
   void _addComment() {
     final text = _textController.text.trim();
     if (text.isNotEmpty) {
@@ -62,6 +74,7 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
       _textController.clear();
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return SlideTransition(
@@ -126,6 +139,7 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
                 ],
               ),
             ),
+
             // Comments list
             Expanded(
               child: BlocConsumer<LiveCommentsBloc, LiveCommentsState>(
@@ -145,6 +159,7 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
                       ),
                     );
                   }
+                  
                   if (state is LiveCommentsError) {
                     return Center(
                       child: Padding(
@@ -160,6 +175,7 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
                       ),
                     );
                   }
+                  
                   if (state is LiveCommentsLoaded) {
                     if (state.comments.isEmpty) {
                       return const Center(
@@ -176,6 +192,7 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
                         ),
                       );
                     }
+                    
                     return ListView.builder(
                       key: ValueKey('comments_${state.comments.length}'),
                       controller: _scrollController,
@@ -190,6 +207,7 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
                       },
                     );
                   }
+                  
                   return const Center(
                     child: Text(
                       'ابدأ مشاهدة التعليقات المباشرة',
@@ -202,6 +220,7 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
                 },
               ),
             ),
+
             // Comment input
             Container(
               padding: const EdgeInsets.all(8),
@@ -258,6 +277,7 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
                   BlocBuilder<LiveCommentsBloc, LiveCommentsState>(
                     builder: (context, state) {
                       final isAdding = state is LiveCommentAdding;
+                      
                       return IconButton(
                         onPressed: isAdding ? null : _addComment,
                         icon: isAdding
@@ -284,6 +304,7 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
       ),
     );
   }
+
   Widget _buildCommentItem(LiveCommentModel comment) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 2),
@@ -339,6 +360,7 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
             ],
           ),
           const SizedBox(height: 4),
+          
           // Comment text
           Text(
             comment.text,
@@ -347,6 +369,7 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
               fontSize: 14,
             ),
           ),
+          
           // Image if available
           if (comment.imageUrl != null) ...[
             const SizedBox(height: 8),
@@ -377,11 +400,13 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
       ),
     );
   }
+
   String _formatTime(String time) {
     try {
       final dateTime = DateTime.parse(time);
       final now = DateTime.now();
       final difference = now.difference(dateTime);
+      
       if (difference.inMinutes < 1) {
         return 'الآن';
       } else if (difference.inMinutes < 60) {

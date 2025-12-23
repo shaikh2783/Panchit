@@ -5,6 +5,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:snginepro/core/widgets/skeletons.dart';
 import 'package:snginepro/features/auth/application/auth_notifier.dart';
+
 import '../../../../core/theme/ui_constants.dart';
 import '../../data/models/funding.dart';
 import '../../domain/funding_repository.dart';
@@ -12,22 +13,28 @@ import 'funding_donate_page.dart';
 import 'funding_donors_page.dart';
 import 'funding_edit_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 class FundingDetailPage extends StatefulWidget {
   final int fundingId;
+
   const FundingDetailPage({super.key, required this.fundingId});
+
   @override
   State<FundingDetailPage> createState() => _FundingDetailPageState();
 }
+
 class _FundingDetailPageState extends State<FundingDetailPage> {
   Funding? _funding;
   bool _loading = true;
   String? _error;
   String? _currentUserId;
+
   @override
   void initState() {
     super.initState();
     _load();
   }
+
   Future<void> _load() async {
     setState(() {
       _loading = true;
@@ -51,6 +58,7 @@ class _FundingDetailPageState extends State<FundingDetailPage> {
       });
     }
   }
+
   Future<void> _delete() async {
     final confirm = await Get.dialog<bool>(
       AlertDialog(
@@ -66,6 +74,7 @@ class _FundingDetailPageState extends State<FundingDetailPage> {
       ),
     );
     if (confirm != true) return;
+
     try {
       final repo = context.read<FundingRepository>();
       await repo.deleteFunding(widget.fundingId);
@@ -75,10 +84,12 @@ class _FundingDetailPageState extends State<FundingDetailPage> {
       Get.snackbar('error'.tr, e.toString());
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final isOwner = _funding != null && _currentUserId != null && _funding!.author.userId == _currentUserId;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('funding_details'.tr),
@@ -157,6 +168,7 @@ class _FundingDetailPageState extends State<FundingDetailPage> {
               : _buildContent(scheme),
     );
   }
+
   Widget _buildContent(ColorScheme scheme) {
     final f = _funding!;
     return SingleChildScrollView(
@@ -187,6 +199,7 @@ class _FundingDetailPageState extends State<FundingDetailPage> {
                 ),
               ],
             ),
+
           // Floating info card
           Transform.translate(
             offset: f.cover != null && f.cover!.isNotEmpty ? const Offset(0, -20) : Offset.zero,
@@ -208,6 +221,7 @@ class _FundingDetailPageState extends State<FundingDetailPage> {
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
                     ),
                     SizedBox(height: UI.md),
+
                     // Progress bar
                     ClipRRect(
                       borderRadius: BorderRadius.circular(6),
@@ -219,6 +233,7 @@ class _FundingDetailPageState extends State<FundingDetailPage> {
                       ),
                     ),
                     SizedBox(height: UI.sm),
+                    
                     // Completion percentage
                     Align(
                       alignment: Alignment.centerRight,
@@ -239,6 +254,7 @@ class _FundingDetailPageState extends State<FundingDetailPage> {
                       ),
                     ),
                     SizedBox(height: UI.md),
+
                     // Amount stats
                     Row(
                       children: [
@@ -272,6 +288,7 @@ class _FundingDetailPageState extends State<FundingDetailPage> {
                       ],
                     ),
                     SizedBox(height: UI.md),
+
                     // Donors list button
                     if (f.totalDonations > 0)
                       OutlinedButton.icon(
@@ -283,6 +300,7 @@ class _FundingDetailPageState extends State<FundingDetailPage> {
                         ),
                       ),
                     SizedBox(height: UI.md),
+
                     // Publisher
                     const Divider(),
                     SizedBox(height: UI.sm),
@@ -323,6 +341,7 @@ class _FundingDetailPageState extends State<FundingDetailPage> {
               ),
             ),
           ),
+
           // Description card
           if (f.description.trim().isNotEmpty)
             Padding(
@@ -362,6 +381,7 @@ class _FundingDetailPageState extends State<FundingDetailPage> {
       ),
     );
   }
+
   Widget _statCard(BuildContext context, {required IconData icon, required String label, required String value, Color? color}) {
     final scheme = Theme.of(context).colorScheme;
     final statColor = color ?? scheme.onSurface;
@@ -392,6 +412,7 @@ class _FundingDetailPageState extends State<FundingDetailPage> {
       ),
     );
   }
+
   Widget _buildSkeleton() {
     return SingleChildScrollView(
       child: Column(

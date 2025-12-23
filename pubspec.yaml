@@ -43,6 +43,7 @@ dependencies:
   cached_video_player_plus: ^4.1.0
   visibility_detector: ^0.4.0+2
   image_picker: ^1.2.0
+  file_picker: ^8.1.2
   encrypt: ^5.0.3
   get: ^4.6.6
   timeago: ^3.7.0
@@ -62,8 +63,13 @@ dependencies:
   flutter_svg: ^2.0.10+1
   agora_rtc_engine: ^6.5.3
   onesignal_flutter: ^5.3.4
+  intl: ^0.19.0
   flutter_paypal_payment: ^1.0.6
   pointycastle: ^3.9.1
+  video_player: ^2.10.1
+  youtube_player_iframe: ^5.2.0
+  qr_flutter: ^4.1.0
+  google_sign_in: ^6.2.2
   
 
 

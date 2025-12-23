@@ -5,46 +5,56 @@ import 'package:snginepro/features/feed/data/models/post.dart';
 import 'package:snginepro/features/feed/data/services/promoted_posts_service.dart';
 import 'package:snginepro/features/feed/data/services/post_management_api_service.dart';
 import 'package:snginepro/features/feed/presentation/widgets/post_card.dart';
+
 /// Widget ثابت يعرض المنشور المدفوع في أعلى الصفحة الرئيسية
 class PromotedPostWidget extends StatefulWidget {
   final VoidCallback? onRefresh;
   final void Function(VoidCallback)? onRefreshCallback;
+
   const PromotedPostWidget({
     super.key,
     this.onRefresh,
     this.onRefreshCallback,
   });
+
   @override
   State<PromotedPostWidget> createState() => _PromotedPostWidgetState();
 }
+
 class _PromotedPostWidgetState extends State<PromotedPostWidget> {
   late PromotedPostsService _promotedPostsService;
   late PostManagementApiService _postManagementService;
   Post? _promotedPost;
   bool _isLoading = false;
   String? _error;
+
   @override
   void initState() {
     super.initState();
     _promotedPostsService = PromotedPostsService(context.read<ApiClient>());
     _postManagementService = PostManagementApiService(context.read<ApiClient>());
     _loadPromotedPost();
+    
     // تمرير دالة التحديث إلى الصفحة الأب
     widget.onRefreshCallback?.call(refreshPromotedPost);
   }
+
   /// تحميل منشور مدفوع عشوائي
   Future<void> _loadPromotedPost() async {
     setState(() {
       _isLoading = true;
       _error = null;
     });
+
     try {
       final promotedPost = await _promotedPostsService.getRandomPromotedPost();
+      
       if (mounted) {
         setState(() {
           _promotedPost = promotedPost;
           _isLoading = false;
         });
+        
         if (promotedPost != null) {
           // مسح ذاكرة الصور المؤقتة عند تحميل منشور جديد
           PaintingBinding.instance.imageCache.clear();
@@ -60,13 +70,17 @@ class _PromotedPostWidgetState extends State<PromotedPostWidget> {
       }
     }
   }
+
   /// تحديث المنشور المدفوع (يستدعى عند Pull to Refresh)
   Future<void> refreshPromotedPost() async {
+    
     // مسح ذاكرة الصور المؤقتة لضمان تحديث الصور
     PaintingBinding.instance.imageCache.clear();
+    
     await _loadPromotedPost();
     widget.onRefresh?.call();
   }
+
   @override
   Widget build(BuildContext context) {
     // إذا كان يتم التحميل للمرة الأولى
@@ -95,6 +109,7 @@ class _PromotedPostWidgetState extends State<PromotedPostWidget> {
         ),
       );
     }
+
     // إذا حدث خطأ ولا يوجد محتوى مسبق
     if (_error != null && _promotedPost == null) {
       return Container(
@@ -128,10 +143,12 @@ class _PromotedPostWidgetState extends State<PromotedPostWidget> {
         ),
       );
     }
+
     // إذا لم يوجد منشور مدفوع متاح
     if (_promotedPost == null) {
       return const SizedBox.shrink();
     }
+
     // عرض المنشور المدفوع
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 2, vertical: 4),
@@ -157,27 +174,33 @@ class _PromotedPostWidgetState extends State<PromotedPostWidget> {
             key: ValueKey('promoted-post-${_promotedPost!.id}'),
             post: _promotedPost!,
             onReactionChanged: (postId, reaction) async {
+              
               // تحديث حالة المنشور المدفوع محلياً (Optimistic Update)
               if (_promotedPost != null) {
                 final updatedPost = _promotedPost!.copyWithReaction(
                   reaction == 'remove' ? null : reaction
                 );
+                
                 // تحديث فقط إذا تغير شيء فعلياً
                 if (updatedPost.myReaction != _promotedPost!.myReaction) {
                   setState(() {
                     _promotedPost = updatedPost;
                   });
                 }
+                
                 // إرسال التفاعل للخادم
                 try {
                   final postIdInt = int.parse(postId);
                   final isReacting = reaction != 'remove';
+                  
                   await _postManagementService.reactToPost(
                     postId: postIdInt,
                     reaction: reaction == 'remove' ? 'like' : reaction, // استخدام like كقيمة افتراضية عند الإزالة
                     isReacting: isReacting,
                   );
+                  
                 } catch (e) {
+                  
                   // في حالة الخطأ، نعيد الحالة السابقة (Revert)
                   if (_promotedPost != null) {
                     final originalReaction = _promotedPost!.myReaction;

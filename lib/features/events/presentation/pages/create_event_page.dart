@@ -13,58 +13,76 @@ import 'package:snginepro/core/models/language.dart';
 import 'package:snginepro/core/services/general_data_service.dart';
 import 'package:snginepro/core/network/api_client.dart';
 import 'package:intl/intl.dart';
+
 class CreateEventPage extends StatefulWidget {
   final Event? event; // Optional: for editing existing event
+
   const CreateEventPage({super.key, this.event});
+
   @override
   State<CreateEventPage> createState() => _CreateEventPageState();
 }
+
 class _CreateEventPageState extends State<CreateEventPage> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _locationController = TextEditingController();
   final _descriptionController = TextEditingController();
+
   DateTime? _startDate;
   DateTime? _endDate;
   String _privacy = 'public';
   bool _isOnline = false;
+  
   // Dropdowns data
   List<EventCategory> _categories = [];
   List<Country> _countries = [];
   List<Language> _languages = [];
+  
   EventCategory? _selectedCategory;
   Country? _selectedCountry;
   Language? _selectedLanguage;
+  
   bool _isLoading = false;
   bool _isLoadingData = true;
+
   @override
   void initState() {
     super.initState();
     _loadDropdownData();
   }
+
   Future<void> _loadDropdownData() async {
     try {
       final apiClient = context.read<ApiClient>();
       final eventsService = EventsService(apiClient);
       final generalDataService = GeneralDataService(apiClient);
+
       final results = await Future.wait([
         eventsService.getEventCategories(),
         generalDataService.getCountries(),
         generalDataService.getLanguages(),
       ]);
+
       setState(() {
         _categories = results[0] as List<EventCategory>;
         _countries = results[1] as List<Country>;
         _languages = results[2] as List<Language>;
+        
+        
         if (_languages.isNotEmpty) {
         }
         if (_countries.isNotEmpty) {
         }
+        
         // Set defaults first
         if (_categories.isNotEmpty) _selectedCategory = _categories.first;
         if (_countries.isNotEmpty) _selectedCountry = _countries.first;
         if (_languages.isNotEmpty) _selectedLanguage = _languages.first;
+        
+        
         _isLoadingData = false;
+        
         // Load event data after dropdown data is loaded
         if (widget.event != null) {
           _loadEventData();
@@ -74,6 +92,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
       setState(() => _isLoadingData = false);
     }
   }
+
   void _loadEventData() {
     final event = widget.event!;
     _titleController.text = event.eventTitle;
@@ -83,18 +102,21 @@ class _CreateEventPageState extends State<CreateEventPage> {
     _endDate = event.eventEndDate;
     _privacy = event.eventPrivacy;
     _isOnline = event.eventIsOnline;
+    
     // Set selected category if available
     if (event.categoryId != null && _categories.isNotEmpty) {
       _selectedCategory = _categories.firstWhereOrNull(
         (c) => c.categoryId == event.categoryId,
       ) ?? _selectedCategory;
     }
+    
     // Set selected country if available
     if (event.countryId != null && _countries.isNotEmpty) {
       _selectedCountry = _countries.firstWhereOrNull(
         (c) => c.countryId == event.countryId,
       ) ?? _selectedCountry;
     }
+    
     // Set selected language if available
     if (event.languageId != null && _languages.isNotEmpty) {
       _selectedLanguage = _languages.firstWhereOrNull(
@@ -102,6 +124,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
       ) ?? _selectedLanguage;
     }
   }
+
   @override
   void dispose() {
     _titleController.dispose();
@@ -109,10 +132,12 @@ class _CreateEventPageState extends State<CreateEventPage> {
     _descriptionController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Get.isDarkMode;
     final theme = Get.theme;
+
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
@@ -184,6 +209,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 },
               ),
               const SizedBox(height: 16),
+
               // Event Location
               TextFormField(
                 controller: _locationController,
@@ -205,6 +231,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 },
               ),
               const SizedBox(height: 16),
+
               // Event Description
               TextFormField(
                 controller: _descriptionController,
@@ -221,6 +248,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 ),
               ),
               const SizedBox(height: 16),
+
               // Loading indicator or dropdowns
               if (_isLoadingData)
                 const Center(
@@ -254,6 +282,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     },
                   ),
                 const SizedBox(height: 16),
+
                 // Country Dropdown
                 if (_countries.isNotEmpty)
                   DropdownButtonFormField<Country>(
@@ -278,6 +307,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     },
                   ),
                 const SizedBox(height: 16),
+
                 // Language Dropdown
                 if (_languages.isNotEmpty)
                   DropdownButtonFormField<Language>(
@@ -303,6 +333,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   ),
               ],
               const SizedBox(height: 16),
+
               // Start Date
               _buildDateField(
                 label: 'start_date'.tr,
@@ -310,6 +341,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 onTap: () => _selectDateTime(isStart: true),
               ),
               const SizedBox(height: 16),
+
               // End Date
               _buildDateField(
                 label: 'end_date'.tr,
@@ -317,6 +349,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 onTap: () => _selectDateTime(isStart: false),
               ),
               const SizedBox(height: 16),
+
               // Online Event Toggle
               Container(
                 decoration: BoxDecoration(
@@ -324,8 +357,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: SwitchListTile(
-                  title: Text('Online Event'),
-                  subtitle: Text('This event will be held online'),
+                  title: Text('online_event'.tr),
+                  subtitle: Text('this_event_held_online'.tr),
                   value: _isOnline,
                   onChanged: (value) {
                     setState(() {
@@ -339,6 +372,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 ),
               ),
               const SizedBox(height: 16),
+
               // Privacy Selector
               Container(
                 decoration: BoxDecoration(
@@ -391,6 +425,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 ),
               ),
               const SizedBox(height: 24),
+
               // Submit Button
               SizedBox(
                 height: 50,
@@ -429,12 +464,14 @@ class _CreateEventPageState extends State<CreateEventPage> {
       ),
     );
   }
+
   Widget _buildDateField({
     required String label,
     required DateTime? value,
     required VoidCallback onTap,
   }) {
     final isDark = Get.isDarkMode;
+
     return InkWell(
       onTap: onTap,
       child: InputDecorator(
@@ -458,6 +495,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
       ),
     );
   }
+
   Future<void> _selectDateTime({required bool isStart}) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -467,11 +505,13 @@ class _CreateEventPageState extends State<CreateEventPage> {
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
+
     if (pickedDate != null) {
       final TimeOfDay? pickedTime = await showTimePicker(
         context: context,
         initialTime: TimeOfDay.now(),
       );
+
       if (pickedTime != null) {
         final selectedDateTime = DateTime(
           pickedDate.year,
@@ -480,6 +520,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
           pickedTime.hour,
           pickedTime.minute,
         );
+
         setState(() {
           if (isStart) {
             _startDate = selectedDateTime;
@@ -494,10 +535,12 @@ class _CreateEventPageState extends State<CreateEventPage> {
       }
     }
   }
+
   void _handleSubmit() {
     if (!_formKey.currentState!.validate()) {
       return;
     }
+
     if (_startDate == null) {
       Get.snackbar(
         'error'.tr,
@@ -508,6 +551,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
       );
       return;
     }
+
     if (_endDate == null) {
       Get.snackbar(
         'error'.tr,
@@ -518,6 +562,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
       );
       return;
     }
+
     if (_endDate!.isBefore(_startDate!)) {
       Get.snackbar(
         'error'.tr,
@@ -528,6 +573,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
       );
       return;
     }
+
     if (widget.event == null) {
       // Create new event
       context.read<EventsBloc>().add(
@@ -571,6 +617,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
           );
     }
   }
+
   /// Format date for API (MySQL format: YYYY-MM-DD HH:MM:SS)
   String _formatDateForApi(DateTime date) {
     return '${date.year.toString().padLeft(4, '0')}-'

@@ -1,10 +1,12 @@
 import 'dart:io';
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:collection/collection.dart';
+
 import 'package:snginepro/core/theme/app_colors.dart';
 import 'package:snginepro/core/theme/app_text_styles.dart';
 import 'package:snginepro/core/theme/theme_controller.dart';
@@ -19,6 +21,7 @@ import 'package:snginepro/features/feed/data/models/post_type_config.dart';
 import 'package:snginepro/features/feed/data/models/upload_file_data.dart';
 import 'package:snginepro/features/feed/data/models/post.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 /// Professional create post page - supports dark mode
 class CreatePostPageModern extends StatefulWidget {
   const CreatePostPageModern({
@@ -28,13 +31,16 @@ class CreatePostPageModern extends StatefulWidget {
     this.handleName,
     this.initialPostType,
   });
+
   final String? handle; // 'me', 'page', 'group', 'event'
   final int? handleId; // ID for page/group/event
   final String? handleName; // Display name for page/group/event
   final PostTypeOption? initialPostType; // Initial post type (e.g., Reel)
+
   @override
   State<CreatePostPageModern> createState() => _CreatePostPageModernState();
 }
+
 class _CreatePostPageModernState extends State<CreatePostPageModern> {
   final TextEditingController _textController = TextEditingController();
   final FocusNode _textFocusNode = FocusNode();
@@ -47,6 +53,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
     TextEditingController(),
     TextEditingController(),
   ];
+
   PostTypeOption _selectedType = PostTypeOption.text;
   String _privacy = 'public';
   bool _isAnonymous = false;
@@ -54,6 +61,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
   bool _isAdultContent = false;
   bool _isCreating = false;
   double _videoUploadProgress = 0.0; // 0.0 - 1.0
+  
   // متغيرات الأنماط الملونة
   ColoredPattern? _selectedColoredPattern;
   bool _showColoredPatterns = false;
@@ -63,7 +71,9 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
   List<Map<String, dynamic>> _activities = [];
   String? _selectedFeelingAction;
   String? _selectedFeelingActivity;
+
   final ThemeController _themeController = Get.find();
+
   @override
   void initState() {
     super.initState();
@@ -75,6 +85,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
     // إضافة listeners للتحديث عند تغيير النص أو التركيز
     _textController.addListener(() => setState(() {}));
     _textFocusNode.addListener(() => setState(() {}));
+    
     // تحديث الإعدادات من السيرفر عند فتح الصفحة
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final configProvider = Provider.of<DynamicAppConfigProvider>(context, listen: false);
@@ -83,37 +94,46 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           DateTime.now().difference(configProvider.lastUpdate!).inMinutes > 5) {
         configProvider.loadConfig(forceRefresh: true);
       }
+      
       // تحميل بيانات الـ Feelings
       _loadFeelingsFromProvider();
     });
   }
+
   /// تحميل بيانات الـ Feelings من الـ Provider الموجود
   Future<void> _loadFeelingsFromProvider() async {
     try {
       final configProvider = Provider.of<DynamicAppConfigProvider>(context, listen: false);
+      
       // التأكد من تحميل الإعدادات أولاً
       if (configProvider.appConfig == null) {
         await configProvider.loadConfig(forceRefresh: false);
       }
+      
       // التحقق من تفعيل الـ Feelings من الـ Provider
       final features = configProvider.features;
       final feelingsEnabled = features?.posts.feelings ?? false;
+      
+      
       // جلب البيانات من الـ Provider مباشرة باستخدام الـ getters الجديدة
       final feelingsData = configProvider.feelings ?? [];
       final activitiesData = configProvider.activities ?? [];
+      
       // إذا لم تكن البيانات متوفرة، استخدم البيانات الافتراضية
       if (feelingsData.isEmpty && activitiesData.isEmpty) {
         _setDefaultFeelingsData();
         return;
       }
-      feelingsData.forEach((f) {});
-      activitiesData.forEach((a) {});
+      
+      
+
       setState(() {
         _feelingsEnabled = true; // نمكن الـ feelings دائماً إذا كانت البيانات متوفرة
         _feelings = feelingsData.map((f) => Map<String, dynamic>.from(f)).toList();
         _activities = activitiesData.map((a) => Map<String, dynamic>.from(a)).toList();
         _feelingsSynced = true;
       });
+
       final allActions = <String>{};
       for (var feeling in _feelings) {
         final action = feeling['action']?.toString();
@@ -126,6 +146,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       _setDefaultFeelingsData();
     }
   }
+
   /// تعيين بيانات افتراضية للـ Feelings والـ Activities
   void _setDefaultFeelingsData() {
     setState(() {
@@ -148,7 +169,9 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       ];
       _feelingsSynced = true;
     });
+    
   }
+
   @override
   void dispose() {
     _textController.dispose();
@@ -159,6 +182,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
     }
     super.dispose();
   }
+
   Future<void> _pickImages() async {
     final picker = ImagePicker();
     final List<XFile> images = await picker.pickMultiImage();
@@ -169,6 +193,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       });
     }
   }
+
   Future<void> _pickVideo() async {
     final picker = ImagePicker();
     final XFile? videoFile = await picker.pickVideo(
@@ -185,6 +210,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       });
     }
   }
+
   Future<void> _pickAudio() async {
     // For now, using video picker as audio picker - can be enhanced with file_picker package
     final picker = ImagePicker();
@@ -201,11 +227,13 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       });
     }
   }
+
   void _removeImage(int index) {
     setState(() {
       _images.removeAt(index);
     });
   }
+
   // دوال الأنماط الملونة
   void _toggleColoredPatterns() {
     setState(() {
@@ -222,19 +250,24 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       }
     });
   }
+
   void _selectColoredPattern(ColoredPattern? pattern) {
     setState(() {
       _selectedColoredPattern = pattern;
     });
   }
+
   Color _getPatternBackground() {
     if (_selectedColoredPattern == null) return Colors.transparent;
+    
     if (_selectedColoredPattern!.backgroundColors != null) {
       final colorStr = _selectedColoredPattern!.backgroundColors!.primary.replaceAll('#', '');
       return Color(int.parse('0xFF$colorStr'));
     }
+    
     return const Color(0xFF6C5CE7);
   }
+
   FeelingData? _buildFeelingData() {
     final action = _selectedFeelingAction;
     if (action == null || action.isEmpty) return null;
@@ -242,6 +275,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
     if (value.isEmpty) return null;
     return FeelingData(action: action, value: value);
   }
+
   bool _shouldHideTextField() {
     // إخفاء TextField عندما:
     // 1. يتم اختيار خلفية ملونة
@@ -251,9 +285,11 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
            (_textController.text.isEmpty || _textController.text.trim().isEmpty) &&
            !_textFocusNode.hasFocus;
   }
+
   /// تحويل اسم الأيقونة إلى emoji
   String _convertIconNameToEmoji(String? iconName) {
     if (iconName == null || iconName.isEmpty) return '😊';
+    
     switch (iconName.toLowerCase()) {
       // Feelings/Actions Icons
       case 'grinning-face-with-smiling-eyes':
@@ -279,6 +315,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         return '🎂';
       case 'magnifying-glass-tilted-left':
         return '�';
+      
       // Emotions Icons
       case 'smiling-face-with-heart-eyes':
         return '😍';
@@ -308,6 +345,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         return '😔';
       case 'confounded-face':
         return '😖';
+      
       // Legacy support
       case 'happy':
         return '😊';
@@ -340,10 +378,12 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         return '🤩';
       case 'nervous':
         return '�';
+      
       default:
         return '😊';
     }
   }
+
   /// الحصول على ترجمة الـ Action بناءً على اسم العمل
   String _getTranslatedAction(String action) {
     switch (action.toLowerCase()) {
@@ -373,6 +413,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         return action; // إرجاع النص الأصلي إذا لم تجد ترجمة
     }
   }
+
   /// الحصول على ترجمة العاطفة بناءً على اسم العاطفة
   String _getTranslatedEmotion(String emotion) {
     switch (emotion.toLowerCase()) {
@@ -410,6 +451,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         return emotion; // إرجاع النص الأصلي إذا لم تجد ترجمة
     }
   }
+
   /// الحصول على الـ placeholder المترجم بناءً على الـ Action
   String _getTranslatedPlaceholder(String action) {
     switch (action.toLowerCase()) {
@@ -439,6 +481,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         return 'What are you ${action.toLowerCase()}?'; // fallback
     }
   }
+
   /// الحصول على ترجمة نوع المنشور
   String _getPostTypeLabel(PostTypeOption type) {
     switch (type) {
@@ -468,6 +511,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         return 'post_type_job'.tr;
     }
   }
+
   void _addPollOption() {
     if (_pollOptions.length < 10) {
       setState(() {
@@ -475,6 +519,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       });
     }
   }
+
   void _removePollOption(int index) {
     if (_pollOptions.length > 2) {
       setState(() {
@@ -483,6 +528,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       });
     }
   }
+
   Future<void> _createPost() async {
     if (_textController.text.trim().isEmpty &&
         _images.isEmpty &&
@@ -497,9 +543,12 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       );
       return;
     }
+
     setState(() => _isCreating = true);
+
     try {
       final apiService = context.read<PostsApiService>();
+
       // Upload images if present
       List<UploadedFileData>? uploadedPhotos;
       if (_images.isNotEmpty) {
@@ -515,10 +564,12 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           }
         }
       }
+
       // Upload video if present
       if (_video != null) {
         _videoUploadProgress = 0.0;
         setState(() {});
+
         try {
           _uploadedVideo = await apiService.uploadFile(
             _video!,
@@ -533,6 +584,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
               }
             },
           );
+
           if (_uploadedVideo != null) {
             if (_uploadedVideo!.thumb != null) {
             }
@@ -559,6 +611,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           _uploadedVideo = null;
         }
       }
+
       // Upload audio if present
       UploadedFileData? uploadedAudio;
       if (_audio != null) {
@@ -569,20 +622,25 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         if (uploadedAudio != null) {
         }
       }
+
       // Build the request
       final request = _buildPostRequest(
         photos: uploadedPhotos,
         video: _uploadedVideo,
         audio: uploadedAudio,
       );
+
       // Debug logging for group posts
       final requestJson = request.toJson();
+
       // Create the post
       final postResponse = await apiService.createPostAdvanced(request);
+
       // Update list and go back to main page
       if (mounted) {
-        // Close page first
-        Get.back();
+        // Close page first and return success
+        Get.back(result: true);
+
         // Show success message
         Get.snackbar(
           'success'.tr,
@@ -594,6 +652,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           colorText: Colors.white,
           duration: const Duration(seconds: 3),
         );
+
         // Add new post immediately instead of full reload
         if (postResponse.isSuccess && postResponse.postData != null) {
           try {
@@ -624,6 +683,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       }
     }
   }
+
   CreatePostRequest _buildPostRequest({
     List<UploadedFileData>? photos,
     UploadedFileData? video,
@@ -633,7 +693,8 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
     final handle = widget.handle ?? 'me';
     final handleId = widget.handleId;
     final feeling = _buildFeelingData();
-     // Debug: Check selected type
+    
+    
     switch (_selectedType) {
       case PostTypeOption.photos:
         // Convert UploadedFileData to PhotoData with size and extension
@@ -676,6 +737,8 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                 if (video.meta != null) 'meta': video.meta,
               }
             : null;
+
+
         return CreatePostRequest(
           handle: handle,
           pageId: handle == 'page' && handleId != null ? handleId.toString() : null,
@@ -700,12 +763,15 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
             thumbPath = thumbUrl;
           }
         }
+        
         final reelData = video != null
             ? {
                 'source': video.source,
                 if (thumbPath != null) 'thumb': thumbPath,
               }
             : null;
+
+
         return CreatePostRequest(
           handle: handle,
           pageId: handle == 'page' && handleId != null ? handleId.toString() : null,
@@ -774,6 +840,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         );
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthNotifier>();
@@ -783,8 +850,10 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         auth.currentUser?['user_name'] ??
         'User';
     final userAvatar = auth.currentUser?['user_picture'];
+    
     // Use handleName if posting to page/group/event, otherwise use userName
     final displayName = widget.handleName ?? userName;
+
     return Consumer<DynamicAppConfigProvider>(
       builder: (context, configProvider, child) {
         // إذا تغيرت البيانات ولم يتم تحديث الـ feelings، قم بالتحديث
@@ -793,8 +862,10 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
             _loadFeelingsFromProvider();
           });
         }
+        
         return Obx(() {
           final isDark = _themeController.isDarkMode;
+
       return Scaffold(
         backgroundColor: isDark
             ? const Color(0xFF0A0A0A)
@@ -819,6 +890,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       },
     );
   }
+
   PreferredSizeWidget _buildAppBar(bool isDark) {
     String title = 'create_post_title'.tr;
     if (widget.handle == 'me') {
@@ -828,6 +900,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
     } else if (widget.handle == 'group') {
       title = 'post_to_page'.trParams({'name': widget.handleName ?? ''});
     }
+    
     return AppBar(
       backgroundColor: isDark 
         ? const Color(0xFF1A1A1A).withOpacity(0.95)
@@ -941,6 +1014,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       ],
     );
   }
+
   Widget _buildLoadingState(bool isDark) {
     return Center(
       child: Container(
@@ -1089,6 +1163,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       ),
     );
   }
+
   Widget _buildBody(String userName, String? userAvatar, bool isDark) {
     return SingleChildScrollView(
       child: Column(
@@ -1096,16 +1171,24 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         children: [
           // User header
           _buildUserHeader(userName, userAvatar, isDark),
+
           const SizedBox(height: 12),
+
           // Post types
           _buildPostTypeSelector(isDark),
+
           const SizedBox(height: 16),
+
           // Text field
           _buildTextInput(isDark),
+
           const SizedBox(height: 16),
+
           // Additional content by type
           _buildTypeSpecificContent(isDark),
+
           const SizedBox(height: 16),
+
           // Additional tools
           Consumer<DynamicAppConfigProvider>(
             builder: (context, provider, child) {
@@ -1113,15 +1196,20 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
               return const SizedBox.shrink();
             },
           ),
+
           _buildAdditionalTools(isDark),
+
           const SizedBox(height: 16),
+
           // Privacy settings
           _buildPrivacySettings(isDark),
+
           const SizedBox(height: 24),
         ],
       ),
     );
   }
+
   Widget _buildUserHeader(String userName, String? userAvatar, bool isDark) {
     return Container(
       margin: const EdgeInsets.all(16),
@@ -1204,6 +1292,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       ),
     );
   }
+
   Widget _buildPrivacyDropdown(bool isDark) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -1305,6 +1394,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       ),
     );
   }
+
   Widget _buildPostTypeSelector(bool isDark) {
     return Container(
       height: 110,
@@ -1333,6 +1423,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           children: PostTypeOption.values.take(8).map((type) {
             final config = PostTypeConfig.getConfig(type);
             final isSelected = _selectedType == type;
+
             return Container(
               width: 80,
               margin: const EdgeInsets.only(right: 10),
@@ -1340,6 +1431,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                 onTap: () {
                   // Prevent changing type if initialPostType is set
                   if (widget.initialPostType != null) return;
+                  
                   setState(() => _selectedType = type);
                   if (type == PostTypeOption.photos) {
                     _pickImages();
@@ -1442,6 +1534,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       ),
     );
   }
+
   Widget _buildTextInput(bool isDark) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -1559,27 +1652,35 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       ),
     );
   }
+
   Widget _buildTypeSpecificContent(bool isDark) {
     if (_selectedType == PostTypeOption.photos && _images.isNotEmpty) {
       return _buildImageGrid(isDark);
     }
+
     if (_selectedType == PostTypeOption.video && _video != null) {
       return _buildVideoPreview(isDark);
     }
+
     if (_selectedType == PostTypeOption.reel && _video != null) {
       return _buildVideoPreview(isDark); // Reel uses same preview as video
     }
+
     if (_selectedType == PostTypeOption.audio && _audio != null) {
       return _buildAudioPreview(isDark);
     }
+
     if (_selectedType == PostTypeOption.poll) {
       return _buildPollInput(isDark);
     }
+
     if (_selectedType == PostTypeOption.colored && _showColoredPatterns) {
       return _buildColoredPatternsGrid(isDark);
     }
+
     return const SizedBox.shrink();
   }
+
   Widget _buildColoredPatternsGrid(bool isDark) {
     return Consumer<DynamicAppConfigProvider>(
       builder: (context, configProvider, child) {
@@ -1587,6 +1688,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         final featuresConfig = configProvider.features;
         final coloredPostsEnabled = featuresConfig?.posts.coloredPosts ?? false;
         final patterns = configProvider.coloredPatterns ?? [];
+        
         // إذا لم تكن الخلفيات الملونة مفعلة في الخادم
         if (!coloredPostsEnabled) {
           return Container(
@@ -1629,6 +1731,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
             ),
           );
         }
+        
         // إذا لم تكن هناك أنماط متاحة
         if (patterns.isEmpty) {
           return Container(
@@ -1667,6 +1770,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
             ),
           );
         }
+        
         return Container(
           margin: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
@@ -1848,6 +1952,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                     itemBuilder: (context, index) {
                       final pattern = patterns[index];
                       final isSelected = _selectedColoredPattern?.id == pattern.id;
+                      
                       return Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
@@ -1890,6 +1995,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       },
     );
   }
+
   Widget _buildPatternPreview(ColoredPattern pattern) {
     if (pattern.backgroundImage != null && pattern.backgroundImage!.full.isNotEmpty) {
       return Image.network(
@@ -1903,9 +2009,11 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       return _buildColorPreview(pattern);
     }
   }
+
   Widget _buildColorPreview(ColoredPattern pattern) {
     if (pattern.backgroundColors != null) {
       final primary = Color(int.parse('0xFF${pattern.backgroundColors!.primary.replaceAll('#', '')}'));
+      
       if (pattern.backgroundColors!.secondary != null) {
         final secondary = Color(int.parse('0xFF${pattern.backgroundColors!.secondary!.replaceAll('#', '')}'));
         return Container(
@@ -1921,11 +2029,13 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         return Container(color: primary);
       }
     }
+    
     return Container(
       color: const Color(0xFF6C5CE7),
       child: const Icon(Icons.color_lens, color: Colors.white),
     );
   }
+
   Widget _buildVideoPreview(bool isDark) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -2032,6 +2142,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       ),
     );
   }
+
   Widget _buildAudioPreview(bool isDark) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -2137,6 +2248,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       ),
     );
   }
+
   Widget _buildImageGrid(bool isDark) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -2312,6 +2424,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       ),
     );
   }
+
   Widget _buildPollInput(bool isDark) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -2492,6 +2605,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       ),
     );
   }
+
   Widget _buildAdditionalTools(bool isDark) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -2588,6 +2702,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       ),
     );
   }
+
   Widget _buildToolButton(
     IconData icon,
     String label,
@@ -2649,13 +2764,16 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       ),
     );
   }
+
   Widget _buildFeelingSummary() {
     final action = _selectedFeelingAction;
     if (action == null || action.isEmpty) {
       return const SizedBox.shrink();
     }
+
     final value = _selectedFeelingActivity ?? _feelingValueController.text.trim();
     final label = value.isNotEmpty ? '$action · $value' : action;
+    
     // تحديد الأيقونة المناسبة بناءً على نوع الـ Action
     IconData icon;
     Color iconColor;
@@ -2708,6 +2826,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         icon = Icons.emoji_emotions_outlined;
         iconColor = Colors.orange;
     }
+
     return Row(
       children: [
         Icon(icon, size: 16, color: iconColor),
@@ -2725,9 +2844,11 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       ],
     );
   }
+
   void _openFeelingPicker() {
     final provider = Provider.of<DynamicAppConfigProvider>(context, listen: false);
     _syncFeelingsFromConfig(context, provider);
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -2744,6 +2865,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       },
     );
   }
+
   Widget _buildFeelingSheet(BuildContext sheetContext) {
     if (!_feelingsEnabled && _feelings.isEmpty) {
       return Column(
@@ -2758,6 +2880,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         ],
       );
     }
+
     return StatefulBuilder(
       builder: (context, setSheetState) {
         return Column(
@@ -2789,17 +2912,22 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
               items: () {
                 final uniqueFeelingsActions = <String>{};
                 final items = <DropdownMenuItem<String>>[];
+                
+                
                 for (var feeling in _feelings) {
                   final action = feeling['action']?.toString();
                   if (action != null && action.isNotEmpty && !uniqueFeelingsActions.contains(action)) {
                     uniqueFeelingsActions.add(action);
                     final translatedLabel = _getTranslatedAction(action);
+                    
+                    
                     items.add(DropdownMenuItem<String>(
                       value: action,
                       child: Text(translatedLabel),
                     ));
                   }
                 }
+                
                 return items;
               }(),
               onChanged: (value) {
@@ -2826,6 +2954,8 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
               hint: Text('select_a_feeling'.tr),
               items: () {
                 final items = <DropdownMenuItem<String>>[];
+                
+                
                 // جمع جميع الـ activities المتاحة (هذه هي المشاعر الفعلية)
                 final uniqueFeelings = <String>{};
                 for (var activity in _activities) {
@@ -2849,6 +2979,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                     ));
                   }
                 }
+                
                 return items;
               }(),
               onChanged: (value) {
@@ -2880,6 +3011,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                       // إضافة أيقونة مناسبة للنشاط
                       IconData icon;
                       final actionLower = _selectedFeelingAction?.toLowerCase() ?? '';
+                      
                       if (actionLower.contains('listen')) {
                         icon = Icons.headphones;
                       } else if (actionLower.contains('watch')) {
@@ -2928,6 +3060,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       },
     );
   }
+
   void _clearFeelingSelection() {
     setState(() {
       _selectedFeelingAction = null;
@@ -2935,19 +3068,24 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       _feelingValueController.clear();
     });
   }
+
   void _syncFeelingsFromConfig(BuildContext context, DynamicAppConfigProvider provider) {
     final expandable = provider.appConfig?.expandable ?? {};
     final rawFeelings = _normalizeList(expandable['feelings']);
     final rawActivities = _normalizeList(expandable['activities']);
     final enabled = provider.features?.posts.feelings ?? false;
+
     final shouldUpdate = !_feelingsSynced ||
         _feelingsEnabled != enabled ||
         !const DeepCollectionEquality().equals(_feelings, rawFeelings) ||
         !const DeepCollectionEquality().equals(_activities, rawActivities);
+
     if (!shouldUpdate) return;
+
     if (rawFeelings.isEmpty && rawActivities.isEmpty) {
       return;
     }
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       setState(() {
@@ -2958,6 +3096,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       });
     });
   }
+
 List<Map<String, dynamic>> _normalizeList(dynamic data) {
     if (data is List) {
       return data.map((item) {
@@ -2972,6 +3111,7 @@ List<Map<String, dynamic>> _normalizeList(dynamic data) {
     }
     return [];
   }
+
   Widget _buildPrivacySettings(bool isDark) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -3007,6 +3147,7 @@ List<Map<String, dynamic>> _normalizeList(dynamic data) {
       ),
     );
   }
+
   Widget _buildSettingSwitch(
     String label,
     bool value,

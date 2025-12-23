@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+
 class WalletTransaction extends Equatable {
   const WalletTransaction({
     required this.id,
@@ -14,6 +15,7 @@ class WalletTransaction extends Equatable {
     this.relatedUser,
     this.metadata,
   });
+
   final int id;
   final double amount;
   final String amountFormatted;
@@ -26,6 +28,7 @@ class WalletTransaction extends Equatable {
   final int? nodeId;
   final WalletRelatedUser? relatedUser;
   final Map<String, dynamic>? metadata;
+
   factory WalletTransaction.fromJson(Map<String, dynamic> json) {
     return WalletTransaction(
       id: _toInt(json['transaction_id'] ?? json['id']),
@@ -42,6 +45,7 @@ class WalletTransaction extends Equatable {
       metadata: _parseMetadata(json['metadata']),
     );
   }
+
   WalletTransaction copyWith({
     int? id,
     double? amount,
@@ -71,18 +75,21 @@ class WalletTransaction extends Equatable {
       metadata: metadata ?? this.metadata,
     );
   }
+
   static WalletRelatedUser? _parseRelatedUser(Object? value) {
     if (value is Map<String, dynamic>) {
       return WalletRelatedUser.fromJson(value);
     }
     return null;
   }
+
   static Map<String, dynamic>? _parseMetadata(Object? value) {
     if (value is Map<String, dynamic>) {
       return value;
     }
     return null;
   }
+
   @override
   List<Object?> get props => [
     id,
@@ -99,6 +106,7 @@ class WalletTransaction extends Equatable {
     metadata,
   ];
 }
+
 class WalletRelatedUser extends Equatable {
   const WalletRelatedUser({
     required this.id,
@@ -107,11 +115,13 @@ class WalletRelatedUser extends Equatable {
     required this.picture,
     required this.verified,
   });
+
   final int id;
   final String username;
   final String fullName;
   final String picture;
   final bool verified;
+
   factory WalletRelatedUser.fromJson(Map<String, dynamic> json) {
     return WalletRelatedUser(
       id: _toInt(json['user_id'] ?? json['id']),
@@ -121,6 +131,7 @@ class WalletRelatedUser extends Equatable {
       verified: _toBool(json['verified'] ?? json['is_verified']),
     );
   }
+
   WalletRelatedUser copyWith({
     int? id,
     String? username,
@@ -136,9 +147,11 @@ class WalletRelatedUser extends Equatable {
       verified: verified ?? this.verified,
     );
   }
+
   @override
   List<Object?> get props => [id, username, fullName, picture, verified];
 }
+
 int _toInt(Object? value) {
   if (value is int) return value;
   if (value is num) return value.toInt();
@@ -147,6 +160,7 @@ int _toInt(Object? value) {
   }
   return 0;
 }
+
 double _toDouble(Object? value, {double fallback = 0}) {
   if (value is num) return value.toDouble();
   if (value is String) {
@@ -154,15 +168,18 @@ double _toDouble(Object? value, {double fallback = 0}) {
   }
   return fallback;
 }
+
 String _toString(Object? value, {String fallback = ''}) {
   if (value == null) return fallback;
   return value.toString();
 }
+
 String? _nullableString(Object? value) {
   if (value == null) return null;
   final stringValue = value.toString();
   return stringValue.isEmpty ? null : stringValue;
 }
+
 int? _nullableInt(Object? value) {
   if (value == null) return null;
   if (value is int) return value;
@@ -172,6 +189,7 @@ int? _nullableInt(Object? value) {
   }
   return null;
 }
+
 bool _toBool(Object? value) {
   if (value is bool) return value;
   if (value is num) return value != 0;

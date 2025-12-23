@@ -3,19 +3,24 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/live_comments_bloc.dart';
 import '../../data/models/live_stream_models.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 /// Widget للتعليقات المباشرة مع API
 class LiveChatApiWidget extends StatefulWidget {
   final String liveId;
+
   const LiveChatApiWidget({
     Key? key,
     required this.liveId,
   }) : super(key: key);
+
   @override
   State<LiveChatApiWidget> createState() => _LiveChatApiWidgetState();
 }
+
 class _LiveChatApiWidgetState extends State<LiveChatApiWidget> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -23,6 +28,7 @@ class _LiveChatApiWidgetState extends State<LiveChatApiWidget> {
     context.read<LiveCommentsBloc>().add(LoadLiveComments(postId: widget.liveId));
     context.read<LiveCommentsBloc>().add(StartLiveCommentsPolling(postId: widget.liveId));
   }
+
   @override
   void dispose() {
     // Stop polling when widget is disposed
@@ -31,6 +37,7 @@ class _LiveChatApiWidgetState extends State<LiveChatApiWidget> {
     _scrollController.dispose();
     super.dispose();
   }
+
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
@@ -42,6 +49,7 @@ class _LiveChatApiWidgetState extends State<LiveChatApiWidget> {
       }
     });
   }
+
   void _sendMessage() {
     final message = _messageController.text.trim();
     if (message.isNotEmpty) {
@@ -54,6 +62,7 @@ class _LiveChatApiWidgetState extends State<LiveChatApiWidget> {
       _messageController.clear();
     }
   }
+
   void _reactToComment(String commentId, String reactionType) {
     context.read<LiveCommentsBloc>().add(
       ReactToLiveComment(
@@ -62,6 +71,7 @@ class _LiveChatApiWidgetState extends State<LiveChatApiWidget> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -114,6 +124,7 @@ class _LiveChatApiWidgetState extends State<LiveChatApiWidget> {
               ],
             ),
           ),
+          
           // Messages List
           Expanded(
             child: BlocBuilder<LiveCommentsBloc, LiveCommentsState>(
@@ -152,11 +163,13 @@ class _LiveChatApiWidgetState extends State<LiveChatApiWidget> {
                   );
                 } else if (state is LiveCommentsLoaded || state is LiveCommentAdding) {
                   List<LiveCommentModel> comments = [];
+                  
                   if (state is LiveCommentsLoaded) {
                     comments = state.comments;
                   } else if (state is LiveCommentAdding) {
                     comments = state.currentComments;
                   }
+
                   if (comments.isEmpty) {
                     return const Center(
                       child: Text(
@@ -169,10 +182,12 @@ class _LiveChatApiWidgetState extends State<LiveChatApiWidget> {
                       ),
                     );
                   }
+
                   // Scroll to bottom when new comments are loaded
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     _scrollToBottom();
                   });
+
                   return ListView.builder(
                     key: ValueKey('api_comments_${comments.length}'),
                     controller: _scrollController,
@@ -184,6 +199,7 @@ class _LiveChatApiWidgetState extends State<LiveChatApiWidget> {
                     },
                   );
                 }
+                
                 return const Center(
                   child: Text(
                     'ابدأ محادثة!',
@@ -196,6 +212,7 @@ class _LiveChatApiWidgetState extends State<LiveChatApiWidget> {
               },
             ),
           ),
+          
           // Input Field
           Container(
             padding: const EdgeInsets.all(12),
@@ -233,6 +250,7 @@ class _LiveChatApiWidgetState extends State<LiveChatApiWidget> {
                 BlocBuilder<LiveCommentsBloc, LiveCommentsState>(
                   builder: (context, state) {
                     final isLoading = state is LiveCommentAdding;
+                    
                     return Container(
                       decoration: BoxDecoration(
                         color: Colors.blue,
@@ -264,6 +282,7 @@ class _LiveChatApiWidgetState extends State<LiveChatApiWidget> {
       ),
     );
   }
+
   Widget _buildCommentItem(LiveCommentModel comment) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -291,6 +310,7 @@ class _LiveChatApiWidgetState extends State<LiveChatApiWidget> {
                 : null,
           ),
           const SizedBox(width: 12),
+          
           // Comment Content
           Expanded(
             child: Column(
@@ -326,6 +346,7 @@ class _LiveChatApiWidgetState extends State<LiveChatApiWidget> {
                   ],
                 ),
                 const SizedBox(height: 4),
+                
                 // Comment Text
                 Text(
                   comment.text,
@@ -334,6 +355,7 @@ class _LiveChatApiWidgetState extends State<LiveChatApiWidget> {
                     fontSize: 14,
                   ),
                 ),
+                
                 // Image if exists
                 if (comment.imageUrl != null && 
                     comment.imageUrl!.isNotEmpty && 
@@ -360,6 +382,7 @@ class _LiveChatApiWidgetState extends State<LiveChatApiWidget> {
                     ),
                   ),
                 ],
+                
                 // Reactions
                 if (comment.reactions.isNotEmpty) ...[
                   const SizedBox(height: 8),
@@ -372,11 +395,14 @@ class _LiveChatApiWidgetState extends State<LiveChatApiWidget> {
       ),
     );
   }
+
   Widget _buildReactionsRow(LiveCommentModel comment) {
     final reactions = comment.reactions.entries
         .where((entry) => entry.value > 0)
         .toList();
+    
     if (reactions.isEmpty) return const SizedBox.shrink();
+    
     return Row(
       children: [
         ...reactions.take(3).map((entry) {
@@ -409,6 +435,7 @@ class _LiveChatApiWidgetState extends State<LiveChatApiWidget> {
             ),
           );
         }).toList(),
+        
         // Add reaction button
         GestureDetector(
           onTap: () => _showReactionPicker(comment.commentId),
@@ -431,6 +458,7 @@ class _LiveChatApiWidgetState extends State<LiveChatApiWidget> {
       ],
     );
   }
+
   String _getReactionIcon(String reactionType) {
     switch (reactionType) {
       case 'like':
@@ -449,6 +477,7 @@ class _LiveChatApiWidgetState extends State<LiveChatApiWidget> {
         return '👍';
     }
   }
+
   void _showReactionPicker(String commentId) {
     showModalBottomSheet(
       context: context,
@@ -491,6 +520,7 @@ class _LiveChatApiWidgetState extends State<LiveChatApiWidget> {
       ),
     );
   }
+
   Widget _buildReactionOption(String type, String icon, String commentId) {
     return GestureDetector(
       onTap: () {
@@ -510,9 +540,11 @@ class _LiveChatApiWidgetState extends State<LiveChatApiWidget> {
       ),
     );
   }
+
   String _formatTime(DateTime timestamp) {
     final now = DateTime.now();
     final difference = now.difference(timestamp);
+    
     if (difference.inMinutes < 1) {
       return 'الآن';
     } else if (difference.inMinutes < 60) {

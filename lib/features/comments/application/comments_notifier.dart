@@ -1,9 +1,12 @@
 import 'package:flutter/foundation.dart';
 import '../data/models/comment.dart';
 import '../domain/comments_repository.dart';
+
 class CommentsNotifier extends ChangeNotifier {
   final CommentsRepository _repository;
+
   CommentsNotifier(this._repository);
+
   // State
   List<CommentModel> _comments = [];
   bool _isLoading = false;
@@ -12,6 +15,7 @@ class CommentsNotifier extends ChangeNotifier {
   int _currentOffset = 0;
   bool _hasMore = true;
   final int _limit = 20;
+
   // Getters
   List<CommentModel> get comments => _comments;
   bool get isLoading => _isLoading;
@@ -19,19 +23,23 @@ class CommentsNotifier extends ChangeNotifier {
   String? get error => _error;
   bool get hasMore => _hasMore;
   int get commentsCount => _comments.length;
+
   // Fetch initial comments
   Future<void> fetchComments(int postId) async {
     if (_isLoading) return;
+
     _isLoading = true;
     _error = null;
     _currentOffset = 0;
     notifyListeners();
+
     try {
       final response = await _repository.getPostComments(
         postId,
         offset: _currentOffset,
         limit: _limit,
       );
+
       _comments = response.comments;
       _hasMore = response.hasMore;
       _currentOffset = response.comments.length;
@@ -44,17 +52,21 @@ class CommentsNotifier extends ChangeNotifier {
       notifyListeners();
     }
   }
+
   // Load more comments (pagination)
   Future<void> loadMoreComments(int postId) async {
     if (_isLoadingMore || !_hasMore || _isLoading) return;
+
     _isLoadingMore = true;
     notifyListeners();
+
     try {
       final response = await _repository.getPostComments(
         postId,
         offset: _currentOffset,
         limit: _limit,
       );
+
       _comments.addAll(response.comments);
       _hasMore = response.hasMore;
       _currentOffset = _comments.length;
@@ -65,6 +77,7 @@ class CommentsNotifier extends ChangeNotifier {
       notifyListeners();
     }
   }
+
   // Create a new comment
   Future<CommentModel?> createComment({
     required int postId,
@@ -79,9 +92,11 @@ class CommentsNotifier extends ChangeNotifier {
         image: image,
         voiceNote: voiceNote,
       );
+
       // Add to the beginning of the list
       _comments.insert(0, newComment);
       notifyListeners();
+
       return newComment;
     } catch (e) {
       _error = e.toString();
@@ -89,6 +104,7 @@ class CommentsNotifier extends ChangeNotifier {
       return null;
     }
   }
+
   // React to a comment (optimistic update)
   Future<void> reactToComment({
     required String commentId,
@@ -97,15 +113,19 @@ class CommentsNotifier extends ChangeNotifier {
     // Find comment index
     final index = _comments.indexWhere((c) => c.commentId == commentId);
     if (index == -1) return;
+
     // Store old state for rollback
     final oldComment = _comments[index];
+
     // Optimistic update
     final wasReacted = oldComment.iReact;
     final oldReaction = oldComment.iReaction;
+
     Map<String, int> newReactions = Map.from(oldComment.reactions);
     bool newIReact = false;
     String? newIReaction;
     int newTotal = oldComment.reactionsTotalCount;
+
     if (reaction == 'remove') {
       // Remove reaction
       if (wasReacted && oldReaction != null) {
@@ -126,6 +146,7 @@ class CommentsNotifier extends ChangeNotifier {
       newIReact = true;
       newIReaction = reaction;
     }
+
     _comments[index] = oldComment.copyWith(
       reactions: newReactions,
       reactionsTotalCount: newTotal,
@@ -133,6 +154,7 @@ class CommentsNotifier extends ChangeNotifier {
       iReaction: newIReaction,
     );
     notifyListeners();
+
     // Make API call
     try {
       await _repository.reactToComment(
@@ -146,6 +168,7 @@ class CommentsNotifier extends ChangeNotifier {
       notifyListeners();
     }
   }
+
   // Edit a comment
   Future<bool> editComment({
     required String commentId,
@@ -156,6 +179,7 @@ class CommentsNotifier extends ChangeNotifier {
         commentId: int.parse(commentId),
         newText: newText,
       );
+
       // Update comment in list with the returned comment data
       final index = _comments.indexWhere((c) => c.commentId == commentId);
       if (index != -1) {
@@ -163,6 +187,7 @@ class CommentsNotifier extends ChangeNotifier {
         _comments[index] = CommentModel.fromJson(result);
         notifyListeners();
       }
+
       return true;
     } catch (e) {
       _error = e.toString();
@@ -170,13 +195,16 @@ class CommentsNotifier extends ChangeNotifier {
       return false;
     }
   }
+
   // Delete a comment
   Future<bool> deleteComment(String commentId) async {
     try {
       await _repository.deleteComment(int.parse(commentId));
+
       // Remove from list
       _comments.removeWhere((c) => c.commentId == commentId);
       notifyListeners();
+
       return true;
     } catch (e) {
       _error = e.toString();
@@ -184,6 +212,7 @@ class CommentsNotifier extends ChangeNotifier {
       return false;
     }
   }
+
   // Increment replies count when a reply is added
   void incrementRepliesCount(String commentId) {
     final index = _comments.indexWhere((c) => c.commentId == commentId);
@@ -194,6 +223,7 @@ class CommentsNotifier extends ChangeNotifier {
       notifyListeners();
     }
   }
+
   // Reset state
   void reset() {
     _comments = [];

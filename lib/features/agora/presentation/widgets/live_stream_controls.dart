@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import '../../application/agora_service.dart';
+
 class LiveStreamControls extends StatelessWidget {
   const LiveStreamControls({
     super.key,
@@ -8,9 +9,11 @@ class LiveStreamControls extends StatelessWidget {
     required this.broadcasterName,
     required this.onLeave,
   });
+
   final AgoraService agoraService;
   final String broadcasterName;
   final VoidCallback onLeave;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -90,7 +93,9 @@ class LiveStreamControls extends StatelessWidget {
                 ),
               ],
             ),
+            
             const SizedBox(height: 16),
+            
             // أدوات التحكم
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -102,6 +107,7 @@ class LiveStreamControls extends StatelessWidget {
                   isActive: !agoraService.isMuted,
                   onTap: agoraService.toggleMute,
                 ),
+                
                 // السماعة
                 _ControlButton(
                   icon: agoraService.isSpeakerEnabled ? Iconsax.volume_high : Iconsax.headphone,
@@ -109,6 +115,7 @@ class LiveStreamControls extends StatelessWidget {
                   isActive: agoraService.isSpeakerEnabled,
                   onTap: agoraService.toggleSpeaker,
                 ),
+                
                 // مغادرة البث
                 _ControlButton(
                   icon: Iconsax.logout,
@@ -125,6 +132,7 @@ class LiveStreamControls extends StatelessWidget {
     );
   }
 }
+
 class _ControlButton extends StatelessWidget {
   const _ControlButton({
     required this.icon,
@@ -133,11 +141,13 @@ class _ControlButton extends StatelessWidget {
     this.isActive = true,
     this.isDestructive = false,
   });
+
   final IconData icon;
   final String label;
   final VoidCallback onTap;
   final bool isActive;
   final bool isDestructive;
+
   @override
   Widget build(BuildContext context) {
     final backgroundColor = isDestructive
@@ -145,7 +155,9 @@ class _ControlButton extends StatelessWidget {
         : isActive
             ? Colors.white.withOpacity(0.2)
             : Colors.black.withOpacity(0.5);
+    
     final foregroundColor = isActive ? Colors.white : Colors.white60;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(

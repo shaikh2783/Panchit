@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+
 import 'package:snginepro/core/theme/design_tokens.dart';
 import 'package:snginepro/features/wallet/data/models/wallet_package.dart';
+import 'package:get/get.dart';
+
 class WalletPackageCard extends StatefulWidget {
   const WalletPackageCard({
     super.key,
@@ -9,14 +12,18 @@ class WalletPackageCard extends StatefulWidget {
     required this.onPurchase,
     this.isPurchasing = false,
   });
+
   final WalletPackage package;
   final VoidCallback onPurchase;
   final bool isPurchasing;
+
   @override
   State<WalletPackageCard> createState() => _WalletPackageCardState();
 }
+
 class _WalletPackageCardState extends State<WalletPackageCard> {
   bool _showPermissions = false;
+
   @override
   Widget build(BuildContext context) {
     final package = widget.package;
@@ -37,16 +44,17 @@ class _WalletPackageCardState extends State<WalletPackageCard> {
     final canRenew = package.canRenew;
     final statusLabel = package.subscriptionStatusLabel;
     final secondaryStatus = package.subscriptionSecondaryLabel;
+
     final badges = <Widget>[];
     if (package.isRecommended) {
       badges.add(
-        _BadgeChip(label: 'Recommended', color: highlight, icon: Iconsax.star),
+        _BadgeChip(label: 'recommended_badge'.tr, color: highlight, icon: Iconsax.star),
       );
     }
     if (isCurrentPlan) {
       badges.add(
         _BadgeChip(
-          label: 'Your current plan',
+          label: 'your_current_plan'.tr,
           color: highlight,
           icon: Iconsax.verify,
         ),
@@ -65,12 +73,13 @@ class _WalletPackageCardState extends State<WalletPackageCard> {
     if (package.isPopular) {
       badges.add(
         _BadgeChip(
-          label: 'Popular choice',
+          label: 'popular_choice_badge'.tr,
           color: theme.colorScheme.secondary,
           icon: Iconsax.flash,
         ),
       );
     }
+
     return AnimatedContainer(
       duration: AnimDurations.medium,
       curve: CurvesToken.standard,
@@ -327,7 +336,7 @@ class _WalletPackageCardState extends State<WalletPackageCard> {
                           ),
                         ),
                         icon: const Icon(Iconsax.info_circle, size: 18),
-                        label: const Text('See details'),
+                        label: Text('see_details_button'.tr),
                       ),
                     ],
                   ),
@@ -339,9 +348,11 @@ class _WalletPackageCardState extends State<WalletPackageCard> {
       ),
     );
   }
+
   void _togglePermissions() {
     setState(() => _showPermissions = !_showPermissions);
   }
+
   void _showPackageDetails(BuildContext context) {
     final theme = Theme.of(context);
     final package = widget.package;
@@ -355,6 +366,7 @@ class _WalletPackageCardState extends State<WalletPackageCard> {
     final expiryLabel = subscription?.expiryLabel;
     final isCurrentPlan = package.isCurrentPlan;
     final isExpiredPlan = package.isSubscriptionExpired;
+
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -418,15 +430,15 @@ class _WalletPackageCardState extends State<WalletPackageCard> {
                     ),
                   ],
                   const SizedBox(height: Spacing.xl),
-                  _DetailsRow(label: 'Price', value: package.formattedPrice),
+                  _DetailsRow(label: 'price_label'.tr, value: package.formattedPrice),
                   _DetailsRow(
-                    label: 'Billing cycle',
+                    label: 'billing_cycle_label'.tr,
                     value: package.hasPeriod
                         ? package.period!.label
                         : 'One-time activation',
                   ),
                   if (purchasedLabel != null) ...[
-                    _DetailsRow(label: 'Purchased on', value: purchasedLabel),
+                    _DetailsRow(label: 'purchased_on_label'.tr, value: purchasedLabel),
                   ],
                   if (subscription != null &&
                       expiryLabel != null &&
@@ -439,7 +451,7 @@ class _WalletPackageCardState extends State<WalletPackageCard> {
                     ),
                   ],
                   if (subscription != null && subscription.isLifetime) ...[
-                    _DetailsRow(label: 'Expiry', value: 'Lifetime access'),
+                    _DetailsRow(label: 'expiry_label'.tr, value: 'lifetime_access'.tr),
                   ],
                   const SizedBox(height: Spacing.lg),
                   Text(
@@ -514,14 +526,17 @@ class _WalletPackageCardState extends State<WalletPackageCard> {
     );
   }
 }
+
 class WalletPackageCardSkeleton extends StatelessWidget {
   const WalletPackageCardSkeleton({super.key});
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final baseColor = theme.colorScheme.surfaceVariant.withOpacity(
       theme.brightness == Brightness.dark ? 0.25 : 0.4,
     );
+
     Widget shimmer({double height = 16, double width = double.infinity}) {
       return Container(
         height: height,
@@ -532,6 +547,7 @@ class WalletPackageCardSkeleton extends StatelessWidget {
         ),
       );
     }
+
     return Container(
       padding: const EdgeInsets.all(Spacing.xl),
       decoration: BoxDecoration(
@@ -581,15 +597,18 @@ class WalletPackageCardSkeleton extends StatelessWidget {
     );
   }
 }
+
 class _BadgeChip extends StatelessWidget {
   const _BadgeChip({
     required this.label,
     required this.color,
     required this.icon,
   });
+
   final String label;
   final Color color;
   final IconData icon;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -623,10 +642,13 @@ class _BadgeChip extends StatelessWidget {
     );
   }
 }
+
 class _FeaturePill extends StatelessWidget {
   const _FeaturePill({required this.label, required this.accent});
+
   final String label;
   final Color accent;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -660,10 +682,13 @@ class _FeaturePill extends StatelessWidget {
     );
   }
 }
+
 class _AccentBlob extends StatelessWidget {
   const _AccentBlob({required this.color, required this.size});
+
   final Color color;
   final double size;
+
   @override
   Widget build(BuildContext context) {
     return IgnorePointer(
@@ -675,15 +700,18 @@ class _AccentBlob extends StatelessWidget {
     );
   }
 }
+
 class _PriceColumn extends StatelessWidget {
   const _PriceColumn({
     required this.package,
     required this.highlight,
     required this.textColor,
   });
+
   final WalletPackage package;
   final Color highlight;
   final Color textColor;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -717,10 +745,13 @@ class _PriceColumn extends StatelessWidget {
     );
   }
 }
+
 class _DetailsRow extends StatelessWidget {
   const _DetailsRow({required this.label, required this.value});
+
   final String label;
   final String value;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -748,6 +779,7 @@ class _DetailsRow extends StatelessWidget {
     );
   }
 }
+
 Color _parseColor(String? value, Color fallback) {
   if (value == null || value.isEmpty) {
     return fallback;
@@ -766,6 +798,7 @@ Color _parseColor(String? value, Color fallback) {
   }
   return fallback;
 }
+
 List<String> describePackageFeatures(WalletPackage package) {
   final features = package.features;
   if (features.isEmpty) {
@@ -773,14 +806,17 @@ List<String> describePackageFeatures(WalletPackage package) {
   }
   final descriptions = <String>[];
   final handledKeys = <String>{};
+
   void addIfTrue(String key, String description) {
     if (_asBool(features[key])) {
       descriptions.add(description);
       handledKeys.add(key);
     }
   }
+
   addIfTrue('verification_badge', 'Verification badge included');
   addIfTrue('badge', 'Verification badge included');
+
   void parseBoost(String key, String label) {
     final value = features[key];
     if (value is Map<String, dynamic>) {
@@ -793,8 +829,10 @@ List<String> describePackageFeatures(WalletPackage package) {
       handledKeys.add(key);
     }
   }
+
   parseBoost('boost_posts', 'Boost posts');
   parseBoost('boost_pages', 'Boost pages');
+
   void parseLimit(String key, String label) {
     final amount = _asInt(features[key]);
     if (amount > 0) {
@@ -802,16 +840,19 @@ List<String> describePackageFeatures(WalletPackage package) {
       handledKeys.add(key);
     }
   }
+
   parseLimit('allowed_products', 'products');
   parseLimit('allowed_blogs_categories', 'blog categories');
   parseLimit('allowed_videos_categories', 'video categories');
   parseLimit('max_groups', 'groups');
   parseLimit('max_pages', 'pages');
+
   final stored = features['storage'];
   if (stored != null) {
     descriptions.add('Storage: ${stored.toString()}');
     handledKeys.add('storage');
   }
+
   features.forEach((key, value) {
     if (handledKeys.contains(key)) {
       return;
@@ -834,26 +875,33 @@ List<String> describePackageFeatures(WalletPackage package) {
     }
     descriptions.add('${_titleCase(key)}: ${value.toString()}');
   });
+
   return descriptions;
 }
+
 List<_CapabilityItem> describePackageCapabilities(WalletPackage package) {
   final permissions = package.permissions;
   if (permissions == null || !permissions.hasCapabilities) {
     return const [];
   }
+
   final entries = <_CapabilityItem>[];
   final relevantEntries = permissions.capabilities.entries
       .where((entry) => _capabilityKeys.contains(entry.key))
       .toList(growable: false);
+
   if (relevantEntries.isEmpty) {
     return const [];
   }
+
   final allEnabled =
       relevantEntries.isNotEmpty &&
       relevantEntries.every((entry) => entry.value == true);
+
   if (allEnabled) {
     entries.add(const _CapabilityItem('All permissions enabled', true));
   }
+
   for (final descriptor in _capabilityDescriptors) {
     final value = permissions.capabilities[descriptor.key];
     if (value == null) {
@@ -861,8 +909,10 @@ List<_CapabilityItem> describePackageCapabilities(WalletPackage package) {
     }
     entries.add(_CapabilityItem(descriptor.label, value));
   }
+
   return entries;
 }
+
 String _formatCount(Object? value) {
   final number = _asInt(value);
   if (number <= 0) {
@@ -870,6 +920,7 @@ String _formatCount(Object? value) {
   }
   return number.toString();
 }
+
 bool _asBool(Object? value) {
   if (value is bool) return value;
   if (value is num) return value != 0;
@@ -879,6 +930,7 @@ bool _asBool(Object? value) {
   }
   return false;
 }
+
 int _asInt(Object? value) {
   if (value is int) return value;
   if (value is num) return value.toInt();
@@ -887,6 +939,7 @@ int _asInt(Object? value) {
   }
   return 0;
 }
+
 String _titleCase(String input) {
   if (input.isEmpty) return input;
   final normalized = input.replaceAll('_', ' ');
@@ -899,6 +952,7 @@ String _titleCase(String input) {
       )
       .join(' ');
 }
+
 class _SubscriptionStatusBanner extends StatelessWidget {
   const _SubscriptionStatusBanner({
     required this.primary,
@@ -907,11 +961,13 @@ class _SubscriptionStatusBanner extends StatelessWidget {
     this.isActive = false,
     this.isExpired = false,
   });
+
   final String primary;
   final String? secondary;
   final Color highlight;
   final bool isActive;
   final bool isExpired;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -923,6 +979,7 @@ class _SubscriptionStatusBanner extends StatelessWidget {
     } else {
       accent = highlight;
     }
+
     final background = isActive
         ? highlight.withOpacity(0.16)
         : isExpired
@@ -933,6 +990,7 @@ class _SubscriptionStatusBanner extends StatelessWidget {
         : isExpired
         ? Iconsax.close_circle
         : Iconsax.info_circle;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(Spacing.md),
@@ -976,16 +1034,21 @@ class _SubscriptionStatusBanner extends StatelessWidget {
     );
   }
 }
+
 class _CapabilityItem {
   const _CapabilityItem(this.label, this.enabled);
+
   final String label;
   final bool enabled;
 }
+
 class _CapabilityDescriptor {
   const _CapabilityDescriptor(this.key, this.label);
+
   final String key;
   final String label;
 }
+
 const List<_CapabilityDescriptor> _capabilityDescriptors = [
   _CapabilityDescriptor('pages', 'Create Pages'),
   _CapabilityDescriptor('groups', 'Create Groups'),
@@ -1023,6 +1086,7 @@ const List<_CapabilityDescriptor> _capabilityDescriptors = [
   _CapabilityDescriptor('courses', 'Access Courses'),
   _CapabilityDescriptor('forums', 'Forums Access'),
 ];
+
 const Set<String> _capabilityKeys = {
   'pages',
   'groups',
@@ -1060,6 +1124,7 @@ const Set<String> _capabilityKeys = {
   'courses',
   'forums',
 };
+
 class _CapabilityRow extends StatelessWidget {
   const _CapabilityRow({
     required this.label,
@@ -1067,10 +1132,12 @@ class _CapabilityRow extends StatelessWidget {
     required this.accent,
     this.dense = false,
   });
+
   final String label;
   final bool enabled;
   final Color accent;
   final bool dense;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -1082,6 +1149,7 @@ class _CapabilityRow extends StatelessWidget {
           : theme.textTheme.bodyMedium?.color?.withOpacity(0.72),
       fontWeight: enabled ? FontWeight.w600 : FontWeight.w500,
     );
+
     return Row(
       crossAxisAlignment: dense
           ? CrossAxisAlignment.center

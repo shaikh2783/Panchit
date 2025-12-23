@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+
 class AppTheme {
   const AppTheme._();
+
   static ThemeData light() {
     const primaryColor = Color(0xFF2563EB);
     const onPrimary = Colors.white;
@@ -8,6 +10,7 @@ class AppTheme {
       seedColor: primaryColor,
       brightness: Brightness.light,
     );
+
     return ThemeData(
       colorScheme: colorScheme,
       scaffoldBackgroundColor: colorScheme.surface,
@@ -66,6 +69,7 @@ class AppTheme {
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       )
+   
     );
   }
 }

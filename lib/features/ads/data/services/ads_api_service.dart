@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:snginepro/core/network/api_client.dart';
+
 class AdsApiService {
   final ApiClient _client;
   AdsApiService(this._client);
+
   Future<Map<String, dynamic>> listCampaigns({
     int offset = 0,
     int limit = 20,
@@ -27,6 +29,7 @@ class AdsApiService {
     };
     return _client.get('/data/ads/campaigns', queryParameters: query);
   }
+
   Future<Map<String, dynamic>> setCampaignActive({
     required int campaignId,
     required bool active,
@@ -36,6 +39,7 @@ class AdsApiService {
     };
     return _client.post('/data/ads/campaigns/$campaignId/status', body: body, asJson: true);
   }
+
   Future<Map<String, dynamic>> createCampaign({
     required String title,
     required String placement,
@@ -56,6 +60,7 @@ class AdsApiService {
   }) async {
     // Normalize bidding values to backend expected: 'click' or 'view'
     final normalizedBidding = bidding == 'clicks' ? 'click' : (bidding == 'views' ? 'view' : bidding);
+
     final body = <String, dynamic>{
       'campaign_title': title,
       'ads_placement': placement,
@@ -85,6 +90,7 @@ class AdsApiService {
       asJson: true,
     );
   }
+
   Future<Map<String, dynamic>> updateCampaign({
     required int campaignId,
     String? title,
@@ -137,6 +143,7 @@ class AdsApiService {
       asJson: true,
     );
   }
+
   num _parseNumeric(String v) {
     return num.tryParse(v) ?? 0;
   }

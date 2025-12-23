@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+
 class WalletPaginatedResult<T> extends Equatable {
   const WalletPaginatedResult({
     required this.items,
@@ -9,6 +10,7 @@ class WalletPaginatedResult<T> extends Equatable {
     required this.hasMore,
     this.raw,
   });
+
   final List<T> items;
   final int count;
   final int total;
@@ -16,6 +18,7 @@ class WalletPaginatedResult<T> extends Equatable {
   final int limit;
   final bool hasMore;
   final Map<String, dynamic>? raw;
+
   WalletPaginatedResult<T> copyWith({
     List<T>? items,
     int? count,
@@ -35,8 +38,10 @@ class WalletPaginatedResult<T> extends Equatable {
       raw: raw ?? this.raw,
     );
   }
+
   @override
   List<Object?> get props => [items, count, total, offset, limit, hasMore, raw];
+
   static int _toInt(Object? value) {
     if (value is int) return value;
     if (value is num) return value.toInt();
@@ -45,6 +50,7 @@ class WalletPaginatedResult<T> extends Equatable {
     }
     return 0;
   }
+
   static bool _toBool(Object? value) {
     if (value is bool) return value;
     if (value is num) return value != 0;
@@ -54,12 +60,14 @@ class WalletPaginatedResult<T> extends Equatable {
     }
     return false;
   }
+
   static Map<String, dynamic> _map(Object? source) {
     if (source is Map<String, dynamic>) {
       return source;
     }
     return const {};
   }
+
   static WalletPaginatedResult<T> fromJson<T>(
     Map<String, dynamic> json, {
     required String itemsKey,

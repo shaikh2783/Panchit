@@ -10,6 +10,7 @@ class BasicInfoUpdateRequest {
   final String? relationship; // Relationship status
   final String? biography;
   final String? website;
+
   BasicInfoUpdateRequest({
     this.firstname,
     this.lastname,
@@ -22,6 +23,7 @@ class BasicInfoUpdateRequest {
     this.biography,
     this.website,
   });
+
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     if (firstname != null) map['firstname'] = firstname;
@@ -37,16 +39,19 @@ class BasicInfoUpdateRequest {
     return map;
   }
 }
+
 /// طلب تعديل معلومات العمل
 class WorkInfoUpdateRequest {
   final String? workTitle;
   final String? workPlace;
   final String? workUrl;
+
   WorkInfoUpdateRequest({
     this.workTitle,
     this.workPlace,
     this.workUrl,
   });
+
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     if (workTitle != null) map['work_title'] = workTitle;
@@ -55,14 +60,17 @@ class WorkInfoUpdateRequest {
     return map;
   }
 }
+
 /// طلب تعديل معلومات الموقع
 class LocationUpdateRequest {
   final String? city;
   final String? hometown;
+
   LocationUpdateRequest({
     this.city,
     this.hometown,
   });
+
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     if (city != null) map['city'] = city;
@@ -70,16 +78,19 @@ class LocationUpdateRequest {
     return map;
   }
 }
+
 /// طلب تعديل معلومات التعليم
 class EducationUpdateRequest {
   final String? eduMajor;
   final String? eduSchool;
   final String? eduClass;
+
   EducationUpdateRequest({
     this.eduMajor,
     this.eduSchool,
     this.eduClass,
   });
+
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     if (eduMajor != null) map['edu_major'] = eduMajor;
@@ -88,6 +99,7 @@ class EducationUpdateRequest {
     return map;
   }
 }
+
 /// طلب تعديل روابط التواصل الاجتماعي
 class SocialLinksUpdateRequest {
   final String? facebook;
@@ -97,6 +109,7 @@ class SocialLinksUpdateRequest {
   final String? twitch;
   final String? linkedin;
   final String? vkontakte;
+
   SocialLinksUpdateRequest({
     this.facebook,
     this.twitter,
@@ -106,6 +119,7 @@ class SocialLinksUpdateRequest {
     this.linkedin,
     this.vkontakte,
   });
+
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     if (facebook != null) map['facebook'] = facebook;
@@ -118,24 +132,30 @@ class SocialLinksUpdateRequest {
     return map;
   }
 }
+
 /// طلب تعديل تصميم الملف الشخصي
 class DesignUpdateRequest {
   final String profileBackground;
+
   DesignUpdateRequest({required this.profileBackground});
+
   Map<String, dynamic> toJson() {
     return {'user_profile_background': profileBackground};
   }
 }
+
 /// طلب تغيير كلمة المرور
 class PasswordUpdateRequest {
   final String currentPassword;
   final String newPassword;
   final String confirmPassword;
+
   PasswordUpdateRequest({
     required this.currentPassword,
     required this.newPassword,
     required this.confirmPassword,
   });
+
   Map<String, dynamic> toJson() {
     return {
       'current': currentPassword,
@@ -144,16 +164,19 @@ class PasswordUpdateRequest {
     };
   }
 }
+
 /// استجابة عامة لعمليات التعديل
 class ProfileUpdateResponse {
   final bool success;
   final String message;
   final Map<String, dynamic>? data;
+
   ProfileUpdateResponse({
     required this.success,
     required this.message,
     this.data,
   });
+
   factory ProfileUpdateResponse.fromJson(Map<String, dynamic> json) {
     return ProfileUpdateResponse(
       success: json['success'] == true,

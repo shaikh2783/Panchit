@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'order_item.dart';
 import 'order_user.dart';
 import 'shipping_address.dart';
+
 /// Order Model - نموذج الطلب
 /// 
 /// يمثل طلب شراء كامل مع جميع التفاصيل المتعلقة به.
@@ -11,10 +12,10 @@ import 'shipping_address.dart';
 /// الاستخدام:
 /// ```dart
 /// final order = Order.fromJson(json);
-/// 
-/// 
-/// 
-/// 
+/// print('الطلب: ${order.orderHash}');
+/// print('الحالة: ${order.statusDisplay}');
+/// print('البائع: ${order.seller.fullName}');
+/// print('المشتري: ${order.buyer.fullName}');
 /// ```
 /// 
 /// Order Status Flow:
@@ -51,6 +52,7 @@ class Order extends Equatable {
   final OrderUser buyer;
   final OrderUser seller;
   final List<OrderItem> items;
+
   /// Creates an Order instance
   const Order({
     required this.orderHash,
@@ -66,9 +68,11 @@ class Order extends Equatable {
     required this.seller,
     required this.items,
   });
+
   /// Creates Order from JSON response
   factory Order.fromJson(Map<String, dynamic> json) {
     final itemsList = json['items'] as List<dynamic>? ?? [];
+    
     return Order(
       orderHash: json['order_hash'].toString(),
       orderId: json['order_id']?.toString() ?? '',
@@ -86,6 +90,7 @@ class Order extends Equatable {
       items: itemsList.map((item) => OrderItem.fromJson(item)).toList(),
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'order_hash': orderHash,
@@ -102,18 +107,24 @@ class Order extends Equatable {
       'items': items.map((item) => item.toJson()).toList(),
     };
   }
+
   /// Status helper - checks if order is pending
   /// 
   /// Returns `true` if order status is 'pending'
   bool get isPending => status == 'pending';
+  
   /// Status helper - checks if order is being processed
   bool get isProcessing => status == 'processing';
+  
   /// Status helper - checks if order has been shipped
   bool get isShipped => status == 'shipped';
+  
   /// Status helper - checks if order is delivered
   bool get isDelivered => status == 'delivered';
+  
   /// Status helper - checks if order is cancelled
   bool get isCancelled => status == 'cancelled';
+
   /// Format status for display in Arabic
   /// 
   /// Converts English status to Arabic for UI display
@@ -133,6 +144,7 @@ class Order extends Equatable {
         return status;
     }
   }
+
   @override
   List<Object?> get props => [
         orderHash,

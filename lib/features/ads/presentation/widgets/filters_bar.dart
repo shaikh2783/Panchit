@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+
 class FiltersBar extends StatelessWidget {
   const FiltersBar({
     super.key,
@@ -15,6 +16,7 @@ class FiltersBar extends StatelessWidget {
     required this.onApprovalChanged,
     required this.onSearchChanged,
   });
+
   final String sortBy;
   final String sortDir;
   final String? placement;
@@ -25,10 +27,12 @@ class FiltersBar extends StatelessWidget {
   final ValueChanged<String?> onPlacementChanged;
   final ValueChanged<bool?> onApprovalChanged;
   final ValueChanged<String> onSearchChanged;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -129,6 +133,7 @@ class FiltersBar extends StatelessWidget {
       ),
     );
   }
+
   String _getSortLabel() {
     switch (sortBy) {
       case 'campaign_spend':
@@ -139,6 +144,7 @@ class FiltersBar extends StatelessWidget {
         return 'ads_sort_newest'.tr;
     }
   }
+
   void _showSortMenu(BuildContext context) async {
     final selected = await showMenu<String>(
       context: context,
@@ -182,19 +188,23 @@ class FiltersBar extends StatelessWidget {
     }
   }
 }
+
 class _ChipButton extends StatelessWidget {
   const _ChipButton({
     required this.icon,
     required this.label,
     required this.onTap,
   });
+
   final IconData icon;
   final String label;
   final VoidCallback onTap;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -242,6 +252,7 @@ class _ChipButton extends StatelessWidget {
     );
   }
 }
+
 class _ChipToggle extends StatelessWidget {
   const _ChipToggle({
     required this.active,
@@ -249,10 +260,12 @@ class _ChipToggle extends StatelessWidget {
     required this.iconOff,
     required this.onChanged,
   });
+
   final bool active;
   final IconData iconOn;
   final IconData iconOff;
   final ValueChanged<bool> onChanged;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -300,6 +313,7 @@ class _ChipToggle extends StatelessWidget {
     );
   }
 }
+
 class _FilterDropdown extends StatelessWidget {
   const _FilterDropdown({
     required this.value,
@@ -308,11 +322,13 @@ class _FilterDropdown extends StatelessWidget {
     required this.label,
     required this.icon,
   });
+
   final String? value;
   final List<DropdownMenuItem<String?>> items;
   final ValueChanged<String?> onChanged;
   final String label;
   final IconData icon;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -344,15 +360,18 @@ class _FilterDropdown extends StatelessWidget {
     );
   }
 }
+
 class _SearchField extends StatelessWidget {
   const _SearchField({
     required this.hint,
     required this.onChanged,
     required this.initialValue,
   });
+
   final String hint;
   final ValueChanged<String> onChanged;
   final String initialValue;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

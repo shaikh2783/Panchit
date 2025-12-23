@@ -6,6 +6,7 @@ enum FriendshipStatus {
   following,      // متابعة فقط
   blocked,        // محظور
 }
+
 class FriendshipInfo {
   final int userId;
   final FriendshipStatus status;
@@ -13,6 +14,7 @@ class FriendshipInfo {
   final bool canFollow;
   final String displayName;
   final String avatarUrl;
+
   const FriendshipInfo({
     required this.userId,
     required this.status,
@@ -21,6 +23,7 @@ class FriendshipInfo {
     required this.displayName,
     this.avatarUrl = '',
   });
+
   factory FriendshipInfo.fromJson(Map<String, dynamic> json) {
     return FriendshipInfo(
       userId: json['user_id'] ?? 0,
@@ -31,6 +34,7 @@ class FriendshipInfo {
       avatarUrl: json['avatar_url'] ?? '',
     );
   }
+
   static FriendshipStatus _statusFromString(String status) {
     switch (status.toLowerCase()) {
       case 'friends':
@@ -47,6 +51,7 @@ class FriendshipInfo {
         return FriendshipStatus.none;
     }
   }
+
   FriendshipInfo copyWith({
     int? userId,
     FriendshipStatus? status,
@@ -65,17 +70,20 @@ class FriendshipInfo {
     );
   }
 }
+
 class FriendActionResult {
   final bool success;
   final String message;
   final FriendshipStatus newStatus;
   final Map<String, dynamic>? data;
+
   const FriendActionResult({
     required this.success,
     required this.message,
     required this.newStatus,
     this.data,
   });
+
   factory FriendActionResult.success(String message, FriendshipStatus newStatus) {
     return FriendActionResult(
       success: true,
@@ -83,6 +91,7 @@ class FriendActionResult {
       newStatus: newStatus,
     );
   }
+
   factory FriendActionResult.error(String message, FriendshipStatus currentStatus) {
     return FriendActionResult(
       success: false,

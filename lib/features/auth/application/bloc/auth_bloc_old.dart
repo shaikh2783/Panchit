@@ -4,21 +4,26 @@ import 'package:snginepro/features/auth/application/bloc/auth_states.dart';
 import 'package:snginepro/features/auth/domain/auth_repository.dart';
 import 'package:snginepro/features/auth/data/storage/auth_storage.dart';
 import 'package:snginepro/features/auth/domain/models/auth_session.dart';
+
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
   final AuthStorage _authStorage;
+
   AuthBloc({
     required AuthRepository authRepository,
     required AuthStorage authStorage,
   })  : _authRepository = authRepository,
         _authStorage = authStorage,
         super(const AuthInitialState()) {
+    
     // Register event handlers
     on<AuthInitializeEvent>(_onInitialize);
     on<AuthLoginEvent>(_onLogin);
     on<AuthLogoutEvent>(_onLogout);
+
     // Removed register, forgotPassword, resetPassword as they don't exist in current repository
   }
+
   // Initialize authentication state
   Future<void> _onInitialize(
     AuthInitializeEvent event,
@@ -26,6 +31,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     try {
       final session = await _authStorage.readSession();
+
       if (session != null && session.token.isNotEmpty) {
         emit(AuthAuthenticatedState(
           user: session.user ?? {},
@@ -40,18 +46,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       ));
     }
   }
+
   // Handle login
   Future<void> _onLogin(
     AuthLoginEvent event,
     Emitter<AuthState> emit,
   ) async {
     emit(const AuthLoginLoadingState());
+    
     try {
       final response = await _authRepository.signIn(
         identity: event.email,
         password: event.password,
         deviceType: 'mobile',
       );
+
       if (response.isSuccess && response.authToken != null) {
         // Save auth session
         final session = AuthSession(
@@ -60,6 +69,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           user: response.user,
         );
         await _authStorage.saveSession(session);
+
         emit(AuthAuthenticatedState(
           user: response.user ?? {},
           token: response.authToken!,
@@ -75,15 +85,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       ));
     }
   }
+
   // Handle logout
   Future<void> _onLogout(
     AuthLogoutEvent event,
     Emitter<AuthState> emit,
   ) async {
     emit(const AuthLogoutLoadingState());
+    
     try {
       // Clear stored auth data (no logout API call needed for now)
       await _authStorage.clearSession();
+      
       emit(const AuthUnauthenticatedState());
     } catch (e) {
       // Even if clearing fails, emit unauthenticated state

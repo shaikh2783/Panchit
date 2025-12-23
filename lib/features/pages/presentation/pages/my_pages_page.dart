@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
+
 import 'package:snginepro/core/config/app_config.dart';
 import 'package:snginepro/core/theme/app_colors.dart';
 import 'package:snginepro/features/pages/application/pages_notifier.dart';
@@ -10,24 +11,30 @@ import 'package:snginepro/features/pages/presentation/pages/page_profile_page.da
 import 'package:snginepro/features/pages/presentation/pages/page_create_page.dart';
 import 'package:snginepro/features/boost/domain/boost_repository.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 class MyPagesPage extends StatefulWidget {
   const MyPagesPage({super.key});
+
   @override
   State<MyPagesPage> createState() => _MyPagesPageState();
 }
+
 class _MyPagesPageState extends State<MyPagesPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final _tabs = const [
-    Tab(text: 'My Pages'),
-    Tab(text: 'Liked'),
-    Tab(text: 'Suggested'),
+
+  final _tabs = [
+    Tab(text: 'my_pages_tab_my_pages'.tr),
+    Tab(text: 'my_pages_tab_liked'.tr),
+    Tab(text: 'my_pages_tab_suggested'.tr),
   ];
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: _tabs.length, vsync: this)
       ..addListener(_onTabChanged);
+
     // Initial load
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
@@ -36,12 +43,14 @@ class _MyPagesPageState extends State<MyPagesPage>
         ..loadMyPages();
     });
   }
+
   @override
   void dispose() {
     _tabController.removeListener(_onTabChanged);
     _tabController.dispose();
     super.dispose();
   }
+
   void _onTabChanged() {
     if (_tabController.indexIsChanging) return;
     final notifier = context.read<PagesNotifier>();
@@ -61,10 +70,13 @@ class _MyPagesPageState extends State<MyPagesPage>
       notifier.refresh();
     }
   }
+
   Future<void> _handleRefresh() => context.read<PagesNotifier>().refresh();
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return DefaultTabController(
       length: _tabs.length,
       child: Scaffold(
@@ -84,7 +96,7 @@ class _MyPagesPageState extends State<MyPagesPage>
                     ? AppColors.surfaceDark
                     : AppColors.surfaceLight,
                 title: Text(
-                  'Pages',
+                  'my_pages_title'.tr,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.w800,
                     letterSpacing: -0.3,
@@ -95,7 +107,7 @@ class _MyPagesPageState extends State<MyPagesPage>
                   IconButton(
                     onPressed: () {},
                     icon: Icon(Iconsax.search_favorite),
-                    tooltip: 'Search',
+                    tooltip: 'my_pages_search_tooltip'.tr,
                   ),
                   const SizedBox(width: 4),
                 ],
@@ -122,6 +134,7 @@ class _MyPagesPageState extends State<MyPagesPage>
                   ),
                 ),
               ),
+
               // Content per tab
               SliverFillRemaining(
                 hasScrollBody: true,
@@ -151,11 +164,15 @@ class _MyPagesPageState extends State<MyPagesPage>
     );
   }
 }
+
 class _PagesList extends StatelessWidget {
   const _PagesList({required this.tab});
+
   final PagesTab tab;
+
   Future<void> _refresh(BuildContext context) =>
       context.read<PagesNotifier>().refresh();
+
   @override
   Widget build(BuildContext context) {
     return Consumer<PagesNotifier>(
@@ -163,18 +180,21 @@ class _PagesList extends StatelessWidget {
         final isLoading = notifier.isLoading;
         final error = notifier.error;
         final pages = notifier.currentPages;
+
         if (isLoading && pages.isEmpty) {
           return const _ListLoader();
         }
+
         if (error != null && pages.isEmpty) {
           return _StateMessage(
             icon: Icons.error_outline,
-            title: 'Something went wrong',
+            title: 'my_pages_error_title'.tr,
             message: error,
-            actionLabel: 'Retry',
+            actionLabel: 'retry_button'.tr,
             onAction: () => _refresh(context),
           );
         }
+
         if (pages.isEmpty) {
           return _StateMessage(
             icon: Icons.pages_outlined,
@@ -182,6 +202,7 @@ class _PagesList extends StatelessWidget {
             message: _emptySubtitle(tab),
           );
         }
+
         return ListView.separated(
           padding: const EdgeInsets.fromLTRB(12, 12, 12, 24),
           itemCount: pages.length,
@@ -191,29 +212,33 @@ class _PagesList extends StatelessWidget {
       },
     );
   }
+
   static String _emptyTitle(PagesTab tab) {
     switch (tab) {
       case PagesTab.myPages:
-        return 'No pages yet';
+        return 'my_pages_empty_my_pages_title'.tr;
       case PagesTab.likedPages:
-        return 'No liked pages';
+        return 'my_pages_empty_liked_title'.tr;
       case PagesTab.suggestedPages:
-        return 'No suggestions';
+        return 'my_pages_empty_suggested_title'.tr;
     }
   }
+
   static String _emptySubtitle(PagesTab tab) {
     switch (tab) {
       case PagesTab.myPages:
-        return 'Create or manage a page to see it here.';
+        return 'my_pages_empty_my_pages_subtitle'.tr;
       case PagesTab.likedPages:
-        return 'Like a page and it will appear in this list.';
+        return 'my_pages_empty_liked_subtitle'.tr;
       case PagesTab.suggestedPages:
-        return 'We’ll show recommended pages when available.';
+        return 'my_pages_empty_suggested_subtitle'.tr;
     }
   }
 }
+
 class _ListLoader extends StatelessWidget {
   const _ListLoader();
+
   @override
   Widget build(BuildContext context) {
     // Simple skeletons without extra packages
@@ -231,6 +256,7 @@ class _ListLoader extends StatelessWidget {
     );
   }
 }
+
 class _StateMessage extends StatelessWidget {
   const _StateMessage({
     required this.icon,
@@ -239,11 +265,13 @@ class _StateMessage extends StatelessWidget {
     this.actionLabel,
     this.onAction,
   });
+
   final IconData icon;
   final String title;
   final String? message;
   final String? actionLabel;
   final VoidCallback? onAction;
+
   @override
   Widget build(BuildContext context) {
     final onSurface = Theme.of(context).colorScheme.onSurface;
@@ -282,34 +310,44 @@ class _StateMessage extends StatelessWidget {
     );
   }
 }
+
 class _PageCard extends StatefulWidget {
   const _PageCard({required this.page});
+
   final PageModel page;
+
   @override
   State<_PageCard> createState() => _PageCardState();
 }
+
 class _PageCardState extends State<_PageCard> {
   late bool _isBoosted;
   bool _isBoostLoading = false;
+
   @override
   void initState() {
     super.initState();
     _isBoosted = widget.page.boosted;
   }
+
   Future<void> _handleBoost() async {
     if (_isBoostLoading) return;
+
     setState(() {
       _isBoostLoading = true;
     });
+
     try {
       final boostRepository = context.read<BoostRepository>();
       final result = _isBoosted
           ? await boostRepository.unboostPage(widget.page.id)
           : await boostRepository.boostPage(widget.page.id);
+
       if (result.success) {
         setState(() {
           _isBoosted = result.boosted ?? false;
         });
+
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -338,11 +376,13 @@ class _PageCardState extends State<_PageCard> {
       }
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final mediaAsset = context.read<AppConfig>().mediaAsset;
     final surface = Theme.of(context).colorScheme.surface;
+
     return Container(
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardDark : Colors.white,
@@ -415,18 +455,18 @@ class _PageCardState extends State<_PageCard> {
                           color: AppColors.primary.withOpacity(0.95),
                           borderRadius: BorderRadius.circular(999),
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.auto_awesome,
                               size: 16,
                               color: Colors.white,
                             ),
-                            SizedBox(width: 6),
+                            const SizedBox(width: 6),
                             Text(
-                              'Featured',
-                              style: TextStyle(
+                              'my_pages_featured_badge'.tr,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w700,
                               ),
@@ -438,6 +478,7 @@ class _PageCardState extends State<_PageCard> {
                 ],
               ),
             ),
+
           // Header row
           Padding(
             padding: const EdgeInsets.fromLTRB(14, 14, 14, 10),
@@ -509,7 +550,7 @@ class _PageCardState extends State<_PageCard> {
                                 ),
                               ),
                               child: Text(
-                                'Admin',
+                              'my_pages_admin_badge'.tr,
                                 style: TextStyle(
                                   color: AppColors.success,
                                   fontWeight: FontWeight.w700,
@@ -539,7 +580,7 @@ class _PageCardState extends State<_PageCard> {
                           const Icon(Icons.thumb_up_alt_outlined, size: 16),
                           const SizedBox(width: 6),
                           Text(
-                            '${widget.page.formattedLikes} likes',
+                              'my_pages_likes_label'.trParams({'count': widget.page.formattedLikes}),
                             style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(
                                   color: Theme.of(
@@ -556,7 +597,9 @@ class _PageCardState extends State<_PageCard> {
               ],
             ),
           ),
+
           const Divider(height: 1),
+
           // Actions
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 8, 10, 12),
@@ -572,7 +615,7 @@ class _PageCardState extends State<_PageCard> {
                       );
                     },
                     icon: const Icon(Icons.visibility_outlined),
-                    label: const Text('View'),
+                    label: Text('view_button'.tr),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -592,7 +635,7 @@ class _PageCardState extends State<_PageCard> {
                         size: 20,
                       ),
                       label: Text(
-                        widget.page.iLike ? 'Liked' : 'Like',
+                        widget.page.iLike ? 'my_pages_liked_button'.tr : 'my_pages_like_button'.tr,
                         style: TextStyle(
                           color: widget.page.iLike ? AppColors.primary : null,
                           fontWeight: FontWeight.w700,
@@ -627,7 +670,7 @@ class _PageCardState extends State<_PageCard> {
                               size: 20,
                             ),
                       label: Text(
-                        _isBoosted ? 'boosted'.tr : 'boost_page'.tr,
+                        _isBoosted ? 'my_pages_boosted_button'.tr : 'my_pages_boost_button'.tr,
                         style: TextStyle(
                           color: _isBoosted ? const Color(0xFFFF8C00) : null,
                           fontWeight: _isBoosted

@@ -8,24 +8,29 @@ import '../../domain/market_repository.dart';
 import '../../application/bloc/cart/cart_bloc.dart';
 import '../../application/bloc/cart/cart_event.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 /// Product Details Page - صفحة تفاصيل المنتج
 /// 
 /// عرض جميع تفاصيل المنتج مع إمكانية الإضافة للسلة
 class ProductDetailsPage extends StatefulWidget {
   final String productId;
+
   const ProductDetailsPage({
     Key? key,
     required this.productId,
   }) : super(key: key);
+
   @override
   State<ProductDetailsPage> createState() => _ProductDetailsPageState();
 }
+
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
   Product? _product;
   bool _isLoading = true;
   String? _error;
   int _quantity = 1;
   int _currentPhotoIndex = 0;
+
   String _decodeHtml(String s) {
     return s
         .replaceAll('&amp;', '&')
@@ -34,19 +39,23 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
         .replaceAll('&quot;', '"')
         .replaceAll('&#39;', "'");
   }
+
   @override
   void initState() {
     super.initState();
     _loadProduct();
   }
+
   Future<void> _loadProduct() async {
     setState(() {
       _isLoading = true;
       _error = null;
     });
+
     try {
       final repository = context.read<MarketRepository>();
       final product = await repository.getProductDetails(widget.productId);
+      
       if (mounted) {
         setState(() {
           _product = product;
@@ -62,14 +71,17 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       }
     }
   }
+
   void _addToCart() {
     if (_product == null || !_product!.isAvailable) return;
+
     context.read<CartBloc>().add(
       AddToCartEvent(
         productId: _product!.productId,
         quantity: _quantity,
       ),
     );
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('تم إضافة المنتج للسلة'),
@@ -77,12 +89,14 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       ),
     );
   }
+
   void _contactSeller() {
     // Navigate to chat or seller profile
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('ميزة المحادثة قريباً')),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,6 +111,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           : null,
     );
   }
+
   Widget _buildError() {
     return Center(
       child: Column(
@@ -119,6 +134,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       ),
     );
   }
+
   Widget _buildLoading() {
     return CustomScrollView(
       slivers: [
@@ -162,8 +178,10 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       ],
     );
   }
+
   Widget _buildProductDetails() {
     if (_product == null) return const SizedBox();
+
     final scheme = Theme.of(context).colorScheme;
     return CustomScrollView(
       slivers: [
@@ -195,6 +213,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             ),
           ],
         ),
+
         // Product Details
         SliverToBoxAdapter(
           child: Padding(
@@ -223,7 +242,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     ),
                   ],
                 ),
+
                 const SizedBox(height: UI.lg),
+
                 // Product Info Cards
                 _buildInfoRow(
                   Icons.category,
@@ -254,7 +275,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       : 'not_available'.tr,
                   color: _product!.isInStock ? Colors.green : Colors.red,
                 ),
+
                 const Divider(height: UI.xl * 1.5),
+
                 // Description
                 Text(
                   'description'.tr,
@@ -265,7 +288,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                   _decodeHtml(_product!.description),
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(height: 1.5, color: UI.subtleText(context)),
                 ),
+
                 const Divider(height: UI.xl * 1.5),
+
                 // Seller Info
                 Text(
                   'market_seller'.tr,
@@ -273,6 +298,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                 ),
                 const SizedBox(height: UI.md),
                 _buildSellerCard(),
+
                 const SizedBox(height: 80), // Space for bottom bar
               ],
             ),
@@ -281,8 +307,10 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       ],
     );
   }
+
   Widget _buildImageGallery() {
     final photos = _product?.photos ?? [];
+    
     if (photos.isEmpty) {
       return Container(
         color: Colors.grey[200],
@@ -293,6 +321,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
         ),
       );
     }
+
     return Stack(
       children: [
         PageView.builder(
@@ -337,6 +366,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             );
           },
         ),
+
         // Photo indicator
         if (photos.length > 1)
           Positioned(
@@ -364,6 +394,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       ],
     );
   }
+
   Widget _buildInfoRow(IconData icon, String label, String value, {Color? color}) {
     final subtle = UI.subtleText(context);
     return Padding(
@@ -394,8 +425,10 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       ),
     );
   }
+
   Widget _buildSellerCard() {
     final seller = _product!.seller;
+
     return Container(
       decoration: BoxDecoration(
         color: UI.surfaceCard(context),
@@ -461,6 +494,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       ),
     );
   }
+
   Widget _buildBottomBar() {
     final scheme = Theme.of(context).colorScheme;
     return Container(
@@ -508,7 +542,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                 ],
               ),
             ),
+
             const SizedBox(width: UI.lg),
+
             // Add to Cart Button
             Expanded(
               child: ElevatedButton.icon(

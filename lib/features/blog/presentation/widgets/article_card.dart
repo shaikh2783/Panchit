@@ -4,14 +4,18 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import '../../../../core/theme/ui_constants.dart';
 import '../../data/models/blog_post.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 class ArticleCard extends StatelessWidget {
   final BlogPost post;
   final VoidCallback? onTap;
+
   const ArticleCard({super.key, required this.post, this.onTap});
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final isDark = Get.isDarkMode;
+    
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(UI.rLg),
@@ -122,6 +126,7 @@ class ArticleCard extends StatelessWidget {
                 ),
               ],
             ),
+            
             // Content
             Padding(
               padding: EdgeInsets.all(UI.lg),
@@ -140,6 +145,7 @@ class ArticleCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: UI.md),
+                  
                   // Snippet
                   Text(
                     post.textSnippet,
@@ -151,6 +157,7 @@ class ArticleCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: UI.lg),
+                  
                   // Author & Date row
                   Row(
                     children: [
@@ -225,6 +232,7 @@ class ArticleCard extends StatelessWidget {
                       ),
                     ],
                   ),
+                  
                   // Tags if available
                   if (post.tags.isNotEmpty) ...[
                     const SizedBox(height: UI.md),

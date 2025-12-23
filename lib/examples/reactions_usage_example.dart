@@ -2,11 +2,14 @@
 /// 
 /// This file is for demonstration only - can be deleted
 library;
+
 import 'package:flutter/material.dart';
 import '../core/services/reactions_service.dart';
 import '../features/comments/presentation/widgets/reactions_menu.dart';
+
 class ReactionsUsageExample extends StatelessWidget {
   const ReactionsUsageExample({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,9 +21,11 @@ class ReactionsUsageExample extends StatelessWidget {
             // Example 1: Simple button with long press
             _ExampleButton1(),
             const SizedBox(height: 20),
+            
             // Example 2: Show current reaction
             _ExampleButton2(),
             const SizedBox(height: 20),
+            
             // Example 3: List all reactions
             _ExampleButton3(),
           ],
@@ -29,6 +34,7 @@ class ReactionsUsageExample extends StatelessWidget {
     );
   }
 }
+
 /// مثال 1: زر مع long press
 class _ExampleButton1 extends StatelessWidget {
   void _showReactions(BuildContext context) {
@@ -44,6 +50,7 @@ class _ExampleButton1 extends StatelessWidget {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
@@ -54,13 +61,16 @@ class _ExampleButton1 extends StatelessWidget {
     );
   }
 }
+
 /// مثال 2: عرض التفاعل الحالي
 class _ExampleButton2 extends StatefulWidget {
   @override
   State<_ExampleButton2> createState() => _ExampleButton2State();
 }
+
 class _ExampleButton2State extends State<_ExampleButton2> {
   String? currentReaction;
+
   void _showReactions(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -80,11 +90,13 @@ class _ExampleButton2State extends State<_ExampleButton2> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     final reaction = currentReaction != null
         ? ReactionsService.instance.getReactionByName(currentReaction!)
         : null;
+
     return ElevatedButton(
       onPressed: () => _showReactions(context),
       style: ElevatedButton.styleFrom(
@@ -100,6 +112,7 @@ class _ExampleButton2State extends State<_ExampleButton2> {
       ),
     );
   }
+
   Color _parseColor(String colorString) {
     try {
       String hex = colorString.replaceAll('#', '');
@@ -110,6 +123,7 @@ class _ExampleButton2State extends State<_ExampleButton2> {
     }
   }
 }
+
 /// مثال 3: عرض جميع التفاعلات المتاحة
 class _ExampleButton3 extends StatelessWidget {
   @override
@@ -117,6 +131,7 @@ class _ExampleButton3 extends StatelessWidget {
     return ElevatedButton(
       onPressed: () {
         final reactions = ReactionsService.instance.getReactions();
+        
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -149,6 +164,7 @@ class _ExampleButton3 extends StatelessWidget {
       child: const Text('Show All Reactions'),
     );
   }
+
   Color _parseColor(String colorString) {
     try {
       String hex = colorString.replaceAll('#', '');
@@ -159,6 +175,7 @@ class _ExampleButton3 extends StatelessWidget {
     }
   }
 }
+
 /// Notes:
 /// 
 /// 1. Usage in comments:

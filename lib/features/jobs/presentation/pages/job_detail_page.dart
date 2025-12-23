@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_html/flutter_html.dart';
+
 import '../../../../core/theme/ui_constants.dart';
 import '../../../../core/widgets/skeletons.dart';
 import '../../data/models/job.dart';
@@ -12,21 +13,26 @@ import '../../../auth/application/auth_notifier.dart';
 import 'job_edit_page.dart';
 import 'job_candidates_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 class JobDetailPage extends StatefulWidget {
   final int jobId;
   const JobDetailPage({super.key, required this.jobId});
+
   @override
   State<JobDetailPage> createState() => _JobDetailPageState();
 }
+
 class _JobDetailPageState extends State<JobDetailPage> {
   Job? _job;
   String? _error;
   bool _loading = true;
+
   @override
   void initState() {
     super.initState();
     _load();
   }
+
   Future<void> _load() async {
     setState(() {
       _loading = true;
@@ -46,6 +52,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
@@ -132,6 +139,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
               : _buildContent(scheme),
     );
   }
+
   Future<void> _confirmDelete() async {
     if (_job == null) return;
     final confirm = await Get.dialog<bool>(
@@ -155,6 +163,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
       }
     }
   }
+
   Widget _buildContent(ColorScheme scheme) {
     final j = _job!;
     return ListView(
@@ -185,6 +194,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
               ),
             ),
           ]),
+
         // Floating info card
         Transform.translate(
           offset: const Offset(0, -20),
@@ -246,6 +256,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
             ),
           ),
         ),
+
         // Description card
         if (j.description.trim().isNotEmpty)
           Padding(
@@ -281,6 +292,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
       ],
     );
   }
+
   Widget _chip(BuildContext context, String label, Color bg, Color fg) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -288,5 +300,6 @@ class _JobDetailPageState extends State<JobDetailPage> {
       child: Text(label, style: TextStyle(color: fg, fontWeight: FontWeight.w600)),
     );
   }
+
   Widget _buildSkeleton() => ListView(children: const [SkeletonBox(height: 240, radius: 0)]);
 }

@@ -7,14 +7,17 @@ import '../../application/bloc/cart/cart_event.dart';
 import '../../application/bloc/cart/cart_state.dart';
 import '../widgets/cart_item_card.dart';
 import 'checkout_page.dart';
+
 /// Cart Page - صفحة سلة التسوق
 /// 
 /// عرض منتجات السلة مع إمكانية التعديل والحذف
 class CartPage extends StatefulWidget {
   const CartPage({Key? key}) : super(key: key);
+
   @override
   State<CartPage> createState() => _CartPageState();
 }
+
 class _CartPageState extends State<CartPage> {
   @override
   void initState() {
@@ -28,6 +31,7 @@ class _CartPageState extends State<CartPage> {
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,9 +60,11 @@ class _CartPageState extends State<CartPage> {
           if (state is CartInitial || state is CartLoading) {
             return const Center(child: CircularProgressIndicator());
           }
+
           if (state is CartError) {
             return _buildError(context, state.message);
           }
+
           if (state is CartOperationInProgress) {
             // Show current cart while operation is in progress
             if (state.currentCart.items.isEmpty) {
@@ -76,18 +82,21 @@ class _CartPageState extends State<CartPage> {
               ],
             );
           }
+
           if (state is CartOperationSuccess) {
             if (state.cart.items.isEmpty) {
               return _buildEmptyCart(context);
             }
             return _buildCartContent(context, state.cart);
           }
+
           if (state is CartLoaded) {
             if (state.cart.items.isEmpty) {
               return _buildEmptyCart(context);
             }
             return _buildCartContent(context, state.cart);
           }
+
           return const SizedBox();
         },
       ),
@@ -107,6 +116,7 @@ class _CartPageState extends State<CartPage> {
       ),
     );
   }
+
   Widget _buildError(BuildContext context, String message) {
     return Center(
       child: Column(
@@ -128,6 +138,7 @@ class _CartPageState extends State<CartPage> {
       ),
     );
   }
+
   Widget _buildEmptyCart(BuildContext context) {
     return Center(
       child: Column(
@@ -173,6 +184,7 @@ class _CartPageState extends State<CartPage> {
       ),
     );
   }
+
   Widget _buildCartContent(BuildContext context, Cart cart) {
     return RefreshIndicator(
       onRefresh: () async {
@@ -198,14 +210,18 @@ class _CartPageState extends State<CartPage> {
                       );
                 },
               )),
+
           const SizedBox(height: 16),
+
           // Summary Card
           _buildSummaryCard(cart),
+
           const SizedBox(height: 100), // Space for bottom bar
         ],
       ),
     );
   }
+
   Widget _buildSummaryCard(Cart cart) {
     return Card(
       elevation: 2,
@@ -237,6 +253,7 @@ class _CartPageState extends State<CartPage> {
       ),
     );
   }
+
   Widget _buildSummaryRow(String label, String value, {bool isTotal = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -260,6 +277,7 @@ class _CartPageState extends State<CartPage> {
       ],
     );
   }
+
   Widget _buildCheckoutBar(BuildContext context, Cart cart) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -321,6 +339,7 @@ class _CartPageState extends State<CartPage> {
       ),
     );
   }
+
   void _showClearCartDialog(BuildContext context) {
     showDialog(
       context: context,

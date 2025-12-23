@@ -7,11 +7,14 @@ import 'package:snginepro/features/ads/data/services/ads_api_service.dart';
 import '../../domain/ads_repository.dart';
 import '../widgets/campaign_card.dart';
 import '../widgets/filters_bar.dart';
+
 class AdsCampaignsPage extends StatefulWidget {
   const AdsCampaignsPage({super.key});
+
   @override
   State<AdsCampaignsPage> createState() => _AdsCampaignsPageState();
 }
+
 class _AdsCampaignsPageState extends State<AdsCampaignsPage> {
   late final AdsRepository _repo;
   List<Map<String, dynamic>> _items = [];
@@ -22,6 +25,7 @@ class _AdsCampaignsPageState extends State<AdsCampaignsPage> {
   bool? _isApproved;
   String? _placement;
   String _search = '';
+
   @override
   void initState() {
     super.initState();
@@ -29,6 +33,7 @@ class _AdsCampaignsPageState extends State<AdsCampaignsPage> {
     _repo = AdsRepository(service);
     _load();
   }
+
   Future<void> _load() async {
     setState(() => _loading = true);
     try {
@@ -48,6 +53,7 @@ class _AdsCampaignsPageState extends State<AdsCampaignsPage> {
       if (mounted) setState(() => _loading = false);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -88,6 +94,7 @@ class _AdsCampaignsPageState extends State<AdsCampaignsPage> {
               _load();
             },
           ),
+
           // Campaigns Grid
           Expanded(
             child: _loading
@@ -119,6 +126,7 @@ class _AdsCampaignsPageState extends State<AdsCampaignsPage> {
                               final isApproved = c['campaign_is_approved'] == true || c['campaign_is_approved'] == 1;
                               final rawImage = (c['ads_image'] ?? c['campaign_image'] ?? c['image'] ?? '').toString();
                               final imageUri = rawImage.isNotEmpty ? appConfig.mediaAsset(rawImage) : null;
+                              
                               return CampaignCard(
                                 key: ValueKey('campaign_$id'),
                                 title: title.isEmpty ? 'ads_campaign_untitled'.tr : title,
@@ -203,6 +211,7 @@ class _AdsCampaignsPageState extends State<AdsCampaignsPage> {
       ),
     );
   }
+
   String _sortLabel() {
     switch (_sortBy) {
       case 'campaign_spend':
@@ -214,6 +223,7 @@ class _AdsCampaignsPageState extends State<AdsCampaignsPage> {
     }
   }
 }
+
 class _EmptyState extends StatelessWidget {
   const _EmptyState({required this.message});
   final String message;
@@ -223,12 +233,12 @@ class _EmptyState extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Iconsax.chart, size: 64, color: Colors.grey.withValues(alpha: 0.5)),
+          Icon(Iconsax.chart, size: 64, color: Colors.grey.withOpacity(0.5)),
           const SizedBox(height: 16),
           Text(
             message,
             style: TextStyle(
-              color: Colors.grey.withValues(alpha: 0.7),
+              color: Colors.grey.withOpacity(0.7),
               fontSize: 16,
             ),
           ),
@@ -237,6 +247,7 @@ class _EmptyState extends StatelessWidget {
     );
   }
 }
+
 class _ShimmerGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -254,7 +265,7 @@ class _ShimmerGrid extends StatelessWidget {
         return Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            color: theme.cardColor.withValues(alpha: 0.3),
+            color: theme.cardColor.withOpacity(0.3),
           ),
         );
       },

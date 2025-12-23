@@ -3,44 +3,60 @@ import 'package:snginepro/core/bloc/base_bloc.dart';
 import 'package:snginepro/core/network/api_exception.dart';
 import 'package:snginepro/features/feed/data/models/story.dart';
 import 'package:snginepro/features/stories/domain/stories_repository.dart';
+
 // Events
 abstract class StoriesEvent extends BaseEvent {}
+
 class LoadStoriesEvent extends StoriesEvent {}
+
 class RefreshStoriesEvent extends StoriesEvent {}
+
 class CreateStoryEvent extends StoriesEvent {
   final String? imagePath;
   final String? videoPath;
   final String? text;
   final Duration? duration;
+
   CreateStoryEvent({
     this.imagePath,
     this.videoPath,
     this.text,
     this.duration,
   });
+
   @override
   List<Object?> get props => [imagePath, videoPath, text, duration];
 }
+
 class ViewStoryEvent extends StoriesEvent {
   final String storyId;
   final String userId;
+
   ViewStoryEvent({required this.storyId, required this.userId});
+
   @override
   List<Object?> get props => [storyId, userId];
 }
+
 class DeleteStoryEvent extends StoriesEvent {
   final String storyId;
+
   DeleteStoryEvent(this.storyId);
+
   @override
   List<Object?> get props => [storyId];
 }
+
 class ReactToStoryEvent extends StoriesEvent {
   final String storyId;
   final String reaction;
+
   ReactToStoryEvent({required this.storyId, required this.reaction});
+
   @override
   List<Object?> get props => [storyId, reaction];
 }
+
 // States
 abstract class StoriesState extends BaseState {
   const StoriesState({
@@ -51,10 +67,12 @@ abstract class StoriesState extends BaseState {
     this.currentStoryIndex = 0,
     this.isCreatingStory = false,
   });
+
   final List<Story> stories;
   final List<Story> myStories;
   final int currentStoryIndex;
   final bool isCreatingStory;
+
   @override
   List<Object?> get props => [
         ...super.props,
@@ -64,9 +82,11 @@ abstract class StoriesState extends BaseState {
         isCreatingStory,
       ];
 }
+
 class StoriesInitial extends StoriesState {
   const StoriesInitial();
 }
+
 class StoriesLoading extends StoriesState {
   const StoriesLoading({
     super.stories,
@@ -74,6 +94,7 @@ class StoriesLoading extends StoriesState {
     super.currentStoryIndex,
   }) : super(isLoading: true);
 }
+
 class StoriesCreating extends StoriesState {
   const StoriesCreating({
     required super.stories,
@@ -81,6 +102,7 @@ class StoriesCreating extends StoriesState {
     required super.currentStoryIndex,
   }) : super(isCreatingStory: true);
 }
+
 class StoriesLoaded extends StoriesState {
   const StoriesLoaded({
     required super.stories,
@@ -88,6 +110,7 @@ class StoriesLoaded extends StoriesState {
     super.currentStoryIndex,
   });
 }
+
 class StoriesError extends StoriesState {
   const StoriesError(
     String message, {
@@ -96,39 +119,49 @@ class StoriesError extends StoriesState {
     super.currentStoryIndex,
   }) : super(errorMessage: message);
 }
+
 class StoryCreated extends StoriesState {
   final Story newStory;
+
   const StoryCreated({
     required this.newStory,
     required super.stories,
     required super.myStories,
     super.currentStoryIndex,
   });
+
   @override
   List<Object?> get props => [...super.props, newStory];
 }
+
 class StoryViewed extends StoriesState {
   final String viewedStoryId;
+
   const StoryViewed({
     required this.viewedStoryId,
     required super.stories,
     required super.myStories,
     super.currentStoryIndex,
   });
+
   @override
   List<Object?> get props => [...super.props, viewedStoryId];
 }
+
 class StoryDeleted extends StoriesState {
   final String deletedStoryId;
+
   const StoryDeleted({
     required this.deletedStoryId,
     required super.stories,
     required super.myStories,
     super.currentStoryIndex,
   });
+
   @override
   List<Object?> get props => [...super.props, deletedStoryId];
 }
+
 // Bloc
 class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
   StoriesBloc(this._repository) : super(const StoriesInitial()) {
@@ -139,7 +172,9 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
     on<DeleteStoryEvent>(_onDeleteStory);
     on<ReactToStoryEvent>(_onReactToStory);
   }
+
   final StoriesRepository _repository;
+
   Future<void> _onLoadStories(
     LoadStoriesEvent event,
     Emitter<StoriesState> emit,
@@ -149,8 +184,10 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
       myStories: state.myStories,
       currentStoryIndex: state.currentStoryIndex,
     ));
+
     try {
       final response = await _repository.fetchStories();
+      
       // Convert stories from StoriesResponse to feed Story models
       final feedStories = <Story>[];
       for (var story in response.stories) {
@@ -167,10 +204,12 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
             linkText: '',
           ));
         }
+        
         // تخطي القصص التي لا تحتوي على أي عناصر صالحة
         if (items.isEmpty) {
           continue;
         }
+        
         feedStories.add(Story(
           id: story.id,
           authorName: story.authorName,
@@ -178,6 +217,7 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
           items: items,
         ));
       }
+
       emit(StoriesLoaded(
         stories: feedStories,
         myStories: const [], // No separate my stories endpoint available
@@ -199,6 +239,7 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
       ));
     }
   }
+
   Future<void> _onRefreshStories(
     RefreshStoriesEvent event,
     Emitter<StoriesState> emit,
@@ -206,6 +247,7 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
     // Same as load for now since no separate refresh endpoint
     add(LoadStoriesEvent());
   }
+
   Future<void> _onCreateStory(
     CreateStoryEvent event,
     Emitter<StoriesState> emit,
@@ -215,6 +257,7 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
       myStories: state.myStories,
       currentStoryIndex: state.currentStoryIndex,
     ));
+
     try {
       // ✅ استخدام API الحقيقي لإنشاء القصة
       await _repository.createStory(
@@ -222,8 +265,10 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
         videoPath: event.videoPath,
         text: event.text,
       );
+
       // إعادة تحميل القصص بعد الإنشاء
       add(LoadStoriesEvent());
+
       emit(StoriesLoaded(
         stories: state.stories,
         myStories: state.myStories,
@@ -245,6 +290,7 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
       ));
     }
   }
+
   Future<void> _onViewStory(
     ViewStoryEvent event,
     Emitter<StoriesState> emit,
@@ -257,6 +303,7 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
       currentStoryIndex: state.currentStoryIndex,
     ));
   }
+
   Future<void> _onDeleteStory(
     DeleteStoryEvent event,
     Emitter<StoriesState> emit,
@@ -268,6 +315,7 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
     final updatedMyStories = state.myStories
         .where((story) => story.id != event.storyId)
         .toList();
+
     emit(StoryDeleted(
       deletedStoryId: event.storyId,
       stories: updatedStories,
@@ -275,6 +323,7 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
       currentStoryIndex: state.currentStoryIndex,
     ));
   }
+
   Future<void> _onReactToStory(
     ReactToStoryEvent event,
     Emitter<StoriesState> emit,

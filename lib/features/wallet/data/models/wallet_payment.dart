@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+
 class WalletPayment extends Equatable {
   const WalletPayment({
     required this.id,
@@ -12,6 +13,7 @@ class WalletPayment extends Equatable {
     required this.timestamp,
     this.notes,
   });
+
   final int id;
   final double amount;
   final String amountFormatted;
@@ -22,6 +24,7 @@ class WalletPayment extends Equatable {
   final String requestedAt;
   final int timestamp;
   final String? notes;
+
   factory WalletPayment.fromJson(Map<String, dynamic> json) {
     return WalletPayment(
       id: _toInt(json['payment_id'] ?? json['id']),
@@ -36,6 +39,7 @@ class WalletPayment extends Equatable {
       notes: _nullableString(json['notes']),
     );
   }
+
   WalletPayment copyWith({
     int? id,
     double? amount,
@@ -61,6 +65,7 @@ class WalletPayment extends Equatable {
       notes: notes ?? this.notes,
     );
   }
+
   @override
   List<Object?> get props => [
     id,
@@ -75,6 +80,7 @@ class WalletPayment extends Equatable {
     notes,
   ];
 }
+
 int _toInt(Object? value) {
   if (value is int) return value;
   if (value is num) return value.toInt();
@@ -83,6 +89,7 @@ int _toInt(Object? value) {
   }
   return 0;
 }
+
 double _toDouble(Object? value, {double fallback = 0}) {
   if (value is num) return value.toDouble();
   if (value is String) {
@@ -90,10 +97,12 @@ double _toDouble(Object? value, {double fallback = 0}) {
   }
   return fallback;
 }
+
 String _toString(Object? value, {String fallback = ''}) {
   if (value == null) return fallback;
   return value.toString();
 }
+
 String? _nullableString(Object? value) {
   if (value == null) return null;
   final stringValue = value.toString();

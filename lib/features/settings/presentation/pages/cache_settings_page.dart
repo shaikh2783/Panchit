@@ -1,34 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:snginepro/App_Settings.dart';
 import 'package:snginepro/core/services/video_precache_service.dart';
+
 /// صفحة إعدادات الكاش
 /// تسمح للمستخدم بإدارة إعدادات كاش الفيديوهات
 class CacheSettingsPage extends StatefulWidget {
   const CacheSettingsPage({super.key});
+
   @override
   State<CacheSettingsPage> createState() => _CacheSettingsPageState();
 }
+
 class _CacheSettingsPageState extends State<CacheSettingsPage> {
   late int videoCacheDays;
   late bool enablePreCache;
   late int preCacheVideos;
   late bool wifiOnlyPreCache;
+
   @override
   void initState() {
     super.initState();
     _loadSettings();
   }
+
   void _loadSettings() {
     videoCacheDays = AppSettings.videoCacheDuration;
     enablePreCache = AppSettings.enableVideoPreCaching;
     preCacheVideos = AppSettings.preCacheCount;
     wifiOnlyPreCache = AppSettings.preCacheOnlyOnWifi;
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
@@ -36,7 +44,7 @@ class _CacheSettingsPageState extends State<CacheSettingsPage> {
         backgroundColor: Colors.transparent,
         centerTitle: true,
         title: Text(
-          'Cache Settings',
+          'cache_settings_title'.tr,
           style: theme.textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.w800,
             letterSpacing: 0.1,
@@ -48,67 +56,78 @@ class _CacheSettingsPageState extends State<CacheSettingsPage> {
         children: [
           // Header (glassy)
           _GlassHeader(
-            title: 'Manage Your Cache',
-            subtitle: 'Control video caching and storage settings',
+            title: 'cache_manage_title'.tr,
+            subtitle: 'cache_manage_subtitle'.tr,
             icon: Icons.storage_rounded,
           ),
           const SizedBox(height: 20),
+
           // معلومات الكاش
-          const _SectionTitle('Cache Information'),
+          _SectionTitle('cache_information_section'.tr),
           const SizedBox(height: 10),
           _CacheInfoTile(
             icon: Icons.video_library,
-            label: 'Cached Videos',
+            label: 'cached_videos_label'.tr,
             value: '${VideoPrecacheService().cachedCount}',
             gradient: const [Color(0xFF29B6F6), Color(0xFF0288D1)],
           ),
           _CacheInfoTile(
             icon: Icons.storage,
-            label: 'Cache Duration',
-            value: '${AppSettings.videoCacheDuration} days',
+            label: 'cache_duration_label'.tr,
+            value: 'cache_duration_value'.trParams({
+              'days': AppSettings.videoCacheDuration.toString(),
+            }),
             gradient: const [Color(0xFFFFB74D), Color(0xFFF57C00)],
           ),
           _CacheInfoTile(
             icon: Icons.sd_storage,
-            label: 'Max Cache Size',
-            value: '${AppSettings.maxCacheSize} MB',
+            label: 'max_cache_size_label'.tr,
+            value: 'cache_size_value'.trParams({
+              'size': AppSettings.maxCacheSize.toString(),
+            }),
             gradient: const [Color(0xFF81C784), Color(0xFF43A047)],
           ),
+
           const SizedBox(height: 22),
+
           // إعدادات Pre-Cache
-          const _SectionTitle('Pre-Cache Settings'),
+          _SectionTitle('pre_cache_settings_section'.tr),
           const SizedBox(height: 10),
           _CacheSettingToggleTile(
-            title: 'Enable Auto Pre-Cache',
-            subtitle: 'Automatically save upcoming videos',
+            title: 'enable_auto_pre_cache'.tr,
+            subtitle: 'enable_auto_pre_cache_subtitle'.tr,
             icon: Icons.bolt_rounded,
             value: enablePreCache,
             gradient: const [Color(0xFF9575CD), Color(0xFF5E35B1)],
             onChanged: (value) {
               setState(() => enablePreCache = value);
               _showSnackBar(
-                value ? '✅ Pre-Cache enabled' : '❌ Pre-Cache disabled',
+                value
+                    ? 'pre_cache_enabled_message'.tr
+                    : 'pre_cache_disabled_message'.tr,
               );
             },
           ),
           if (enablePreCache) ...[
             const SizedBox(height: 12),
             _CacheSettingOptionTile(
-              title: 'Pre-Cache Count',
-              subtitle: 'Number of videos to cache ahead',
+              title: 'pre_cache_count_title'.tr,
+              subtitle: 'pre_cache_count_subtitle'.tr,
               icon: Icons.filter_list_rounded,
               value: preCacheVideos,
               options: const [1, 2, 3, 5],
               gradient: const [Color(0xFF64B5F6), Color(0xFF1E88E5)],
               onChanged: (value) {
                 setState(() => preCacheVideos = value);
-                _showSnackBar('Pre-Cache set to $value videos');
+                _showSnackBar(
+                  'pre_cache_set_message'.trParams({'count': value.toString()}),
+                );
               },
             ),
             const SizedBox(height: 12),
             _CacheSettingToggleTile(
-              title: 'WiFi Only Pre-Cache',
-              subtitle: 'Save mobile data usage',
+              title: 'wifi_only_pre_cache_title'.tr,
+              subtitle: 'wifi_only_pre_cache_subtitle'.tr,
               icon: Icons.wifi_rounded,
               value: wifiOnlyPreCache,
               gradient: const [Color(0xFF4DB6AC), Color(0xFF00897B)],
@@ -116,77 +135,84 @@ class _CacheSettingsPageState extends State<CacheSettingsPage> {
                 setState(() => wifiOnlyPreCache = value);
                 _showSnackBar(
                   value
-                      ? '📡 Pre-Cache on WiFi only'
-                      : '📡 Pre-Cache on all networks',
+                      ? 'wifi_only_pre_cache_snackbar'.tr
+                      : 'wifi_all_networks_snackbar'.tr,
                 );
               },
             ),
           ],
+
           const SizedBox(height: 22),
+
           // إدارة الكاش
-          const _SectionTitle('Cache Management'),
+          _SectionTitle('cache_management_section'.tr),
           const SizedBox(height: 10),
-          _DeleteCacheTile(
-            onDelete: () => _showDeleteConfirmation(context),
-          ),
+          _DeleteCacheTile(onDelete: () => _showDeleteConfirmation(context)),
+
           const SizedBox(height: 22),
+
           // نصائح
           _TipsCard(isDark: isDark),
+
           const SizedBox(height: 32),
         ],
       ),
     );
   }
+
   void _showSnackBar(String message) {
     HapticFeedback.lightImpact();
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: const Duration(seconds: 2),
-      ),
+      SnackBar(content: Text(message), duration: const Duration(seconds: 2)),
     );
   }
+
   void _showDeleteConfirmation(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Clear Cache'),
-        content: const Text('Are you sure you want to delete all cached videos?'),
+        title: Text('clear_cache_title'.tr),
+        content: Text('clear_cache_confirmation'.tr),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text('cancel'.tr),
           ),
           TextButton(
             onPressed: () async {
               await VideoPrecacheService().clearAllCache();
               if (mounted) {
                 Navigator.pop(context);
-                _showSnackBar('✅ Cache cleared successfully');
+                _showSnackBar('cache_cleared_success_message'.tr);
                 setState(() {});
               }
             },
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            child: Text('delete'.tr, style: const TextStyle(color: Colors.red)),
           ),
         ],
       ),
     );
   }
 }
+
 // =============== UI Pieces ===============
+
 class _GlassHeader extends StatelessWidget {
   const _GlassHeader({
     required this.title,
     required this.subtitle,
     required this.icon,
   });
+
   final String title;
   final String subtitle;
   final IconData icon;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -250,9 +276,11 @@ class _GlassHeader extends StatelessWidget {
     );
   }
 }
+
 class _SectionTitle extends StatelessWidget {
   const _SectionTitle(this.title);
   final String title;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -278,6 +306,7 @@ class _SectionTitle extends StatelessWidget {
     );
   }
 }
+
 class _CacheInfoTile extends StatelessWidget {
   const _CacheInfoTile({
     required this.icon,
@@ -285,13 +314,16 @@ class _CacheInfoTile extends StatelessWidget {
     required this.value,
     required this.gradient,
   });
+
   final IconData icon;
   final String label;
   final String value;
   final List<Color> gradient;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
@@ -356,6 +388,7 @@ class _CacheInfoTile extends StatelessWidget {
     );
   }
 }
+
 class _CacheSettingToggleTile extends StatelessWidget {
   const _CacheSettingToggleTile({
     required this.title,
@@ -365,15 +398,18 @@ class _CacheSettingToggleTile extends StatelessWidget {
     required this.gradient,
     required this.onChanged,
   });
+
   final String title;
   final String subtitle;
   final IconData icon;
   final bool value;
   final List<Color> gradient;
   final ValueChanged<bool> onChanged;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
@@ -452,6 +488,7 @@ class _CacheSettingToggleTile extends StatelessWidget {
     );
   }
 }
+
 class _CacheSettingOptionTile extends StatefulWidget {
   const _CacheSettingOptionTile({
     required this.title,
@@ -462,6 +499,7 @@ class _CacheSettingOptionTile extends StatefulWidget {
     required this.gradient,
     required this.onChanged,
   });
+
   final String title;
   final String subtitle;
   final IconData icon;
@@ -469,20 +507,25 @@ class _CacheSettingOptionTile extends StatefulWidget {
   final List<int> options;
   final List<Color> gradient;
   final ValueChanged<int> onChanged;
+
   @override
   State<_CacheSettingOptionTile> createState() =>
       _CacheSettingOptionTileState();
 }
+
 class _CacheSettingOptionTileState extends State<_CacheSettingOptionTile> {
   late int selectedValue;
+
   @override
   void initState() {
     super.initState();
     selectedValue = widget.value;
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
@@ -543,8 +586,9 @@ class _CacheSettingOptionTileState extends State<_CacheSettingOptionTile> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.textTheme.bodySmall?.color
-                              ?.withOpacity(0.7),
+                          color: theme.textTheme.bodySmall?.color?.withOpacity(
+                            0.7,
+                          ),
                         ),
                       ),
                     ],
@@ -562,6 +606,13 @@ class _CacheSettingOptionTileState extends State<_CacheSettingOptionTile> {
                 itemBuilder: (context, index) {
                   final option = widget.options[index];
                   final isSelected = selectedValue == option;
+                  final optionLabelKey = option == 1
+                      ? 'pre_cache_option_single'
+                      : 'pre_cache_option_multiple';
+                  final optionLabel = optionLabelKey.trParams({
+                    'count': option.toString(),
+                  });
+
                   return GestureDetector(
                     onTap: () {
                       HapticFeedback.selectionClick();
@@ -590,7 +641,7 @@ class _CacheSettingOptionTileState extends State<_CacheSettingOptionTile> {
                       ),
                       child: Center(
                         child: Text(
-                          '$option video${option > 1 ? 's' : ''}',
+                          optionLabel,
                           style: TextStyle(
                             color: isSelected ? Colors.white : null,
                             fontWeight: FontWeight.w600,
@@ -609,12 +660,16 @@ class _CacheSettingOptionTileState extends State<_CacheSettingOptionTile> {
     );
   }
 }
+
 class _DeleteCacheTile extends StatelessWidget {
   const _DeleteCacheTile({required this.onDelete});
+
   final VoidCallback onDelete;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
@@ -669,7 +724,7 @@ class _DeleteCacheTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Clear All Cache',
+                        'clear_all_cache'.tr,
                         style: theme.textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.w800,
                           letterSpacing: 0.1,
@@ -677,10 +732,11 @@ class _DeleteCacheTile extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        'Delete all cached videos',
+                        'delete_all_cached_videos'.tr,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.textTheme.bodySmall?.color
-                              ?.withOpacity(0.7),
+                          color: theme.textTheme.bodySmall?.color?.withOpacity(
+                            0.7,
+                          ),
                         ),
                       ),
                     ],
@@ -700,12 +756,16 @@ class _DeleteCacheTile extends StatelessWidget {
     );
   }
 }
+
 class _TipsCard extends StatelessWidget {
   const _TipsCard({required this.isDark});
+
   final bool isDark;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -713,10 +773,7 @@ class _TipsCard extends StatelessWidget {
             ? Colors.blue.withOpacity(0.1)
             : Colors.blue.withOpacity(0.08),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.blue.withOpacity(0.3),
-          width: 1,
-        ),
+        border: Border.all(color: Colors.blue.withOpacity(0.3), width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -730,7 +787,7 @@ class _TipsCard extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Text(
-                'Pro Tips',
+                'cache_pro_tips_title'.tr,
                 style: theme.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: theme.colorScheme.primary,
@@ -740,10 +797,9 @@ class _TipsCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            '• Pre-Cache automatically saves upcoming videos for faster playback\n'
-            '• Videos are automatically removed after ${AppSettings.videoCacheDuration} days\n'
-            '• WiFi-only mode helps save mobile data\n'
-            '• Cache can be manually cleared anytime',
+            'cache_pro_tips_body'.trParams({
+              'days': AppSettings.videoCacheDuration.toString(),
+            }),
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.textTheme.bodySmall?.color?.withOpacity(0.8),
               height: 1.6,

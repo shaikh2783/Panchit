@@ -3,22 +3,28 @@ import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
 import '../../../../core/theme/ui_constants.dart';
 import '../../domain/jobs_repository.dart';
 import '../../data/models/job.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 class JobEditPage extends StatefulWidget {
   const JobEditPage({super.key});
+
   @override
   State<JobEditPage> createState() => _JobEditPageState();
 }
+
 class _JobEditPageState extends State<JobEditPage> {
   final _formKey = GlobalKey<FormState>();
   final _picker = ImagePicker();
+
   late Job _job;
   bool _init = false;
+
   final _titleCtrl = TextEditingController();
   final _messageCtrl = TextEditingController();
   final _locationCtrl = TextEditingController();
@@ -26,6 +32,7 @@ class _JobEditPageState extends State<JobEditPage> {
   final _salaryMaxCtrl = TextEditingController();
   final _salaryMinCurrencyCtrl = TextEditingController(text: '24');
   final _salaryMaxCurrencyCtrl = TextEditingController(text: '24');
+
   int? _categoryId;
   String _payPer = 'per_month';
   String _type = 'full_time';
@@ -34,8 +41,10 @@ class _JobEditPageState extends State<JobEditPage> {
   String? _coverUrl;
   bool _uploadingCover = false;
   double _uploadProgress = 0;
+
   List<JobCategory> _categories = [];
   bool _loadingCategories = true;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -53,6 +62,7 @@ class _JobEditPageState extends State<JobEditPage> {
     }
     _loadCategories();
   }
+
   @override
   void dispose() {
     _titleCtrl.dispose();
@@ -64,6 +74,7 @@ class _JobEditPageState extends State<JobEditPage> {
     _salaryMaxCurrencyCtrl.dispose();
     super.dispose();
   }
+
   Future<void> _loadCategories() async {
     setState(() => _loadingCategories = true);
     try {
@@ -77,6 +88,7 @@ class _JobEditPageState extends State<JobEditPage> {
       setState(() => _loadingCategories = false);
     }
   }
+
   Future<void> _pickCover() async {
     try {
       final XFile? picked = await _picker.pickImage(source: ImageSource.gallery, imageQuality: 85);
@@ -111,6 +123,7 @@ class _JobEditPageState extends State<JobEditPage> {
       if (mounted) setState(() => _uploadingCover = false);
     }
   }
+
   void _removeCover() {
     setState(() {
       _coverSource = null;
@@ -118,6 +131,7 @@ class _JobEditPageState extends State<JobEditPage> {
       _uploadProgress = 0;
     });
   }
+
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _submitting = true);
@@ -147,6 +161,7 @@ class _JobEditPageState extends State<JobEditPage> {
       if (mounted) setState(() => _submitting = false);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -206,6 +221,7 @@ class _JobEditPageState extends State<JobEditPage> {
               ]),
             ),
             SizedBox(height: UI.lg),
+
             TextFormField(
               controller: _titleCtrl,
               decoration: InputDecoration(labelText: 'job_title'.tr, prefixIcon: const Icon(Iconsax.briefcase_copy)),
@@ -225,6 +241,7 @@ class _JobEditPageState extends State<JobEditPage> {
               validator: (v) => (v == null || v.trim().isEmpty) ? 'required'.tr : null,
             ),
             SizedBox(height: UI.md),
+
             InputDecorator(
               decoration: InputDecoration(labelText: 'category'.tr, prefixIcon: const Icon(Iconsax.category_2_copy)),
               child: _loadingCategories
@@ -241,6 +258,7 @@ class _JobEditPageState extends State<JobEditPage> {
                     ),
             ),
             SizedBox(height: UI.md),
+
             Row(children: [
               Expanded(
                 child: TextFormField(
@@ -278,6 +296,7 @@ class _JobEditPageState extends State<JobEditPage> {
                 ),
               ),
             ]),
+
             SizedBox(height: UI.md),
             InputDecorator(
               decoration: InputDecoration(labelText: 'pay_salary_per'.tr, prefixIcon: const Icon(Iconsax.calendar_1_copy)),
@@ -285,11 +304,11 @@ class _JobEditPageState extends State<JobEditPage> {
                 isExpanded: true,
                 value: _payPer,
                 underline: const SizedBox.shrink(),
-                items: const [
-                  DropdownMenuItem(value: 'per_hour', child: Text('Per Hour')),
-                  DropdownMenuItem(value: 'per_day', child: Text('Per Day')),
-                  DropdownMenuItem(value: 'per_week', child: Text('Per Week')),
-                  DropdownMenuItem(value: 'per_month', child: Text('Per Month')),
+                items:  [
+                  DropdownMenuItem(value: 'per_hour', child: Text('per_hour_option'.tr)),
+                  DropdownMenuItem(value: 'per_day', child: Text('per_day_option'.tr)),
+                  DropdownMenuItem(value: 'per_week', child: Text('per_week_option'.tr)),
+                  DropdownMenuItem(value: 'per_month', child: Text('per_month_option'.tr)),
                 ],
                 onChanged: (v) => setState(() => _payPer = v ?? 'per_month'),
               ),
@@ -301,12 +320,12 @@ class _JobEditPageState extends State<JobEditPage> {
                 isExpanded: true,
                 value: _type,
                 underline: const SizedBox.shrink(),
-                items: const [
-                  DropdownMenuItem(value: 'full_time', child: Text('Full Time')),
-                  DropdownMenuItem(value: 'part_time', child: Text('Part Time')),
-                  DropdownMenuItem(value: 'contract', child: Text('Contract')),
-                  DropdownMenuItem(value: 'temporary', child: Text('Temporary')),
-                  DropdownMenuItem(value: 'internship', child: Text('Internship')),
+                items:  [
+                  DropdownMenuItem(value: 'full_time', child: Text('full_time_option'.tr)),
+                  DropdownMenuItem(value: 'part_time', child: Text('part_time_option'.tr)),
+                  DropdownMenuItem(value: 'contract', child: Text('contract_option'.tr)),
+                  DropdownMenuItem(value: 'temporary', child: Text('temporary_option'.tr)),
+                  DropdownMenuItem(value: 'internship', child: Text('internship_option'.tr)),
                 ],
                 onChanged: (v) => setState(() => _type = v ?? 'full_time'),
               ),

@@ -2,26 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
+
 import '../../../../core/theme/ui_constants.dart';
 import '../../data/models/funding.dart';
 import '../../domain/funding_repository.dart';
+
 class FundingDonatePage extends StatefulWidget {
   final Funding funding;
+
   const FundingDonatePage({super.key, required this.funding});
+
   @override
   State<FundingDonatePage> createState() => _FundingDonatePageState();
 }
+
 class _FundingDonatePageState extends State<FundingDonatePage> {
   final _formKey = GlobalKey<FormState>();
   final _amountCtrl = TextEditingController();
   bool _donating = false;
+
   @override
   void dispose() {
     _amountCtrl.dispose();
     super.dispose();
   }
+
   Future<void> _donate() async {
     if (!_formKey.currentState!.validate()) return;
+
     final amount = double.tryParse(_amountCtrl.text) ?? 0;
     setState(() => _donating = true);
     try {
@@ -37,10 +45,12 @@ class _FundingDonatePageState extends State<FundingDonatePage> {
       if (mounted) setState(() => _donating = false);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final remaining = widget.funding.remainingAmount;
+
     return Scaffold(
       appBar: AppBar(title: Text('donate'.tr)),
       body: SingleChildScrollView(
@@ -107,6 +117,7 @@ class _FundingDonatePageState extends State<FundingDonatePage> {
                 ),
               ),
               SizedBox(height: UI.xl),
+
               // Amount input
               Text(
                 'donation_amount'.tr,
@@ -129,6 +140,7 @@ class _FundingDonatePageState extends State<FundingDonatePage> {
                 },
               ),
               SizedBox(height: UI.lg),
+
               // Quick amounts
               Text(
                 'quick_amounts'.tr,
@@ -146,6 +158,7 @@ class _FundingDonatePageState extends State<FundingDonatePage> {
                 }).toList(),
               ),
               SizedBox(height: UI.xl * 2),
+
               // Donate button
               SizedBox(
                 width: double.infinity,

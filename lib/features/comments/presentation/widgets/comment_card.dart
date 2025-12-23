@@ -6,6 +6,7 @@ import '../../data/models/comment.dart';
 import '../../application/comments_notifier.dart';
 import '../../application/replies_notifier.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 class CommentCard extends StatefulWidget {
   const CommentCard({
     super.key,
@@ -13,25 +14,31 @@ class CommentCard extends StatefulWidget {
     this.isReply = false,
     this.onReplyTap,
   });
+
   final CommentModel comment;
   final bool isReply;
   final VoidCallback? onReplyTap;
+
   @override
   State<CommentCard> createState() => _CommentCardState();
 }
+
 class _CommentCardState extends State<CommentCard> {
   bool _isEditing = false;
   late TextEditingController _editController;
+
   @override
   void initState() {
     super.initState();
     _editController = TextEditingController(text: widget.comment.textPlain);
   }
+
   @override
   void dispose() {
     _editController.dispose();
     super.dispose();
   }
+
   String _formatTime(String timeStr) {
     try {
       final dateTime = DateTime.parse(timeStr);
@@ -41,6 +48,7 @@ class _CommentCardState extends State<CommentCard> {
       return timeStr;
     }
   }
+
   Future<void> _handleReaction(String reaction) async {
     if (widget.isReply) {
       final repliesNotifier = context.read<RepliesNotifier>();
@@ -57,9 +65,11 @@ class _CommentCardState extends State<CommentCard> {
       );
     }
   }
+
   Future<void> _handleEdit() async {
     final newText = _editController.text.trim();
     if (newText.isEmpty) return;
+
     bool success;
     if (widget.isReply) {
       final repliesNotifier = context.read<RepliesNotifier>();
@@ -75,10 +85,12 @@ class _CommentCardState extends State<CommentCard> {
         newText: newText,
       );
     }
+
     if (success && mounted) {
       setState(() => _isEditing = false);
     }
   }
+
   Future<void> _handleDelete() async {
     final confirmed = await showDialog<bool>(
       context: context,
@@ -98,6 +110,7 @@ class _CommentCardState extends State<CommentCard> {
         ],
       ),
     );
+
     if (confirmed == true && mounted) {
       if (widget.isReply) {
         final repliesNotifier = context.read<RepliesNotifier>();
@@ -111,6 +124,7 @@ class _CommentCardState extends State<CommentCard> {
       }
     }
   }
+
   void _showReactionPicker() {
     showModalBottomSheet(
       context: context,
@@ -206,10 +220,12 @@ class _CommentCardState extends State<CommentCard> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final mediaAsset = context.read<AppConfig>().mediaAsset;
+
     return Container(
       margin: EdgeInsets.only(
         left: widget.isReply ? 48 : 8,
@@ -306,6 +322,7 @@ class _CommentCardState extends State<CommentCard> {
             ],
           ),
           const SizedBox(height: 8),
+
           // Comment text or edit field
           if (_isEditing) ...[
             TextField(
@@ -358,7 +375,9 @@ class _CommentCardState extends State<CommentCard> {
               ),
             ],
           ],
+
           const SizedBox(height: 8),
+
           // Action buttons
           Row(
             children: [
@@ -393,7 +412,9 @@ class _CommentCardState extends State<CommentCard> {
                   ),
                 ),
               ),
+
               const SizedBox(width: 12),
+
               // Reply button (only for top-level comments)
               if (!widget.isReply)
                 InkWell(
@@ -428,6 +449,7 @@ class _CommentCardState extends State<CommentCard> {
       ),
     );
   }
+
   Color _getReactionColor(String? reaction) {
     switch (reaction) {
       case 'like':
@@ -449,15 +471,18 @@ class _CommentCardState extends State<CommentCard> {
     }
   }
 }
+
 class _ReactionButton extends StatelessWidget {
   const _ReactionButton({
     required this.emoji,
     required this.label,
     required this.onTap,
   });
+
   final String emoji;
   final String label;
   final VoidCallback onTap;
+
   @override
   Widget build(BuildContext context) {
     return InkWell(

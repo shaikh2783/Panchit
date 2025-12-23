@@ -1,6 +1,7 @@
 import 'colored_pattern_model.dart';
 import 'reaction_model.dart';
 import 'upload_settings_model.dart';
+
 /// نموذج البيانات الرئيسي لإعدادات التطبيق
 class AppConfig {
   final AppInfo appInfo;
@@ -14,6 +15,7 @@ class AppConfig {
   final List<Map<String, dynamic>> activities;
   final Map<String, dynamic>? expandable;
   final String timestamp;
+
   const AppConfig({
     required this.appInfo,
     required this.uiSettings,
@@ -27,8 +29,10 @@ class AppConfig {
     this.expandable,
     required this.timestamp,
   });
+
   factory AppConfig.fromJson(Map<String, dynamic> json) {
     final data = json['data'] ?? json;
+    
     return AppConfig(
       appInfo: AppInfo.fromJson(data['app_info'] ?? {}),
       uiSettings: UiSettings.fromJson(data['ui_settings'] ?? {}),
@@ -51,6 +55,7 @@ class AppConfig {
       timestamp: json['timestamp']?.toString() ?? DateTime.now().toIso8601String(),
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'data': {
@@ -69,18 +74,21 @@ class AppConfig {
     };
   }
 }
+
 /// معلومات التطبيق الأساسية
 class AppInfo {
   final String version;
   final String sngineVersion;
   final String lastUpdated;
   final String serverTime;
+
   const AppInfo({
     required this.version,
     required this.sngineVersion,
     required this.lastUpdated,
     required this.serverTime,
   });
+
   factory AppInfo.fromJson(Map<String, dynamic> json) {
     return AppInfo(
       version: json['version']?.toString() ?? '1.0.0',
@@ -89,6 +97,7 @@ class AppInfo {
       serverTime: json['server_time']?.toString() ?? '',
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'version': version,
@@ -98,6 +107,7 @@ class AppInfo {
     };
   }
 }
+
 /// إعدادات واجهة المستخدم
 class UiSettings {
   final String appName;
@@ -110,6 +120,7 @@ class UiSettings {
   final String dateFormat;
   final int newsfeedResults;
   final int offlineTime;
+
   const UiSettings({
     required this.appName,
     required this.appDescription,
@@ -122,6 +133,7 @@ class UiSettings {
     required this.newsfeedResults,
     required this.offlineTime,
   });
+
   factory UiSettings.fromJson(Map<String, dynamic> json) {
     return UiSettings(
       appName: json['app_name']?.toString() ?? 'Panchit',
@@ -136,6 +148,7 @@ class UiSettings {
       offlineTime: int.tryParse(json['offline_time']?.toString() ?? '') ?? 5,
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'app_name': appName,
@@ -151,18 +164,21 @@ class UiSettings {
     };
   }
 }
+
 /// ميزات التطبيق
 class Features {
   final PostsFeatures posts;
   final SocialFeatures social;
   final MonetizationFeatures monetization;
   final ContentFeatures content;
+
   const Features({
     required this.posts,
     required this.social,
     required this.monetization,
     required this.content,
   });
+
   factory Features.fromJson(Map<String, dynamic> json) {
     return Features(
       posts: PostsFeatures.fromJson(json['posts'] ?? {}),
@@ -171,6 +187,7 @@ class Features {
       content: ContentFeatures.fromJson(json['content'] ?? {}),
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'posts': posts.toJson(),
@@ -180,6 +197,7 @@ class Features {
     };
   }
 }
+
 /// ميزات المنشورات
 class PostsFeatures {
   final bool enabled;
@@ -192,6 +210,7 @@ class PostsFeatures {
   final bool liveVideos;
   final bool stories;
   final bool schedulePosts;
+
   const PostsFeatures({
     required this.enabled,
     required this.coloredPosts,
@@ -204,6 +223,7 @@ class PostsFeatures {
     required this.stories,
     required this.schedulePosts,
   });
+
   factory PostsFeatures.fromJson(Map<String, dynamic> json) {
     return PostsFeatures(
       enabled: json['enabled'] == true || json['enabled']?.toString() == '1',
@@ -218,6 +238,7 @@ class PostsFeatures {
       schedulePosts: json['schedule_posts'] == true || json['schedule_posts']?.toString() == '1',
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'enabled': enabled,
@@ -233,6 +254,7 @@ class PostsFeatures {
     };
   }
 }
+
 /// ميزات التواصل الاجتماعي
 class SocialFeatures {
   final bool friendsEnabled;
@@ -243,6 +265,7 @@ class SocialFeatures {
   final bool chat;
   final bool voiceCalls;
   final bool videoCalls;
+
   const SocialFeatures({
     required this.friendsEnabled,
     required this.followersEnabled,
@@ -253,6 +276,7 @@ class SocialFeatures {
     required this.voiceCalls,
     required this.videoCalls,
   });
+
   factory SocialFeatures.fromJson(Map<String, dynamic> json) {
     return SocialFeatures(
       friendsEnabled: json['friends_enabled'] == true || json['friends_enabled']?.toString() == '1',
@@ -265,6 +289,7 @@ class SocialFeatures {
       videoCalls: json['video_calls'] == true || json['video_calls']?.toString() == '1',
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'friends_enabled': friendsEnabled,
@@ -278,6 +303,7 @@ class SocialFeatures {
     };
   }
 }
+
 /// ميزات تحقيق الدخل
 class MonetizationFeatures {
   final bool packages;
@@ -288,6 +314,7 @@ class MonetizationFeatures {
   final bool market;
   final bool offers;
   final bool jobs;
+
   const MonetizationFeatures({
     required this.packages,
     required this.wallet,
@@ -298,6 +325,7 @@ class MonetizationFeatures {
     required this.offers,
     required this.jobs,
   });
+
   factory MonetizationFeatures.fromJson(Map<String, dynamic> json) {
     return MonetizationFeatures(
       packages: json['packages'] == true || json['packages']?.toString() == '1',
@@ -310,6 +338,7 @@ class MonetizationFeatures {
       jobs: json['jobs'] == true || json['jobs']?.toString() == '1',
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'packages': packages,
@@ -323,6 +352,7 @@ class MonetizationFeatures {
     };
   }
 }
+
 /// ميزات المحتوى
 class ContentFeatures {
   final bool blogs;
@@ -330,6 +360,7 @@ class ContentFeatures {
   final bool movies;
   final bool games;
   final bool courses;
+
   const ContentFeatures({
     required this.blogs,
     required this.forums,
@@ -337,6 +368,7 @@ class ContentFeatures {
     required this.games,
     required this.courses,
   });
+
   factory ContentFeatures.fromJson(Map<String, dynamic> json) {
     return ContentFeatures(
       blogs: json['blogs'] == true || json['blogs']?.toString() == '1',
@@ -346,6 +378,7 @@ class ContentFeatures {
       courses: json['courses'] == true || json['courses']?.toString() == '1',
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'blogs': blogs,
@@ -356,6 +389,7 @@ class ContentFeatures {
     };
   }
 }
+
 /// صلاحيات المستخدم
 class UserPermissions {
   final bool canCreatePages;
@@ -366,6 +400,7 @@ class UserPermissions {
   final bool isVerified;
   final bool isSubscribed;
   final bool isAdult;
+
   const UserPermissions({
     required this.canCreatePages,
     required this.canCreateGroups,
@@ -376,6 +411,7 @@ class UserPermissions {
     required this.isSubscribed,
     required this.isAdult,
   });
+
   factory UserPermissions.fromJson(Map<String, dynamic> json) {
     return UserPermissions(
       canCreatePages: json['can_create_pages'] == true || json['can_create_pages']?.toString() == '1',
@@ -388,6 +424,7 @@ class UserPermissions {
       isAdult: json['is_adult'] == true || json['is_adult']?.toString() == '1',
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'can_create_pages': canCreatePages,

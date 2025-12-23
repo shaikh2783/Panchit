@@ -5,63 +5,78 @@ import 'package:provider/provider.dart';
 import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:video_player/video_player.dart';
 import 'package:get/get.dart';
+
 import 'package:snginepro/core/theme/theme_controller.dart';
 import 'package:snginepro/features/feed/data/models/upload_file_data.dart';
 import 'package:snginepro/features/feed/data/models/create_post_request.dart';
 import 'package:snginepro/features/feed/data/services/post_management_api_service.dart';
 import 'package:snginepro/features/feed/data/datasources/posts_api_service.dart';
 import 'package:snginepro/core/network/api_client.dart';
+
 class CreateReelPage extends StatefulWidget {
   const CreateReelPage({super.key});
+
   @override
   State<CreateReelPage> createState() => _CreateReelPageState();
 }
+
 class _CreateReelPageState extends State<CreateReelPage> {
   final TextEditingController _descriptionController = TextEditingController();
   final ThemeController _themeController = Get.find();
+  
   File? _videoFile;
   CachedVideoPlayerPlus? _videoController;
   UploadedFileData? _uploadedVideo;
   bool _isUploading = false;
   bool _isCreating = false;
   double _uploadProgress = 0.0;
+
   @override
   void dispose() {
     _descriptionController.dispose();
     _videoController?.controller.dispose();
     super.dispose();
   }
+
   Future<void> _pickVideo() async {
     final picker = ImagePicker();
     final XFile? videoFile = await picker.pickVideo(
       source: ImageSource.gallery,
     );
+    
     if (videoFile != null) {
       setState(() {
         _videoFile = File(videoFile.path);
       });
+      
       // Initialize video player for preview
       _videoController = CachedVideoPlayerPlus.file(
         _videoFile!,
       );
       await _videoController!.initialize();
       setState(() {});
+      
       _videoController!.controller.setLooping(true);
       _videoController!.controller.play();
+      
       // Auto-upload video
       await _uploadVideo();
     }
   }
+
   Future<void> _uploadVideo() async {
     if (_videoFile == null) return;
+
     setState(() {
       _isUploading = true;
       _uploadProgress = 0.0;
     });
+
     try {
       final postsService = PostsApiService(
         context.read<ApiClient>(),
       );
+
       final result = await postsService.uploadFile(
         _videoFile!,
         type: FileUploadType.video,
@@ -71,14 +86,16 @@ class _CreateReelPageState extends State<CreateReelPage> {
           });
         },
       );
+
       setState(() {
         _uploadedVideo = result;
         _isUploading = false;
       });
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('✅ Video uploaded successfully'),
+            content: Text('✅ تم رفع الفيديو بنجاح'),
             backgroundColor: Colors.green,
           ),
         );
@@ -87,29 +104,33 @@ class _CreateReelPageState extends State<CreateReelPage> {
       setState(() {
         _isUploading = false;
       });
+      
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('❌ Video upload failed: $e'),
+            content: Text('❌ فشل رفع الفيديو: $e'),
             backgroundColor: Colors.red,
           ),
         );
       }
     }
   }
+
   Future<void> _createReel() async {
     if (_uploadedVideo == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('⚠️ Please select a video first'),
+          content: Text('⚠️ يرجى اختيار فيديو أولاً'),
           backgroundColor: Colors.orange,
         ),
       );
       return;
     }
+
     setState(() {
       _isCreating = true;
     });
+
     try {
       // Extract relative path from thumb URL
       String? thumbPath;
@@ -121,10 +142,12 @@ class _CreateReelPageState extends State<CreateReelPage> {
           thumbPath = thumbUrl;
         }
       }
+
       final reelData = {
         'source': _uploadedVideo!.source,
         if (thumbPath != null) 'thumb': thumbPath,
       };
+
       final request = CreatePostRequest(
         handle: 'me',
         privacy: 'public',
@@ -132,28 +155,31 @@ class _CreateReelPageState extends State<CreateReelPage> {
         reel: reelData,
         reelThumbnail: thumbPath,
       );
+
       final postsService = PostsApiService(
         context.read<ApiClient>(),
       );
+
       final response = await postsService.createPostAdvanced(request);
+
       if (response.isSuccess) {
         if (mounted) {
           Navigator.pop(context, true); // Return true to refresh reels
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('🎉 The reel has been successfully deployed!'),
+              content: Text('🎉 تم نشر الريل بنجاح!'),
               backgroundColor: Colors.green,
             ),
           );
         }
       } else {
-        throw Exception(response.message ?? 'Failure to build the railway');
+        throw Exception(response.message ?? 'فشل إنشاء الريل');
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('❌ Real deployment failed: $e'),
+            content: Text('❌ فشل نشر الريل: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -166,9 +192,11 @@ class _CreateReelPageState extends State<CreateReelPage> {
       }
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final isDark = _themeController.isDarkMode;
+    
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF1a1a1a) : Colors.white,
       appBar: AppBar(
@@ -182,7 +210,7 @@ class _CreateReelPageState extends State<CreateReelPage> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'Building Rail',
+          'إنشاء ريل',
           style: TextStyle(
             color: isDark ? Colors.white : Colors.black,
             fontSize: 20,
@@ -194,7 +222,7 @@ class _CreateReelPageState extends State<CreateReelPage> {
             TextButton(
               onPressed: _createReel,
               child: const Text(
-                'to publish',
+                'نشر',
                 style: TextStyle(
                   color: Color(0xFFE1306C),
                   fontSize: 16,
@@ -221,6 +249,7 @@ class _CreateReelPageState extends State<CreateReelPage> {
           : _buildPreviewScreen(isDark),
     );
   }
+
   Widget _buildSelectVideoScreen(bool isDark) {
     return Center(
       child: Column(
@@ -233,7 +262,7 @@ class _CreateReelPageState extends State<CreateReelPage> {
           ),
           const SizedBox(height: 24),
           Text(
-            'Choose a video for Reel',
+            'اختر فيديو للريل',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -244,7 +273,7 @@ class _CreateReelPageState extends State<CreateReelPage> {
           ElevatedButton.icon(
             onPressed: _pickVideo,
             icon: const Icon(Icons.video_library),
-            label: const Text('Select video'),
+            label: const Text('اختيار فيديو'),
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFE1306C),
               foregroundColor: Colors.white,
@@ -258,6 +287,7 @@ class _CreateReelPageState extends State<CreateReelPage> {
       ),
     );
   }
+
   Widget _buildPreviewScreen(bool isDark) {
     return Column(
       children: [
@@ -280,6 +310,7 @@ class _CreateReelPageState extends State<CreateReelPage> {
                     ),
                   ),
                 ),
+              
               // Upload progress overlay
               if (_isUploading)
                 Container(
@@ -296,7 +327,7 @@ class _CreateReelPageState extends State<CreateReelPage> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                        'Video uploading...${(_uploadProgress * 100).toInt()}%',
+                          'جاري رفع الفيديو... ${(_uploadProgress * 100).toInt()}%',
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
@@ -306,6 +337,7 @@ class _CreateReelPageState extends State<CreateReelPage> {
                     ),
                   ),
                 ),
+              
               // Change video button
               if (!_isUploading && _uploadedVideo != null)
                 Positioned(
@@ -323,6 +355,7 @@ class _CreateReelPageState extends State<CreateReelPage> {
             ],
           ),
         ),
+        
         // Description input
         Container(
           padding: const EdgeInsets.all(16),
@@ -339,7 +372,7 @@ class _CreateReelPageState extends State<CreateReelPage> {
             maxLines: 3,
             textAlign: TextAlign.right,
             decoration: InputDecoration(
-              hintText: 'Add a description of the reel...',
+              hintText: 'أضف وصف للريل...',
               hintStyle: TextStyle(
                 color: isDark ? Colors.grey[600] : Colors.grey[400],
               ),

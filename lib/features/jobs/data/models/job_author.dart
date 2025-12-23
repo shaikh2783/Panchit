@@ -2,11 +2,13 @@ class JobAuthor {
   final int userId;
   final String userName;
   final String userPicture;
+
   const JobAuthor({
     required this.userId,
     required this.userName,
     required this.userPicture,
   });
+
   factory JobAuthor.fromJson(Map<String, dynamic> json) {
     return JobAuthor(
       userId: json['user_id'] is String

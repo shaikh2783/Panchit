@@ -2,6 +2,7 @@ import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/foundation.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../data/agora_config.dart';
+
 /// خدمة إدارة البث المباشر باستخدام Agora
 class AgoraService extends ChangeNotifier {
   RtcEngine? _engine;
@@ -12,9 +13,11 @@ class AgoraService extends ChangeNotifier {
   bool _isSpeakerEnabled = true;
   String? _currentChannel;
   int? _currentUid;
+  
   // إحصائيات البث
   final Map<int, bool> _remoteUsers = {};
   RtcStats? _rtcStats;
+  
   // Getters
   RtcEngine? get engine => _engine;
   bool get isInitialized => _isInitialized;
@@ -28,19 +31,26 @@ class AgoraService extends ChangeNotifier {
   RtcStats? get rtcStats => _rtcStats;
   bool get hasRemoteUsers => _remoteUsers.isNotEmpty;
   int get remoteUsersCount => _remoteUsers.length;
+
   /// تهيئة محرك Agora
   Future<bool> initialize() async {
     try {
       if (!AgoraConfig.isConfigured) {
         return false;
       }
+
+
       // طلب الصلاحيات مع معالجة محسنة
       final permissionsGranted = await _requestPermissionsImproved();
+      
       if (!permissionsGranted) {
         return false;
       }
+
+
       // إنشاء محرك Agora
       _engine = createAgoraRtcEngine();
+      
       // تهيئة المحرك
       await _engine!.initialize(
         RtcEngineContext(
@@ -48,52 +58,69 @@ class AgoraService extends ChangeNotifier {
           channelProfile: ChannelProfileType.channelProfileCommunication,
         ),
       );
+
       // تكوين إعدادات الفيديو
       await _setupVideoConfig();
+      
       // تكوين إعدادات الصوت
       await _setupAudioConfig();
+      
       // إعداد Event Handlers
       _setupEventHandlers();
+      
       _isInitialized = true;
       notifyListeners();
+      
       return true;
+      
     } catch (e) {
       return false;
     }
   }
+
   /// طلب الصلاحيات المطلوبة بطريقة محسنة
   Future<bool> _requestPermissionsImproved() async {
     try {
+      
       // التحقق من حالة الصلاحيات الحالية أولاً
       final cameraCurrentStatus = await Permission.camera.status;
       final micCurrentStatus = await Permission.microphone.status;
+      
+      
       // إذا كانت الصلاحيات ممنوحة مسبقاً، لا نحتاج لطلبها مجدداً
       if (cameraCurrentStatus.isGranted && micCurrentStatus.isGranted) {
         return true;
       }
+      
       // طلب صلاحية الكاميرا إذا لم تكن ممنوحة
       if (!cameraCurrentStatus.isGranted) {
         final cameraStatus = await Permission.camera.request();
+        
         if (!cameraStatus.isGranted) {
           if (cameraStatus.isPermanentlyDenied) {
           }
           return false;
         }
       }
+      
       // طلب صلاحية المايكروفون إذا لم تكن ممنوحة
       if (!micCurrentStatus.isGranted) {
         final micStatus = await Permission.microphone.request();
+        
         if (!micStatus.isGranted) {
           if (micStatus.isPermanentlyDenied) {
           }
           return false;
         }
       }
+      
       return true;
+      
     } catch (e) {
       return false;
     }
   }
+
   /// تكوين إعدادات الفيديو
   Future<void> _setupVideoConfig() async {
     await _engine!.setVideoEncoderConfiguration(
@@ -108,9 +135,11 @@ class AgoraService extends ChangeNotifier {
         mirrorMode: VideoMirrorModeType.videoMirrorModeAuto,
       ),
     );
+    
     // تمكين الفيديو
     await _engine!.enableVideo();
   }
+
   /// تكوين إعدادات الصوت
   Future<void> _setupAudioConfig() async {
     await _engine!.enableAudio();
@@ -119,6 +148,7 @@ class AgoraService extends ChangeNotifier {
       scenario: AudioScenarioType.audioScenarioGameStreaming,
     );
   }
+
   /// إعداد مستمعي الأحداث
   void _setupEventHandlers() {
     _engine!.registerEventHandler(
@@ -130,6 +160,7 @@ class AgoraService extends ChangeNotifier {
           _currentUid = connection.localUid;
           notifyListeners();
         },
+
         // عند مغادرة القناة
         onLeaveChannel: (connection, stats) {
           _isJoined = false;
@@ -138,27 +169,32 @@ class AgoraService extends ChangeNotifier {
           _remoteUsers.clear();
           notifyListeners();
         },
+
         // عند انضمام مستخدم آخر
         onUserJoined: (connection, remoteUid, elapsed) {
           _remoteUsers[remoteUid] = true;
           notifyListeners();
         },
+
         // عند مغادرة مستخدم آخر
         onUserOffline: (connection, remoteUid, reason) {
           _remoteUsers.remove(remoteUid);
           notifyListeners();
         },
+
         // عند تحديث إحصائيات الشبكة
         onRtcStats: (connection, stats) {
           _rtcStats = stats;
           notifyListeners();
         },
+
         // عند حدوث خطأ
         onError: (err, msg) {
         },
       ),
     );
   }
+
   /// الانضمام لقناة البث
   Future<bool> joinChannel({
     required String channelName,
@@ -168,6 +204,7 @@ class AgoraService extends ChangeNotifier {
     if (!_isInitialized || _engine == null) {
       return false;
     }
+
     try {
       // الانضمام للقناة
       await _engine!.joinChannel(
@@ -179,63 +216,80 @@ class AgoraService extends ChangeNotifier {
           channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
         ),
       );
+      
       return true;
+      
     } catch (e) {
       return false;
     }
   }
+
   /// مغادرة القناة الحالية
   Future<void> leaveChannel() async {
     if (_engine != null && _isJoined) {
       await _engine!.leaveChannel();
     }
   }
+
   /// تشغيل/إيقاف الصوت المحلي
   Future<void> toggleMute() async {
     if (_engine == null) return;
+    
     _isMuted = !_isMuted;
     await _engine!.muteLocalAudioStream(_isMuted);
     notifyListeners();
   }
+
   /// تشغيل/إيقاف الكاميرا المحلية
   Future<void> toggleCamera() async {
     if (_engine == null) return;
+    
     _isCameraEnabled = !_isCameraEnabled;
     await _engine!.muteLocalVideoStream(!_isCameraEnabled);
     notifyListeners();
   }
+
   /// تشغيل/إيقاف السماعة
   Future<void> toggleSpeaker() async {
     if (_engine == null) return;
+    
     _isSpeakerEnabled = !_isSpeakerEnabled;
     await _engine!.setEnableSpeakerphone(_isSpeakerEnabled);
     notifyListeners();
   }
+
   /// تبديل الكاميرا (أمامية/خلفية)
   Future<void> switchCamera() async {
     if (_engine == null) return;
+    
     await _engine!.switchCamera();
   }
+
   /// الحصول على معرف المستخدم المحلي
   int getLocalUid() {
     return _currentUid ?? 0;
   }
+
   /// التحقق من وجود مستخدم عن بُعد
   bool hasRemoteUser(int uid) {
     return _remoteUsers.containsKey(uid);
   }
+
   /// تنظيف الموارد
   Future<void> dispose() async {
     if (_isJoined) {
       await leaveChannel();
     }
+    
     if (_engine != null) {
       await _engine!.release();
       _engine = null;
     }
+    
     _isInitialized = false;
     _isJoined = false;
     _remoteUsers.clear();
+    
     super.dispose();
   }
 }

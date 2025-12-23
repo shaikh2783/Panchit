@@ -6,50 +6,62 @@ import 'package:snginepro/core/models/reaction_user_model.dart';
 import 'package:snginepro/core/services/reaction_users_api_service.dart';
 import 'package:snginepro/core/services/reactions_service.dart';
 import 'package:snginepro/core/network/api_client.dart';
+
 class ReactionUsersBottomSheet extends StatefulWidget {
   final String type; // 'post', 'photo', or 'comment'
   final int id;
   final Map<String, int> reactionStats;
+
   const ReactionUsersBottomSheet({
     super.key,
     required this.type,
     required this.id,
     required this.reactionStats,
   });
+
   @override
   State<ReactionUsersBottomSheet> createState() =>
       _ReactionUsersBottomSheetState();
 }
+
 class _ReactionUsersBottomSheetState extends State<ReactionUsersBottomSheet>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   late ReactionUsersApiService _apiService;
+  
   String _selectedReaction = 'all';
   List<ReactionUser> _users = [];
   bool _isLoading = false;
   bool _hasMore = true;
   int _offset = 0;
   String? _error;
+
   @override
   void initState() {
     super.initState();
     _apiService = ReactionUsersApiService(context.read<ApiClient>());
+    
     // Create tabs: All + each reaction type that has users
     final tabs = ['all'] + widget.reactionStats.keys.toList();
     _tabController = TabController(length: tabs.length, vsync: this);
+    
     _loadUsers();
   }
+
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
   }
+
   Future<void> _loadUsers() async {
     if (_isLoading || !_hasMore) return;
+
     setState(() {
       _isLoading = true;
       _error = null;
     });
+
     try {
       final response = await _apiService.getReactionUsers(
         type: widget.type,
@@ -57,6 +69,7 @@ class _ReactionUsersBottomSheetState extends State<ReactionUsersBottomSheet>
         reaction: _selectedReaction,
         offset: _offset,
       );
+
       setState(() {
         if (_offset == 0) {
           _users = response.users;
@@ -74,6 +87,7 @@ class _ReactionUsersBottomSheetState extends State<ReactionUsersBottomSheet>
       setState(() => _isLoading = false);
     }
   }
+
   void _changeReaction(String reaction) {
     setState(() {
       _selectedReaction = reaction;
@@ -83,11 +97,13 @@ class _ReactionUsersBottomSheetState extends State<ReactionUsersBottomSheet>
     });
     _loadUsers();
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final totalCount =
         widget.reactionStats.values.fold(0, (sum, count) => sum + count);
+
     return Container(
       height: MediaQuery.of(context).size.height * 0.75,
       decoration: BoxDecoration(
@@ -106,6 +122,7 @@ class _ReactionUsersBottomSheetState extends State<ReactionUsersBottomSheet>
               borderRadius: BorderRadius.circular(2),
             ),
           ),
+
           // Header with total count
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -128,6 +145,7 @@ class _ReactionUsersBottomSheetState extends State<ReactionUsersBottomSheet>
               ],
             ),
           ),
+
           // Reaction tabs
           if (widget.reactionStats.isNotEmpty)
             Container(
@@ -154,7 +172,7 @@ class _ReactionUsersBottomSheetState extends State<ReactionUsersBottomSheet>
                   Tab(
                     child: Row(
                       children: [
-                        const Text('All'),
+                         Text('all_reactions'.tr),
                         const SizedBox(width: 4),
                         Text(
                           '($totalCount)',
@@ -188,6 +206,7 @@ class _ReactionUsersBottomSheetState extends State<ReactionUsersBottomSheet>
                 ],
               ),
             ),
+
           // Users list
           Expanded(
             child: _buildUsersList(),
@@ -196,6 +215,7 @@ class _ReactionUsersBottomSheetState extends State<ReactionUsersBottomSheet>
       ),
     );
   }
+
   Widget _buildUsersList() {
     if (_error != null && _users.isEmpty) {
       return Center(
@@ -215,15 +235,17 @@ class _ReactionUsersBottomSheetState extends State<ReactionUsersBottomSheet>
                 });
                 _loadUsers();
               },
-              child: const Text('Retry'),
+              child: Text('retry_button'.tr),
             ),
           ],
         ),
       );
     }
+
     if (_users.isEmpty && _isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
+
     if (_users.isEmpty) {
       return Center(
         child: Column(
@@ -248,6 +270,7 @@ class _ReactionUsersBottomSheetState extends State<ReactionUsersBottomSheet>
         ),
       );
     }
+
     return ListView.separated(
       padding: const EdgeInsets.symmetric(vertical: 8),
       itemCount: _users.length + (_hasMore ? 1 : 0),
@@ -267,14 +290,17 @@ class _ReactionUsersBottomSheetState extends State<ReactionUsersBottomSheet>
             child: const Center(child: CircularProgressIndicator()),
           );
         }
+
         final user = _users[index];
         return _buildUserTile(user);
       },
     );
   }
+
   Widget _buildUserTile(ReactionUser user) {
     final theme = Theme.of(context);
     final reaction = ReactionsService.instance.getReactionByName(user.reaction);
+
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       leading: Stack(
@@ -377,8 +403,10 @@ class _ReactionUsersBottomSheetState extends State<ReactionUsersBottomSheet>
       },
     );
   }
+
   Widget? _buildConnectionButton(ReactionUser user) {
     final theme = Theme.of(context);
+
     if (user.isFriend) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -404,7 +432,7 @@ class _ReactionUsersBottomSheetState extends State<ReactionUsersBottomSheet>
           minimumSize: const Size(80, 32),
           padding: const EdgeInsets.symmetric(horizontal: 12),
         ),
-        child: const Text('Following'),
+        child: Text('following_status'.tr),
       );
     } else if (user.noConnection) {
       return ElevatedButton(
@@ -415,12 +443,14 @@ class _ReactionUsersBottomSheetState extends State<ReactionUsersBottomSheet>
           minimumSize: const Size(80, 32),
           padding: const EdgeInsets.symmetric(horizontal: 12),
         ),
-        child:  Text('follow'.tr),
+        child: Text('follow_status'.tr),
       );
     }
+
     return null;
   }
 }
+
 // Helper function to show the bottom sheet
 void showReactionUsersSheet({
   required BuildContext context,

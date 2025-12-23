@@ -1,16 +1,22 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:snginepro/core/network/api_exception.dart';
+
 import '../../data/models/wallet_action_result.dart';
 import '../../data/models/wallet_package.dart';
 import '../../domain/wallet_repository.dart';
+
 class WalletPackagesCubit extends Cubit<WalletPackagesState> {
   WalletPackagesCubit(this._repository) : super(const WalletPackagesState());
+
   final WalletRepository _repository;
+
   Future<void> fetchPackages({bool forceRefresh = false}) async {
     if (state.status == WalletPackagesStatus.loading && !forceRefresh) {
       return;
     }
+
     emit(
       state.copyWith(
         status: WalletPackagesStatus.loading,
@@ -19,6 +25,7 @@ class WalletPackagesCubit extends Cubit<WalletPackagesState> {
         clearPurchaseResult: true,
       ),
     );
+
     try {
       final packages = await _repository.fetchPackages();
       emit(
@@ -42,6 +49,7 @@ class WalletPackagesCubit extends Cubit<WalletPackagesState> {
       );
     }
   }
+
   Future<WalletActionResult?> purchasePackage(int packageId) async {
     emit(
       state.copyWith(
@@ -51,6 +59,7 @@ class WalletPackagesCubit extends Cubit<WalletPackagesState> {
         clearPurchaseResult: true,
       ),
     );
+
     try {
       final result = await _repository.purchasePackage(packageId: packageId);
       final status = result.success
@@ -76,12 +85,14 @@ class WalletPackagesCubit extends Cubit<WalletPackagesState> {
       return null;
     }
   }
+
   String _mapErrorMessage(Object error) {
     if (error is ApiException) {
       return error.message;
     }
     return error.toString();
   }
+
   void resetPurchaseStatus() {
     emit(
       state.copyWith(
@@ -93,6 +104,7 @@ class WalletPackagesCubit extends Cubit<WalletPackagesState> {
     );
   }
 }
+
 class WalletPackagesState extends Equatable {
   const WalletPackagesState({
     this.status = WalletPackagesStatus.initial,
@@ -103,6 +115,7 @@ class WalletPackagesState extends Equatable {
     this.lastPurchaseResult,
     this.purchasingPackageId,
   });
+
   final WalletPackagesStatus status;
   final List<WalletPackage> packages;
   final String? errorMessage;
@@ -110,9 +123,11 @@ class WalletPackagesState extends Equatable {
   final String? purchaseError;
   final WalletActionResult? lastPurchaseResult;
   final int? purchasingPackageId;
+
   bool get isLoading => status == WalletPackagesStatus.loading;
   bool get hasError => errorMessage != null && errorMessage!.isNotEmpty;
   bool get hasPackages => packages.isNotEmpty;
+
   WalletPackagesState copyWith({
     WalletPackagesStatus? status,
     List<WalletPackage>? packages,
@@ -141,6 +156,7 @@ class WalletPackagesState extends Equatable {
       purchasingPackageId: purchasingPackageId ?? this.purchasingPackageId,
     );
   }
+
   @override
   List<Object?> get props => [
     status,
@@ -152,5 +168,7 @@ class WalletPackagesState extends Equatable {
     purchasingPackageId,
   ];
 }
+
 enum WalletPackagesStatus { initial, loading, success, failure }
+
 enum WalletPackagePurchaseStatus { idle, inProgress, success, failure }

@@ -19,14 +19,17 @@ import 'package:snginepro/features/wallet/presentation/widgets/wallet_packages.d
 import 'package:snginepro/features/wallet/presentation/widgets/wallet_shared_widgets.dart';
 import 'package:snginepro/features/wallet/presentation/widgets/wallet_utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 class WalletTransactionsTab extends StatelessWidget {
   const WalletTransactionsTab({
     super.key,
     required this.controller,
     required this.onRefresh,
   });
+
   final ScrollController controller;
   final Future<void> Function() onRefresh;
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<WalletTransactionsBloc, WalletTransactionsState>(
@@ -34,6 +37,7 @@ class WalletTransactionsTab extends StatelessWidget {
         if (state.isLoading && state.transactions.isEmpty) {
           return const Center(child: CircularProgressIndicator());
         }
+
         return RefreshIndicator(
           onRefresh: onRefresh,
           child: ListView(
@@ -90,14 +94,17 @@ class WalletTransactionsTab extends StatelessWidget {
     );
   }
 }
+
 class WalletPaymentsTab extends StatelessWidget {
   const WalletPaymentsTab({
     super.key,
     required this.controller,
     required this.onRefresh,
   });
+
   final ScrollController controller;
   final Future<void> Function() onRefresh;
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<WalletPaymentsBloc, WalletPaymentsState>(
@@ -105,6 +112,7 @@ class WalletPaymentsTab extends StatelessWidget {
         if (state.isLoading && state.payments.isEmpty) {
           return const Center(child: CircularProgressIndicator());
         }
+
         return RefreshIndicator(
           onRefresh: onRefresh,
           child: ListView(
@@ -161,14 +169,17 @@ class WalletPaymentsTab extends StatelessWidget {
     );
   }
 }
+
 class WalletPackagesTab extends StatelessWidget {
   const WalletPackagesTab({
     super.key,
     required this.controller,
     required this.onRefresh,
   });
+
   final ScrollController controller;
   final Future<void> Function() onRefresh;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -186,6 +197,7 @@ class WalletPackagesTab extends StatelessWidget {
             ),
           );
         }
+
         if (state.purchaseStatus == WalletPackagePurchaseStatus.success &&
             state.lastPurchaseResult != null) {
           final result = state.lastPurchaseResult!;
@@ -202,6 +214,7 @@ class WalletPackagesTab extends StatelessWidget {
       builder: (context, state) {
         final cubit = context.read<WalletPackagesCubit>();
         final slivers = _buildPackageSlivers(context, state, cubit);
+
         return DecoratedBox(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -243,6 +256,7 @@ class WalletPackagesTab extends StatelessWidget {
     );
   }
 }
+
 List<Widget> _buildPackageSlivers(
   BuildContext context,
   WalletPackagesState state,
@@ -269,6 +283,7 @@ List<Widget> _buildPackageSlivers(
       ),
     ];
   }
+
   if (state.status == WalletPackagesStatus.failure && !state.hasPackages) {
     return [
       SliverFillRemaining(
@@ -284,6 +299,7 @@ List<Widget> _buildPackageSlivers(
       ),
     ];
   }
+
   if (!state.hasPackages) {
     return const [
       SliverFillRemaining(
@@ -298,7 +314,9 @@ List<Widget> _buildPackageSlivers(
       ),
     ];
   }
+
   final children = <Widget>[];
+
   if (state.status == WalletPackagesStatus.failure &&
       state.errorMessage != null &&
       state.errorMessage!.isNotEmpty) {
@@ -313,11 +331,13 @@ List<Widget> _buildPackageSlivers(
       ),
     );
   }
+
   for (var index = 0; index < state.packages.length; index++) {
     final package = state.packages[index];
     final isPurchasing =
         state.purchaseStatus == WalletPackagePurchaseStatus.inProgress &&
         state.purchasingPackageId == package.id;
+
     children.add(
       Padding(
         padding: EdgeInsets.only(
@@ -331,6 +351,7 @@ List<Widget> _buildPackageSlivers(
       ),
     );
   }
+
   return [
     SliverPadding(
       padding: const EdgeInsets.fromLTRB(Spacing.lg, Spacing.md, Spacing.lg, 0),
@@ -338,8 +359,10 @@ List<Widget> _buildPackageSlivers(
     ),
   ];
 }
+
 class _PackagesTabHeader extends StatelessWidget {
   const _PackagesTabHeader();
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -365,9 +388,12 @@ class _PackagesTabHeader extends StatelessWidget {
     );
   }
 }
+
 class WalletTransactionTile extends StatelessWidget {
   const WalletTransactionTile({super.key, required this.transaction});
+
   final WalletTransaction transaction;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -380,6 +406,7 @@ class WalletTransactionTile extends StatelessWidget {
       if (transaction.date.isNotEmpty) transaction.date,
     ];
     final related = transaction.relatedUser;
+
     return Card(
       elevation: 1,
       shape: RoundedRectangleBorder(
@@ -445,9 +472,12 @@ class WalletTransactionTile extends StatelessWidget {
     );
   }
 }
+
 class WalletPaymentTile extends StatelessWidget {
   const WalletPaymentTile({super.key, required this.payment});
+
   final WalletPayment payment;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -458,6 +488,7 @@ class WalletPaymentTile extends StatelessWidget {
     final requestedAt = payment.requestedAt.isNotEmpty
         ? payment.requestedAt
         : walletFormatDate(walletDateTimeFromTimestamp(payment.timestamp));
+
     return Card(
       elevation: 1,
       shape: RoundedRectangleBorder(
@@ -515,9 +546,12 @@ class WalletPaymentTile extends StatelessWidget {
     );
   }
 }
+
 class WalletRelatedUserRow extends StatelessWidget {
   const WalletRelatedUserRow({super.key, required this.relatedUser});
+
   final WalletRelatedUser relatedUser;
+
   @override
   Widget build(BuildContext context) {
     final mediaAsset = Provider.of<AppConfig>(
@@ -526,6 +560,7 @@ class WalletRelatedUserRow extends StatelessWidget {
     ).mediaAsset;
     final avatarUrl = relatedUser.picture;
     final theme = Theme.of(context);
+
     return Row(
       children: [
         CircleAvatar(
@@ -562,9 +597,12 @@ class WalletRelatedUserRow extends StatelessWidget {
     );
   }
 }
+
 class WalletMetadataView extends StatelessWidget {
   const WalletMetadataView({super.key, required this.metadata});
+
   final Map<String, dynamic> metadata;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -586,6 +624,7 @@ class WalletMetadataView extends StatelessWidget {
           .toList(),
     );
   }
+
   String _formatKey(String key) {
     if (key.isEmpty) return key;
     final buffer = StringBuffer();

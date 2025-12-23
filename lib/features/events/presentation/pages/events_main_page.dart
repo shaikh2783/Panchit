@@ -10,46 +10,59 @@ import '../../data/models/event_category.dart';
 import '../widgets/event_card.dart';
 import 'create_event_page.dart';
 import 'event_detail_page.dart';
+
 class EventsMainPage extends StatefulWidget {
   const EventsMainPage({super.key});
+
   @override
   State<EventsMainPage> createState() => _EventsMainPageState();
 }
+
 class _EventsMainPageState extends State<EventsMainPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final ScrollController _scrollController = ScrollController();
+
   // للفلترة في Discover tab
   EventCategory? _selectedCategory;
+  
   // Categories من API
   List<EventCategory> _categories = [];
   bool _categoriesLoading = true;
+  
   // للبحث
   final TextEditingController _searchController = TextEditingController();
   bool _isSearching = false;
   String _searchQuery = '';
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 5, vsync: this);
     _tabController.addListener(_onTabChanged);
     _scrollController.addListener(_onScroll);
+    
     // تحميل التصنيفات أولاً
     _loadCategories();
+    
     // تحميل البيانات الأولية
     _loadData();
   }
+
   void _loadCategories() {
     context.read<EventsBloc>().add(const FetchEventCategoriesEvent());
   }
+
   void _onTabChanged() {
     if (_tabController.indexIsChanging) {
       _loadData();
     }
   }
+
   void _loadData() {
     final bloc = context.read<EventsBloc>();
     final currentTab = _tabController.index;
+    
     switch (currentTab) {
       case 0: // Discover
         bloc.add(FetchSuggestedEventsEvent(
@@ -77,6 +90,7 @@ class _EventsMainPageState extends State<EventsMainPage>
       // TODO: Add pagination logic
     }
   }
+
   @override
   void dispose() {
     _tabController.dispose();
@@ -84,9 +98,11 @@ class _EventsMainPageState extends State<EventsMainPage>
     _searchController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Get.theme;
+
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
@@ -141,9 +157,11 @@ class _EventsMainPageState extends State<EventsMainPage>
       ),
     );
   }
+
   // Discover Tab مع فلترة Categories وزر البحث
   Widget _buildDiscoverTab() {
     final theme = Get.theme;
+    
     return Column(
       children: [
         // Search Bar
@@ -200,8 +218,10 @@ class _EventsMainPageState extends State<EventsMainPage>
             },
           ),
         ),
+        
         // Category Filter
         _buildCategoryFilter(),
+        
         // Search Results Header
         if (_isSearching && _searchQuery.isNotEmpty)
           Container(
@@ -230,6 +250,7 @@ class _EventsMainPageState extends State<EventsMainPage>
               ],
             ),
           ),
+        
         // Events List
         Expanded(
           child: _buildTabContent('discover'),
@@ -237,8 +258,10 @@ class _EventsMainPageState extends State<EventsMainPage>
       ],
     );
   }
+
   Widget _buildCategoryFilter() {
     final theme = Get.theme;
+    
     return BlocListener<EventsBloc, EventsState>(
       listener: (context, state) {
         if (state is EventCategoriesLoaded) {
@@ -290,8 +313,10 @@ class _EventsMainPageState extends State<EventsMainPage>
                       ),
                     );
                   }
+
                   final category = _categories[index - 1];
                   final isSelected = _selectedCategory?.categoryId == category.categoryId;
+
                   return Padding(
                     padding: const EdgeInsets.only(right: 8),
                     child: ChoiceChip(
@@ -305,6 +330,7 @@ class _EventsMainPageState extends State<EventsMainPage>
                             _selectedCategory = null;
                           }
                         });
+
                         // إعادة تحميل مع الفلترة الجديدة
                         _loadData();
                       },
@@ -320,6 +346,7 @@ class _EventsMainPageState extends State<EventsMainPage>
       ),
     );
   }
+
   Widget _buildTabContent(String type) {
     return BlocBuilder<EventsBloc, EventsState>(
       builder: (context, state) {
@@ -327,6 +354,7 @@ class _EventsMainPageState extends State<EventsMainPage>
         if (state is EventsLoading) {
           return const Center(child: CircularProgressIndicator());
         }
+
         // حالة الخطأ
         if (state is EventsError) {
           return Center(
@@ -349,8 +377,10 @@ class _EventsMainPageState extends State<EventsMainPage>
             ),
           );
         }
+
         // استخراج البيانات
         List<Event> events = [];
+
         if (state is SuggestedEventsLoaded && type == 'discover') {
           events = state.events;
         } else if (state is MyEventsLoaded && type != 'discover') {
@@ -359,10 +389,12 @@ class _EventsMainPageState extends State<EventsMainPage>
           // نتائج البحث
           events = state.events;
         }
+
         // حالة Empty
         if (events.isEmpty) {
           return _buildEmptyState(type);
         }
+
         // عرض القائمة
         return RefreshIndicator(
           onRefresh: () async {
@@ -399,11 +431,14 @@ class _EventsMainPageState extends State<EventsMainPage>
       },
     );
   }
+
   Widget _buildEmptyState(String type) {
     final theme = Get.theme;
+    
     String title;
     String subtitle;
     IconData icon;
+
     switch (type) {
       case 'discover':
         title = 'no_events_found'.tr;
@@ -435,6 +470,7 @@ class _EventsMainPageState extends State<EventsMainPage>
         subtitle = '';
         icon = Iconsax.calendar;
     }
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
