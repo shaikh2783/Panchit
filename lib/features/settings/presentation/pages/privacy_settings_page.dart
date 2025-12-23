@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import '../../data/models/privacy_settings_model.dart';
 import '../../data/services/privacy_settings_service.dart';
@@ -417,7 +418,7 @@ class _PrivacySettingsPageState extends State<PrivacySettingsPage>
                 onChanged: (v) => _toggleNotification('email_profile_visits', v),
               ),
               _SwitchTile(
-                label: 'Friend requests',
+                label: 'friend_request'.tr,
                 value: notifications.emailFriendRequests,
                 onChanged: (v) => _toggleNotification('email_friend_requests', v),
               ),
@@ -627,7 +628,7 @@ class _SwitchTile extends StatelessWidget {
     return SwitchListTile(
       contentPadding: EdgeInsets.zero,
       title: Text(
-        label,
+        label.tr,
         style: theme.textTheme.bodyMedium?.copyWith(
           fontWeight: FontWeight.w600,
         ),

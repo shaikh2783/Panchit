@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
@@ -7,11 +8,6 @@ import 'package:snginepro/core/theme/app_colors.dart';
 import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/features/friends/data/models/friend.dart';
 import 'package:snginepro/features/friends/data/services/friends_api_service.dart';
-/// Clean, self‑contained FriendRequestsPage (single file)
-/// - Gradient header + custom tabs with counters
-/// - Polished cards (received/sent)
-/// - Skeleton while loading
-/// - Works with your existing FriendRequest model (uses timeAgo & mutualFriendsText)
 class FriendRequestsPage extends StatefulWidget {
   const FriendRequestsPage({super.key});
   @override
@@ -90,7 +86,7 @@ class _FriendRequestsPageState extends State<FriendRequestsPage>
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Accepted friend request from ${request.senderName}'),
+            content: Text('${'accepted_friend_request_from'.tr} ${request.senderName}'),
             backgroundColor: Colors.green,
             behavior: SnackBarBehavior.floating,
           ),
@@ -98,7 +94,7 @@ class _FriendRequestsPageState extends State<FriendRequestsPage>
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to accept request: ${result.message}'),
+            content: Text('${'failed_to_accept_request'.tr} ${result.message}'),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
           ),
@@ -108,7 +104,7 @@ class _FriendRequestsPageState extends State<FriendRequestsPage>
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error accepting request: $e'),
+          content: Text('${'error_accepting_request'.tr} $e'),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
         ),
@@ -126,7 +122,7 @@ class _FriendRequestsPageState extends State<FriendRequestsPage>
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Declined friend request from ${request.senderName}'),
+            content: Text('${'declined_friend_request_from'.tr} ${request.senderName}'),
             backgroundColor: Colors.orange,
             behavior: SnackBarBehavior.floating,
           ),
@@ -134,7 +130,7 @@ class _FriendRequestsPageState extends State<FriendRequestsPage>
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to decline request: ${result.message}'),
+            content: Text('${'failed_to_decline_request'.tr} ${result.message}'),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
           ),
@@ -144,7 +140,7 @@ class _FriendRequestsPageState extends State<FriendRequestsPage>
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error declining request: $e'),
+          content: Text('${'error_declining_request'.tr} $e'),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
         ),
@@ -162,14 +158,14 @@ class _FriendRequestsPageState extends State<FriendRequestsPage>
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Cancelled friend request to ${request.senderName}'),
+            content: Text('${'cancelled_friend_request_to'.tr} ${request.senderName}'),
             behavior: SnackBarBehavior.floating,
           ),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to cancel request: ${result.message}'),
+            content: Text('${'failed_to_cancel_request'.tr} ${result.message}'),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
           ),
@@ -179,7 +175,7 @@ class _FriendRequestsPageState extends State<FriendRequestsPage>
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error cancelling request: $e'),
+          content: Text('${'error_cancelling_request'.tr} $e'),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
         ),
@@ -196,7 +192,7 @@ class _FriendRequestsPageState extends State<FriendRequestsPage>
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.transparent,
-        title: const Text('Friend Requests'),
+        title:  Text('friend_requests'.tr),
         flexibleSpace: const _GradientAppBar(),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(64),
@@ -211,7 +207,7 @@ class _FriendRequestsPageState extends State<FriendRequestsPage>
                   end: Alignment.bottomCenter,
                   colors: [
                     Colors.transparent,
-                    (isDark ? Colors.black : Colors.white).withOpacity(0.10),
+                    (isDark ? Colors.black : Colors.white).withValues(alpha: 0.10),
                   ],
                 ),
               ),
@@ -266,8 +262,8 @@ class _GradientAppBar extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            p.withOpacity(0.28),
-            p.withOpacity(0.10),
+            p.withValues(alpha: 0.28),
+            p.withValues(alpha: 0.10),
             a,
           ],
         ),
@@ -286,29 +282,29 @@ class _Tabs extends StatelessWidget {
   final int sentCount;
   @override
   Widget build(BuildContext context) {
-    final onSurf = Theme.of(context).colorScheme.onSurface.withOpacity(0.7);
+    final onSurf = Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7);
     final primary = AppColors.primary;
     return Container(
       height: 44,
       decoration: BoxDecoration(
-        color: Theme.of(context).cardColor.withOpacity(0.75),
+        color: Theme.of(context).cardColor.withValues(alpha: 0.75),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: onSurf.withOpacity(0.15)),
+        border: Border.all(color: onSurf.withValues(alpha: 0.15)),
       ),
       child: TabBar(
         controller: controller,
         indicator: BoxDecoration(
-          color: primary.withOpacity(0.12),
+          color: primary.withValues(alpha: 0.12),
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: primary.withOpacity(0.25)),
+          border: Border.all(color: primary.withValues(alpha: 0.25)),
         ),
         splashBorderRadius: BorderRadius.circular(10),
         labelColor: Theme.of(context).colorScheme.onSurface,
         unselectedLabelColor: onSurf,
         dividerColor: Colors.transparent,
         tabs: [
-          _TabItem(icon: Iconsax.user_add, label: 'Received', count: receivedCount),
-          _TabItem(icon: Iconsax.user_minus, label: 'Sent', count: sentCount),
+          _TabItem(icon: Iconsax.user_add, label: 'received'.tr, count: receivedCount),
+          _TabItem(icon: Iconsax.user_minus, label: 'sent'.tr, count: sentCount),
         ],
       ),
     );
@@ -332,9 +328,9 @@ class _TabItem extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.15),
+              color: AppColors.primary.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(999),
-              border: Border.all(color: AppColors.primary.withOpacity(0.25)),
+              border: Border.all(color: AppColors.primary.withValues(alpha: 0.25)),
             ),
             child: Text(
               '$count',
@@ -371,10 +367,10 @@ class _ReceivedList extends StatelessWidget {
           physics: const AlwaysScrollableScrollPhysics(),
           child: SizedBox(
             height: MediaQuery.of(context).size.height - topPadding - 100,
-            child: const _EmptyState(
+            child:  _EmptyState(
               icon: Iconsax.user_add,
-              title: 'No friend requests',
-              subtitle: 'When someone sends you a friend request, you\'ll see it here.',
+              title: 'no_friend_requests'.tr,
+              subtitle: 'no_friend_requests_hint'.tr,
             ),
           ),
         ),
@@ -417,10 +413,10 @@ class _SentList extends StatelessWidget {
           physics: const AlwaysScrollableScrollPhysics(),
           child: SizedBox(
             height: MediaQuery.of(context).size.height - topPadding - 100,
-            child: const _EmptyState(
+            child:  _EmptyState(
               icon: Iconsax.user_minus,
-              title: 'No sent requests',
-              subtitle: 'Friend requests you send will appear here.',
+              title: 'no_sent_requests'.tr,
+              subtitle: 'no_sent_requests_hint'.tr,
             ),
           ),
         ),
@@ -463,11 +459,11 @@ class _ReceivedRequestCard extends StatelessWidget {
         color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isDark ? Colors.white.withOpacity(0.08) : Colors.black.withOpacity(0.06),
+          color: isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.06),
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
@@ -501,13 +497,13 @@ class _ReceivedRequestCard extends StatelessWidget {
                   Icon(
                     Iconsax.location,
                     size: 14,
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                   const SizedBox(width: 4),
                   Text(
                     request.location,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
                 ],
@@ -520,7 +516,7 @@ class _ReceivedRequestCard extends StatelessWidget {
                   child: FilledButton.icon(
                     onPressed: onAccept,
                     icon: const Icon(Iconsax.user_tick, size: 18),
-                    label: const Text('Accept'),
+                    label:  Text('accept'.tr),
                     style: FilledButton.styleFrom(
                       backgroundColor: Colors.green,
                       foregroundColor: Colors.white,
@@ -534,7 +530,7 @@ class _ReceivedRequestCard extends StatelessWidget {
                   child: OutlinedButton.icon(
                     onPressed: onDecline,
                     icon: const Icon(Iconsax.user_remove, size: 18),
-                    label: const Text('Decline'),
+                    label:  Text('decline'.tr),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.red,
                       side: const BorderSide(color: Colors.red),
@@ -567,11 +563,11 @@ class _SentRequestCard extends StatelessWidget {
         color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isDark ? Colors.white.withOpacity(0.08) : Colors.black.withOpacity(0.06),
+          color: isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.06),
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
@@ -596,7 +592,7 @@ class _SentRequestCard extends StatelessWidget {
                   Text(
                     '@${request.senderUsername}',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -605,13 +601,13 @@ class _SentRequestCard extends StatelessWidget {
                       Icon(
                         Iconsax.clock,
                         size: 12,
-                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                       const SizedBox(width: 4),
                       Text(
                         'Sent ${request.timeAgo}',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
                       ),
                     ],
@@ -622,7 +618,7 @@ class _SentRequestCard extends StatelessWidget {
             TextButton.icon(
               onPressed: onCancel,
               icon: const Icon(Iconsax.close_circle, size: 16),
-              label: const Text('Cancel'),
+              label:  Text('cancel'.tr),
               style: TextButton.styleFrom(
                 foregroundColor: Colors.red,
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -709,7 +705,7 @@ class _UserInfo extends StatelessWidget {
         Text(
           '@${request.senderUsername}',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
               ),
         ),
         const SizedBox(height: 4),
@@ -723,7 +719,7 @@ class _UserInfo extends StatelessWidget {
         Text(
           request.timeAgo,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
               ),
         ),
       ],
@@ -744,7 +740,7 @@ class _EmptyState extends StatelessWidget {
   final String subtitle;
   @override
   Widget build(BuildContext context) {
-    final onSurf = Theme.of(context).colorScheme.onSurface.withOpacity(0.6);
+    final onSurf = Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6);
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -776,8 +772,8 @@ class _SkeletonList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final base = Theme.of(context).brightness == Brightness.dark
-        ? Colors.white.withOpacity(0.08)
-        : Colors.black.withOpacity(0.06);
+        ? Colors.white.withValues(alpha: 0.08)
+        : Colors.black.withValues(alpha: 0.06);
     return ListView.builder(
       padding: EdgeInsets.fromLTRB(16, MediaQuery.of(context).padding.top + kToolbarHeight + 64 + 12, 16, 16),
       itemCount: 6,

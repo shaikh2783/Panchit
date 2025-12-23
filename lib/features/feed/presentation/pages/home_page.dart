@@ -122,7 +122,7 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 24),
             Text(
-              'Loading posts...',
+              'loading_posts'.tr,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
@@ -199,7 +199,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    'Connection Error',
+                    'connection_error'.tr,
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -235,8 +235,8 @@ class _HomePageState extends State<HomePage> {
                     child: ElevatedButton.icon(
                       onPressed: onRetry,
                       icon: const Icon(Icons.refresh_rounded, color: Colors.white),
-                      label: const Text(
-                        'Try Again',
+                      label: Text(
+                        'try_again'.tr,
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -302,7 +302,7 @@ class _HomePageState extends State<HomePage> {
               ),
               const SizedBox(height: 32),
               Text(
-                'لا توجد منشورات',
+                'no_posts_yet'.tr,
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -322,8 +322,8 @@ class _HomePageState extends State<HomePage> {
               ElevatedButton.icon(
                 onPressed: _openCreatePost,
                 icon: const Icon(Iconsax.edit, size: 20),
-                label: const Text(
-                  'إنشاء منشور',
+                label: Text(
+                  'create_post'.tr,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
@@ -563,7 +563,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 const SizedBox(height: 16),
                                 Text(
-                                  'Loading more posts...',
+                                  'loading_more_posts'.tr,
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,

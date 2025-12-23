@@ -68,7 +68,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.1),
+                color: Colors.blue.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(Iconsax.discover, color: Colors.blue, size: 18),
@@ -233,7 +233,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.amber.withOpacity(0.3),
+            color: Colors.amber.withValues(alpha: 0.3),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -244,7 +244,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Icon(Iconsax.medal_star, color: Colors.white, size: 28),
@@ -268,7 +268,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     widget.balance.remaining.toString(),
                   ]),
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withValues(alpha: 0.9),
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
@@ -408,7 +408,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                                           _buildImageUrl(user.picture!),
                                         )
                                       : null,
-                                  backgroundColor: Colors.blue.withOpacity(0.1),
+                                  backgroundColor: Colors.blue.withValues(alpha: 0.1),
                                   child: user.picture == null
                                       ? Text(
                                           user.fullName.isNotEmpty
@@ -548,7 +548,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
           subtitleKey: 'premium_pages_subtitle',
         ),
         const SizedBox(height: 12),
-        Container(
+        SizedBox(
                height: Get.height *0.25,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -566,7 +566,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.08),
+                        color: Colors.black.withValues(alpha: 0.08),
                         blurRadius: 20,
                         offset: const Offset(0, 4),
                       ),
@@ -650,7 +650,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                                               )
                                             : null,
                                         backgroundColor: Colors.indigo
-                                            .withOpacity(0.1),
+                                            .withValues(alpha: 0.1),
                                         child: page.pagePicture == null
                                             ? Icon(
                                                 Iconsax.building,
@@ -790,7 +790,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.08),
+                color: Colors.black.withValues(alpha: 0.08),
                 blurRadius: 20,
                 offset: const Offset(0, 4),
               ),
@@ -871,7 +871,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.green.withOpacity(0.1),
+                            color: Colors.green.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Row(
@@ -929,7 +929,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
           subtitleKey: 'people_you_may_know_subtitle',
         ),
         const SizedBox(height: 12),
-        Container(
+        SizedBox(
               height: Get.height *0.27,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -948,7 +948,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.08),
+                        color: Colors.black.withValues(alpha: 0.08),
                         blurRadius: 20,
                         offset: const Offset(0, 4),
                       ),
@@ -981,7 +981,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                                             _buildImageUrl(person.picture!),
                                           )
                                         : null,
-                                    backgroundColor: Colors.blue.withOpacity(
+                                    backgroundColor: Colors.blue.withValues(alpha:
                                       0.1,
                                     ),
                                     child: person.picture == null
@@ -1054,11 +1054,11 @@ class _DiscoverPageState extends State<DiscoverPage> {
                                   vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Colors.blue.withOpacity(0.1),
+                                  color: Colors.blue.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Text(
-                                  '${person.mutualFriendsCount} mutual',
+                                  '${person.mutualFriendsCount} ${'mutual_friends_label'.tr}',
                                   style: TextStyle(
                                     color: Colors.blue[700],
                                     fontSize: 11,
@@ -1125,7 +1125,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
           subtitleKey: 'pages_to_discover_subtitle',
         ),
         const SizedBox(height: 12),
-        Container(
+        SizedBox(
         height: Get.height *0.26,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -1143,7 +1143,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.08),
+                        color: Colors.black.withValues(alpha: 0.08),
                         blurRadius: 20,
                         offset: const Offset(0, 4),
                       ),
@@ -1166,7 +1166,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                                             _buildImageUrl(page.pagePicture!),
                                           )
                                         : null,
-                                    backgroundColor: Colors.indigo.withOpacity(
+                                    backgroundColor: Colors.indigo.withValues(alpha:
                                       0.1,
                                     ),
                                     child: page.pagePicture == null
@@ -1300,7 +1300,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
           subtitleKey: 'groups_to_join_subtitle',
         ),
         const SizedBox(height: 12),
-        Container(
+        SizedBox(
         height: Get.height *0.3,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -1319,7 +1319,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.08),
+                        color: Colors.black.withValues(alpha: 0.08),
                         blurRadius: 20,
                         offset: const Offset(0, 4),
                       ),
@@ -1336,8 +1336,8 @@ class _DiscoverPageState extends State<DiscoverPage> {
                           ),
                           gradient: LinearGradient(
                             colors: [
-                              Colors.deepPurple.withOpacity(0.8),
-                              Colors.purple.withOpacity(0.6),
+                              Colors.deepPurple.withValues(alpha: 0.8),
+                              Colors.purple.withValues(alpha: 0.6),
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -1366,7 +1366,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                                     _buildImageUrl(group.groupPicture!),
                                   )
                                 : null,
-                            backgroundColor: Colors.purple.withOpacity(0.1),
+                            backgroundColor: Colors.purple.withValues(alpha: 0.1),
                             child: group.groupPicture == null
                                 ? Icon(
                                     Iconsax.people,
@@ -1404,8 +1404,8 @@ class _DiscoverPageState extends State<DiscoverPage> {
                               ),
                               decoration: BoxDecoration(
                                 color: group.groupPrivacy == 1
-                                    ? Colors.green.withOpacity(0.1)
-                                    : Colors.orange.withOpacity(0.1),
+                                    ? Colors.green.withValues(alpha: 0.1)
+                                    : Colors.orange.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
@@ -1496,7 +1496,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
           subtitleKey: 'events_to_attend_subtitle',
         ),
         const SizedBox(height: 12),
-        Container(
+        SizedBox(
           height: Get.height *0.28,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -1517,7 +1517,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.08),
+                        color: Colors.black.withValues(alpha: 0.08),
                         blurRadius: 20,
                         offset: const Offset(0, 4),
                       ),
@@ -1534,8 +1534,8 @@ class _DiscoverPageState extends State<DiscoverPage> {
                           ),
                           gradient: LinearGradient(
                             colors: [
-                              Colors.cyan.withOpacity(0.8),
-                              Colors.blue.withOpacity(0.6),
+                              Colors.cyan.withValues(alpha: 0.8),
+                              Colors.blue.withValues(alpha: 0.6),
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -1562,7 +1562,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                                 vertical: 6,
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.cyan.withOpacity(0.1),
+                                color: Colors.cyan.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Row(

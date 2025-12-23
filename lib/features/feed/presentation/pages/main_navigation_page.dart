@@ -85,6 +85,7 @@ class _MainNavigationPageState extends State<MainNavigationPage>
         });
       }
     } catch (e) {
+      debugPrint('Error loading friend requests: $e');
     }
   }
   // 🔄 Migration: Using Bloc pages for specific features while keeping Provider for others
@@ -96,7 +97,6 @@ class _MainNavigationPageState extends State<MainNavigationPage>
     const NotificationsPage(), // ✅ Bloc Migration: Notifications page using Bloc pattern
     MenuPage(onNavigateToTab: (index) => setState(() => _currentIndex = index)), // Pass callback to MenuPage
   ];
-  // --- 💡 2. تحديث الأيقونات لاستخدام Iconsax ---
   static const List<_NavItem> _items = [
     _NavItem(icon: Iconsax.home, activeIcon: Iconsax.home),
     _NavItem(icon: Iconsax.people, activeIcon: Iconsax.profile_2user),
@@ -201,35 +201,35 @@ class _BottomNavBar extends StatelessWidget {
               end: Alignment.bottomCenter,
               colors: isDark 
                 ? [
-                    const Color(0xFF1A1A1A).withOpacity(0.95),
-                    const Color(0xFF0A0A0A).withOpacity(0.98),
+                    const Color(0xFF1A1A1A).withValues(alpha: 0.95),
+                    const Color(0xFF0A0A0A).withValues(alpha: 0.98),
                   ]
                 : [
-                    Colors.white.withOpacity(0.95),
-                    const Color(0xFFF8F9FA).withOpacity(0.98),
+                    Colors.white.withValues(alpha: 0.95),
+                    const Color(0xFFF8F9FA).withValues(alpha: 0.98),
                   ],
             ),
             border: Border(
               top: BorderSide(
                 color: isDark 
-                  ? Colors.white.withOpacity(0.1)
-                  : Colors.black.withOpacity(0.08),
+                  ? Colors.white.withValues(alpha: 0.1)
+                  : Colors.black.withValues(alpha: 0.08),
                 width: 1,
               ),
             ),
             boxShadow: [
               BoxShadow(
                 color: isDark 
-                  ? Colors.black.withOpacity(0.4)
-                  : Colors.black.withOpacity(0.08),
+                  ? Colors.black.withValues(alpha: 0.4)
+                  : Colors.black.withValues(alpha: 0.08),
                 blurRadius: 20,
                 spreadRadius: 0,
                 offset: const Offset(0, -4),
               ),
               BoxShadow(
                 color: isDark 
-                  ? Colors.black.withOpacity(0.2)
-                  : Colors.black.withOpacity(0.04),
+                  ? Colors.black.withValues(alpha: 0.2)
+                  : Colors.black.withValues(alpha: 0.04),
                 blurRadius: 40,
                 spreadRadius: 0,
                 offset: const Offset(0, -8),
@@ -291,22 +291,22 @@ class _NavButton extends StatelessWidget {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      theme.colorScheme.primary.withOpacity(0.15),
-                      theme.colorScheme.primary.withOpacity(0.08),
+                      theme.colorScheme.primary.withValues(alpha: 0.15),
+                      theme.colorScheme.primary.withValues(alpha: 0.08),
                     ],
                   )
                 : null,
               borderRadius: BorderRadius.circular(20),
               border: isActive
                 ? Border.all(
-                    color: theme.colorScheme.primary.withOpacity(0.3),
+                    color: theme.colorScheme.primary.withValues(alpha: 0.3),
                     width: 1.5,
                   )
                 : null,
               boxShadow: isActive
                 ? [
                     BoxShadow(
-                      color: theme.colorScheme.primary.withOpacity(0.2),
+                      color: theme.colorScheme.primary.withValues(alpha: 0.2),
                       blurRadius: 12,
                       spreadRadius: 0,
                       offset: const Offset(0, 4),
@@ -324,7 +324,7 @@ class _NavButton extends StatelessWidget {
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: isActive
-                        ? theme.colorScheme.primary.withOpacity(0.1)
+                        ? theme.colorScheme.primary.withValues(alpha: 0.1)
                         : Colors.transparent,
                       shape: BoxShape.circle,
                     ),
@@ -368,7 +368,7 @@ class _NavButton extends StatelessWidget {
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xFFFF4757).withOpacity(0.4),
+                              color: const Color(0xFFFF4757).withValues(alpha: 0.4),
                               blurRadius: 8,
                               spreadRadius: 0,
                               offset: const Offset(0, 2),

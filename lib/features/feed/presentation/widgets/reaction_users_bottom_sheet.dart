@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:snginepro/core/models/reaction_user_model.dart';
 import 'package:snginepro/core/services/reaction_users_api_service.dart';
@@ -414,7 +415,7 @@ class _ReactionUsersBottomSheetState extends State<ReactionUsersBottomSheet>
           minimumSize: const Size(80, 32),
           padding: const EdgeInsets.symmetric(horizontal: 12),
         ),
-        child: const Text('Follow'),
+        child:  Text('follow'.tr),
       );
     }
     return null;

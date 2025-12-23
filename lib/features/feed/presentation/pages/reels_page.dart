@@ -84,16 +84,16 @@ class _ReelsPageState extends State<ReelsPage> {
             child: _ReelsMessage(
               icon: Iconsax.warning_2,
               message: state.message,
-              actionLabel: 'Try Again',
+              actionLabel: 'try_again'.tr,
               onAction: () => context.read<ReelsBloc>().add(LoadReelsEvent(source: state.source)),
             ),
           );
         }
         if (state is! ReelsLoadedState || state.reels.isEmpty) {
-          return const _DarkScaffold(
+          return  _DarkScaffold(
             child: _ReelsMessage(
               icon: Iconsax.video,
-              message: 'No reels available right now.',
+              message: 'no_reels_available'.tr,
             ),
           );
         }
@@ -147,8 +147,8 @@ class _DarkScaffold extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text(
-          'Reels',
+        title:  Text(
+          'reels'.tr,
           style: TextStyle(
             color: Colors.white,
             fontSize: 24,
@@ -203,18 +203,18 @@ class _ReelsMessage extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Colors.grey.withOpacity(0.1),
-              Colors.grey.withOpacity(0.05),
+              Colors.grey.withValues(alpha: 0.1),
+              Colors.grey.withValues(alpha: 0.05),
             ],
           ),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withValues(alpha: 0.1),
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.3),
+              color: Colors.black.withValues(alpha: 0.3),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -229,14 +229,14 @@ class _ReelsMessage extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      Colors.white.withOpacity(0.2),
-                      Colors.white.withOpacity(0.1),
+                      Colors.white.withValues(alpha: 0.2),
+                      Colors.white.withValues(alpha: 0.1),
                     ],
                   ),
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.white.withOpacity(0.1),
+                      color: Colors.white.withValues(alpha: 0.1),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),
@@ -273,7 +273,7 @@ class _ReelsMessage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.white.withOpacity(0.3),
+                      color: Colors.white.withValues(alpha: 0.3),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),
@@ -343,8 +343,8 @@ class _ReelViewState extends State<_ReelView>
         // TODO: send like
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('❤️ Liked'),
+           SnackBar(
+            content: Text('❤️ ${'liked'.tr}'),
             duration: Duration(milliseconds: 600),
             behavior: SnackBarBehavior.floating,
           ),
@@ -430,10 +430,10 @@ class _GlassGradients extends StatelessWidget {
             end: Alignment.bottomCenter,
             stops: const [0, .18, .6, 1],
             colors: [
-              Colors.black.withOpacity(.55),
+              Colors.black.withValues(alpha: .55),
               Colors.transparent,
               Colors.transparent,
-              Colors.black.withOpacity(.75),
+              Colors.black.withValues(alpha: .75),
             ],
           ),
         ),
@@ -451,18 +451,18 @@ class _TopGlassBar extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Colors.black.withOpacity(0.4),
-            Colors.black.withOpacity(0.2),
+            Colors.black.withValues(alpha: 0.4),
+            Colors.black.withValues(alpha: 0.2),
           ],
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Colors.white.withOpacity(0.15),
+          color: Colors.white.withValues(alpha: 0.15),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
+            color: Colors.black.withValues(alpha: 0.3),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -479,8 +479,8 @@ class _TopGlassBar extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      Colors.white.withOpacity(0.2),
-                      Colors.white.withOpacity(0.1),
+                      Colors.white.withValues(alpha: 0.2),
+                      Colors.white.withValues(alpha: 0.1),
                     ],
                   ),
                   shape: BoxShape.circle,
@@ -492,8 +492,8 @@ class _TopGlassBar extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              const Text(
-                'Reels',
+               Text(
+                'reels'.tr,
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w700,
@@ -505,13 +505,13 @@ class _TopGlassBar extends StatelessWidget {
               _buildGlassButton(
                 icon: Iconsax.search_normal_1,
                 onTap: () {},
-                tooltip: 'Search',
+                tooltip: 'search'.tr,
               ),
               const SizedBox(width: 8),
               _buildGlassButton(
                 icon: Iconsax.setting_2,
                 onTap: () {},
-                tooltip: 'Settings',
+                tooltip: 'settings'.tr,
               ),
             ],
           ),
@@ -536,13 +536,13 @@ class _TopGlassBar extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Colors.white.withOpacity(0.15),
-                  Colors.white.withOpacity(0.05),
+                  Colors.white.withValues(alpha: 0.15),
+                  Colors.white.withValues(alpha: 0.05),
                 ],
               ),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white.withValues(alpha: 0.1),
                 width: 0.5,
               ),
             ),
@@ -580,18 +580,18 @@ class _CaptionAndOwner extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Colors.black.withOpacity(0.6),
-                Colors.black.withOpacity(0.4),
+                Colors.black.withValues(alpha: 0.6),
+                Colors.black.withValues(alpha: 0.4),
               ],
             ),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: Colors.white.withOpacity(0.15),
+              color: Colors.white.withValues(alpha: 0.15),
               width: 1,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.4),
+                color: Colors.black.withValues(alpha: 0.4),
                 blurRadius: 12,
                 offset: const Offset(0, 6),
               ),
@@ -607,13 +607,13 @@ class _CaptionAndOwner extends StatelessWidget {
                       shape: BoxShape.circle,
                       gradient: LinearGradient(
                         colors: [
-                          Colors.white.withOpacity(0.3),
-                          Colors.white.withOpacity(0.1),
+                          Colors.white.withValues(alpha: 0.3),
+                          Colors.white.withValues(alpha: 0.1),
                         ],
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
@@ -628,7 +628,6 @@ class _CaptionAndOwner extends StatelessWidget {
                           : null,
                     ),
                   ),
-                  // مؤشر حالة الاتصال للمستخدمين فقط
                   if (post.authorType == 'user' && post.authorIsOnline)
                     Positioned(
                       bottom: 0,
@@ -645,7 +644,7 @@ class _CaptionAndOwner extends StatelessWidget {
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.3),
+                              color: Colors.black.withValues(alpha: 0.3),
                               offset: const Offset(0, 1),
                               blurRadius: 2,
                             ),
@@ -674,14 +673,14 @@ class _CaptionAndOwner extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.white.withOpacity(0.3),
+                      color: Colors.white.withValues(alpha: 0.3),
                       blurRadius: 6,
                       offset: const Offset(0, 2),
                     ),
                   ],
                 ),
-                child: const Text(
-                  'Follow',
+                child:  Text(
+                  'follow'.tr,
                   style: TextStyle(
                     color: Colors.black, 
                     fontWeight: FontWeight.w700,
@@ -699,13 +698,13 @@ class _CaptionAndOwner extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Colors.black.withOpacity(0.4),
-                  Colors.black.withOpacity(0.2),
+                  Colors.black.withValues(alpha: 0.4),
+                  Colors.black.withValues(alpha: 0.2),
                 ],
               ),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white.withValues(alpha: 0.1),
                 width: 0.5,
               ),
             ),
@@ -714,7 +713,7 @@ class _CaptionAndOwner extends StatelessWidget {
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: Colors.white.withOpacity(0.95),
+                color: Colors.white.withValues(alpha: 0.95),
                 height: 1.4,
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
@@ -728,13 +727,13 @@ class _CaptionAndOwner extends StatelessWidget {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Colors.black.withOpacity(0.3),
-                Colors.black.withOpacity(0.1),
+                Colors.black.withValues(alpha: 0.3),
+                Colors.black.withValues(alpha: 0.1),
               ],
             ),
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: Colors.white.withOpacity(0.08),
+              color: Colors.white.withValues(alpha: 0.08),
               width: 0.5,
             ),
           ),
@@ -745,8 +744,8 @@ class _CaptionAndOwner extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      Colors.white.withOpacity(0.2),
-                      Colors.white.withOpacity(0.1),
+                      Colors.white.withValues(alpha: 0.2),
+                      Colors.white.withValues(alpha: 0.1),
                     ],
                   ),
                   shape: BoxShape.circle,
@@ -760,7 +759,7 @@ class _CaptionAndOwner extends StatelessWidget {
               const SizedBox(width: 8),
               Flexible(
                 child: Text(
-                  'Original audio • ${post.authorName}',
+                  '${'original_audio'.tr} • ${post.authorName}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
@@ -870,7 +869,7 @@ class _ActionsRailState extends State<_ActionsRail> {
           _currentPost = widget.post;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Error occurred while adding reaction')),
+           SnackBar(content: Text('error_adding_reaction'.tr)),
         );
       }
     }
@@ -903,7 +902,7 @@ class _ActionsRailState extends State<_ActionsRail> {
           _currentPost = widget.post;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Error occurred while adding reaction')),
+           SnackBar(content: Text('error_adding_reaction'.tr)),
         );
       }
     }
@@ -920,9 +919,7 @@ class _ActionsRailState extends State<_ActionsRail> {
     );
   }
   void _showReactionUsers() {
-    // استخدام reactionBreakdown الفعلي لحساب العدد الصحيح
     final reactionStats = Map<String, int>.from(_currentPost.reactionBreakdown);
-    // إذا لم تكن هناك breakdown ولكن هناك تفاعلات، اعتبرها likes
     if (reactionStats.isEmpty && _currentPost.reactionsCount > 0) {
       reactionStats['like'] = _currentPost.reactionsCount;
     }
@@ -957,26 +954,26 @@ class _ActionsRailState extends State<_ActionsRail> {
                     end: Alignment.bottomRight,
                     colors: active 
                       ? [
-                          (activeColor ?? Colors.red).withOpacity(0.3),
-                          (activeColor ?? Colors.red).withOpacity(0.1),
+                          (activeColor ?? Colors.red).withValues(alpha: 0.3),
+                          (activeColor ?? Colors.red).withValues(alpha: 0.1),
                         ]
                       : [
-                          Colors.black.withOpacity(0.5),
-                          Colors.black.withOpacity(0.3),
+                          Colors.black.withValues(alpha: 0.5),
+                          Colors.black.withValues(alpha: 0.3),
                         ],
                   ),
                   shape: BoxShape.circle,
                   border: Border.all(
                     color: active 
-                      ? (activeColor ?? Colors.red).withOpacity(0.4)
-                      : Colors.white.withOpacity(0.15),
+                      ? (activeColor ?? Colors.red).withValues(alpha: 0.4)
+                      : Colors.white.withValues(alpha: 0.15),
                     width: 1.5,
                   ),
                   boxShadow: [
                     BoxShadow(
                       color: active 
-                        ? (activeColor ?? Colors.red).withOpacity(0.3)
-                        : Colors.black.withOpacity(0.4),
+                        ? (activeColor ?? Colors.red).withValues(alpha: 0.3)
+                        : Colors.black.withValues(alpha: 0.4),
                       blurRadius: active ? 12 : 8,
                       offset: const Offset(0, 4),
                     ),
@@ -995,13 +992,13 @@ class _ActionsRailState extends State<_ActionsRail> {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          Colors.black.withOpacity(0.4),
-                          Colors.black.withOpacity(0.2),
+                          Colors.black.withValues(alpha: 0.4),
+                          Colors.black.withValues(alpha: 0.2),
                         ],
                       ),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: Colors.white.withOpacity(0.1),
+                        color: Colors.white.withValues(alpha: 0.1),
                         width: 0.5,
                       ),
                     ),
@@ -1038,7 +1035,7 @@ class _ActionsRailState extends State<_ActionsRail> {
           onLongPress: _showReactionsPicker,
         ),
         btn(Iconsax.message, label: _currentPost.commentsCountFormatted, onTap: _showComments),
-        btn(Iconsax.send_2, label: 'Share', onTap: () {}),
+        btn(Iconsax.send_2, label: 'share'.tr, onTap: () {}),
         btn(Iconsax.more, onTap: () {}),
         const SizedBox(height: 8),
         // spinning music disc
@@ -1054,23 +1051,23 @@ class _ActionsRailState extends State<_ActionsRail> {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  Colors.purple.withOpacity(0.3),
-                  Colors.blue.withOpacity(0.2),
-                  Colors.black.withOpacity(0.4),
+                  Colors.purple.withValues(alpha: 0.3),
+                  Colors.blue.withValues(alpha: 0.2),
+                  Colors.black.withValues(alpha: 0.4),
                 ],
               ),
               border: Border.all(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 width: 1.5,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.purple.withOpacity(0.2),
+                  color: Colors.purple.withValues(alpha: 0.2),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
+                  color: Colors.black.withValues(alpha: 0.3),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -1081,12 +1078,12 @@ class _ActionsRailState extends State<_ActionsRail> {
                 shape: BoxShape.circle,
               ),
               child: CircleAvatar(
-                backgroundColor: Colors.grey.withOpacity(0.2),
+                backgroundColor: Colors.grey.withValues(alpha: 0.2),
                 backgroundImage: avatar,
                 child: avatar == null
                     ? Icon(
                         Iconsax.music,
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                         size: 18,
                       )
                     : null,
@@ -1098,7 +1095,6 @@ class _ActionsRailState extends State<_ActionsRail> {
     );
   }
 }
-/// Reaction Picker Widget for Reels
 class _ReactionPicker extends StatefulWidget {
   const _ReactionPicker({required this.onSelected});
   final Function(String) onSelected;
@@ -1164,9 +1160,9 @@ class _ReactionPickerState extends State<_ReactionPicker>
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.8),
+          color: Colors.black.withValues(alpha: 0.8),
           borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: Colors.white.withOpacity(0.1)),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -1193,7 +1189,6 @@ class _ReactionPickerState extends State<_ReactionPicker>
     );
   }
 }
-/// Reaction Button Widget
 class _ReactionButton extends StatelessWidget {
   const _ReactionButton({
     required this.reaction,
@@ -1232,7 +1227,6 @@ class _ReactionButton extends StatelessWidget {
     );
   }
 }
-/// Reaction Icon Widget
 class _ReactionIcon extends StatelessWidget {
   const _ReactionIcon({required this.type, this.size = 18});
   final String type;
