@@ -4,14 +4,17 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/instance_manager.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
+
 import 'package:snginepro/core/theme/design_tokens.dart';
 import '../../application/bloc/wallet_packages_cubit.dart';
 import '../../data/models/wallet_action_result.dart';
 import '../../domain/wallet_repository.dart';
 import '../widgets/wallet_packages.dart';
 import '../widgets/wallet_shared_widgets.dart';
+
 class WalletPackagesPage extends StatelessWidget {
   const WalletPackagesPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final repository = Provider.of<WalletRepository>(context, listen: false);
@@ -21,8 +24,10 @@ class WalletPackagesPage extends StatelessWidget {
     );
   }
 }
+
 class _WalletPackagesView extends StatelessWidget {
   const _WalletPackagesView();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,11 +99,13 @@ class _WalletPackagesView extends StatelessWidget {
     );
   }
 }
+
 List<Widget> _buildContentSlivers(
   BuildContext context,
   WalletPackagesState state,
 ) {
   final cubit = context.read<WalletPackagesCubit>();
+
   if (state.isLoading) {
     return [
       SliverPadding(
@@ -117,6 +124,7 @@ List<Widget> _buildContentSlivers(
       ),
     ];
   }
+
   if (state.status == WalletPackagesStatus.failure) {
     return [
       SliverFillRemaining(
@@ -132,6 +140,7 @@ List<Widget> _buildContentSlivers(
       ),
     ];
   }
+
   if (!state.hasPackages) {
     return const [
       SliverFillRemaining(
@@ -146,6 +155,7 @@ List<Widget> _buildContentSlivers(
       ),
     ];
   }
+
   return [
     SliverPadding(
       padding: const EdgeInsets.fromLTRB(
@@ -175,9 +185,12 @@ List<Widget> _buildContentSlivers(
     ),
   ];
 }
+
 class _PackagesSliverAppBar extends StatelessWidget {
   const _PackagesSliverAppBar({required this.onRefresh});
+
   final VoidCallback onRefresh;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -214,8 +227,10 @@ class _PackagesSliverAppBar extends StatelessWidget {
     );
   }
 }
+
 class _PackagesHero extends StatelessWidget {
   const _PackagesHero();
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -289,10 +304,13 @@ class _PackagesHero extends StatelessWidget {
     );
   }
 }
+
 class _HeroOrb extends StatelessWidget {
   const _HeroOrb({required this.color, required this.size});
+
   final Color color;
   final double size;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -302,10 +320,13 @@ class _HeroOrb extends StatelessWidget {
     );
   }
 }
+
 class _HeroChip extends StatelessWidget {
   const _HeroChip({required this.icon, required this.label});
+
   final IconData icon;
   final String label;
+
   @override
   Widget build(BuildContext context) {
     return Container(

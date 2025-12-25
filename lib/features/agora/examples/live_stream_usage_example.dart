@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import '../presentation/pages/live_stream_viewer_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 /// مثال لكيفية استخدام LiveStreamViewerPage مع API integration
 class LiveStreamUsageExample {
+  
   /// مثال 1: انتقال لمشاهدة بث مباشر مع API integration
   static void navigateToLiveStream(
     BuildContext context, {
@@ -24,17 +26,20 @@ class LiveStreamUsageExample {
           token: token,
           broadcasterName: broadcasterName,
           uid: 0, // عادة 0 للمشاهدين
+          
           // معلومات إضافية
           broadcasterAvatar: broadcasterAvatar,
           thumbnailUrl: thumbnailUrl,
           isVerified: isVerified,
           viewersCount: viewersCount,
+          
           // معرف البث للـ API - هذا مهم!
           postId: postId,
         ),
       ),
     );
   }
+
   /// مثال 2: مشاهدة بث مباشر بدون API (البيانات التجريبية فقط)
   static void navigateToLiveStreamDemo(
     BuildContext context, {
@@ -55,6 +60,7 @@ class LiveStreamUsageExample {
       ),
     );
   }
+
   /// مثال 3: الحصول على بيانات البث من API ثم فتح المشاهدة
   static Future<void> joinLiveStreamFromAPI(
     BuildContext context, {
@@ -69,6 +75,7 @@ class LiveStreamUsageExample {
           child: CircularProgressIndicator(),
         ),
       );
+
       // هنا يجب استدعاء API للحصول على بيانات البث
       // مثال على الاستجابة المتوقعة:
       final mockApiResponse = {
@@ -85,15 +92,19 @@ class LiveStreamUsageExample {
           'live_ended': false,
         }
       };
+
       // إغلاق loader
       Navigator.pop(context);
+
       if (mockApiResponse['status'] == 'success') {
         final data = mockApiResponse['data'] as Map<String, dynamic>;
+        
         // التأكد من أن البث لم ينته
         if (data['live_ended'] == true) {
           _showErrorDialog(context, 'هذا البث المباشر قد انتهى');
           return;
         }
+
         // فتح صفحة المشاهدة مع البيانات المستلمة
         navigateToLiveStream(
           context,
@@ -114,6 +125,7 @@ class LiveStreamUsageExample {
       _showErrorDialog(context, 'حدث خطأ: ${e.toString()}');
     }
   }
+
   /// مثال 4: قائمة البثوث المباشرة النشطة
   static Widget buildActiveLiveStreamsList() {
     return FutureBuilder<List<Map<String, dynamic>>>(
@@ -123,17 +135,21 @@ class LiveStreamUsageExample {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         }
+
         if (snapshot.hasError) {
           return Center(
             child: Text('خطأ في تحميل البثوث: ${snapshot.error}'),
           );
         }
+
         final liveStreams = snapshot.data ?? [];
+        
         if (liveStreams.isEmpty) {
           return const Center(
             child: Text('لا توجد بثوث مباشرة حالياً'),
           );
         }
+
         return ListView.builder(
           itemCount: liveStreams.length,
           itemBuilder: (context, index) {
@@ -144,6 +160,7 @@ class LiveStreamUsageExample {
       },
     );
   }
+
   /// مساعد: بناء كارد البث المباشر
   static Widget _buildLiveStreamCard(
     BuildContext context, 
@@ -236,10 +253,12 @@ class LiveStreamUsageExample {
       ),
     );
   }
+
   /// مساعد: جلب البثوث المباشرة النشطة (mock)
   static Future<List<Map<String, dynamic>>> _fetchActiveLiveStreams() async {
     // محاكاة استدعاء API
     await Future.delayed(const Duration(seconds: 2));
+    
     return [
       {
         'post_id': '123',
@@ -263,6 +282,7 @@ class LiveStreamUsageExample {
       },
     ];
   }
+
   /// مساعد: عرض رسالة خطأ
   static void _showErrorDialog(BuildContext context, String message) {
     showDialog(
@@ -280,9 +300,11 @@ class LiveStreamUsageExample {
     );
   }
 }
+
 /// مثال صفحة لعرض البثوث المباشرة
 class LiveStreamsPage extends StatelessWidget {
   const LiveStreamsPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

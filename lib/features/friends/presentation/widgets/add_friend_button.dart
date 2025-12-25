@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/network/api_client.dart';
 import '../../data/models/friendship_model.dart';
 import '../../data/services/friends_api_service.dart';
+
 /// Widget زر إضافة الصديق القابل لإعادة الاستخدام
 class AddFriendButton extends StatefulWidget {
   const AddFriendButton({
@@ -19,32 +21,44 @@ class AddFriendButton extends StatefulWidget {
     this.showText = true,
     this.customText,
   });
+
   /// معرف المستخدم المراد إضافته كصديق
   final int userId;
+  
   /// حالة الصداقة الأولية
   final FriendshipStatus initialStatus;
+  
   /// حجم الزر
   final AddFriendButtonSize size;
+  
   /// نمط الزر
   final AddFriendButtonStyle style;
+  
   /// callback عند تغيير حالة الصداقة
   final void Function(FriendshipStatus newStatus)? onStatusChanged;
+  
   /// خدمة API (اختيارية - ستستخدم خدمة افتراضية إذا لم تُمرر)
   final FriendsApiService? friendsApiService;
+  
   /// إظهار النص مع الأيقونة
   final bool showText;
+  
   /// نص مخصص بدلاً من النص الافتراضي
   final String? customText;
+
   @override
   State<AddFriendButton> createState() => _AddFriendButtonState();
 }
+
 class _AddFriendButtonState extends State<AddFriendButton> {
   FriendshipStatus _currentStatus = FriendshipStatus.none;
   bool _isLoading = false;
   late FriendsApiService _apiService;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    
     // إنشاء الخدمة باستخدام ApiClient من Provider
     if (widget.friendsApiService != null) {
       _apiService = widget.friendsApiService!;
@@ -53,11 +67,13 @@ class _AddFriendButtonState extends State<AddFriendButton> {
       _apiService = FriendsApiService(apiClient);
     }
   }
+
   @override
   void initState() {
     super.initState();
     _currentStatus = widget.initialStatus;
   }
+
   @override
   void didUpdateWidget(AddFriendButton oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -65,11 +81,15 @@ class _AddFriendButtonState extends State<AddFriendButton> {
       _currentStatus = widget.initialStatus;
     }
   }
+
   Future<void> _handleAction() async {
     if (_isLoading) return;
+
     setState(() => _isLoading = true);
+
     try {
       FriendActionResult result;
+      
       switch (_currentStatus) {
         case FriendshipStatus.none:
           result = await _apiService.sendFriendRequest(widget.userId);
@@ -91,9 +111,11 @@ class _AddFriendButtonState extends State<AddFriendButton> {
           // لا نعرض زر للمحظورين
           return;
       }
+
       if (result.success) {
         setState(() => _currentStatus = result.newStatus);
         widget.onStatusChanged?.call(result.newStatus);
+        
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -120,63 +142,68 @@ class _AddFriendButtonState extends State<AddFriendButton> {
       }
     }
   }
+
   Future<FriendActionResult> _showAcceptDeclineDialog() async {
     final result = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title:Text('friend_request'.tr),
-        content:  Text('accept_or_decline'.tr),
+        title: Text('friend_request_title'.tr),
+        content: Text('accept_or_decline'.tr),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, 'decline'),
-            child:  Text('decline'.tr),
+            child: Text('decline_button'.tr),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, 'accept'),
-            child:  Text('accept'.tr),
+            child: Text('accept_button'.tr),
           ),
         ],
       ),
     );
+
     if (result == 'accept') {
       return await _apiService.acceptFriendRequest(widget.userId);
     } else if (result == 'decline') {
       return await _apiService.declineFriendRequest(widget.userId);
     } else {
-      return FriendActionResult.error('action_cancelled'.tr, _currentStatus);
+      return FriendActionResult.error('Action cancelled', _currentStatus);
     }
   }
+
   Future<FriendActionResult> _showRemoveFriendDialog() async {
     final result = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title:  Text('remove_friend'.tr),
-        content:  Text('remove_friend_confirmation'.tr),
+        title: Text('remove_friend_title'.tr),
+        content: Text('are_you_sure_remove'.tr),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child:  Text('cancel'.tr),
+            child: Text('cancel'.tr),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
             style: FilledButton.styleFrom(backgroundColor: Colors.red),
-            child:  Text('remove'.tr),
+            child: Text('remove_button'.tr),
           ),
         ],
       ),
     );
+
     if (result == true) {
       return await _apiService.removeFriend(widget.userId);
     } else {
-      return FriendActionResult.error('action_cancelled'.tr, _currentStatus);
+      return FriendActionResult.error('Action cancelled', _currentStatus);
     }
   }
+
   ButtonConfig _getButtonConfig() {
     switch (_currentStatus) {
       case FriendshipStatus.none:
         return ButtonConfig(
-          text: widget.customText ?? 'add_friend_button'.tr,
-          textAr: 'add_friend_button'.tr,
+          text: widget.customText ?? 'Add Friend',
+          textAr: 'إضافة صديق',
           icon: Iconsax.user_add,
           color: AppColors.primary,
           backgroundColor: Colors.transparent,
@@ -184,8 +211,8 @@ class _AddFriendButtonState extends State<AddFriendButton> {
         );
       case FriendshipStatus.pending:
         return ButtonConfig(
-          text: widget.customText ?? 'cancel_request'.tr,
-          textAr: 'cancel_request'.tr,
+          text: widget.customText ?? 'Cancel Request',
+          textAr: 'إلغاء الطلب',
           icon: Iconsax.user_minus,
           color: Colors.orange,
           backgroundColor: Colors.transparent,
@@ -193,8 +220,8 @@ class _AddFriendButtonState extends State<AddFriendButton> {
         );
       case FriendshipStatus.requested:
         return ButtonConfig(
-          text: widget.customText ?? 'respond'.tr,
-          textAr: 'respond'.tr,
+          text: widget.customText ?? 'Respond',
+          textAr: 'الرد',
           icon: Iconsax.user_tick,
           color: Colors.green,
           backgroundColor: Colors.green.withOpacity(0.1),
@@ -202,8 +229,8 @@ class _AddFriendButtonState extends State<AddFriendButton> {
         );
       case FriendshipStatus.friends:
         return ButtonConfig(
-          text: widget.customText ?? 'friends'.tr,
-          textAr: 'friends'.tr,
+          text: widget.customText ?? 'Friends',
+          textAr: 'أصدقاء',
           icon: Iconsax.user_tick,
           color: Colors.green,
           backgroundColor: Colors.green.withOpacity(0.1),
@@ -211,8 +238,8 @@ class _AddFriendButtonState extends State<AddFriendButton> {
         );
       case FriendshipStatus.following:
         return ButtonConfig(
-          text: widget.customText ?? 'following'.tr,
-          textAr: 'following'.tr,
+          text: widget.customText ?? 'Following',
+          textAr: 'متابع',
           icon: Iconsax.user_minus,
           color: AppColors.primary,
           backgroundColor: AppColors.primary.withOpacity(0.1),
@@ -220,8 +247,8 @@ class _AddFriendButtonState extends State<AddFriendButton> {
         );
       case FriendshipStatus.blocked:
         return ButtonConfig(
-          text: widget.customText ?? 'blocked'.tr,
-          textAr: 'blocked'.tr,
+          text: widget.customText ?? 'Blocked',
+          textAr: 'محظور',
           icon: Iconsax.user_remove,
           color: Colors.red,
           backgroundColor: Colors.transparent,
@@ -229,15 +256,19 @@ class _AddFriendButtonState extends State<AddFriendButton> {
         );
     }
   }
+
   @override
   Widget build(BuildContext context) {
     // لا نعرض زر للمحظورين
     if (_currentStatus == FriendshipStatus.blocked) {
       return const SizedBox.shrink();
     }
+
     final config = _getButtonConfig();
     final buttonSize = _getButtonSize();
+    
     Widget buttonChild;
+    
     if (_isLoading) {
       buttonChild = SizedBox(
         width: buttonSize.iconSize,
@@ -276,6 +307,7 @@ class _AddFriendButtonState extends State<AddFriendButton> {
         );
       }
     }
+
     switch (widget.style) {
       case AddFriendButtonStyle.filled:
         return FilledButton(
@@ -295,6 +327,7 @@ class _AddFriendButtonState extends State<AddFriendButton> {
           ),
           child: buttonChild,
         );
+
       case AddFriendButtonStyle.outlined:
         return OutlinedButton(
           onPressed: _isLoading ? null : _handleAction,
@@ -312,6 +345,7 @@ class _AddFriendButtonState extends State<AddFriendButton> {
           ),
           child: buttonChild,
         );
+
       case AddFriendButtonStyle.text:
         return TextButton(
           onPressed: _isLoading ? null : _handleAction,
@@ -328,6 +362,7 @@ class _AddFriendButtonState extends State<AddFriendButton> {
           ),
           child: buttonChild,
         );
+
       case AddFriendButtonStyle.iconOnly:
         return IconButton(
           onPressed: _isLoading ? null : _handleAction,
@@ -341,6 +376,7 @@ class _AddFriendButtonState extends State<AddFriendButton> {
         );
     }
   }
+
   ButtonSize _getButtonSize() {
     switch (widget.size) {
       case AddFriendButtonSize.small:
@@ -379,6 +415,7 @@ class _AddFriendButtonState extends State<AddFriendButton> {
     }
   }
 }
+
 // تكوين الزر
 class ButtonConfig {
   final String text;
@@ -387,6 +424,7 @@ class ButtonConfig {
   final Color color;
   final Color backgroundColor;
   final Color borderColor;
+
   const ButtonConfig({
     required this.text,
     required this.textAr,
@@ -396,6 +434,7 @@ class ButtonConfig {
     required this.borderColor,
   });
 }
+
 // أحجام الزر
 class ButtonSize {
   final double iconSize;
@@ -406,6 +445,7 @@ class ButtonSize {
   final double minHeight;
   final double borderRadius;
   final double spacing;
+
   const ButtonSize({
     required this.iconSize,
     required this.fontSize,
@@ -417,7 +457,9 @@ class ButtonSize {
     required this.spacing,
   });
 }
+
 // أحجام الزر المتاحة
 enum AddFriendButtonSize { small, medium, large }
+
 // أنماط الزر المتاحة
 enum AddFriendButtonStyle { filled, outlined, text, iconOnly }

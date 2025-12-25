@@ -9,6 +9,7 @@ class PostFunding {
     this.coverImage,
     this.fundingCompletion = 0,
   });
+
   final String fundingId;
   final String postId;
   final String title;
@@ -17,19 +18,23 @@ class PostFunding {
   final int totalDonations;   // عدد التبرعات
   final String? coverImage;   // صورة الحملة
   final double fundingCompletion; // نسبة الإنجاز (0-100)
+
   // حساب النسبة المئوية للتبرعات
   double get completionPercentage {
     if (amount <= 0) return 0;
     return (raisedAmount / amount * 100).clamp(0, 100);
   }
+
   // حساب المبلغ المتبقي
   double get remainingAmount {
     return (amount - raisedAmount).clamp(0, amount);
   }
+
   // التحقق من اكتمال الهدف
   bool get isGoalReached {
     return raisedAmount >= amount;
   }
+
   factory PostFunding.fromJson(Map<String, dynamic> json) {
     return PostFunding(
       fundingId: json['funding_id']?.toString() ?? '',
@@ -42,6 +47,7 @@ class PostFunding {
       fundingCompletion: double.tryParse(json['funding_completion']?.toString() ?? '0') ?? 0,
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'funding_id': fundingId,
@@ -54,12 +60,14 @@ class PostFunding {
       'funding_completion': fundingCompletion,
     };
   }
+
   static PostFunding? maybeFromJson(Object? value) {
     if (value is Map<String, dynamic>) {
       return PostFunding.fromJson(value);
     }
     return null;
   }
+
   PostFunding copyWith({
     String? fundingId,
     String? postId,
@@ -81,6 +89,7 @@ class PostFunding {
       fundingCompletion: fundingCompletion ?? this.fundingCompletion,
     );
   }
+
   @override
   String toString() {
     return 'PostFunding(fundingId: $fundingId, title: $title, amount: $amount, raisedAmount: $raisedAmount, completion: ${completionPercentage.toStringAsFixed(1)}%)';

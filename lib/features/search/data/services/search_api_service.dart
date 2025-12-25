@@ -1,10 +1,13 @@
 import 'package:flutter/foundation.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
+
 /// خدمة البحث الشاملة لجميع أنواع المحتوى
 class SearchApiService {
   final ApiClient _apiClient;
+  
   SearchApiService(this._apiClient);
+
   /// البحث الشامل في جميع المحتويات
   /// 
   /// [query] - نص البحث المطلوب
@@ -21,6 +24,7 @@ class SearchApiService {
       if (query.trim().isEmpty) {
         return SearchApiResponse.empty();
       }
+
       final response = await _apiClient.get(
         configCfgP('search'),
         queryParameters: {
@@ -30,6 +34,7 @@ class SearchApiService {
           'limit': limit.clamp(1, 50).toString(),
         },
       );
+
       if (response['status'] == 'success') {
         return SearchApiResponse.fromJson(response['data']);
       } else {
@@ -41,6 +46,7 @@ class SearchApiService {
       return SearchApiResponse.error('Failed to perform search');
     }
   }
+
   /// البحث في المنشورات فقط
   Future<SearchApiResponse> searchPosts({
     required String query,
@@ -49,6 +55,7 @@ class SearchApiService {
   }) async {
     return search(query: query, tab: 'posts', page: page, limit: limit);
   }
+
   /// البحث في المستخدمين فقط
   Future<SearchApiResponse> searchUsers({
     required String query,
@@ -57,6 +64,7 @@ class SearchApiService {
   }) async {
     return search(query: query, tab: 'users', page: page, limit: limit);
   }
+
   /// البحث في الصفحات فقط
   Future<SearchApiResponse> searchPages({
     required String query,
@@ -65,6 +73,7 @@ class SearchApiService {
   }) async {
     return search(query: query, tab: 'pages', page: page, limit: limit);
   }
+
   /// البحث في المجموعات فقط
   Future<SearchApiResponse> searchGroups({
     required String query,
@@ -73,6 +82,7 @@ class SearchApiService {
   }) async {
     return search(query: query, tab: 'groups', page: page, limit: limit);
   }
+
   /// البحث في الفعاليات فقط
   Future<SearchApiResponse> searchEvents({
     required String query,
@@ -81,6 +91,7 @@ class SearchApiService {
   }) async {
     return search(query: query, tab: 'events', page: page, limit: limit);
   }
+
   /// البحث في المدونات فقط
   Future<SearchApiResponse> searchBlogs({
     required String query,
@@ -90,6 +101,7 @@ class SearchApiService {
     return search(query: query, tab: 'blogs', page: page, limit: limit);
   }
 }
+
 /// نموذج استجابة البحث
 class SearchApiResponse {
   final bool success;
@@ -98,6 +110,7 @@ class SearchApiResponse {
   final String tab;
   final List<Map<String, dynamic>> results;
   final SearchPagination pagination;
+
   const SearchApiResponse({
     required this.success,
     this.message,
@@ -106,6 +119,7 @@ class SearchApiResponse {
     required this.results,
     required this.pagination,
   });
+
   factory SearchApiResponse.fromJson(Map<String, dynamic> json) {
     return SearchApiResponse(
       success: true,
@@ -115,6 +129,7 @@ class SearchApiResponse {
       pagination: SearchPagination.fromJson(json['pagination'] ?? {}),
     );
   }
+
   factory SearchApiResponse.empty() {
     return const SearchApiResponse(
       success: true,
@@ -124,6 +139,7 @@ class SearchApiResponse {
       pagination: SearchPagination(currentPage: 1, hasMore: false),
     );
   }
+
   factory SearchApiResponse.error(String message) {
     return SearchApiResponse(
       success: false,
@@ -134,23 +150,28 @@ class SearchApiResponse {
       pagination: const SearchPagination(currentPage: 1, hasMore: false),
     );
   }
+
   bool get isEmpty => results.isEmpty;
   bool get isNotEmpty => results.isNotEmpty;
   int get resultsCount => results.length;
 }
+
 /// نموذج pagination لنتائج البحث
 class SearchPagination {
   final int currentPage;
   final bool hasMore;
+
   const SearchPagination({
     required this.currentPage,
     required this.hasMore,
   });
+
   factory SearchPagination.fromJson(Map<String, dynamic> json) {
     return SearchPagination(
       currentPage: json['current_page'] ?? 1,
       hasMore: json['has_more'] ?? false,
     );
   }
+
   int get nextPage => hasMore ? currentPage + 1 : currentPage;
 }

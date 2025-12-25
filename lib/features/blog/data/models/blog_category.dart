@@ -2,11 +2,13 @@ class BlogCategory {
   final int categoryId;
   final String categoryName;
   final int? categoryOrder;
+
   const BlogCategory({
     required this.categoryId,
     required this.categoryName,
     this.categoryOrder,
   });
+
   factory BlogCategory.fromJson(Map<String, dynamic> json) {
     return BlogCategory(
       categoryId: json['category_id'] is String

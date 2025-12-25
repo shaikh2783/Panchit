@@ -1,12 +1,17 @@
 import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:snginepro/features/auth/domain/models/auth_session.dart';
+
 class AuthStorage {
   AuthStorage(this._prefs);
+
   static const _tokenKey = 'auth.token';
   static const _sessionIdKey = 'auth.sessionId';
   static const _userKey = 'auth.user';
+
   final SharedPreferences _prefs;
+
   Future<void> saveSession(AuthSession session) async {
     await Future.wait([
       _prefs.setString(_tokenKey, session.token),
@@ -20,6 +25,7 @@ class AuthStorage {
         _prefs.remove(_userKey),
     ]);
   }
+
   Future<AuthSession?> readSession() async {
     final token = _prefs.getString(_tokenKey);
     if (token == null || token.isEmpty) {
@@ -35,6 +41,7 @@ class AuthStorage {
       user: user,
     );
   }
+
   Future<void> clearSession() async {
     await Future.wait([
       _prefs.remove(_tokenKey),

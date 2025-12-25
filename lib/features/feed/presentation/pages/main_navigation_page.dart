@@ -15,6 +15,7 @@ import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/core/theme/design_tokens.dart';
 import 'package:snginepro/features/notifications/presentation/pages/notifications_page.dart';
 import 'package:snginepro/features/discover/presentation/pages/discover_page.dart';
+
 // ... (صفحة FriendsPage كما هي) ...
 class FriendsPage extends StatelessWidget {
   const FriendsPage({super.key});
@@ -23,35 +24,43 @@ class FriendsPage extends StatelessWidget {
     return const Scaffold(body: Center(child: Text('Friends Page')));
   }
 }
+
 class MainNavigationPage extends StatefulWidget {
   const MainNavigationPage({super.key});
+
   @override
   State<MainNavigationPage> createState() => _MainNavigationPageState();
 }
+
 class _MainNavigationPageState extends State<MainNavigationPage> 
     with TickerProviderStateMixin {
   int _currentIndex = 0;
   late final FriendsApiService _friendsService;
   int _friendRequestsCount = 0;
   late AnimationController _badgeAnimationController;
+
   @override
   void initState() {
     super.initState();
+    
     // Initialize badge animation
     _badgeAnimationController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeFriendsService();
       _startPeriodicUpdate();
     });
   }
+
   @override
   void dispose() {
     _badgeAnimationController.dispose();
     super.dispose();
   }
+
   void _startPeriodicUpdate() {
     Timer.periodic(const Duration(seconds: 30), (timer) {
       if (mounted) {
@@ -61,11 +70,13 @@ class _MainNavigationPageState extends State<MainNavigationPage>
       }
     });
   }
+
   void _initializeFriendsService() {
     final apiClient = context.read<ApiClient>();
     _friendsService = FriendsApiService(apiClient);
     _loadFriendRequestsCount();
   }
+
   Future<void> _loadFriendRequestsCount() async {
     try {
       final requests = await _friendsService.getFriendRequests();
@@ -73,11 +84,13 @@ class _MainNavigationPageState extends State<MainNavigationPage>
         setState(() {
           final oldCount = _friendRequestsCount;
           _friendRequestsCount = requests.length;
+          
           // Animate badge when count changes
           if (_friendRequestsCount != oldCount) {
             _badgeAnimationController.reset();
             _badgeAnimationController.forward();
           }
+          
           // Add haptic feedback for new friend requests
           if (_friendRequestsCount > oldCount && oldCount > 0) {
             HapticFeedback.mediumImpact();
@@ -85,9 +98,9 @@ class _MainNavigationPageState extends State<MainNavigationPage>
         });
       }
     } catch (e) {
-      debugPrint('Error loading friend requests: $e');
     }
   }
+
   // 🔄 Migration: Using Bloc pages for specific features while keeping Provider for others
   List<Widget> get _pages => [
     const HomePage(), // ✅ Bloc Migration: Feed page using Bloc pattern
@@ -97,6 +110,8 @@ class _MainNavigationPageState extends State<MainNavigationPage>
     const NotificationsPage(), // ✅ Bloc Migration: Notifications page using Bloc pattern
     MenuPage(onNavigateToTab: (index) => setState(() => _currentIndex = index)), // Pass callback to MenuPage
   ];
+
+  // --- 💡 2. تحديث الأيقونات لاستخدام Iconsax ---
   static const List<_NavItem> _items = [
     _NavItem(icon: Iconsax.home, activeIcon: Iconsax.home),
     _NavItem(icon: Iconsax.people, activeIcon: Iconsax.profile_2user),
@@ -106,10 +121,12 @@ class _MainNavigationPageState extends State<MainNavigationPage>
     _NavItem(icon: Iconsax.menu, activeIcon: Iconsax.menu_1),
   ];
   // --- نهاية التحديث ---
+
   @override
   Widget build(BuildContext context) {
     final isDarkDestination = _currentIndex == 3; // Reels page (updated index)
     final theme = Theme.of(context);
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: isDarkDestination
           ? SystemUiOverlayStyle.light
@@ -154,8 +171,10 @@ class _MainNavigationPageState extends State<MainNavigationPage>
               HapticFeedback.selectionClick();
               return;
             }
+            
             HapticFeedback.lightImpact();
             setState(() => _currentIndex = index);
+
             // إعادة تحديث العدادات عند التبديل إلى صفحة الأصدقاء
             if (index == 1) {
               _loadFriendRequestsCount();
@@ -166,6 +185,7 @@ class _MainNavigationPageState extends State<MainNavigationPage>
     );
   }
 }
+
 // ... (_BottomNavBar و _NavItem كما هي) ...
 class _BottomNavBar extends StatelessWidget {
   const _BottomNavBar({
@@ -174,14 +194,17 @@ class _BottomNavBar extends StatelessWidget {
     required this.onItemSelected,
     this.friendRequestsCount = 0,
   });
+
   final int currentIndex;
   final List<_NavItem> items;
   final ValueChanged<int> onItemSelected;
   final int friendRequestsCount;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    
     return ClipRRect(
       borderRadius: const BorderRadius.only(
         topLeft: Radius.circular(24),
@@ -201,35 +224,35 @@ class _BottomNavBar extends StatelessWidget {
               end: Alignment.bottomCenter,
               colors: isDark 
                 ? [
-                    const Color(0xFF1A1A1A).withValues(alpha: 0.95),
-                    const Color(0xFF0A0A0A).withValues(alpha: 0.98),
+                    const Color(0xFF1A1A1A).withOpacity(0.95),
+                    const Color(0xFF0A0A0A).withOpacity(0.98),
                   ]
                 : [
-                    Colors.white.withValues(alpha: 0.95),
-                    const Color(0xFFF8F9FA).withValues(alpha: 0.98),
+                    Colors.white.withOpacity(0.95),
+                    const Color(0xFFF8F9FA).withOpacity(0.98),
                   ],
             ),
             border: Border(
               top: BorderSide(
                 color: isDark 
-                  ? Colors.white.withValues(alpha: 0.1)
-                  : Colors.black.withValues(alpha: 0.08),
+                  ? Colors.white.withOpacity(0.1)
+                  : Colors.black.withOpacity(0.08),
                 width: 1,
               ),
             ),
             boxShadow: [
               BoxShadow(
                 color: isDark 
-                  ? Colors.black.withValues(alpha: 0.4)
-                  : Colors.black.withValues(alpha: 0.08),
+                  ? Colors.black.withOpacity(0.4)
+                  : Colors.black.withOpacity(0.08),
                 blurRadius: 20,
                 spreadRadius: 0,
                 offset: const Offset(0, -4),
               ),
               BoxShadow(
                 color: isDark 
-                  ? Colors.black.withValues(alpha: 0.2)
-                  : Colors.black.withValues(alpha: 0.04),
+                  ? Colors.black.withOpacity(0.2)
+                  : Colors.black.withOpacity(0.04),
                 blurRadius: 40,
                 spreadRadius: 0,
                 offset: const Offset(0, -8),
@@ -257,6 +280,7 @@ class _BottomNavBar extends StatelessWidget {
     );
   }
 }
+
 // --- 💡 3. إعادة تصميم الزر بالكامل (احترافي) ---
 class _NavButton extends StatelessWidget {
   const _NavButton({
@@ -265,14 +289,17 @@ class _NavButton extends StatelessWidget {
     required this.onTap,
     this.badgeCount = 0,
   });
+
   final _NavItem item;
   final bool isActive;
   final VoidCallback onTap;
   final int badgeCount;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    
     return Expanded(
       child: GestureDetector(
         onTap: () {
@@ -291,22 +318,22 @@ class _NavButton extends StatelessWidget {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      theme.colorScheme.primary.withValues(alpha: 0.15),
-                      theme.colorScheme.primary.withValues(alpha: 0.08),
+                      theme.colorScheme.primary.withOpacity(0.15),
+                      theme.colorScheme.primary.withOpacity(0.08),
                     ],
                   )
                 : null,
               borderRadius: BorderRadius.circular(20),
               border: isActive
                 ? Border.all(
-                    color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                    color: theme.colorScheme.primary.withOpacity(0.3),
                     width: 1.5,
                   )
                 : null,
               boxShadow: isActive
                 ? [
                     BoxShadow(
-                      color: theme.colorScheme.primary.withValues(alpha: 0.2),
+                      color: theme.colorScheme.primary.withOpacity(0.2),
                       blurRadius: 12,
                       spreadRadius: 0,
                       offset: const Offset(0, 4),
@@ -324,7 +351,7 @@ class _NavButton extends StatelessWidget {
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: isActive
-                        ? theme.colorScheme.primary.withValues(alpha: 0.1)
+                        ? theme.colorScheme.primary.withOpacity(0.1)
                         : Colors.transparent,
                       shape: BoxShape.circle,
                     ),
@@ -368,7 +395,7 @@ class _NavButton extends StatelessWidget {
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xFFFF4757).withValues(alpha: 0.4),
+                              color: const Color(0xFFFF4757).withOpacity(0.4),
                               blurRadius: 8,
                               spreadRadius: 0,
                               offset: const Offset(0, 2),
@@ -396,8 +423,10 @@ class _NavButton extends StatelessWidget {
   }
 }
 // --- نهاية التحديث ---
+
 class _NavItem {
   const _NavItem({required this.icon, required this.activeIcon});
+
   final IconData icon;
   final IconData activeIcon;
 }

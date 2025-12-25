@@ -6,6 +6,7 @@ import 'post_course.dart';
 import 'post_colored_pattern.dart';
 import 'post_live.dart';
 import 'post_audio.dart';
+
 class Post {
   Post({
     required this.id,
@@ -100,6 +101,7 @@ class Post {
         sharesCountFormatted = _formatCount(sharesCount),
         viewsCountFormatted = _formatCount(viewsCount),
         reviewsCountFormatted = _formatCount(reviewsCount);
+
   final int id;
   final String authorName;
   final String publishedAt;
@@ -133,6 +135,7 @@ class Post {
   final String? myReaction;
   final String privacy;
   final Map<String, int> reactionBreakdown;
+  
   // 🚀 POST MANAGEMENT FIELDS
   final bool isSaved;          // هل المنشور محفوظ (i_save)
   final bool isPinned;         // هل المنشور مثبت (pinned)
@@ -142,6 +145,7 @@ class Post {
   final bool forAdult;         // 🔞 هل المحتوى للبالغين فقط (for_adult)
   final bool isPromoted;       // 💰 هل المنشور مدفوع/مروج (promoted/boosted)
   final bool isAd;             // 📢 هل هذا إعلان (is_ad)
+  
   // 📢 AD FIELDS (only used when isAd = true)
   final String? campaignTitle;
   final String? campaignDescription;
@@ -158,6 +162,7 @@ class Post {
   final int? adGroupId;         // معرف المجموعة (إذا كان ads_type = "group")
   final int? adEventId;         // معرف الحدث (إذا كان ads_type = "event")
   final int? adPostId;          // معرف المنشور (إذا كان ads_type = "post")
+  
   final List<String> topReactions;
   final String? permalink;
   final PostVideo? video;
@@ -166,6 +171,7 @@ class Post {
   final PostPoll? poll;
   final PostLink? link;
   final PostAudio? audio;
+  
   // ⚠️ NEW FIELDS FOR SHARED POSTS AND ARTICLES
   final Post? originPost;      // المنشور الأصلي للمنشورات المشاركة
   final PostBlog? blog;        // محتوى المقال
@@ -183,52 +189,81 @@ class Post {
   final String? feelingAction; // نوع الشعور (Feeling, Listening To, إلخ)
   final String? feelingValue;  // قيمة الشعور (Happy, Song Name, إلخ)
   final String? feelingIcon;   // أيقونة الشعور
+
   final String reactionsCountFormatted;
   final String commentsCountFormatted;
   final String sharesCountFormatted;
   final String viewsCountFormatted;
   final String reviewsCountFormatted;
+
   bool get isReacted => myReaction != null;
+
   bool get hasVideo => video?.hasAnySource ?? false;
+
   bool get isVideoPost =>
       hasVideo && (postType == 'video' || postType == 'live' || postType == 'reel');
+  
   bool get hasPhotos => photos != null && photos!.isNotEmpty;
+  
   bool get hasAnyPhoto => hasPhotos || (ogImage != null && ogImage!.isNotEmpty);
+  
   bool get hasPoll => poll != null;
+  
   bool get hasLink => link != null;
+  
   bool get hasAudio => audio != null;
+  
   bool get isAudioPost => postType == 'audio' && hasAudio;
+  
   bool get isPagePost => authorType == 'page' && pageId != null;
+  
   bool get isGroupPost => inGroup && groupId != null;
+  
   bool get isEventPost => inEvent && event != null;
+  
   bool get isSharedPost => postType == 'shared' && originPost != null;
+  
   bool get isArticlePost => postType == 'article' && blog != null;
+  
   bool get isFundingPost => postType == 'funding' && funding != null;
+  
   bool get isOfferPost => postType == 'offer' && offer != null;
+  
   bool get isCoursePost => postType == 'course' && course != null;
+  
   bool get hasColoredPattern => coloredPattern != null;
+  
   bool get hasBlog => blog != null;
+
   bool get hasLive => live != null;
+  
   bool get isLivePost => postType == 'live' && hasLive;
+  
   bool get isActiveLive => isLivePost && live!.isActive;
+
   factory Post.fromJson(Map<String, dynamic> json) {
     try {
+      
       String? myReaction;
+
       if (json['viewer_reaction'] is Map<String, dynamic>) {
         final viewerReaction = json['viewer_reaction']['reaction'];
         if (viewerReaction is String && viewerReaction.isNotEmpty) {
           myReaction = viewerReaction;
         }
       }
+
       if (myReaction == null) {
         final iReaction = json['i_reaction'];
         if (iReaction is String && iReaction.isNotEmpty) {
           myReaction = iReaction;
         }
       }
+
       if (myReaction == null && _bool(json['i_react'])) {
         myReaction = 'like';
       }
+
       // Debug: Print author information
       final userId = _string(json['user_id']) ?? _string(json['post_author_id']);
       final username = _string(json['user_name']) ?? _string(json['post_author_username']);
@@ -236,21 +271,28 @@ class Post {
       final pageId = _string(json['page_id']);
       final pageName = _string(json['page_name']);
       final pageTitle = _string(json['page_title']);
+      
       // ⚠️ NEW: Parse group information
       final inGroup = _bool(json['in_group']);
       final tipsEnabled = _bool(json['tips_enabled']);
       final forAdult = _bool(json['for_adult']);
+      
       // 🔍 DEBUG: Log all keys in JSON for forAdult posts
       if (forAdult) {
       }
+      
       final photos = PostPhoto.listFromJson(json['photos']);
       final ogImage = _string(json['og_image']);
+      
       if (forAdult || photos != null) {
       }
+      
       final postType = _string(json['post_type']);
+      
       // 🎨 Debug colored_pattern parsing
       if (json['colored_pattern'] != null) {
       }
+
       return Post(
         id: _int(json['post_id']),
         authorName: _authorName(json),
@@ -346,6 +388,7 @@ class Post {
       rethrow; // Re-throw to let the caller handle it
     }
   }
+
   Post copyWith({
     int? id,
     String? authorName,
@@ -516,6 +559,7 @@ class Post {
       feelingIcon: feelingIcon ?? this.feelingIcon,
     );
   }
+
   static bool _bool(Object? value) {
     if (value == null) return false;
     if (value is bool) return value;
@@ -527,6 +571,7 @@ class Post {
     }
     return false;
   }
+
   static String? _string(Object? value) {
     if (value == null) {
       return null;
@@ -536,6 +581,7 @@ class Post {
     }
     return value.toString();
   }
+
   static int _int(Object? value) {
     if (value == null) return 0;
     if (value is int) return value;
@@ -543,16 +589,19 @@ class Post {
     final parsed = int.tryParse(value.toString());
     return parsed ?? 0;
   }
+
   static String _authorName(Map<String, dynamic> json) {
     // If the post is from a page, use the page name
     final pageTitle = _string(json['page_title']);
     if (pageTitle != null && pageTitle.trim().isNotEmpty) {
       return pageTitle.trim();
     }
+    
     final pageName = _string(json['page_name']);
     if (pageName != null && pageName.trim().isNotEmpty) {
       return pageName.trim();
     }
+    
     // If it's from a regular user
     final fromPost = _string(json['post_author_name']);
     if (fromPost != null && fromPost.trim().isNotEmpty) {
@@ -574,12 +623,14 @@ class Post {
     }
     return 'User';
   }
+
   static String? _authorAvatar(Map<String, dynamic> json) {
     // If the post is from a page, use the page image
     final pagePicture = _string(json['page_picture']);
     if (pagePicture != null && pagePicture.isNotEmpty) {
       return pagePicture;
     }
+    
     // If it's from a regular user
     final postAvatar = _string(json['post_author_picture']);
     if (postAvatar != null && postAvatar.isNotEmpty) {
@@ -591,6 +642,7 @@ class Post {
     }
     return null;
   }
+
   static Map<String, int> _parseReactions(Object? value) {
     if (value is Map<String, dynamic>) {
       return value.map(
@@ -599,6 +651,7 @@ class Post {
     }
     return const {};
   }
+
   static List<String> _topReactions(Map<String, int> breakdown) {
     final entries = breakdown.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
@@ -608,6 +661,7 @@ class Post {
         .take(3)
         .toList();
   }
+
   static String _formatCount(int value) {
     if (value >= 1000000) {
       final fixed = (value / 1000000).toStringAsFixed(1);
@@ -619,14 +673,17 @@ class Post {
     }
     return value.toString();
   }
+
   static String _trimTrailingZero(String value) {
     return value.endsWith('.0') ? value.substring(0, value.length - 2) : value;
   }
+
   static PostEvent? _parseEventData(Map<String, dynamic> json) {
     // If there's an event object, use it
     if (json['event'] != null && json['event'] is Map<String, dynamic>) {
       return PostEvent.fromJson(json['event']);
     }
+    
     // If this is an event-related post but event data is in main level
     if (json['post_type'] == 'event' || json['post_type'] == 'event_cover' || _bool(json['in_event'])) {
       // Check if we have event fields at root level
@@ -634,14 +691,18 @@ class Post {
         return PostEvent.fromJson(json);
       }
     }
+    
     return null;
   }
+
   /// Create a copy of this post with updated reaction
   Post copyWithReaction(String? reaction) {
     // إذا كان التفاعل 'remove'، نعتبره null
     final newReaction = (reaction == 'remove') ? null : reaction;
+    
     // Calculate new reaction breakdown
     final newBreakdown = Map<String, int>.from(reactionBreakdown);
+    
     // Remove old reaction
     if (myReaction != null) {
       newBreakdown[myReaction!] = (newBreakdown[myReaction!] ?? 1) - 1;
@@ -649,16 +710,19 @@ class Post {
         newBreakdown.remove(myReaction!);
       }
     }
+    
     // Add new reaction (only if not 'remove')
     if (newReaction != null) {
       newBreakdown[newReaction] = (newBreakdown[newReaction] ?? 0) + 1;
     }
+    
     // Calculate new total count
     final hadReaction = myReaction != null;
     final hasReaction = newReaction != null;
     final newReactionsCount = reactionsCount + 
         (hasReaction ? 1 : 0) - 
         (hadReaction ? 1 : 0);
+    
     return Post(
       id: id,
       authorName: authorName,
@@ -745,6 +809,7 @@ class Post {
     );
   }
 }
+
 class PostVideo {
   PostVideo({
     required this.originalSource,
@@ -753,12 +818,15 @@ class PostVideo {
     required this.categoryName,
     this.viewCount = 0,
   });
+
   final String originalSource;
   final Map<String, String> availableSources;
   final String thumbnail;
   final String categoryName;
   final int viewCount;
+
   bool get hasAnySource => originalSource.isNotEmpty || availableSources.isNotEmpty;
+
   Uri? bestSourceUri() {
     if (availableSources.isNotEmpty) {
       final preferredOrder = [
@@ -782,6 +850,7 @@ class PostVideo {
     }
     return null;
   }
+
   static PostVideo? maybeFromJson(Object? value) {
     if (value is! Map<String, dynamic>) {
       return null;
@@ -815,6 +884,7 @@ class PostVideo {
     );
   }
 }
+
 class PostPhoto {
   PostPhoto({
     required this.id,
@@ -822,10 +892,12 @@ class PostPhoto {
     this.votes = 0,
     this.blur = false, // ✅ إضافة حقل blur
   });
+
   final int id;
   final String source;
   final int votes;
   final bool blur; // ✅ هل الصورة محجوبة (للمحتوى للبالغين)
+
   static PostPhoto? maybeFromJson(Object? value) {
     if (value is! Map<String, dynamic>) {
       return null;
@@ -835,6 +907,7 @@ class PostPhoto {
     if (id == 0 || source == null || source.isEmpty) {
       return null;
     }
+    
     // تجاهل الفيديوهات التي تأتي في حقل photos بالخطأ
     final lowerSource = source.toLowerCase();
     if (lowerSource.endsWith('.mp4') || 
@@ -844,6 +917,7 @@ class PostPhoto {
         lowerSource.contains('/videos/')) {
       return null;
     }
+    
     return PostPhoto(
       id: id,
       source: source,
@@ -851,6 +925,7 @@ class PostPhoto {
       blur: Post._bool(value['blur']), // ✅ إضافة blur من JSON
     );
   }
+
   static List<PostPhoto>? listFromJson(Object? value) {
     if (value is! List) {
       return null;
@@ -868,15 +943,18 @@ class PostPhoto {
     return photos.isEmpty ? null : photos;
   }
 }
+
 class PostPoll {
   PostPoll({
     required this.id,
     required this.votes,
     required this.options,
   });
+
   final int id;
   final int votes;
   final List<PollOption> options;
+
   static PostPoll? maybeFromJson(Object? value) {
     if (value is! Map<String, dynamic>) {
       return null;
@@ -893,6 +971,7 @@ class PostPoll {
     );
   }
 }
+
 class PollOption {
   PollOption({
     required this.id,
@@ -900,14 +979,17 @@ class PollOption {
     required this.votes,
     this.checked = false,
   });
+
   final int id;
   final String text;
   final int votes;
   final bool checked;
+
   double percentage(int totalVotes) {
     if (totalVotes == 0) return 0;
     return (votes / totalVotes) * 100;
   }
+
   static PollOption? maybeFromJson(Object? value) {
     if (value is! Map<String, dynamic>) {
       return null;
@@ -924,6 +1006,7 @@ class PollOption {
       checked: Post._bool(value['checked']),
     );
   }
+
   static List<PollOption> listFromJson(Object? value) {
     if (value is! List) {
       return [];
@@ -934,6 +1017,7 @@ class PollOption {
         .toList();
   }
 }
+
 /// نموذج لمحتوى المقال
 class PostBlog {
   const PostBlog({
@@ -945,6 +1029,7 @@ class PostBlog {
     this.tags,
     this.textSnippet,
   });
+
   final String articleId;
   final String title;
   final String text;
@@ -952,17 +1037,23 @@ class PostBlog {
   final String? categoryName;
   final String? tags;
   final String? textSnippet;
+
   static PostBlog? maybeFromJson(Object? value, {String? fallbackPostId}) {
     if (value is! Map<String, dynamic>) {
       return null;
     }
+    
     // استخدام article_id أولاً، ثم post_id من blog، ثم fallbackPostId من parent Post
     final post_id = Post._string(value['post_id']);
+             
     final title = Post._string(value['title']);
     final text = Post._string(value['parsed_text']) ?? Post._string(value['text']);
+    
+    
     if (post_id == null || title == null || text == null) {
       return null;
     }
+    
     return PostBlog(
       articleId: post_id,
       title: title,

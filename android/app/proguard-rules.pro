@@ -11,8 +11,3 @@
 
 # Keep any part of the app under your application ID from being stripped.
 -keep class com.example.snginepro.** { *; }
-# Please add these rules to your existing keep rules in order to suppress warnings.
-# This is generated automatically by the Android Gradle plugin.
--dontwarn com.google.android.play.core.tasks.OnFailureListener
--dontwarn com.google.android.play.core.tasks.OnSuccessListener
--dontwarn com.google.android.play.core.tasks.Task

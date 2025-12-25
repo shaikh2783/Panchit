@@ -2,17 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+
 import 'package:snginepro/features/boost/domain/boost_repository.dart';
 import 'package:snginepro/features/boost/presentation/widgets/boost_info_card.dart';
 import 'package:snginepro/core/config/app_config.dart';
 import 'package:snginepro/features/pages/domain/pages_repository.dart';
 import 'package:snginepro/features/pages/data/models/page.dart';
 import 'package:snginepro/features/pages/presentation/pages/page_profile_page.dart';
+
 class BoostedPagesPage extends StatefulWidget {
   const BoostedPagesPage({super.key});
+
   @override
   State<BoostedPagesPage> createState() => _BoostedPagesPageState();
 }
+
 class _BoostedPagesPageState extends State<BoostedPagesPage> {
   final ScrollController _scrollController = ScrollController();
   List<PageModel> _pages = [];
@@ -23,17 +27,20 @@ class _BoostedPagesPageState extends State<BoostedPagesPage> {
   bool _subscriptionRequired = false;
   int _offset = 0;
   final int _limit = 20;
+
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
     _loadPages();
   }
+
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
+
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
@@ -42,21 +49,26 @@ class _BoostedPagesPageState extends State<BoostedPagesPage> {
       }
     }
   }
+
   Future<void> _loadPages() async {
     if (_isLoading) return;
+
     setState(() {
       _isLoading = true;
       _offset = 0;
       _pages.clear();
       _subscriptionRequired = false;
     });
+
     try {
       final boostRepository = context.read<BoostRepository>();
       final pagesRepository = context.read<PagesRepository>();
+      
       final response = await boostRepository.getBoostedPages(
         offset: _offset,
         limit: _limit,
       );
+
       // جلب تفاصيل كل صفحة معززة
       final List<PageModel> fullPages = [];
       for (var pageData in response.pages) {
@@ -64,11 +76,13 @@ class _BoostedPagesPageState extends State<BoostedPagesPage> {
           final pageId = pageData['page_id'] is String 
               ? int.parse(pageData['page_id']) 
               : pageData['page_id'] as int;
+          
           final pageDetails = await pagesRepository.fetchPageInfo(pageId: pageId);
           fullPages.add(pageDetails);
         } catch (e) {
         }
       }
+
       if (mounted) {
         setState(() {
           _pages = fullPages;
@@ -82,9 +96,11 @@ class _BoostedPagesPageState extends State<BoostedPagesPage> {
         final message = e.toString();
         final requiresSub = message.contains('SUBSCRIPTION_REQUIRED') ||
             message.contains('subscribe to a package');
+
         if (requiresSub) {
           setState(() => _subscriptionRequired = true);
         }
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(requiresSub ? 'You need to subscribe to view boosted pages' : 'خطأ: $message'),
@@ -98,18 +114,23 @@ class _BoostedPagesPageState extends State<BoostedPagesPage> {
       });
     }
   }
+
   Future<void> _loadMore() async {
     if (_isLoadingMore || !(_pagination?.hasMore ?? false)) return;
+
     setState(() {
       _isLoadingMore = true;
     });
+
     try {
       final boostRepository = context.read<BoostRepository>();
       final pagesRepository = context.read<PagesRepository>();
+      
       final response = await boostRepository.getBoostedPages(
         offset: _offset,
         limit: _limit,
       );
+
       // جلب تفاصيل كل صفحة معززة
       final List<PageModel> newPages = [];
       for (var pageData in response.pages) {
@@ -117,11 +138,13 @@ class _BoostedPagesPageState extends State<BoostedPagesPage> {
           final pageId = pageData['page_id'] is String 
               ? int.parse(pageData['page_id']) 
               : pageData['page_id'] as int;
+          
           final pageDetails = await pagesRepository.fetchPageInfo(pageId: pageId);
           newPages.add(pageDetails);
         } catch (e) {
         }
       }
+
       if (mounted) {
         setState(() {
           _pages.addAll(newPages);
@@ -134,9 +157,11 @@ class _BoostedPagesPageState extends State<BoostedPagesPage> {
         final message = e.toString();
         final requiresSub = message.contains('SUBSCRIPTION_REQUIRED') ||
             message.contains('subscribe to a package');
+
         if (requiresSub) {
           setState(() => _subscriptionRequired = true);
         }
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(requiresSub ? 'You need to subscribe to view boosted pages' : 'خطأ: $message'),
@@ -150,9 +175,11 @@ class _BoostedPagesPageState extends State<BoostedPagesPage> {
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Scaffold(
       backgroundColor: theme.brightness == Brightness.dark 
           ? theme.scaffoldBackgroundColor 
@@ -232,6 +259,7 @@ class _BoostedPagesPageState extends State<BoostedPagesPage> {
                           ),
                         );
                       }
+
                       // Loading indicator at bottom
                       if (index == _pages.length + 1) {
                         return _isLoadingMore
@@ -241,6 +269,7 @@ class _BoostedPagesPageState extends State<BoostedPagesPage> {
                               )
                             : const SizedBox.shrink();
                       }
+
                       // Page cards
                       final page = _pages[index - 1];
                       return _PageCard(
@@ -260,18 +289,22 @@ class _BoostedPagesPageState extends State<BoostedPagesPage> {
     );
   }
 }
+
 class _PageCard extends StatelessWidget {
   final PageModel page;
   final VoidCallback onTap;
+
   const _PageCard({
     required this.page,
     required this.onTap,
   });
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final mediaAsset = context.read<AppConfig>().mediaAsset;
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
@@ -331,6 +364,7 @@ class _PageCard extends StatelessWidget {
               ],
             ),
           ),
+
           Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
@@ -365,6 +399,7 @@ class _PageCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 12),
+
                 // Page Info
                 Expanded(
                   child: Column(
@@ -395,6 +430,7 @@ class _PageCard extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 4),
+
                       // Username
                       Text(
                         '@${page.name}',
@@ -403,6 +439,7 @@ class _PageCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 8),
+
                       // Description preview
                       if (page.description.isNotEmpty)
                         Text(
@@ -417,6 +454,7 @@ class _PageCard extends StatelessWidget {
               ],
             ),
           ),
+
           // Stats
           Container(
             padding: const EdgeInsets.all(16),
@@ -454,17 +492,20 @@ class _PageCard extends StatelessWidget {
     );
   }
 }
+
 class _StatItem extends StatelessWidget {
   final IconData icon;
   final String label;
   final String value;
   final Color color;
+
   const _StatItem({
     required this.icon,
     required this.label,
     required this.value,
     required this.color,
   });
+
   @override
   Widget build(BuildContext context) {
     if (value.isEmpty) {
@@ -483,6 +524,7 @@ class _StatItem extends StatelessWidget {
         ],
       );
     }
+    
     return Column(
       children: [
         Icon(icon, color: color, size: 20),

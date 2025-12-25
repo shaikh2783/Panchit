@@ -2,19 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+
 class DeveloperInfoPage extends StatelessWidget {
   const DeveloperInfoPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       body: CustomScrollView(
         slivers: [
           // App Bar with gradient
           SliverAppBar(
-            expandedHeight: 220,
+            expandedHeight: 200,
             pinned: true,
             elevation: 0,
             backgroundColor: Colors.transparent,
@@ -69,7 +72,7 @@ class DeveloperInfoPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 12),
                       const Text(
-                        'Panchit',
+                        'Ameen Hamed',
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -79,7 +82,7 @@ class DeveloperInfoPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Software Developer Company',
+                        'Flutter Developer',
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.white.withOpacity(0.85),
@@ -93,6 +96,7 @@ class DeveloperInfoPage extends StatelessWidget {
               ),
             ),
           ),
+
           // Content
           SliverToBoxAdapter(
             child: Padding(
@@ -147,7 +151,7 @@ class DeveloperInfoPage extends StatelessWidget {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          'India’s Own Social Media | #VocalForLocal & #AtmaNirbharBharat',
+                          'A complete social networking platform built with Flutter, featuring real-time updates, live streaming, and advanced social features.',
                           style: theme.textTheme.bodyMedium?.copyWith(
                             height: 1.6,
                             color: theme.colorScheme.onSurface.withOpacity(0.7),
@@ -156,7 +160,9 @@ class DeveloperInfoPage extends StatelessWidget {
                       ],
                     ),
                   ),
+
                   const SizedBox(height: 24),
+
                   // Contact Section Header
                   Padding(
                     padding: const EdgeInsets.only(left: 4, bottom: 12),
@@ -168,15 +174,18 @@ class DeveloperInfoPage extends StatelessWidget {
                       ),
                     ),
                   ),
+
                   // Email Contact Card
                   _ContactCard(
                     icon: Iconsax.sms,
                     title: 'Email',
-                    subtitle: 'mail@panchit.com',
+                    subtitle: 'amenaaa93@gmail.com',
                     gradient: const [Color(0xFFEF5350), Color(0xFFE53935)],
                     onTap: () => _launchEmail(context),
                   ),
-                  /*const SizedBox(height: 12),
+
+                  const SizedBox(height: 12),
+
                   // WhatsApp Contact Card
                   _ContactCard(
                     icon: Iconsax.message,
@@ -185,7 +194,9 @@ class DeveloperInfoPage extends StatelessWidget {
                     gradient: const [Color(0xFF66BB6A), Color(0xFF43A047)],
                     onTap: () => _launchWhatsApp(context),
                   ),
+
                   const SizedBox(height: 12),
+
                   // Telegram Contact Card
                   _ContactCard(
                     icon: Iconsax.send_2,
@@ -193,8 +204,10 @@ class DeveloperInfoPage extends StatelessWidget {
                     subtitle: 'Flutter Crafters',
                     gradient: const [Color(0xFF42A5F5), Color(0xFF1E88E5)],
                     onTap: () => _launchTelegram(context),
-                  ),*/
+                  ),
+
                   const SizedBox(height: 32),
+
                   // Footer
                   Center(
                     child: Column(
@@ -230,7 +243,7 @@ class DeveloperInfoPage extends StatelessWidget {
                         ),
                         const SizedBox(height: 12),
                         Text(
-                          '© 2025 Panchit. All rights reserved.',
+                          '© 2024 Ameen Hamed. All rights reserved.',
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurface.withOpacity(0.5),
                           ),
@@ -238,6 +251,7 @@ class DeveloperInfoPage extends StatelessWidget {
                       ],
                     ),
                   ),
+
                   const SizedBox(height: 32),
                 ],
               ),
@@ -247,13 +261,15 @@ class DeveloperInfoPage extends StatelessWidget {
       ),
     );
   }
+
   Future<void> _launchEmail(BuildContext context) async {
     HapticFeedback.lightImpact();
     final Uri emailUri = Uri(
       scheme: 'mailto',
-      path: 'panchit@gmail.com',
+      path: 'amenaaa93@gmail.com',
       query: 'subject=Panchit - Contact',
     );
+    
     if (await canLaunchUrl(emailUri)) {
       await launchUrl(emailUri);
     } else {
@@ -262,9 +278,11 @@ class DeveloperInfoPage extends StatelessWidget {
       }
     }
   }
+
   Future<void> _launchWhatsApp(BuildContext context) async {
     HapticFeedback.lightImpact();
-    final Uri whatsappUri = Uri.parse('https://wa.me/970569997651');
+    final Uri whatsappUri = Uri.parse('https://wa.me/970569997655');
+    
     if (await canLaunchUrl(whatsappUri)) {
       await launchUrl(whatsappUri, mode: LaunchMode.externalApplication);
     } else {
@@ -273,9 +291,11 @@ class DeveloperInfoPage extends StatelessWidget {
       }
     }
   }
+
   Future<void> _launchTelegram(BuildContext context) async {
     HapticFeedback.lightImpact();
     final Uri telegramUri = Uri.parse('https://t.me/FlutterCrafters');
+    
     if (await canLaunchUrl(telegramUri)) {
       await launchUrl(telegramUri, mode: LaunchMode.externalApplication);
     } else {
@@ -284,6 +304,7 @@ class DeveloperInfoPage extends StatelessWidget {
       }
     }
   }
+
   void _showErrorSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -297,14 +318,18 @@ class DeveloperInfoPage extends StatelessWidget {
     );
   }
 }
+
 // Info Card Widget
 class _InfoCard extends StatelessWidget {
   final Widget child;
+
   const _InfoCard({required this.child});
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -328,6 +353,7 @@ class _InfoCard extends StatelessWidget {
     );
   }
 }
+
 // Contact Card Widget
 class _ContactCard extends StatelessWidget {
   final IconData icon;
@@ -335,6 +361,7 @@ class _ContactCard extends StatelessWidget {
   final String subtitle;
   final List<Color> gradient;
   final VoidCallback onTap;
+
   const _ContactCard({
     required this.icon,
     required this.title,
@@ -342,10 +369,12 @@ class _ContactCard extends StatelessWidget {
     required this.gradient,
     required this.onTap,
   });
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+
     return Material(
       color: Colors.transparent,
       child: InkWell(

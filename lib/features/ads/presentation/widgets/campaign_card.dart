@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 class CampaignCard extends StatelessWidget {
   const CampaignCard({
     super.key,
@@ -19,6 +20,7 @@ class CampaignCard extends StatelessWidget {
     this.onTap,
     this.onToggleActive,
   });
+
   final String title;
   final String budget;
   final String spend;
@@ -32,10 +34,12 @@ class CampaignCard extends StatelessWidget {
   final bool isApproved;
   final VoidCallback? onTap;
   final VoidCallback? onToggleActive;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(20),
@@ -47,26 +51,26 @@ class CampaignCard extends StatelessWidget {
             end: Alignment.bottomRight,
             colors: [
               theme.cardColor,
-              theme.cardColor.withValues(alpha: 0.95),
+              theme.cardColor.withOpacity(0.95),
             ],
           ),
           boxShadow: [
             BoxShadow(
-              color: theme.colorScheme.primary.withValues(alpha: 0.1),
+              color: theme.colorScheme.primary.withOpacity(0.1),
               blurRadius: 20,
               offset: const Offset(0, 10),
               spreadRadius: 0,
             ),
             BoxShadow(
-              color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
+              color: Colors.black.withOpacity(isDark ? 0.3 : 0.05),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
           ],
           border: Border.all(
             color: active
-                ? theme.colorScheme.primary.withValues(alpha: 0.3)
-                : theme.dividerColor.withValues(alpha: 0.1),
+                ? theme.colorScheme.primary.withOpacity(0.3)
+                : theme.dividerColor.withOpacity(0.1),
             width: 1.5,
           ),
         ),
@@ -92,8 +96,8 @@ class CampaignCard extends StatelessWidget {
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
-                                theme.colorScheme.primary.withValues(alpha: 0.3),
-                                theme.colorScheme.secondary.withValues(alpha: 0.3),
+                                theme.colorScheme.primary.withOpacity(0.3),
+                                theme.colorScheme.secondary.withOpacity(0.3),
                               ],
                             ),
                           ),
@@ -115,7 +119,7 @@ class CampaignCard extends StatelessWidget {
                             end: Alignment.bottomCenter,
                             colors: [
                               Colors.transparent,
-                              Colors.black.withValues(alpha: 0.6),
+                              Colors.black.withOpacity(0.6),
                             ],
                           ),
                         ),
@@ -142,13 +146,13 @@ class CampaignCard extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                           color: active
-                              ? Colors.green.withValues(alpha: 0.9)
-                              : Colors.grey.withValues(alpha: 0.9),
+                              ? Colors.green.withOpacity(0.9)
+                              : Colors.grey.withOpacity(0.9),
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
                               color: (active ? Colors.green : Colors.grey)
-                                  .withValues(alpha: 0.3),
+                                  .withOpacity(0.3),
                               blurRadius: 8,
                               spreadRadius: 0,
                             ),
@@ -180,6 +184,7 @@ class CampaignCard extends StatelessWidget {
                     ),
                   ],
                 ),
+
               // Content
               Padding(
                 padding: const EdgeInsets.all(16),
@@ -212,17 +217,18 @@ class CampaignCard extends StatelessWidget {
                             onPressed: onToggleActive,
                             style: IconButton.styleFrom(
                               backgroundColor:
-                                  theme.colorScheme.primary.withValues(alpha: 0.1),
+                                  theme.colorScheme.primary.withOpacity(0.1),
                             ),
                           ),
                       ],
                     ),
                     const SizedBox(height: 16),
+
                     // Stats Grid
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.surfaceVariant.withValues(alpha: 0.5),
+                        color: theme.colorScheme.surfaceVariant.withOpacity(0.5),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Column(
@@ -240,7 +246,7 @@ class CampaignCard extends StatelessWidget {
                               Container(
                                 width: 1,
                                 height: 30,
-                                color: theme.dividerColor.withValues(alpha: 0.3),
+                                color: theme.dividerColor.withOpacity(0.3),
                               ),
                               Expanded(
                                 child: _StatItem(
@@ -254,7 +260,7 @@ class CampaignCard extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                           Divider(
-                            color: theme.dividerColor.withValues(alpha: 0.3),
+                            color: theme.dividerColor.withOpacity(0.3),
                             height: 1,
                           ),
                           const SizedBox(height: 8),
@@ -271,7 +277,7 @@ class CampaignCard extends StatelessWidget {
                               Container(
                                 width: 1,
                                 height: 30,
-                                color: theme.dividerColor.withValues(alpha: 0.3),
+                                color: theme.dividerColor.withOpacity(0.3),
                               ),
                               Expanded(
                                 child: _StatItem(
@@ -286,6 +292,7 @@ class CampaignCard extends StatelessWidget {
                         ],
                       ),
                     ),
+
                     // Bidding & Created
                     if (bidding != null || createdAt != null) ...[
                       const SizedBox(height: 12),
@@ -318,21 +325,25 @@ class CampaignCard extends StatelessWidget {
     ));
   }
 }
+
 class _StatusBadge extends StatelessWidget {
   const _StatusBadge({
     required this.text,
     required this.isApproved,
   });
+
   final String text;
   final bool isApproved;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final color = isApproved ? Colors.green : Colors.orange;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.9),
+        color: color.withOpacity(0.9),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -364,6 +375,7 @@ class _StatusBadge extends StatelessWidget {
     );
   }
 }
+
 class _StatItem extends StatelessWidget {
   const _StatItem({
     required this.icon,
@@ -371,10 +383,12 @@ class _StatItem extends StatelessWidget {
     required this.value,
     required this.color,
   });
+
   final IconData icon;
   final String label;
   final String value;
   final Color color;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -401,15 +415,18 @@ class _StatItem extends StatelessWidget {
     );
   }
 }
+
 class _InfoChip extends StatelessWidget {
   const _InfoChip({
     required this.icon,
     required this.text,
     required this.color,
   });
+
   final IconData icon;
   final String text;
   final Color color;
+
   @override
   Widget build(BuildContext context) {
     return Container(

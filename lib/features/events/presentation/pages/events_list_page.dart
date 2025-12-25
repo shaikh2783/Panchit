@@ -9,34 +9,44 @@ import 'package:snginepro/features/events/presentation/widgets/event_card.dart';
 import 'package:snginepro/features/events/presentation/pages/event_detail_page.dart';
 import 'package:snginepro/features/events/presentation/pages/create_event_page.dart';
 import 'package:snginepro/features/events/data/models/event.dart';
+
 class EventsListPage extends StatefulWidget {
   const EventsListPage({super.key});
+
   @override
   State<EventsListPage> createState() => _EventsListPageState();
 }
+
 class _EventsListPageState extends State<EventsListPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+
   // Store events locally
   List<Event> _suggestedEvents = [];
   List<Event> _myEvents = [];
   List<Event> _searchResults = [];
+
   bool _isLoadingSuggested = false;
   bool _isLoadingMy = false;
   bool _isSearching = false;
+  
   bool _hasMoreSuggested = true;
   bool _hasMoreMy = true;
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+
     // Load initial data
     context.read<EventsBloc>().add(const FetchSuggestedEventsEvent());
     context.read<EventsBloc>().add(const FetchMyEventsEvent());
+
     // Setup scroll listener for pagination
     _scrollController.addListener(_onScroll);
+
     // Setup tab listener
     _tabController.addListener(() {
       if (_tabController.indexIsChanging) {
@@ -44,6 +54,7 @@ class _EventsListPageState extends State<EventsListPage>
       }
     });
   }
+
   @override
   void dispose() {
     _tabController.dispose();
@@ -51,6 +62,7 @@ class _EventsListPageState extends State<EventsListPage>
     _scrollController.dispose();
     super.dispose();
   }
+
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
@@ -62,16 +74,19 @@ class _EventsListPageState extends State<EventsListPage>
       }
     }
   }
+
   void _onSearch(String query) {
     if (query.trim().isEmpty) {
       return;
     }
     context.read<EventsBloc>().add(SearchEventsEvent(query));
   }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Get.isDarkMode;
     final theme = Get.theme;
+
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
@@ -100,6 +115,7 @@ class _EventsListPageState extends State<EventsListPage>
                   builder: (_) => const CreateEventPage(),
                 ),
               );
+              
               // Refresh list if event was created
               if (result == true) {
                 context
@@ -173,8 +189,10 @@ class _EventsListPageState extends State<EventsListPage>
           children: [
             // Suggested Events
             _buildSuggestedEventsTab(),
+
             // My Events
             _buildMyEventsTab(),
+
             // Search
             _buildSearchTab(),
           ],
@@ -182,6 +200,7 @@ class _EventsListPageState extends State<EventsListPage>
       ),
     );
   }
+
   Widget _buildSuggestedEventsTab() {
     if (_isLoadingSuggested && _suggestedEvents.isEmpty) {
       return Center(
@@ -202,6 +221,7 @@ class _EventsListPageState extends State<EventsListPage>
         ),
       );
     }
+
     if (_suggestedEvents.isEmpty) {
       return Center(
         child: Column(
@@ -231,6 +251,7 @@ class _EventsListPageState extends State<EventsListPage>
         ),
       );
     }
+
     return RefreshIndicator(
       onRefresh: () async {
         context
@@ -251,6 +272,7 @@ class _EventsListPageState extends State<EventsListPage>
               ),
             );
           }
+
           final event = _suggestedEvents[index];
           return EventCard(
             event: event,
@@ -269,6 +291,7 @@ class _EventsListPageState extends State<EventsListPage>
       ),
     );
   }
+
   Widget _buildMyEventsTab() {
     if (_isLoadingMy && _myEvents.isEmpty) {
       return Center(
@@ -289,6 +312,7 @@ class _EventsListPageState extends State<EventsListPage>
         ),
       );
     }
+
     if (_myEvents.isEmpty) {
       return Center(
         child: Column(
@@ -315,6 +339,7 @@ class _EventsListPageState extends State<EventsListPage>
         ),
       );
     }
+
     return RefreshIndicator(
       onRefresh: () async {
         context
@@ -335,6 +360,7 @@ class _EventsListPageState extends State<EventsListPage>
               ),
             );
           }
+
           final event = _myEvents[index];
           return EventCard(
             event: event,
@@ -353,6 +379,7 @@ class _EventsListPageState extends State<EventsListPage>
       ),
     );
   }
+
   Widget _buildSearchTab() {
     return Column(
       children: [
@@ -387,6 +414,7 @@ class _EventsListPageState extends State<EventsListPage>
             },
           ),
         ),
+
         // Search Results
         Expanded(
           child: _isSearching
@@ -467,6 +495,7 @@ class _EventsListPageState extends State<EventsListPage>
       ],
     );
   }
+
   void _showSearchDialog() {
     showDialog(
       context: context,

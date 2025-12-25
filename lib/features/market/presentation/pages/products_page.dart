@@ -8,17 +8,21 @@ import 'product_details_page.dart';
 import 'cart_page.dart';
 import '../../../../core/theme/ui_constants.dart';
 import '../../../../core/widgets/skeletons.dart';
+
 /// Products Page - صفحة المنتجات
 /// 
 /// عرض قائمة المنتجات مع إمكانية البحث والفلترة حسب الفئة
 class ProductsPage extends StatefulWidget {
   const ProductsPage({Key? key}) : super(key: key);
+
   @override
   State<ProductsPage> createState() => _ProductsPageState();
 }
+
 class _ProductsPageState extends State<ProductsPage> {
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  
   List<Product> _products = [];
   List<ProductCategory> _categories = [];
   int? _selectedCategoryId;
@@ -26,7 +30,9 @@ class _ProductsPageState extends State<ProductsPage> {
   bool _hasMore = true;
   int _offset = 0;
   final int _limit = 20;
+  
   late MarketRepository _repository;
+
   @override
   void initState() {
     super.initState();
@@ -35,12 +41,14 @@ class _ProductsPageState extends State<ProductsPage> {
     _loadProducts();
     _scrollController.addListener(_onScroll);
   }
+
   @override
   void dispose() {
     _searchController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
+
   void _onScroll() {
     if (_scrollController.position.pixels >= 
         _scrollController.position.maxScrollExtent * 0.8) {
@@ -49,6 +57,7 @@ class _ProductsPageState extends State<ProductsPage> {
       }
     }
   }
+
   Future<void> _loadCategories() async {
     try {
       final categories = await _repository.getCategories();
@@ -59,8 +68,10 @@ class _ProductsPageState extends State<ProductsPage> {
       _showError('${'market_error_loading_categories'.tr}: $e');
     }
   }
+
   Future<void> _loadProducts({bool refresh = false}) async {
     if (_isLoading) return;
+    
     setState(() {
       _isLoading = true;
       if (refresh) {
@@ -69,6 +80,7 @@ class _ProductsPageState extends State<ProductsPage> {
         _hasMore = true;
       }
     });
+
     try {
       final products = await _repository.getProducts(
         categoryId: _selectedCategoryId,
@@ -76,6 +88,7 @@ class _ProductsPageState extends State<ProductsPage> {
         offset: _offset,
         limit: _limit,
       );
+
       if (mounted) {
         setState(() {
           if (refresh) {
@@ -94,22 +107,27 @@ class _ProductsPageState extends State<ProductsPage> {
       }
     }
   }
+
   Future<void> _loadMore() async {
     _offset += _limit;
     await _loadProducts();
   }
+
   void _onCategoryChanged(int? categoryId) {
     setState(() => _selectedCategoryId = categoryId);
     _loadProducts(refresh: true);
   }
+
   void _onSearchChanged() {
     _loadProducts(refresh: true);
   }
+
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message), backgroundColor: Colors.red),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -158,6 +176,7 @@ class _ProductsPageState extends State<ProductsPage> {
               onSubmitted: (_) => _onSearchChanged(),
             ),
           ),
+
           // Categories Filter
           if (_categories.isNotEmpty)
             SizedBox(
@@ -183,7 +202,9 @@ class _ProductsPageState extends State<ProductsPage> {
                 },
               ),
             ),
+
           const SizedBox(height: 8),
+
           // Products Grid
           Expanded(
             child: _products.isEmpty
@@ -237,16 +258,19 @@ class _ProductsPageState extends State<ProductsPage> {
     );
   }
 }
+
 /// Category Chip Widget
 class _CategoryChip extends StatelessWidget {
   final String label;
   final bool isSelected;
   final VoidCallback onTap;
+
   const _CategoryChip({
     required this.label,
     required this.isSelected,
     required this.onTap,
   });
+
   @override
   Widget build(BuildContext context) {
     return Padding(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
+
 import '../../../../core/theme/ui_constants.dart';
 import '../../../../core/widgets/skeletons.dart';
 import '../../data/models/job.dart';
@@ -10,12 +11,15 @@ import 'job_detail_page.dart';
 import 'job_create_page.dart';
 import '../../../auth/application/auth_notifier.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 class JobsListPage extends StatefulWidget {
   final bool mineOnly;
   const JobsListPage({super.key, this.mineOnly = false});
+
   @override
   State<JobsListPage> createState() => _JobsListPageState();
 }
+
 class _JobsListPageState extends State<JobsListPage> {
   final _scroll = ScrollController();
   List<Job> _jobs = [];
@@ -25,6 +29,7 @@ class _JobsListPageState extends State<JobsListPage> {
   int _offset = 0;
   final int _limit = 20;
   String _error = '';
+
   // Filters
   List<JobCategory> _categories = [];
   int? _categoryId;
@@ -33,12 +38,14 @@ class _JobsListPageState extends State<JobsListPage> {
   final _locationCtrl = TextEditingController();
   final _salaryMinCtrl = TextEditingController();
   final _salaryMaxCtrl = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     _prime();
     _scroll.addListener(_onScroll);
   }
+
   @override
   void dispose() {
     _scroll.dispose();
@@ -47,6 +54,7 @@ class _JobsListPageState extends State<JobsListPage> {
     _salaryMaxCtrl.dispose();
     super.dispose();
   }
+
   Future<void> _prime() async {
     // Load categories in parallel with first page
     try {
@@ -56,11 +64,13 @@ class _JobsListPageState extends State<JobsListPage> {
     } catch (_) {}
     await _load();
   }
+
   void _onScroll() {
     if (_scroll.position.pixels >= _scroll.position.maxScrollExtent - 200) {
       if (!_loadingMore && _hasMore) _loadMore();
     }
   }
+
   Future<void> _load() async {
     setState(() {
       _loading = true;
@@ -96,6 +106,7 @@ class _JobsListPageState extends State<JobsListPage> {
       });
     }
   }
+
   Future<void> _loadMore() async {
     setState(() => _loadingMore = true);
     try {
@@ -123,12 +134,14 @@ class _JobsListPageState extends State<JobsListPage> {
       setState(() => _loadingMore = false);
     }
   }
+
   List<Job> _filterMine(List<Job> items) {
     final auth = context.read<AuthNotifier>();
     final id = int.tryParse(auth.currentUser?['user_id']?.toString() ?? '');
     if (id == null) return const [];
     return items.where((j) => (j.iOwner == true) || j.author.userId == id).toList();
   }
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
@@ -329,6 +342,7 @@ class _JobsListPageState extends State<JobsListPage> {
                 ),
     );
   }
+
   Widget _ownerMenu(Job j) {
     final auth = context.read<AuthNotifier>();
     final id = int.tryParse(auth.currentUser?['user_id']?.toString() ?? '');
@@ -370,6 +384,7 @@ class _JobsListPageState extends State<JobsListPage> {
       ],
     );
   }
+
   Widget _buildFilterChips() {
     final chips = <Widget>[];
     if (_categoryId != null) {
@@ -402,6 +417,7 @@ class _JobsListPageState extends State<JobsListPage> {
       ]),
     );
   }
+
   Widget _chip(String label, VoidCallback onClear) {
     return Chip(
       label: Text(label),
@@ -409,6 +425,7 @@ class _JobsListPageState extends State<JobsListPage> {
       onDeleted: () { onClear(); _load(); },
     );
   }
+
   void _openFilters() {
     showModalBottomSheet(
       context: context,
@@ -428,6 +445,7 @@ class _JobsListPageState extends State<JobsListPage> {
                 TextButton(onPressed: () { setState(() { _categoryId = null; _type = null; _payPer = null; _locationCtrl.clear(); _salaryMinCtrl.clear(); _salaryMaxCtrl.clear(); }); _load(); Get.back(); }, child: Text('clear'.tr)),
               ]),
               SizedBox(height: UI.md),
+
               // Category
               Text('select_category'.tr),
               SizedBox(height: UI.sm),
@@ -441,6 +459,7 @@ class _JobsListPageState extends State<JobsListPage> {
                 onChanged: (v) => setState(() => _categoryId = v),
               ),
               SizedBox(height: UI.md),
+
               // Type
               Text('type'.tr),
               SizedBox(height: UI.sm),
@@ -459,6 +478,7 @@ class _JobsListPageState extends State<JobsListPage> {
                 onChanged: (v) => setState(() => _type = v),
               ),
               SizedBox(height: UI.md),
+
               // Pay per
               Text('pay_per'.tr),
               SizedBox(height: UI.sm),
@@ -476,11 +496,13 @@ class _JobsListPageState extends State<JobsListPage> {
                 onChanged: (v) => setState(() => _payPer = v),
               ),
               SizedBox(height: UI.md),
+
               // Location
               Text('location'.tr),
               SizedBox(height: UI.sm),
               TextField(controller: _locationCtrl, decoration: InputDecoration(hintText: 'search_location'.tr)),
               SizedBox(height: UI.md),
+
               // Salary range
               Text('salary_range'.tr),
               SizedBox(height: UI.sm),
@@ -489,6 +511,7 @@ class _JobsListPageState extends State<JobsListPage> {
                 SizedBox(width: UI.md),
                 Expanded(child: TextField(controller: _salaryMaxCtrl, keyboardType: TextInputType.number, decoration: InputDecoration(labelText: 'salary_max'.tr))),
               ]),
+
               SizedBox(height: UI.lg),
               SizedBox(
                 width: double.infinity,
@@ -504,6 +527,7 @@ class _JobsListPageState extends State<JobsListPage> {
       ),
     );
   }
+
   Widget _buildSkeleton() {
     return ListView.separated(
       padding: EdgeInsets.all(UI.lg),
@@ -527,6 +551,7 @@ class _JobsListPageState extends State<JobsListPage> {
       ),
     );
   }
+
   Widget _chipSmall(BuildContext context, String label, Color bg, Color fg) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),

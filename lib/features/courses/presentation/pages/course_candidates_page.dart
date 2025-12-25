@@ -4,9 +4,11 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
 import '../../../../core/config/app_config.dart';
+
 /// صفحة عرض المتقدمين للدورة
 class CourseCandidatesPage extends StatefulWidget {
   const CourseCandidatesPage({
@@ -14,11 +16,14 @@ class CourseCandidatesPage extends StatefulWidget {
     required this.courseId,
     required this.courseTitle,
   });
+
   final String courseId;
   final String courseTitle;
+
   @override
   State<CourseCandidatesPage> createState() => _CourseCandidatesPageState();
 }
+
 class _CourseCandidatesPageState extends State<CourseCandidatesPage> {
   List<CourseCandidate> _candidates = [];
   bool _loading = false;
@@ -26,6 +31,7 @@ class _CourseCandidatesPageState extends State<CourseCandidatesPage> {
   int _offset = 0;
   bool _hasMore = true;
   bool _initialized = false;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -34,7 +40,9 @@ class _CourseCandidatesPageState extends State<CourseCandidatesPage> {
       _loadCandidates();
     }
   }
+
   Future<void> _loadCandidates({bool refresh = false}) async {
+    
     if (refresh) {
       setState(() {
         _offset = 0;
@@ -52,18 +60,26 @@ class _CourseCandidatesPageState extends State<CourseCandidatesPage> {
       }
       setState(() => _loading = true);
     }
+
     try {
       final client = context.read<ApiClient>();
+      
       final uri = '${configCfgP('courses_base')}/candidates?offset=$_offset';
+      
+      
       final response = await client.post(
         uri,
         body: {'course_id': widget.courseId},
       );
+
+
       if (response['status'] == 'success') {
         final data = response['data'] as Map<String, dynamic>;
         final candidatesList = (data['candidates'] as List? ?? [])
             .map((json) => CourseCandidate.fromJson(json as Map<String, dynamic>))
             .toList();
+
+
         setState(() {
           _candidates.addAll(candidatesList);
           _offset += candidatesList.length;
@@ -80,28 +96,32 @@ class _CourseCandidatesPageState extends State<CourseCandidatesPage> {
       setState(() => _loading = false);
     }
   }
+
   Future<void> _makePhoneCall(String phone) async {
     final uri = Uri.parse('tel:$phone');
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
     }
   }
+
   Future<void> _sendEmail(String email) async {
     final uri = Uri.parse('mailto:$email');
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Get.isDarkMode;
     final appConfig = context.read<AppConfig>();
+
     return Scaffold(
       appBar: AppBar(
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('المتقدمين'),
+             Text('course_candidates_title'.tr),
             Text(
               widget.courseTitle,
               style: TextStyle(
@@ -198,6 +218,7 @@ class _CourseCandidatesPageState extends State<CourseCandidatesPage> {
                               ),
                             );
                           }
+
                           final candidate = _candidates[index];
                           return _CandidateCard(
                             candidate: candidate,
@@ -212,6 +233,7 @@ class _CourseCandidatesPageState extends State<CourseCandidatesPage> {
     );
   }
 }
+
 class _CandidateCard extends StatelessWidget {
   const _CandidateCard({
     required this.candidate,
@@ -220,11 +242,13 @@ class _CandidateCard extends StatelessWidget {
     required this.onCallPhone,
     required this.onSendEmail,
   });
+
   final CourseCandidate candidate;
   final bool isDark;
   final AppConfig appConfig;
   final VoidCallback onCallPhone;
   final VoidCallback onSendEmail;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -270,6 +294,7 @@ class _CandidateCard extends StatelessWidget {
                       : null,
                 ),
                 const SizedBox(width: 12),
+                
                 // Name and verified badge
                 Expanded(
                   child: Column(
@@ -311,6 +336,7 @@ class _CandidateCard extends StatelessWidget {
                     ],
                   ),
                 ),
+                
                 // Applied time
                 Text(
                   _formatDate(candidate.appliedTime),
@@ -321,9 +347,11 @@ class _CandidateCard extends StatelessWidget {
                 ),
               ],
             ),
+
             const SizedBox(height: 16),
             const Divider(height: 1),
             const SizedBox(height: 16),
+
             // Contact Info
             _InfoRow(
               icon: Iconsax.location,
@@ -332,6 +360,7 @@ class _CandidateCard extends StatelessWidget {
               isDark: isDark,
             ),
             const SizedBox(height: 12),
+            
             _InfoRow(
               icon: Iconsax.call,
               label: 'الهاتف',
@@ -340,6 +369,7 @@ class _CandidateCard extends StatelessWidget {
               onTap: onCallPhone,
             ),
             const SizedBox(height: 12),
+            
             _InfoRow(
               icon: Iconsax.sms,
               label: 'البريد',
@@ -347,6 +377,7 @@ class _CandidateCard extends StatelessWidget {
               isDark: isDark,
               onTap: onSendEmail,
             ),
+
             // Action Buttons
             const SizedBox(height: 16),
             Row(
@@ -387,9 +418,11 @@ class _CandidateCard extends StatelessWidget {
       ),
     );
   }
+
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final diff = now.difference(date);
+
     if (diff.inDays == 0) {
       if (diff.inHours == 0) {
         return 'منذ ${diff.inMinutes} د';
@@ -402,6 +435,7 @@ class _CandidateCard extends StatelessWidget {
     }
   }
 }
+
 class _InfoRow extends StatelessWidget {
   const _InfoRow({
     required this.icon,
@@ -410,11 +444,13 @@ class _InfoRow extends StatelessWidget {
     required this.isDark,
     this.onTap,
   });
+
   final IconData icon;
   final String label;
   final String value;
   final bool isDark;
   final VoidCallback? onTap;
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -459,6 +495,7 @@ class _InfoRow extends StatelessWidget {
     );
   }
 }
+
 /// Model class for course candidate
 class CourseCandidate {
   const CourseCandidate({
@@ -478,6 +515,7 @@ class CourseCandidate {
     this.userSubscribed = false,
     this.userVerified = false,
   });
+
   final int applicationId;
   final int postId;
   final int userId;
@@ -493,6 +531,7 @@ class CourseCandidate {
   final String? userPicture;
   final bool userSubscribed;
   final bool userVerified;
+
   factory CourseCandidate.fromJson(Map<String, dynamic> json) {
     return CourseCandidate(
       applicationId: int.parse(json['application_id']?.toString() ?? '0'),

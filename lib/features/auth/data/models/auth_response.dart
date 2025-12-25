@@ -1,4 +1,5 @@
 import 'dart:collection';
+
 class AuthResponse {
   AuthResponse({
     required this.status,
@@ -10,17 +11,20 @@ class AuthResponse {
   })  : data = data != null ? UnmodifiableMapView(data) : null,
         user = user != null ? UnmodifiableMapView(user) : null,
         raw = UnmodifiableMapView(payload);
+
   final String? status;
   final String? message;
   final String? authToken;
   final Map<String, dynamic>? data;
   final Map<String, dynamic>? user;
   final Map<String, dynamic> raw;
+
   factory AuthResponse.fromJson(Map<String, dynamic> json) {
     final normalizedPayload = Map<String, dynamic>.from(json);
     final normalizedData = _normalizeMap(json['data']);
     final normalizedUser =
         normalizedData != null ? _normalizeMap(normalizedData['user']) : null;
+
     return AuthResponse(
       status: _string(json['status']),
       message: _extractMessage(json),
@@ -30,7 +34,9 @@ class AuthResponse {
       payload: normalizedPayload,
     );
   }
+
   bool get isSuccess => status?.toLowerCase() == 'success';
+
   String? get userDisplayName {
     final fullName = _string(user?['user_fullname']);
     if (fullName != null && fullName.isNotEmpty) {
@@ -54,6 +60,7 @@ class AuthResponse {
     }
     return null;
   }
+
   String? get sessionId {
     final sessionFromData = _string(data?['session_id']);
     if (sessionFromData != null && sessionFromData.isNotEmpty) {
@@ -65,10 +72,12 @@ class AuthResponse {
     }
     return null;
   }
+
   String? get userId {
     final id = data?['user_id'] ?? user?['user_id'];
     return _string(id);
   }
+
   bool? get needActivation {
     final value = data?['need_activation'];
     if (value is bool) return value;
@@ -78,9 +87,11 @@ class AuthResponse {
     if (value is int) return value == 1;
     return null;
   }
+
   String? get activationType {
     return _string(data?['activation_type']);
   }
+
   static String? _extractMessage(Map<String, dynamic> json) {
     final candidates = [
       json['message'],
@@ -101,6 +112,7 @@ class AuthResponse {
     }
     return null;
   }
+
   static String? _extractAuthToken(Map<String, dynamic> json) {
     final candidates = [
       json['auth_token'],
@@ -119,6 +131,7 @@ class AuthResponse {
     }
     return null;
   }
+
   static Map<String, dynamic>? _normalizeMap(Object? value) {
     if (value is Map<String, dynamic>) {
       return Map<String, dynamic>.from(value);
@@ -130,6 +143,7 @@ class AuthResponse {
     }
     return null;
   }
+
   static String? _string(Object? value) {
     if (value == null) {
       return null;

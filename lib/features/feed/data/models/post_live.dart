@@ -11,6 +11,7 @@ class PostLive {
   final bool liveRecorded;
   final String? agoraAudienceUid;
   final String? agoraAudienceToken;
+
   const PostLive({
     required this.liveId,
     required this.postId,
@@ -25,7 +26,9 @@ class PostLive {
     this.agoraAudienceUid,
     this.agoraAudienceToken,
   });
+
   bool get isActive => !liveEnded;
+  
   factory PostLive.fromJson(Map<String, dynamic> json) {
     return PostLive(
       liveId: json['live_id'].toString(),
@@ -42,6 +45,7 @@ class PostLive {
       agoraAudienceToken: json['agora_audience_token'],
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'live_id': liveId,
@@ -58,6 +62,7 @@ class PostLive {
       'agora_audience_token': agoraAudienceToken,
     };
   }
+
   PostLive copyWith({
     String? liveId,
     String? postId,
@@ -87,10 +92,12 @@ class PostLive {
       agoraAudienceToken: agoraAudienceToken ?? this.agoraAudienceToken,
     );
   }
+
   @override
   String toString() {
     return 'PostLive(liveId: $liveId, channelName: $agoraChannelName, isActive: $isActive)';
   }
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
@@ -98,6 +105,7 @@ class PostLive {
         other.liveId == liveId &&
         other.agoraChannelName == agoraChannelName;
   }
+
   @override
   int get hashCode {
     return liveId.hashCode ^ agoraChannelName.hashCode;

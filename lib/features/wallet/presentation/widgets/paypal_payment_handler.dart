@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_paypal_payment/flutter_paypal_payment.dart';
 import 'package:snginepro/App_Settings.dart';
+
 class PayPalPaymentHandler {
   /// Process a PayPal payment.
   /// Adjusted to accept dynamic map to avoid runtime type casting errors
@@ -20,10 +21,12 @@ class PayPalPaymentHandler {
       onError(configError);
       return;
     }
+
     // Debug credential info (masked)
     final clientId = AppSettings.paypalClientId;
     final secret = AppSettings.paypalSecretKey;
-    
+
+
     try {
       await Navigator.of(context).push(
         MaterialPageRoute(
@@ -80,6 +83,7 @@ class PayPalPaymentHandler {
       onError('Failed to start PayPal checkout: $e');
     }
   }
+
   static String extractTransactionId(Map<String, dynamic> params) {
     try {
       // Extract transaction ID from PayPal response
@@ -97,6 +101,7 @@ class PayPalPaymentHandler {
       return '';
     }
   }
+
   static String extractPayerId(Map<String, dynamic> params) {
     try {
       if (params.containsKey('data')) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import '../../application/agora_service.dart';
+
 class RemoteVideoWidget extends StatefulWidget {
   const RemoteVideoWidget({
     super.key,
@@ -8,25 +9,31 @@ class RemoteVideoWidget extends StatefulWidget {
     required this.channelName,
     required this.agoraService, // إضافة AgoraService كمعامل
   });
+
   final int uid;
   final String channelName;
   final AgoraService agoraService; // معامل مباشر
+
   @override
   State<RemoteVideoWidget> createState() => _RemoteVideoWidgetState();
 }
+
 class _RemoteVideoWidgetState extends State<RemoteVideoWidget> {
   late AgoraService _agoraService;
+
   @override
   void initState() {
     super.initState();
     _agoraService = widget.agoraService; // استخدام المعامل المُمرر
   }
+
   @override
   Widget build(BuildContext context) {
     // التحقق من وجود محرك Agora
     if (_agoraService.engine == null) {
       return _buildNoEngineWidget();
     }
+
     // عرض فيديو المستخدم البعيد باستخدام AgoraVideoView
     return Container(
       width: double.infinity,
@@ -45,6 +52,7 @@ class _RemoteVideoWidgetState extends State<RemoteVideoWidget> {
       ),
     );
   }
+
   Widget _buildNoEngineWidget() {
     return Container(
       width: double.infinity,

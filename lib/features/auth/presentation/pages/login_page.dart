@@ -2,25 +2,38 @@ import 'dart:ui';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:snginepro/App_Settings.dart';
 import 'package:snginepro/features/auth/application/auth_notifier.dart';
 import 'package:snginepro/features/auth/data/models/auth_response.dart';
 import 'package:snginepro/features/auth/presentation/pages/signup_page.dart';
+
 /// 🎨 Ultra Modern Login Page - Complete Redesign
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
+
 class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _identityController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
   static const String _deviceType = 'A';
+
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: ['email', 'profile', 'openid'],
+
+  );
+
   late AnimationController _backgroundController;
   late AnimationController _formController;
+
   @override
   void initState() {
     super.initState();
@@ -28,12 +41,15 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       vsync: this,
       duration: const Duration(seconds: 20),
     )..repeat();
+
     _formController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
     );
+
     _formController.forward();
   }
+
   @override
   void dispose() {
     _identityController.dispose();
@@ -42,9 +58,11 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     _formController.dispose();
     super.dispose();
   }
+
   Future<void> _handleLogin() async {
     final form = _formKey.currentState;
     if (form == null || !form.validate()) return;
+
     FocusScope.of(context).unfocus();
     final authNotifier = context.read<AuthNotifier>();
     final AuthResponse? response = await authNotifier.signIn(
@@ -52,9 +70,11 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       password: _passwordController.text,
       deviceType: _deviceType,
     );
+
     if (!mounted) return;
     final messenger = ScaffoldMessenger.of(context);
     messenger.clearSnackBars();
+
     if (response != null) {
       final displayName = response.userDisplayName;
       final message = displayName != null
@@ -65,29 +85,36 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           content: Text(message),
           backgroundColor: const Color(0xFF10B981),
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           margin: const EdgeInsets.all(16),
         ),
       );
     } else {
-      final error = authNotifier.errorMessage ?? 'Login failed. Please try again.';
+      final error =
+          authNotifier.errorMessage ?? 'Login failed. Please try again.';
       messenger.showSnackBar(
         SnackBar(
           content: Text(error),
           backgroundColor: const Color(0xFFEF4444),
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           margin: const EdgeInsets.all(16),
         ),
       );
     }
   }
+
   String? _validateIdentity(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Email or username is required';
     }
     return null;
   }
+
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Password is required';
@@ -97,6 +124,117 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     }
     return null;
   }
+
+  Future<void> _handleGoogleSignIn() async {
+    // التحقق من تفعيل الميزة
+    if (!AppSettings.enableGoogleSignIn) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('تسجيل الدخول عبر Google معطل حالياً'),
+          backgroundColor: const Color(0xFFEF4444),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          margin: const EdgeInsets.all(16),
+        ),
+      );
+      return;
+    }
+
+    // التحقق من اكتمال الإعدادات
+    final validationError = AppSettings.validateGoogleSignInConfig();
+    if (validationError != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(validationError),
+          backgroundColor: const Color(0xFFEF4444),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          margin: const EdgeInsets.all(16),
+        ),
+      );
+      return;
+    }
+
+    try {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        // User cancelled sign in
+        return;
+      }
+
+      // الحصول على ID Token / Server Auth Code من Google
+      final googleAuth = await googleUser.authentication;
+      final idToken = googleAuth.idToken;
+      final serverAuthCode = googleUser.serverAuthCode; // قد يكون موجود بدلاً من idToken
+      
+      
+      final authNotifier = context.read<AuthNotifier>();
+      final AuthResponse? response = await authNotifier.signInWithGoogle(
+        googleId: googleUser.id,
+        email: googleUser.email,
+        firstName: googleUser.displayName?.split(' ').first,
+        lastName: googleUser.displayName?.split(' ').skip(1).join(' '),
+        picture: googleUser.photoUrl,
+        idToken: idToken ?? serverAuthCode, // استخدم serverAuthCode إذا لم يكن idToken متاح
+        deviceType: _deviceType,
+      );
+
+      if (!mounted) return;
+      final messenger = ScaffoldMessenger.of(context);
+      messenger.clearSnackBars();
+
+      if (response != null) {
+        final displayName = response.userDisplayName;
+        final message = displayName != null
+            ? 'Welcome back, $displayName! 🎉'
+            : (response.message ?? 'Successfully logged in.');
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(message),
+            backgroundColor: const Color(0xFF10B981),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            margin: const EdgeInsets.all(16),
+          ),
+        );
+      } else {
+        final error =
+            authNotifier.errorMessage ?? 'Login failed. Please try again.';
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(error),
+            backgroundColor: const Color(0xFFEF4444),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            margin: const EdgeInsets.all(16),
+          ),
+        );
+      }
+    } catch (error, stackTrace) {
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Google Sign-In failed: $error'),
+          backgroundColor: const Color(0xFFEF4444),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          margin: const EdgeInsets.all(16),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final authState = context.watch<AuthNotifier>();
@@ -104,6 +242,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     final errorMessage = authState.errorMessage;
     final size = MediaQuery.of(context).size;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       body: Stack(
         children: [
@@ -114,26 +253,23 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: isDark
-                    ? [
-                        const Color(0xFF1A1A2E),
-                        const Color(0xFF16213E),
-                      ]
-                    : [
-                        const Color(0xFF5B86E5),
-                        const Color(0xFF36D1DC),
-                      ],
+                    ? [const Color(0xFF1A1A2E), const Color(0xFF16213E)]
+                    : [const Color(0xFF5B86E5), const Color(0xFF36D1DC)],
               ),
             ),
           ),
+
           // ✨ Floating Particles
           ...List.generate(8, (index) {
             return AnimatedBuilder(
               animation: _backgroundController,
               builder: (context, child) {
-                final offset = (_backgroundController.value + index * 0.125) % 1;
+                final offset =
+                    (_backgroundController.value + index * 0.125) % 1;
                 final x = size.width * ((index * 0.125) % 1);
                 final y = size.height * offset;
                 final scale = 0.5 + math.sin(offset * math.pi * 2) * 0.3;
+
                 return Positioned(
                   left: x,
                   top: y,
@@ -162,21 +298,28 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
               },
             );
           }),
+
           // 📱 Main Content
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 40,
+                ),
                 child: FadeTransition(
                   opacity: _formController,
                   child: SlideTransition(
-                    position: Tween<Offset>(
-                      begin: const Offset(0, 0.1),
-                      end: Offset.zero,
-                    ).animate(CurvedAnimation(
-                      parent: _formController,
-                      curve: Curves.easeOutCubic,
-                    )),
+                    position:
+                        Tween<Offset>(
+                          begin: const Offset(0, 0.1),
+                          end: Offset.zero,
+                        ).animate(
+                          CurvedAnimation(
+                            parent: _formController,
+                            curve: Curves.easeOutCubic,
+                          ),
+                        ),
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 440),
                       child: Column(
@@ -185,6 +328,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                           // 🎯 Logo & Brand
                           _buildLogo(),
                           const SizedBox(height: 48),
+
                           // 💎 Glass Card with Form
                           _buildGlassCard(
                             child: Column(
@@ -193,20 +337,29 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                 // Header
                                 _buildHeader(),
                                 const SizedBox(height: 32),
+
                                 // Error Banner
                                 if (errorMessage != null) ...[
                                   _buildErrorBanner(errorMessage),
                                   const SizedBox(height: 20),
                                 ],
+
                                 // Form
                                 _buildForm(),
                                 const SizedBox(height: 24),
+
                                 // Login Button
                                 _buildLoginButton(isLoading),
                                 const SizedBox(height: 20),
-                                // Divider
-                                _buildDivider(),
-                                const SizedBox(height: 20),
+
+                                // Divider & Google Sign-In Button (only if enabled)
+                                if (AppSettings.enableGoogleSignIn) ...[
+                                  _buildDivider(),
+                                  const SizedBox(height: 20),
+                                  _buildGoogleSignInButton(isLoading),
+                                  const SizedBox(height: 20),
+                                ],
+
                                 // Footer
                                 _buildFooter(),
                               ],
@@ -224,6 +377,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       ),
     );
   }
+
   // 🎯 Logo Section
   Widget _buildLogo() {
     return TweenAnimationBuilder<double>(
@@ -299,12 +453,14 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       },
     );
   }
+
   // 💎 Solid Card with Dark Mode Support
   Widget _buildGlassCard({required Widget child}) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       decoration: BoxDecoration(
-        color: isDark 
+        color: isDark
             ? const Color(0xFF0F1419).withOpacity(0.95)
             : Colors.white,
         borderRadius: BorderRadius.circular(32),
@@ -327,9 +483,11 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       child: child,
     );
   }
+
   // 📝 Header
   Widget _buildHeader() {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -347,7 +505,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           'Sign in to continue your journey',
           style: TextStyle(
             fontSize: 15,
-            color: isDark 
+            color: isDark
                 ? Colors.white.withOpacity(0.7)
                 : const Color(0xFF4A5568),
             fontWeight: FontWeight.w400,
@@ -356,6 +514,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       ],
     );
   }
+
   // ⚠️ Error Banner
   Widget _buildErrorBanner(String message) {
     return Container(
@@ -390,6 +549,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       ),
     );
   }
+
   // 📋 Form
   Widget _buildForm() {
     return Form(
@@ -400,18 +560,19 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           _buildTextField(
             controller: _identityController,
             label: 'Email or Username',
-            hint: 'Enter your email or username',
+            hint: 'enter_email_or_username'.tr,
             icon: Icons.person_outline_rounded,
             keyboardType: TextInputType.emailAddress,
             validator: _validateIdentity,
             onChanged: (_) => context.read<AuthNotifier>().clearError(),
           ),
           const SizedBox(height: 16),
+
           // Password Field
           _buildTextField(
             controller: _passwordController,
             label: 'Password',
-            hint: 'Enter your password',
+            hint: 'enter_password_text'.tr,
             icon: Icons.lock_outline_rounded,
             obscureText: _obscurePassword,
             validator: _validatePassword,
@@ -424,10 +585,12 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     : Icons.visibility_outlined,
                 color: Colors.white.withOpacity(0.7),
               ),
-              onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+              onPressed: () =>
+                  setState(() => _obscurePassword = !_obscurePassword),
             ),
           ),
           const SizedBox(height: 12),
+
           // Forgot Password
           Align(
             alignment: AlignmentDirectional.centerEnd,
@@ -441,10 +604,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
               ),
               child: const Text(
                 'Forgot Password?',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
               ),
             ),
           ),
@@ -452,6 +612,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       ),
     );
   }
+
   // 🎨 Custom TextField
   Widget _buildTextField({
     required TextEditingController controller,
@@ -466,6 +627,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     Widget? suffixIcon,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return TextFormField(
       controller: controller,
       obscureText: obscureText,
@@ -483,13 +645,13 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         hintText: hint,
         prefixIcon: Icon(
           icon,
-          color: isDark 
+          color: isDark
               ? Colors.white.withOpacity(0.7)
               : const Color(0xFF5B86E5).withOpacity(0.8),
         ),
         suffixIcon: suffixIcon,
         labelStyle: TextStyle(
-          color: isDark 
+          color: isDark
               ? Colors.white.withOpacity(0.7)
               : const Color(0xFF4A5568),
           fontSize: 14,
@@ -502,62 +664,53 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           fontSize: 14,
         ),
         filled: true,
-        fillColor: isDark
-            ? const Color(0xFF1A202C)
-            : const Color(0xFFF7FAFC),
+        fillColor: isDark ? const Color(0xFF1A202C) : const Color(0xFFF7FAFC),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(
-            color: isDark
-                ? const Color(0xFF2D3748)
-                : const Color(0xFFE2E8F0),
+            color: isDark ? const Color(0xFF2D3748) : const Color(0xFFE2E8F0),
             width: 1.5,
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(
-            color: isDark
-                ? const Color(0xFF2D3748)
-                : const Color(0xFFE2E8F0),
+            color: isDark ? const Color(0xFF2D3748) : const Color(0xFFE2E8F0),
             width: 1.5,
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(
-            color: isDark
-                ? const Color(0xFF5B86E5)
-                : const Color(0xFF5B86E5),
+            color: isDark ? const Color(0xFF5B86E5) : const Color(0xFF5B86E5),
             width: 2,
           ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(
-            color: Color(0xFFEF4444),
-            width: 1.5,
-          ),
+          borderSide: const BorderSide(color: Color(0xFFEF4444), width: 1.5),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(
-            color: Color(0xFFEF4444),
-            width: 2,
-          ),
+          borderSide: const BorderSide(color: Color(0xFFEF4444), width: 2),
         ),
         errorStyle: TextStyle(
           color: isDark ? const Color(0xFFFFCDD2) : const Color(0xFFEF4444),
           fontSize: 12,
           fontWeight: FontWeight.w500,
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 18,
+        ),
       ),
     );
   }
+
   // 🚀 Login Button
   Widget _buildLoginButton(bool isLoading) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       height: 56,
       decoration: BoxDecoration(
@@ -618,9 +771,82 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       ),
     );
   }
+
+  // 🔵 Google Sign-In Button
+  Widget _buildGoogleSignInButton(bool isLoading) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Container(
+      height: 56,
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF1A202C) : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isDark ? const Color(0xFF2D3748) : const Color(0xFFE2E8F0),
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            spreadRadius: 0,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: isLoading ? null : _handleGoogleSignIn,
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ShaderMask(
+                  shaderCallback: (Rect bounds) {
+                    return const LinearGradient(
+                      colors: [
+                        Color(0xFF4285F4), // Blue
+                        Color(0xFFDB4437), // Red
+                        Color(0xFFF4B400), // Yellow
+                        Color(0xFF0F9D58), // Green
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ).createShader(bounds);
+                  },
+                  child: const Icon(
+                    Iconsax.google_1,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Flexible(
+                  child: Text(
+                    'sign_in_with_google'.tr,
+                    style: TextStyle(
+                      color: isDark ? Colors.white : const Color(0xFF1F2937),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   // ➖ Divider
   Widget _buildDivider() {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Row(
       children: [
         Expanded(
@@ -656,9 +882,11 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       ],
     );
   }
+
   // 📄 Footer
   Widget _buildFooter() {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       children: [
         Text(
@@ -696,10 +924,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           ),
           child: Text(
             'create_account'.tr,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-            ),
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
           ),
         ),
         const SizedBox(height: 16),

@@ -3,6 +3,7 @@ import 'cart_event.dart';
 import 'cart_state.dart';
 import '../../../domain/market_repository.dart';
 import '../../../data/models/models.dart';
+
 /// Cart Bloc
 /// 
 /// يدير حالة سلة التسوق باستخدام Bloc pattern.
@@ -48,6 +49,7 @@ import '../../../data/models/models.dart';
 /// - [CartEmpty]: سلة فارغة
 class CartBloc extends Bloc<CartEvent, CartState> {
   final MarketRepository _repository;
+
   /// Creates a CartBloc instance
   /// 
   /// Parameters:
@@ -62,6 +64,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     on<RefreshCartEvent>(_onRefreshCart);
     on<CheckoutCartEvent>(_onCheckoutCart);
   }
+
   /// Handle load cart event
   Future<void> _onLoadCart(
     LoadCartEvent event,
@@ -69,7 +72,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   ) async {
     try {
       emit(const CartLoading());
+
       final cart = await _repository.getCart();
+
       if (cart.isEmpty) {
         emit(const CartEmpty());
       } else {
@@ -79,6 +84,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       emit(CartError(message: 'فشل في جلب سلة التسوق: ${e.toString()}'));
     }
   }
+
   /// Handle add to cart event
   Future<void> _onAddToCart(
     AddToCartEvent event,
@@ -91,36 +97,44 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           : state is CartOperationSuccess
               ? (state as CartOperationSuccess).cart
               : Cart.empty();
+
       emit(CartOperationInProgress(
         currentCart: currentCart,
         operation: 'adding',
       ));
+
       await _repository.addToCart(
         productId: event.productId,
         quantity: event.quantity,
       );
+
       // Reload cart to get updated data
       final updatedCart = await _repository.getCart();
+
       emit(CartOperationSuccess(
         cart: updatedCart,
         message: 'تمت إضافة المنتج إلى السلة',
       ));
+
       // Auto-transition to loaded state
       emit(CartLoaded(updatedCart));
     } catch (e) {
       final currentCart = state is CartOperationInProgress
           ? (state as CartOperationInProgress).currentCart
           : null;
+
       emit(CartError(
         message: 'فشل في إضافة المنتج: ${e.toString()}',
         currentCart: currentCart,
       ));
+
       // Return to previous state if possible
       if (currentCart != null && currentCart.isNotEmpty) {
         emit(CartLoaded(currentCart));
       }
     }
   }
+
   /// Handle update cart item event
   Future<void> _onUpdateCartItem(
     UpdateCartItemEvent event,
@@ -130,33 +144,41 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       final currentCart = state is CartLoaded
           ? (state as CartLoaded).cart
           : Cart.empty();
+
       emit(CartOperationInProgress(
         currentCart: currentCart,
         operation: 'updating',
       ));
+
       await _repository.updateCartItem(
         cartId: event.cartId,
         quantity: event.quantity,
       );
+
       final updatedCart = await _repository.getCart();
+
       emit(CartOperationSuccess(
         cart: updatedCart,
         message: 'تم تحديث الكمية',
       ));
+
       emit(CartLoaded(updatedCart));
     } catch (e) {
       final currentCart = state is CartOperationInProgress
           ? (state as CartOperationInProgress).currentCart
           : null;
+
       emit(CartError(
         message: 'فشل في تحديث الكمية: ${e.toString()}',
         currentCart: currentCart,
       ));
+
       if (currentCart != null) {
         emit(CartLoaded(currentCart));
       }
     }
   }
+
   /// Handle remove from cart event
   Future<void> _onRemoveFromCart(
     RemoveFromCartEvent event,
@@ -166,16 +188,21 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       final currentCart = state is CartLoaded
           ? (state as CartLoaded).cart
           : Cart.empty();
+
       emit(CartOperationInProgress(
         currentCart: currentCart,
         operation: 'removing',
       ));
+
       await _repository.removeFromCart(event.cartId);
+
       final updatedCart = await _repository.getCart();
+
       emit(CartOperationSuccess(
         cart: updatedCart,
         message: 'تم حذف المنتج من السلة',
       ));
+
       if (updatedCart.isEmpty) {
         emit(const CartEmpty());
       } else {
@@ -185,15 +212,18 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       final currentCart = state is CartOperationInProgress
           ? (state as CartOperationInProgress).currentCart
           : null;
+
       emit(CartError(
         message: 'فشل في حذف المنتج: ${e.toString()}',
         currentCart: currentCart,
       ));
+
       if (currentCart != null) {
         emit(CartLoaded(currentCart));
       }
     }
   }
+
   /// Handle clear cart event
   Future<void> _onClearCart(
     ClearCartEvent event,
@@ -203,29 +233,36 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       final currentCart = state is CartLoaded
           ? (state as CartLoaded).cart
           : Cart.empty();
+
       emit(CartOperationInProgress(
         currentCart: currentCart,
         operation: 'clearing',
       ));
+
       await _repository.clearCart();
+
       emit(CartOperationSuccess(
         cart: Cart.empty(),
         message: 'تم مسح السلة',
       ));
+
       emit(const CartEmpty());
     } catch (e) {
       final currentCart = state is CartOperationInProgress
           ? (state as CartOperationInProgress).currentCart
           : null;
+
       emit(CartError(
         message: 'فشل في مسح السلة: ${e.toString()}',
         currentCart: currentCart,
       ));
+
       if (currentCart != null) {
         emit(CartLoaded(currentCart));
       }
     }
   }
+
   /// Handle refresh cart event
   Future<void> _onRefreshCart(
     RefreshCartEvent event,
@@ -233,6 +270,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   ) async {
     try {
       final cart = await _repository.getCart();
+
       if (cart.isEmpty) {
         emit(const CartEmpty());
       } else {
@@ -242,6 +280,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       emit(CartError(message: 'فشل في تحديث السلة: ${e.toString()}'));
     }
   }
+
   /// Handle checkout cart event
   Future<void> _onCheckoutCart(
     CheckoutCartEvent event,
@@ -250,16 +289,19 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     try {
       // Show loading while processing
       emit(const CartLoading());
+
       // Call checkout API with shipping address
       final result = await _repository.checkout(
         address: event.shippingAddress,
         notes: event.notes.isNotEmpty ? event.notes : null,
         paymentMethod: event.paymentMethod,
       );
+
       // Check if orders were created
       if (result.totalOrders > 0 && result.orders.isNotEmpty) {
         // Get first order ID
         final orderId = result.orders.first.orderId;
+        
         emit(CartCheckoutSuccess(
           orderId: orderId,
           message: 'تم تقديم ${result.totalOrders} طلب بنجاح',

@@ -10,12 +10,15 @@ import '../../domain/offers_repository.dart';
 import 'offer_detail_page.dart';
 import 'offer_create_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 class OffersListPage extends StatefulWidget {
   final bool mineOnly;
   const OffersListPage({super.key, this.mineOnly = false});
+
   @override
   State<OffersListPage> createState() => _OffersListPageState();
 }
+
 class _OffersListPageState extends State<OffersListPage> {
   final _scroll = ScrollController();
   List<Offer> _items = [];
@@ -28,17 +31,20 @@ class _OffersListPageState extends State<OffersListPage> {
   int _offset = 0;
   final int _limit = 20;
   String _error = '';
+
   @override
   void initState() {
     super.initState();
     _prime();
     _scroll.addListener(_onScroll);
   }
+
   @override
   void dispose() {
     _scroll.dispose();
     super.dispose();
   }
+
   Future<void> _prime() async {
     // Categories reserved for future filter dropdown
     // try {
@@ -48,11 +54,13 @@ class _OffersListPageState extends State<OffersListPage> {
     // } catch (_) {}
     await _load();
   }
+
   void _onScroll() {
     if (_scroll.position.pixels >= _scroll.position.maxScrollExtent - 200) {
       if (!_loadingMore && _hasMore) _loadMore();
     }
   }
+
   Future<void> _load() async {
     setState(() {
       _loading = true;
@@ -79,6 +87,7 @@ class _OffersListPageState extends State<OffersListPage> {
       });
     }
   }
+
   Future<void> _loadMore() async {
     setState(() => _loadingMore = true);
     try {
@@ -97,12 +106,14 @@ class _OffersListPageState extends State<OffersListPage> {
       setState(() => _loadingMore = false);
     }
   }
+
   List<Offer> _filterMine(List<Offer> items) {
     final auth = context.read<AuthNotifier>();
     final id = auth.currentUser?['user_id']?.toString();
     if (id == null || id.isEmpty) return const [];
     return items.where((o) => o.author.userId.toString() == id).toList();
   }
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
@@ -172,6 +183,7 @@ class _OffersListPageState extends State<OffersListPage> {
                     ),
     );
   }
+
   Widget _card(Offer o) {
     final scheme = Theme.of(context).colorScheme;
     return GestureDetector(
@@ -230,6 +242,7 @@ class _OffersListPageState extends State<OffersListPage> {
       ),
     );
   }
+
   Widget _buildSkeleton() {
     return ListView.separated(
       padding: EdgeInsets.all(UI.lg),

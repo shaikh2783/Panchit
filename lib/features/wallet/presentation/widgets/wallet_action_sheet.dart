@@ -4,18 +4,23 @@ import 'package:snginepro/core/theme/design_tokens.dart';
 import 'package:snginepro/features/wallet/application/bloc/wallet_action_cubit.dart';
 import 'package:snginepro/features/wallet/data/models/wallet_summary.dart';
 import 'package:snginepro/features/wallet/presentation/widgets/wallet_shared_widgets.dart';
+import 'package:get/get.dart';
+
 class WalletActionBottomSheet extends StatefulWidget {
   const WalletActionBottomSheet({
     super.key,
     required this.summary,
     required this.action,
   });
+
   final WalletSummary summary;
   final WalletActionType action;
+
   @override
   State<WalletActionBottomSheet> createState() =>
       _WalletActionBottomSheetState();
 }
+
 class _WalletActionBottomSheetState extends State<WalletActionBottomSheet> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _userIdController;
@@ -24,7 +29,9 @@ class _WalletActionBottomSheetState extends State<WalletActionBottomSheet> {
   late final TextEditingController _noteController;
   String? _selectedSource;
   String? _selectedMethod;
+
   WalletActionCubit get _cubit => context.read<WalletActionCubit>();
+
   @override
   void initState() {
     super.initState();
@@ -47,6 +54,7 @@ class _WalletActionBottomSheetState extends State<WalletActionBottomSheet> {
       }
     }
   }
+
   @override
   void dispose() {
     _userIdController.dispose();
@@ -55,18 +63,22 @@ class _WalletActionBottomSheetState extends State<WalletActionBottomSheet> {
     _noteController.dispose();
     super.dispose();
   }
+
   String get _currencySymbol {
     final wallet = widget.summary.wallet;
     return wallet.currencySymbol.isNotEmpty
         ? wallet.currencySymbol
         : wallet.currency;
   }
+
   void _submit() {
     final cubit = _cubit;
     if (!_formKey.currentState!.validate()) {
       return;
     }
+
     final amount = double.tryParse(_amountController.text.trim()) ?? 0;
+
     switch (widget.action) {
       case WalletActionType.transfer:
         final userId = int.tryParse(_userIdController.text.trim());
@@ -110,10 +122,12 @@ class _WalletActionBottomSheetState extends State<WalletActionBottomSheet> {
         break;
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final theme = Theme.of(context);
+
     return Padding(
       padding: EdgeInsets.only(
         left: Spacing.lg,
@@ -322,7 +336,7 @@ class _WalletActionBottomSheetState extends State<WalletActionBottomSheet> {
                         onPressed: isProcessing
                             ? null
                             : () => Navigator.of(context).pop(),
-                        child: const Text('Cancel'),
+                        child: Text('cancel'.tr),
                       ),
                     ),
                     const SizedBox(width: Spacing.sm),
@@ -337,7 +351,7 @@ class _WalletActionBottomSheetState extends State<WalletActionBottomSheet> {
                                   strokeWidth: 2,
                                 ),
                               )
-                            : const Text('Confirm'),
+                            : Text('confirmed_button'.tr),
                       ),
                     ),
                   ],
@@ -349,6 +363,7 @@ class _WalletActionBottomSheetState extends State<WalletActionBottomSheet> {
       ),
     );
   }
+
   String _titleForAction(WalletActionType action) {
     switch (action) {
       case WalletActionType.transfer:
@@ -361,6 +376,7 @@ class _WalletActionBottomSheetState extends State<WalletActionBottomSheet> {
         return 'Recharge wallet';
     }
   }
+
   String _subtitleForAction(WalletActionType action, WalletSummary summary) {
     switch (action) {
       case WalletActionType.transfer:
@@ -383,6 +399,7 @@ class _WalletActionBottomSheetState extends State<WalletActionBottomSheet> {
         return 'Add funds to your wallet balance. Enter the amount you want to recharge.';
     }
   }
+
   String _formatWithdrawalLabel(String source) {
     if (source.isEmpty) return source;
     final formatted = source
@@ -394,6 +411,7 @@ class _WalletActionBottomSheetState extends State<WalletActionBottomSheet> {
         .join(' ');
     return formatted;
   }
+
   String _formatPaymentMethod(String method) {
     if (method.isEmpty) return method;
     final formatted = method

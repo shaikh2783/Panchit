@@ -1,9 +1,12 @@
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
 import '../models/funding.dart';
+
 class FundingApiService {
   final ApiClient _client;
+
   FundingApiService(this._client);
+
   /// Get list of funding requests
   Future<Map<String, dynamic>> getFunding({
     int offset = 0,
@@ -17,6 +20,7 @@ class FundingApiService {
     };
     return await _client.get(configCfgP('funding_base'), queryParameters: query);
   }
+
   /// Get single funding request
   Future<Funding> getFundingById(int id) async {
     final response = await _client.get('${configCfgP('funding_base')}/$id');
@@ -26,6 +30,7 @@ class FundingApiService {
     }
     throw Exception(response['message'] ?? 'Failed to fetch funding');
   }
+
   /// Create funding request
   Future<Funding> createFunding(Map<String, dynamic> body) async {
     final response = await _client.post(configCfgP('funding_base'), body: body);
@@ -35,6 +40,7 @@ class FundingApiService {
     }
     throw Exception(response['message'] ?? 'Failed to create funding');
   }
+
   /// Update funding request
   Future<Funding> updateFunding(int id, Map<String, dynamic> body) async {
     final response = await _client.post('${configCfgP('funding_base')}/$id/update', body: body);
@@ -44,6 +50,7 @@ class FundingApiService {
     }
     throw Exception(response['message'] ?? 'Failed to update funding');
   }
+
   /// Delete funding request
   Future<void> deleteFunding(int id) async {
     final response = await _client.post('${configCfgP('funding_base')}/$id/delete');
@@ -51,6 +58,7 @@ class FundingApiService {
       throw Exception(response['message'] ?? 'Failed to delete funding');
     }
   }
+
   /// Donate to funding request
   Future<Funding> donateFunding(int id, double amount) async {
     final response = await _client.post(
@@ -63,6 +71,7 @@ class FundingApiService {
     }
     throw Exception(response['message'] ?? 'Failed to donate');
   }
+
   /// Get donors list
   Future<Map<String, dynamic>> getDonors(int id, {int offset = 0, int limit = 20}) async {
     final query = <String, String>{

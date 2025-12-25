@@ -1,23 +1,29 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../data/models/wallet_action_result.dart';
 import '../../domain/wallet_repository.dart';
+
 class WalletActionCubit extends Cubit<WalletActionState> {
   WalletActionCubit(this._repository)
     : super(const WalletActionState.initial());
+
   final WalletRepository _repository;
+
   Future<void> transfer({required int userId, required double amount}) async {
     await _execute(
       action: WalletActionType.transfer,
       runner: () => _repository.transfer(userId: userId, amount: amount),
     );
   }
+
   Future<void> tip({required int userId, required double amount}) async {
     await _execute(
       action: WalletActionType.tip,
       runner: () => _repository.sendTip(userId: userId, amount: amount),
     );
   }
+
   Future<void> withdraw({
     required String source,
     required double amount,
@@ -27,6 +33,7 @@ class WalletActionCubit extends Cubit<WalletActionState> {
       runner: () => _repository.withdraw(source: source, amount: amount),
     );
   }
+
   Future<void> recharge({
     required double amount,
     String? method,
@@ -43,6 +50,7 @@ class WalletActionCubit extends Cubit<WalletActionState> {
       ),
     );
   }
+
   Future<void> _execute({
     required WalletActionType action,
     required Future<WalletActionResult> Function() runner,
@@ -55,6 +63,7 @@ class WalletActionCubit extends Cubit<WalletActionState> {
         clearResult: true,
       ),
     );
+
     try {
       final result = await runner();
       final status = result.success
@@ -78,6 +87,7 @@ class WalletActionCubit extends Cubit<WalletActionState> {
       );
     }
   }
+
   void resetStatus() {
     emit(
       state.copyWith(
@@ -89,6 +99,7 @@ class WalletActionCubit extends Cubit<WalletActionState> {
     );
   }
 }
+
 class WalletActionState extends Equatable {
   const WalletActionState({
     required this.status,
@@ -96,15 +107,18 @@ class WalletActionState extends Equatable {
     this.errorMessage,
     this.lastAction,
   });
+
   const WalletActionState.initial()
     : status = WalletActionStatus.idle,
       result = null,
       errorMessage = null,
       lastAction = null;
+
   final WalletActionStatus status;
   final WalletActionResult? result;
   final String? errorMessage;
   final WalletActionType? lastAction;
+
   WalletActionState copyWith({
     WalletActionStatus? status,
     WalletActionResult? result,
@@ -120,8 +134,11 @@ class WalletActionState extends Equatable {
       lastAction: lastAction ?? this.lastAction,
     );
   }
+
   @override
   List<Object?> get props => [status, result, errorMessage, lastAction];
 }
+
 enum WalletActionStatus { idle, inProgress, success, failure }
+
 enum WalletActionType { transfer, tip, withdraw, recharge }

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+
 class BoostInfoCard extends StatelessWidget {
   final int boostedCount;
   final int remainingBoosts;
   final int boostLimit;
   final bool canBoostMore;
+
   const BoostInfoCard({
     super.key,
     required this.boostedCount,
@@ -13,10 +15,12 @@ class BoostInfoCard extends StatelessWidget {
     required this.boostLimit,
     required this.canBoostMore,
   });
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(20),
@@ -152,6 +156,7 @@ class BoostInfoCard extends StatelessWidget {
       ),
     );
   }
+
   Widget _buildStatItem(
     BuildContext context, {
     required IconData icon,
@@ -160,6 +165,7 @@ class BoostInfoCard extends StatelessWidget {
     required Color color,
   }) {
     final theme = Theme.of(context);
+    
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
       decoration: BoxDecoration(

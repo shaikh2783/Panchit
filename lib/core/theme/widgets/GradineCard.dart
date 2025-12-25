@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:snginepro/core/theme/design_tokens.dart';
+
 class GradientCard extends StatelessWidget {
   const GradientCard({
     super.key,
@@ -23,6 +24,7 @@ class GradientCard extends StatelessWidget {
     this.isFrosted = false,
     this.frostOpacity = 0.85,
   });
+
   final Widget child;
   final EdgeInsetsGeometry? margin;
   final EdgeInsetsGeometry? padding;
@@ -35,39 +37,46 @@ class GradientCard extends StatelessWidget {
   final List<BoxShadow>? boxShadow;
   final Border? border;
   final double? elevation;
+
   // Edge glow (bezel)
   final List<Color>? bezelGradientColors;
   final double bezelWidth;
+
   // Frosted glass
   final bool isFrosted;
   final double frostOpacity;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+
     final double radius = borderRadius ?? Radii.medium;
     final BorderRadius clipRadius = BorderRadius.circular(radius);
+
     // ظل افتراضي حسب الإضاءة/الارتفاع
     final double effectiveElevation = elevation ?? Elevations.level2;
     final List<BoxShadow>? effectiveBoxShadow = boxShadow ??
         (effectiveElevation > 0
             ? [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: isDark ? 0.32 : 0.06),
+                  color: Colors.black.withOpacity(isDark ? 0.32 : 0.06),
                   blurRadius: effectiveElevation,
                   offset: const Offset(0, 2),
                 )
               ]
             : null);
+
     // لون الخلفية (في حالة frosted، يكون شبه شفاف)
     Color backgroundColor;
     if (gradientColors == null || gradientColors!.length < 2) {
       backgroundColor = color ?? theme.colorScheme.surface;
     } else {
       // عند وجود تدرّج، نستخدم أول لون كأساس للشفافية عند تفعيل frosted
-      backgroundColor = gradientColors!.first.withValues(alpha: 0.5);
+      backgroundColor = gradientColors!.first.withOpacity(0.5);
     }
-    if (isFrosted) backgroundColor = backgroundColor.withValues(alpha: frostOpacity);
+    if (isFrosted) backgroundColor = backgroundColor.withOpacity(frostOpacity);
+
     // ديكور الحاوية الخارجية
     BoxDecoration outerDecoration = BoxDecoration(
       gradient: (gradientColors != null &&
@@ -86,8 +95,10 @@ class GradientCard extends StatelessWidget {
       border: (bezelGradientColors == null) ? border : null,
       boxShadow: effectiveBoxShadow,
     );
+
     // المحتوى الافتراضي
     Widget inner = Container(padding: padding, child: child);
+
     // إن وُجد Bezel Gradient: نرسم إطارًا لامعًا ثم المحتوى الداخلي
     if (bezelGradientColors != null && bezelGradientColors!.length >= 2) {
       final innerRadius = math.max(0.0, radius - bezelWidth);
@@ -121,11 +132,13 @@ class GradientCard extends StatelessWidget {
           child: child,
         ),
       );
+
       // عندما نستخدم Bezel ننقل الظل للداخل ونخفف ديكور الخارج
       outerDecoration = BoxDecoration(
         borderRadius: clipRadius,
       );
     }
+
     // البطاقة (مع الضباب إن طُلب)
     Widget card = Container(
       margin: margin,
@@ -138,8 +151,10 @@ class GradientCard extends StatelessWidget {
             )
           : inner,
     );
+
     // معالجة الضغط بدون استخدام borderRadius المباشر في InkWell
     if (onTap == null) return card;
+
     return Material(
       type: MaterialType.transparency,
       child: InkWell(

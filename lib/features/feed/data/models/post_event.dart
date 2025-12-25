@@ -10,6 +10,7 @@ class PostEvent {
   final int eventInterested;
   final int eventGoing;
   final bool iJoined;
+
   const PostEvent({
     required this.eventId,
     required this.eventTitle,
@@ -23,6 +24,7 @@ class PostEvent {
     required this.eventGoing,
     required this.iJoined,
   });
+
   factory PostEvent.fromJson(Map<String, dynamic> json) {
     // Handle i_joined format from API response
     bool iJoined = false;
@@ -34,6 +36,7 @@ class PostEvent {
     } else {
       iJoined = json['i_joined'] == true || json['i_joined']?.toString() == '1';
     }
+
     return PostEvent(
       eventId: json['event_id']?.toString() ?? '0',
       eventTitle: json['event_title']?.toString() ?? '',
@@ -49,6 +52,7 @@ class PostEvent {
       iJoined: iJoined,
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'event_id': eventId,
@@ -64,6 +68,7 @@ class PostEvent {
       'i_joined': iJoined,
     };
   }
+
   PostEvent copyWith({
     String? eventId,
     String? eventTitle,
@@ -91,9 +96,11 @@ class PostEvent {
       iJoined: iJoined ?? this.iJoined,
     );
   }
+
   // Helper getters
   String get formattedInterestedCount => _formatCount(eventInterested);
   String get formattedGoingCount => _formatCount(eventGoing);
+
   static String _formatCount(int count) {
     if (count < 1000) return count.toString();
     if (count < 1000000) return '${(count / 1000).toStringAsFixed(1)}K';

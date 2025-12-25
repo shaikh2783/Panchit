@@ -9,6 +9,7 @@ class Story {
     this.timestamp,
     this.isSeen = false,
   }) : media = media ?? const <StoryMedia>[];
+
   final String id;
   final String authorName;
   final String? authorAvatarUrl;
@@ -17,7 +18,9 @@ class Story {
   final bool isOwner;
   final DateTime? timestamp;
   final bool isSeen;
+
   bool get hasMedia => media.isNotEmpty;
+
   String? get effectivePreview {
     if (previewImageUrl != null && previewImageUrl!.isNotEmpty) {
       return previewImageUrl;
@@ -27,6 +30,7 @@ class Story {
     }
     return null;
   }
+
   Story copyWith({
     String? id,
     String? authorName,
@@ -48,18 +52,21 @@ class Story {
       isSeen: isSeen ?? this.isSeen,
     );
   }
+
   factory Story.fromJson(Map<String, dynamic> json) {
     final id = _string(json['story_id']) ??
         _string(json['id']) ??
         _string(json['storyId']) ??
         _string(json['storyid']) ??
         DateTime.now().microsecondsSinceEpoch.toString();
+
     final publisher = _map(json['publisher']) ?? _map(json['user']);
     final authorName = _resolveAuthorName(json, publisher);
     final authorAvatar =
         _string(json['photo']) ??
         _resolveAuthorAvatar(json, publisher) ??
         _string(json['avatar']);
+
     final mediaItems = <StoryMedia>[];
     void addMedia(Object? value) {
       if (value is Iterable) {
@@ -72,11 +79,13 @@ class Story {
         mediaItems.add(StoryMedia.fromJson(value));
       }
     }
+
     addMedia(json['media']);
     addMedia(json['story_media']);
     addMedia(json['items']);
     addMedia(json['stories']);
     addMedia(json['reels']); // Add support for reels array
+    
     // Handle direct photo/video fields from API
     final photo = _string(json['photo']);
     if (photo != null && photo.isNotEmpty) {
@@ -87,6 +96,7 @@ class Story {
         previewUrl: photo,
       ));
     }
+    
     final video = _string(json['video']);
     if (video != null && video.isNotEmpty) {
       mediaItems.add(StoryMedia(
@@ -97,12 +107,16 @@ class Story {
         previewUrl: photo ?? video,
       ));
     }
+
     final preview = _string(json['thumbnail']) ??
         _string(json['background']) ??
         (mediaItems.isNotEmpty ? mediaItems.first.previewUrl : null);
+
     final timestamp = _parseDate(json['time']) ?? _parseDate(json['date']);
+
     final isOwner = _bool(json['is_user'] ?? json['is_owner']);
     final isSeen = _bool(json['is_seen'] ?? json['seen']);
+
     return Story(
       id: id,
       authorName: authorName,
@@ -114,6 +128,7 @@ class Story {
       isSeen: isSeen,
     );
   }
+
   static String _resolveAuthorName(
     Map<String, dynamic> json,
     Map<String, dynamic>? publisher,
@@ -139,6 +154,7 @@ class Story {
     }
     return 'مستخدم';
   }
+
   static String? _resolveAuthorAvatar(
     Map<String, dynamic> json,
     Map<String, dynamic>? publisher,
@@ -161,6 +177,7 @@ class Story {
     }
     return null;
   }
+
   static String? _string(Object? value) {
     if (value == null) {
       return null;
@@ -170,12 +187,14 @@ class Story {
     }
     return value.toString();
   }
+
   static Map<String, dynamic>? _map(Object? value) {
     if (value is Map<String, dynamic>) {
       return value;
     }
     return null;
   }
+
   static bool _bool(Object? value) {
     if (value == null) {
       return false;
@@ -192,6 +211,7 @@ class Story {
         normalized == 'yes' ||
         normalized == 'y';
   }
+
   static DateTime? _parseDate(Object? value) {
     final raw = _string(value);
     if (raw == null || raw.isEmpty) {
@@ -214,6 +234,7 @@ class Story {
     return null;
   }
 }
+
 class StoryMedia {
   StoryMedia({
     required this.id,
@@ -223,14 +244,17 @@ class StoryMedia {
     this.previewUrl,
     this.duration,
   });
+
   final String id;
   final String type;
   final String source;
   final String? thumbnail;
   final String? previewUrl;
   final Duration? duration;
+
   bool get isVideo => type.toLowerCase() == 'video';
   bool get isValid => source.isNotEmpty;
+
   factory StoryMedia.fromJson(Map<String, dynamic> json) {
     final id = Story._string(json['id']) ??
         Story._string(json['media_id']) ??
@@ -254,6 +278,7 @@ class StoryMedia {
         Story._string(json['poster']) ??
         Story._string(json['photo']);
     final preview = Story._string(json['preview']) ?? thumbnail ?? source;
+
     // ✅ إصلاح: التعامل مع duration كـ int أو String
     Duration? duration;
     final durationValue = json['duration'] ?? json['length'];
@@ -269,6 +294,7 @@ class StoryMedia {
         }
       }
     }
+
     return StoryMedia(
       id: id,
       type: type,
@@ -279,3 +305,4 @@ class StoryMedia {
     );
   }
 }
+

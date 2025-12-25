@@ -5,6 +5,7 @@ class TimeAgo {
   static String formatArabic(DateTime dateTime) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
+
     if (difference.inSeconds < 60) {
       return 'منذ لحظات';
     } else if (difference.inMinutes < 60) {
@@ -75,10 +76,12 @@ class TimeAgo {
       }
     }
   }
+
   /// تحويل DateTime إلى صيغة "time ago" بالإنجليزية
   static String formatEnglish(DateTime dateTime) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
+
     if (difference.inSeconds < 60) {
       return 'just now';
     } else if (difference.inMinutes < 60) {
@@ -101,6 +104,7 @@ class TimeAgo {
       return years == 1 ? '1 year ago' : '$years years ago';
     }
   }
+
   /// تحويل String datetime إلى صيغة "منذ" بالعربية
   /// يدعم الصيغ التالية:
   /// - ISO 8601: "2025-11-10T15:49:39Z"
@@ -109,8 +113,10 @@ class TimeAgo {
     if (dateTimeString == null || dateTimeString.isEmpty) {
       return isEnglish ? 'unknown' : 'غير معروف';
     }
+
     try {
       DateTime dateTime;
+      
       // إذا كان String يحتوي على "T" فهو ISO 8601
       if (dateTimeString.contains('T')) {
         dateTime = DateTime.parse(dateTimeString);
@@ -123,11 +129,13 @@ class TimeAgo {
       else {
         dateTime = DateTime.parse(dateTimeString);
       }
+
       return isEnglish ? formatEnglish(dateTime) : formatArabic(dateTime);
     } catch (e) {
       return isEnglish ? 'unknown' : 'غير معروف';
     }
   }
+
   /// تحويل Unix timestamp (seconds) إلى صيغة "منذ"
   static String formatFromTimestamp(int timestamp, {bool isEnglish = false}) {
     try {
@@ -137,6 +145,7 @@ class TimeAgo {
       return isEnglish ? 'unknown' : 'غير معروف';
     }
   }
+
   /// تحويل Unix timestamp (milliseconds) إلى صيغة "منذ"
   static String formatFromMilliseconds(int milliseconds, {bool isEnglish = false}) {
     try {

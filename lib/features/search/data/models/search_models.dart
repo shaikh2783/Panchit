@@ -1,4 +1,5 @@
 /// نماذج البحث لجميع أنواع النتائج
+
 /// نتيجة البحث العامة
 abstract class SearchResult {
   final String id;
@@ -7,6 +8,7 @@ abstract class SearchResult {
   final String subtitle;
   final String? imageUrl;
   final bool verified;
+
   const SearchResult({
     required this.id,
     required this.type,
@@ -16,6 +18,7 @@ abstract class SearchResult {
     this.verified = false,
   });
 }
+
 /// نتيجة البحث للمستخدمين
 class SearchUser extends SearchResult {
   final int userId;
@@ -28,6 +31,7 @@ class SearchUser extends SearchResult {
   final bool isSubscribed;
   final String connectionStatus; // "none", "friends", "pending", etc.
   final int mutualFriendsCount;
+
   const SearchUser({
     required this.userId,
     required this.username,
@@ -47,10 +51,12 @@ class SearchUser extends SearchResult {
           imageUrl: profilePicture,
           verified: isVerified,
         );
+
   factory SearchUser.fromJson(Map<String, dynamic> json) {
     final firstName = json['user_firstname']?.toString() ?? '';
     final lastName = json['user_lastname']?.toString() ?? '';
     final fullName = json['name']?.toString() ?? '$firstName $lastName'.trim();
+    
     return SearchUser(
       userId: int.tryParse(json['user_id']?.toString() ?? '0') ?? 0,
       username: json['user_name']?.toString() ?? '',
@@ -65,6 +71,7 @@ class SearchUser extends SearchResult {
     );
   }
 }
+
 /// نتيجة البحث للصفحات
 class SearchPageResult extends SearchResult {
   final int pageId;
@@ -78,6 +85,7 @@ class SearchPageResult extends SearchResult {
   final bool isVerified;
   final bool isBoosted;
   final bool iLiked;
+
   SearchPageResult({
     required this.pageId,
     required this.pageName,
@@ -100,6 +108,7 @@ class SearchPageResult extends SearchResult {
           imageUrl: pagePicture,
           verified: isVerified,
         );
+
   factory SearchPageResult.fromJson(Map<String, dynamic> json) {
     return SearchPageResult(
       pageId: int.tryParse(json['page_id']?.toString() ?? '0') ?? 0,
@@ -116,6 +125,7 @@ class SearchPageResult extends SearchResult {
     );
   }
 }
+
 /// نتيجة البحث للمجموعات
 class SearchGroup extends SearchResult {
   final int groupId;
@@ -128,6 +138,7 @@ class SearchGroup extends SearchResult {
   final int groupMembers;
   final String groupPrivacy; // "public", "closed", "secret"
   final bool iJoined;
+
   SearchGroup({
     required this.groupId,
     required this.groupName,
@@ -149,6 +160,7 @@ class SearchGroup extends SearchResult {
           imageUrl: groupPicture,
           verified: false,
         );
+
   factory SearchGroup.fromJson(Map<String, dynamic> json) {
     return SearchGroup(
       groupId: int.tryParse(json['group_id']?.toString() ?? '0') ?? 0,
@@ -164,6 +176,7 @@ class SearchGroup extends SearchResult {
     );
   }
 }
+
 /// نتيجة البحث للفعاليات
 class SearchEvent extends SearchResult {
   final int eventId;
@@ -176,6 +189,7 @@ class SearchEvent extends SearchResult {
   final int eventCategory;
   final String eventPrivacy;
   final bool iGoing;
+
   SearchEvent({
     required this.eventId,
     required this.eventTitle,
@@ -195,6 +209,7 @@ class SearchEvent extends SearchResult {
           imageUrl: eventCover,
           verified: false,
         );
+
   factory SearchEvent.fromJson(Map<String, dynamic> json) {
     return SearchEvent(
       eventId: int.tryParse(json['event_id']?.toString() ?? '0') ?? 0,
@@ -210,6 +225,7 @@ class SearchEvent extends SearchResult {
     );
   }
 }
+
 /// Factory لتحويل JSON إلى النوع المناسب حسب tab
 class SearchResultFactory {
   static List<SearchResult> fromJsonList(List<Map<String, dynamic>> results, String tab) {
@@ -230,6 +246,7 @@ class SearchResultFactory {
     }
   }
 }
+
 /// أنواع البحث المتاحة
 enum SearchType {
   posts('posts', 'Posts', 'المنشورات'),
@@ -238,10 +255,13 @@ enum SearchType {
   groups('groups', 'Groups', 'المجموعات'),
   events('events', 'Events', 'الفعاليات'),
   blogs('blogs', 'Blogs', 'المدونات');
+
   const SearchType(this.key, this.title, this.titleAr);
+  
   final String key;
   final String title;
   final String titleAr;
+
   static SearchType fromString(String value) {
     for (SearchType type in SearchType.values) {
       if (type.key == value.toLowerCase()) {

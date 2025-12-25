@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 class SkeletonBox extends StatelessWidget {
   final double height;
   final double width;
   final double radius;
+
   const SkeletonBox({super.key, this.height = 16, this.width = double.infinity, this.radius = 8});
+
   @override
   Widget build(BuildContext context) {
     final base = Get.isDarkMode ? Colors.grey[800]! : Colors.grey[300]!;
@@ -18,8 +21,10 @@ class SkeletonBox extends StatelessWidget {
     );
   }
 }
+
 class SkeletonProductCard extends StatelessWidget {
   const SkeletonProductCard({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -48,9 +53,12 @@ class SkeletonProductCard extends StatelessWidget {
     );
   }
 }
+
 class SkeletonProductGrid extends StatelessWidget {
   final int itemCount;
+
   const SkeletonProductGrid({super.key, this.itemCount = 6});
+
   @override
   Widget build(BuildContext context) {
     return GridView.builder(

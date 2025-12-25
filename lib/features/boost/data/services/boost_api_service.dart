@@ -1,8 +1,12 @@
 import 'package:snginepro/core/network/api_client.dart';
+
 class BoostApiService {
   final ApiClient _client;
+
   BoostApiService(this._client);
+
   // ==================== Posts Boost ====================
+
   /// تعزيز منشور
   Future<Map<String, dynamic>> boostPost(int postId) async {
     return await _client.post(
@@ -10,6 +14,7 @@ class BoostApiService {
       body: {'post_id': postId},
     );
   }
+
   /// إلغاء تعزيز منشور  
   Future<Map<String, dynamic>> unboostPost(int postId) async {
     return await _client.post(
@@ -17,6 +22,7 @@ class BoostApiService {
       body: {'post_id': postId},
     );
   }
+
   /// عرض المنشورات المعززة
   Future<Map<String, dynamic>> getBoostedPosts({
     int offset = 0,
@@ -30,7 +36,9 @@ class BoostApiService {
       },
     );
   }
+
   // ==================== Pages Boost ====================
+
   /// تعزيز صفحة
   Future<Map<String, dynamic>> boostPage(int pageId) async {
     return await _client.post(
@@ -38,6 +46,7 @@ class BoostApiService {
       body: {'page_id': pageId},
     );
   }
+
   /// إلغاء تعزيز صفحة
   Future<Map<String, dynamic>> unboostPage(int pageId) async {
     return await _client.post(
@@ -45,6 +54,7 @@ class BoostApiService {
       body: {'page_id': pageId},
     );
   }
+
   /// عرض الصفحات المعززة
   Future<Map<String, dynamic>> getBoostedPages({
     int offset = 0,

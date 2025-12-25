@@ -1,10 +1,12 @@
 import 'comment.dart';
+
 class CommentsResponse {
   final List<CommentModel> comments;
   final int total;
   final int offset;
   final int limit;
   final bool hasMore;
+
   CommentsResponse({
     required this.comments,
     required this.total,
@@ -12,9 +14,11 @@ class CommentsResponse {
     required this.limit,
     required this.hasMore,
   });
+
   factory CommentsResponse.fromJson(Map<String, dynamic> json) {
     final data = json['data'] ?? {};
     final commentsList = data['comments'] as List? ?? [];
+    
     return CommentsResponse(
       comments: commentsList
           .map((comment) => CommentModel.fromJson(comment as Map<String, dynamic>))
@@ -34,12 +38,14 @@ class CommentsResponse {
     );
   }
 }
+
 class RepliesResponse {
   final List<CommentModel> replies;
   final int total;
   final int offset;
   final int limit;
   final bool hasMore;
+
   RepliesResponse({
     required this.replies,
     required this.total,
@@ -47,9 +53,11 @@ class RepliesResponse {
     required this.limit,
     required this.hasMore,
   });
+
   factory RepliesResponse.fromJson(Map<String, dynamic> json) {
     final data = json['data'] ?? {};
     final repliesList = data['replies'] as List? ?? [];
+    
     return RepliesResponse(
       replies: repliesList
           .map((reply) => CommentModel.fromJson(reply as Map<String, dynamic>))

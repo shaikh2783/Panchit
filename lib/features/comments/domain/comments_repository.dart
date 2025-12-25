@@ -1,9 +1,12 @@
 import '../data/datasources/comments_api_service.dart';
 import '../data/models/comment.dart';
 import '../data/models/comments_response.dart';
+
 class CommentsRepository {
   final CommentsApiService _apiService;
+
   CommentsRepository(this._apiService);
+
   Future<CommentsResponse> getPostComments(
     int postId, {
     int offset = 0,
@@ -15,6 +18,7 @@ class CommentsRepository {
       limit: limit,
     );
   }
+
   Future<CommentModel> createComment({
     required int postId,
     required String text,
@@ -28,6 +32,7 @@ class CommentsRepository {
       voiceNote: voiceNote,
     );
   }
+
   Future<RepliesResponse> getCommentReplies(
     int commentId, {
     int offset = 0,
@@ -39,6 +44,7 @@ class CommentsRepository {
       limit: limit,
     );
   }
+
   Future<CommentModel> createReply({
     required int commentId,
     required String text,
@@ -52,6 +58,7 @@ class CommentsRepository {
       voiceNote: voiceNote,
     );
   }
+
   Future<void> reactToComment({
     required int commentId,
     required String reaction,
@@ -61,6 +68,7 @@ class CommentsRepository {
       reaction: reaction,
     );
   }
+
   Future<Map<String, dynamic>> editComment({
     required int commentId,
     required String newText,
@@ -70,6 +78,7 @@ class CommentsRepository {
       newText: newText,
     );
   }
+
   Future<void> deleteComment(int commentId) async {
     return await _apiService.deleteComment(commentId);
   }

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+
 /// نموذج دعوة الفعالية (Event Invitation)
 class EventInvitation extends Equatable {
   final int invitationId;
@@ -14,6 +15,7 @@ class EventInvitation extends Equatable {
   final String? fromUserPicture;
   final DateTime invitedAt;
   final String status; // pending, accepted, rejected
+
   const EventInvitation({
     required this.invitationId,
     required this.eventId,
@@ -29,6 +31,7 @@ class EventInvitation extends Equatable {
     required this.invitedAt,
     required this.status,
   });
+
   factory EventInvitation.fromJson(Map<String, dynamic> json) {
     return EventInvitation(
       invitationId: int.parse(json['invitation_id'].toString()),
@@ -48,6 +51,7 @@ class EventInvitation extends Equatable {
       status: json['status']?.toString() ?? 'pending',
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'invitation_id': invitationId,
@@ -65,13 +69,16 @@ class EventInvitation extends Equatable {
       'status': status,
     };
   }
+
   String get fromUserFullName {
     if (fromFirstName == null && fromLastName == null) return fromUserName;
     return '${fromFirstName ?? ''} ${fromLastName ?? ''}'.trim();
   }
+
   bool get isPending => status == 'pending';
   bool get isAccepted => status == 'accepted';
   bool get isRejected => status == 'rejected';
+
   @override
   List<Object?> get props => [
         invitationId,

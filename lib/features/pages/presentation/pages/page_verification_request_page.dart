@@ -1,30 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
 import '../../data/models/page.dart';
 import '../../domain/pages_repository.dart';
+
 class PageVerificationRequestPage extends StatefulWidget {
   final PageModel page;
+
   const PageVerificationRequestPage({super.key, required this.page});
+
   @override
   State<PageVerificationRequestPage> createState() =>
       _PageVerificationRequestPageState();
 }
+
 class _PageVerificationRequestPageState
     extends State<PageVerificationRequestPage> {
   final _formKey = GlobalKey<FormState>();
   final _businessWebsiteController = TextEditingController();
   final _businessAddressController = TextEditingController();
   final _messageController = TextEditingController();
+
   File? _photoFile;
   File? _passportFile;
   bool _isSubmitting = false;
   bool _isUploadingImages = false;
   double _uploadProgress = 0.0;
+
   @override
   void dispose() {
     _businessWebsiteController.dispose();
@@ -32,6 +40,7 @@ class _PageVerificationRequestPageState
     _messageController.dispose();
     super.dispose();
   }
+
   Future<void> _pickImage(ImageSource source, bool isPassport) async {
     try {
       final picker = ImagePicker();
@@ -41,6 +50,7 @@ class _PageVerificationRequestPageState
         maxHeight: 1920,
         imageQuality: 85,
       );
+
       if (pickedFile != null) {
         setState(() {
           if (isPassport) {
@@ -61,47 +71,60 @@ class _PageVerificationRequestPageState
       }
     }
   }
+
   Future<void> _submitRequest() async {
     if (!_formKey.currentState!.validate()) return;
+
     setState(() {
       _isSubmitting = true;
       _isUploadingImages = true;
       _uploadProgress = 0.0;
     });
+
     String? photoUrl;
     String? passportUrl;
+
     try {
       final apiClient = context.read<ApiClient>();
+      
       // رفع صورة الصفحة إذا كانت موجودة
       if (_photoFile != null) {
         setState(() => _uploadProgress = 0.1);
+        
         final photoResponse = await apiClient.multipartPost(
           configCfgP('file_upload'),
           body: {'type': 'photo'},
           filePath: _photoFile!.path,
           fileFieldName: 'file',
         );
+
         if (photoResponse['status'] == 'success' && photoResponse['data'] != null) {
           photoUrl = photoResponse['data']['source'] ?? photoResponse['data']['url'];
         }
       }
+
       setState(() => _uploadProgress = 0.5);
+
       // رفع صورة الجواز إذا كانت موجودة
       if (_passportFile != null) {
+        
         final passportResponse = await apiClient.multipartPost(
           configCfgP('file_upload'),
           body: {'type': 'photo'},
           filePath: _passportFile!.path,
           fileFieldName: 'file',
         );
+
         if (passportResponse['status'] == 'success' && passportResponse['data'] != null) {
           passportUrl = passportResponse['data']['source'] ?? passportResponse['data']['url'];
         }
       }
+
       setState(() {
         _isUploadingImages = false;
         _uploadProgress = 1.0;
       });
+
       // إرسال طلب التوثيق مع روابط الصور
       final repo = context.read<PagesRepository>();
       final result = await repo.requestVerification(
@@ -118,6 +141,7 @@ class _PageVerificationRequestPageState
             ? null
             : _messageController.text.trim(),
       );
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -126,12 +150,16 @@ class _PageVerificationRequestPageState
             duration: Duration(seconds: 3),
           ),
         );
+
+
         Navigator.pop(context, true);
       }
     } catch (e) {
       if (mounted) {
+
         final errorMessage = e.toString();
         final isPending = errorMessage.contains('pending');
+        
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -150,6 +178,7 @@ class _PageVerificationRequestPageState
                 : null,
           ),
         );
+        
         // إذا كان لديه طلب pending، أغلق الصفحة
         if (isPending) {
           await Future.delayed(const Duration(milliseconds: 500));
@@ -164,11 +193,12 @@ class _PageVerificationRequestPageState
       }
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Request Verification'),
+        title: Text('request_verification_title'.tr),
         centerTitle: true,
       ),
       body: Form(
@@ -217,6 +247,7 @@ class _PageVerificationRequestPageState
               ),
             ),
             const SizedBox(height: 24),
+
             // Info Card
             Container(
               padding: const EdgeInsets.all(16),
@@ -244,6 +275,7 @@ class _PageVerificationRequestPageState
               ),
             ),
             const SizedBox(height: 24),
+
             // Photo Upload
             _buildImagePicker(
               title: 'Page Photo',
@@ -254,6 +286,7 @@ class _PageVerificationRequestPageState
               onRemove: () => setState(() => _photoFile = null),
             ),
             const SizedBox(height: 16),
+
             // Passport/ID Upload
             _buildImagePicker(
               title: 'Passport/ID Document',
@@ -264,6 +297,7 @@ class _PageVerificationRequestPageState
               onRemove: () => setState(() => _passportFile = null),
             ),
             const SizedBox(height: 16),
+
             // Business Website
             TextFormField(
               controller: _businessWebsiteController,
@@ -279,6 +313,7 @@ class _PageVerificationRequestPageState
               keyboardType: TextInputType.url,
             ),
             const SizedBox(height: 16),
+
             // Business Address
             TextFormField(
               controller: _businessAddressController,
@@ -294,6 +329,7 @@ class _PageVerificationRequestPageState
               maxLines: 2,
             ),
             const SizedBox(height: 16),
+
             // Message
             TextFormField(
               controller: _messageController,
@@ -315,6 +351,7 @@ class _PageVerificationRequestPageState
               },
             ),
             const SizedBox(height: 32),
+
             // Upload Progress Indicator
             if (_isUploadingImages)
               Column(
@@ -335,6 +372,7 @@ class _PageVerificationRequestPageState
                   const SizedBox(height: 16),
                 ],
               ),
+
             // Submit Button
             SizedBox(
               height: 56,
@@ -379,6 +417,7 @@ class _PageVerificationRequestPageState
       ),
     );
   }
+
   Widget _buildImagePicker({
     required String title,
     required String subtitle,
@@ -451,6 +490,7 @@ class _PageVerificationRequestPageState
       ),
     );
   }
+
   void _showImageSourceDialog(bool isPassport) {
     showModalBottomSheet(
       context: context,
@@ -465,7 +505,7 @@ class _PageVerificationRequestPageState
             children: [
               ListTile(
                 leading: const Icon(Iconsax.camera),
-                title: const Text('Take Photo'),
+                title: Text('take_photo_button'.tr),
                 onTap: () {
                   Navigator.pop(context);
                   _pickImage(ImageSource.camera, isPassport);
@@ -473,7 +513,7 @@ class _PageVerificationRequestPageState
               ),
               ListTile(
                 leading: const Icon(Iconsax.gallery),
-                title: const Text('Choose from Gallery'),
+                title: Text('choose_from_gallery_button'.tr),
                 onTap: () {
                   Navigator.pop(context);
                   _pickImage(ImageSource.gallery, isPassport);

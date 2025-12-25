@@ -10,11 +10,13 @@ import '../../bloc/live_comments_bloc.dart';
 import '../../data/api_service/live_stream_api_service.dart';
 import '../../data/models/live_stream_models.dart';
 import '../widgets/live_stream_controls_widget.dart';
+
 class ProfessionalLiveStreamPage extends StatefulWidget {
   final String? initialTitle;
   final String? initialDescription;
   final String? node; // page أو group
   final int? nodeId; // معرف الصفحة أو المجموعة
+
   const ProfessionalLiveStreamPage({
     Key? key,
     this.initialTitle,
@@ -22,22 +24,27 @@ class ProfessionalLiveStreamPage extends StatefulWidget {
     this.node,
     this.nodeId,
   }) : super(key: key);
+
   @override
   State<ProfessionalLiveStreamPage> createState() => _ProfessionalLiveStreamPageState();
 }
+
 class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage> {
   late RtcEngine _engine;
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  
   bool _isEngineInitialized = false;
   bool _isLiveStreamActive = false;
   bool _isCameraEnabled = true;
   bool _isMicrophoneEnabled = true;
   bool _isFrontCamera = true;
+  
   String? _currentStreamId;
   int _currentViewers = 0; // عدد المشاهدين الحالي
   Timer? _statsTimer; // مؤقت لتحديث الإحصائيات
   bool _isUpdatingStats = false; // لمنع التحديثات المتكررة
+
   @override
   void initState() {
     super.initState();
@@ -45,6 +52,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
     _descriptionController.text = widget.initialDescription ?? '';
     _initializeAgoraEngine();
   }
+
   @override
   void dispose() {
     _isUpdatingStats = true; // منع أي تحديثات أثناء الـ dispose
@@ -54,27 +62,35 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
     _disposeAgoraEngine();
     super.dispose();
   }
+
   Future<void> _initializeAgoraEngine() async {
     try {
       // طلب الأذونات
       await [Permission.camera, Permission.microphone].request();
+
       // إنشاء Agora engine
       _engine = createAgoraRtcEngine();
+      
       await _engine.initialize(const RtcEngineContext(
         appId: "ba3efbf0e1cf4a9fb86c8a7734c79c0c", // App ID من البيئة
         channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
       ));
+
       await _engine.enableVideo();
       await _engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
+      
       // إعداد معاينة الفيديو
       await _engine.startPreview();
+      
       setState(() {
         _isEngineInitialized = true;
       });
+
     } catch (e) {
       _showErrorSnackBar('فشل في تهيئة محرك البث');
     }
   }
+
   Future<void> _disposeAgoraEngine() async {
     try {
       if (_isLiveStreamActive) {
@@ -85,11 +101,13 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
     } catch (e) {
     }
   }
+
   Future<void> _startLiveStream(BuildContext context) async {
     if (_titleController.text.trim().isEmpty) {
       _showErrorSnackBar('يجب إدخال عنوان البث');
       return;
     }
+
     context.read<LiveStreamCreationBloc>().add(
       CreateLiveStreamEvent(
         title: _titleController.text.trim(),
@@ -103,27 +121,33 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
       ),
     );
   }
+
   Future<void> _joinAgoraChannel({
     required String channelName,
     required String token,
     required int uid,
   }) async {
     try {
+      
       await _engine.joinChannel(
         token: token,
         channelId: channelName,
         uid: uid,
         options: const ChannelMediaOptions(),
       );
+
       setState(() {
         _isLiveStreamActive = true;
       });
+
       // بدء تحديث الإحصائيات
       _startStatsPolling();
+
     } catch (e) {
       _showErrorSnackBar('فشل في الانضمام لقناة البث');
     }
   }
+
   Future<void> _stopLiveStream() async {
     try {
       // إيقاف التحديث التلقائي للتعليقات والإحصائيات
@@ -131,25 +155,32 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
         context.read<LiveCommentsBloc>().add(StopLiveCommentsPolling());
         _stopStatsPolling();
       }
+      
       if (_currentStreamId != null) {
         // إنهاء البث في الـ backend
         final apiService = LiveStreamApiService(context.read<ApiClient>());
         await apiService.endLiveStream(postId: _currentStreamId!);
       }
+
       // مغادرة قناة Agora
       await _engine.leaveChannel();
+      
       setState(() {
         _isLiveStreamActive = false;
         _currentStreamId = null;
       });
+
       _showSuccessSnackBar('تم إنهاء البث بنجاح');
     } catch (e) {
       _showErrorSnackBar('فشل في إنهاء البث');
     }
   }
+
   /// بدء تحديث الإحصائيات كل 3 ثوان
   void _startStatsPolling() {
     _stopStatsPolling(); // إيقاف المؤقت السابق إن وجد
+    
+    
     _statsTimer = Timer.periodic(const Duration(seconds: 3), (timer) async {
       if (!mounted || !_isLiveStreamActive || _currentStreamId == null || _isUpdatingStats) {
         if (!mounted || !_isLiveStreamActive || _currentStreamId == null) {
@@ -157,12 +188,17 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
         }
         return;
       }
+      
       _isUpdatingStats = true;
+      
       try {
         final apiService = LiveStreamApiService(context.read<ApiClient>());
         final response = await apiService.getLiveStats(postId: _currentStreamId!);
+        
         if (response['status'] == 'success' && response['data'] != null) {
           final liveCount = response['data']['live_count'] ?? 0;
+          
+          
           // التأكد من أن الـ widget ما زال مُثبت وأن القيمة تغيرت فعلاً
           if (mounted && liveCount != _currentViewers) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -183,11 +219,13 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
       }
     });
   }
+
   /// إيقاف تحديث الإحصائيات  
   void _stopStatsPolling() {
     _statsTimer?.cancel();
     _statsTimer = null;
   }
+
   Future<void> _toggleCamera() async {
     try {
       await _engine.enableLocalVideo(!_isCameraEnabled);
@@ -197,6 +235,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
     } catch (e) {
     }
   }
+
   Future<void> _toggleMicrophone() async {
     try {
       await _engine.enableLocalAudio(!_isMicrophoneEnabled);
@@ -206,6 +245,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
     } catch (e) {
     }
   }
+
   Future<void> _switchCamera() async {
     try {
       await _engine.switchCamera();
@@ -215,6 +255,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
     } catch (e) {
     }
   }
+
   void _showErrorSnackBar(String message) {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
@@ -225,6 +266,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
       ),
     );
   }
+
   void _showSuccessSnackBar(String message) {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
@@ -235,6 +277,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -246,6 +289,8 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
             setState(() {
               _currentStreamId = state.postId.toString();
             });
+
+
             if (state.agoraToken != null && state.agoraUid != null) {
               _joinAgoraChannel(
                 channelName: state.channelName,
@@ -253,18 +298,24 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
                 uid: state.agoraUid!,
               );
             } else {
+              
               // إنشاء البث بدون token (للتجربة)
               setState(() {
                 _isLiveStreamActive = true;
               });
+              
               _showSuccessSnackBar('تم إنشاء البث بنجاح! (بدون Agora token)');
             }
+
             _showSuccessSnackBar('تم إنشاء البث بنجاح!');
+            
             // بدء تحديثات التعليقات والإحصائيات
             final commentsBloc = context.read<LiveCommentsBloc>();
             commentsBloc.add(LoadLiveComments(postId: _currentStreamId!));
+            
             // تشغيل التحديث التلقائي للتعليقات كل 3 ثوان
             commentsBloc.add(StartLiveCommentsPolling(postId: _currentStreamId!));
+            
             // تشغيل تحديث الإحصائيات حتى لو لم يكن هناك Agora token
             _startStatsPolling();
           } else if (state is LiveStreamCreationError) {
@@ -275,6 +326,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
       ),
     );
   }
+
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
       backgroundColor: Colors.transparent,
@@ -319,6 +371,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
       ],
     );
   }
+
   Widget _buildBody() {
     if (!_isEngineInitialized) {
       return const Center(
@@ -335,6 +388,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
         ),
       );
     }
+
     return ClipRect(
       child: Stack(
         fit: StackFit.expand,
@@ -343,6 +397,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
           Positioned.fill(
             child: _buildVideoView(),
           ),
+          
           // Live stream setup (when not streaming)
           if (!_isLiveStreamActive)
             Positioned.fill(
@@ -350,6 +405,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
                 builder: (context) => _buildStreamSetupOverlay(context),
               ),
             ),
+        
                 // Live controls and overlay (when streaming)
         if (_isLiveStreamActive) ...[
           // Top overlay with live indicator and viewer count
@@ -359,6 +415,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
             right: 0,
             child: _buildTopOverlay(),
           ),
+
           // Controls overlay (positioned at bottom to not cover chat)
           Positioned(
             left: 0,
@@ -367,6 +424,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
             height: 120, // Fixed height for controls only
             child: _buildControlsSection(),
           ),
+
           // Bottom chat area (above controls) - LAST for highest z-index
           Positioned(
             left: 16,
@@ -380,6 +438,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
       ),
     );
   }
+
   Widget _buildVideoView() {
     return RepaintBoundary(
       child: Container(
@@ -405,6 +464,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
       ),
     );
   }
+
   Widget _buildStreamSetupOverlay(BuildContext context) {
     return Container(
       color: Colors.black54,
@@ -430,6 +490,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 24),
+              
               // Title input
               TextField(
                 controller: _titleController,
@@ -445,6 +506,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
                 textInputAction: TextInputAction.next,
               ),
               const SizedBox(height: 16),
+              
               // Description input
               TextField(
                 controller: _descriptionController,
@@ -460,10 +522,12 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
                 maxLength: 300,
               ),
               const SizedBox(height: 24),
+              
               // Start stream button
               BlocBuilder<LiveStreamCreationBloc, LiveStreamCreationState>(
                 builder: (context, state) {
                   final isLoading = state is LiveStreamCreationLoading;
+                  
                   return ElevatedButton.icon(
                     onPressed: isLoading ? null : () => _startLiveStream(context),
                     icon: isLoading
@@ -497,6 +561,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
       ),
     );
   }
+
   Widget _buildControlsSection() {
     return LiveStreamControlsWidget(
       key: ValueKey('controls_${_isLiveStreamActive}'),
@@ -511,6 +576,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
       onEndStream: _stopLiveStream,
     );
   }
+
   /// بناء الـ overlay العلوي مع مؤشر البث المباشر وعدد المشاهدين
   Widget _buildTopOverlay() {
     return SafeArea(
@@ -541,7 +607,9 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
                 ],
               ),
             ),
+            
             const SizedBox(width: 12),
+            
             // عدد المشاهدين
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -575,6 +643,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
       ),
     );
   }
+
   /// بناء منطقة الشات مع إمكانية الكتابة
   Widget _buildChatArea() {
     return BlocBuilder<LiveCommentsBloc, LiveCommentsState>(
@@ -625,6 +694,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
                     ],
                   ),
                 ),
+                
                 // قائمة التعليقات
                 Expanded(
                   child: Container(
@@ -632,6 +702,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
                     child: _buildCommentsList(state),
                   ),
                 ),
+                
                 // منطقة إدخال التعليق
                 _buildCommentInput(),
               ],
@@ -650,10 +721,12 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
         ),
       );
     }
+    
     if (state is LiveCommentsLoaded && state.comments.isNotEmpty) {
       // ترتيب التعليقات بحسب التوقيت - الأحدث أولاً
       final sortedComments = List<LiveCommentModel>.from(state.comments);
       sortedComments.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+      
       return ListView.builder(
         reverse: true, // الأحدث في الأسفل (كالدردشات العادية)
         padding: const EdgeInsets.symmetric(vertical: 8),
@@ -665,6 +738,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
         },
       );
     }
+    
     return Center(
       child: Text(
         'ابدأ محادثة!',
@@ -675,6 +749,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
       ),
     );
   }
+
   /// بناء عنصر تعليق واحد
   Widget _buildCommentItem(LiveCommentModel comment) {
     return Container(
@@ -751,9 +826,11 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
       ),
     );
   }
+
   /// منطقة إدخال التعليق
   Widget _buildCommentInput() {
     final TextEditingController commentController = TextEditingController();
+    
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -827,17 +904,22 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
       ),
     );
   }
+
   /// إرسال تعليق جديد
   void _sendComment(TextEditingController controller) {
     if (controller.text.trim().isEmpty || _currentStreamId == null) return;
+
     final commentsBloc = context.read<LiveCommentsBloc>();
+    
     // إضافة التعليق عبر الـ BLoC
     commentsBloc.add(AddLiveComment(
       postId: _currentStreamId!,
       text: controller.text.trim(),
     ));
+
     controller.clear();
   }
+
   /// تنسيق عدد المشاهدين
   String _formatViewersCount(int count) {
     if (count >= 1000000) {
@@ -848,11 +930,13 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
       return count.toString();
     }
   }
+
   /// تنسيق وقت التعليق
   String _formatCommentTime(DateTime timestamp) {
     try {
       final now = DateTime.now();
       final difference = now.difference(timestamp);
+
       if (difference.inSeconds < 60) {
         return 'الآن';
       } else if (difference.inMinutes < 60) {

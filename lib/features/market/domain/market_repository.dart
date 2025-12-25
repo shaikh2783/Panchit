@@ -1,5 +1,6 @@
 import '../data/models/models.dart';
 import '../data/services/market_api_service.dart';
+
 /// Market Repository
 /// 
 /// طبقة Repository تفصل Business Logic عن طبقة API.
@@ -31,14 +32,17 @@ import '../data/services/market_api_service.dart';
 /// - [Cart], [Order]: النماذج المستخدمة
 class MarketRepository {
   final MarketApiService _apiService;
+
   /// Creates a MarketRepository instance
   /// 
   /// Parameters:
   /// - [apiService]: خدمة API للسوق
   MarketRepository(this._apiService);
+
   // ========================================
   // Products Methods
   // ========================================
+
   /// Get list of products
   /// 
   /// Retrieves products with optional filtering.
@@ -88,6 +92,7 @@ class MarketRepository {
       throw _handleError('Failed to fetch products', e);
     }
   }
+
   /// Get product details
   /// 
   /// Retrieves full details of a specific product.
@@ -104,8 +109,8 @@ class MarketRepository {
   /// Example:
   /// ```dart
   /// final product = await repository.getProductDetails('351');
-  /// 
-  /// 
+  /// print('${product.name} - ${product.formattedPrice}');
+  /// print('البائع: ${product.seller.fullName}');
   /// ```
   Future<Product> getProductDetails(String productId) async {
     try {
@@ -114,9 +119,69 @@ class MarketRepository {
       throw _handleError('Failed to fetch product details', e);
     }
   }
+
+  /// Get my products (seller)
+  ///
+  /// Retrieves the authenticated seller's products with optional filters.
+  Future<List<Product>> getMyProducts({
+    String? search,
+    String? status,
+    int offset = 0,
+    int limit = 20,
+  }) async {
+    try {
+      return await _apiService.getMyProducts(
+        search: search,
+        status: status,
+        offset: offset,
+        limit: limit,
+      );
+    } catch (e) {
+      throw _handleError('Failed to fetch my products', e);
+    }
+  }
+
+  /// Create a new product listing
+  ///
+  /// Wraps the publisher flow for creating products.
+  Future<Product> createProduct({
+    required String name,
+    required double price,
+    required int quantity,
+    required int categoryId,
+    String status = 'new',
+    String location = '',
+    bool isDigital = false,
+    String productUrl = '',
+    String productFile = '',
+    String description = '',
+    List<Map<String, dynamic>> photos = const [],
+    bool forAdult = false,
+  }) async {
+    try {
+      return await _apiService.createProduct(
+        name: name,
+        price: price,
+        quantity: quantity,
+        categoryId: categoryId,
+        status: status,
+        location: location,
+        isDigital: isDigital,
+        productUrl: productUrl,
+        productFile: productFile,
+        description: description,
+        photos: photos,
+        forAdult: forAdult,
+      );
+    } catch (e) {
+      throw _handleError('Failed to create product', e);
+    }
+  }
+
   // ========================================
   // Shopping Cart Methods
   // ========================================
+
   /// Get current shopping cart
   /// 
   /// Returns the user's shopping cart with all items.
@@ -128,9 +193,9 @@ class MarketRepository {
   /// ```dart
   /// try {
   ///   final cart = await repository.getCart();
-  ///   
+  ///   print('Items: ${cart.itemsCount}, Total: ${cart.total}');
   /// } catch (e) {
-  ///   
+  ///   print('Error: $e');
   /// }
   /// ```
   Future<Cart> getCart() async {
@@ -140,6 +205,7 @@ class MarketRepository {
       throw _handleError('Failed to fetch cart', e);
     }
   }
+
   /// Add product to cart
   /// 
   /// Adds a product with specified quantity to shopping cart.
@@ -171,6 +237,7 @@ class MarketRepository {
       throw _handleError('Failed to add to cart', e);
     }
   }
+
   /// Update cart item quantity
   /// 
   /// Updates the quantity of an existing cart item.
@@ -188,6 +255,7 @@ class MarketRepository {
     if (quantity <= 0) {
       throw Exception('Quantity must be greater than 0');
     }
+
     try {
       await _apiService.updateCartItem(
         cartId: cartId,
@@ -197,6 +265,7 @@ class MarketRepository {
       throw _handleError('Failed to update cart item', e);
     }
   }
+
   /// Remove item from cart
   /// 
   /// Removes a single product from the shopping cart.
@@ -213,6 +282,7 @@ class MarketRepository {
       throw _handleError('Failed to remove from cart', e);
     }
   }
+
   /// Clear entire cart
   /// 
   /// Removes all items from the shopping cart.
@@ -226,9 +296,11 @@ class MarketRepository {
       throw _handleError('Failed to clear cart', e);
     }
   }
+
   // ========================================
   // Checkout Methods
   // ========================================
+
   /// Process checkout
   /// 
   /// Completes the purchase and creates orders.
@@ -259,7 +331,7 @@ class MarketRepository {
   ///   notes: 'التوصيل بين 9 ص - 5 م',
   /// );
   /// 
-  /// 
+  /// print('تم إنشاء ${result.totalOrders} طلب');
   /// ```
   Future<CheckoutResult> checkout({
     required ShippingAddress address,
@@ -276,9 +348,11 @@ class MarketRepository {
       throw _handleError('Checkout failed', e);
     }
   }
+
   // ========================================
   // Orders Methods
   // ========================================
+
   /// Get buyer orders (purchases)
   /// 
   /// Retrieves all orders where current user is the buyer.
@@ -303,6 +377,7 @@ class MarketRepository {
       throw _handleError('Failed to fetch buyer orders', e);
     }
   }
+
   /// Get seller orders (sales)
   /// 
   /// Retrieves all orders where current user is the seller.
@@ -327,6 +402,7 @@ class MarketRepository {
       throw _handleError('Failed to fetch seller orders', e);
     }
   }
+
   /// Get order details
   /// 
   /// Retrieves full details of a specific order.
@@ -346,9 +422,11 @@ class MarketRepository {
       throw _handleError('Failed to fetch order details', e);
     }
   }
+
   // ========================================
   // Categories Methods
   // ========================================
+
   /// Get all product categories
   /// 
   /// Retrieves list of all available product categories.
@@ -360,7 +438,7 @@ class MarketRepository {
   /// ```dart
   /// final categories = await repository.getCategories();
   /// for (var cat in categories) {
-  ///   
+  ///   print('${cat.categoryId}: ${cat.categoryName}');
   /// }
   /// ```
   Future<List<ProductCategory>> getCategories() async {
@@ -370,9 +448,11 @@ class MarketRepository {
       throw _handleError('Failed to fetch categories', e);
     }
   }
+
   // ========================================
   // Helper Methods
   // ========================================
+
   /// Handle errors uniformly
   /// 
   /// Wraps errors with context message

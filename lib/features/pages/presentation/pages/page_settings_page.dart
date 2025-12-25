@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
+
 import 'package:snginepro/core/theme/app_colors.dart';
 import 'package:snginepro/features/pages/domain/pages_repository.dart';
 import 'package:snginepro/features/pages/data/models/page.dart';
@@ -9,21 +10,27 @@ import 'package:snginepro/features/pages/data/models/page_category.dart';
 import 'package:snginepro/core/data/models/country.dart';
 import 'package:snginepro/core/data/models/language.dart';
 import 'package:snginepro/core/network/api_exception.dart';
+
 class PageSettingsPage extends StatefulWidget {
   const PageSettingsPage({super.key, required this.page});
+
   final PageModel page;
+
   @override
   State<PageSettingsPage> createState() => _PageSettingsPageState();
 }
+
 class _PageSettingsPageState extends State<PageSettingsPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   bool _isLoading = false;
+
   // Settings Section Controllers
   final _titleController = TextEditingController();
   final _usernameController = TextEditingController();
   int? _selectedCategory;
   bool _pageTipsEnabled = false;
+
   // Info Section Controllers
   final _descriptionController = TextEditingController();
   final _websiteController = TextEditingController();
@@ -32,10 +39,12 @@ class _PageSettingsPageState extends State<PageSettingsPage>
   final _locationController = TextEditingController();
   int? _selectedCountry;
   int? _selectedLanguage;
+
   // Action Section Controllers
   final _actionTextController = TextEditingController();
   final _actionUrlController = TextEditingController();
   String _actionColor = 'primary';
+
   // Social Section Controllers
   final _facebookController = TextEditingController();
   final _twitterController = TextEditingController();
@@ -43,15 +52,20 @@ class _PageSettingsPageState extends State<PageSettingsPage>
   final _instagramController = TextEditingController();
   final _linkedinController = TextEditingController();
   final _vkontakteController = TextEditingController();
+
   // Monetization Section
   bool _monetizationEnabled = false;
+
   // Dynamic data from API
   List<PageCategory> _categories = [];
   bool _isLoadingCategories = false;
+  
   List<Country> _countries = [];
   bool _isLoadingCountries = false;
+  
   List<Language> _languages = [];
   bool _isLoadingLanguages = false;
+
   final List<Map<String, String>> _actionColors = [
     {'value': 'light', 'name': 'Light'},
     {'value': 'primary', 'name': 'Primary'},
@@ -60,6 +74,7 @@ class _PageSettingsPageState extends State<PageSettingsPage>
     {'value': 'warning', 'name': 'Warning'},
     {'value': 'danger', 'name': 'Danger'},
   ];
+
   @override
   void initState() {
     super.initState();
@@ -67,6 +82,7 @@ class _PageSettingsPageState extends State<PageSettingsPage>
     _loadAllData();
     _initializeData();
   }
+
   Future<void> _loadAllData() async {
     await Future.wait([
       _loadCategories(),
@@ -74,6 +90,7 @@ class _PageSettingsPageState extends State<PageSettingsPage>
       _loadLanguages(),
     ]);
   }
+
   Future<void> _loadCategories() async {
     setState(() => _isLoadingCategories = true);
     try {
@@ -91,6 +108,7 @@ class _PageSettingsPageState extends State<PageSettingsPage>
       }
     }
   }
+
   Future<void> _loadCountries() async {
     setState(() => _isLoadingCountries = true);
     try {
@@ -108,6 +126,7 @@ class _PageSettingsPageState extends State<PageSettingsPage>
       }
     }
   }
+
   Future<void> _loadLanguages() async {
     setState(() => _isLoadingLanguages = true);
     try {
@@ -125,18 +144,22 @@ class _PageSettingsPageState extends State<PageSettingsPage>
       }
     }
   }
+
   void _initializeData() {
     // Settings
     _titleController.text = widget.page.title;
     _usernameController.text = widget.page.name;
     _selectedCategory = int.tryParse(widget.page.category) ?? 1;
+
     // Info
     _descriptionController.text = widget.page.description;
     _selectedCountry = 1;
     _selectedLanguage = 1;
+
     // Action, Social, Monetization values would come from API
     _actionColor = 'primary';
   }
+
   @override
   void dispose() {
     _tabController.dispose();
@@ -157,9 +180,11 @@ class _PageSettingsPageState extends State<PageSettingsPage>
     _vkontakteController.dispose();
     super.dispose();
   }
+
   Future<void> _saveCurrentSection() async {
     String section;
     Map<String, dynamic> data = {};
+
     switch (_tabController.index) {
       case 0: // Settings
         section = 'settings';
@@ -208,7 +233,9 @@ class _PageSettingsPageState extends State<PageSettingsPage>
       default:
         return;
     }
+
     setState(() => _isLoading = true);
+
     try {
       final repository = context.read<PagesRepository>();
       await repository.updatePageSection(
@@ -216,10 +243,12 @@ class _PageSettingsPageState extends State<PageSettingsPage>
         section: section,
         data: data,
       );
+
       if (!mounted) return;
+
       Get.snackbar(
-        'Success',
-        'Changes saved successfully!',
+        'success'.tr,
+        'changes_saved_successfully'.tr,
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.green,
         colorText: Colors.white,
@@ -230,16 +259,17 @@ class _PageSettingsPageState extends State<PageSettingsPage>
       _showError(e.message);
     } catch (e) {
       if (!mounted) return;
-      _showError('Failed to save changes: $e');
+      _showError('failed_to_save_changes_with_error'.trParams({'error': e.toString()}));
     } finally {
       if (mounted) {
         setState(() => _isLoading = false);
       }
     }
   }
+
   void _showError(String message) {
     Get.snackbar(
-      'Error',
+      'error'.tr,
       message,
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: Colors.red,
@@ -247,15 +277,17 @@ class _PageSettingsPageState extends State<PageSettingsPage>
       duration: const Duration(seconds: 3),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       backgroundColor: isDark
           ? AppColors.backgroundDark
           : AppColors.backgroundLight,
       appBar: AppBar(
-        title: const Text('Page Settings'),
+        title: Text('page_settings'.tr),
         backgroundColor: isDark
             ? AppColors.surfaceDark
             : AppColors.surfaceLight,
@@ -276,9 +308,9 @@ class _PageSettingsPageState extends State<PageSettingsPage>
             TextButton.icon(
               onPressed: _saveCurrentSection,
               icon: const Icon(Iconsax.save_2, size: 18),
-              label: const Text(
-                'Save',
-                style: TextStyle(fontWeight: FontWeight.w700),
+              label: Text(
+                'save'.tr,
+                style: const TextStyle(fontWeight: FontWeight.w700),
               ),
             ),
         ],
@@ -286,13 +318,13 @@ class _PageSettingsPageState extends State<PageSettingsPage>
           controller: _tabController,
           isScrollable: true,
           tabAlignment: TabAlignment.start,
-          tabs: const [
-            Tab(icon: Icon(Iconsax.setting_2), text: 'Settings'),
-            Tab(icon: Icon(Iconsax.info_circle), text: 'Info'),
-            Tab(icon: Icon(Iconsax.link), text: 'Action'),
-            Tab(icon: Icon(Iconsax.share), text: 'Social'),
-            Tab(icon: Icon(Iconsax.dollar_circle), text: 'Monetization'),
-            Tab(icon: Icon(Iconsax.trash), text: 'Delete'),
+          tabs: [
+            Tab(icon: const Icon(Iconsax.setting_2), text: 'settings'.tr),
+            Tab(icon: const Icon(Iconsax.info_circle), text: 'info_tab'.tr),
+            Tab(icon: const Icon(Iconsax.link), text: 'action_tab'.tr),
+            Tab(icon: const Icon(Iconsax.share), text: 'social_tab'.tr),
+            Tab(icon: const Icon(Iconsax.dollar_circle), text: 'monetization_settings'.tr),
+            Tab(icon: const Icon(Iconsax.trash), text: 'delete'.tr),
           ],
         ),
       ),
@@ -309,16 +341,17 @@ class _PageSettingsPageState extends State<PageSettingsPage>
       ),
     );
   }
+
   Widget _buildSettingsTab(bool isDark) {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        _buildSectionHeader('Basic Settings', Iconsax.setting_2),
+        _buildSectionHeader('basic_settings'.tr, Iconsax.setting_2),
         const SizedBox(height: 16),
         TextFormField(
           controller: _titleController,
           decoration: InputDecoration(
-            labelText: 'Page Title *',
+            labelText: '${'page_title'.tr} *',
             prefixIcon: const Icon(Iconsax.document_text),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             filled: true,
@@ -329,7 +362,7 @@ class _PageSettingsPageState extends State<PageSettingsPage>
         TextFormField(
           controller: _usernameController,
           decoration: InputDecoration(
-            labelText: 'Username *',
+            labelText: '${'username'.tr} *',
             prefixIcon: const Icon(Iconsax.user),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             filled: true,
@@ -345,22 +378,22 @@ class _PageSettingsPageState extends State<PageSettingsPage>
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: Colors.grey.shade300),
                 ),
-                child: const Row(
+                child: Row(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       width: 20,
                       height: 20,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     ),
-                    SizedBox(width: 12),
-                    Text('Loading categories...'),
+                    const SizedBox(width: 12),
+                    Text('loading_categories'.tr),
                   ],
                 ),
               )
             : DropdownButtonFormField<int>(
                 value: _selectedCategory,
                 decoration: InputDecoration(
-                  labelText: 'Category *',
+                  labelText: '${'category'.tr} *',
                   prefixIcon: const Icon(Iconsax.category),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                   filled: true,
@@ -376,8 +409,8 @@ class _PageSettingsPageState extends State<PageSettingsPage>
               ),
         const SizedBox(height: 16),
         SwitchListTile(
-          title: const Text('Enable Page Tips'),
-          subtitle: const Text('Allow users to send tips to this page'),
+          title: Text('enable_page_tips_title'.tr),
+          subtitle: Text('allow_users_send_tips_desc'.tr),
           value: _pageTipsEnabled,
           onChanged: (value) => setState(() => _pageTipsEnabled = value),
           secondary: const Icon(Iconsax.wallet),
@@ -385,11 +418,12 @@ class _PageSettingsPageState extends State<PageSettingsPage>
       ],
     );
   }
+
   Widget _buildInfoTab(bool isDark) {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        _buildSectionHeader('Page Information', Iconsax.info_circle),
+        _buildSectionHeader('page_information'.tr, Iconsax.info_circle),
         const SizedBox(height: 16),
         _isLoadingCountries
             ? Container(
@@ -399,22 +433,22 @@ class _PageSettingsPageState extends State<PageSettingsPage>
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: Colors.grey.shade300),
                 ),
-                child: const Row(
+                child: Row(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       width: 20,
                       height: 20,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     ),
-                    SizedBox(width: 12),
-                    Text('Loading countries...'),
+                    const SizedBox(width: 12),
+                    Text('loading_countries'.tr),
                   ],
                 ),
               )
             : DropdownButtonFormField<int>(
                 value: _selectedCountry,
                 decoration: InputDecoration(
-                  labelText: 'Country *',
+                  labelText: '${'country'.tr} *',
                   prefixIcon: const Icon(Iconsax.global),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                   filled: true,
@@ -437,22 +471,22 @@ class _PageSettingsPageState extends State<PageSettingsPage>
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: Colors.grey.shade300),
                 ),
-                child: const Row(
+                child: Row(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       width: 20,
                       height: 20,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     ),
-                    SizedBox(width: 12),
-                    Text('Loading languages...'),
+                    const SizedBox(width: 12),
+                    Text('loading_languages'.tr),
                   ],
                 ),
               )
             : DropdownButtonFormField<int>(
                 value: _selectedLanguage,
                 decoration: InputDecoration(
-                  labelText: 'Language *',
+                  labelText: '${'language'.tr} *',
                   prefixIcon: const Icon(Iconsax.language_square),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                   filled: true,
@@ -470,7 +504,7 @@ class _PageSettingsPageState extends State<PageSettingsPage>
         TextFormField(
           controller: _descriptionController,
           decoration: InputDecoration(
-            labelText: 'Description',
+            labelText: 'description'.tr,
             prefixIcon: const Icon(Iconsax.message_text),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             filled: true,
@@ -482,7 +516,7 @@ class _PageSettingsPageState extends State<PageSettingsPage>
         TextFormField(
           controller: _websiteController,
           decoration: InputDecoration(
-            labelText: 'Website',
+            labelText: 'profile_website'.tr,
             prefixIcon: const Icon(Iconsax.global_search),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             filled: true,
@@ -493,7 +527,7 @@ class _PageSettingsPageState extends State<PageSettingsPage>
         TextFormField(
           controller: _companyController,
           decoration: InputDecoration(
-            labelText: 'Company',
+            labelText: 'profile_company'.tr,
             prefixIcon: const Icon(Iconsax.building),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             filled: true,
@@ -504,7 +538,7 @@ class _PageSettingsPageState extends State<PageSettingsPage>
         TextFormField(
           controller: _phoneController,
           decoration: InputDecoration(
-            labelText: 'Phone',
+            labelText: 'phone'.tr,
             prefixIcon: const Icon(Iconsax.call),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             filled: true,
@@ -515,7 +549,7 @@ class _PageSettingsPageState extends State<PageSettingsPage>
         TextFormField(
           controller: _locationController,
           decoration: InputDecoration(
-            labelText: 'Location',
+            labelText: 'location'.tr,
             prefixIcon: const Icon(Iconsax.location),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             filled: true,
@@ -525,17 +559,18 @@ class _PageSettingsPageState extends State<PageSettingsPage>
       ],
     );
   }
+
   Widget _buildActionTab(bool isDark) {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        _buildSectionHeader('Call-to-Action Button', Iconsax.link),
+        _buildSectionHeader('call_to_action_button'.tr, Iconsax.link),
         const SizedBox(height: 16),
         TextFormField(
           controller: _actionTextController,
           decoration: InputDecoration(
-            labelText: 'Button Text',
-            hintText: 'e.g., Visit Website, Book Now',
+            labelText: 'button_text'.tr,
+            hintText: 'button_text_hint'.tr,
             prefixIcon: const Icon(Iconsax.text),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             filled: true,
@@ -546,8 +581,8 @@ class _PageSettingsPageState extends State<PageSettingsPage>
         TextFormField(
           controller: _actionUrlController,
           decoration: InputDecoration(
-            labelText: 'Button URL',
-            hintText: 'https://example.com',
+            labelText: 'button_url'.tr,
+            hintText: 'button_url_hint'.tr,
             prefixIcon: const Icon(Iconsax.link_1),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             filled: true,
@@ -558,7 +593,7 @@ class _PageSettingsPageState extends State<PageSettingsPage>
         DropdownButtonFormField<String>(
           value: _actionColor,
           decoration: InputDecoration(
-            labelText: 'Button Color',
+            labelText: 'button_color'.tr,
             prefixIcon: const Icon(Iconsax.color_swatch),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             filled: true,
@@ -567,7 +602,7 @@ class _PageSettingsPageState extends State<PageSettingsPage>
           items: _actionColors.map((color) {
             return DropdownMenuItem(
               value: color['value'],
-              child: Text(color['name']!),
+              child: Text('color_${color['value']!}'.tr),
             );
           }).toList(),
           onChanged: (value) => setState(() => _actionColor = value!),
@@ -575,16 +610,17 @@ class _PageSettingsPageState extends State<PageSettingsPage>
       ],
     );
   }
+
   Widget _buildSocialTab(bool isDark) {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        _buildSectionHeader('Social Media Links', Iconsax.share),
+        _buildSectionHeader('social_media_links'.tr, Iconsax.share),
         const SizedBox(height: 16),
         TextFormField(
           controller: _facebookController,
           decoration: InputDecoration(
-            labelText: 'Facebook',
+            labelText: 'facebook_link'.tr,
             prefixIcon: const Icon(Iconsax.facebook),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             filled: true,
@@ -595,7 +631,7 @@ class _PageSettingsPageState extends State<PageSettingsPage>
         TextFormField(
           controller: _twitterController,
           decoration: InputDecoration(
-            labelText: 'Twitter',
+            labelText: 'twitter_link'.tr,
             prefixIcon: const Icon(Iconsax.share),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             filled: true,
@@ -606,7 +642,7 @@ class _PageSettingsPageState extends State<PageSettingsPage>
         TextFormField(
           controller: _youtubeController,
           decoration: InputDecoration(
-            labelText: 'YouTube',
+            labelText: 'youtube_link'.tr,
             prefixIcon: const Icon(Iconsax.video_square),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             filled: true,
@@ -617,7 +653,7 @@ class _PageSettingsPageState extends State<PageSettingsPage>
         TextFormField(
           controller: _instagramController,
           decoration: InputDecoration(
-            labelText: 'Instagram',
+            labelText: 'instagram_link'.tr,
             prefixIcon: const Icon(Iconsax.instagram),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             filled: true,
@@ -628,7 +664,7 @@ class _PageSettingsPageState extends State<PageSettingsPage>
         TextFormField(
           controller: _linkedinController,
           decoration: InputDecoration(
-            labelText: 'LinkedIn',
+            labelText: 'linkedin_link'.tr,
             prefixIcon: const Icon(Iconsax.link_2),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             filled: true,
@@ -639,7 +675,7 @@ class _PageSettingsPageState extends State<PageSettingsPage>
         TextFormField(
           controller: _vkontakteController,
           decoration: InputDecoration(
-            labelText: 'VKontakte',
+            labelText: 'vkontakte_link'.tr,
             prefixIcon: const Icon(Iconsax.link_2),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             filled: true,
@@ -649,15 +685,16 @@ class _PageSettingsPageState extends State<PageSettingsPage>
       ],
     );
   }
+
   Widget _buildMonetizationTab(bool isDark) {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        _buildSectionHeader('Monetization Settings', Iconsax.dollar_circle),
+        _buildSectionHeader('monetization_settings'.tr, Iconsax.dollar_circle),
         const SizedBox(height: 16),
         SwitchListTile(
-          title: const Text('Enable Monetization'),
-          subtitle: const Text('Allow this page to earn money from content'),
+          title: Text('enable_monetization_page_title'.tr),
+          subtitle: Text('allow_page_earn_money_desc'.tr),
           value: _monetizationEnabled,
           onChanged: (value) => setState(() => _monetizationEnabled = value),
           secondary: const Icon(Iconsax.money),
@@ -676,7 +713,7 @@ class _PageSettingsPageState extends State<PageSettingsPage>
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  'Monetization allows your page to earn revenue from ads and other features.',
+                  'monetization_info_text'.tr,
                   style: TextStyle(color: Colors.blue[900], fontSize: 13),
                 ),
               ),
@@ -686,6 +723,7 @@ class _PageSettingsPageState extends State<PageSettingsPage>
       ],
     );
   }
+
   Widget _buildSectionHeader(String title, IconData icon) {
     return Row(
       children: [
@@ -698,6 +736,7 @@ class _PageSettingsPageState extends State<PageSettingsPage>
       ],
     );
   }
+
   Widget _buildDeleteTab(bool isDark) {
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -718,7 +757,7 @@ class _PageSettingsPageState extends State<PageSettingsPage>
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      'Delete Page',
+                      'delete_page'.tr,
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w800,
@@ -730,7 +769,7 @@ class _PageSettingsPageState extends State<PageSettingsPage>
               ),
               const SizedBox(height: 16),
               Text(
-                'Warning: This action cannot be undone!',
+                'warning_action_cannot_be_undone'.tr,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -739,7 +778,7 @@ class _PageSettingsPageState extends State<PageSettingsPage>
               ),
               const SizedBox(height: 12),
               Text(
-                'Deleting this page will permanently remove:',
+                'deleting_page_will_remove'.tr,
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.red.shade700,
@@ -747,14 +786,14 @@ class _PageSettingsPageState extends State<PageSettingsPage>
                 ),
               ),
               const SizedBox(height: 8),
-              _buildDeleteWarningItem('All posts published by this page'),
-              _buildDeleteWarningItem('All photos and videos'),
-              _buildDeleteWarningItem('All page members and admins'),
-              _buildDeleteWarningItem('All page likes and followers'),
-              _buildDeleteWarningItem('Page settings and information'),
+              _buildDeleteWarningItem('delete_page_warning_posts'.tr),
+              _buildDeleteWarningItem('delete_page_warning_media'.tr),
+              _buildDeleteWarningItem('delete_page_warning_members_admins'.tr),
+              _buildDeleteWarningItem('delete_page_warning_likes_followers'.tr),
+              _buildDeleteWarningItem('delete_page_warning_settings_info'.tr),
               const SizedBox(height: 20),
               Text(
-                'This action is permanent and cannot be reversed. Please make sure you want to delete this page before proceeding.',
+                'delete_page_irreversible_note'.tr,
                 style: TextStyle(
                   fontSize: 13,
                   color: Colors.red.shade600,
@@ -767,9 +806,9 @@ class _PageSettingsPageState extends State<PageSettingsPage>
                 child: ElevatedButton.icon(
                   onPressed: _confirmDeletePage,
                   icon: const Icon(Iconsax.trash, size: 20),
-                  label: const Text(
-                    'Delete Page Permanently',
-                    style: TextStyle(
+                  label: Text(
+                    'delete_page_permanently'.tr,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
                     ),
@@ -790,6 +829,7 @@ class _PageSettingsPageState extends State<PageSettingsPage>
       ],
     );
   }
+
   Widget _buildDeleteWarningItem(String text) {
     return Padding(
       padding: const EdgeInsets.only(left: 8, top: 6),
@@ -811,25 +851,26 @@ class _PageSettingsPageState extends State<PageSettingsPage>
       ),
     );
   }
+
   Future<void> _confirmDeletePage() async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Row(
+        title: Row(
           children: [
-            Icon(Iconsax.warning_2, color: Colors.red, size: 28),
-            SizedBox(width: 12),
-            Expanded(child: Text('Delete Page?')),
+            const Icon(Iconsax.warning_2, color: Colors.red, size: 28),
+            const SizedBox(width: 12),
+            Expanded(child: Text('delete_page_confirmation_title'.tr)),
           ],
         ),
         content: Text(
-          'Are you absolutely sure you want to delete "${widget.page.title}"? This action cannot be undone and all page data will be permanently deleted.',
+          'delete_page_confirmation_message'.trParams({'title': widget.page.title}),
           style: const TextStyle(fontSize: 14),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text('cancel'.tr),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
@@ -837,37 +878,43 @@ class _PageSettingsPageState extends State<PageSettingsPage>
               backgroundColor: Colors.red.shade700,
               foregroundColor: Colors.white,
             ),
-            child: const Text('Delete Permanently'),
+            child: Text('delete_permanently_button'.tr),
           ),
         ],
       ),
     );
+
     if (confirmed == true && mounted) {
       await _deletePage();
     }
   }
+
   Future<void> _deletePage() async {
     setState(() => _isLoading = true);
     try {
       final repo = context.read<PagesRepository>();
       await repo.deletePage(pageId: widget.page.id);
+
       if (!mounted) return;
+
       // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Page deleted successfully'),
+        SnackBar(
+          content: Text('page_deleted_successfully'.tr),
           backgroundColor: Colors.green,
         ),
       );
+
       // Go back twice (close settings and profile page)
       Navigator.pop(context, true);
       Navigator.pop(context, true);
     } catch (e) {
       if (!mounted) return;
       setState(() => _isLoading = false);
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to delete page: ${e.toString()}'),
+          content: Text('failed_to_delete_page_with_error'.trParams({'error': e.toString()})),
           backgroundColor: Colors.red,
         ),
       );

@@ -5,21 +5,27 @@ import '../../../../core/theme/ui_constants.dart';
 import '../../data/models/models.dart';
 import '../../domain/market_repository.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 class OrderDetailsPage extends StatefulWidget {
   final String orderId; // order hash
+
   const OrderDetailsPage({super.key, required this.orderId});
+
   @override
   State<OrderDetailsPage> createState() => _OrderDetailsPageState();
 }
+
 class _OrderDetailsPageState extends State<OrderDetailsPage> {
   Order? _order;
   bool _loading = true;
   String? _error;
+
   @override
   void initState() {
     super.initState();
     _fetch();
   }
+
   Future<void> _fetch() async {
     setState(() {
       _loading = true;
@@ -41,6 +47,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,6 +80,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
       body: _buildBody(context),
     );
   }
+
   Widget _buildBody(BuildContext context) {
     if (_loading) {
       return _buildSkeleton();
@@ -111,6 +119,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
       ],
     );
   }
+
   Widget _buildHeaderCard(Order order) {
     return Card(
       color: UI.surfaceCard(context),
@@ -158,6 +167,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
       ),
     );
   }
+
   Widget _buildAddressCard(Order order) {
     final addr = order.shippingAddress;
     return Card(
@@ -193,6 +203,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
       ),
     );
   }
+
   Widget _buildItemsCard(Order order) {
     return Card(
       color: UI.surfaceCard(context),
@@ -214,6 +225,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
       ),
     );
   }
+
   Widget _orderItemTile(OrderItem it) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
@@ -242,6 +254,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
       ),
     );
   }
+
   Widget _buildTotalsCard(Order order) {
     return Card(
       color: UI.surfaceCard(context),
@@ -262,6 +275,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
       ),
     );
   }
+
   Widget _kv(String k, String v) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -275,6 +289,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
       ),
     );
   }
+
   Widget _summaryRow(String label, String value, {bool isTotal = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -297,6 +312,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
       ],
     );
   }
+
   Widget _buildSkeleton() {
     Color base = Get.isDarkMode ? Colors.grey[800]! : Colors.grey[300]!;
     Widget box({double h = 16, double w = double.infinity, double r = 8}) =>
@@ -327,7 +343,9 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
       ],
     );
   }
+
   Widget _imgPh() => Icon(Icons.image_outlined, color: UI.subtleText(context));
+
   Widget _buildStatusChip(String status) {
     Color bg;
     Color fg = Colors.white;
@@ -356,6 +374,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
       child: Text(_statusDisplay(status), style: TextStyle(color: fg, fontWeight: FontWeight.bold, fontSize: 12)),
     );
   }
+
   String _statusDisplay(String status) {
     // Localized status text
     switch (status) {

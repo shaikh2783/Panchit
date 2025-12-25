@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
 import '../../../../core/theme/ui_constants.dart';
@@ -11,14 +12,18 @@ import '../../data/models/job.dart';
 import '../../data/models/job_currency.dart';
 import 'job_detail_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 class JobCreatePage extends StatefulWidget {
   const JobCreatePage({super.key});
+
   @override
   State<JobCreatePage> createState() => _JobCreatePageState();
 }
+
 class _JobCreatePageState extends State<JobCreatePage> {
   final _formKey = GlobalKey<FormState>();
   final _picker = ImagePicker();
+
   final _titleCtrl = TextEditingController();
   final _messageCtrl = TextEditingController();
   final _locationCtrl = TextEditingController();
@@ -26,6 +31,7 @@ class _JobCreatePageState extends State<JobCreatePage> {
   final _salaryMaxCtrl = TextEditingController();
   final _salaryMinCurrencyCtrl = TextEditingController();
   final _salaryMaxCurrencyCtrl = TextEditingController();
+
   int? _categoryId;
   String _payPer = 'per_month';
   String _type = 'full_time';
@@ -34,17 +40,20 @@ class _JobCreatePageState extends State<JobCreatePage> {
   String? _coverUrl;
   bool _uploadingCover = false;
   double _uploadProgress = 0;
+
   List<JobCategory> _categories = [];
   bool _loadingCategories = true;
   List<JobCurrency> _currencies = [];
   bool _loadingCurrencies = true;
   int? _salaryMinCurrencyId;
   int? _salaryMaxCurrencyId;
+
   @override
   void initState() {
     super.initState();
     _prime();
   }
+
   @override
   void dispose() {
     _titleCtrl.dispose();
@@ -56,6 +65,7 @@ class _JobCreatePageState extends State<JobCreatePage> {
     _salaryMaxCurrencyCtrl.dispose();
     super.dispose();
   }
+
   Future<void> _loadCategories() async {
     setState(() => _loadingCategories = true);
     try {
@@ -69,6 +79,7 @@ class _JobCreatePageState extends State<JobCreatePage> {
       setState(() => _loadingCategories = false);
     }
   }
+
   Future<void> _loadCurrencies() async {
     setState(() => _loadingCurrencies = true);
     try {
@@ -82,9 +93,11 @@ class _JobCreatePageState extends State<JobCreatePage> {
       setState(() => _loadingCurrencies = false);
     }
   }
+
   Future<void> _prime() async {
     await Future.wait([_loadCategories(), _loadCurrencies()]);
   }
+
   Future<void> _pickCover() async {
     try {
       final XFile? picked = await _picker.pickImage(source: ImageSource.gallery, imageQuality: 85);
@@ -119,6 +132,7 @@ class _JobCreatePageState extends State<JobCreatePage> {
       if (mounted) setState(() => _uploadingCover = false);
     }
   }
+
   void _removeCover() {
     setState(() {
       _coverSource = null;
@@ -126,6 +140,7 @@ class _JobCreatePageState extends State<JobCreatePage> {
       _uploadProgress = 0;
     });
   }
+
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     // Extra guard: if salary provided, currency must be provided
@@ -164,6 +179,7 @@ class _JobCreatePageState extends State<JobCreatePage> {
       if (mounted) setState(() => _submitting = false);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -280,6 +296,7 @@ class _JobCreatePageState extends State<JobCreatePage> {
               ]),
             ),
             SizedBox(height: UI.lg),
+
             TextFormField(
               controller: _titleCtrl,
               decoration: InputDecoration(labelText: 'job_title'.tr, prefixIcon: const Icon(Iconsax.briefcase_copy)),
@@ -299,6 +316,7 @@ class _JobCreatePageState extends State<JobCreatePage> {
               validator: (v) => (v == null || v.trim().isEmpty) ? 'required'.tr : null,
             ),
             SizedBox(height: UI.md),
+
             // Category selector
             InputDecorator(
               decoration: InputDecoration(labelText: 'category'.tr, prefixIcon: const Icon(Iconsax.category_2_copy)),
@@ -316,6 +334,7 @@ class _JobCreatePageState extends State<JobCreatePage> {
                     ),
             ),
             SizedBox(height: UI.md),
+
             Row(children: [
               Expanded(
                 child: TextFormField(
@@ -384,6 +403,7 @@ class _JobCreatePageState extends State<JobCreatePage> {
                 ),
               ),
             ]),
+
             SizedBox(height: UI.md),
             InputDecorator(
               decoration: InputDecoration(labelText: 'pay_salary_per'.tr, prefixIcon: const Icon(Iconsax.calendar_1_copy)),

@@ -1,10 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snginepro/core/bloc/base_bloc.dart';
+
 import '../../data/models/wallet_paginated.dart';
 import '../../data/models/wallet_transaction.dart';
 import '../../domain/wallet_repository.dart';
 import 'wallet_transactions_event.dart';
 import 'wallet_transactions_state.dart';
+
 class WalletTransactionsBloc
     extends BaseBloc<WalletTransactionsEvent, WalletTransactionsState> {
   WalletTransactionsBloc(this._repository)
@@ -13,7 +15,9 @@ class WalletTransactionsBloc
     on<LoadMoreWalletTransactions>(_onLoadMoreTransactions);
     on<RefreshWalletTransactions>(_onRefreshTransactions);
   }
+
   final WalletRepository _repository;
+
   Future<void> _onLoadTransactions(
     LoadWalletTransactions event,
     Emitter<WalletTransactionsState> emit,
@@ -29,16 +33,19 @@ class WalletTransactionsBloc
         isLoadingMore: false,
       ),
     );
+
     try {
       final result = await _repository.fetchTransactions(
         offset: 0,
         limit: event.limit,
       );
+
       emit(_stateFromResult(result));
     } catch (error) {
       emit(state.copyWith(isLoading: false, errorMessage: error.toString()));
     }
   }
+
   Future<void> _onLoadMoreTransactions(
     LoadMoreWalletTransactions event,
     Emitter<WalletTransactionsState> emit,
@@ -46,13 +53,17 @@ class WalletTransactionsBloc
     if (!state.hasMore || state.isLoadingMore) {
       return;
     }
+
     emit(state.copyWith(isLoadingMore: true, errorMessage: null));
+
     try {
       final result = await _repository.fetchTransactions(
         offset: state.offset,
         limit: state.limit,
       );
+
       final updated = state.transactions + result.items;
+
       emit(
         state.copyWith(
           transactions: updated,
@@ -68,6 +79,7 @@ class WalletTransactionsBloc
       );
     }
   }
+
   Future<void> _onRefreshTransactions(
     RefreshWalletTransactions event,
     Emitter<WalletTransactionsState> emit,
@@ -90,6 +102,7 @@ class WalletTransactionsBloc
       emit(state.copyWith(isLoading: false, errorMessage: error.toString()));
     }
   }
+
   WalletTransactionsState _stateFromResult(
     WalletPaginatedResult<WalletTransaction> result,
   ) {
@@ -103,6 +116,7 @@ class WalletTransactionsBloc
       offset: nextOffset,
     );
   }
+
   int _calculateNextOffset(
     WalletPaginatedResult<WalletTransaction> result,
     int cumulativeLength,

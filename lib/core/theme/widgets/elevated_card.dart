@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:snginepro/core/theme/design_tokens.dart';
+
 /// A reusable elevated card that adapts to light/dark themes and central tokens.
 class ElevatedCard extends StatelessWidget {
   const ElevatedCard({
@@ -11,17 +12,21 @@ class ElevatedCard extends StatelessWidget {
     required this.child,
     this.color,
   });
+
   final EdgeInsetsGeometry? margin;
   final EdgeInsetsGeometry? padding;
   final double? borderRadius;
   final VoidCallback? onTap;
   final Widget child;
   final Color? color;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+
     final radius = borderRadius ?? Radii.medium;
+
     final card = Container(
       margin: margin,
       padding: padding,
@@ -31,13 +36,13 @@ class ElevatedCard extends StatelessWidget {
         boxShadow: [
           if (!isDark)
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.06),
+              color: Colors.black.withOpacity(0.06),
               blurRadius: Elevations.level2,
               offset: const Offset(0, 2),
             )
           else
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.32),
+              color: Colors.black.withOpacity(0.32),
               blurRadius: Elevations.level2,
               offset: const Offset(0, 2),
             ),
@@ -45,7 +50,9 @@ class ElevatedCard extends StatelessWidget {
       ),
       child: child,
     );
+
     if (onTap == null) return card;
+
     return Material(
       color: Colors.transparent,
       child: InkWell(

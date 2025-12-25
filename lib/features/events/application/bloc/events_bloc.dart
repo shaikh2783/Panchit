@@ -4,9 +4,11 @@ import '../../data/models/event_member.dart';
 import '../../data/services/events_service.dart';
 import 'events_events.dart';
 import 'events_states.dart';
+
 /// Events Bloc
 class EventsBloc extends Bloc<EventsEvent, EventsState> {
   final EventsService _eventsService;
+
   // Pagination trackers
   int _suggestedOffset = 0;
   int _myEventsOffset = 0;
@@ -14,9 +16,11 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
   int _postsOffset = 0;
   int _currentPostsEventId = 0; // Track which event's posts we're loading
   static const int _limit = 20;
+  
   // Store events for pagination
   List<Event> _suggestedEvents = [];
   List<Event> _myEvents = [];
+
   EventsBloc(this._eventsService) : super(EventsInitial()) {
     on<FetchSuggestedEventsEvent>(_onFetchSuggestedEvents);
     on<FetchMyEventsEvent>(_onFetchMyEvents);
@@ -34,6 +38,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
     on<UpdateEventPictureEvent>(_onUpdateEventPicture);
     on<UpdateEventCoverEvent>(_onUpdateEventCover);
   }
+
   /// جلب فعاليات مقترحة
   Future<void> _onFetchSuggestedEvents(
     FetchSuggestedEventsEvent event,
@@ -45,7 +50,9 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
         _suggestedOffset = 0;
         _suggestedEvents = [];
       }
+      
       emit(EventsLoading());
+
       final result = await _eventsService.getSuggestedEvents(
         categoryId: event.categoryId,
         type: event.type,
@@ -53,9 +60,11 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
         offset: _suggestedOffset,
         limit: _limit,
       );
+
       if (result['status'] == 'success') {
         final eventsList = result['events'] as List<Event>;
         final total = result['total'] as int;
+        
         if (event.refresh) {
           // إذا كان refresh، نبدأ من جديد
           _suggestedEvents = eventsList;
@@ -65,7 +74,9 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
           _suggestedEvents.addAll(eventsList);
           _suggestedOffset += eventsList.length;
         }
+        
         final hasMore = _suggestedOffset < total;
+
         emit(SuggestedEventsLoaded(
           events: List.from(_suggestedEvents),
           total: total,
@@ -78,6 +89,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
       emit(EventsError(e.toString()));
     }
   }
+
   /// جلب فعالياتي
   Future<void> _onFetchMyEvents(
     FetchMyEventsEvent event,
@@ -89,15 +101,19 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
         _myEventsOffset = 0;
         _myEvents = [];
       }
+      
       emit(EventsLoading());
+
       final result = await _eventsService.getMyEvents(
         filter: event.filter,
         offset: _myEventsOffset,
         limit: _limit,
       );
+
       if (result['status'] == 'success') {
         final eventsList = result['events'] as List<Event>;
         final total = result['total'] as int;
+        
         if (event.refresh) {
           // إذا كان refresh، نبدأ من جديد
           _myEvents = eventsList;
@@ -107,7 +123,9 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
           _myEvents.addAll(eventsList);
           _myEventsOffset += eventsList.length;
         }
+        
         final hasMore = _myEventsOffset < total;
+
         emit(MyEventsLoaded(
           events: List.from(_myEvents),
           total: total,
@@ -120,6 +138,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
       emit(EventsError(e.toString()));
     }
   }
+
   /// البحث عن فعاليات
   Future<void> _onSearchEvents(
     SearchEventsEvent event,
@@ -127,10 +146,12 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
   ) async {
     try {
       emit(EventsLoading());
+
       final result = await _eventsService.searchEvents(
         query: event.query,
         limit: 50,
       );
+
       if (result['status'] == 'success') {
         emit(EventsSearchResultsLoaded(
           events: result['events'],
@@ -144,6 +165,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
       emit(EventsError(e.toString()));
     }
   }
+
   /// جلب تفاصيل فعالية
   Future<void> _onFetchEventDetails(
     FetchEventDetailsEvent event,
@@ -151,7 +173,9 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
   ) async {
     try {
       emit(EventsLoading());
+
       final result = await _eventsService.getEvent(event.eventId);
+
       if (result['status'] == 'success') {
         emit(EventDetailsLoaded(result['event']));
       } else {
@@ -161,6 +185,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
       emit(EventsError(e.toString()));
     }
   }
+
   /// إنشاء فعالية
   Future<void> _onCreateEvent(
     CreateEventEvent event,
@@ -168,6 +193,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
   ) async {
     try {
       emit(EventsLoading());
+
       final result = await _eventsService.createEvent(
         title: event.title,
         location: event.location,
@@ -182,6 +208,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
         eventPicture: event.eventPicture,
         eventCover: event.eventCover,
       );
+
       if (result['status'] == 'success') {
         final eventId = int.parse(result['data']['event_id'].toString());
         emit(EventCreated(
@@ -195,6 +222,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
       emit(EventsError(e.toString()));
     }
   }
+
   /// تعديل فعالية
   Future<void> _onUpdateEvent(
     UpdateEventEvent event,
@@ -202,6 +230,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
   ) async {
     try {
       emit(EventsLoading());
+
       final result = await _eventsService.updateEvent(
         eventId: event.eventId,
         title: event.title,
@@ -217,6 +246,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
         eventPicture: event.eventPicture,
         eventCover: event.eventCover,
       );
+
       if (result['status'] == 'success') {
         emit(EventUpdated(result['message'] ?? 'Event updated successfully'));
       } else {
@@ -226,6 +256,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
       emit(EventsError(e.toString()));
     }
   }
+
   /// حذف فعالية
   Future<void> _onDeleteEvent(
     DeleteEventEvent event,
@@ -233,7 +264,9 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
   ) async {
     try {
       emit(EventsLoading());
+
       final result = await _eventsService.deleteEvent(event.eventId);
+
       if (result['status'] == 'success') {
         emit(EventDeleted(result['message'] ?? 'Event deleted successfully'));
       } else {
@@ -243,6 +276,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
       emit(EventsError(e.toString()));
     }
   }
+
   /// الانضمام لفعالية
   Future<void> _onJoinEvent(
     JoinEventEvent event,
@@ -250,10 +284,12 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
   ) async {
     try {
       emit(EventsLoading());
+
       final result = await _eventsService.joinEvent(
         eventId: event.eventId,
         action: event.action,
       );
+
       if (result['status'] == 'success') {
         emit(EventJoined(
           eventId: event.eventId,
@@ -267,6 +303,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
       emit(EventsError(e.toString()));
     }
   }
+
   /// مغادرة فعالية
   Future<void> _onLeaveEvent(
     LeaveEventEvent event,
@@ -274,7 +311,9 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
   ) async {
     try {
       emit(EventsLoading());
+
       final result = await _eventsService.leaveEvent(event.eventId);
+
       if (result['status'] == 'success') {
         emit(EventLeft(
           eventId: event.eventId,
@@ -287,6 +326,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
       emit(EventsError(e.toString()));
     }
   }
+
   /// جلب أعضاء فعالية
   Future<void> _onFetchEventMembers(
     FetchEventMembersEvent event,
@@ -297,17 +337,21 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
         _membersOffset = 0;
         emit(EventsLoading());
       }
+
       final result = await _eventsService.getEventMembers(
         eventId: event.eventId,
         type: event.type,
         offset: _membersOffset,
         limit: _limit,
       );
+
       if (result['status'] == 'success') {
         final membersList = result['members'] as List<EventMember>;
         final total = result['total'] as int;
+        
         _membersOffset += membersList.length;
         final hasMore = _membersOffset < total;
+
         emit(EventMembersLoaded(
           members: membersList,
           total: total,
@@ -320,6 +364,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
       emit(EventsError(e.toString()));
     }
   }
+
   /// دعوة أصدقاء
   Future<void> _onInviteFriends(
     InviteFriendsToEventEvent event,
@@ -327,10 +372,12 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
   ) async {
     try {
       emit(EventsLoading());
+
       final result = await _eventsService.inviteFriends(
         eventId: event.eventId,
         userIds: event.userIds,
       );
+
       if (result['status'] == 'success') {
         emit(FriendsInvited(result['message'] ?? 'Friends invited successfully'));
       } else {
@@ -340,6 +387,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
       emit(EventsError(e.toString()));
     }
   }
+
   /// جلب منشورات فعالية
   Future<void> _onFetchEventPosts(
     FetchEventPostsEvent event,
@@ -352,16 +400,20 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
         _currentPostsEventId = event.eventId;
         emit(EventsLoading());
       }
+
       final result = await _eventsService.getEventPosts(
         eventId: event.eventId,
         offset: _postsOffset,
         limit: _limit,
       );
+
       if (result['status'] == 'success') {
         final posts = result['data'] as List;
         final total = result['total'] as int? ?? posts.length;
+        
         _postsOffset += posts.length;
         final hasMore = _postsOffset < total;
+
         emit(EventPostsLoaded(
           posts: posts,
           total: total,
@@ -374,6 +426,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
       emit(EventsError(e.toString()));
     }
   }
+
   /// جلب تصنيفات الفعاليات
   Future<void> _onFetchEventCategories(
     FetchEventCategoriesEvent event,
@@ -381,12 +434,15 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
   ) async {
     try {
       emit(EventsLoading());
+      
       final categories = await _eventsService.getEventCategories();
+      
       emit(EventCategoriesLoaded(categories));
     } catch (e) {
       emit(EventsError(e.toString()));
     }
   }
+
   /// تحديث صورة الفعالية
   Future<void> _onUpdateEventPicture(
     UpdateEventPictureEvent event,
@@ -394,10 +450,12 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
   ) async {
     try {
       emit(EventsLoading());
+
       final result = await _eventsService.updateEventPicture(
         eventId: event.eventId,
         pictureData: event.pictureData,
       );
+
       if (result['status'] == 'success') {
         emit(EventPictureUpdated(
           event: result['event'],
@@ -410,6 +468,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
       emit(EventsError(e.toString()));
     }
   }
+
   /// تحديث غلاف الفعالية
   Future<void> _onUpdateEventCover(
     UpdateEventCoverEvent event,
@@ -417,10 +476,13 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
   ) async {
     try {
       emit(EventsLoading());
+
       final result = await _eventsService.updateEventCover(
         eventId: event.eventId,
         coverData: event.coverData,
       );
+
+
       if (result['status'] == 'success') {
         emit(EventCoverUpdated(
           event: result['event'],

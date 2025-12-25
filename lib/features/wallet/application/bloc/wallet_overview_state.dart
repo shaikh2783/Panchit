@@ -1,12 +1,15 @@
 import 'package:snginepro/core/bloc/base_bloc.dart';
 import '../../data/models/wallet_summary.dart';
+
 class WalletOverviewState extends BaseState {
   const WalletOverviewState({
     this.summary,
     bool isLoading = false,
     String? errorMessage,
   }) : super(isLoading: isLoading, errorMessage: errorMessage);
+
   final WalletSummary? summary;
+
   WalletOverviewState copyWith({
     WalletSummary? summary,
     bool? isLoading,
@@ -19,6 +22,7 @@ class WalletOverviewState extends BaseState {
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
     );
   }
+
   @override
   List<Object?> get props => [summary, isLoading, errorMessage];
 }

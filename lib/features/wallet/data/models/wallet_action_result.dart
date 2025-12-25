@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+
 class WalletActionResult extends Equatable {
   const WalletActionResult({
     required this.success,
@@ -10,6 +11,7 @@ class WalletActionResult extends Equatable {
     this.balanceFormatted,
     this.payload,
   });
+
   final bool success;
   final String message;
   final double? amount;
@@ -18,6 +20,7 @@ class WalletActionResult extends Equatable {
   final double? balance;
   final String? balanceFormatted;
   final Map<String, dynamic>? payload;
+
   factory WalletActionResult.fromResponse(Map<String, dynamic> response) {
     final status = response['status']?.toString().toLowerCase() == 'success';
     final message = response['message']?.toString() ?? '';
@@ -34,6 +37,7 @@ class WalletActionResult extends Equatable {
       payload: map.isEmpty ? null : map,
     );
   }
+
   @override
   List<Object?> get props => [
     success,
@@ -46,6 +50,7 @@ class WalletActionResult extends Equatable {
     payload,
   ];
 }
+
 double? _toNullableDouble(Object? value) {
   if (value == null) return null;
   if (value is num) return value.toDouble();

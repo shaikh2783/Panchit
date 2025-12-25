@@ -4,22 +4,28 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
 import '../../../../core/config/app_config.dart';
+
 /// صفحة إنشاء دورة جديدة
 class CourseCreatePage extends StatefulWidget {
   const CourseCreatePage({super.key});
+
   @override
   State<CourseCreatePage> createState() => _CourseCreatePageState();
 }
+
 class _CourseCreatePageState extends State<CourseCreatePage> {
   final _formKey = GlobalKey<FormState>();
   final _picker = ImagePicker();
+
   final _titleCtrl = TextEditingController();
   final _descriptionCtrl = TextEditingController();
   final _locationCtrl = TextEditingController();
   final _feesCtrl = TextEditingController();
+
   DateTime? _startDate;
   DateTime? _endDate;
   bool _isFree = true;
@@ -27,10 +33,12 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
   bool _submitting = false;
   int _feesCurrencyId = 1; // Default to currency ID 1 (usually main currency)
   int _categoryId = 1; // Default category ID
+
   String? _coverSource;
   String? _coverUrl;
   bool _uploadingCover = false;
   double _uploadProgress = 0;
+
   @override
   void dispose() {
     _titleCtrl.dispose();
@@ -39,6 +47,7 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
     _feesCtrl.dispose();
     super.dispose();
   }
+
   Future<void> _pickCover() async {
     try {
       final XFile? picked = await _picker.pickImage(
@@ -46,10 +55,12 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
         imageQuality: 85,
       );
       if (picked == null) return;
+
       setState(() {
         _uploadingCover = true;
         _uploadProgress = 0;
       });
+
       final client = context.read<ApiClient>();
       final response = await client.multipartPost(
         configCfgP('file_upload'),
@@ -61,6 +72,7 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
           setState(() => _uploadProgress = total == 0 ? 0 : sent / total);
         },
       );
+
       if (response['status'] == 'success') {
         final data = response['data'] as Map<String, dynamic>;
         setState(() {
@@ -68,14 +80,15 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
           _coverUrl = (data['url'] ?? '') as String?;
         });
       } else {
-        Get.snackbar('خطأ', response['message']?.toString() ?? 'فشل رفع الصورة');
+        Get.snackbar('error'.tr, response['message']?.toString() ?? 'course_cover_upload_fail'.tr);
       }
     } catch (e) {
-      Get.snackbar('خطأ', e.toString());
+      Get.snackbar('error'.tr, e.toString());
     } finally {
       if (mounted) setState(() => _uploadingCover = false);
     }
   }
+
   void _removeCover() {
     setState(() {
       _coverSource = null;
@@ -83,6 +96,7 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
       _uploadProgress = 0;
     });
   }
+
   Future<void> _selectDate(BuildContext context, bool isStartDate) async {
     final tomorrow = DateTime.now().add(const Duration(days: 1));
     final DateTime? picked = await showDatePicker(
@@ -93,6 +107,7 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
       firstDate: isStartDate ? tomorrow : (_startDate ?? tomorrow),
       lastDate: DateTime.now().add(const Duration(days: 365 * 2)),
     );
+
     if (picked != null) {
       setState(() {
         if (isStartDate) {
@@ -103,15 +118,20 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
       });
     }
   }
+
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
+
     if (!_isFree && _feesCtrl.text.trim().isEmpty) {
-      Get.snackbar('خطأ', 'يرجى إدخال رسوم الدورة');
+      Get.snackbar('error'.tr, 'course_fees_required'.tr);
       return;
     }
+
     setState(() => _submitting = true);
+
     try {
       final client = context.read<ApiClient>();
+      
       final body = <String, dynamic>{
         'title': _titleCtrl.text.trim(),
         'description': _descriptionCtrl.text.trim(),
@@ -124,33 +144,37 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
         if (_endDate != null) 'end_date': _endDate!.toIso8601String().split('T')[0],
         if (_coverSource != null) 'cover_image': _coverSource,
       };
+
       final response = await client.post(configCfgP('courses_create'), body: body);
+
       if (response['api_status'] == 200 || response['status'] == 'success') {
         if (mounted) {
           Navigator.of(context).pop(true); // Return true to indicate success
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('تم إنشاء الدورة بنجاح')),
+            SnackBar(content: Text('course_create_success'.tr)),
           );
         }
       } else {
-        Get.snackbar('خطأ', response['message']?.toString() ?? 'فشل إنشاء الدورة');
+        Get.snackbar('error'.tr, response['message']?.toString() ?? 'course_create_failed'.tr);
       }
     } catch (e) {
-      Get.snackbar('خطأ', e.toString());
+      Get.snackbar('error'.tr, e.toString());
     } finally {
       if (mounted) setState(() => _submitting = false);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Get.isDarkMode;
     final mediaResolver = context.read<AppConfig>().mediaAsset;
+
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF121212) : Colors.grey[50],
       appBar: AppBar(
-        title: const Text(
-          'إنشاء دورة جديدة',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: Text(
+          'course_create_title'.tr,
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
       body: Form(
@@ -161,58 +185,62 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
             // Cover Image
             _buildCoverSection(isDark, mediaResolver),
             const SizedBox(height: 24),
+
             // Title
             TextFormField(
               controller: _titleCtrl,
               decoration: InputDecoration(
-                labelText: 'عنوان الدورة *',
-                hintText: 'مثال: دورة تطوير تطبيقات Flutter',
+                labelText: 'course_title_label'.tr,
+                hintText: 'course_title_hint'.tr,
                 prefixIcon: const Icon(Iconsax.book),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              validator: (v) => v?.trim().isEmpty ?? true ? 'مطلوب' : null,
+              validator: (v) => v?.trim().isEmpty ?? true ? 'field_required'.tr : null,
               maxLength: 100,
             ),
             const SizedBox(height: 16),
+
             // Description
             TextFormField(
               controller: _descriptionCtrl,
               decoration: InputDecoration(
-                labelText: 'وصف الدورة *',
-                hintText: 'اكتب وصفاً تفصيلياً عن الدورة...',
+                labelText: 'course_description_label'.tr,
+                hintText: 'course_description_hint'.tr,
                 prefixIcon: const Icon(Iconsax.document_text),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              validator: (v) => v?.trim().isEmpty ?? true ? 'مطلوب' : null,
+              validator: (v) => v?.trim().isEmpty ?? true ? 'field_required'.tr : null,
               maxLines: 5,
               maxLength: 500,
             ),
             const SizedBox(height: 16),
+
             // Location
             TextFormField(
               controller: _locationCtrl,
               decoration: InputDecoration(
-                labelText: 'المكان *',
-                hintText: 'مثال: الرياض - السعودية أو عبر الإنترنت',
+                labelText: 'course_location_label'.tr,
+                hintText: 'course_location_hint'.tr,
                 prefixIcon: const Icon(Iconsax.location),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              validator: (v) => v?.trim().isEmpty ?? true ? 'مطلوب' : null,
+              validator: (v) => v?.trim().isEmpty ?? true ? 'field_required'.tr : null,
             ),
             const SizedBox(height: 16),
+
             // Date Range
             Row(
               children: [
                 Expanded(
                   child: _buildDateButton(
                     context,
-                    label: 'تاريخ البدء',
+                    label: 'course_start_date'.tr,
                     date: _startDate,
                     onTap: () => _selectDate(context, true),
                   ),
@@ -221,7 +249,7 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
                 Expanded(
                   child: _buildDateButton(
                     context,
-                    label: 'تاريخ الانتهاء',
+                    label: 'course_end_date'.tr,
                     date: _endDate,
                     onTap: () => _selectDate(context, false),
                   ),
@@ -229,6 +257,7 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
               ],
             ),
             const SizedBox(height: 16),
+
             // Free Course Toggle
             Container(
               padding: const EdgeInsets.all(16),
@@ -248,7 +277,7 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      'دورة مجانية',
+                      'course_free_toggle'.tr,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -264,26 +293,28 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
               ),
             ),
             const SizedBox(height: 16),
+
             // Fees (if not free)
             if (!_isFree)
               TextFormField(
                 controller: _feesCtrl,
                 decoration: InputDecoration(
-                  labelText: 'رسوم الدورة *',
-                  hintText: 'مثال: 500',
+                  labelText: 'course_fees_label'.tr,
+                  hintText: 'course_fees_hint'.tr,
                   prefixIcon: const Icon(Iconsax.money_recive),
-                  suffixText: 'ر.س',
+                  suffixText: 'course_currency_sar'.tr,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
                 keyboardType: TextInputType.number,
                 validator: (v) {
-                  if (!_isFree && (v?.trim().isEmpty ?? true)) return 'مطلوب';
+                  if (!_isFree && (v?.trim().isEmpty ?? true)) return 'field_required'.tr;
                   return null;
                 },
               ),
             if (!_isFree) const SizedBox(height: 16),
+
             // Available Toggle
             Container(
               padding: const EdgeInsets.all(16),
@@ -306,7 +337,7 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'متاحة للتسجيل',
+                          'course_available_title'.tr,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -314,7 +345,9 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
                           ),
                         ),
                         Text(
-                          _isAvailable ? 'يمكن للمستخدمين التسجيل' : 'مغلقة حالياً',
+                          _isAvailable
+                              ? 'course_available_open'.tr
+                              : 'course_available_closed'.tr,
                           style: TextStyle(
                             fontSize: 12,
                             color: isDark ? Colors.grey[400] : Colors.grey[600],
@@ -331,6 +364,7 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
               ),
             ),
             const SizedBox(height: 24),
+
             // Submit Button
             SizedBox(
               height: 50,
@@ -352,9 +386,9 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
                           valueColor: AlwaysStoppedAnimation(Colors.white),
                         ),
                       )
-                    : const Text(
-                        'إنشاء الدورة',
-                        style: TextStyle(
+                    : Text(
+                        'course_create_button'.tr,
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
@@ -367,6 +401,7 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
       ),
     );
   }
+
   Widget _buildCoverSection(bool isDark, Uri Function(String) mediaResolver) {
     return Container(
       decoration: BoxDecoration(
@@ -389,7 +424,7 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  'صورة الغلاف',
+                  'course_cover_label'.tr,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -472,7 +507,7 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                'اضغط لاختيار صورة الغلاف',
+                                'course_cover_tap'.tr,
                                 style: TextStyle(
                                   color: isDark ? Colors.grey[400] : Colors.grey[600],
                                 ),
@@ -487,6 +522,7 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
       ),
     );
   }
+
   Widget _buildDateButton(
     BuildContext context, {
     required String label,
@@ -494,6 +530,7 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
     required VoidCallback onTap,
   }) {
     final isDark = Get.isDarkMode;
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
@@ -526,9 +563,9 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  date != null
+                    date != null
                       ? '${date.day}/${date.month}/${date.year}'
-                      : 'اختر التاريخ',
+                      : 'course_select_date'.tr,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,

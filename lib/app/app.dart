@@ -14,6 +14,7 @@ import 'package:snginepro/core/theme/app_theme.dart';
 import 'package:snginepro/core/localization/app_translations.dart';
 import 'package:snginepro/core/localization/localization_controller.dart';
 import 'package:snginepro/features/auth/application/auth_notifier.dart';
+import 'package:snginepro/core/services/notification_navigation_service.dart';
 import 'package:snginepro/features/auth/application/bloc/auth_bloc.dart';
 import 'package:snginepro/features/auth/application/bloc/auth_events.dart';
 import 'package:snginepro/features/auth/data/datasources/auth_api_service.dart';
@@ -53,12 +54,7 @@ import 'package:snginepro/features/reels/application/reels_notifier.dart';
 import 'package:snginepro/features/reels/application/bloc/reels_bloc.dart';
 import 'package:snginepro/features/reels/data/datasources/reels_api_service.dart';
 import 'package:snginepro/features/reels/domain/reels_repository.dart';
-import 'package:snginepro/features/groups/application/bloc/groups_bloc.dart';
-import 'package:snginepro/features/groups/application/bloc/group_invitations_bloc.dart';
-import 'package:snginepro/features/groups/data/datasources/groups_api_service.dart';
-import 'package:snginepro/features/groups/data/datasources/groups_management_service.dart';
-import 'package:snginepro/features/groups/data/services/group_invitations_service.dart';
-import 'package:snginepro/features/groups/domain/groups_repository.dart';
+// Groups module removed; strip group-related imports
 import 'package:snginepro/features/events/application/bloc/events_bloc.dart';
 import 'package:snginepro/features/events/data/services/events_service.dart';
 import 'package:snginepro/features/market/data/services/market_api_service.dart';
@@ -72,6 +68,13 @@ import 'package:snginepro/features/funding/data/services/funding_api_service.dar
 import 'package:snginepro/features/funding/domain/funding_repository.dart';
 import 'package:snginepro/features/offers/data/services/offers_api_service.dart';
 import 'package:snginepro/features/offers/domain/offers_repository.dart';
+import 'package:snginepro/features/people/data/services/people_api_service.dart';
+import 'package:snginepro/main.dart' show globalApiClient;
+import 'package:snginepro/features/people/domain/people_repository.dart';
+import 'package:snginepro/features/watch/data/services/watch_api_service.dart';
+import 'package:snginepro/features/watch/domain/watch_repository.dart';
+import 'package:snginepro/features/movies/data/services/movies_api_service.dart';
+import 'package:snginepro/features/movies/domain/movies_repository.dart';
 import 'package:snginepro/features/wallet/data/services/wallet_api_service.dart';
 import 'package:snginepro/features/wallet/domain/wallet_repository.dart';
 import 'package:snginepro/features/ads/data/services/ads_api_service.dart';
@@ -80,18 +83,29 @@ import 'package:snginepro/features/ads/presentation/pages/ads_campaigns_page.dar
 import 'package:snginepro/features/ads/presentation/pages/create_campaign_page.dart';
 import 'package:snginepro/features/boost/data/services/boost_api_service.dart';
 import 'package:snginepro/features/boost/domain/boost_repository.dart';
+import 'package:snginepro/features/feed/data/services/share_api_service.dart';
+import 'package:snginepro/features/feed/domain/share_repository.dart';
+import 'package:snginepro/features/feed/data/services/reviews_api_service.dart';
+import 'package:snginepro/features/feed/domain/reviews_repository.dart';
+
 class App extends StatelessWidget {
   const App({super.key, required this.sharedPreferences});
+
   final SharedPreferences sharedPreferences;
+
   @override
   Widget build(BuildContext context) {
+    // تأجيل تفعيل التنقل من الإشعارات حتى يصبح الـ Navigator جاهز (يمنع الشاشة السوداء عند الفتح من إشعار)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      NotificationNavigationService.markAppReady();
+    });
+
     return MultiProvider(
       providers: [
         Provider<AppConfig>.value(value: appConfig),
         Provider<SharedPreferences>.value(value: sharedPreferences),
-        Provider<ApiClient>(
-          create: (context) => ApiClient(config: context.read<AppConfig>()),
-          dispose: (_, client) => client.dispose(),
+        Provider<ApiClient>.value(
+          value: globalApiClient, // Use the global instance with auth token
         ),
         Provider<AuthStorage>(
           create: (context) => AuthStorage(context.read<SharedPreferences>()),
@@ -145,27 +159,12 @@ class App extends StatelessWidget {
         Provider<ReelsRepository>(
           create: (context) => ReelsRepository(context.read<ReelsApiService>()),
         ),
-        Provider<GroupsApiService>(
-          create: (context) => GroupsApiService(context.read<ApiClient>()),
-        ),
-        Provider<GroupsManagementService>(
-          create: (context) =>
-              GroupsManagementService(context.read<ApiClient>()),
-        ),
-        Provider<GroupsRepository>(
-          create: (context) => GroupsRepository(
-            context.read<GroupsApiService>(),
-            context.read<GroupsManagementService>(),
-          ),
-        ),
-        Provider<GroupInvitationsService>(
-          create: (context) =>
-              GroupInvitationsService(context.read<ApiClient>()),
-        ),
+
         // Events Service
         Provider<EventsService>(
           create: (context) => EventsService(context.read<ApiClient>()),
         ),
+
         // Market Service & Repository
         Provider<MarketApiService>(
           create: (context) => MarketApiService(context.read<ApiClient>()),
@@ -174,6 +173,7 @@ class App extends StatelessWidget {
           create: (context) =>
               MarketRepository(context.read<MarketApiService>()),
         ),
+
         // Blog Service & Repository
         Provider<BlogApiService>(
           create: (context) => BlogApiService(context.read<ApiClient>()),
@@ -188,6 +188,7 @@ class App extends StatelessWidget {
         Provider<JobsRepository>(
           create: (context) => JobsRepository(context.read<JobsApiService>()),
         ),
+
         // Funding
         Provider<FundingApiService>(
           create: (context) => FundingApiService(context.read<ApiClient>()),
@@ -196,6 +197,7 @@ class App extends StatelessWidget {
           create: (context) =>
               FundingRepository(context.read<FundingApiService>()),
         ),
+
         // Offers
         Provider<OffersApiService>(
           create: (context) => OffersApiService(context.read<ApiClient>()),
@@ -204,6 +206,33 @@ class App extends StatelessWidget {
           create: (context) =>
               OffersRepository(context.read<OffersApiService>()),
         ),
+
+        // People
+        Provider<PeopleApiService>(
+          create: (context) => PeopleApiService(context.read<ApiClient>()),
+        ),
+        Provider<PeopleRepository>(
+          create: (context) =>
+              PeopleRepository(context.read<PeopleApiService>()),
+        ),
+
+        // Watch
+        Provider<WatchApiService>(
+          create: (context) => WatchApiService(context.read<ApiClient>()),
+        ),
+        Provider<WatchRepository>(
+          create: (context) => WatchRepository(context.read<WatchApiService>()),
+        ),
+
+        // Movies
+        Provider<MoviesApiService>(
+          create: (context) => MoviesApiService(context.read<ApiClient>()),
+        ),
+        Provider<MoviesRepository>(
+          create: (context) =>
+              MoviesRepository(context.read<MoviesApiService>()),
+        ),
+
         // Wallet
         Provider<WalletApiService>(
           create: (context) => WalletApiService(context.read<ApiClient>()),
@@ -212,6 +241,7 @@ class App extends StatelessWidget {
           create: (context) =>
               WalletRepository(context.read<WalletApiService>()),
         ),
+
         // Ads / Campaigns
         Provider<AdsApiService>(
           create: (context) => AdsApiService(context.read<ApiClient>()),
@@ -219,6 +249,7 @@ class App extends StatelessWidget {
         Provider<AdsRepository>(
           create: (context) => AdsRepository(context.read<AdsApiService>()),
         ),
+
         // Boost
         Provider<BoostApiService>(
           create: (context) => BoostApiService(context.read<ApiClient>()),
@@ -226,18 +257,36 @@ class App extends StatelessWidget {
         Provider<BoostRepository>(
           create: (context) => BoostRepository(context.read<BoostApiService>()),
         ),
+
+        // Share Service & Repository
+        Provider<ShareApiService>(
+          create: (context) => ShareApiService(context.read<ApiClient>()),
+        ),
+        Provider<ShareRepository>(
+          create: (context) => ShareRepository(context.read<ShareApiService>()),
+        ),
+
+        // Reviews Service & Repository
+        Provider<ReviewsApiService>(
+          create: (context) => ReviewsApiService(context.read<ApiClient>()),
+        ),
+        Provider<ReviewsRepository>(
+          create: (context) => ReviewsRepository(context.read<ReviewsApiService>()),
+        ),
+
         // Dynamic App Config Service
         Provider<DynamicAppConfigService>(
           create: (context) =>
               DynamicAppConfigService(context.read<ApiClient>()),
         ),
+
         // Keep existing ChangeNotifier providers for gradual migration
         ChangeNotifierProvider<AuthNotifier>(
           create: (context) {
             final notifier = AuthNotifier(
               context.read<AuthRepository>(),
               context.read<AuthStorage>(),
-              context.read<ApiClient>(),
+              globalApiClient, // Use global instance to ensure token sync
             );
             notifier.restoreSession();
             return notifier;
@@ -272,6 +321,7 @@ class App extends StatelessWidget {
         ChangeNotifierProvider<ReelsNotifier>(
           create: (context) => ReelsNotifier(context.read<ReelsRepository>()),
         ),
+
         // Dynamic App Config Provider
         ChangeNotifierProvider<DynamicAppConfigProvider>(
           create: (context) {
@@ -293,58 +343,62 @@ class App extends StatelessWidget {
               authStorage: context.read<AuthStorage>(),
             )..add(const AuthInitializeEvent()),
           ),
+
           // Posts Bloc
           BlocProvider<PostsBloc>(
             create: (context) => PostsBloc(context.read<PostsRepository>()),
           ),
+
           // Profile Bloc
           BlocProvider<ProfileBloc>(
             create: (context) => ProfileBloc(context.read<ProfileApiService>()),
           ),
+
           // Comments Bloc
           BlocProvider<CommentsBloc>(
             create: (context) =>
                 CommentsBloc(context.read<CommentsRepository>()),
           ),
+
           // Notifications Bloc
           BlocProvider<NotificationsBloc>(
             create: (context) =>
                 NotificationsBloc(context.read<NotificationsRepository>()),
           ),
+
           // Stories Bloc
           BlocProvider<StoriesBloc>(
             create: (context) => StoriesBloc(context.read<StoriesRepository>()),
           ),
+
           // Pages Bloc
           BlocProvider<PagesBloc>(
             create: (context) => PagesBloc(context.read<PagesRepository>()),
           ),
+
           // Profile Posts Bloc
           BlocProvider<ProfilePostsBloc>(
             create: (context) =>
                 ProfilePostsBloc(context.read<PostsRepository>()),
           ),
+
           // Page Posts Bloc
           BlocProvider<PagePostsBloc>(
             create: (context) => PagePostsBloc(context.read<PagesRepository>()),
           ),
+
           // Reels Bloc
           BlocProvider<ReelsBloc>(
             create: (context) => ReelsBloc(context.read<ReelsRepository>()),
           ),
+
           // Groups Bloc
-          BlocProvider<GroupsBloc>(
-            create: (context) => GroupsBloc(context.read<GroupsRepository>()),
-          ),
-          // Group Invitations Bloc
-          BlocProvider<GroupInvitationsBloc>(
-            create: (context) =>
-                GroupInvitationsBloc(context.read<GroupInvitationsService>()),
-          ),
+
           // Events Bloc
           BlocProvider<EventsBloc>(
             create: (context) => EventsBloc(context.read<EventsService>()),
           ),
+
           // Cart Bloc
           BlocProvider<CartBloc>(
             create: (context) => CartBloc(context.read<MarketRepository>()),
@@ -392,7 +446,9 @@ class App extends StatelessWidget {
                 name: '/ads/campaigns/edit',
                 page: () {
                   final args = Get.arguments;
-                  final map = (args is Map<String, dynamic>) ? args : (args is Map ? Map<String, dynamic>.from(args) : null);
+                  final map = (args is Map<String, dynamic>)
+                      ? args
+                      : (args is Map ? Map<String, dynamic>.from(args) : null);
                   return CreateCampaignPage(initialCampaign: map);
                 },
               ),
@@ -403,8 +459,10 @@ class App extends StatelessWidget {
     );
   }
 }
+
 class _AuthSwitcher extends StatelessWidget {
   const _AuthSwitcher();
+
   @override
   Widget build(BuildContext context) {
     return Consumer<AuthNotifier>(

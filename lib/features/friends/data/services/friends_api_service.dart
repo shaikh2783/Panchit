@@ -1,14 +1,19 @@
 import 'package:flutter/foundation.dart';
+
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
 import '../models/friendship_model.dart';
+
 /// خدمة API شاملة لإدارة الأصدقاء والمتابعة
 class FriendsApiService {
   final ApiClient _apiClient;
+  
   FriendsApiService(this._apiClient);
+  
   // ========================================
   // 🤝 Friend Management APIs
   // ========================================
+  
   /// إرسال طلب صداقة
   Future<FriendActionResult> sendFriendRequest(int userId) async {
     try {
@@ -16,6 +21,7 @@ class FriendsApiService {
         configCfgP('friends_add'),
         body: {'user_id': userId},
       );
+      
       if (response['status'] == 'success') {
         return FriendActionResult.success(
           response['message'] ?? 'Friend request sent successfully',
@@ -34,6 +40,7 @@ class FriendsApiService {
       );
     }
   }
+  
   /// إلغاء طلب صداقة مرسل
   Future<FriendActionResult> cancelFriendRequest(int userId) async {
     try {
@@ -42,6 +49,7 @@ class FriendsApiService {
         configCfgP('friends_cancel'),
         body: {'user_id': userId},
       );
+      
       if (response['status'] == 'success') {
         return FriendActionResult.success(
           response['message'] ?? 'Friend request cancelled',
@@ -60,6 +68,7 @@ class FriendsApiService {
       );
     }
   }
+
   /// قبول طلب صداقة
   Future<FriendActionResult> acceptFriendRequest(int userId) async {
     try {
@@ -68,6 +77,7 @@ class FriendsApiService {
         configCfgP('friends_accept'),
         body: {'user_id': userId},
       );
+      
       if (response['status'] == 'success') {
         return FriendActionResult.success(
           response['message'] ?? 'Friend request accepted',
@@ -86,6 +96,7 @@ class FriendsApiService {
       );
     }
   }
+
   /// رفض طلب صداقة
   Future<FriendActionResult> declineFriendRequest(int userId) async {
     try {
@@ -94,6 +105,7 @@ class FriendsApiService {
         configCfgP('friends_decline'),
         body: {'user_id': userId},
       );
+      
       if (response['status'] == 'success') {
         return FriendActionResult.success(
           response['message'] ?? 'Friend request declined',
@@ -112,6 +124,7 @@ class FriendsApiService {
       );
     }
   }
+
   /// إزالة صديق (إنهاء الصداقة)
   Future<FriendActionResult> removeFriend(int userId) async {
     try {
@@ -119,6 +132,7 @@ class FriendsApiService {
         configCfgP('friends_remove'),
         body: {'user_id': userId},
       );
+      
       if (response['status'] == 'success') {
         return FriendActionResult.success(
           response['message'] ?? 'Friend removed successfully',
@@ -137,10 +151,12 @@ class FriendsApiService {
       );
     }
   }
+
   /// جلب طلبات الصداقة الواردة
   Future<List<Map<String, dynamic>>> getFriendRequests() async {
     try {
       final response = await _apiClient.get(configCfgP('friends_requests'));
+      
       if (response['status'] == 'success') {
         final data = response['data']['friend_requests'] as List;
         return data.cast<Map<String, dynamic>>();
@@ -150,10 +166,12 @@ class FriendsApiService {
       return [];
     }
   }
+
   /// جلب طلبات الصداقة المرسلة
   Future<List<Map<String, dynamic>>> getSentFriendRequests() async {
     try {
       final response = await _apiClient.get(configCfgP('friends_sent'));
+      
       if (response['status'] == 'success') {
         final data = response['data']['sent_requests'] as List;
         return data.cast<Map<String, dynamic>>();
@@ -163,9 +181,11 @@ class FriendsApiService {
       return [];
     }
   }
+
   // ========================================
   // 👥 Follow Management APIs
   // ========================================
+  
   /// متابعة مستخدم
   Future<FriendActionResult> followUser(int userId) async {
     try {
@@ -173,6 +193,7 @@ class FriendsApiService {
         configCfgP('users_follow'),
         body: {'user_id': userId},
       );
+      
       if (response['status'] == 'success') {
         return FriendActionResult.success(
           response['message'] ?? 'Now following user',
@@ -191,6 +212,7 @@ class FriendsApiService {
       );
     }
   }
+  
   /// إلغاء متابعة مستخدم
   Future<FriendActionResult> unfollowUser(int userId) async {
     try {
@@ -198,6 +220,7 @@ class FriendsApiService {
         configCfgP('users_unfollow'),
         body: {'user_id': userId},
       );
+      
       if (response['status'] == 'success') {
         return FriendActionResult.success(
           response['message'] ?? 'Unfollowed user',
@@ -216,13 +239,16 @@ class FriendsApiService {
       );
     }
   }
+
   // ========================================
   // 🌍 Public APIs (للزوار والمسجلين)
   // ========================================
+
   /// الحصول على حالة العلاقة (عام - للزوار والمسجلين)
   Future<Map<String, dynamic>?> getUserRelationshipStatus(int userId) async {
     try {
       final response = await _apiClient.get(configCfgP('user_base') + '/$userId/relationship');
+      
       if (response['status'] == 'success') {
         return response['data'];
       }
@@ -231,10 +257,12 @@ class FriendsApiService {
       return null;
     }
   }
+
   /// الحصول على الملف الشخصي العام (للزوار والمسجلين)
   Future<Map<String, dynamic>?> getPublicUserProfile(String username) async {
     try {
       final response = await _apiClient.get(configCfgP('user_base') + '/$username/profile');
+      
       if (response['status'] == 'success') {
         return response['data'];
       }

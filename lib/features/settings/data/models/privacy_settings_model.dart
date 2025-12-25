@@ -2,16 +2,16 @@
 class PrivacySettings {
   final PrivacyOptions privacy;
   final NotificationOptions notifications;
-  PrivacySettings({
-    required this.privacy,
-    required this.notifications,
-  });
+
+  PrivacySettings({required this.privacy, required this.notifications});
+
   factory PrivacySettings.fromJson(Map<String, dynamic> json) {
     return PrivacySettings(
       privacy: PrivacyOptions.fromJson(json['privacy'] ?? {}),
       notifications: NotificationOptions.fromJson(json['notifications'] ?? {}),
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'privacy': privacy.toJson(),
@@ -19,6 +19,7 @@ class PrivacySettings {
     };
   }
 }
+
 /// خيارات الخصوصية
 class PrivacyOptions {
   // Visibility settings
@@ -37,16 +38,19 @@ class PrivacyOptions {
   final String gender;
   final String birthdate;
   final String relationship;
+
   // Interaction settings
   final String wall;
   final String chat;
   final String poke;
   final String gifts;
+
   // Feature toggles
   final bool chatEnabled;
   final bool newsletterEnabled;
   final bool tipsEnabled;
   final bool suggestionsHidden;
+
   PrivacyOptions({
     required this.basic,
     required this.work,
@@ -72,6 +76,7 @@ class PrivacyOptions {
     required this.tipsEnabled,
     required this.suggestionsHidden,
   });
+
   factory PrivacyOptions.fromJson(Map<String, dynamic> json) {
     // Helper function to ensure valid privacy values
     String normalizePrivacyValue(dynamic value) {
@@ -85,6 +90,7 @@ class PrivacyOptions {
       // If invalid value, default to public
       return 'public';
     }
+
     return PrivacyOptions(
       basic: normalizePrivacyValue(json['user_privacy_basic']),
       work: normalizePrivacyValue(json['user_privacy_work']),
@@ -105,12 +111,25 @@ class PrivacyOptions {
       chat: normalizePrivacyValue(json['user_privacy_chat']),
       poke: normalizePrivacyValue(json['user_privacy_poke']),
       gifts: normalizePrivacyValue(json['user_privacy_gifts']),
-      chatEnabled: json['user_chat_enabled'] == true || json['user_chat_enabled'] == 1 || json['user_chat_enabled'] == '1',
-      newsletterEnabled: json['user_newsletter_enabled'] == true || json['user_newsletter_enabled'] == 1 || json['user_newsletter_enabled'] == '1',
-      tipsEnabled: json['user_tips_enabled'] == true || json['user_tips_enabled'] == 1 || json['user_tips_enabled'] == '1',
-      suggestionsHidden: json['user_suggestions_hidden'] == true || json['user_suggestions_hidden'] == 1 || json['user_suggestions_hidden'] == '1',
+      chatEnabled:
+          json['user_chat_enabled'] == true ||
+          json['user_chat_enabled'] == 1 ||
+          json['user_chat_enabled'] == '1',
+      newsletterEnabled:
+          json['user_newsletter_enabled'] == true ||
+          json['user_newsletter_enabled'] == 1 ||
+          json['user_newsletter_enabled'] == '1',
+      tipsEnabled:
+          json['user_tips_enabled'] == true ||
+          json['user_tips_enabled'] == 1 ||
+          json['user_tips_enabled'] == '1',
+      suggestionsHidden:
+          json['user_suggestions_hidden'] == true ||
+          json['user_suggestions_hidden'] == 1 ||
+          json['user_suggestions_hidden'] == '1',
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'user_privacy_basic': basic,
@@ -138,6 +157,7 @@ class PrivacyOptions {
       'user_suggestions_hidden': suggestionsHidden,
     };
   }
+
   PrivacyOptions copyWith({
     String? basic,
     String? work,
@@ -190,6 +210,7 @@ class PrivacyOptions {
     );
   }
 }
+
 /// خيارات الإشعارات
 class NotificationOptions {
   final bool emailPostLikes;
@@ -201,6 +222,7 @@ class NotificationOptions {
   final bool emailFriendRequests;
   final bool notificationsSound;
   final bool chatSound;
+
   NotificationOptions({
     required this.emailPostLikes,
     required this.emailPostComments,
@@ -212,6 +234,7 @@ class NotificationOptions {
     required this.notificationsSound,
     required this.chatSound,
   });
+
   factory NotificationOptions.fromJson(Map<String, dynamic> json) {
     // Helper function to normalize boolean values from API
     bool normalizeBool(dynamic value, [bool defaultValue = true]) {
@@ -221,6 +244,7 @@ class NotificationOptions {
       if (value == 0 || value == '0' || value == 'false') return false;
       return defaultValue;
     }
+
     return NotificationOptions(
       emailPostLikes: normalizeBool(json['email_post_likes']),
       emailPostComments: normalizeBool(json['email_post_comments']),
@@ -233,6 +257,7 @@ class NotificationOptions {
       chatSound: normalizeBool(json['chat_sound']),
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'email_post_likes': emailPostLikes,
@@ -246,6 +271,7 @@ class NotificationOptions {
       'chat_sound': chatSound,
     };
   }
+
   NotificationOptions copyWith({
     bool? emailPostLikes,
     bool? emailPostComments,
@@ -270,16 +296,19 @@ class NotificationOptions {
     );
   }
 }
+
 /// استجابة API للإعدادات
 class PrivacySettingsResponse {
   final String status;
   final String message;
   final PrivacySettings data;
+
   PrivacySettingsResponse({
     required this.status,
     required this.message,
     required this.data,
   });
+
   factory PrivacySettingsResponse.fromJson(Map<String, dynamic> json) {
     return PrivacySettingsResponse(
       status: json['status'] ?? 'success',

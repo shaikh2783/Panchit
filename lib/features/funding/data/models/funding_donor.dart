@@ -4,6 +4,7 @@ class FundingDonor {
   final String? donorPicture;
   final double amount;
   final String time;
+
   FundingDonor({
     required this.donorId,
     required this.donorName,
@@ -11,6 +12,7 @@ class FundingDonor {
     required this.amount,
     required this.time,
   });
+
   factory FundingDonor.fromJson(Map<String, dynamic> json) {
     return FundingDonor(
       donorId: json['user_id']?.toString() ?? json['donor_id']?.toString() ?? '',
@@ -25,6 +27,7 @@ class FundingDonor {
             ?? '',
     );
   }
+
   Map<String, dynamic> toJson() => {
         'donor_id': donorId,
         'donor_name': donorName,

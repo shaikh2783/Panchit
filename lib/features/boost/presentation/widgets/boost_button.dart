@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+
 class BoostButton extends StatefulWidget {
   final bool isBoosted;
   final VoidCallback onTap;
   final bool isLoading;
   final bool enabled;
   final String? remainingText;
+
   const BoostButton({
     super.key,
     required this.isBoosted,
@@ -15,12 +17,15 @@ class BoostButton extends StatefulWidget {
     this.enabled = true,
     this.remainingText,
   });
+
   @override
   State<BoostButton> createState() => _BoostButtonState();
 }
+
 class _BoostButtonState extends State<BoostButton> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
+
   @override
   void initState() {
     super.initState();
@@ -32,11 +37,13 @@ class _BoostButtonState extends State<BoostButton> with SingleTickerProviderStat
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
   }
+
   @override
   void dispose() {
     _animationController.dispose();
     super.dispose();
   }
+
   void _handleTap() {
     if (!widget.enabled || widget.isLoading) return;
     _animationController.forward().then((_) {
@@ -44,10 +51,12 @@ class _BoostButtonState extends State<BoostButton> with SingleTickerProviderStat
       widget.onTap();
     });
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+
     return ScaleTransition(
       scale: _scaleAnimation,
       child: Material(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +14,7 @@ import '../../data/api_service/live_stream_api_service.dart';
 import '../../providers/live_stream_providers.dart';
 import '../widgets/live_chat_api_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 class LiveStreamViewerPage extends StatefulWidget {
   const LiveStreamViewerPage({
     super.key,
@@ -29,6 +29,7 @@ class LiveStreamViewerPage extends StatefulWidget {
     this.postId, // معرف البوست للـ API
     this.liveId, // معرف البث المباشر
   });
+
   final String channelName;
   final String token;
   final String broadcasterName;
@@ -39,9 +40,11 @@ class LiveStreamViewerPage extends StatefulWidget {
   final int viewersCount;
   final String? postId; // جديد للـ API
   final String? liveId; // جديد للـ API
+
   @override
   State<LiveStreamViewerPage> createState() => _LiveStreamViewerPageState();
 }
+
 class _LiveStreamViewerPageState extends State<LiveStreamViewerPage> 
     with TickerProviderStateMixin, LiveStreamBlocsMixin {
   late AgoraService _agoraService;
@@ -49,8 +52,10 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
   late AnimationController _controlsAnimationController;
   late AnimationController _loadingAnimationController;
   late AnimationController _interfaceAnimationController;
+  
   Timer? _hideControlsTimer;
   Timer? _statsUpdateTimer;
+  
   bool _isLoading = true;
   bool _showControls = true;
   bool _showChat = false;
@@ -62,54 +67,68 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
   bool _isLoadingStats = false;
   Map<String, dynamic>? _liveStats;
   String? _lastCommentId; // لتتبع آخر تعليق للتحديثات الفعلية
+  
   @override
   void initState() {
     super.initState();
     _currentViewers = widget.viewersCount;
     _liveApiService = LiveStreamApiService(context.read<ApiClient>());
+    
     // طباعة القيم المُمررة للتطوير
+    
     _initializeAnimations();
     _initializeAgora();
     _hideSystemUI();
     _joinLiveStream();
     // لا نبدأ stats updates هنا - سنبدأها بعد نجاح join
   }
+
   void _initializeAnimations() {
     _controlsAnimationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
+    
     _loadingAnimationController = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
+    
     _interfaceAnimationController = AnimationController(
       duration: const Duration(milliseconds: 400),
       vsync: this,
     );
+    
     _controlsAnimationController.forward();
     _interfaceAnimationController.forward();
     _loadingAnimationController.repeat();
   }
+
   // الانضمام للبث المباشر عبر API
   Future<void> _joinLiveStream() async {
     final postId = widget.postId ?? widget.liveId;
     if (postId == null) {
       return;
     }
+
     try {
       final result = await _liveApiService.joinLiveStream(postId: postId);
+      
+      
       if (result['status'] == 'success') {
         setState(() {
           _hasJoinedLive = true;
         });
+        
         // بدء مراقبة الإحصائيات فقط بعد نجاح الانضمام
         _startStatsUpdates();
+        
         // تحديث عدد المشاهدين فور الانضمام - معالجة محسنة
         final data = result['data'];
         if (data != null) {
           // جرب live_count أولاً (من stats API)
           int? viewerCount = data['live_count'];
+          
           // إذا لم نجد live_count، جرب من post object
           if (viewerCount == null && data['post'] != null) {
             final statistics = data['post']['statistics'];
@@ -117,32 +136,38 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
               viewerCount = statistics['live_viewers'] ?? statistics['reactions'] ?? 0;
             }
           }
+          
           // إذا لم نجد أي عدد، استخدم 1 (المستخدم الحالي)
           viewerCount ??= 1;
+          
           setState(() {
             _currentViewers = viewerCount!;
           });
+          
           // طباعة تفاصيل إضافية للتطوير
           if (data['post'] != null) {
             final post = data['post'];
           }
         }
+        
         // عرض رسالة نجاح
-        _showSuccessMessage('live_join_success'.tr);
+        _showSuccessMessage('انضممت للبث المباشر بنجاح!');
       } else {
         setState(() {
           _isStreamEnded = true;
         });
+        
         if (result['error_type'] == 'stream_ended') {
           _showStreamEndedMessage();
         } else {
-          _showJoinFailedMessage(result['message'] ?? 'live_join_failed'.tr);
+          _showJoinFailedMessage(result['message'] ?? 'فشل في الانضمام للبث');
         }
       }
     } catch (e) {
-      _showJoinFailedMessage('${'connection_error'.tr}: ${e.toString()}');
+      _showJoinFailedMessage('خطأ في الاتصال: ${e.toString()}');
     }
   }
+
   // عرض رسالة نجاح
   void _showSuccessMessage(String message) {
     if (!mounted) return;
@@ -160,36 +185,41 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
       ),
     );
   }
+
   // عرض رسالة انتهاء البث
   void _showStreamEndedMessage() {
     ScaffoldMessenger.of(context).showSnackBar(
-       SnackBar(
-        content: Text('live_ended'.tr),
+      const SnackBar(
+        content: Text('انتهى البث المباشر'),
         backgroundColor: Colors.red,
         duration: Duration(seconds: 3),
       ),
     );
   }
+
   // عرض رسالة فشل الانضمام
   void _showJoinFailedMessage(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('${'live_join_failed_again'.tr}$message'),
+        content: Text('فشل في الانضمام للبث: $message'),
         backgroundColor: Colors.orange,
         duration: const Duration(seconds: 5),
         action: SnackBarAction(
-          label: 'retry'.tr,
+          label: 'إعادة المحاولة',
           onPressed: _joinLiveStream,
         ),
       ),
     );
   }
+
   // بدء تحديثات إحصائيات البث
   void _startStatsUpdates() {
     final postId = widget.postId ?? widget.liveId;
     if (postId == null) {
       return;
     }
+
+    
     // تحديث الإحصائيات كل 3 ثوانٍ (أسرع للتفاعل)
     _statsUpdateTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
       if (mounted && _hasJoinedLive && !_isStreamEnded) {
@@ -198,30 +228,40 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
         timer.cancel();
       }
     });
+
     // جلب الإحصائيات فوراً
     _fetchLiveStats();
   }
+
   // جلب إحصائيات البث المباشر
   Future<void> _fetchLiveStats() async {
     final postId = widget.postId ?? widget.liveId;
     if (_isLoadingStats || postId == null || !_hasJoinedLive) return;
+
     try {
       setState(() {
         _isLoadingStats = true;
       });
+
       final result = await _liveApiService.getLiveStats(postId: postId);
+
       if (!mounted) return; // تحقق من mounted قبل setState
+
       if (result['status'] == 'success') {
         final data = result['data'];
         final newViewerCount = data['live_count'];
+        
+        
         // معلومات إضافية للتطوير
         if (data['comments'] != null) {
           final comments = data['comments'] as List;
+          
           // تحديث آخر comment ID لللاستعلامات المستقبلية
           if (comments.isNotEmpty) {
             _lastCommentId = comments.last['comment_id']?.toString();
           }
         }
+        
         // تحديث إذا حصلنا على قيمة جديدة مختلفة
         if (newViewerCount != null && newViewerCount != _currentViewers) {
           setState(() {
@@ -229,6 +269,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
             _currentViewers = newViewerCount;
           });
         }
+        
         // التحقق من حالة البث
         if (data['is_live'] == false || data['status'] == 'ended') {
           setState(() {
@@ -257,14 +298,18 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
       }
     }
   }
+
   // مغادرة البث المباشر
   Future<void> _leaveLiveStream() async {
     final postId = widget.postId ?? widget.liveId;
     if (postId == null || !_hasJoinedLive) return;
+
     try {
       await _liveApiService.leaveLiveStream(postId: postId);
+      
       // إيقاف التحديثات
       _statsUpdateTimer?.cancel();
+      
       // تحديث الحالة فقط إذا كان mounted
       if (mounted) {
         setState(() {
@@ -281,6 +326,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
       }
     }
   }
+
   // بناء واجهة إحصائيات البث
   Widget _buildLiveStats() {
     return Container(
@@ -288,20 +334,20 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Colors.black.withValues(alpha: 0.8),
-            Colors.black.withValues(alpha: 0.6),
+            Colors.black.withOpacity(0.8),
+            Colors.black.withOpacity(0.6),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.3),
+          color: Colors.white.withOpacity(0.3),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.3),
+            color: Colors.black.withOpacity(0.3),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -333,7 +379,9 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
               ),
             ],
           ),
+          
           const SizedBox(height: 8),
+          
           // عدد المشاهدين الحقيقي 
           Row(
             mainAxisSize: MainAxisSize.min,
@@ -356,10 +404,11 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
               Text(
                 'مشاهد',
                 style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.8),
+                  color: Colors.white.withOpacity(0.8),
                   fontSize: 12,
                 ),
               ),
+              
               // مؤشر التحديث
               if (_isLoadingStats) ...[
                 const SizedBox(width: 6),
@@ -369,13 +418,14 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
                     valueColor: AlwaysStoppedAnimation(
-                      Colors.white.withValues(alpha: 0.6),
+                      Colors.white.withOpacity(0.6),
                     ),
                   ),
                 ),
               ],
             ],
           ),
+          
           if (_liveStats != null) ...[
             const SizedBox(height: 8),
             // عدد التعليقات
@@ -397,6 +447,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                 ),
               ],
             ),
+            
             const SizedBox(height: 8),
             // عدد الإعجابات
             Row(
@@ -418,6 +469,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
               ],
             ),
           ],
+          
           // مؤشر التحديث
           if (_isLoadingStats) ...[
             const SizedBox(height: 8),
@@ -434,6 +486,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
       ),
     );
   }
+
   // تنسيق عدد المشاهدين
   String _formatViewersCount(int count) {
     if (count >= 1000000) {
@@ -443,12 +496,15 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
     }
     return count.toString();
   }
+
   void _hideSystemUI() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
   }
+
   void _showSystemUI() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   }
+
   Future<void> _initializeAgora() async {
     try {
       setState(() {
@@ -456,8 +512,10 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
         _hasError = false;
         _errorMessage = null;
       });
+      
       // إنشاء AgoraService محلياً
       _agoraService = AgoraService();
+      
       // تهيئة Agora
       final initialized = await _agoraService.initialize();
       if (!initialized) {
@@ -465,33 +523,41 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
         await _handlePermissionsError();
         return;
       }
+      
       // الانضمام للقناة
       final joined = await _agoraService.joinChannel(
         channelName: widget.channelName,
         token: widget.token,
         uid: widget.uid,
       );
+      
       if (!joined) {
-        throw Exception('channel_join_failed'.tr);
+        throw Exception('فشل في الانضمام للقناة - تحقق من معرف القناة والتوكن');
       }
+      
       setState(() {
         _isLoading = false;
       });
+      
       _loadingAnimationController.stop();
+      
     } catch (e) {
       setState(() {
         _isLoading = false;
         _hasError = true;
         _errorMessage = e.toString();
       });
+      
       _loadingAnimationController.stop();
     }
   }
+
   // إظهار/إخفاء واجهة التحكم
   void _toggleControls() {
     setState(() {
       _showControls = !_showControls;
     });
+    
     if (_showControls) {
       _controlsAnimationController.forward();
       _interfaceAnimationController.forward();
@@ -513,25 +579,29 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
       _hideControlsTimer = null;
     }
   }
+  
   // تبديل عرض الدردشة
   void _toggleChat() {
     setState(() {
       _showChat = !_showChat;
     });
   }
+  
   // معالجة أخطاء الصلاحيات
   Future<void> _handlePermissionsError() async {
     // إظهار رسالة خطأ للمستخدم
     setState(() {
       _hasError = true;
-      _errorMessage = 'camera_mic_required_message'.tr;
+      _errorMessage = 'يجب السماح بالوصول للكاميرا والمايكروفون لمشاهدة البث المباشر';
     });
+
     // إظهار حوار تعليمات
     await Future.delayed(Duration(milliseconds: 500));
     if (mounted) {
       _showPermissionsDialog();
     }
   }
+
   // عرض حوار تعليمات الصلاحيات
   void _showPermissionsDialog() {
     showDialog(
@@ -541,7 +611,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
           children: [
             Icon(Icons.security, color: Colors.orange),
             SizedBox(width: 8),
-            Text('permissions_required_title'.tr),
+            Text('صلاحيات مطلوبة'),
           ],
         ),
         content: Column(
@@ -549,7 +619,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'permissions_required_description'.tr,
+              'لمشاهدة البث المباشر، نحتاج للوصول إلى:',
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
             SizedBox(height: 12),
@@ -557,7 +627,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
               children: [
                 Icon(Icons.videocam, color: Colors.blue, size: 20),
                 SizedBox(width: 8),
-                Text('camera_permission'.tr),
+                Text('الكاميرا - لعرض الفيديو'),
               ],
             ),
             SizedBox(height: 8),
@@ -565,19 +635,20 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
               children: [
                 Icon(Icons.mic, color: Colors.green, size: 20),
                 SizedBox(width: 8),
-                Text('microphone_permission'.tr),
+                Text('المايكروفون - للصوت'),
               ],
             ),
             SizedBox(height: 16),
             Container(
               padding: EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.orange.withValues(alpha: 0.1),
+                color: Colors.orange.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
+                border: Border.all(color: Colors.orange.withOpacity(0.3)),
               ),
               child: Text(
-                'permissions_permanently_denied'.tr,
+                '⚠️ يبدو أن الصلاحيات مرفوضة نهائياً. '
+                'يجب تفعيلها يدوياً من إعدادات التطبيق.',
                 style: TextStyle(
                   fontSize: 13,
                   color: Colors.orange[800],
@@ -592,7 +663,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
               Navigator.of(context).pop();
               Navigator.of(context).pop(); // العودة للصفحة السابقة
             },
-            child: Text('cancel'.tr),
+            child: Text('إلغاء'),
           ),
           ElevatedButton.icon(
             onPressed: () async {
@@ -611,12 +682,14 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
       ),
     );
   }
+
   // فتح إعدادات التطبيق
   Future<void> _openAppSettings() async {
     try {
       // استخدام package:permission_handler
       final opened = await openAppSettings();
       if (opened) {
+        
         // إظهار رسالة تعليمية
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -626,7 +699,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                 SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                   'enable_camera_mic_instruction'.tr,
+                    'فعّل الكاميرا والمايكروفون ثم ارجع للتطبيق',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
@@ -635,7 +708,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
             backgroundColor: Colors.blue,
             duration: Duration(seconds: 5),
             action: SnackBarAction(
-              label: 'try_again'.tr,
+              label: 'حاول مجدداً',
               textColor: Colors.white,
               onPressed: () {
                 // إعادة تهيئة Agora
@@ -648,6 +721,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
     } catch (e) {
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -661,6 +735,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
       ),
     );
   }
+
   Widget _buildErrorWidget() {
     return Center(
       child: ElevatedCard(
@@ -677,7 +752,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
               ),
               const SizedBox(height: 16),
               Text(
-                'live_connection_failed'.tr,
+                'فشل في الاتصال بالبث',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -685,7 +760,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
               ),
               const SizedBox(height: 8),
               Text(
-                _errorMessage ?? 'unexpected_error'.tr,
+                _errorMessage ?? 'حدث خطأ غير متوقع',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
@@ -701,7 +776,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                         Navigator.of(context).pop();
                       },
                       icon: const Icon(Iconsax.arrow_left_2),
-                      label:  Text('back'.tr),
+                      label: const Text('رجوع'),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -717,7 +792,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                         _initializeAgora();
                       },
                       icon: const Icon(Iconsax.refresh),
-                      label:  Text('retry'.tr),
+                      label: const Text('إعادة محاولة'),
                     ),
                   ),
                 ],
@@ -728,6 +803,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
       ),
     );
   }
+
   Widget _buildLoadingWidget() {
     return Stack(
       children: [
@@ -743,9 +819,10 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
               ),
             ),
             child: Container(
-              color: Colors.black.withValues(alpha: 0.5),
+              color: Colors.black.withOpacity(0.5),
             ),
           ),
+        
         // مؤشر التحميل
         Center(
           child: Column(
@@ -762,7 +839,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: Colors.red.withValues(alpha: 0.3),
+                          color: Colors.red.withOpacity(0.3),
                           width: 3,
                         ),
                       ),
@@ -786,11 +863,11 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.7),
+                  color: Colors.black.withOpacity(0.7),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  'connecting_live'.tr,
+                  'الاتصال بالبث المباشر...',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -802,7 +879,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.5),
+                  color: Colors.black.withOpacity(0.5),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
@@ -816,13 +893,14 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
             ],
           ),
         ),
+        
         // زر الإلغاء
         Positioned(
           top: 16,
           left: 16,
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.5),
+              color: Colors.black.withOpacity(0.5),
               shape: BoxShape.circle,
             ),
             child: IconButton(
@@ -841,6 +919,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
       ],
     );
   }
+
   Widget _buildStreamWidget(AgoraService agoraService) {
     return GestureDetector(
       onTap: _toggleControls,
@@ -848,6 +927,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
         children: [
           // عرض الفيديو
           _buildVideoWidget(agoraService),
+          
           // شارة LIVE وإحصائيات
           AnimatedBuilder(
             animation: _interfaceAnimationController,
@@ -861,6 +941,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
               );
             },
           ),
+          
           // معلومات البث والإحصائيات
           Positioned(
             top: 16,
@@ -878,19 +959,21 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
               },
             ),
           ),
+          
           // تفاعلات مباشرة
           LiveReactionsWidget(
             onReactionSent: (reaction) {
               // TODO: إرسال التفاعل عبر Agora أو API
             },
           ),
+          
           // دردشة مباشرة
           if (_showChat)
             Positioned(
               top: 0,
               bottom: 0,
               right: 0,
-              child: SizedBox(
+              child: Container(
                 width: 320,
                 child: (widget.postId ?? widget.liveId) != null 
                   ? LiveStreamBlocProvider(
@@ -904,6 +987,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                     ),
               ),
             ),
+          
           // أدوات التحكم المحسنة
           AnimatedBuilder(
             animation: _controlsAnimationController,
@@ -929,6 +1013,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
       ),
     );
   }
+
   Widget _buildVideoWidget(AgoraService agoraService) {
     if (!agoraService.hasRemoteUsers) {
       // عرض رسالة انتظار أو صورة مصغرة
@@ -942,13 +1027,13 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
             Icon(
               Iconsax.video,
               size: 80,
-              color: Colors.white.withValues(alpha: 0.5),
+              color: Colors.white.withOpacity(0.5),
             ),
             const SizedBox(height: 16),
             Text(
-              'waiting_for_live'.tr,
+              'انتظار بدء البث...',
               style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.7),
+                color: Colors.white.withOpacity(0.7),
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
               ),
@@ -957,7 +1042,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
             Text(
               widget.broadcasterName,
               style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.5),
+                color: Colors.white.withOpacity(0.5),
                 fontSize: 14,
               ),
             ),
@@ -965,6 +1050,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
         ),
       );
     }
+
     // عرض فيديو البث المباشر
     final remoteUid = agoraService.remoteUsers.keys.first;
     return RemoteVideoWidget(
@@ -973,6 +1059,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
       agoraService: agoraService, // تمرير AgoraService
     );
   }
+  
   // بناء الواجهة العلوية
   Widget _buildTopInterface() {
     return Container(
@@ -987,7 +1074,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.3),
+                  color: Colors.black.withOpacity(0.3),
                   offset: const Offset(0, 2),
                   blurRadius: 6,
                 ),
@@ -1005,8 +1092,8 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                   ),
                 ),
                 const SizedBox(width: 6),
-                 Text(
-                  'live'.tr,
+                const Text(
+                  'LIVE',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 12,
@@ -1017,11 +1104,12 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
             ),
           ),
           const Spacer(),
+          
           // عدد المشاهدين
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.5),
+              color: Colors.black.withOpacity(0.5),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -1034,7 +1122,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  '$_currentViewers',
+                  '${_currentViewers}',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 12,
@@ -1048,6 +1136,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
       ),
     );
   }
+  
   // بناء أدوات التحكم المحسنة
   Widget _buildEnhancedControls(AgoraService agoraService) {
     return Container(
@@ -1057,7 +1146,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
           end: Alignment.bottomCenter,
           colors: [
             Colors.transparent,
-            Colors.black.withValues(alpha: 0.8),
+            Colors.black.withOpacity(0.8),
           ],
         ),
       ),
@@ -1069,7 +1158,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.5),
+              color: Colors.black.withOpacity(0.5),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Row(
@@ -1107,8 +1196,8 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                     color: Colors.red,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child:  Text(
-                    'FOLLOW'.tr,
+                  child: const Text(
+                    'FOLLOW',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 9,
@@ -1119,7 +1208,9 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
               ],
             ),
           ),
+          
           const SizedBox(height: 12),
+          
           // أزرار التحكم
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1131,7 +1222,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                   width: 50,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: Colors.red.withValues(alpha: 0.8),
+                    color: Colors.red.withOpacity(0.8),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
@@ -1141,6 +1232,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                   ),
                 ),
               ),
+              
               // أزرار وسطية
               Flexible(
                 child: Row(
@@ -1154,7 +1246,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                         width: 45,
                         height: 45,
                         decoration: BoxDecoration(
-                          color: Colors.black.withValues(alpha: 0.6),
+                          color: Colors.black.withOpacity(0.6),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -1164,7 +1256,9 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                         ),
                       ),
                     ),
+                    
                     const SizedBox(width: 8),
+                    
                     // زر المشاركة
                     GestureDetector(
                       onTap: () {
@@ -1174,7 +1268,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                       width: 45,
                       height: 45,
                       decoration: BoxDecoration(
-                        color: Colors.black.withValues(alpha: 0.6),
+                        color: Colors.black.withOpacity(0.6),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
@@ -1187,6 +1281,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                   ],
                 ),
               ),
+              
               // زر الدردشة
               GestureDetector(
                 onTap: _toggleChat,
@@ -1194,9 +1289,9 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                   width: 50,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: _showChat
-                        ? Colors.blue.withValues(alpha: 0.8)
-                        : Colors.black.withValues(alpha: 0.6),
+                    color: _showChat 
+                        ? Colors.blue.withOpacity(0.8)
+                        : Colors.black.withOpacity(0.6),
                     shape: BoxShape.circle,
                   ),
                   child: Stack(
@@ -1231,22 +1326,26 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
       ),
     );
   }
+
   @override
   void dispose() {
+    
     // إيقاف جميع المؤقتات
     _hideControlsTimer?.cancel();
     _statsUpdateTimer?.cancel();
+    
     // مغادرة البث المباشر عند الخروج (بدون انتظار)
     if (_hasJoinedLive && (widget.postId != null || widget.liveId != null)) {
-      _leaveLiveStream().catchError((e) {});
     }
+    
     // تنظيف الموارد
     _controlsAnimationController.dispose();
     _loadingAnimationController.dispose();
     _interfaceAnimationController.dispose();
+    
     // تنظيف Agora والنظام
-    _agoraService.leaveChannel().catchError((e) {});
     _showSystemUI();
+    
     super.dispose();
   }
 }

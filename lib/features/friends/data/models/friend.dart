@@ -12,6 +12,7 @@ class FriendRequest {
     this.location = '',
     this.status = FriendRequestStatus.pending,
   });
+
   final int id;
   final int senderId;
   final String senderName;
@@ -23,20 +24,24 @@ class FriendRequest {
   final String bio;
   final String location;
   final FriendRequestStatus status;
+
   String get timeAgo {
     final now = DateTime.now();
     final difference = now.difference(sentAt);
+
     if (difference.inMinutes < 1) return 'Just now';
     if (difference.inMinutes < 60) return '${difference.inMinutes}m ago';
     if (difference.inHours < 24) return '${difference.inHours}h ago';
     if (difference.inDays < 7) return '${difference.inDays}d ago';
     return '${(difference.inDays / 7).floor()}w ago';
   }
+
   String get mutualFriendsText {
     if (mutualFriendsCount == 0) return 'No mutual friends';
     if (mutualFriendsCount == 1) return '1 mutual friend';
     return '$mutualFriendsCount mutual friends';
   }
+
   factory FriendRequest.fromJson(Map<String, dynamic> json) {
     return FriendRequest(
       id: json['id'] ?? 0,
@@ -55,6 +60,7 @@ class FriendRequest {
       ),
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -71,6 +77,7 @@ class FriendRequest {
     };
   }
 }
+
 enum FriendRequestStatus {
   pending,
   accepted,

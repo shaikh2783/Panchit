@@ -4,6 +4,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+
 class CampaignImageUpload extends StatelessWidget {
   const CampaignImageUpload({
     super.key,
@@ -12,15 +13,19 @@ class CampaignImageUpload extends StatelessWidget {
     required this.onUpload,
     this.isUploading = false,
   });
+
   final String? imageUrl;
   final Function(File) onImagePicked;
   final VoidCallback onUpload;
   final bool isUploading;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+
     return Column(
+      
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -127,6 +132,7 @@ class CampaignImageUpload extends StatelessWidget {
       ],
     );
   }
+
   Widget _buildPlaceholder(ThemeData theme) {
     return Container(
       color: theme.colorScheme.surfaceVariant,
@@ -139,6 +145,7 @@ class CampaignImageUpload extends StatelessWidget {
       ),
     );
   }
+
   Widget _buildUploadButton(BuildContext context, ThemeData theme) {
     return Material(
       color: Colors.transparent,

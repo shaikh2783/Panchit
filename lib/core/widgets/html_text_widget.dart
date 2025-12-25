@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:snginepro/core/config/app_config.dart';
 import 'package:snginepro/features/profile/presentation/pages/profile_page.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 /// Common widget for displaying HTML text
 /// Supports mentions (@), links, and formatting
 /// Supports limited text display with "Show more" option
@@ -21,31 +22,44 @@ class HtmlTextWidget extends StatefulWidget {
     this.showLessText = 'Hide',
     this.textAlign = TextAlign.start, // إضافة دعم للمحاذاة
   });
+
   /// HTML content to display
   final String htmlContent;
+
   /// Maximum number of characters before showing "Show more" (default: 300)
   final int maxLength;
+
   /// Font size (default: 15)
   final double fontSize;
+
   /// Line height (default: 1.45)
   final double lineHeight;
+
   /// Text color (if null, will use theme color)
   final Color? textColor;
+
   /// Link color (if null, will use theme primary color)
   final Color? linkColor;
+
   /// Function called when a mention (@mention) is tapped
   final void Function(String username)? onMentionTap;
+
   /// "Show more" button text
   final String showMoreText;
+
   /// "Hide" button text
   final String showLessText;
+
   /// Text alignment (default: TextAlign.start)
   final TextAlign textAlign;
+
   @override
   State<HtmlTextWidget> createState() => _HtmlTextWidgetState();
 }
+
 class _HtmlTextWidgetState extends State<HtmlTextWidget> {
   bool _isExpanded = false;
+
   /// Extract plain text from HTML
   String _getPlainText(String html) {
     return html
@@ -58,15 +72,18 @@ class _HtmlTextWidgetState extends State<HtmlTextWidget> {
         .replaceAll('&#039;', "'")
         .trim();
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final effectiveTextColor =
-        widget.textColor ?? theme.colorScheme.onSurface.withValues(alpha: 0.85);
+        widget.textColor ?? theme.colorScheme.onSurface.withOpacity(0.85);
     final effectiveLinkColor = widget.linkColor ?? theme.colorScheme.primary;
+
     // Extract plain text to check length
     final plainText = _getPlainText(widget.htmlContent);
     final isLongText = plainText.length > widget.maxLength;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -103,12 +120,13 @@ class _HtmlTextWidgetState extends State<HtmlTextWidget> {
           },
           onLinkTap: (url, attributes, element) {
             if (url == null) return;
-            //flutter: 🔗 Link tapped: https://www.panchit.com/search/hashtag/ameen
+            //flutter: 🔗 Link tapped: https://sngine.fluttercrafters.com/search/hashtag/ameen
             final appConfig = context.read<AppConfig>();
             // Extract username from the link
             final uri = Uri.tryParse(url);
             if (uri != null && uri.pathSegments.isNotEmpty) {
               final username = uri.pathSegments.last;
+
               // التحقق من وجود data-uid في الـ attributes (يعني أنها mention)
               final dataUid = attributes['data-uid'];
               if (dataUid != null) {
@@ -118,11 +136,13 @@ class _HtmlTextWidgetState extends State<HtmlTextWidget> {
                 return;
               }
             }
+
             // التحقق من نوع الرابط
             if (url.startsWith(appConfig.baseUrl)) {
               String username = url
                   .replaceFirst(appConfig.baseUrl, '')
                   .replaceAll('/', '');
+              
               if (username.startsWith('searchhashta')) {
                 //go to hashtag page
               } else {
@@ -139,6 +159,7 @@ class _HtmlTextWidgetState extends State<HtmlTextWidget> {
             }
           },
         ),
+
         // زر "إظهار المزيد" / "إخفاء"
         if (isLongText)
           Padding(

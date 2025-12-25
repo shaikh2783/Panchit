@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'professional_live_stream_wrapper.dart';
 import 'live_stream_settings_page.dart';
+
 /// صفحة سريعة لاختيار نوع البث المباشر
 class LiveStreamOptionsPage extends StatelessWidget {
   const LiveStreamOptionsPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
       appBar: AppBar(
@@ -28,6 +31,7 @@ class LiveStreamOptionsPage extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 20),
+            
             // Header
             Container(
               width: double.infinity,
@@ -90,7 +94,9 @@ class LiveStreamOptionsPage extends StatelessWidget {
                 ],
               ),
             ),
+            
             const SizedBox(height: 32),
+            
             // Quick Start Option
             _buildOptionCard(
               context: context,
@@ -108,7 +114,9 @@ class LiveStreamOptionsPage extends StatelessWidget {
                 );
               },
             ),
+            
             const SizedBox(height: 16),
+            
             // Advanced Options
             _buildOptionCard(
               context: context,
@@ -129,7 +137,9 @@ class LiveStreamOptionsPage extends StatelessWidget {
                 );
               },
             ),
+            
             const SizedBox(height: 16),
+            
             // Scheduled Stream Option  
             _buildOptionCard(
               context: context,
@@ -143,7 +153,9 @@ class LiveStreamOptionsPage extends StatelessWidget {
                 _showComingSoonDialog(context);
               },
             ),
+            
             const Spacer(),
+            
             // Tips
             Container(
               padding: const EdgeInsets.all(16),
@@ -177,6 +189,7 @@ class LiveStreamOptionsPage extends StatelessWidget {
       ),
     );
   }
+
   Widget _buildOptionCard({
     required BuildContext context,
     required String title,
@@ -186,6 +199,7 @@ class LiveStreamOptionsPage extends StatelessWidget {
     required VoidCallback onTap,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Card(
       elevation: 8,
       shadowColor: Colors.black.withOpacity(0.1),
@@ -267,6 +281,7 @@ class LiveStreamOptionsPage extends StatelessWidget {
       ),
     );
   }
+
   void _showComingSoonDialog(BuildContext context) {
     showDialog(
       context: context,

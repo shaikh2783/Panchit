@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:intl/intl.dart';
+
 class CampaignDatePicker extends StatelessWidget {
   const CampaignDatePicker({
     super.key,
@@ -10,14 +11,17 @@ class CampaignDatePicker extends StatelessWidget {
     required this.onTap,
     this.validator,
   });
+
   final String label;
   final TextEditingController controller;
   final VoidCallback onTap;
   final String? Function(String?)? validator;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -35,8 +39,8 @@ class CampaignDatePicker extends StatelessWidget {
             gradient: LinearGradient(
               colors: isDark
                   ? [
-                      theme.cardColor.withValues(alpha: 0.5),
-                      theme.cardColor.withValues(alpha: 0.3),
+                      theme.cardColor.withOpacity(0.5),
+                      theme.cardColor.withOpacity(0.3),
                     ]
                   : [
                       Colors.white,
@@ -44,7 +48,7 @@ class CampaignDatePicker extends StatelessWidget {
                     ],
             ),
             border: Border.all(
-              color: theme.colorScheme.primary.withValues(alpha: 0.2),
+              color: theme.colorScheme.primary.withOpacity(0.2),
               width: 1.5,
             ),
             boxShadow: [
@@ -82,6 +86,7 @@ class CampaignDatePicker extends StatelessWidget {
       ],
     );
   }
+
   static Future<DateTime?> pickDate(BuildContext context, {DateTime? initialDate}) async {
     return showDatePicker(
       context: context,
@@ -102,6 +107,7 @@ class CampaignDatePicker extends StatelessWidget {
       },
     );
   }
+
   static String formatDate(DateTime date) {
     return DateFormat('yyyy-MM-dd').format(date);
   }

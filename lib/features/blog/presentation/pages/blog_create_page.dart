@@ -5,8 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:snginepro/features/pages/domain/pages_repository.dart';
 import 'package:snginepro/features/pages/data/models/page.dart';
-import 'package:snginepro/features/groups/domain/groups_repository.dart';
-import 'package:snginepro/features/groups/data/models/group.dart';
+// Groups module removed; clean up imports
 import 'package:snginepro/features/events/data/services/events_service.dart';
 import 'package:snginepro/features/events/data/models/event.dart';
 import '../../../../core/network/api_client.dart';
@@ -15,12 +14,14 @@ import '../../../../core/theme/ui_constants.dart';
 import '../../domain/blog_repository.dart';
 import '../../data/models/models.dart';
 import 'blog_post_page.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+// cached_network_image not used here; removed
+
 class BlogCreatePage extends StatefulWidget {
   const BlogCreatePage({super.key});
   @override
   State<BlogCreatePage> createState() => _BlogCreatePageState();
 }
+
 class _BlogCreatePageState extends State<BlogCreatePage> {
   final _formKey = GlobalKey<FormState>();
   final _titleCtrl = TextEditingController();
@@ -29,7 +30,7 @@ class _BlogCreatePageState extends State<BlogCreatePage> {
   final List<String> _tags = [];
   int? _selectedCategoryId;
   String _publishTo = 'timeline';
-  int? _pageId; int? _groupId; int? _eventId;
+  int? _pageId; int? _eventId;
   bool _tipsEnabled = false;
   bool _forSubscriptions = false;
   bool _isPaid = false;
@@ -43,17 +44,17 @@ class _BlogCreatePageState extends State<BlogCreatePage> {
   List<BlogCategory> _categories = [];
   // Loaded entities for selection
   List<PageModel> _myPages = [];
-  List<Group> _myGroups = [];
   List<Event> _myEvents = [];
   bool _loadingPages = false;
-  bool _loadingGroups = false;
   bool _loadingEvents = false;
   final ImagePicker _picker = ImagePicker();
+
   @override
   void initState() {
     super.initState();
     _loadCategories();
   }
+
   Future<void> _loadCategories() async {
     try {
       final repo = context.read<BlogRepository>();
@@ -61,6 +62,7 @@ class _BlogCreatePageState extends State<BlogCreatePage> {
       if (mounted) setState(() => _categories = cats);
     } catch (_) {}
   }
+
   Future<void> _loadMyPages() async {
     if (_myPages.isNotEmpty || _loadingPages) return;
     setState(() => _loadingPages = true);
@@ -72,17 +74,9 @@ class _BlogCreatePageState extends State<BlogCreatePage> {
       Get.snackbar('error'.tr, e.toString());
     } finally { if (mounted) setState(() => _loadingPages = false); }
   }
-  Future<void> _loadMyGroups() async {
-    if (_myGroups.isNotEmpty || _loadingGroups) return;
-    setState(() => _loadingGroups = true);
-    try {
-      final groupsRepo = context.read<GroupsRepository>();
-      final resp = await groupsRepo.getMyGroups();
-      if (mounted) setState(() => _myGroups = resp.groups);
-    } catch (e) {
-      Get.snackbar('error'.tr, e.toString());
-    } finally { if (mounted) setState(() => _loadingGroups = false); }
-  }
+
+  // Groups module removed: no group loading
+
   Future<void> _loadMyEvents() async {
     if (_myEvents.isNotEmpty || _loadingEvents) return;
     setState(() => _loadingEvents = true);
@@ -99,6 +93,7 @@ class _BlogCreatePageState extends State<BlogCreatePage> {
       Get.snackbar('error'.tr, e.toString());
     } finally { if (mounted) setState(() => _loadingEvents = false); }
   }
+
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _submitting = true);
@@ -107,7 +102,6 @@ class _BlogCreatePageState extends State<BlogCreatePage> {
       final body = {
         'publish_to': _publishTo,
         if (_publishTo == 'page' && _pageId != null) 'page_id': _pageId,
-        if (_publishTo == 'group' && _groupId != null) 'group_id': _groupId,
         if (_publishTo == 'event' && _eventId != null) 'event_id': _eventId,
         'title': _titleCtrl.text.trim(),
         'text': _htmlCtrl.text.trim(),
@@ -131,6 +125,7 @@ class _BlogCreatePageState extends State<BlogCreatePage> {
       if (mounted) setState(() => _submitting = false);
     }
   }
+
   Future<void> _pickCover() async {
     try {
       final XFile? picked = await _picker.pickImage(source: ImageSource.gallery, imageQuality: 85);
@@ -165,6 +160,7 @@ class _BlogCreatePageState extends State<BlogCreatePage> {
       if (mounted) setState(() => _uploadingCover = false);
     }
   }
+
   void _removeCover() {
     setState(() {
       _coverSource = null;
@@ -172,6 +168,7 @@ class _BlogCreatePageState extends State<BlogCreatePage> {
       _uploadProgress = 0;
     });
   }
+
   void _addTagFromInput() {
     final raw = _tagsCtrl.text.trim();
     if (raw.isEmpty) return;
@@ -182,6 +179,7 @@ class _BlogCreatePageState extends State<BlogCreatePage> {
     _tagsCtrl.clear();
     setState(() {});
   }
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
@@ -223,12 +221,11 @@ class _BlogCreatePageState extends State<BlogCreatePage> {
             DropdownButtonFormField<String>(
               decoration: _inputDecoration(icon: Iconsax.send_copy),
               value: _publishTo,
-              items: ['timeline','page','group','event'].map((e)=>DropdownMenuItem(value:e, child: Text(e.tr))).toList(),
+              items: ['timeline','page','event'].map((e)=>DropdownMenuItem(value:e, child: Text(e.tr))).toList(),
               onChanged: (v){
                 final target = v ?? 'timeline';
                 setState(()=>_publishTo = target);
                 if (target=='page') _loadMyPages();
-                else if (target=='group') _loadMyGroups();
                 else if (target=='event') _loadMyEvents();
               },
             ),
@@ -241,15 +238,7 @@ class _BlogCreatePageState extends State<BlogCreatePage> {
               onChanged: (v)=>setState(()=>_pageId=v),
               emptyText: 'no_pages'.tr,
             ),
-            if (_publishTo=='group') _entitySelector(
-              loading: _loadingGroups,
-              onLoad: _loadMyGroups,
-              label: 'select_group'.tr,
-              items: _myGroups.map((g)=>DropdownMenuItem(value: g.groupId, child: Text(g.groupTitle))).toList(),
-              value: _groupId,
-              onChanged: (v)=>setState(()=>_groupId=v),
-              emptyText: 'no_groups'.tr,
-            ),
+            // Groups module removed: group selector no longer shown
             if (_publishTo=='event') _entitySelector(
               loading: _loadingEvents,
               onLoad: _loadMyEvents,
@@ -419,6 +408,7 @@ class _BlogCreatePageState extends State<BlogCreatePage> {
       ),
     );
   }
+
   Widget _label(String text, {bool requiredField=false}) => Padding(
     padding: EdgeInsets.only(bottom: UI.xs),
     child: Row(
@@ -428,6 +418,7 @@ class _BlogCreatePageState extends State<BlogCreatePage> {
       ],
     ),
   );
+
   InputDecoration _inputDecoration({required IconData icon, String? hint, Widget? suffix}) {
     final scheme = Theme.of(context).colorScheme;
     return InputDecoration(
@@ -450,7 +441,9 @@ class _BlogCreatePageState extends State<BlogCreatePage> {
       ),
     );
   }
+
   // Legacy numeric ID field removed (now using entity selectors)
+
   Widget _entitySelector({
     required bool loading,
     required VoidCallback onLoad,

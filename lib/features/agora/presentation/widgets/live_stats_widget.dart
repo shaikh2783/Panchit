@@ -1,33 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/live_comments_bloc.dart';
+
 class LiveStatsWidget extends StatefulWidget {
   final String liveId;
+
   const LiveStatsWidget({
     Key? key,
     required this.liveId,
   }) : super(key: key);
+
   @override
   State<LiveStatsWidget> createState() => _LiveStatsWidgetState();
 }
+
 class _LiveStatsWidgetState extends State<LiveStatsWidget>
     with TickerProviderStateMixin {
   late AnimationController _pulseController;
   late AnimationController _countController;
   late Animation<double> _pulseAnimation;
   late Animation<double> _countAnimation;
+
   int _previousViewerCount = 0;
+
   @override
   void initState() {
     super.initState();
+    
     _pulseController = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
+    
     _countController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
+    
     _pulseAnimation = Tween<double>(
       begin: 1.0,
       end: 1.2,
@@ -35,6 +44,7 @@ class _LiveStatsWidgetState extends State<LiveStatsWidget>
       parent: _pulseController,
       curve: Curves.elasticOut,
     ));
+    
     _countAnimation = Tween<double>(
       begin: 0.8,
       end: 1.0,
@@ -42,31 +52,37 @@ class _LiveStatsWidgetState extends State<LiveStatsWidget>
       parent: _countController,
       curve: Curves.bounceOut,
     ));
+
     _pulseController.repeat(reverse: true);
   }
+
   @override
   void dispose() {
     _pulseController.dispose();
     _countController.dispose();
     super.dispose();
   }
+
   void _animateCountChange(int newCount) {
     if (newCount != _previousViewerCount) {
       _previousViewerCount = newCount;
       _countController.forward(from: 0);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LiveCommentsBloc, LiveCommentsState>(
       builder: (context, state) {
         int viewerCount = 0;
         int commentsCount = 0;
+
         if (state is LiveCommentsLoaded) {
           viewerCount = state.metadata.liveCount ?? 0;
           commentsCount = state.comments.length;
           _animateCountChange(viewerCount);
         }
+
         return Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
@@ -118,7 +134,9 @@ class _LiveStatsWidgetState extends State<LiveStatsWidget>
                   );
                 },
               ),
+              
               const SizedBox(height: 12),
+              
               // Viewer count
               AnimatedBuilder(
                 animation: _countAnimation,
@@ -147,7 +165,9 @@ class _LiveStatsWidgetState extends State<LiveStatsWidget>
                   );
                 },
               ),
+              
               const SizedBox(height: 8),
+              
               // Comments count
               Row(
                 mainAxisSize: MainAxisSize.min,

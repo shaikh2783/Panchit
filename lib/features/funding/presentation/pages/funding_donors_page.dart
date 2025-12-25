@@ -3,16 +3,21 @@ import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:snginepro/core/widgets/skeletons.dart';
+
 import '../../../../core/theme/ui_constants.dart';
 import '../../data/models/funding_donor.dart';
 import '../../domain/funding_repository.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 class FundingDonorsPage extends StatefulWidget {
   final int fundingId;
+
   const FundingDonorsPage({super.key, required this.fundingId});
+
   @override
   State<FundingDonorsPage> createState() => _FundingDonorsPageState();
 }
+
 class _FundingDonorsPageState extends State<FundingDonorsPage> {
   final _scrollCtrl = ScrollController();
   List<FundingDonor> _donors = [];
@@ -22,22 +27,26 @@ class _FundingDonorsPageState extends State<FundingDonorsPage> {
   final int _limit = 20;
   bool _hasMore = true;
   bool _loadingMore = false;
+
   @override
   void initState() {
     super.initState();
     _load();
     _scrollCtrl.addListener(_onScroll);
   }
+
   @override
   void dispose() {
     _scrollCtrl.dispose();
     super.dispose();
   }
+
   void _onScroll() {
     if (_scrollCtrl.position.pixels >= _scrollCtrl.position.maxScrollExtent * 0.8) {
       _loadMore();
     }
   }
+
   Future<void> _load() async {
     setState(() {
       _loading = true;
@@ -61,6 +70,7 @@ class _FundingDonorsPageState extends State<FundingDonorsPage> {
       });
     }
   }
+
   Future<void> _loadMore() async {
     if (!_hasMore || _loadingMore || _loading) return;
     setState(() => _loadingMore = true);
@@ -80,9 +90,11 @@ class _FundingDonorsPageState extends State<FundingDonorsPage> {
       setState(() => _loadingMore = false);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       appBar: AppBar(title: Text('donors'.tr)),
       body: _loading
@@ -183,6 +195,7 @@ class _FundingDonorsPageState extends State<FundingDonorsPage> {
                     ),
     );
   }
+
   Widget _buildSkeleton() {
     return ListView.separated(
       padding: EdgeInsets.all(UI.lg),

@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+
 import '../../data/models/post.dart';
 import '../../data/models/post_course.dart';
 import '../../../auth/application/auth_notifier.dart';
@@ -11,6 +12,7 @@ import '../../../courses/presentation/pages/course_edit_page.dart';
 import '../../../courses/presentation/pages/course_candidates_page.dart';
 import '../pages/post_detail_page.dart';
 import '../../../../core/network/api_client.dart';
+
 /// Widget to display course information in a post
 class CourseCard extends StatelessWidget {
   const CourseCard({
@@ -18,18 +20,24 @@ class CourseCard extends StatelessWidget {
     required this.post,
     required this.mediaResolver,
   });
+
   final Post post;
   final Uri Function(String) mediaResolver;
+
   @override
   Widget build(BuildContext context) {
     final course = post.course;
     if (course == null) return const SizedBox.shrink();
+
     final isDark = Get.isDarkMode;
+    
     // Check if current user owns this course
     final auth = context.watch<AuthNotifier>();
     final currentUserId = auth.currentUser?['user_id']?.toString();
     final isOwner = currentUserId != null && post.authorId == currentUserId;
+    
     // Debug: Check ownership
+    
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
@@ -74,6 +82,7 @@ class CourseCard extends StatelessWidget {
                 ),
               ),
             ),
+
           // Course Info
           Padding(
             padding: const EdgeInsets.all(16),
@@ -93,6 +102,7 @@ class CourseCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 12),
+
                 // Location
                 if (course.location != null && course.location!.isNotEmpty)
                   Padding(
@@ -117,6 +127,7 @@ class CourseCard extends StatelessWidget {
                       ],
                     ),
                   ),
+
                 // Date Range
                 if (course.startDate != null || course.endDate != null)
                   Padding(
@@ -141,6 +152,7 @@ class CourseCard extends StatelessWidget {
                       ],
                     ),
                   ),
+
                 // Price
                 Row(
                   children: [
@@ -183,7 +195,9 @@ class CourseCard extends StatelessWidget {
                     _buildStatusBadge(course),
                   ],
                 ),
+
                 const SizedBox(height: 16),
+
                 // Action Buttons
                 Row(
                   children: [
@@ -225,13 +239,14 @@ class CourseCard extends StatelessWidget {
                               builder: (_) => CourseEditPage(post: post),
                             ),
                           );
+                          
                           // If course was updated, you might want to refresh the list
                           if (result == true) {
                             // Trigger refresh if needed
                           }
                         },
                         icon: const Icon(Iconsax.edit, size: 18),
-                        label: const Text('تعديل'),
+                        label: Text('edit_course_button'.tr),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 16,
@@ -250,6 +265,7 @@ class CourseCard extends StatelessWidget {
                             // Handle enrollment - show dialog to collect user info
                             final auth = context.read<AuthNotifier>();
                             final currentUser = auth.currentUser;
+                            
                             if (currentUser == null) {
                               Get.snackbar(
                                 'خطأ',
@@ -259,18 +275,21 @@ class CourseCard extends StatelessWidget {
                               );
                               return;
                             }
+                            
                             // Pre-fill data from user profile
                             final userName = '${currentUser['user_firstname'] ?? ''} ${currentUser['user_lastname'] ?? ''}'.trim();
                             final userEmail = currentUser['user_email']?.toString().trim() ?? '';
+                            
                             // Show dialog to collect enrollment data
                             final formKey = GlobalKey<FormState>();
                             final nameCtrl = TextEditingController(text: userName);
                             final locationCtrl = TextEditingController(text: currentUser['user_current_city']?.toString().trim() ?? '');
                             final phoneCtrl = TextEditingController(text: currentUser['user_phone']?.toString().trim() ?? '');
                             final emailCtrl = TextEditingController(text: userEmail);
+                            
                             final confirmed = await Get.dialog<bool>(
                               AlertDialog(
-                                title: const Text('التسجيل في الدورة'),
+                                title: Text('course_enrollment_title'.tr),
                                 content: SingleChildScrollView(
                                   child: Form(
                                     key: formKey,
@@ -323,7 +342,7 @@ class CourseCard extends StatelessWidget {
                                 actions: [
                                   TextButton(
                                     onPressed: () => Get.back(result: false),
-                                    child: const Text('إلغاء'),
+                                    child: Text('course_enrollment_cancel'.tr),
                                   ),
                                   ElevatedButton(
                                     onPressed: () {
@@ -331,18 +350,22 @@ class CourseCard extends StatelessWidget {
                                         Get.back(result: true);
                                       }
                                     },
-                                    child: const Text('تسجيل'),
+                                    child: Text('course_enrollment_confirm'.tr),
                                   ),
                                 ],
                               ),
                             );
+                            
                             if (confirmed != true) return;
+                            
                             final apiClient = context.read<ApiClient>();
                             final service = CoursesApiService(apiClient);
+                            
                             Get.dialog(
                               const Center(child: CircularProgressIndicator()),
                               barrierDismissible: false,
                             );
+                            
                             final result = await service.enrollInCourse(
                               post.id.toString(),
                               name: nameCtrl.text.trim(),
@@ -350,7 +373,9 @@ class CourseCard extends StatelessWidget {
                               phone: phoneCtrl.text.trim(),
                               email: emailCtrl.text.trim(),
                             );
+                            
                             Get.back(); // Close loading dialog
+                            
                             if (result.success) {
                               Get.snackbar(
                                 'نجح',
@@ -395,7 +420,7 @@ class CourseCard extends StatelessWidget {
                           );
                         },
                         icon: const Icon(Iconsax.eye, size: 18),
-                        label: const Text('التفاصيل'),
+                        label: Text('course_details_button'.tr),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 16,
@@ -409,6 +434,7 @@ class CourseCard extends StatelessWidget {
                     ],
                   ],
                 ),
+
                 // Candidates Count (only show for non-owners)
                 if (!isOwner && course.candidatesCount > 0)
                   Padding(
@@ -438,9 +464,11 @@ class CourseCard extends StatelessWidget {
       ),
     );
   }
+
   Widget _buildStatusBadge(PostCourse course) {
     String text;
     Color color;
+
     if (!course.available) {
       text = 'مغلق';
       color = Colors.grey;
@@ -457,6 +485,7 @@ class CourseCard extends StatelessWidget {
       text = 'قريباً';
       color = Colors.green;
     }
+
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 10,
@@ -477,18 +506,23 @@ class CourseCard extends StatelessWidget {
       ),
     );
   }
+
   String _formatPrice(PostCourse course) {
     if (course.fees == null || course.fees!.isEmpty) return 'مجاني';
+
     final currency = course.feesCurrency;
     if (currency == null) return course.fees!;
+
     if (currency.dir == 'left') {
       return '${currency.symbol}${course.fees}';
     } else {
       return '${course.fees} ${currency.symbol}';
     }
   }
+
   String _formatDateRange(String? startDate, String? endDate) {
     if (startDate == null && endDate == null) return 'غير محدد';
+
     try {
       if (startDate != null && endDate != null) {
         final start = DateTime.parse(startDate);
@@ -511,8 +545,10 @@ class CourseCard extends StatelessWidget {
         return 'ينتهي في $endDate';
       }
     }
+
     return 'غير محدد';
   }
+
   String _formatDate(DateTime date) {
     // Simple date formatting without intl
     final months = [

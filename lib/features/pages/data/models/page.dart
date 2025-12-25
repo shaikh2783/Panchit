@@ -28,6 +28,7 @@ class PageModel {
     this.linkedin = '',
     this.vkontakte = '',
   });
+
   final int id;
   final String name;
   final String title;
@@ -40,6 +41,7 @@ class PageModel {
   final bool boosted;
   final bool iAdmin;
   final bool iLike;
+  
   // Info fields
   final String website;
   final String company;
@@ -47,10 +49,12 @@ class PageModel {
   final String location;
   final String country;
   final String language;
+  
   // Action button
   final String actionText;
   final String actionUrl;
   final String actionColor;
+  
   // Social links
   final String facebook;
   final String twitter;
@@ -58,6 +62,7 @@ class PageModel {
   final String instagram;
   final String linkedin;
   final String vkontakte;
+
   String get formattedLikes {
     if (likes >= 1000000) {
       final fixed = (likes / 1000000).toStringAsFixed(1);
@@ -69,9 +74,11 @@ class PageModel {
     }
     return likes.toString();
   }
+
   static String _trimTrailingZero(String value) {
     return value.endsWith('.0') ? value.substring(0, value.length - 2) : value;
   }
+
   factory PageModel.fromJson(Map<String, dynamic> json) {
     return PageModel(
       id: _parseInt(json['page_id']),
@@ -103,6 +110,7 @@ class PageModel {
       vkontakte: _parseString(json['page_social_vkontakte']) ?? '',
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'page_id': id,
@@ -134,15 +142,18 @@ class PageModel {
       'page_social_vkontakte': vkontakte,
     };
   }
+
   static int _parseInt(dynamic value) {
     if (value is int) return value;
     if (value is String) return int.tryParse(value) ?? 0;
     return 0;
   }
+
   static String? _parseString(dynamic value) {
     if (value == null) return null;
     return value.toString();
   }
+
   static bool _parseBool(dynamic value) {
     if (value is bool) return value;
     if (value is int) return value == 1;

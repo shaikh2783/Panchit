@@ -1,33 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:record/record.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:io';
+
 import '../../application/comments_notifier.dart';
 import '../../application/replies_notifier.dart';
 import '../../data/models/comment.dart';
 import '../../data/datasources/comments_api_service.dart';
 import '../widgets/reactions_menu.dart';
 import '../../../../core/services/reactions_service.dart';
+
 class CommentsBottomSheet extends StatefulWidget {
   const CommentsBottomSheet({
     super.key,
     required this.postId,
     required this.commentsCount,
   });
+
   final int postId;
   final int commentsCount;
+
   @override
   State<CommentsBottomSheet> createState() => _CommentsBottomSheetState();
 }
+
 class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
   final TextEditingController _commentController = TextEditingController();
   final FocusNode _commentFocus = FocusNode();
   final ImagePicker _imagePicker = ImagePicker();
   final AudioRecorder _audioRecorder = AudioRecorder();
+
   CommentModel? _replyingToComment;
   final Map<String, bool> _expandedReplies = {};
   final Map<String, int> _visibleReplies = {}; // للتحكم في "عرض المزيد"
@@ -36,6 +41,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
   bool _isRecording = false;
   Duration _recordingDuration = Duration.zero;
   DateTime? _recordingStartTime;
+
   @override
   void initState() {
     super.initState();
@@ -43,6 +49,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
       context.read<CommentsNotifier>().fetchComments(widget.postId);
     });
   }
+
   @override
   void dispose() {
     _commentController.dispose();
@@ -50,40 +57,40 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
     _audioRecorder.dispose();
     super.dispose();
   }
+
   Future<void> _handleSendComment() async {
     final text = _commentController.text.trim();
     if (text.isEmpty && _selectedImage == null && _recordedAudio == null) return;
+
     String? imagePath;
     String? voiceNotePath;
+
     // رفع الصورة
     if (_selectedImage != null) {
       try {
         if (mounted) {
-          try {
-            ScaffoldMessenger.of(context).showSnackBar(
-               SnackBar(content: Text('Uploading'.tr)),
-            );
-          } catch (e, s) {
-            print(s);
-          }
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Uploading image...')),
+          );
         }
         final apiService = context.read<CommentsApiService>();
         imagePath = await apiService.uploadImage(_selectedImage!);
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('${'upload_image_failed'} $e')),
+            SnackBar(content: Text('Failed to upload image: $e')),
           );
         }
         return;
       }
     }
+
     // رفع الصوت
     if (_recordedAudio != null) {
       try {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-             SnackBar(content: Text('uploading_voice'.tr)),
+            const SnackBar(content: Text('Uploading voice recording...')),
           );
         }
         final apiService = context.read<CommentsApiService>();
@@ -91,12 +98,13 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('${'upload_voice_failed'} $e')),
+            SnackBar(content: Text('Failed to upload recording: $e')),
           );
         }
         return;
       }
     }
+
     if (_replyingToComment != null) {
       // إرسال رد
       final repliesNotifier = context.read<RepliesNotifier>();
@@ -106,6 +114,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
         image: imagePath,
         voiceNote: voiceNotePath,
       );
+
       if (reply != null) {
         context.read<CommentsNotifier>().incrementRepliesCount(
               _replyingToComment!.commentId,
@@ -134,9 +143,11 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
         _recordedAudio = null;
       });
     }
+
     _commentController.clear();
     _commentFocus.unfocus();
   }
+
   Future<void> _pickImage() async {
     final XFile? image = await _imagePicker.pickImage(
       source: ImageSource.gallery,
@@ -148,11 +159,13 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
       });
     }
   }
+
   void _removeImage() {
     setState(() {
       _selectedImage = null;
     });
   }
+
   Future<void> _toggleRecording() async {
     if (_isRecording) {
       final path = await _audioRecorder.stop();
@@ -164,7 +177,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
           _recordingStartTime = null;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-           SnackBar(content: Text('voice_saved'.tr)),
+          const SnackBar(content: Text('Voice recording saved')),
         );
       }
     } else {
@@ -173,6 +186,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
           final tempDir = await getTemporaryDirectory();
           final timestamp = DateTime.now().millisecondsSinceEpoch;
           final audioPath = '${tempDir.path}/comment_audio_$timestamp.m4a';
+
           await _audioRecorder.start(
             const RecordConfig(
               encoder: AudioEncoder.aacLc,
@@ -181,6 +195,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
             ),
             path: audioPath,
           );
+
           setState(() {
             _isRecording = true;
             _recordingStartTime = DateTime.now();
@@ -190,21 +205,22 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
         } catch (e) {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('${'start_recording_failed'.tr} $e')),
+              SnackBar(content: Text('Failed to start recording: $e')),
             );
           }
         }
       } else {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-             SnackBar(
-              content: Text('mic_permission_settings'.tr),
+            const SnackBar(
+              content: Text('Please grant microphone permission from settings'),
             ),
           );
         }
       }
     }
   }
+
   void _updateRecordingDuration() {
     if (_isRecording && _recordingStartTime != null) {
       setState(() {
@@ -217,17 +233,20 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
       });
     }
   }
+
   void _removeRecording() {
     setState(() {
       _recordedAudio = null;
     });
   }
+
   String _formatDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     final minutes = twoDigits(duration.inMinutes.remainder(60));
     final seconds = twoDigits(duration.inSeconds.remainder(60));
     return '$minutes:$seconds';
   }
+
   String _formatRelative(DateTime time) {
     final now = DateTime.now();
     final diff = now.difference(time);
@@ -237,17 +256,20 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
     if (diff.inDays < 7) return '${diff.inDays} يوم';
     return '${time.year}/${time.month}/${time.day}';
   }
+
   void _handleReplyToComment(CommentModel comment) {
     setState(() {
       _replyingToComment = comment;
     });
     _commentFocus.requestFocus();
   }
+
   void _cancelReply() {
     setState(() {
       _replyingToComment = null;
     });
   }
+
   void _toggleReplies(String commentId) {
     setState(() {
       final next = !(_expandedReplies[commentId] ?? false);
@@ -256,6 +278,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
         _visibleReplies[commentId] = 2; // مثل فيسبوك: عرض ردّين بدايةً
       }
     });
+
     if (_expandedReplies[commentId] == true) {
       final repliesNotifier = context.read<RepliesNotifier>();
       if (repliesNotifier.getReplies(commentId).isEmpty) {
@@ -263,17 +286,20 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
       }
     }
   }
+
   void _loadMoreReplies(String commentId, int step, int total) {
     final current = _visibleReplies[commentId] ?? 2;
     setState(() {
       _visibleReplies[commentId] = (current + step).clamp(0, total);
     });
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final commentsNotifier = context.watch<CommentsNotifier>();
     final repliesNotifier = context.watch<RepliesNotifier>();
+
     return DraggableScrollableSheet(
       initialChildSize: 0.9,
       minChildSize: 0.5,
@@ -298,13 +324,14 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
+    
               // Header
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
                   children: [
                     Text(
-                      'comments'.tr,
+                      'Comments',
                       style: theme.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -324,7 +351,9 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                   ],
                 ),
               ),
+    
               const Divider(height: 1),
+    
               // Comments list
               Expanded(
                 child: commentsNotifier.isLoading
@@ -341,14 +370,14 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                 ),
                                 const SizedBox(height: 16),
                                 Text(
-                                  'load_comments_error'.tr,
+                                  'Error loading comments',
                                   style: theme.textTheme.bodyLarge,
                                 ),
                                 const SizedBox(height: 8),
                                 ElevatedButton(
                                   onPressed: () => commentsNotifier
                                       .fetchComments(widget.postId),
-                                  child:  Text('retry'.tr),
+                                  child: const Text('Retry'),
                                 ),
                               ],
                             ),
@@ -366,7 +395,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                     ),
                                     const SizedBox(height: 16),
                                     Text(
-                                      'no_comments'.tr,
+                                      'No comments yet',
                                       style: theme.textTheme.bodyLarge
                                           ?.copyWith(
                                         color: theme.colorScheme.onSurface
@@ -375,7 +404,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      'no_comments'.tr,
+                                      'Be the first to comment',
                                       style: theme.textTheme.bodySmall
                                           ?.copyWith(
                                         color: theme.colorScheme.onSurface
@@ -417,6 +446,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                         ),
                                       );
                                     }
+    
                                     final comment =
                                         commentsNotifier.comments[index];
                                     final isExpanded =
@@ -426,12 +456,14 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                         .getReplies(comment.commentId);
                                     final isLoadingReplies = repliesNotifier
                                         .isLoading(comment.commentId);
+    
                                     final visible =
                                         _visibleReplies[comment.commentId] ??
                                             2;
                                     final total = replies.length;
                                     final showLoadMore =
                                         isExpanded && total > visible;
+    
                                     return _CommentTile(
                                       theme: theme,
                                       comment: comment,
@@ -472,8 +504,8 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                                 ),
                                                 label: Text(
                                                   isExpanded
-                                                      ? 'hide_replies'.tr
-                                                      : 'Show ${comment.repliesCount} ${comment.repliesCount == 1 ? 'reply'.tr : 'replies'}',
+                                                      ? 'Hide replies'
+                                                      : 'Show ${comment.repliesCount} ${comment.repliesCount == 1 ? 'reply' : 'replies'}',
                                                   style: theme
                                                       .textTheme.bodySmall,
                                                 ),
@@ -532,7 +564,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                                                   5,
                                                                   total),
                                                           child: Text(
-                                                            '${'show_more_replies'.tr} (${total - visible})',
+                                                            'Show more replies (${total - visible})',
                                                             style: theme
                                                                 .textTheme
                                                                 .bodySmall,
@@ -550,7 +582,9 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                 ),
                               ),
               ),
+    
               const Divider(height: 1),
+    
               // Comment input (Facebook-like)
               Container(
                 padding: EdgeInsets.only(
@@ -582,7 +616,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                '#${'replying_to'.tr} ${_replyingToComment!.authorName}',
+                                'Replying to ${_replyingToComment!.authorName}',
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: theme.colorScheme.primary,
                                 ),
@@ -597,6 +631,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                           ],
                         ),
                       ),
+    
                     // معاينة صورة
                     if (_selectedImage != null)
                       Container(
@@ -636,6 +671,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                           ],
                         ),
                       ),
+    
                     // معاينة الصوت
                     if (_recordedAudio != null && !_isRecording)
                       Container(
@@ -662,7 +698,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'voice_recording'.tr,
+                                    'Voice recording',
                                     style: theme.textTheme.bodyMedium
                                         ?.copyWith(
                                       fontWeight: FontWeight.bold,
@@ -670,7 +706,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                     ),
                                   ),
                                   Text(
-                                    'ready_to_send'.tr,
+                                    'Ready to send',
                                     style: theme.textTheme.bodySmall
                                         ?.copyWith(
                                       color: theme.colorScheme.onSurface
@@ -692,6 +728,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                           ],
                         ),
                       ),
+    
                     // مؤشر التسجيل
                     if (_isRecording)
                       Container(
@@ -715,7 +752,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              '${'recording'.tr} ${_formatDuration(_recordingDuration)}',
+                              'Recording... ${_formatDuration(_recordingDuration)}',
                               style: const TextStyle(
                                 color: Colors.red,
                                 fontWeight: FontWeight.bold,
@@ -724,6 +761,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                           ],
                         ),
                       ),
+    
                     // شريط الإدخال
                     Row(
                       children: [
@@ -768,8 +806,8 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                               onSubmitted: (_) => _handleSendComment(),
                               decoration: InputDecoration(
                                 hintText: _replyingToComment != null
-                                    ? 'write_reply'.tr
-                                    : 'write_comment'.tr,
+                                    ? 'Write your reply...'
+                                    : 'Write a comment...',
                                 hintStyle: theme.textTheme.bodyMedium
                                     ?.copyWith(
                                         color: theme.colorScheme.onSurface
@@ -804,6 +842,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
     );
   }
 }
+
 /// عنصر تعليق/رد بأسلوب فيسبوك
 class _CommentTile extends StatelessWidget {
   const _CommentTile({
@@ -818,6 +857,7 @@ class _CommentTile extends StatelessWidget {
     this.repliesSection,
     this.parentCommentId, // لتمييز الردود
   });
+
   final ThemeData theme;
   final CommentModel comment;
   final String Function(DateTime) formatRelative;
@@ -828,6 +868,7 @@ class _CommentTile extends StatelessWidget {
   final VoidCallback onReply;
   final Widget? repliesSection;
   final String? parentCommentId; // للردود فقط
+
   // عرض قائمة التفاعلات
   void _showReactionsMenu(BuildContext context, {required Function(String) onReact}) {
     showModalBottomSheet(
@@ -836,6 +877,7 @@ class _CommentTile extends StatelessWidget {
       builder: (context) => _ReactionsMenu(onReact: onReact),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     final cs = theme.colorScheme;
@@ -902,12 +944,14 @@ class _CommentTile extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 4),
+
                       // النص
                       if (comment.text.isNotEmpty)
                         Text(
                           comment.text,
                           style: theme.textTheme.bodyMedium,
                         ),
+
                       // صورة مرفقة
                       if (comment.image != null && comment.image!.isNotEmpty)
                         Padding(
@@ -920,6 +964,7 @@ class _CommentTile extends StatelessWidget {
                             ),
                           ),
                         ),
+
                       // مرفق صوتي بسيط (أيقونة/نص)
                       if (comment.voiceNote != null &&
                           comment.voiceNote!.isNotEmpty)
@@ -931,7 +976,7 @@ class _CommentTile extends StatelessWidget {
                               const SizedBox(width: 6),
                               Expanded(
                                 child: Text(
-                                  'voice_message'.tr,
+                                  'Voice message',
                                   style: theme.textTheme.bodySmall,
                                 ),
                               ),
@@ -942,6 +987,7 @@ class _CommentTile extends StatelessWidget {
                     ],
                   ),
                 ),
+
                 // شريط “إعجاب · ردّ” + عدّاد التفاعلات
                 Padding(
                   padding: const EdgeInsetsDirectional.only(
@@ -984,7 +1030,7 @@ class _CommentTile extends StatelessWidget {
                               Text(
                                 isLiked && comment.iReaction != null
                                     ? _getReactionText(comment.iReaction!)
-                                    : 'like'.tr,
+                                    : 'Like',
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   fontWeight:
                                       isLiked ? FontWeight.w700 : FontWeight.w500,
@@ -1003,7 +1049,7 @@ class _CommentTile extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 6, vertical: 2),
                           child: Text(
-                            'reply'.tr,
+                            'Reply',
                             style: theme.textTheme.bodySmall,
                           ),
                         ),
@@ -1025,6 +1071,7 @@ class _CommentTile extends StatelessWidget {
                     ],
                   ),
                 ),
+
                 if (repliesSection != null) repliesSection!,
               ],
             ),
@@ -1033,6 +1080,7 @@ class _CommentTile extends StatelessWidget {
       ),
     );
   }
+
   String _initials(String s) {
     final parts = s.trim().split(RegExp(r'\s+'));
     if (parts.isEmpty) return '?';
@@ -1040,9 +1088,11 @@ class _CommentTile extends StatelessWidget {
     return (parts[0].isNotEmpty ? parts[0][0] : '') +
         (parts[1].isNotEmpty ? parts[1][0] : '');
   }
+
   // دوال مساعدة للتفاعلات - تستخدم البيانات من API
   Widget _getReactionIcon(String reaction) {
     final reactionModel = ReactionsService.instance.getReactionByName(reaction);
+    
     if (reactionModel != null) {
       return CachedNetworkImage(
         imageUrl: reactionModel.imageUrl,
@@ -1063,28 +1113,35 @@ class _CommentTile extends StatelessWidget {
         ),
       );
     }
+    
     // إذا لم يوجد في الكاش، نعرض أيقونة افتراضية
     return const Icon(Icons.thumb_up_alt, size: 16, color: Colors.blue);
   }
+
   String _getReactionText(String reaction) {
     final reactionModel = ReactionsService.instance.getReactionByName(reaction);
-    return reactionModel?.title ?? 'like'.tr;
+    return reactionModel?.title ?? 'Like';
   }
+
   Color? _getReactionColor(String? reaction) {
     if (reaction == null) return Colors.blue;
     final reactionModel = ReactionsService.instance.getReactionByName(reaction);
     return reactionModel?.colorValue ?? Colors.blue;
   }
 }
+
 // قائمة التفاعلات المتعددة (مثل فيسبوك)
 // الآن تستخدم البيانات المحملة من الكاش
 class _ReactionsMenu extends StatelessWidget {
   const _ReactionsMenu({required this.onReact});
+
   final Function(String) onReact;
+
   @override
   Widget build(BuildContext context) {
     // استخدام ReactionsMenu الجديد
     return ReactionsMenu(onReact: onReact);
   }
 }
+
 // لم نعد بحاجة لـ _ReactionButton لأنه موجود في ReactionsMenu

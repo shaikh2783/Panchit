@@ -7,6 +7,7 @@ import 'package:snginepro/features/feed/data/models/story.dart';
 import 'package:snginepro/features/feed/data/models/upload_file_data.dart';
 import 'package:http_parser/http_parser.dart' as http_parser;
 import 'package:snginepro/main.dart';
+
 // Internal representation of an upload attempt permutation
 class _UploadAttempt {
   const _UploadAttempt({
@@ -20,13 +21,13 @@ class _UploadAttempt {
   final http_parser.MediaType? contentType;
   final bool includeExtras;
 }
+
 class PostsApiService {
   PostsApiService(this._client);
+
   final ApiClient _client;
-  Future<PostsResponse> fetchNewsfeed({
-    int limit = 10,
-    int offset = 0,
-  }) async {
+
+  Future<PostsResponse> fetchNewsfeed({int limit = 10, int offset = 0}) async {
     final response = await _client.get(
       configCfgP('newsfeed'),
       queryParameters: {
@@ -35,21 +36,31 @@ class PostsApiService {
         'include_ads': '1',
       },
     );
-    final postsResponse = PostsResponse.fromJson(response, requestedLimit: limit);
+
+    final postsResponse = PostsResponse.fromJson(
+      response,
+      requestedLimit: limit,
+    );
+
     if (!postsResponse.isSuccess) {
       throw ApiException(
         postsResponse.message ?? 'Failed to fetch posts',
         details: response,
       );
     }
+
     // Debug: Show ALL post IDs to check for missing posts
     if (postsResponse.posts.isNotEmpty) {
       for (var i = 0; i < postsResponse.posts.length; i++) {
         final p = postsResponse.posts[i];
-        final textPreview = p.text.length > 30 ? p.text.substring(0, 30) : p.text;
+        final textPreview = p.text.length > 30
+            ? p.text.substring(0, 30)
+            : p.text;
       }
+
       // Check for post ID 0 specifically
       final hasPostZero = postsResponse.posts.any((p) => p.id == 0);
+
       // Show oldest and newest posts in this batch
       if (postsResponse.posts.length > 1) {
         final oldest = postsResponse.posts.last;
@@ -57,14 +68,17 @@ class PostsApiService {
       }
     } else {
     }
+
     return postsResponse;
   }
+
   /// Fetch posts for a specific user
   Future<PostsResponse> fetchUserPosts({
     required int userId,
     int limit = 20,
     int offset = 0,
   }) async {
+
     // Use the dedicated endpoint with user_id parameter
     final response = await _client.get(
       configCfgP('user_posts'),
@@ -75,8 +89,10 @@ class PostsApiService {
         'limit': limit.toString(),
       },
     );
+
     if (response['data'] != null && response['data']['posts'] != null) {
     }
+
     final postsResponse = PostsResponse.fromJson(response);
     if (!postsResponse.isSuccess) {
       throw ApiException(
@@ -84,47 +100,223 @@ class PostsApiService {
         details: response,
       );
     }
+
     if (postsResponse.posts.isNotEmpty) {
     } else {
     }
+
     return postsResponse;
   }
-  /// Fetch a single post by ID
-  Future<Map<String, dynamic>> fetchPost(int postId) async {
+
+  /// Fetch posts for a specific group
+  Future<PostsResponse> fetchGroupPosts({
+    required int groupId,
+    int limit = 20,
+    int offset = 0,
+  }) async {
+
     final response = await _client.get(
-      configCfgP('posts_get'),
+      '/data/groups/posts',
       queryParameters: {
-        'post_id': '$postId',
+        'group_id': groupId.toString(),
+        'offset': offset.toString(),
+        'limit': limit.toString(),
       },
     );
+
+    if (response['data'] != null && response['data']['posts'] != null) {
+    }
+
+    final postsResponse = PostsResponse.fromJson(
+      response,
+      requestedLimit: limit,
+    );
+    if (!postsResponse.isSuccess) {
+      throw ApiException(
+        postsResponse.message ?? 'Failed to fetch group posts',
+        details: response,
+      );
+    }
+
+    if (postsResponse.posts.isNotEmpty) {
+    } else {
+    }
+
+    return postsResponse;
+  }
+
+  /// Fetch user's saved posts
+  Future<PostsResponse> fetchSavedPosts({
+    int limit = 20,
+    int offset = 0,
+  }) async {
+
+    // Use relative path; AppConfig will prefix with apiBasePath
+    final response = await _client.get(
+      '/data/posts/saved',
+      queryParameters: {
+        'limit': limit.toString(),
+        'offset': offset.toString(),
+      },
+    );
+
+    // The saved posts endpoint should return the same structure as newsfeed/user posts
+    final postsResponse = PostsResponse.fromJson(
+      response,
+      requestedLimit: limit,
+    );
+
+    if (!postsResponse.isSuccess) {
+      throw ApiException(
+        postsResponse.message ?? 'Failed to fetch saved posts',
+        details: response,
+      );
+    }
+
+    if (postsResponse.posts.isNotEmpty) {
+    } else {
+    }
+
+    return postsResponse;
+  }
+
+  /// Fetch user's memories posts
+  Future<PostsResponse> fetchMemories({
+    int limit = 20,
+    int offset = 0,
+  }) async {
+
+    final response = await _client.get(
+      '/data/posts/memories',
+      queryParameters: {
+        'limit': limit.toString(),
+        'offset': offset.toString(),
+      },
+    );
+
+    final postsResponse = PostsResponse.fromJson(
+      response,
+      requestedLimit: limit,
+    );
+
+    if (!postsResponse.isSuccess) {
+      throw ApiException(
+        postsResponse.message ?? 'Failed to fetch memories',
+        details: response,
+      );
+    }
+
+    if (postsResponse.posts.isNotEmpty) {
+    } else {
+    }
+
+    return postsResponse;
+  }
+
+  /// Fetch user's scheduled posts
+  Future<PostsResponse> fetchScheduledPosts({
+    int limit = 20,
+    int offset = 0,
+  }) async {
+
+    final response = await _client.get(
+      '/data/posts/scheduled',
+      queryParameters: {
+        'limit': limit.toString(),
+        'offset': offset.toString(),
+      },
+    );
+
+    final postsResponse = PostsResponse.fromJson(
+      response,
+      requestedLimit: limit,
+    );
+
+    if (!postsResponse.isSuccess) {
+      throw ApiException(
+        postsResponse.message ?? 'Failed to fetch scheduled posts',
+        details: response,
+      );
+    }
+
+    if (postsResponse.posts.isNotEmpty) {
+    } else {
+    }
+
+    return postsResponse;
+  }
+
+  /// Fetch watch feed posts
+  Future<PostsResponse> fetchWatchPosts({
+    int limit = 20,
+    int offset = 0,
+    String? country,
+  }) async {
+
+    final response = await _client.get(
+      '/data/watch',
+      queryParameters: {
+        'limit': limit.toString(),
+        'offset': offset.toString(),
+        if (country != null && country.isNotEmpty) 'country': country,
+      },
+    );
+
+    final postsResponse = PostsResponse.fromJson(
+      response,
+      requestedLimit: limit,
+    );
+
+    if (!postsResponse.isSuccess) {
+      throw ApiException(
+        postsResponse.message ?? 'Failed to fetch watch posts',
+        details: response,
+      );
+    }
+
+    if (postsResponse.posts.isNotEmpty) {
+    } else {
+    }
+
+    return postsResponse;
+  }
+
+  /// Fetch a single post by ID
+  Future<Map<String, dynamic>> fetchPost(int postId) async {
+
+    final response = await _client.get(
+      configCfgP('posts_get'),
+      queryParameters: {'post_id': '$postId'},
+    );
+
     if (response['status'] != 'success') {
       throw ApiException(
         response['message'] ?? 'Failed to fetch post',
         details: response,
       );
     }
+
     final data = response['data'];
     if (data == null) {
       throw ApiException('Post not found', details: response);
     }
+
     return data as Map<String, dynamic>;
   }
+
   Future<void> reactToPost(int postId, String reaction) async {
     await _client.post(
       configCfgP('posts_react'),
-      body: {
-        'post_id': postId,
-        'reaction': reaction,
-      },
+      body: {'post_id': postId, 'reaction': reaction},
     );
   }
+
   Future<List<Story>> fetchStories() async {
     final response = await _client.get(
       configCfgP('stories'),
-      queryParameters: {
-        'format': 'both',
-      },
+      queryParameters: {'format': 'both'},
     );
+
     final data = response['data'];
     if (data is Map<String, dynamic>) {
       final storiesList = data['stories'];
@@ -134,11 +326,14 @@ class PostsApiService {
             .toList();
       }
     }
+
     if (data is List) {
       return data.map((storyData) => Story.fromJson(storyData)).toList();
     }
+
     return const [];
   }
+
   /// Upload file (photo, video, audio, document) to server
   /// Returns UploadedFileData with source, type, url, and optional thumb
   Future<UploadedFileData?> uploadFile(
@@ -149,13 +344,16 @@ class PostsApiService {
     try {
       final mediaType = _inferMediaType(file, type);
       final originalFileName = _basename(file.path);
+
       // Clean filename: remove special chars, keep only extension
       final ext = _getExtension(originalFileName);
       final cleanName = 'upload_${DateTime.now().millisecondsSinceEpoch}$ext';
+
       // Use official endpoint per new server documentation
       // Server expects plural form: photos, videos, audio, file
       final attempts = <_UploadAttempt>[];
       final pluralType = _pluralize(type.value);
+
       attempts.add(
         _UploadAttempt(
           endpoint: configCfgP('file_upload'),
@@ -164,15 +362,16 @@ class PostsApiService {
           includeExtras: false, // Keep it minimal as per new docs
         ),
       );
+
       ApiException? lastError;
       int attemptNum = 0;
       for (final attempt in attempts) {
         attemptNum++;
         try {
+
           // Build minimal body as per new server docs
-          final body = <String, String>{
-            'type': attempt.typeValue,
-          };
+          final body = <String, String>{'type': attempt.typeValue};
+
           final response = await _client.multipartPost(
             attempt.endpoint,
             body: body,
@@ -182,6 +381,7 @@ class PostsApiService {
             onProgress: onProgress,
             fileName: cleanName,
           );
+
           if (response['status'] == 'success' && response['data'] != null) {
             final data = response['data'];
             return UploadedFileData(
@@ -199,6 +399,8 @@ class PostsApiService {
               meta: data['meta'], // Additional metadata
             );
           } else {
+
+            if (response.containsKey('errors'));
           }
         } catch (e) {
           if (e is ApiException) {
@@ -210,6 +412,8 @@ class PostsApiService {
           }
         }
       }
+
+
       // If we reach here, all attempts failed
       if (lastError != null) throw lastError;
       return null; // Should not reach, but keeps analyzer happy
@@ -217,16 +421,22 @@ class PostsApiService {
       // If the backend responded with an image-specific validation error while uploading video/audio,
       // attempt a graceful fallback (some installs still use legacy path or ignore content-type).
       if (e is ApiException) {
-        throw ApiException('Failed to upload file: ${e.message}', statusCode: e.statusCode, details: e.details);
+        throw ApiException(
+          'Failed to upload file: ${e.message}',
+          statusCode: e.statusCode,
+          details: e.details,
+        );
       }
       throw ApiException('Failed to upload file: $e');
     }
   }
+
   /// Legacy method - kept for backward compatibility
   Future<String?> uploadPhoto(File photo) async {
     final result = await uploadFile(photo, type: FileUploadType.photo);
     return result?.source;
   }
+
   /// Determine proper MIME type for the given file and upload type
   http_parser.MediaType _inferMediaType(File file, FileUploadType type) {
     // Avoid bringing in extra deps; do simple extension check
@@ -236,6 +446,7 @@ class PostsApiService {
     if (dot != -1 && dot < path.length - 1) {
       ext = path.substring(dot + 1);
     }
+
     switch (type) {
       case FileUploadType.photo:
         switch (ext) {
@@ -289,23 +500,29 @@ class PostsApiService {
           case 'doc':
             return http_parser.MediaType('application', 'msword');
           case 'docx':
-            return http_parser.MediaType('application', 'vnd.openxmlformats-officedocument.wordprocessingml.document');
+            return http_parser.MediaType(
+              'application',
+              'vnd.openxmlformats-officedocument.wordprocessingml.document',
+            );
           default:
             return http_parser.MediaType('application', 'octet-stream');
         }
     }
   }
+
   String _basename(String path) {
     if (path.isEmpty) return '';
     final idx = path.lastIndexOf('/');
     if (idx == -1) return path;
     return path.substring(idx + 1);
   }
+
   String _getExtension(String filename) {
     final dot = filename.lastIndexOf('.');
     if (dot == -1 || dot == filename.length - 1) return '';
     return filename.substring(dot); // includes the dot
   }
+
   String _pluralize(String type) {
     switch (type) {
       case 'photo':
@@ -320,6 +537,7 @@ class PostsApiService {
         return type;
     }
   }
+
   /// Delete uploaded file before posting (cleanup)
   Future<bool> deleteUploadedFile(String source) async {
     try {
@@ -332,6 +550,7 @@ class PostsApiService {
       return false;
     }
   }
+
   Future<void> createPost(
     String message, {
     List<String>? photoSources,
@@ -346,8 +565,7 @@ class PostsApiService {
         'publish_to': 'timeline',
         if (photoSources != null && photoSources.isNotEmpty)
           'photos': photoSources,
-        if (coloredPattern != null)
-          'colored_pattern': coloredPattern,
+        if (coloredPattern != null) 'colored_pattern': coloredPattern,
         if (feelingAction != null && feelingAction.isNotEmpty)
           'feeling_action': feelingAction,
         if (feelingValue != null && feelingValue.isNotEmpty)
@@ -355,8 +573,11 @@ class PostsApiService {
       },
     );
   }
+
   /// Create a post with full options support
-  Future<CreatePostResponse> createPostAdvanced(CreatePostRequest request) async {
+  Future<CreatePostResponse> createPostAdvanced(
+    CreatePostRequest request,
+  ) async {
     // If it's a group post, try different endpoints
     if (request.groupId != null) {
       // Try endpoint 1: groups/{id}/create_post
@@ -365,18 +586,21 @@ class PostsApiService {
           configCfgP('groups_list') + '/${request.groupId}/create_post',
           body: request.toJson(),
         );
+
         final createResponse = CreatePostResponse.fromJson(response);
         if (createResponse.isSuccess) {
           return createResponse;
         }
       } catch (e) {
       }
+
       // Try endpoint 2: publisher (sometimes used for group posts)
       try {
         final response = await _client.post(
           configCfgP('posts_base') + '/publisher',
           body: request.toJson(),
         );
+
         final createResponse = CreatePostResponse.fromJson(response);
         if (createResponse.isSuccess) {
           return createResponse;
@@ -384,11 +608,13 @@ class PostsApiService {
       } catch (e) {
       }
     }
+
     // Fall back to main endpoint
     final response = await _client.post(
       configCfgP('posts_base') + '/create',
       body: request.toJson(),
     );
+
     final createResponse = CreatePostResponse.fromJson(response);
     if (!createResponse.isSuccess) {
       throw ApiException(
@@ -399,4 +625,6 @@ class PostsApiService {
     return createResponse;
   }
 }
+
+
 // ✅ تم نقل configCfgP إلى main.dart - استيراد من هناك
