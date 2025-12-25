@@ -5,10 +5,12 @@ class Story {
     this.authorAvatarUrl,
     this.items = const [],
   });
+
   final String id;
   final String authorName;
   final String? authorAvatarUrl;
   final List<StoryItem> items;
+
   factory Story.fromJson(Map<String, dynamic> json) {
     return Story(
       id: _string(json['id']) ?? '',
@@ -20,6 +22,7 @@ class Story {
           const [],
     );
   }
+
   static String? _string(Object? value) {
     if (value == null) {
       return null;
@@ -30,6 +33,7 @@ class Story {
     return value.toString();
   }
 }
+
 class StoryItem {
   StoryItem({
     required this.id,
@@ -37,10 +41,12 @@ class StoryItem {
     required this.source,
     this.linkText = '',
   });
+
   final String id;
   final String type; // 'photo' or 'video'
   final String source;
   final String linkText;
+
   factory StoryItem.fromJson(Map<String, dynamic> json) {
     return StoryItem(
       id: Story._string(json['id']) ?? '',

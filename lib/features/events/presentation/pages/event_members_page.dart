@@ -8,38 +8,47 @@ import '../../application/bloc/events_events.dart';
 import '../../application/bloc/events_states.dart';
 import '../../data/models/event_member.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
+
 class EventMembersPage extends StatefulWidget {
   final int eventId;
   final String eventTitle;
   final bool isAdmin;
+
   const EventMembersPage({
     super.key,
     required this.eventId,
     required this.eventTitle,
     this.isAdmin = false,
   });
+
   @override
   State<EventMembersPage> createState() => _EventMembersPageState();
 }
+
 class _EventMembersPageState extends State<EventMembersPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final ScrollController _scrollController = ScrollController();
+
   String? _selectedType; // going, interested, invited
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(_onTabChanged);
     _scrollController.addListener(_onScroll);
+
     // Load initial data (All members)
     _loadMembers();
   }
+
   void _onTabChanged() {
     if (_tabController.indexIsChanging) {
       _loadMembers();
     }
   }
+
   void _loadMembers() {
     String? type;
     switch (_tabController.index) {
@@ -53,30 +62,36 @@ class _EventMembersPageState extends State<EventMembersPage>
         type = 'interested';
         break;
     }
+
     setState(() {
       _selectedType = type;
     });
+
     context.read<EventsBloc>().add(FetchEventMembersEvent(
           eventId: widget.eventId,
           type: type,
           refresh: true,
         ));
   }
+
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent * 0.8) {
       // TODO: Load more members (pagination)
     }
   }
+
   @override
   void dispose() {
     _tabController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Get.theme;
+
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
@@ -123,16 +138,19 @@ class _EventMembersPageState extends State<EventMembersPage>
       ),
     );
   }
+
   Widget _buildMembersList() {
     return BlocBuilder<EventsBloc, EventsState>(
       builder: (context, state) {
         if (state is EventsLoading) {
           return _buildLoadingState();
         }
+
         if (state is EventMembersLoaded) {
           if (state.members.isEmpty) {
             return _buildEmptyState();
           }
+
           return RefreshIndicator(
             onRefresh: () async {
               _loadMembers();
@@ -148,15 +166,19 @@ class _EventMembersPageState extends State<EventMembersPage>
             ),
           );
         }
+
         if (state is EventsError) {
           return _buildErrorState(state.message);
         }
+
         return const SizedBox();
       },
     );
   }
+
   Widget _buildMemberCard(EventMember member) {
     final theme = Get.theme;
+
     return InkWell(
       onTap: () {
         // الانتقال لصفحة البروفايل
@@ -192,6 +214,7 @@ class _EventMembersPageState extends State<EventMembersPage>
                   : null,
             ),
             const SizedBox(width: 12),
+
             // معلومات العضو
             Expanded(
               child: Column(
@@ -236,6 +259,7 @@ class _EventMembersPageState extends State<EventMembersPage>
                 ],
               ),
             ),
+
             // زر الخيارات للـ Admin
             if (widget.isAdmin)
               PopupMenuButton<String>(
@@ -266,6 +290,7 @@ class _EventMembersPageState extends State<EventMembersPage>
       ),
     );
   }
+
   Color _getMembershipColor(String type) {
     switch (type.toLowerCase()) {
       case 'going':
@@ -278,6 +303,7 @@ class _EventMembersPageState extends State<EventMembersPage>
         return Colors.grey;
     }
   }
+
   String _getMembershipLabel(String type) {
     switch (type.toLowerCase()) {
       case 'going':
@@ -290,6 +316,7 @@ class _EventMembersPageState extends State<EventMembersPage>
         return type;
     }
   }
+
   void _showRemoveMemberDialog(EventMember member) {
     Get.dialog(
       AlertDialog(
@@ -322,6 +349,7 @@ class _EventMembersPageState extends State<EventMembersPage>
       ),
     );
   }
+
   Widget _buildLoadingState() {
     return Center(
       child: Column(
@@ -341,8 +369,10 @@ class _EventMembersPageState extends State<EventMembersPage>
       ),
     );
   }
+
   Widget _buildEmptyState() {
     final theme = Get.theme;
+
     String message;
     switch (_selectedType) {
       case 'going':
@@ -354,6 +384,7 @@ class _EventMembersPageState extends State<EventMembersPage>
       default:
         message = 'لا يوجد أعضاء بعد'; // استخدام النص مباشرة
     }
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -374,6 +405,7 @@ class _EventMembersPageState extends State<EventMembersPage>
       ),
     );
   }
+
   Widget _buildErrorState(String message) {
     return Center(
       child: Column(

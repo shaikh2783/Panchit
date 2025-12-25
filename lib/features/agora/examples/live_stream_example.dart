@@ -1,23 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../providers/live_stream_providers.dart';
 import '../presentation/widgets/live_chat_api_widget.dart';
 import '../bloc/live_comments_bloc.dart';
+
 /// مثال شامل لاستخدام نظام التعليقات المباشرة مع API
 class LiveStreamExamplePage extends StatefulWidget {
   final String liveId;
   final String liveTitle;
+
   const LiveStreamExamplePage({
     Key? key,
     required this.liveId,
     required this.liveTitle,
   }) : super(key: key);
+
   @override
   State<LiveStreamExamplePage> createState() => _LiveStreamExamplePageState();
 }
+
 class _LiveStreamExamplePageState extends State<LiveStreamExamplePage>
     with LiveStreamBlocsMixin {
   bool _showChat = true;
+
   @override
   void initState() {
     super.initState();
@@ -27,6 +33,7 @@ class _LiveStreamExamplePageState extends State<LiveStreamExamplePage>
       startLiveStats(context, widget.liveId);
     });
   }
+
   @override
   void dispose() {
     // Clean up when leaving
@@ -34,6 +41,7 @@ class _LiveStreamExamplePageState extends State<LiveStreamExamplePage>
     stopLiveStats(context);
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return LiveStreamBlocProvider(
@@ -110,12 +118,14 @@ class _LiveStreamExamplePageState extends State<LiveStreamExamplePage>
                 ),
               ),
             ),
+
             // Stats overlay
             Positioned(
               top: 20,
               left: 20,
               child: _buildStatsOverlay(),
             ),
+
             // Chat toggle button
             Positioned(
               top: 20,
@@ -140,6 +150,7 @@ class _LiveStreamExamplePageState extends State<LiveStreamExamplePage>
                 ),
               ),
             ),
+
             // Chat widget
             if (_showChat)
               Positioned(
@@ -148,6 +159,7 @@ class _LiveStreamExamplePageState extends State<LiveStreamExamplePage>
                 width: 300,
                 child: LiveChatApiWidget(liveId: widget.liveId),
               ),
+
             // Bottom controls
             Positioned(
               bottom: 20,
@@ -160,6 +172,7 @@ class _LiveStreamExamplePageState extends State<LiveStreamExamplePage>
       ),
     );
   }
+
   Widget _buildStatsOverlay() {
     return BlocBuilder<LiveStatsBloc, LiveStatsState>(
       builder: (context, state) {
@@ -233,6 +246,7 @@ class _LiveStreamExamplePageState extends State<LiveStreamExamplePage>
             ),
           );
         }
+        
         return Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
@@ -255,6 +269,7 @@ class _LiveStreamExamplePageState extends State<LiveStreamExamplePage>
       },
     );
   }
+
   Widget _buildBottomControls() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -264,6 +279,7 @@ class _LiveStreamExamplePageState extends State<LiveStreamExamplePage>
         _buildQuickReactionButton('❤️', 'love'),
         _buildQuickReactionButton('😂', 'haha'),
         _buildQuickReactionButton('😮', 'wow'),
+        
         // More actions
         Container(
           padding: const EdgeInsets.all(12),
@@ -303,6 +319,7 @@ class _LiveStreamExamplePageState extends State<LiveStreamExamplePage>
       ],
     );
   }
+
   Widget _buildQuickReactionButton(String emoji, String reactionType) {
     return GestureDetector(
       onTap: () {
@@ -322,6 +339,7 @@ class _LiveStreamExamplePageState extends State<LiveStreamExamplePage>
       ),
     );
   }
+
   void _sendQuickReaction(String reactionType) {
     // You can implement quick reactions to the live stream here
     // For now, we'll show a simple feedback
@@ -333,6 +351,7 @@ class _LiveStreamExamplePageState extends State<LiveStreamExamplePage>
       ),
     );
   }
+
   String _getReactionIcon(String reactionType) {
     switch (reactionType) {
       case 'like':
@@ -351,6 +370,7 @@ class _LiveStreamExamplePageState extends State<LiveStreamExamplePage>
         return '👍';
     }
   }
+
   void _showShareDialog() {
     showDialog(
       context: context,
@@ -380,6 +400,7 @@ class _LiveStreamExamplePageState extends State<LiveStreamExamplePage>
       ),
     );
   }
+
   void _showOptionsDialog() {
     showDialog(
       context: context,
@@ -419,6 +440,7 @@ class _LiveStreamExamplePageState extends State<LiveStreamExamplePage>
       ),
     );
   }
+
   String _formatNumber(int number) {
     if (number >= 1000000) {
       return '${(number / 1000000).toStringAsFixed(1)}م';
@@ -428,9 +450,11 @@ class _LiveStreamExamplePageState extends State<LiveStreamExamplePage>
     return number.toString();
   }
 }
+
 /// Widget مبسط لعرض قائمة البثوث المباشرة
 class LiveStreamListExample extends StatelessWidget {
   const LiveStreamListExample({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     // Sample live streams data
@@ -454,6 +478,7 @@ class LiveStreamListExample extends StatelessWidget {
         'viewers': 2100,
       },
     ];
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('البثوث المباشرة'),

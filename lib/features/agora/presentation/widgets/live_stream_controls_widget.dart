@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 class LiveStreamControlsWidget extends StatelessWidget {
   final bool isStreaming;
   final bool isCameraEnabled;
@@ -9,6 +10,7 @@ class LiveStreamControlsWidget extends StatelessWidget {
   final VoidCallback onToggleMicrophone;
   final VoidCallback onSwitchCamera;
   final VoidCallback onEndStream;
+
   const LiveStreamControlsWidget({
     Key? key,
     required this.isStreaming,
@@ -21,6 +23,7 @@ class LiveStreamControlsWidget extends StatelessWidget {
     required this.onSwitchCamera,
     required this.onEndStream,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return RepaintBoundary(
@@ -57,6 +60,7 @@ class LiveStreamControlsWidget extends StatelessWidget {
                       isActive: isCameraEnabled,
                       onPressed: onToggleCamera,
                     ),
+
                     // Microphone toggle
                     _buildControlButton(
                       icon: isMicrophoneEnabled ? Icons.mic : Icons.mic_off,
@@ -64,12 +68,14 @@ class LiveStreamControlsWidget extends StatelessWidget {
                       isActive: isMicrophoneEnabled,
                       onPressed: onToggleMicrophone,
                     ),
+
                     // Switch camera
                     _buildControlButton(
                       icon: Icons.flip_camera_ios,
                       label: 'تبديل الكاميرا',
                       onPressed: onSwitchCamera,
                     ),
+
                     // End stream (if streaming)
                     if (isStreaming)
                       _buildControlButton(
@@ -87,6 +93,7 @@ class LiveStreamControlsWidget extends StatelessWidget {
       ),
     );
   }
+
   Widget _buildControlButton({
     required IconData icon,
     required String label,

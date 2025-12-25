@@ -1,4 +1,5 @@
 import 'funding_author.dart';
+
 class Funding {
   final String postId;
   final String title;
@@ -10,6 +11,7 @@ class Funding {
   final String? cover;
   final String createdTime;
   final FundingAuthor author;
+
   Funding({
     required this.postId,
     required this.title,
@@ -22,6 +24,7 @@ class Funding {
     required this.createdTime,
     required this.author,
   });
+
   factory Funding.fromJson(Map<String, dynamic> json) {
     return Funding(
       postId: json['post_id']?.toString() ?? '',
@@ -36,6 +39,7 @@ class Funding {
       author: FundingAuthor.fromJson(json['author'] ?? {}),
     );
   }
+
   Map<String, dynamic> toJson() => {
         'post_id': postId,
         'title': title,
@@ -48,6 +52,7 @@ class Funding {
         'created_time': createdTime,
         'author': author.toJson(),
       };
+
   double get progress => amount > 0 ? (raisedAmount / amount).clamp(0.0, 1.0) : 0.0;
   double get remainingAmount => (amount - raisedAmount).clamp(0.0, amount);
 }

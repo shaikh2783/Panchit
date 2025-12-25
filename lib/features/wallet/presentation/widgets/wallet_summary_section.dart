@@ -6,6 +6,7 @@ import 'package:snginepro/features/wallet/data/models/wallet_summary.dart';
 import 'package:snginepro/features/wallet/presentation/pages/wallet_recharge_page.dart';
 import 'package:snginepro/features/wallet/presentation/widgets/wallet_shared_widgets.dart';
 import 'package:snginepro/features/wallet/presentation/widgets/wallet_utils.dart';
+
 class WalletSummaryCard extends StatelessWidget {
   const WalletSummaryCard({
     super.key,
@@ -15,11 +16,13 @@ class WalletSummaryCard extends StatelessWidget {
     required this.onRefresh,
     this.errorMessage,
   });
+
   final WalletSummary summary;
   final bool isRefreshing;
   final String? errorMessage;
   final void Function(WalletActionType action) onAction;
   final VoidCallback onRefresh;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -34,6 +37,7 @@ class WalletSummaryCard extends StatelessWidget {
     final otherBalanceEntries = balanceEntries
         .where((entry) => entry.key != 'available')
         .toList();
+
     // Add recharge action if wallet is enabled
     if (summary.wallet.enabled) {
       availableActions.add(
@@ -53,6 +57,7 @@ class WalletSummaryCard extends StatelessWidget {
         ),
       );
     }
+
     if (summary.wallet.transferEnabled) {
       availableActions.add(
         WalletActionButton(
@@ -62,6 +67,7 @@ class WalletSummaryCard extends StatelessWidget {
         ),
       );
     }
+
     if (summary.tips.enabled) {
       availableActions.add(
         WalletActionButton(
@@ -71,6 +77,7 @@ class WalletSummaryCard extends StatelessWidget {
         ),
       );
     }
+
     final hasWithdrawalOption = summary.withdrawalSources.values.any(
       (source) => source.enabled,
     );
@@ -83,6 +90,7 @@ class WalletSummaryCard extends StatelessWidget {
         ),
       );
     }
+
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(
@@ -204,6 +212,7 @@ class WalletSummaryCard extends StatelessWidget {
       ),
     );
   }
+
   String _formatLabel(String value) {
     if (value.isEmpty) return value;
     final pieces = value.split('_').map((part) {
@@ -213,8 +222,10 @@ class WalletSummaryCard extends StatelessWidget {
     return pieces.join(' ');
   }
 }
+
 class WalletSummarySkeleton extends StatelessWidget {
   const WalletSummarySkeleton({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -232,6 +243,7 @@ class WalletSummarySkeleton extends StatelessWidget {
     );
   }
 }
+
 class WalletMetricChip extends StatelessWidget {
   const WalletMetricChip({
     super.key,
@@ -239,9 +251,11 @@ class WalletMetricChip extends StatelessWidget {
     required this.value,
     this.trailing,
   });
+
   final String label;
   final String value;
   final String? trailing;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import '../../application/agora_service.dart';
+
 class LiveStreamStats extends StatelessWidget {
   const LiveStreamStats({
     super.key,
     required this.agoraService,
   });
+
   final AgoraService agoraService;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -18,7 +21,9 @@ class LiveStreamStats extends StatelessWidget {
           color: agoraService.isJoined ? Colors.green : Colors.red,
           tooltip: agoraService.isJoined ? 'متصل' : 'غير متصل',
         ),
+        
         const SizedBox(height: 8),
+        
         // جودة الشبكة
         if (agoraService.rtcStats != null)
           _StatCard(
@@ -30,6 +35,7 @@ class LiveStreamStats extends StatelessWidget {
       ],
     );
   }
+
   IconData _getNetworkQualityIcon(rtcStats) {
     // تحديد أيقونة جودة الشبكة بناءً على زمن الاستجابة
     final delay = rtcStats.lastmileDelay ?? 0;
@@ -38,6 +44,7 @@ class LiveStreamStats extends StatelessWidget {
     if (delay < 200) return Iconsax.wifi; // متوسط
     return Iconsax.close_circle; // ضعيف
   }
+
   Color _getNetworkQualityColor(rtcStats) {
     // تحديد لون جودة الشبكة بناءً على زمن الاستجابة
     final delay = rtcStats.lastmileDelay ?? 0;
@@ -47,6 +54,7 @@ class LiveStreamStats extends StatelessWidget {
     return Colors.red; // ضعيف
   }
 }
+
 class _StatCard extends StatelessWidget {
   const _StatCard({
     required this.icon,
@@ -54,10 +62,12 @@ class _StatCard extends StatelessWidget {
     required this.tooltip,
     this.text,
   });
+
   final IconData icon;
   final Color color;
   final String tooltip;
   final String? text;
+
   @override
   Widget build(BuildContext context) {
     return Tooltip(

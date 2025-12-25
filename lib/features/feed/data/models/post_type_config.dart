@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 enum PostTypeOption {
   text,
   photos,
@@ -13,6 +14,7 @@ enum PostTypeOption {
   offer,
   job,
 }
+
 class PostTypeConfig {
   const PostTypeConfig({
     required this.type,
@@ -21,11 +23,13 @@ class PostTypeConfig {
     required this.color,
     this.description,
   });
+
   final PostTypeOption type;
   final String title;
   final IconData icon;
   final Color color;
   final String? description;
+
   static const List<PostTypeConfig> all = [
     PostTypeConfig(
       type: PostTypeOption.photos,
@@ -105,6 +109,7 @@ class PostTypeConfig {
       description: 'Create Job',
     ),
   ];
+
   // Get settings for a specific type
   static PostTypeConfig getConfig(PostTypeOption type) {
     return all.firstWhere(
@@ -112,6 +117,7 @@ class PostTypeConfig {
       orElse: () => all.first,
     );
   }
+
   // Property to get label from title
   String get label => title;
 }

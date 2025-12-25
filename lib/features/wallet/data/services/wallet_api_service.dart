@@ -1,15 +1,19 @@
 import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/core/network/api_exception.dart';
 import 'package:snginepro/main.dart' show configCfgP;
+
 import '../models/wallet_action_result.dart';
 import '../models/wallet_paginated.dart';
 import '../models/wallet_package.dart';
 import '../models/wallet_payment.dart';
 import '../models/wallet_summary.dart';
 import '../models/wallet_transaction.dart';
+
 class WalletApiService {
   WalletApiService(this._client);
+
   final ApiClient _client;
+
   Future<WalletSummary> fetchSummary() async {
     final response = await _client.get(configCfgP('wallet_base'));
     final data = response['data'];
@@ -18,6 +22,7 @@ class WalletApiService {
     }
     return WalletSummary.fromJson(const {});
   }
+
   Future<WalletPaginatedResult<WalletTransaction>> fetchTransactions({
     int offset = 0,
     int limit = 20,
@@ -32,6 +37,7 @@ class WalletApiService {
       itemBuilder: (json) => WalletTransaction.fromJson(json),
     );
   }
+
   Future<WalletPaginatedResult<WalletPayment>> fetchPayments({
     int offset = 0,
     int limit = 20,
@@ -46,6 +52,7 @@ class WalletApiService {
       itemBuilder: (json) => WalletPayment.fromJson(json),
     );
   }
+
   Future<WalletActionResult> transfer({
     required int userId,
     required double amount,
@@ -56,6 +63,7 @@ class WalletApiService {
     );
     return WalletActionResult.fromResponse(response);
   }
+
   Future<WalletActionResult> sendTip({
     required int userId,
     required double amount,
@@ -66,6 +74,7 @@ class WalletApiService {
     );
     return WalletActionResult.fromResponse(response);
   }
+
   Future<WalletActionResult> withdraw({
     required String source,
     required double amount,
@@ -76,6 +85,7 @@ class WalletApiService {
     );
     return WalletActionResult.fromResponse(response);
   }
+
   Future<WalletActionResult> recharge({
     required double amount,
     String? method,
@@ -92,11 +102,14 @@ class WalletApiService {
     if (note != null && note.isNotEmpty) {
       body['note'] = note;
     }
+
     final response = await _client.post(configCfgP('wallet_recharge'), body: body);
     return WalletActionResult.fromResponse(response);
   }
+
   Future<List<WalletPackage>> fetchPackages() async {
     Map<String, dynamic> response;
+
     try {
       response = await _client.get(configCfgP('wallet_packages'));
     } on ApiException catch (error) {
@@ -107,6 +120,7 @@ class WalletApiService {
         rethrow;
       }
     }
+
     final data = response['data'] ?? response;
     final packagesData = _extractPackages(data);
     return packagesData
@@ -114,6 +128,7 @@ class WalletApiService {
         .map(WalletPackage.fromJson)
         .toList(growable: false);
   }
+
   Future<WalletActionResult> purchasePackage({required int packageId}) async {
     final response = await _client.post(
       configCfgP('wallet_packages_purchase'),
@@ -122,6 +137,7 @@ class WalletApiService {
     return WalletActionResult.fromResponse(response);
   }
 }
+
 List<dynamic> _extractPackages(Object? data) {
   if (data is List) {
     return data;

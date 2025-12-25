@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+
 /// Product Model - نموذج المنتج
 /// 
 /// يمثل منتج في السوق مع جميع تفاصيله.
@@ -7,11 +8,11 @@ import 'package:equatable/equatable.dart';
 /// الاستخدام:
 /// ```dart
 /// final product = Product.fromJson(json);
-/// 
-/// 
-/// 
-/// 
-/// 
+/// print('${product.name} - ${product.price} ${product.currency}');
+/// print('الحالة: ${product.conditionDisplay}');
+/// print('البائع: ${product.seller.userName}');
+/// print('الكمية المتوفرة: ${product.quantity}');
+/// print('نوع: ${product.isDigital ? "رقمي" : "فيزيائي"}');
 /// ```
 /// 
 /// Properties:
@@ -50,6 +51,7 @@ class Product extends Equatable {
   final bool isFavorite;
   final int quantity; // الكمية المتوفرة
   final bool isDigital; // منتج رقمي أو فيزيائي
+
     const Product({
     required this.productId,
     required this.name,
@@ -69,6 +71,7 @@ class Product extends Equatable {
     this.quantity = 0,
     this.isDigital = false,
   });
+
   @override
   List<Object?> get props => [
     productId,
@@ -89,16 +92,19 @@ class Product extends Equatable {
     quantity,
     isDigital,
   ];
+
   /// Creates Product from JSON response
   factory Product.fromJson(Map<String, dynamic> json) {
     // Handle photos array - check multiple possible field names
     List<String> photosList = [];
+    
     // Try different possible field names for photos
     final photosData = json['images'] ??  // Main field from API
                       json['photos'] ?? 
                       json['album_pictures'] ?? 
                       json['product_pictures'] ?? 
                       json['pictures'];
+    
     if (photosData != null) {
       if (photosData is List) {
         photosList = photosData
@@ -118,14 +124,17 @@ class Product extends Equatable {
         photosList = [photosData.toString()];
       }
     }
+    
     // Also check for single photo field
     if (photosList.isEmpty && json['photo'] != null) {
       photosList = [json['photo'].toString()];
     }
+    
     // Also check product_picture field
     if (photosList.isEmpty && json['product_picture'] != null) {
       photosList = [json['product_picture'].toString()];
     }
+
     // Parse created_at
     DateTime createdTime;
     try {
@@ -133,6 +142,7 @@ class Product extends Equatable {
     } catch (e) {
       createdTime = DateTime.now();
     }
+
     return Product(
       productId: json['post_id']?.toString() ?? json['product_id']?.toString() ?? '',
       name: json['product_name']?.toString() ?? json['name']?.toString() ?? '',
@@ -153,6 +163,7 @@ class Product extends Equatable {
       isDigital: json['is_digital'] == true || json['is_digital'] == '1' || json['is_digital'] == 1,
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'product_id': productId,
@@ -174,6 +185,7 @@ class Product extends Equatable {
       'is_digital': isDigital,
     };
   }
+
   /// Product condition display in Arabic
   String get conditionDisplay {
     switch (condition) {
@@ -193,6 +205,7 @@ class Product extends Equatable {
         return condition;
     }
   }
+
   /// Product status display in Arabic
   String get statusDisplay {
     switch (status) {
@@ -206,20 +219,28 @@ class Product extends Equatable {
         return status;
     }
   }
+
   /// Check if product is available for purchase
   bool get isAvailable => status == 'available' && quantity > 0;
+
   /// Check if product is sold
   bool get isSold => status == 'sold';
+
   /// Check if product is out of stock
   bool get isOutOfStock => quantity == 0;
+
   /// Check if product is in stock
   bool get isInStock => quantity > 0;
+
   /// Product type display (digital/physical)
   String get productTypeDisplay => isDigital ? 'منتج رقمي' : 'منتج فيزيائي';
+
   /// Get primary photo
   String get primaryPhoto => photos.isNotEmpty ? photos.first : '';
+
   /// Format price with currency
   String get formattedPrice => '$price $currency';
+
   Product copyWith({
     String? productId,
     String? name,
@@ -260,6 +281,7 @@ class Product extends Equatable {
     );
   }
 }
+
 /// Product Seller Model - معلومات البائع
 /// 
 /// معلومات البائع المرتبط بالمنتج
@@ -270,6 +292,7 @@ class ProductSeller extends Equatable {
   final String userLastname;
   final String userPicture;
   final bool verified;
+
   const ProductSeller({
     required this.userId,
     required this.userName,
@@ -278,6 +301,7 @@ class ProductSeller extends Equatable {
     required this.userPicture,
     this.verified = false,
   });
+
   factory ProductSeller.fromJson(Map<String, dynamic> json) {
     return ProductSeller(
       userId: json['user_id']?.toString() ?? '',
@@ -288,6 +312,7 @@ class ProductSeller extends Equatable {
       verified: json['user_verified'] == true || json['user_verified'] == '1',
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'user_id': userId,
@@ -298,7 +323,9 @@ class ProductSeller extends Equatable {
       'user_verified': verified,
     };
   }
+
   String get fullName => '$userFirstname $userLastname'.trim();
+
   @override
   List<Object?> get props => [
         userId,

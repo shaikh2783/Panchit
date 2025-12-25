@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import '../presentation/pages/live_stream_viewer_page.dart';
+
 /// مثال لاختبار Live Stream API integration
 class LiveStreamTestPage extends StatefulWidget {
   const LiveStreamTestPage({Key? key}) : super(key: key);
+
   @override
   State<LiveStreamTestPage> createState() => _LiveStreamTestPageState();
 }
+
 class _LiveStreamTestPageState extends State<LiveStreamTestPage> {
   final TextEditingController _liveIdController = TextEditingController();
   final TextEditingController _channelController = TextEditingController();
   final TextEditingController _tokenController = TextEditingController();
   final TextEditingController _broadcasterController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -20,6 +24,7 @@ class _LiveStreamTestPageState extends State<LiveStreamTestPage> {
     _tokenController.text = 'test_token';
     _broadcasterController.text = 'أحمد محمد';
   }
+
   @override
   void dispose() {
     _liveIdController.dispose();
@@ -28,6 +33,7 @@ class _LiveStreamTestPageState extends State<LiveStreamTestPage> {
     _broadcasterController.dispose();
     super.dispose();
   }
+
   void _openLiveStreamWithAPI() {
     if (_liveIdController.text.isEmpty || 
         _channelController.text.isEmpty || 
@@ -40,6 +46,7 @@ class _LiveStreamTestPageState extends State<LiveStreamTestPage> {
       );
       return;
     }
+
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -50,6 +57,7 @@ class _LiveStreamTestPageState extends State<LiveStreamTestPage> {
           uid: 0,
           // هذا مهم للـ API integration
           liveId: _liveIdController.text,
+          
           // معلومات إضافية
           thumbnailUrl: 'https://via.placeholder.com/300x200',
           isVerified: true,
@@ -58,6 +66,7 @@ class _LiveStreamTestPageState extends State<LiveStreamTestPage> {
       ),
     );
   }
+
   void _openLiveStreamDemo() {
     Navigator.push(
       context,
@@ -72,6 +81,7 @@ class _LiveStreamTestPageState extends State<LiveStreamTestPage> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,6 +103,7 @@ class _LiveStreamTestPageState extends State<LiveStreamTestPage> {
               ),
             ),
             const SizedBox(height: 20),
+            
             // معرف البث (للـ API)
             TextField(
               controller: _liveIdController,
@@ -104,6 +115,7 @@ class _LiveStreamTestPageState extends State<LiveStreamTestPage> {
               ),
             ),
             const SizedBox(height: 16),
+            
             // اسم القناة
             TextField(
               controller: _channelController,
@@ -115,6 +127,7 @@ class _LiveStreamTestPageState extends State<LiveStreamTestPage> {
               ),
             ),
             const SizedBox(height: 16),
+            
             // التوكن
             TextField(
               controller: _tokenController,
@@ -126,6 +139,7 @@ class _LiveStreamTestPageState extends State<LiveStreamTestPage> {
               ),
             ),
             const SizedBox(height: 16),
+            
             // اسم المذيع
             TextField(
               controller: _broadcasterController,
@@ -136,7 +150,9 @@ class _LiveStreamTestPageState extends State<LiveStreamTestPage> {
                 prefixIcon: Icon(Icons.person),
               ),
             ),
+            
             const SizedBox(height: 32),
+            
             // أزرار الاختبار
             ElevatedButton.icon(
               onPressed: _openLiveStreamWithAPI,
@@ -148,7 +164,9 @@ class _LiveStreamTestPageState extends State<LiveStreamTestPage> {
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
             ),
+            
             const SizedBox(height: 16),
+            
             OutlinedButton.icon(
               onPressed: _openLiveStreamDemo,
               icon: const Icon(Icons.preview),
@@ -157,7 +175,9 @@ class _LiveStreamTestPageState extends State<LiveStreamTestPage> {
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
             ),
+            
             const SizedBox(height: 32),
+            
             // معلومات مهمة
             Container(
               padding: const EdgeInsets.all(16),

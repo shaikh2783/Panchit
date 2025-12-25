@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'dart:ui';
 import '../../data/models/post_audio.dart';
+
 /// Widget احترافي لعرض وتشغيل الملفات الصوتية
 class PostAudioWidget extends StatefulWidget {
   const PostAudioWidget({
@@ -15,42 +16,53 @@ class PostAudioWidget extends StatefulWidget {
     this.showProgress = true,
     this.autoPlay = false,
   });
+
   final PostAudio audio;
   final String authorName;
   final Uri Function(String) mediaResolver;
   final bool showWaveform;
   final bool showProgress;
   final bool autoPlay;
+
   @override
   State<PostAudioWidget> createState() => _PostAudioWidgetState();
 }
+
 class _PostAudioWidgetState extends State<PostAudioWidget>
     with TickerProviderStateMixin {
   late AnimationController _playAnimationController;
   late AnimationController _waveAnimationController;
   late Animation<double> _scaleAnimation;
   late Animation<double> _waveAnimation;
+
   late AudioPlayer _audioPlayer;
+
   bool _isPlaying = false;
   bool _isLoading = false;
   bool _hasError = false;
   bool _isCompleted = false; // ✅ لمعرفة هل وصل للنهاية
+
   Duration _currentPosition = Duration.zero;
   Duration _totalDuration = Duration.zero;
   String? _errorMessage;
+
   @override
   void initState() {
     super.initState();
+
     _audioPlayer = AudioPlayer();
     _setupAudioPlayer();
+
     _playAnimationController = AnimationController(
       duration: const Duration(milliseconds: 200),
       vsync: this,
     );
+
     _waveAnimationController = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
+
     _scaleAnimation = Tween<double>(
       begin: 1.0,
       end: 0.95,
@@ -60,6 +72,7 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
         curve: Curves.easeInOut,
       ),
     );
+
     _waveAnimation = Tween<double>(
       begin: 0.3,
       end: 1.0,
@@ -69,17 +82,21 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
         curve: Curves.easeInOut,
       ),
     );
+
     if (widget.autoPlay) {
       _initializeAndPlay();
     }
   }
+
   void _setupAudioPlayer() {
     _audioPlayer.onPlayerStateChanged.listen((PlayerState state) {
       if (!mounted) return;
+
       setState(() {
         _isPlaying = state == PlayerState.playing;
         // لا نستخدم stopped كـ loading
       });
+
       if (_isPlaying) {
         _playAnimationController.forward();
         if (!_waveAnimationController.isAnimating) {
@@ -90,18 +107,21 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
         _waveAnimationController.stop();
       }
     });
+
     _audioPlayer.onPositionChanged.listen((position) {
       if (!mounted) return;
       setState(() {
         _currentPosition = position;
       });
     });
+
     _audioPlayer.onDurationChanged.listen((duration) {
       if (!mounted) return;
       setState(() {
         _totalDuration = duration;
       });
     });
+
     _audioPlayer.onPlayerComplete.listen((event) {
       if (!mounted) return;
       setState(() {
@@ -109,10 +129,12 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
         _isCompleted = true;                 // ✅ وصل للنهاية
         _currentPosition = _totalDuration;   // خلي الشريط على النهاية
       });
+
       _playAnimationController.reverse();
       _waveAnimationController.stop();
     });
   }
+
   @override
   void dispose() {
     _playAnimationController.dispose();
@@ -120,6 +142,7 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
     _audioPlayer.dispose();
     super.dispose();
   }
+
   Future<void> _initializeAndPlay() async {
     try {
       final audioUri = widget.mediaResolver(widget.audio.source);
@@ -129,7 +152,9 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
         _errorMessage = null;
         _isCompleted = false;
       });
+
       await _audioPlayer.play(UrlSource(audioUri.toString()));
+
       if (!mounted) return;
       setState(() {
         _isLoading = false;
@@ -143,6 +168,7 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
       });
     }
   }
+
   Future<void> _initializeAudioOnly() async {
     try {
       setState(() {
@@ -150,8 +176,10 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
         _hasError = false;
         _errorMessage = null;
       });
+
       final audioUri = widget.mediaResolver(widget.audio.source);
       await _audioPlayer.setSourceUrl(audioUri.toString());
+
       if (!mounted) return;
       setState(() {
         _isLoading = false;
@@ -166,11 +194,13 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
       });
     }
   }
+
   Future<void> _togglePlayPause() async {
     if (_hasError) {
       await _initializeAudioOnly();
       if (_hasError) return;
     }
+
     try {
       if (_isPlaying) {
         /// إيقاف مؤقت
@@ -183,14 +213,17 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
               _currentPosition < _totalDuration && _currentPosition > Duration.zero
                   ? _currentPosition
                   : Duration.zero;
+
           final audioUri = widget.mediaResolver(widget.audio.source);
           setState(() {
             _isLoading = true;
           });
+
           await _audioPlayer.play(UrlSource(audioUri.toString()));
           if (restartFrom > Duration.zero) {
             await _audioPlayer.seek(restartFrom);
           }
+
           if (!mounted) return;
           setState(() {
             _isLoading = false;
@@ -198,13 +231,16 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
           });
           return;
         }
+
         // ✅ حالة عادية (ليس مكتمل)
         if (!_isPlaying) {
           final audioUri = widget.mediaResolver(widget.audio.source);
           setState(() {
             _isLoading = true;
           });
+
           await _audioPlayer.play(UrlSource(audioUri.toString()));
+
           if (!mounted) return;
           setState(() {
             _isLoading = false;
@@ -221,14 +257,17 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
       });
     }
   }
+
   Future<void> _restartAudio() async {
     try {
       final audioUri = widget.mediaResolver(widget.audio.source);
       setState(() {
         _isLoading = true;
       });
+
       await _audioPlayer.play(UrlSource(audioUri.toString()));
       await _audioPlayer.seek(Duration.zero);
+
       if (!mounted) return;
       setState(() {
         _currentPosition = Duration.zero;
@@ -238,49 +277,61 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
     } catch (e) {
     }
   }
+
   /// ✅ هذه أهم دالة: السحب على شريط التقدم
   Future<void> _onSeek(double position) async {
     try {
       final newPosition = Duration(milliseconds: position.round());
+
       // نحرك المؤشر للمكان الجديد
       await _audioPlayer.seek(newPosition);
+
       if (!mounted) return;
       setState(() {
         _currentPosition = newPosition;
+
         // لو رجعنا لقبل النهاية نلغي حالة الاكتمال
         if (newPosition < _totalDuration) {
           _isCompleted = false;
         }
       });
+
       // ✅ الحالة الحرّاجة: كنا في حالة مكتمل، والمستخدم حرّك الشريط
       if (_isCompleted) {
         final audioUri = widget.mediaResolver(widget.audio.source);
+
         setState(() {
           _isLoading = true;
         });
+
         await _audioPlayer.play(UrlSource(audioUri.toString()));
         await _audioPlayer.seek(newPosition);
+
         if (!mounted) return;
         setState(() {
           _isLoading = false;
           _isCompleted = false;
         });
       }
+
       // ملاحظة: لما يكون الصوت متوقف بسبب pause (مش completed)،
       // ما نشغّله تلقائيًا هنا، يخليه مثل سبوتيفاي: تقدر تحرك الشريط وهو متوقف.
     } catch (e) {
     }
   }
+
   String _formatTime(Duration duration) {
     final totalSeconds = duration.inSeconds;
     final minutes = totalSeconds ~/ 60;
     final seconds = totalSeconds % 60;
     return '${minutes.toString()}:${seconds.toString().padLeft(2, '0')}';
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -311,6 +362,7 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
           children: [
             _buildHeader(theme, isDark),
             const SizedBox(height: 16),
+
             if (_hasError) ...[
               Container(
                 padding: const EdgeInsets.all(8),
@@ -340,6 +392,7 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
                 ),
               ),
             ],
+
             Row(
               children: [
                 _buildPlayButton(theme),
@@ -362,6 +415,7 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
                 _buildTimeDisplay(theme),
               ],
             ),
+
             const SizedBox(height: 12),
             _buildFooter(theme, isDark),
           ],
@@ -369,6 +423,7 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
       ),
     );
   }
+
   Widget _buildHeader(ThemeData theme, bool isDark) {
     return Row(
       children: [
@@ -435,6 +490,7 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
       ],
     );
   }
+
   Widget _buildPlayButton(ThemeData theme) {
     return AnimatedBuilder(
       animation: _scaleAnimation,
@@ -476,6 +532,7 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
       },
     );
   }
+
   Widget _buildPlayButtonIcon(ThemeData theme) {
     if (_isLoading) {
       return const SizedBox(
@@ -489,6 +546,7 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
         ),
       );
     }
+
     if (_hasError) {
       return const Icon(
         Iconsax.refresh,
@@ -496,12 +554,14 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
         size: 20,
       );
     }
+
     return Icon(
       _isPlaying ? Iconsax.pause : Iconsax.play,
       color: Colors.white,
       size: 24,
     );
   }
+
   Widget _buildRestartButton(ThemeData theme) {
     return GestureDetector(
       onTap: _hasError || _isLoading ? null : _restartAudio,
@@ -532,6 +592,7 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
       ),
     );
   }
+
   Widget _buildWaveform(ThemeData theme) {
     return SizedBox(
       height: 40,
@@ -548,12 +609,14 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
               final barProgress = index / 30;
               final isActive = barProgress <= progress;
               final animationOffset = (index * 0.2) % 1.0;
+
               final baseHeight =
                   0.3 + (index % 4) * 0.15;
               final animatedHeight = _isPlaying
                   ? baseHeight +
                       ((_waveAnimation.value + animationOffset) % 1.0) * 0.4
                   : baseHeight;
+
               return Container(
                 width: 2.5,
                 height: 40 * animatedHeight.clamp(0.2, 1.0),
@@ -571,9 +634,11 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
       ),
     );
   }
+
   Widget _buildProgressBar(ThemeData theme) {
     final currentMs = _currentPosition.inMilliseconds.toDouble();
     final totalMs = _totalDuration.inMilliseconds.toDouble();
+
     return SliderTheme(
       data: SliderTheme.of(context).copyWith(
         trackHeight: 3,
@@ -591,6 +656,7 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
       ),
     );
   }
+
   Widget _buildTimeDisplay(ThemeData theme) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -612,6 +678,7 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
       ],
     );
   }
+
   Widget _buildFooter(ThemeData theme, bool isDark) {
     return Row(
       children: [
@@ -665,12 +732,14 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
       ],
     );
   }
+
   IconData _getAudioIcon() {
     if (widget.audio.isMP3) return Iconsax.music_circle;
     if (widget.audio.isWAV) return Iconsax.music_square;
     if (widget.audio.isM4A) return Iconsax.music_square_add;
     return Iconsax.microphone;
   }
+
   void _showAudioMenu(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -695,7 +764,7 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
             ),
             ListTile(
               leading: const Icon(Iconsax.refresh),
-              title: const Text('إعادة تشغيل من البداية'),
+              title: Text('restart_from_beginning'.tr),
               onTap: () {
                 Navigator.pop(context);
                 _restartAudio();
@@ -703,7 +772,7 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
             ),
             ListTile(
               leading: const Icon(Iconsax.import_2),
-              title: const Text('Download'),
+              title: Text('download_button'.tr),
               onTap: () {
                 Navigator.pop(context);
                 // TODO: Implement download
@@ -711,7 +780,7 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
             ),
             ListTile(
               leading: const Icon(Iconsax.share),
-              title: const Text('Share'),
+              title: Text('share_button_action'.tr),
               onTap: () {
                 Navigator.pop(context);
                 // TODO: Implement share
@@ -719,7 +788,7 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
             ),
             ListTile(
               leading: const Icon(Iconsax.info_circle),
-              title: const Text('Audio Info'),
+              title: Text('audio_info_button'.tr),
               onTap: () {
                 Navigator.pop(context);
                 _showAudioInfo(context);
@@ -731,11 +800,12 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
       ),
     );
   }
+
   void _showAudioInfo(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Audio Information'),
+        title: Text('audio_information_title'.tr),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -751,17 +821,20 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
+            child: Text('close_button'.tr),
           ),
         ],
       ),
     );
   }
 }
+
 class _InfoRow extends StatelessWidget {
   const _InfoRow(this.label, this.value);
+
   final String label;
   final String value;
+
   @override
   Widget build(BuildContext context) {
     return Padding(

@@ -2,11 +2,13 @@ class Country {
   final int id;
   final String name;
   final String code;
+
   Country({
     required this.id,
     required this.name,
     required this.code,
   });
+
   factory Country.fromJson(Map<String, dynamic> json) {
     return Country(
       id: json['id'] ?? 0,
@@ -14,6 +16,7 @@ class Country {
       code: json['code'] ?? '',
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -22,11 +25,14 @@ class Country {
     };
   }
 }
+
 class WorkInfo {
   final String? title;
   final String? place;
   final String? website;
+
   WorkInfo({this.title, this.place, this.website});
+
   factory WorkInfo.fromJson(Map<String, dynamic> json) {
     return WorkInfo(
       title: json['title'],
@@ -34,25 +40,33 @@ class WorkInfo {
       website: json['website'],
     );
   }
+
   bool get isEmpty => title == null && place == null && website == null;
 }
+
 class LocationInfo {
   final String? currentCity;
   final String? hometown;
+
   LocationInfo({this.currentCity, this.hometown});
+
   factory LocationInfo.fromJson(Map<String, dynamic> json) {
     return LocationInfo(
       currentCity: json['current_city'],
       hometown: json['hometown'],
     );
   }
+
   bool get isEmpty => currentCity == null && hometown == null;
 }
+
 class EducationInfo {
   final String? school;
   final String? major;
   final String? classYear;
+
   EducationInfo({this.school, this.major, this.classYear});
+
   factory EducationInfo.fromJson(Map<String, dynamic> json) {
     return EducationInfo(
       school: json['school'],
@@ -60,8 +74,10 @@ class EducationInfo {
       classYear: json['class'],
     );
   }
+
   bool get isEmpty => school == null && major == null && classYear == null;
 }
+
 class SocialLinks {
   final String? website;
   final String? facebook;
@@ -71,6 +87,7 @@ class SocialLinks {
   final String? twitch;
   final String? linkedin;
   final String? vkontakte;
+
   SocialLinks({
     this.website,
     this.facebook,
@@ -81,6 +98,7 @@ class SocialLinks {
     this.linkedin,
     this.vkontakte,
   });
+
   factory SocialLinks.fromJson(Map<String, dynamic> json) {
     return SocialLinks(
       website: json['website'],
@@ -93,6 +111,7 @@ class SocialLinks {
       vkontakte: json['vkontakte'],
     );
   }
+
   bool get isEmpty =>
       website == null &&
       facebook == null &&
@@ -103,6 +122,7 @@ class SocialLinks {
       linkedin == null &&
       vkontakte == null;
 }
+
 class UserProfile {
   final String id;
   final String username;
@@ -125,6 +145,7 @@ class UserProfile {
   final LocationInfo location;
   final EducationInfo education;
   final SocialLinks socialLinks;
+
   UserProfile({
     required this.id,
     required this.username,
@@ -148,6 +169,7 @@ class UserProfile {
     required this.education,
     required this.socialLinks,
   });
+
   factory UserProfile.fromJson(Map<String, dynamic> json) {
     final profile = json['profile'] ?? json;
     return UserProfile(
@@ -177,6 +199,7 @@ class UserProfile {
     );
   }
 }
+
 class ProfileStats {
   final int friends;
   final int followers;
@@ -184,6 +207,7 @@ class ProfileStats {
   final int posts;
   final int photos;
   final int videos;
+
   ProfileStats({
     required this.friends,
     required this.followers,
@@ -192,6 +216,7 @@ class ProfileStats {
     required this.photos,
     required this.videos,
   });
+
   factory ProfileStats.fromJson(Map<String, dynamic> json) {
     return ProfileStats(
       friends: json['friends'] ?? 0,
@@ -203,17 +228,20 @@ class ProfileStats {
     );
   }
 }
+
 class ProfileRelationship {
   final bool isSelf;
   final String connection;
   final bool isFollowing;
   final bool isFollowedBy;
+
   ProfileRelationship({
     required this.isSelf,
     required this.connection,
     required this.isFollowing,
     required this.isFollowedBy,
   });
+
   factory ProfileRelationship.fromJson(Map<String, dynamic> json) {
     return ProfileRelationship(
       isSelf: json['is_self'] == true,
@@ -222,12 +250,14 @@ class ProfileRelationship {
       isFollowedBy: json['is_followed_by'] == true,
     );
   }
+
   bool get isFriend => connection == 'friend';
   bool get canAddFriend => connection == 'add';
   bool get hasPendingRequest => connection == 'request';
   bool get canCancelRequest => connection == 'cancel';
   bool get isBlocked => connection == 'block';
 }
+
 class Address {
   final int id;
   final String title;
@@ -236,6 +266,7 @@ class Address {
   final String zipCode;
   final String phone;
   final String details;
+
   Address({
     required this.id,
     required this.title,
@@ -245,6 +276,7 @@ class Address {
     required this.phone,
     required this.details,
   });
+
   factory Address.fromJson(Map<String, dynamic> json) {
     return Address(
       id: json['id'] ?? 0,
@@ -257,6 +289,7 @@ class Address {
     );
   }
 }
+
 class UserProfileResponse {
   final UserProfile profile;
   final ProfileStats stats;
@@ -264,6 +297,7 @@ class UserProfileResponse {
   final Map<String, dynamic> privacy;
   final List<Address> addresses;
   final Map<String, String?> socialLinks;
+
   UserProfileResponse({
     required this.profile,
     required this.stats,
@@ -272,6 +306,7 @@ class UserProfileResponse {
     required this.addresses,
     required this.socialLinks,
   });
+
   factory UserProfileResponse.fromJson(Map<String, dynamic> json) {
     final data = json['data'];
     return UserProfileResponse(

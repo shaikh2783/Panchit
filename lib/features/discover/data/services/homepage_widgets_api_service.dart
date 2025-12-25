@@ -2,16 +2,21 @@ import 'package:flutter/foundation.dart';
 import '../../../../core/config/app_config.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
+
 /// Homepage Widgets API service to retrieve all widgets
 class HomepageWidgetsApiService {
   final ApiClient _apiClient;
+  
   HomepageWidgetsApiService(this._apiClient);
+
   /// Fetch all homepage widgets
   Future<HomepageWidgetsResponse> getHomepageWidgets({String? authToken}) async {
     try {
+      
       // Try the primary path first
       try {
         final response = await _apiClient.get(configCfgP('homepage_widgets'));
+
         if (response['status'] == 'success') {
           return HomepageWidgetsResponse.fromJson(response['data']);
         } else {
@@ -22,6 +27,7 @@ class HomepageWidgetsApiService {
       } catch (e) {
         // If the primary path fails, try an alternative endpoint with different headers
         if (e.toString().contains('401') || e.toString().contains('not logged in')) {
+          
           try {
             // Use the same headers that work in Postman with credentials from appConfig
             final alternativeHeaders = <String, String>{
@@ -29,6 +35,7 @@ class HomepageWidgetsApiService {
               'apiKey': appConfig.apiKey,
               'apiSecret': appConfig.apiSecret,
             };
+            
             // Add auth token if available
             if (authToken != null && authToken.isNotEmpty) {
               alternativeHeaders['x-auth-token'] = authToken;
@@ -36,10 +43,12 @@ class HomepageWidgetsApiService {
               // Use the default token as a fallback
               alternativeHeaders['x-auth-token'] = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiIxIiwidG9rZW4iOiIwMjZkMjZjNmJhZTA5YTg4M2JjYjI4M2Q4OGFkYTgwZiJ9.yFhBEuq8Ktb7IF9WsviwHzn3Dt1tyCvzWvsjjeB06Zg';
             }
+            
             final response = await _apiClient.get(
               configCfgP('homepage_widgets'),
               headers: alternativeHeaders,
             );
+
             if (response['status'] == 'success') {
               return HomepageWidgetsResponse.fromJson(response['data']);
             } else {
@@ -55,13 +64,16 @@ class HomepageWidgetsApiService {
         }
       }
     } catch (e) {
+      
       // If the API call fails, use temporary mock data
       if (e.toString().contains('401') || e.toString().contains('not logged in')) {
         return _generateMockResponse();
       }
+      
       return HomepageWidgetsResponse.error('Failed to load homepage widgets');
     }
   }
+
   /// Generate mock data when the API is unavailable
   HomepageWidgetsResponse _generateMockResponse() {
     final mockData = {
@@ -81,11 +93,11 @@ class HomepageWidgetsApiService {
           'users': [
             {
               'user_id': 1,
-              'username': 'Panchit',
-              'firstname': 'Panchit',
-              'lastname': 'Panchit',
-              'fullname': 'Panchit',
-              'picture': 'https://www.panchit.com/content/themes/default/images/blank_profile_male.png',
+              'username': 'ameen',
+              'firstname': 'Ameen',
+              'lastname': 'Hamed',
+              'fullname': 'Ameen Hamed',
+              'picture': 'https://sngine.fluttercrafters.com/content/themes/default/images/blank_profile_male.png',
               'verified': true,
               'subscribed': true
             }
@@ -96,7 +108,7 @@ class HomepageWidgetsApiService {
           'title': 'Trending',
           'hashtags': [
             {
-              'hashtag': '#Panchit',
+              'hashtag': '#ameen',
               'frequency': 5,
               'posts_count': 1
             },
@@ -124,25 +136,30 @@ class HomepageWidgetsApiService {
         }
       }
     };
+    
     return HomepageWidgetsResponse.fromJson(mockData);
   }
 }
+
 /// Homepage Widgets API response
 class HomepageWidgetsResponse {
   final bool success;
   final String? message;
   final HomepageWidgets? widgets;
+
   HomepageWidgetsResponse({
     required this.success,
     this.message,
     this.widgets,
   });
+
   factory HomepageWidgetsResponse.fromJson(Map<String, dynamic> json) {
     return HomepageWidgetsResponse(
       success: true,
       widgets: HomepageWidgets.fromJson(json['widgets']),
     );
   }
+
   factory HomepageWidgetsResponse.error(String message) {
     return HomepageWidgetsResponse(
       success: false,
@@ -150,6 +167,7 @@ class HomepageWidgetsResponse {
     );
   }
 }
+
 /// All homepage widgets
 class HomepageWidgets {
   final ProUsersWidget? proUsers;
@@ -161,6 +179,7 @@ class HomepageWidgets {
   final SuggestedGroupsWidget? suggestedGroups;
   final SuggestedEventsWidget? suggestedEvents;
   final MeritsBalanceWidget? meritsBalance;
+
   HomepageWidgets({
     this.proUsers,
     this.proPages,
@@ -172,6 +191,7 @@ class HomepageWidgets {
     this.suggestedEvents,
     this.meritsBalance,
   });
+
   factory HomepageWidgets.fromJson(Map<String, dynamic> json) {
     return HomepageWidgets(
       proUsers: json['pro_users'] != null 
@@ -204,16 +224,19 @@ class HomepageWidgets {
     );
   }
 }
+
 /// Featured pages widget
 class ProPagesWidget {
   final bool enabled;
   final String title;
   final List<ProPage> pages;
+
   ProPagesWidget({
     required this.enabled,
     required this.title,
     required this.pages,
   });
+
   factory ProPagesWidget.fromJson(Map<String, dynamic> json) {
     return ProPagesWidget(
       enabled: json['enabled'] ?? false,
@@ -224,6 +247,7 @@ class ProPagesWidget {
     );
   }
 }
+
 class ProPage {
   final int pageId;
   final String pageName;
@@ -233,6 +257,7 @@ class ProPage {
   final int pageLikes;
   final bool pageVerified;
   final bool isLiked;
+
   ProPage({
     required this.pageId,
     required this.pageName,
@@ -243,6 +268,7 @@ class ProPage {
     required this.pageVerified,
     required this.isLiked,
   });
+
   factory ProPage.fromJson(Map<String, dynamic> json) {
     return ProPage(
       pageId: int.tryParse(json['page_id']?.toString() ?? '0') ?? 0,
@@ -256,16 +282,19 @@ class ProPage {
     );
   }
 }
+
 /// Featured users widget
 class ProUsersWidget {
   final bool enabled;
   final String title;
   final List<ProUser> users;
+
   ProUsersWidget({
     required this.enabled,
     required this.title,
     required this.users,
   });
+
   factory ProUsersWidget.fromJson(Map<String, dynamic> json) {
     return ProUsersWidget(
       enabled: json['enabled'] ?? false,
@@ -276,6 +305,7 @@ class ProUsersWidget {
     );
   }
 }
+
 class ProUser {
   final int userId;
   final String username;
@@ -285,6 +315,7 @@ class ProUser {
   final String? picture;
   final bool verified;
   final bool subscribed;
+
   ProUser({
     required this.userId,
     required this.username,
@@ -295,6 +326,7 @@ class ProUser {
     required this.verified,
     required this.subscribed,
   });
+
   factory ProUser.fromJson(Map<String, dynamic> json) {
     return ProUser(
       userId: int.tryParse(json['user_id']?.toString() ?? '0') ?? 0,
@@ -308,16 +340,19 @@ class ProUser {
     );
   }
 }
+
 /// Trending hashtags widget
 class TrendingHashtagsWidget {
   final bool enabled;
   final String title;
   final List<TrendingHashtag> hashtags;
+
   TrendingHashtagsWidget({
     required this.enabled,
     required this.title,
     required this.hashtags,
   });
+
   factory TrendingHashtagsWidget.fromJson(Map<String, dynamic> json) {
     return TrendingHashtagsWidget(
       enabled: json['enabled'] ?? false,
@@ -328,15 +363,18 @@ class TrendingHashtagsWidget {
     );
   }
 }
+
 class TrendingHashtag {
   final String hashtag;
   final int frequency;
   final int postsCount;
+
   TrendingHashtag({
     required this.hashtag,
     required this.frequency,
     required this.postsCount,
   });
+
   factory TrendingHashtag.fromJson(Map<String, dynamic> json) {
     return TrendingHashtag(
       hashtag: json['hashtag']?.toString() ?? '',
@@ -345,16 +383,19 @@ class TrendingHashtag {
     );
   }
 }
+
 /// Top users by merits widget
 class MeritsTopUsersWidget {
   final bool enabled;
   final String title;
   final List<MeritsTopUser> users;
+
   MeritsTopUsersWidget({
     required this.enabled,
     required this.title,
     required this.users,
   });
+
   factory MeritsTopUsersWidget.fromJson(Map<String, dynamic> json) {
     return MeritsTopUsersWidget(
       enabled: json['enabled'] ?? false,
@@ -365,6 +406,7 @@ class MeritsTopUsersWidget {
     );
   }
 }
+
 class MeritsTopUser {
   final int userId;
   final String username;
@@ -374,6 +416,7 @@ class MeritsTopUser {
   final String? picture;
   final bool verified;
   final int totalMerits;
+
   MeritsTopUser({
     required this.userId,
     required this.username,
@@ -384,6 +427,7 @@ class MeritsTopUser {
     required this.verified,
     required this.totalMerits,
   });
+
   factory MeritsTopUser.fromJson(Map<String, dynamic> json) {
     return MeritsTopUser(
       userId: int.tryParse(json['user_id']?.toString() ?? '0') ?? 0,
@@ -397,16 +441,19 @@ class MeritsTopUser {
     );
   }
 }
+
 /// Suggested friends widget
 class SuggestedFriendsWidget {
   final bool enabled;
   final String title;
   final List<SuggestedFriend> people;
+
   SuggestedFriendsWidget({
     required this.enabled,
     required this.title,
     required this.people,
   });
+
   factory SuggestedFriendsWidget.fromJson(Map<String, dynamic> json) {
     return SuggestedFriendsWidget(
       enabled: json['enabled'] ?? false,
@@ -417,6 +464,7 @@ class SuggestedFriendsWidget {
     );
   }
 }
+
 class SuggestedFriend {
   final int userId;
   final String username;
@@ -426,6 +474,7 @@ class SuggestedFriend {
   final String? picture;
   final bool verified;
   final int mutualFriendsCount;
+
   SuggestedFriend({
     required this.userId,
     required this.username,
@@ -436,6 +485,7 @@ class SuggestedFriend {
     required this.verified,
     required this.mutualFriendsCount,
   });
+
   factory SuggestedFriend.fromJson(Map<String, dynamic> json) {
     return SuggestedFriend(
       userId: int.tryParse(json['user_id']?.toString() ?? '0') ?? 0,
@@ -449,16 +499,19 @@ class SuggestedFriend {
     );
   }
 }
+
 /// Suggested pages widget
 class SuggestedPagesWidget {
   final bool enabled;
   final String title;
   final List<SuggestedPage> pages;
+
   SuggestedPagesWidget({
     required this.enabled,
     required this.title,
     required this.pages,
   });
+
   factory SuggestedPagesWidget.fromJson(Map<String, dynamic> json) {
     return SuggestedPagesWidget(
       enabled: json['enabled'] ?? false,
@@ -469,6 +522,7 @@ class SuggestedPagesWidget {
     );
   }
 }
+
 class SuggestedPage {
   final int pageId;
   final String pageName;
@@ -478,6 +532,7 @@ class SuggestedPage {
   final int pageLikes;
   final bool pageVerified;
   final PageCategory? category;
+
   SuggestedPage({
     required this.pageId,
     required this.pageName,
@@ -488,6 +543,7 @@ class SuggestedPage {
     required this.pageVerified,
     this.category,
   });
+
   factory SuggestedPage.fromJson(Map<String, dynamic> json) {
     return SuggestedPage(
       pageId: int.tryParse(json['page_id']?.toString() ?? '0') ?? 0,
@@ -503,13 +559,16 @@ class SuggestedPage {
     );
   }
 }
+
 class PageCategory {
   final int categoryId;
   final String categoryName;
+
   PageCategory({
     required this.categoryId,
     required this.categoryName,
   });
+
   factory PageCategory.fromJson(Map<String, dynamic> json) {
     return PageCategory(
       categoryId: int.tryParse(json['category_id']?.toString() ?? '0') ?? 0,
@@ -517,16 +576,19 @@ class PageCategory {
     );
   }
 }
+
 /// Suggested groups widget
 class SuggestedGroupsWidget {
   final bool enabled;
   final String title;
   final List<SuggestedGroup> groups;
+
   SuggestedGroupsWidget({
     required this.enabled,
     required this.title,
     required this.groups,
   });
+
   factory SuggestedGroupsWidget.fromJson(Map<String, dynamic> json) {
     return SuggestedGroupsWidget(
       enabled: json['enabled'] ?? false,
@@ -537,6 +599,7 @@ class SuggestedGroupsWidget {
     );
   }
 }
+
 class SuggestedGroup {
   final int groupId;
   final String groupName;
@@ -547,6 +610,7 @@ class SuggestedGroup {
   final int groupMembers;
   final GroupCategory? category;
   final GroupMembership membership;
+
   SuggestedGroup({
     required this.groupId,
     required this.groupName,
@@ -558,6 +622,7 @@ class SuggestedGroup {
     this.category,
     required this.membership,
   });
+
   factory SuggestedGroup.fromJson(Map<String, dynamic> json) {
     return SuggestedGroup(
       groupId: int.tryParse(json['group_id']?.toString() ?? '0') ?? 0,
@@ -574,13 +639,16 @@ class SuggestedGroup {
     );
   }
 }
+
 class GroupCategory {
   final int categoryId;
   final String categoryName;
+
   GroupCategory({
     required this.categoryId,
     required this.categoryName,
   });
+
   factory GroupCategory.fromJson(Map<String, dynamic> json) {
     return GroupCategory(
       categoryId: int.tryParse(json['category_id']?.toString() ?? '0') ?? 0,
@@ -588,15 +656,18 @@ class GroupCategory {
     );
   }
 }
+
 class GroupMembership {
   final bool isMember;
   final bool isAdmin;
   final String status;
+
   GroupMembership({
     required this.isMember,
     required this.isAdmin,
     required this.status,
   });
+
   factory GroupMembership.fromJson(Map<String, dynamic> json) {
     return GroupMembership(
       isMember: json['is_member'] == true || json['is_member'] == 1,
@@ -605,16 +676,19 @@ class GroupMembership {
     );
   }
 }
+
 /// Merits balance widget
 class MeritsBalanceWidget {
   final bool enabled;
   final String title;
   final MeritsBalance balance;
+
   MeritsBalanceWidget({
     required this.enabled,
     required this.title,
     required this.balance,
   });
+
   factory MeritsBalanceWidget.fromJson(Map<String, dynamic> json) {
     return MeritsBalanceWidget(
       enabled: json['enabled'] ?? false,
@@ -623,15 +697,18 @@ class MeritsBalanceWidget {
     );
   }
 }
+
 class MeritsBalance {
   final int total;
   final int remaining;
   final int spent;
+
   MeritsBalance({
     required this.total,
     required this.remaining,
     required this.spent,
   });
+
   factory MeritsBalance.fromJson(Map<String, dynamic> json) {
     return MeritsBalance(
       total: int.tryParse(json['total']?.toString() ?? '0') ?? 0,
@@ -640,16 +717,19 @@ class MeritsBalance {
     );
   }
 }
+
 /// Suggested events widget
 class SuggestedEventsWidget {
   final bool enabled;
   final String title;
   final List<SuggestedEvent> events;
+
   SuggestedEventsWidget({
     required this.enabled,
     required this.title,
     required this.events,
   });
+
   factory SuggestedEventsWidget.fromJson(Map<String, dynamic> json) {
     return SuggestedEventsWidget(
       enabled: json['enabled'] ?? false,
@@ -660,6 +740,7 @@ class SuggestedEventsWidget {
     );
   }
 }
+
 class SuggestedEvent {
   final int eventId;
   final String eventTitle;
@@ -671,6 +752,7 @@ class SuggestedEvent {
   final String? eventCover;
   final int eventInterested;
   final int eventGoing;
+
   SuggestedEvent({
     required this.eventId,
     required this.eventTitle,
@@ -683,6 +765,7 @@ class SuggestedEvent {
     required this.eventInterested,
     required this.eventGoing,
   });
+
   factory SuggestedEvent.fromJson(Map<String, dynamic> json) {
     return SuggestedEvent(
       eventId: int.tryParse(json['event_id']?.toString() ?? '0') ?? 0,

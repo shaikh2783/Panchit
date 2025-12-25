@@ -6,45 +6,55 @@ import 'package:snginepro/features/notifications/data/models/notification.dart';
 import 'package:snginepro/features/feed/presentation/pages/post_detail_page.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:cached_network_image/cached_network_image.dart';
+
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
+
   @override
   State<NotificationsPage> createState() => _NotificationsPageState();
 }
+
 class _NotificationsPageState extends State<NotificationsPage> {
   final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
     // العربية لـ timeago
     timeago.setLocaleMessages('en', timeago.ArMessages());
+
     _scrollController.addListener(_onScroll);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<NotificationsNotifier>().fetchNotifications(refresh: true);
     });
   }
+
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
+
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
       context.read<NotificationsNotifier>().loadMoreNotifications();
     }
   }
+
   Future<void> _handleRefresh() async {
-    await context
-        .read<NotificationsNotifier>()
-        .fetchNotifications(refresh: true);
+    await context.read<NotificationsNotifier>().fetchNotifications(
+      refresh: true,
+    );
   }
+
   Future<void> _markAllAsRead() async {
     try {
       await context.read<NotificationsNotifier>().markAllAsRead();
       Get.snackbar(
-        'Success',
-        'All notifications marked as read',
+        'notifications_success'.tr,
+        'notifications_marked_success'.tr,
         snackPosition: SnackPosition.BOTTOM,
         duration: const Duration(seconds: 2),
         backgroundColor: Colors.green.withOpacity(0.85),
@@ -52,14 +62,15 @@ class _NotificationsPageState extends State<NotificationsPage> {
       );
     } catch (e) {
       Get.snackbar(
-        'Error',
-        'Failed to mark notifications as read',
+        'notifications_error'.tr,
+        'notifications_mark_error'.tr,
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.withOpacity(0.85),
+        backgroundColor: Colors.red.withValues(alpha: 0.85),
         colorText: Colors.white,
       );
     }
   }
+
   void _handleNotificationTap(NotificationModel n) {
     if (n.nodeType == 'post' && n.nodeId != null) {
       Navigator.of(context).push(
@@ -71,27 +82,27 @@ class _NotificationsPageState extends State<NotificationsPage> {
       // TODO: صفحة Group
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: isDark 
-        ? const Color(0xFF0A0A0A)
-        : const Color(0xFFF8F9FA),
+      backgroundColor: isDark
+          ? const Color(0xFF0A0A0A)
+          : const Color(0xFFF8F9FA),
       appBar: AppBar(
         centerTitle: false,
         title: Text(
-          'Notifications',
+          'notifications_title'.tr,
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
             color: isDark ? Colors.white : Colors.grey[800],
           ),
         ),
-        backgroundColor: isDark 
-          ? const Color(0xFF1A1A1A)
-          : Colors.white,
+        backgroundColor: isDark ? const Color(0xFF1A1A1A) : Colors.white,
         elevation: 0,
         shadowColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
@@ -103,19 +114,19 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   margin: const EdgeInsets.only(right: 8),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [cs.primary, cs.primary.withOpacity(0.8)],
+                      colors: [cs.primary, cs.primary.withValues(alpha: 0.8)],
                     ),
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: cs.primary.withOpacity(0.3),
+                        color: cs.primary.withValues(alpha: 0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
                       ),
                     ],
                   ),
                   child: IconButton(
-                    tooltip: 'Mark all as read',
+                    tooltip: 'notifications_mark_all_read'.tr,
                     onPressed: _markAllAsRead,
                     icon: const Icon(
                       Icons.mark_email_read_rounded,
@@ -138,9 +149,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: isDark 
-              ? [const Color(0xFF0A0A0A), const Color(0xFF1A1A1A)]
-              : [const Color(0xFFF8F9FA), const Color(0xFFE9ECEF)],
+            colors: isDark
+                ? [const Color(0xFF0A0A0A), const Color(0xFF1A1A1A)]
+                : [const Color(0xFFF8F9FA), const Color(0xFFE9ECEF)],
           ),
         ),
         child: Consumer<NotificationsNotifier>(
@@ -148,19 +159,26 @@ class _NotificationsPageState extends State<NotificationsPage> {
             if (n.isLoading && n.notifications.isEmpty) {
               return _buildInitialLoading(isDark);
             }
+
             if (n.error != null && n.notifications.isEmpty) {
-              return _buildErrorView(n.error!, () => n.fetchNotifications(refresh: true), isDark);
+              return _buildErrorView(
+                n.error!,
+                () => n.fetchNotifications(refresh: true),
+                isDark,
+              );
             }
+
             if (n.notifications.isEmpty) {
               return _buildEmptyView(isDark);
             }
+
             return RefreshIndicator(
               onRefresh: _handleRefresh,
               backgroundColor: isDark ? const Color(0xFF2A2A2A) : Colors.white,
               color: cs.primary,
               child: ListView.separated(
                 controller: _scrollController,
-                padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
+                padding: const EdgeInsets.fromLTRB(16, 20, 16, 70),
                 itemCount: n.notifications.length + (n.isLoadingMore ? 1 : 0),
                 separatorBuilder: (_, __) => const SizedBox(height: 12),
                 itemBuilder: (context, index) {
@@ -175,29 +193,31 @@ class _NotificationsPageState extends State<NotificationsPage> {
                       ),
                     );
                   }
-                    final item = n.notifications[index];
+
+                  final item = n.notifications[index];
+
                   return Dismissible(
                     key: ValueKey(item.notificationId),
                     background: _slideBg(
                       context,
                       color: cs.primary,
                       icon: Icons.mark_email_read_rounded,
-                      label: 'Mark read',
+                      label: 'notifications_mark_read'.tr,
                       alignStart: true,
                     ),
                     secondaryBackground: _slideBg(
                       context,
                       color: Colors.red,
                       icon: Icons.delete_outline_rounded,
-                      label: 'Delete',
+                      label: 'notifications_delete'.tr,
                       alignStart: false,
                     ),
                     confirmDismiss: (dir) async {
                       if (dir == DismissDirection.startToEnd) {
                         // Mark read
-                        await context
-                            .read<NotificationsNotifier>()
-                            .markAsRead(item.notificationId);
+                        await context.read<NotificationsNotifier>().markAsRead(
+                          item.notificationId,
+                        );
                         return false; // لا تمسح من القائمة
                       } else {
                         // حذف (إن أردت لاحقًا)
@@ -208,9 +228,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     child: _NotificationCard(
                       notification: item,
                       onTap: () {
-                        context
-                            .read<NotificationsNotifier>()
-                            .markAsRead(item.notificationId);
+                        context.read<NotificationsNotifier>().markAsRead(
+                          item.notificationId,
+                        );
                         _handleNotificationTap(item);
                       },
                     ),
@@ -223,15 +243,16 @@ class _NotificationsPageState extends State<NotificationsPage> {
       ),
     );
   }
+
   Widget _buildInitialLoading(bool isDark) {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: isDark 
-            ? [const Color(0xFF0A0A0A), const Color(0xFF1A1A1A)]
-            : [const Color(0xFFF8F9FA), const Color(0xFFE9ECEF)],
+          colors: isDark
+              ? [const Color(0xFF0A0A0A), const Color(0xFF1A1A1A)]
+              : [const Color(0xFFF8F9FA), const Color(0xFFE9ECEF)],
         ),
       ),
       child: ListView.separated(
@@ -244,13 +265,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
               gradient: LinearGradient(
-                colors: isDark 
-                  ? [const Color(0xFF2A2A2A), const Color(0xFF1F1F1F)]
-                  : [Colors.white, const Color(0xFFF5F5F5)],
+                colors: isDark
+                    ? [const Color(0xFF2A2A2A), const Color(0xFF1F1F1F)]
+                    : [Colors.white, const Color(0xFFF5F5F5)],
               ),
               boxShadow: [
                 BoxShadow(
-                  color: isDark ? Colors.black26 : Colors.grey.withOpacity(0.1),
+                  color: isDark ? Colors.black26 : Colors.grey.withValues(alpha: 0.1),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -265,7 +286,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     height: 52,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: isDark ? const Color(0xFF3A3A3A) : const Color(0xFFE0E0E0),
+                      color: isDark
+                          ? const Color(0xFF3A3A3A)
+                          : const Color(0xFFE0E0E0),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -279,7 +302,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
                           width: double.infinity,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(7),
-                            color: isDark ? const Color(0xFF3A3A3A) : const Color(0xFFE0E0E0),
+                            color: isDark
+                                ? const Color(0xFF3A3A3A)
+                                : const Color(0xFFE0E0E0),
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -288,7 +313,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
                           width: 150,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(6),
-                            color: isDark ? const Color(0xFF2A2A2A) : const Color(0xFFF0F0F0),
+                            color: isDark
+                                ? const Color(0xFF2A2A2A)
+                                : const Color(0xFFF0F0F0),
                           ),
                         ),
                       ],
@@ -302,15 +329,16 @@ class _NotificationsPageState extends State<NotificationsPage> {
       ),
     );
   }
+
   Widget _buildErrorView(String message, VoidCallback onRetry, bool isDark) {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: isDark 
-            ? [const Color(0xFF0A0A0A), const Color(0xFF1A1A1A)]
-            : [const Color(0xFFF8F9FA), const Color(0xFFE9ECEF)],
+          colors: isDark
+              ? [const Color(0xFF0A0A0A), const Color(0xFF1A1A1A)]
+              : [const Color(0xFFF8F9FA), const Color(0xFFE9ECEF)],
         ),
       ),
       child: Center(
@@ -318,7 +346,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
           padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 40.0),
           child: Card(
             elevation: isDark ? 8 : 4,
-            shadowColor: isDark ? Colors.black54 : Colors.grey.withOpacity(0.3),
+            shadowColor: isDark ? Colors.black54 : Colors.grey.withValues(alpha: 0.3),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
@@ -326,17 +354,17 @@ class _NotificationsPageState extends State<NotificationsPage> {
               padding: const EdgeInsets.all(32),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                gradient: isDark 
-                  ? const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Color(0xFF2A2A2A), Color(0xFF1F1F1F)],
-                    )
-                  : const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Colors.white, Color(0xFFF8F9FA)],
-                    ),
+                gradient: isDark
+                    ? const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [Color(0xFF2A2A2A), Color(0xFF1F1F1F)],
+                      )
+                    : const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [Colors.white, Color(0xFFF8F9FA)],
+                      ),
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -346,13 +374,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       gradient: LinearGradient(
-                        colors: isDark 
-                          ? [Colors.red[700]!, Colors.red[800]!]
-                          : [Colors.red[300]!, Colors.red[400]!],
+                        colors: isDark
+                            ? [Colors.red[700]!, Colors.red[800]!]
+                            : [Colors.red[300]!, Colors.red[400]!],
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.red.withOpacity(0.3),
+                          color: Colors.red.withValues(alpha: 0.3),
                           blurRadius: 20,
                           spreadRadius: 2,
                         ),
@@ -366,7 +394,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    'connection_error'.tr,
+                    'notifications_connection_error'.tr,
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -386,14 +414,14 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: isDark 
-                          ? [Colors.blue[600]!, Colors.blue[700]!]
-                          : [Colors.blue[500]!, Colors.blue[600]!],
+                        colors: isDark
+                            ? [Colors.blue[600]!, Colors.blue[700]!]
+                            : [Colors.blue[500]!, Colors.blue[600]!],
                       ),
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.blue.withOpacity(0.3),
+                          color: Colors.blue.withValues(alpha: 0.3),
                           blurRadius: 8,
                           offset: const Offset(0, 4),
                         ),
@@ -401,9 +429,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     ),
                     child: ElevatedButton.icon(
                       onPressed: onRetry,
-                      icon: const Icon(Icons.refresh_rounded, color: Colors.white),
-                      label: const Text(
-                        'Try Again',
+                      icon: const Icon(
+                        Icons.refresh_rounded,
+                        color: Colors.white,
+                      ),
+                      label: Text(
+                        'notifications_try_again'.tr,
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -413,8 +444,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         backgroundColor: Colors.transparent,
                         shadowColor: Colors.transparent,
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 24, 
-                          vertical: 14
+                          horizontal: 24,
+                          vertical: 14,
                         ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -430,15 +461,16 @@ class _NotificationsPageState extends State<NotificationsPage> {
       ),
     );
   }
+
   Widget _buildEmptyView(bool isDark) {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: isDark 
-            ? [const Color(0xFF0A0A0A), const Color(0xFF1A1A1A)]
-            : [const Color(0xFFF8F9FA), const Color(0xFFE9ECEF)],
+          colors: isDark
+              ? [const Color(0xFF0A0A0A), const Color(0xFF1A1A1A)]
+              : [const Color(0xFFF8F9FA), const Color(0xFFE9ECEF)],
         ),
       ),
       child: Center(
@@ -446,7 +478,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
           padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 40.0),
           child: Card(
             elevation: isDark ? 8 : 4,
-            shadowColor: isDark ? Colors.black54 : Colors.grey.withOpacity(0.3),
+            shadowColor: isDark ? Colors.black54 : Colors.grey.withValues(alpha: 0.3),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
@@ -454,17 +486,17 @@ class _NotificationsPageState extends State<NotificationsPage> {
               padding: const EdgeInsets.all(32),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                gradient: isDark 
-                  ? const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Color(0xFF2A2A2A), Color(0xFF1F1F1F)],
-                    )
-                  : const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Colors.white, Color(0xFFF8F9FA)],
-                    ),
+                gradient: isDark
+                    ? const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [Color(0xFF2A2A2A), Color(0xFF1F1F1F)],
+                      )
+                    : const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [Colors.white, Color(0xFFF8F9FA)],
+                      ),
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -474,13 +506,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       gradient: LinearGradient(
-                        colors: isDark 
-                          ? [Colors.blue[700]!, Colors.blue[800]!]
-                          : [Colors.blue[300]!, Colors.blue[400]!],
+                        colors: isDark
+                            ? [Colors.blue[700]!, Colors.blue[800]!]
+                            : [Colors.blue[300]!, Colors.blue[400]!],
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.blue.withOpacity(0.3),
+                          color: Colors.blue.withValues(alpha: 0.3),
                           blurRadius: 20,
                           spreadRadius: 2,
                         ),
@@ -494,7 +526,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    'No Notifications',
+                    'notifications_empty_title'.tr,
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -503,7 +535,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    'You will see updates and alerts here',
+                    'notifications_empty_subtitle'.tr,
                     style: TextStyle(
                       fontSize: 16,
                       color: isDark ? Colors.grey[400] : Colors.grey[600],
@@ -512,7 +544,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Stay tuned for new activity!',
+                    'notifications_empty_hint'.tr,
                     style: TextStyle(
                       fontSize: 14,
                       color: isDark ? Colors.grey[500] : Colors.grey[500],
@@ -527,22 +559,23 @@ class _NotificationsPageState extends State<NotificationsPage> {
       ),
     );
   }
-  Widget _slideBg(BuildContext context,
-      {required Color color,
-      required IconData icon,
-      required String label,
-      required bool alignStart}) {
+
+  Widget _slideBg(
+    BuildContext context, {
+    required Color color,
+    required IconData icon,
+    required String label,
+    required bool alignStart,
+  }) {
     return Container(
       alignment: alignStart ? Alignment.centerLeft : Alignment.centerRight,
       padding: const EdgeInsets.symmetric(horizontal: 24),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [color, color.withOpacity(0.8)],
-        ),
+        gradient: LinearGradient(colors: [color, color.withValues(alpha: 0.8)]),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.3),
+            color: color.withValues(alpha: 0.3),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -562,12 +595,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
           ),
           const SizedBox(width: 12),
           Text(
-            label, 
+            label,
             style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
               fontSize: 16,
-            )
+            ),
           ),
           if (alignStart) const Spacer(),
         ],
@@ -575,10 +608,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
     );
   }
 }
+
 class _NotificationCard extends StatelessWidget {
   const _NotificationCard({required this.notification, required this.onTap});
+
   final NotificationModel notification;
   final VoidCallback onTap;
+
   String _t(String t) {
     try {
       return timeago.format(DateTime.parse(t), locale: 'ar');
@@ -586,6 +622,7 @@ class _NotificationCard extends StatelessWidget {
       return t;
     }
   }
+
   IconData _icon() {
     switch (notification.action) {
       case 'friend_add':
@@ -602,9 +639,12 @@ class _NotificationCard extends StatelessWidget {
       case 'share':
         return Icons.ios_share_rounded;
       default:
-        return notification.isReaction ? Icons.favorite_rounded : Icons.notifications_rounded;
+        return notification.isReaction
+            ? Icons.favorite_rounded
+            : Icons.notifications_rounded;
     }
   }
+
   Color _iconColor(ColorScheme cs) {
     switch (notification.action) {
       case 'friend_add':
@@ -623,41 +663,40 @@ class _NotificationCard extends StatelessWidget {
         return notification.isReaction ? Colors.red : cs.secondary;
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
     final isUnread = !notification.seen;
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 2),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         gradient: LinearGradient(
-          colors: isDark 
-            ? isUnread 
-              ? [const Color(0xFF2A3A4A), const Color(0xFF1F2F3F)]
-              : [const Color(0xFF2A2A2A), const Color(0xFF1F1F1F)]
-            : isUnread
+          colors: isDark
+              ? isUnread
+                    ? [const Color(0xFF2A3A4A), const Color(0xFF1F2F3F)]
+                    : [const Color(0xFF2A2A2A), const Color(0xFF1F1F1F)]
+              : isUnread
               ? [const Color(0xFFF0F8FF), Colors.white]
               : [Colors.white, const Color(0xFFFAFAFA)],
         ),
         boxShadow: [
           BoxShadow(
-            color: isDark 
-              ? Colors.black.withOpacity(0.3)
-              : Colors.grey.withOpacity(0.15),
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.3)
+                : Colors.grey.withValues(alpha: 0.15),
             blurRadius: isUnread ? 12 : 6,
             spreadRadius: isUnread ? 1 : 0,
             offset: const Offset(0, 3),
           ),
         ],
-        border: isUnread 
-          ? Border.all(
-              color: cs.primary.withOpacity(0.5),
-              width: 1.5,
-            )
-          : null,
+        border: isUnread
+            ? Border.all(color: cs.primary.withValues(alpha: 0.5), width: 1.5)
+            : null,
       ),
       child: Material(
         color: Colors.transparent,
@@ -683,7 +722,7 @@ class _NotificationCard extends StatelessWidget {
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: cs.primary.withOpacity(isUnread ? 0.3 : 0.1),
+                            color: cs.primary.withValues(alpha: isUnread ? 0.3 : 0.1),
                             blurRadius: 8,
                             spreadRadius: 1,
                           ),
@@ -691,7 +730,9 @@ class _NotificationCard extends StatelessWidget {
                       ),
                       child: CircleAvatar(
                         radius: 28,
-                        backgroundImage: CachedNetworkImageProvider(notification.user.picture),
+                        backgroundImage: CachedNetworkImageProvider(
+                          notification.user.picture,
+                        ),
                       ),
                     ),
                     if (notification.user.verified)
@@ -703,12 +744,18 @@ class _NotificationCard extends StatelessWidget {
                             color: cs.primary,
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: isDark ? const Color(0xFF2A2A2A) : Colors.white, 
-                              width: 2
+                              color: isDark
+                                  ? const Color(0xFF2A2A2A)
+                                  : Colors.white,
+                              width: 2,
                             ),
                           ),
                           padding: const EdgeInsets.all(3),
-                          child: const Icon(Icons.verified, size: 12, color: Colors.white),
+                          child: const Icon(
+                            Icons.verified,
+                            size: 12,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     Positioned(
@@ -719,12 +766,14 @@ class _NotificationCard extends StatelessWidget {
                           color: _iconColor(cs),
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: isDark ? const Color(0xFF2A2A2A) : Colors.white, 
-                            width: 2
+                            color: isDark
+                                ? const Color(0xFF2A2A2A)
+                                : Colors.white,
+                            width: 2,
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: _iconColor(cs).withOpacity(0.4),
+                              color: _iconColor(cs).withValues(alpha: 0.4),
                               blurRadius: 6,
                               spreadRadius: 1,
                             ),
@@ -748,7 +797,9 @@ class _NotificationCard extends StatelessWidget {
                             TextSpan(
                               text: notification.user.name,
                               style: theme.textTheme.titleSmall?.copyWith(
-                                fontWeight: isUnread ? FontWeight.w700 : FontWeight.w600,
+                                fontWeight: isUnread
+                                    ? FontWeight.w700
+                                    : FontWeight.w600,
                                 color: isDark ? Colors.white : Colors.grey[800],
                                 fontSize: 15,
                               ),
@@ -756,7 +807,9 @@ class _NotificationCard extends StatelessWidget {
                             TextSpan(
                               text: ' ${notification.message}',
                               style: theme.textTheme.bodyMedium?.copyWith(
-                                color: isDark ? Colors.grey[300] : Colors.grey[600],
+                                color: isDark
+                                    ? Colors.grey[300]
+                                    : Colors.grey[600],
                                 fontSize: 14,
                                 height: 1.3,
                               ),
@@ -768,24 +821,33 @@ class _NotificationCard extends StatelessWidget {
                       Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
                             decoration: BoxDecoration(
-                              color: (isDark ? Colors.grey[800] : Colors.grey[100])?.withOpacity(0.8),
+                              color:
+                                  (isDark ? Colors.grey[800] : Colors.grey[100])
+                                      ?.withValues(alpha: 0.8),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(
-                                  Icons.schedule_rounded, 
-                                  size: 12, 
-                                  color: isDark ? Colors.grey[400] : Colors.grey[600]
+                                  Icons.schedule_rounded,
+                                  size: 12,
+                                  color: isDark
+                                      ? Colors.grey[400]
+                                      : Colors.grey[600],
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
                                   _t(notification.time),
                                   style: theme.textTheme.bodySmall?.copyWith(
-                                    color: isDark ? Colors.grey[400] : Colors.grey[600],
+                                    color: isDark
+                                        ? Colors.grey[400]
+                                        : Colors.grey[600],
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -798,12 +860,14 @@ class _NotificationCard extends StatelessWidget {
                             Container(
                               padding: const EdgeInsets.all(6),
                               decoration: BoxDecoration(
-                                color: isDark ? Colors.grey[800] : Colors.grey[100],
+                                color: isDark
+                                    ? Colors.grey[800]
+                                    : Colors.grey[100],
                                 shape: BoxShape.circle,
                               ),
                               child: Text(
-                                notification.reactionEmoji!, 
-                                style: const TextStyle(fontSize: 16)
+                                notification.reactionEmoji!,
+                                style: const TextStyle(fontSize: 16),
                               ),
                             ),
                           if (isUnread) ...[
@@ -813,12 +877,15 @@ class _NotificationCard extends StatelessWidget {
                               height: 10,
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
-                                  colors: [cs.primary, cs.primary.withOpacity(0.8)],
+                                  colors: [
+                                    cs.primary,
+                                    cs.primary.withValues(alpha: 0.8),
+                                  ],
                                 ),
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: cs.primary.withOpacity(0.4),
+                                    color: cs.primary.withValues(alpha: 0.4),
                                     blurRadius: 4,
                                     spreadRadius: 1,
                                   ),

@@ -3,15 +3,19 @@ import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../../../../core/theme/ui_constants.dart';
 import '../../domain/jobs_repository.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 class JobCandidatesPage extends StatefulWidget {
   final int jobId;
   const JobCandidatesPage({super.key, required this.jobId});
+
   @override
   State<JobCandidatesPage> createState() => _JobCandidatesPageState();
 }
+
 class _JobCandidatesPageState extends State<JobCandidatesPage> {
   final _scroll = ScrollController();
   List<Map<String, dynamic>> _candidates = [];
@@ -20,22 +24,26 @@ class _JobCandidatesPageState extends State<JobCandidatesPage> {
   bool _hasMore = true;
   int _offset = 0;
   String _error = '';
+
   @override
   void initState() {
     super.initState();
     _load();
     _scroll.addListener(_onScroll);
   }
+
   @override
   void dispose() {
     _scroll.dispose();
     super.dispose();
   }
+
   void _onScroll() {
     if (_scroll.position.pixels >= _scroll.position.maxScrollExtent - 200) {
       if (!_loadingMore && _hasMore) _loadMore();
     }
   }
+
   Future<void> _load() async {
     setState(() { _loading = true; _error = ''; _offset = 0; _hasMore = true; });
     try {
@@ -52,6 +60,7 @@ class _JobCandidatesPageState extends State<JobCandidatesPage> {
       setState(() { _error = e.toString(); _loading = false; });
     }
   }
+
   Future<void> _loadMore() async {
     setState(() => _loadingMore = true);
     try {
@@ -68,6 +77,7 @@ class _JobCandidatesPageState extends State<JobCandidatesPage> {
       setState(() => _loadingMore = false);
     }
   }
+
   List<Map<String, dynamic>> _extractList(Map<String, dynamic> data) {
     final keys = ['candidates', 'applicants', 'applications'];
     for (final k in keys) {
@@ -78,6 +88,7 @@ class _JobCandidatesPageState extends State<JobCandidatesPage> {
     }
     return const [];
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,6 +118,7 @@ class _JobCandidatesPageState extends State<JobCandidatesPage> {
                 ),
     );
   }
+
   Widget _candidateCard(Map<String, dynamic> c) {
     final title = (c['user_name'] ?? c['name'] ?? '').toString();
     final appliedAt = (c['applied_at'] ?? c['created_time'] ?? c['time'] ?? '').toString();
@@ -128,6 +140,7 @@ class _JobCandidatesPageState extends State<JobCandidatesPage> {
       c['about_you'],
     ]);
     final experiences = _extractExperiences(c);
+
     return Container(
       decoration: BoxDecoration(
         color: UI.surfaceCard(context),
@@ -188,6 +201,7 @@ class _JobCandidatesPageState extends State<JobCandidatesPage> {
       ]),
     );
   }
+
   String _bestString(List<dynamic> candidates) {
     for (final v in candidates) {
       if (v == null) continue;
@@ -196,11 +210,13 @@ class _JobCandidatesPageState extends State<JobCandidatesPage> {
     }
     return '';
   }
+
   Future<void> _launchUri(Uri uri) async {
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     }
   }
+
   List<Map<String, dynamic>> _extractExperiences(Map<String, dynamic> c) {
     final keys = ['experiences', 'work_history', 'jobs'];
     for (final k in keys) {
@@ -211,6 +227,7 @@ class _JobCandidatesPageState extends State<JobCandidatesPage> {
     }
     return const [];
   }
+
   Widget _experienceBlock(Map<String, dynamic> e) {
     final whereWorked = (e['where_did_you_work'] ?? e['company'] ?? e['work_place'] ?? '').toString();
     final position = (e['position'] ?? e['job_title'] ?? '').toString();
@@ -236,6 +253,7 @@ class _JobCandidatesPageState extends State<JobCandidatesPage> {
       ]),
     );
   }
+
   Widget _kv(String label, String value, {bool dense = false, bool multiline = false}) {
     if (value.isEmpty) return const SizedBox.shrink();
     final styleLabel = Theme.of(context).textTheme.bodySmall?.copyWith(color: UI.subtleText(context));

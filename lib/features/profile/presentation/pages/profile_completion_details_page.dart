@@ -3,32 +3,39 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+
 import '../../data/models/profile_completion_model.dart';
 import '../../data/models/user_profile_model.dart';
 import '../../data/services/profile_api_service.dart';
 import '../../../../core/network/api_client.dart';
 import 'profile_edit_page.dart';
+
 class ProfileCompletionDetailsPage extends StatefulWidget {
   final ProfileCompletionData initialCompletionData;
   final UserProfile profile;
+
   const ProfileCompletionDetailsPage({
     super.key,
     required this.initialCompletionData,
     required this.profile,
   });
+
   @override
   State<ProfileCompletionDetailsPage> createState() =>
       _ProfileCompletionDetailsPageState();
 }
+
 class _ProfileCompletionDetailsPageState
     extends State<ProfileCompletionDetailsPage> {
   late ProfileCompletionData completionData;
   bool _isRefreshing = false;
+
   @override
   void initState() {
     super.initState();
     completionData = widget.initialCompletionData;
   }
+
   Future<void> _refreshCompletionData() async {
     if (_isRefreshing) return;
     setState(() => _isRefreshing = true);
@@ -36,6 +43,7 @@ class _ProfileCompletionDetailsPageState
       final apiClient = context.read<ApiClient>();
       final profileService = ProfileApiService(apiClient);
       final response = await profileService.getProfileCompletion();
+
       if (!mounted) return;
       setState(() {
         completionData = response.data;
@@ -52,6 +60,7 @@ class _ProfileCompletionDetailsPageState
       );
     }
   }
+
   Future<void> _navigateToEdit() async {
     final result = await Navigator.push(
       context,
@@ -59,8 +68,10 @@ class _ProfileCompletionDetailsPageState
         builder: (context) => ProfileEditPage(profile: widget.profile),
       ),
     );
+
     if (result == true && mounted) {
       await _refreshCompletionData();
+
       if (completionData.isComplete && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -80,23 +91,27 @@ class _ProfileCompletionDetailsPageState
             ),
           ),
         );
+
         await Future.delayed(const Duration(seconds: 1));
         if (mounted) Navigator.pop(context, true);
       }
     }
   }
+
   Color _progressColor(int percentage) {
     if (percentage >= 90) return Colors.green;
     if (percentage >= 70) return Colors.blue;
     if (percentage >= 50) return Colors.orange;
     return Colors.red;
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final percentage = completionData.completionPercentage.clamp(0, 100);
     final progressColor = _progressColor(percentage);
+
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: _refreshCompletionData,
@@ -128,6 +143,7 @@ class _ProfileCompletionDetailsPageState
                 ),
               ),
             ),
+
             // الإحصائيات المختصرة
             SliverToBoxAdapter(
               child: Padding(
@@ -139,6 +155,7 @@ class _ProfileCompletionDetailsPageState
                 ),
               ),
             ),
+
             // الحقول المكتملة
             if (completionData.completedFields.isNotEmpty)
               SliverPadding(
@@ -163,6 +180,7 @@ class _ProfileCompletionDetailsPageState
                   ),
                 ),
               ),
+
             // الحقول المطلوبة
             if (completionData.missingFields.isNotEmpty)
               SliverPadding(
@@ -187,10 +205,12 @@ class _ProfileCompletionDetailsPageState
                   ),
                 ),
               ),
+
             const SliverToBoxAdapter(child: SizedBox(height: 100)),
           ],
         ),
       ),
+
       // زر التعديل السفلي
       bottomNavigationBar: completionData.isComplete
           ? const SizedBox.shrink()
@@ -243,14 +263,18 @@ class _ProfileCompletionDetailsPageState
     );
   }
 }
+
 // ---------------- Sub-Widgets ----------------
+
 class _HeaderProgress extends StatelessWidget {
   final double percentage; // 0..100
   final Color color;
+
   const _HeaderProgress({
     required this.percentage,
     required this.color,
   });
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -339,19 +363,23 @@ class _HeaderProgress extends StatelessWidget {
     );
   }
 }
+
 class _StatsRow extends StatelessWidget {
   final int completed;
   final int missing;
   final int total;
+
   const _StatsRow({
     required this.completed,
     required this.missing,
     required this.total,
   });
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+
     Widget item(IconData icon, String label, int value, Color color) {
       return Expanded(
         child: Container(
@@ -383,6 +411,7 @@ class _StatsRow extends StatelessWidget {
         ),
       );
     }
+
     return Row(
       children: [
         item(Iconsax.tick_circle, 'Completed', completed, Colors.green),
@@ -394,21 +423,25 @@ class _StatsRow extends StatelessWidget {
     );
   }
 }
+
 class _SectionCard extends StatelessWidget {
   final String title;
   final IconData icon;
   final Color color;
   final Widget child;
+
   const _SectionCard({
     required this.title,
     required this.icon,
     required this.color,
     required this.child,
   });
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+
     return Container(
       decoration: BoxDecoration(
         color: cs.surface,
@@ -450,12 +483,15 @@ class _SectionCard extends StatelessWidget {
     );
   }
 }
+
 class _CompletedTile extends StatelessWidget {
   final String fieldName;
   const _CompletedTile({required this.fieldName});
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     const fieldLabels = {
       'verified': 'Verification',
       'profile_picture': 'Profile Picture',
@@ -467,6 +503,7 @@ class _CompletedTile extends StatelessWidget {
       'work': 'Work Information',
       'biography': 'Biography',
     };
+
     const fieldIcons = {
       'verified': Iconsax.verify,
       'profile_picture': Iconsax.user,
@@ -478,8 +515,10 @@ class _CompletedTile extends StatelessWidget {
       'work': Iconsax.briefcase,
       'biography': Iconsax.document_text,
     };
+
     final label = fieldLabels[fieldName] ?? fieldName;
     final icon = fieldIcons[fieldName] ?? Iconsax.check;
+
     return ListTile(
       dense: true,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
@@ -496,16 +535,19 @@ class _CompletedTile extends StatelessWidget {
     );
   }
 }
+
 class _MissingTile extends StatelessWidget {
   final MissingField field;
   final VoidCallback onTap;
   const _MissingTile({required this.field, required this.onTap});
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final color = field.required ? Colors.red.shade400 : Colors.orange.shade600;
     final iconData = field.icon;
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
@@ -557,18 +599,22 @@ class _MissingTile extends StatelessWidget {
     );
   }
 }
+
 // ---------------- Painter ----------------
+
 class _RingPainter extends CustomPainter {
   final double progress; // 0..1
   final Color color;
   final double strokeWidth;
   final bool isTrack;
+
   _RingPainter({
     required this.progress,
     required this.color,
     required this.strokeWidth,
     required this.isTrack,
   });
+
   @override
   void paint(Canvas canvas, Size size) {
     final center = size.center(Offset.zero);
@@ -576,6 +622,7 @@ class _RingPainter extends CustomPainter {
     final rect = Rect.fromCircle(center: center, radius: radius);
     final startAngle = -math.pi / 2;
     final sweepAngle = (math.pi * 2) * progress;
+
     if (isTrack) {
       final trackPaint = Paint()
         ..style = PaintingStyle.stroke
@@ -585,7 +632,9 @@ class _RingPainter extends CustomPainter {
       canvas.drawArc(rect, startAngle, math.pi * 2, false, trackPaint);
       return;
     }
+
     if (progress == 0) return;
+
     // Glow
     final glowPaint = Paint()
       ..style = PaintingStyle.stroke
@@ -594,6 +643,7 @@ class _RingPainter extends CustomPainter {
       ..color = color
       ..maskFilter = MaskFilter.blur(BlurStyle.normal, strokeWidth / 2);
     canvas.drawArc(rect, startAngle, sweepAngle, false, glowPaint);
+
     // Gradient sweep
     final sweepPaint = Paint()
       ..style = PaintingStyle.stroke
@@ -606,8 +656,10 @@ class _RingPainter extends CustomPainter {
         stops: const [0.0, 1.0],
         tileMode: TileMode.clamp,
       ).createShader(rect);
+
     canvas.drawArc(rect, startAngle, sweepAngle, false, sweepPaint);
   }
+
   @override
   bool shouldRepaint(covariant _RingPainter oldDelegate) {
     return oldDelegate.progress != progress ||

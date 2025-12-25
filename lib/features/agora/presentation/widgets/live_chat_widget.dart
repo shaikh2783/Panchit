@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'dart:async';
+
 class LiveChatWidget extends StatefulWidget {
   const LiveChatWidget({
     super.key,
@@ -8,17 +9,21 @@ class LiveChatWidget extends StatefulWidget {
     this.isVisible = true,
     this.onToggleVisibility,
   });
+
   final String channelName;
   final bool isVisible;
   final VoidCallback? onToggleVisibility;
+
   @override
   State<LiveChatWidget> createState() => _LiveChatWidgetState();
 }
+
 class _LiveChatWidgetState extends State<LiveChatWidget>
     with SingleTickerProviderStateMixin {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   late AnimationController _animationController;
+  
   // قائمة الرسائل التجريبية - سيتم استبدالها بـ API لاحقاً
   final List<ChatMessage> _messages = [
     ChatMessage(
@@ -40,6 +45,7 @@ class _LiveChatWidgetState extends State<LiveChatWidget>
       isVerified: false,
     ),
   ];
+
   @override
   void initState() {
     super.initState();
@@ -47,12 +53,15 @@ class _LiveChatWidgetState extends State<LiveChatWidget>
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
+    
     if (widget.isVisible) {
       _animationController.forward();
     }
+    
     // محاكاة رسائل جديدة كل 10 ثوان للعرض التوضيحي
     _simulateNewMessages();
   }
+
   void _simulateNewMessages() {
     Timer.periodic(const Duration(seconds: 10), (timer) {
       if (mounted && widget.isVisible) {
@@ -65,6 +74,7 @@ class _LiveChatWidgetState extends State<LiveChatWidget>
           'ما شاء الله عليك',
           'استمر 💪',
         ];
+        
         final demoNames = [
           'فاطمة أحمد',
           'عبدالله محمد',
@@ -73,6 +83,7 @@ class _LiveChatWidgetState extends State<LiveChatWidget>
           'خالد العلي',
           'مريم حسن',
         ];
+        
         setState(() {
           _messages.add(ChatMessage(
             username: demoNames[DateTime.now().millisecond % demoNames.length],
@@ -81,12 +92,14 @@ class _LiveChatWidgetState extends State<LiveChatWidget>
             isVerified: DateTime.now().millisecond % 3 == 0,
           ));
         });
+        
         _scrollToBottom();
       } else {
         timer.cancel();
       }
     });
   }
+
   @override
   void didUpdateWidget(LiveChatWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -98,6 +111,7 @@ class _LiveChatWidgetState extends State<LiveChatWidget>
       }
     }
   }
+
   void _sendMessage() {
     final message = _messageController.text.trim();
     if (message.isNotEmpty) {
@@ -110,10 +124,12 @@ class _LiveChatWidgetState extends State<LiveChatWidget>
           isOwnMessage: true,
         ));
       });
+      
       _messageController.clear();
       _scrollToBottom();
     }
   }
+
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
@@ -125,9 +141,11 @@ class _LiveChatWidgetState extends State<LiveChatWidget>
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    
     return AnimatedBuilder(
       animation: _animationController,
       builder: (context, child) {
@@ -157,10 +175,12 @@ class _LiveChatWidgetState extends State<LiveChatWidget>
                   children: [
                     // Header
                     _buildHeader(theme),
+                    
                     // Messages
                     Expanded(
                       child: _buildMessagesList(theme),
                     ),
+                    
                     // Input
                     _buildMessageInput(theme),
                   ],
@@ -172,6 +192,7 @@ class _LiveChatWidgetState extends State<LiveChatWidget>
       },
     );
   }
+
   Widget _buildHeader(ThemeData theme) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -227,6 +248,7 @@ class _LiveChatWidgetState extends State<LiveChatWidget>
       ),
     );
   }
+
   Widget _buildMessagesList(ThemeData theme) {
     return ListView.builder(
       controller: _scrollController,
@@ -238,6 +260,7 @@ class _LiveChatWidgetState extends State<LiveChatWidget>
       },
     );
   }
+
   Widget _buildMessageBubble(ChatMessage message, ThemeData theme) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
@@ -276,7 +299,9 @@ class _LiveChatWidgetState extends State<LiveChatWidget>
                 ),
               ],
             ),
+          
           const SizedBox(height: 2),
+          
           // Message
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -294,6 +319,7 @@ class _LiveChatWidgetState extends State<LiveChatWidget>
               ),
             ),
           ),
+          
           // Time for own messages
           if (message.isOwnMessage) ...[
             const SizedBox(height: 2),
@@ -309,6 +335,7 @@ class _LiveChatWidgetState extends State<LiveChatWidget>
       ),
     );
   }
+
   Widget _buildMessageInput(ThemeData theme) {
     return Container(
       padding: const EdgeInsets.all(12),
@@ -365,9 +392,11 @@ class _LiveChatWidgetState extends State<LiveChatWidget>
       ),
     );
   }
+
   String _formatTime(DateTime time) {
     final now = DateTime.now();
     final difference = now.difference(time);
+    
     if (difference.inMinutes == 0) {
       return 'الآن';
     } else if (difference.inHours == 0) {
@@ -376,6 +405,7 @@ class _LiveChatWidgetState extends State<LiveChatWidget>
       return '${difference.inHours}س';
     }
   }
+
   @override
   void dispose() {
     _messageController.dispose();
@@ -384,12 +414,14 @@ class _LiveChatWidgetState extends State<LiveChatWidget>
     super.dispose();
   }
 }
+
 class ChatMessage {
   final String username;
   final String message;
   final DateTime timestamp;
   final bool isVerified;
   final bool isOwnMessage;
+
   ChatMessage({
     required this.username,
     required this.message,

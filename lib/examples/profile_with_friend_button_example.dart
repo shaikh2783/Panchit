@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../features/profile/presentation/pages/profile_page.dart';
+
 class ProfileWithFriendButtonExample extends StatelessWidget {
   const ProfileWithFriendButtonExample({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

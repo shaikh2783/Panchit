@@ -1,5 +1,7 @@
 import 'package:snginepro/core/bloc/base_bloc.dart';
+
 import '../../data/models/wallet_transaction.dart';
+
 class WalletTransactionsState extends BaseState {
   const WalletTransactionsState({
     this.transactions = const [],
@@ -10,11 +12,13 @@ class WalletTransactionsState extends BaseState {
     bool isLoading = false,
     String? errorMessage,
   }) : super(isLoading: isLoading, errorMessage: errorMessage);
+
   final List<WalletTransaction> transactions;
   final bool hasMore;
   final bool isLoadingMore;
   final int offset;
   final int limit;
+
   WalletTransactionsState copyWith({
     List<WalletTransaction>? transactions,
     bool? hasMore,
@@ -35,6 +39,7 @@ class WalletTransactionsState extends BaseState {
       limit: limit ?? this.limit,
     );
   }
+
   @override
   List<Object?> get props => [
     transactions,

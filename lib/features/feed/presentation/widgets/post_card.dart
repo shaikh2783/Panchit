@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'dart:ui';
 import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
@@ -36,8 +38,6 @@ import 'package:snginepro/core/models/reaction_model.dart';
 import 'package:snginepro/features/feed/presentation/widgets/reaction_users_bottom_sheet.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
 import '../../../pages/presentation/pages/page_profile_page.dart';
-import '../../../groups/presentation/pages/group_page.dart';
-import '../../../../core/services/group_details_service.dart';
 import '../../../pages/data/models/page.dart' as page_model;
 import 'package:snginepro/features/feed/data/services/post_management_api_service.dart';
 import 'package:snginepro/core/network/api_client.dart';
@@ -48,6 +48,9 @@ import 'package:snginepro/features/ads/data/services/ads_tracking_service.dart';
 import 'package:snginepro/features/boost/domain/boost_repository.dart';
 import 'package:snginepro/features/wallet/presentation/pages/wallet_packages_page.dart';
 import 'package:snginepro/features/blog/presentation/pages/blog_post_page.dart';
+import 'package:snginepro/features/feed/presentation/widgets/share_post_dialog.dart';
+import 'package:snginepro/features/feed/presentation/widgets/post_reviews_bottom_sheet.dart';
+
 /// Reusable Post Card widget that can be used in any feed (posts or ads)
 class PostCard extends StatefulWidget {
   const PostCard({
@@ -57,14 +60,18 @@ class PostCard extends StatefulWidget {
     this.onPostUpdated,
     this.onPostDeleted,
   });
+
   final Post post;
   final Function(String postId, String reaction)? onReactionChanged;
   final Function(Post updatedPost)? onPostUpdated;
   final Function(String postId)? onPostDeleted;
+
   @override
   State<PostCard> createState() => _PostCardState();
 }
-class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin {
+
+class _PostCardState extends State<PostCard>
+    with AutomaticKeepAliveClientMixin {
   late PostManagementApiService _postService;
   late AdsTrackingService _adsTrackingService;
   late AdultContentService _adultContentService; // 🆕 خدمة محتوى البالغين
@@ -72,20 +79,24 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
   bool _adViewTracked = false; // لتتبع المشاهدة مرة واحدة فقط
   bool _isBoostLoading = false;
   bool _isBoosted = false;
+
   @override
   bool get wantKeepAlive => true; // الحفاظ على حالة الـ widget
+
   @override
   void initState() {
     super.initState();
     _currentPost = widget.post;
     _isBoosted = _currentPost.isPromoted;
+
     // Initialize services
     final apiClient = context.read<ApiClient>();
     _postService = PostManagementApiService(apiClient);
     _adultContentService = AdultContentService(apiClient); // 🆕 تهيئة الخدمة
+
     // Track ad view if it's a view-based ad
-    if (_currentPost.isAd && 
-        _currentPost.campaignBidding == 'view' && 
+    if (_currentPost.isAd &&
+        _currentPost.campaignBidding == 'view' &&
         _currentPost.campaignId != null &&
         !_adViewTracked) {
       _adViewTracked = true;
@@ -94,22 +105,26 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
       });
     }
   }
+
   @override
   void didUpdateWidget(covariant PostCard oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.post != oldWidget.post) {
       final newPost = widget.post;
       final isDifferentPost = newPost.id != oldWidget.post.id;
-      final shouldTrackAdView = isDifferentPost &&
+      final shouldTrackAdView =
+          isDifferentPost &&
           newPost.isAd &&
           newPost.campaignBidding == 'view' &&
           newPost.campaignId != null;
+
       setState(() {
         _currentPost = newPost;
         if (isDifferentPost) {
           _adViewTracked = false;
         }
       });
+
       if (shouldTrackAdView && !_adViewTracked) {
         _adViewTracked = true;
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -120,20 +135,27 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
       }
     }
   }
+
   // Track ad view
   Future<void> _trackAdView() async {
     if (_currentPost.campaignId == null) return;
+
     final apiClient = context.read<ApiClient>();
     _adsTrackingService = AdsTrackingService(apiClient);
+
     await _adsTrackingService.trackAdView(_currentPost.campaignId!);
   }
+
   // Track ad click
   Future<void> _trackAdClick() async {
     if (_currentPost.campaignId == null) return;
+
     final apiClient = context.read<ApiClient>();
     _adsTrackingService = AdsTrackingService(apiClient);
+
     await _adsTrackingService.trackAdClick(_currentPost.campaignId!);
   }
+
   void _onAuthorTap(BuildContext context) {
     // إذا كان المنشور من صفحة، افتح صفحة الـ Page
     if (_currentPost.isPagePost) {
@@ -149,6 +171,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
         verified: false,
         boosted: false,
       );
+
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -157,82 +180,47 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
       );
       return;
     }
+
     // إذا كان من مستخدم عادي، افتح الملف الشخصي
     if (_currentPost.authorId != null) {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ProfilePage(
-            userId: int.tryParse(_currentPost.authorId!),
-          ),
+          builder: (context) =>
+              ProfilePage(userId: int.tryParse(_currentPost.authorId!)),
         ),
       );
     } else if (_currentPost.authorUsername != null) {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ProfilePage(
-            username: _currentPost.authorUsername,
-          ),
+          builder: (context) =>
+              ProfilePage(username: _currentPost.authorUsername),
         ),
       );
     }
   }
-  // --- 💡 NEW: دالة للتوجه إلى المجموعة باستخدام API ---
+
+  // Groups module removed; show info instead of navigation
   Future<void> _onGroupTap(BuildContext context) async {
     if (!_currentPost.isGroupPost || _currentPost.groupId == null) return;
-    // عرض مؤشر التحميل
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Center(
-        child: CircularProgressIndicator(),
+
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('groups_no_longer_available'.tr),
+        duration: const Duration(seconds: 2),
       ),
     );
-    try {
-      // جلب تفاصيل المجموعة من API
-      final groupService = GroupDetailsService(context.read<ApiClient>());
-      final group = await groupService.getGroupDetails(_currentPost.groupId!);
-      // إغلاق مؤشر التحميل
-      if (mounted) Navigator.of(context).pop();
-      if (group != null && mounted) {
-        // التوجه إلى صفحة المجموعة بالبيانات الكاملة
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => GroupPage.withGroup(group: group),
-          ),
-        );
-      } else {
-        // عرض رسالة خطأ
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('فشل في تحميل بيانات المجموعة'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
-      }
-    } catch (e) {
-      // إغلاق مؤشر التحميل وعرض خطأ
-      if (mounted) {
-        Navigator.of(context).pop();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('خطأ: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    }
   }
+
   /// تحقق من كون المستخدم الحالي هو مالك المنشور
   bool _isOwner(Post post) {
     try {
       final auth = Provider.of<AuthNotifier>(context, listen: false);
       final currentUser = auth.currentUser;
       if (currentUser == null) return false;
+
       String? currentUserId;
       if (currentUser['user_id'] != null) {
         currentUserId = currentUser['user_id'].toString();
@@ -241,21 +229,27 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
       } else if (currentUser['userID'] != null) {
         currentUserId = currentUser['userID'].toString();
       }
+
       if (currentUserId == null || currentUserId.isEmpty) return false;
+
       // If post is authored by a user -> compare authorId
       if (post.authorType == 'user') {
         return post.authorId != null && post.authorId == currentUserId;
       }
+
       // If post is from a page try matching pageId or authorId as a fallback
       if (post.isPagePost) {
         if (post.pageId != null && post.pageId == currentUserId) return true;
-        if (post.authorId != null && post.authorId == currentUserId) return true;
+        if (post.authorId != null && post.authorId == currentUserId)
+          return true;
       }
+
       return false;
     } catch (e) {
       return false;
     }
   }
+
   /// عرض قائمة خيارات المنشور
   void _showPostMenu(BuildContext context) {
     showModalBottomSheet(
@@ -263,87 +257,29 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) => PostMenuBottomSheet(
-        post: _currentPost,
-        onAction: _handlePostAction,
-      ),
+      builder: (context) =>
+          PostMenuBottomSheet(post: _currentPost, onAction: _handlePostAction),
     );
   }
+
   /// عرض Reviews المنشور
   void _showReviewsBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.75,
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            // مقبض السحب
-            Container(
-              width: 40,
-              height: 4,
-              margin: const EdgeInsets.only(bottom: 16),
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            // عنوان
-            Row(
-              children: [
-                Icon(
-                  Iconsax.star,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  ' (${_currentPost.reviewsCountFormatted})${'review'.tr}',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            // محتوى Reviews (مؤقت)
-            Expanded(
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Iconsax.star,
-                      size: 64,
-                      color: Colors.grey[400],
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'ratings_under_development'.tr,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'ratings_coming_soon'.tr,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.grey[500],
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+      backgroundColor: Colors.transparent,
+      builder: (context) => PostReviewsBottomSheet(
+        post: _currentPost,
+        onCountChanged: (newCount) {
+          setState(() {
+            _currentPost = _currentPost.copyWith(reviewsCount: newCount);
+          });
+          widget.onPostUpdated?.call(_currentPost);
+        },
       ),
     );
   }
+
   /// عرض Tip للمنشور
   void _showTipBottomSheet(BuildContext context) {
     showModalBottomSheet(
@@ -370,16 +306,13 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
             // عنوان
             Row(
               children: [
-                Icon(
-                  Iconsax.dollar_circle,
-                  color: Colors.amber,
-                ),
+                Icon(Iconsax.dollar_circle, color: Colors.amber),
                 const SizedBox(width: 8),
                 Text(
-                  'send_tip'.tr,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  'Send a Tip',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -389,7 +322,10 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
               children: [
                 _Avatar(
                   url: _currentPost.authorAvatarUrl != null
-                      ? context.read<AppConfig>().mediaAsset(_currentPost.authorAvatarUrl!).toString()
+                      ? context
+                            .read<AppConfig>()
+                            .mediaAsset(_currentPost.authorAvatarUrl!)
+                            .toString()
                       : null,
                   radius: 20,
                   showOnlineIndicator: _currentPost.authorType == 'user',
@@ -400,16 +336,16 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${'send_tip_to'.tr} ${_currentPost.authorName}',
+                      'Send a tip to ${_currentPost.authorName}',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     Text(
-                      'appreciation_message'.tr,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.grey[600],
-                      ),
+                      'Show your appreciation for this content',
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                     ),
                   ],
                 ),
@@ -422,24 +358,20 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      Iconsax.dollar_circle,
-                      size: 64,
-                      color: Colors.amber,
-                    ),
+                    Icon(Iconsax.dollar_circle, size: 64, color: Colors.amber),
                     const SizedBox(height: 16),
                     Text(
-                      'tip_feature_coming_soon'.tr,
+                      'Tip feature coming soon!',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: Colors.grey[600],
                       ),
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'tip_feature_description'.tr,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.grey[500],
-                      ),
+                      'We\'re working on implementing the tipping system to support content creators.',
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
                       textAlign: TextAlign.center,
                     ),
                   ],
@@ -451,11 +383,13 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
       ),
     );
   }
+
   /// بناء أيقونات التفاعلات المفصلة
   List<Widget> _buildReactionIcons() {
     final icons = <Widget>[];
     final sortedReactions = _currentPost.reactionBreakdown.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value)); // ترتيب حسب العدد
+
     // عرض أهم 3 تفاعلات فقط
     for (int i = 0; i < sortedReactions.length && i < 3; i++) {
       final entry = sortedReactions[i];
@@ -466,37 +400,52 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
         }
       }
     }
+
     return icons;
   }
+
   /// معالجة تعليم المنشور كـ للبالغين
   Future<void> _handleAdultContentAction(PostAction action) async {
     final isMarkingAsAdult = action == PostAction.markAsAdult;
+
     // تأكيد من المستخدم
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(isMarkingAsAdult ? 'mark_as_adult_title'.tr : 'remove_adult_title'.tr),
+        title: Text(
+          isMarkingAsAdult
+              ? 'adult_confirm_mark_title'.tr
+              : 'adult_confirm_remove_title'.tr,
+        ),
         content: Text(
           isMarkingAsAdult
-              ? 'mark_as_adult_description'.tr
-              : 'remove_adult_description'.tr,
+              ? 'This will:\n'
+                    '• Add 18+ label to your post\n'
+                    '• Apply blur to all photos\n'
+                    '• Require age verification to view'
+              : 'This will:\n'
+                    '• Remove 18+ label\n'
+                    '• Remove blur from photos\n'
+                    '• Make content visible to everyone',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child:  Text('cancel'.tr),
+            child: Text('cancel'.tr),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(
               backgroundColor: isMarkingAsAdult ? Colors.orange : Colors.blue,
             ),
-            child: Text(isMarkingAsAdult ? 'mark_18'.tr : 'remove_18'.tr),
+            child: Text(isMarkingAsAdult ? 'adult_confirm_action_mark'.tr : 'adult_confirm_action_remove'.tr),
           ),
         ],
       ),
     );
+
     if (confirmed != true) return;
+
     try {
       // إظهار مؤشر التحميل
       if (mounted) {
@@ -510,40 +459,44 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                   child: CircularProgressIndicator(strokeWidth: 2),
                 ),
                 const SizedBox(width: 16),
-                Text(isMarkingAsAdult ? 'marking_adult'.tr : 'removing_18'.tr),
+                Text(
+                  isMarkingAsAdult
+                      ? 'Marking as adult content...'
+                      : 'Removing 18+ label...',
+                ),
               ],
             ),
             duration: const Duration(seconds: 2),
           ),
         );
       }
+
       // استدعاء API
       final result = await _adultContentService.markPostAsAdult(
         postId: _currentPost.id,
         adult: isMarkingAsAdult,
       );
+
       if (result['status'] == 'success') {
         // تحديث الحالة المحلية
         setState(() {
           // سنحتاج إلى تحديث Post model ليشمل تحديث forAdult و blur للصور
           // في الوقت الحالي، سنقوم بإعادة تحميل المنشور
         });
+
         if (mounted) {
           ScaffoldMessenger.of(context).clearSnackBars();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Row(
                 children: [
-                  Icon(
-                    Icons.check_circle,
-                    color: Colors.white,
-                  ),
+                  Icon(Icons.check_circle, color: Colors.white),
                   const SizedBox(width: 16),
                   Expanded(
                     child: Text(
                       isMarkingAsAdult
-                          ? 'adult_mark_success'.tr
-                          : 'adult_remove_success'.tr,
+                          ? '✅ Post marked as 18+ and photos blurred'
+                          : '✅ 18+ label removed',
                     ),
                   ),
                 ],
@@ -552,6 +505,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
               duration: const Duration(seconds: 3),
             ),
           );
+
           // إعادة تحميل المنشور للحصول على التحديثات
           // أو يمكننا تحديثه محلياً إذا أضفنا copyWith method
           widget.onPostUpdated?.call(_currentPost);
@@ -566,9 +520,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
               children: [
                 const Icon(Icons.error, color: Colors.white),
                 const SizedBox(width: 16),
-                Expanded(
-                  child: Text('Failed: ${e.toString()}'),
-                ),
+                Expanded(child: Text('${'error'.tr}: ${e.toString()}')),
               ],
             ),
             backgroundColor: Colors.red,
@@ -578,8 +530,10 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
       }
     }
   }
+
   /// التعامل مع إجراءات المنشور
   Future<void> _handlePostAction(PostAction action) async {
+
     // معالجة خاصة لتعديل المنشور
     if (action == PostAction.editPost) {
       await Navigator.push(
@@ -592,6 +546,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                 _currentPost = updatedPost;
               });
               widget.onPostUpdated?.call(updatedPost);
+
               // تحديث PostsBloc للتأكد من تحديث جميع الواجهات
               if (mounted) {
                 context.read<PostsBloc>().add(UpdatePostEvent(updatedPost));
@@ -602,29 +557,38 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
       );
       return;
     }
+
     // معالجة خاصة لتعليم المنشور كـ للبالغين
-    if (action == PostAction.markAsAdult || action == PostAction.unmarkAsAdult) {
+    if (action == PostAction.markAsAdult ||
+        action == PostAction.unmarkAsAdult) {
       await _handleAdultContentAction(action);
       return;
     }
+
     // تحديث فوري للواجهة (Optimistic Update)
     final oldPost = _currentPost;
     final updatedPost = _updatePostState(_currentPost, action);
+
     setState(() {
       _currentPost = updatedPost;
     });
+
     try {
       final result = await _postService.managePost(
         postId: _currentPost.id,
         action: action,
       );
+
       if (result['status'] == 'success' && result['data']?['success'] == true) {
+
         // إشعار الكاتب الرئيسي بالتحديث
         widget.onPostUpdated?.call(_currentPost);
+
         // تحديث PostsBloc للتأكد من تحديث جميع الواجهات
         if (mounted) {
           context.read<PostsBloc>().add(UpdatePostEvent(_currentPost));
         }
+
         // في حالة الحذف، إشعار الكاتب الرئيسي وحذف من PostsBloc
         if (action == PostAction.deletePost) {
           widget.onPostDeleted?.call(_currentPost.id.toString());
@@ -634,6 +598,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
             // أو قد نكون في صفحة Reels حيث لا يوجد dialog/bottomsheet مفتوح
           }
         }
+
         // عرض رسالة نجاح
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -648,10 +613,11 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
         setState(() {
           _currentPost = oldPost;
         });
+
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Failed to ${action.value}'),
+              content: Text('${'operation_failed'.tr}: ${action.value}'),
               backgroundColor: Colors.red,
             ),
           );
@@ -662,17 +628,19 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
       setState(() {
         _currentPost = oldPost;
       });
+
       // عرض رسالة خطأ
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error: ${e.toString()}'),
+            content: Text('${'error'.tr}: ${e.toString()}'),
             backgroundColor: Colors.red,
           ),
         );
       }
     }
   }
+
   /// تحديث حالة المنشور بعد الإجراء
   Post _updatePostState(Post currentPost, PostAction action) {
     switch (action) {
@@ -696,6 +664,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
         return currentPost;
     }
   }
+
   /// رسالة النجاح بناءً على الإجراء
   String _getSuccessMessage(PostAction action) {
     switch (action) {
@@ -724,27 +693,32 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
     }
   }
   // --- نهاية التحسين ---
+
   String _getEventActionText(Post post) {
     if (post.postType == 'event') {
-      return 'created an event';
+      return 'event_action_created'.tr;
     } else if (post.postType == 'event_cover') {
-      return 'updated event cover photo';
+      return 'event_action_updated_cover'.tr;
     } else if (post.inEvent && post.event != null) {
       // منشور عادي في الحدث
-      return 'posted in ${post.event!.eventTitle}';
+      return 'event_action_posted_in'.trParams({
+        'event': post.event!.eventTitle,
+      });
     }
     return '';
   }
+
   String _getLiveActionText(Post post) {
     if (post.postType == 'live') {
       if (post.isActiveLive) {
-        return 'is_live_now'.tr;
+        return 'live_action_is_live'.tr;
       } else {
-        return 'was_live'.tr;
+        return 'live_action_was_live'.tr;
       }
     }
     return '';
   }
+
   /// تحديد الأيقونة المناسبة للشعور بناءً على نوع الـ action
   IconData _getFeelingIcon(String feelingAction) {
     switch (feelingAction.toLowerCase()) {
@@ -774,13 +748,18 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
         return Iconsax.happyemoji;
     }
   }
+
   // 📢 Handle Ad Click - Navigate based on ad type
   Future<void> _handleAdClick(BuildContext context) async {
     // Track click if it's a click-based ad
-    if (_currentPost.campaignBidding == 'click' && _currentPost.campaignId != null) {
+    if (_currentPost.campaignBidding == 'click' &&
+        _currentPost.campaignId != null) {
       await _trackAdClick();
     }
+
     final adsType = _currentPost.adsType;
+
+
     if (adsType == 'page' && _currentPost.adPageId != null) {
       // Navigate to page
       final pageModel = page_model.PageModel(
@@ -795,6 +774,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
         verified: false,
         boosted: false,
       );
+
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -803,44 +783,51 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
       );
     } else if (adsType == 'group' && _currentPost.adGroupId != null) {
       // Navigate to group
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => GroupPage.byId(groupId: _currentPost.adGroupId!),
-        ),
-      );
     } else if (adsType == 'event' && _currentPost.adEventId != null) {
       // Navigate to event
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => EventDetailPage(eventId: _currentPost.adEventId!),
+          builder: (context) =>
+              EventDetailPage(eventId: _currentPost.adEventId!),
         ),
       );
-    } else if (adsType == 'url' && _currentPost.campaignUrl != null && _currentPost.campaignUrl!.isNotEmpty) {
+    } else if (adsType == 'url' &&
+        _currentPost.campaignUrl != null &&
+        _currentPost.campaignUrl!.isNotEmpty) {
       final raw = _currentPost.campaignUrl!.trim();
       await _openAdUrl(raw);
     }
   }
+
   Future<void> _openAdUrl(String rawUrl) async {
     try {
       // Ensure scheme exists to avoid launch failures
       final uri = Uri.tryParse(rawUrl);
       if (uri == null) {
-        Get.snackbar('error'.tr, 'Invalid URL');
+        Get.snackbar('error'.tr, 'invalid_url'.tr);
         return;
       }
+
       final normalized = uri.hasScheme ? uri : Uri.parse('https://$rawUrl');
+
       if (!await launchUrl(normalized, mode: LaunchMode.externalApplication)) {
-        Get.snackbar('error'.tr, 'Could not open URL');
+        Get.snackbar('error'.tr, 'could_not_open_url'.tr);
       }
     } catch (e) {
-      Get.snackbar('error'.tr, 'Could not open URL: $e');
+      Get.snackbar('error'.tr,
+          'could_not_open_url_with_error'.trParams({'error': e.toString()}));
     }
   }
+
   // 📢 Build Ad Card - Professional & Unique Design
-  Widget _buildAdCard(BuildContext context, ThemeData theme, Function mediaAsset) {
+  Widget _buildAdCard(
+    BuildContext context,
+    ThemeData theme,
+    Function mediaAsset,
+  ) {
     final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       key: ValueKey('ad_card_${_currentPost.id}'),
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
@@ -849,19 +836,16 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: isDark 
-            ? [
-                theme.colorScheme.surfaceContainerHighest,
-                theme.colorScheme.surface,
-              ]
-            : [
-                Colors.white,
-                theme.colorScheme.surfaceContainerLowest,
-              ],
+          colors: isDark
+              ? [
+                  theme.colorScheme.surfaceContainerHighest,
+                  theme.colorScheme.surface,
+                ]
+              : [Colors.white, theme.colorScheme.surfaceContainerLowest],
         ),
         boxShadow: [
           BoxShadow(
-            color: theme.colorScheme.primary.withValues(alpha: 0.1),
+            color: theme.colorScheme.primary.withOpacity(0.1),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -878,13 +862,13 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    theme.colorScheme.primary.withValues(alpha: 0.15),
-                    theme.colorScheme.tertiary.withValues(alpha: 0.15),
+                    theme.colorScheme.primary.withOpacity(0.15),
+                    theme.colorScheme.tertiary.withOpacity(0.15),
                   ],
                 ),
                 border: Border(
                   bottom: BorderSide(
-                    color: theme.colorScheme.primary.withValues(alpha: 0.2),
+                    color: theme.colorScheme.primary.withOpacity(0.2),
                     width: 1,
                   ),
                 ),
@@ -894,7 +878,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.primary.withValues(alpha: 0.2),
+                      color: theme.colorScheme.primary.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(
@@ -905,7 +889,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'sponsored'.tr,
+                    'Sponsored',
                     style: theme.textTheme.labelMedium?.copyWith(
                       color: theme.colorScheme.primary,
                       fontWeight: FontWeight.w600,
@@ -916,13 +900,15 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                   Icon(
                     Iconsax.arrow_right_3,
                     size: 16,
-                    color: theme.colorScheme.primary.withValues(alpha: 0.6),
+                    color: theme.colorScheme.primary.withOpacity(0.6),
                   ),
                 ],
               ),
             ),
+
             // Ad Image with Overlay
-            if (_currentPost.adsImage != null && _currentPost.adsImage!.isNotEmpty)
+            if (_currentPost.adsImage != null &&
+                _currentPost.adsImage!.isNotEmpty)
               GestureDetector(
                 onTap: () => _handleAdClick(context),
                 child: Stack(
@@ -980,7 +966,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                             begin: Alignment.bottomCenter,
                             end: Alignment.topCenter,
                             colors: [
-                              Colors.black.withValues(alpha: 0.6),
+                              Colors.black.withOpacity(0.6),
                               Colors.transparent,
                             ],
                           ),
@@ -992,13 +978,16 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                       top: 12,
                       right: 12,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
                         decoration: BoxDecoration(
                           color: theme.colorScheme.primary,
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.3),
+                              color: Colors.black.withOpacity(0.3),
                               blurRadius: 8,
                             ),
                           ],
@@ -1026,6 +1015,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                   ],
                 ),
               ),
+
             // Ad Content with Modern Layout
             Padding(
               padding: const EdgeInsets.all(20),
@@ -1033,15 +1023,17 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Target Info (Page/Group name and picture)
-                  if (_currentPost.targetName != null && _currentPost.targetName!.isNotEmpty)
+                  if (_currentPost.targetName != null &&
+                      _currentPost.targetName!.isNotEmpty)
                     Container(
                       margin: const EdgeInsets.only(bottom: 16),
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                        color: theme.colorScheme.surfaceContainerHighest
+                            .withOpacity(0.5),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: theme.colorScheme.outline.withValues(alpha: 0.2),
+                          color: theme.colorScheme.outline.withOpacity(0.2),
                         ),
                       ),
                       child: Row(
@@ -1053,41 +1045,52 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                                color: theme.colorScheme.primary.withOpacity(
+                                  0.3,
+                                ),
                                 width: 2,
                               ),
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
-                              child: _currentPost.targetPicture != null && _currentPost.targetPicture!.isNotEmpty
-                                ? CachedNetworkImage(
-                                    imageUrl: _currentPost.targetPicture!,
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) => Container(
-                                      color: theme.colorScheme.surfaceContainerHighest,
+                              child:
+                                  _currentPost.targetPicture != null &&
+                                      _currentPost.targetPicture!.isNotEmpty
+                                  ? CachedNetworkImage(
+                                      imageUrl: _currentPost.targetPicture!,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) => Container(
+                                        color: theme
+                                            .colorScheme
+                                            .surfaceContainerHighest,
+                                        child: Icon(
+                                          _getAdTypeIcon(),
+                                          size: 24,
+                                          color: theme.colorScheme.outline,
+                                        ),
+                                      ),
+                                      errorWidget: (context, url, error) =>
+                                          Container(
+                                            color: theme
+                                                .colorScheme
+                                                .surfaceContainerHighest,
+                                            child: Icon(
+                                              _getAdTypeIcon(),
+                                              size: 24,
+                                              color: theme.colorScheme.outline,
+                                            ),
+                                          ),
+                                    )
+                                  : Container(
+                                      color: theme
+                                          .colorScheme
+                                          .surfaceContainerHighest,
                                       child: Icon(
                                         _getAdTypeIcon(),
                                         size: 24,
                                         color: theme.colorScheme.outline,
                                       ),
                                     ),
-                                    errorWidget: (context, url, error) => Container(
-                                      color: theme.colorScheme.surfaceContainerHighest,
-                                      child: Icon(
-                                        _getAdTypeIcon(),
-                                        size: 24,
-                                        color: theme.colorScheme.outline,
-                                      ),
-                                    ),
-                                  )
-                                : Container(
-                                    color: theme.colorScheme.surfaceContainerHighest,
-                                    child: Icon(
-                                      _getAdTypeIcon(),
-                                      size: 24,
-                                      color: theme.colorScheme.outline,
-                                    ),
-                                  ),
                             ),
                           ),
                           const SizedBox(width: 12),
@@ -1115,10 +1118,11 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                                     const SizedBox(width: 4),
                                     Text(
                                       _getAdTypeLabel(),
-                                      style: theme.textTheme.labelSmall?.copyWith(
-                                        color: theme.colorScheme.primary,
-                                        fontWeight: FontWeight.w500,
-                                      ),
+                                      style: theme.textTheme.labelSmall
+                                          ?.copyWith(
+                                            color: theme.colorScheme.primary,
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                     ),
                                   ],
                                 ),
@@ -1129,13 +1133,15 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                           Icon(
                             Iconsax.arrow_right_3,
                             size: 20,
-                            color: theme.colorScheme.primary.withValues(alpha: 0.6),
+                            color: theme.colorScheme.primary.withOpacity(0.6),
                           ),
                         ],
                       ),
                     ),
+
                   // Campaign Title with Icon
-                  if (_currentPost.campaignTitle != null && _currentPost.campaignTitle!.isNotEmpty)
+                  if (_currentPost.campaignTitle != null &&
+                      _currentPost.campaignTitle!.isNotEmpty)
                     Row(
                       children: [
                         Expanded(
@@ -1149,8 +1155,10 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                         ),
                       ],
                     ),
+
                   // Campaign Description
-                  if (_currentPost.campaignDescription != null && _currentPost.campaignDescription!.isNotEmpty) ...[
+                  if (_currentPost.campaignDescription != null &&
+                      _currentPost.campaignDescription!.isNotEmpty) ...[
                     const SizedBox(height: 12),
                     Text(
                       _currentPost.campaignDescription!,
@@ -1162,8 +1170,10 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                       overflow: TextOverflow.ellipsis,
                     ),
                   ],
+
                   // Action Button with Modern Design
-                  if (_currentPost.actionButtonText != null && _currentPost.actionButtonText!.isNotEmpty) ...[
+                  if (_currentPost.actionButtonText != null &&
+                      _currentPost.actionButtonText!.isNotEmpty) ...[
                     const SizedBox(height: 20),
                     Container(
                       decoration: BoxDecoration(
@@ -1176,7 +1186,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: theme.colorScheme.primary.withValues(alpha: 0.4),
+                            color: theme.colorScheme.primary.withOpacity(0.4),
                             blurRadius: 12,
                             offset: const Offset(0, 4),
                           ),
@@ -1221,6 +1231,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
       ),
     );
   }
+
   // Get icon based on ad type
   IconData _getAdTypeIcon() {
     switch (_currentPost.adsType) {
@@ -1236,37 +1247,45 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
         return Iconsax.link;
     }
   }
+
   // Get label based on ad type
   String _getAdTypeLabel() {
     switch (_currentPost.adsType) {
       case 'page':
-        return 'page'.tr;
+        return 'ad_type_page'.tr;
       case 'group':
-        return 'group'.tr;
+        return 'ad_type_group'.tr;
       case 'event':
-        return 'event'.tr;
+        return 'ad_type_event'.tr;
       case 'post':
-        return 'post'.tr;
+        return 'ad_type_post'.tr;
       default:
-        return 'link'.tr;
+        return 'ad_type_link'.tr;
     }
   }
+
   // Handle boost/unboost action
   Future<void> _handleBoost(BuildContext context) async {
     if (_isBoostLoading) return;
+
     setState(() {
       _isBoostLoading = true;
     });
+
     try {
       final boostRepository = context.read<BoostRepository>();
       final result = _isBoosted
           ? await boostRepository.unboostPost(_currentPost.id)
           : await boostRepository.boostPost(_currentPost.id);
+
       if (result.success) {
         setState(() {
           _isBoosted = result.boosted ?? false;
-          _currentPost = _currentPost.copyWith(isPromoted: result.boosted ?? false);
+          _currentPost = _currentPost.copyWith(
+            isPromoted: result.boosted ?? false,
+          );
         });
+
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -1281,22 +1300,22 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
       if (context.mounted) {
         // التحقق من نوع الخطأ
         final errorMessage = e.toString();
-        final isSubscriptionRequired = errorMessage.contains('SUBSCRIPTION_REQUIRED') || 
-                                       errorMessage.contains('You need to subscribe') ||
-                                       errorMessage.contains('Error: SUBSCRIPTION_REQUIRED');
+        final isSubscriptionRequired =
+            errorMessage.contains('SUBSCRIPTION_REQUIRED') ||
+            errorMessage.contains('You need to subscribe') ||
+            errorMessage.contains('Error: SUBSCRIPTION_REQUIRED');
+
         if (isSubscriptionRequired) {
           // عرض dialog مع خيار الذهاب للباقات
           showDialog(
             context: context,
             builder: (dialogContext) => AlertDialog(
-              title:  Text('subscription_required'.tr),
-              content:  Text(
-                'subscription_required_message'.tr,
-              ),
+              title: Text('subscription_required'.tr),
+              content: Text('need_subscription_to_boost'.tr),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(dialogContext),
-                  child:  Text('cancel'.tr),
+                  child: Text('cancel_action'.tr),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -1311,7 +1330,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFE1306C),
                   ),
-                  child:  Text('view_packages'.tr),
+                  child: Text('show_packages_button'.tr),
                 ),
               ],
             ),
@@ -1335,21 +1354,27 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
       }
     }
   }
+
   @override
   @override
   Widget build(BuildContext context) {
     super.build(context); // مطلوب لـ AutomaticKeepAliveClientMixin
+
     final theme = Theme.of(context);
     final mediaAsset = context.read<AppConfig>().mediaAsset;
+
     // If this is an ad, show the ad card
     if (_currentPost.isAd) {
       return _buildAdCard(context, theme, mediaAsset);
     }
+
     // Otherwise, show the post card
+
     // إخفاء المنشور إذا كان مخفي (إلا إذا كان المالك)
     if (_currentPost.isHidden && !_isOwner(_currentPost)) {
       return const SizedBox.shrink();
     }
+
     return ElevatedCard(
       key: ValueKey('post_card_${_currentPost.id}'),
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
@@ -1386,8 +1411,8 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                               child: Text(
                                 _currentPost.authorName,
                                 style: theme.textTheme.titleSmall?.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                  fontWeight: FontWeight.w600,
+                                ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -1405,7 +1430,10 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                             if (_currentPost.forAdult) ...[
                               const SizedBox(width: 4),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
                                 decoration: BoxDecoration(
                                   color: Colors.red,
                                   borderRadius: BorderRadius.circular(4),
@@ -1423,19 +1451,21 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                           ],
                         ),
                         // إضافة نوع المنشور للأحداث
-                        if (_currentPost.inEvent && _currentPost.event != null) ...[
+                        if (_currentPost.inEvent &&
+                            _currentPost.event != null) ...[
                           const SizedBox(height: 2),
                           GestureDetector(
                             onTap: () {
                               // Navigate to event detail page
-                              final eventId = int.tryParse(_currentPost.event!.eventId);
+                              final eventId = int.tryParse(
+                                _currentPost.event!.eventId,
+                              );
                               if (eventId != null) {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (_) => EventDetailPage(
-                                      eventId: eventId,
-                                    ),
+                                    builder: (_) =>
+                                        EventDetailPage(eventId: eventId),
                                   ),
                                 );
                               }
@@ -1443,8 +1473,8 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                             child: Row(
                               children: [
                                 Icon(
-                                  _currentPost.postType == 'event' 
-                                      ? Icons.event_available 
+                                  _currentPost.postType == 'event'
+                                      ? Icons.event_available
                                       : _currentPost.postType == 'event_cover'
                                       ? Icons.photo_camera
                                       : Icons.event,
@@ -1473,18 +1503,22 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                           Row(
                             children: [
                               Icon(
-                                _currentPost.isActiveLive 
-                                    ? Iconsax.record_circle 
+                                _currentPost.isActiveLive
+                                    ? Iconsax.record_circle
                                     : Iconsax.video,
                                 size: 12,
-                                color: _currentPost.isActiveLive ? Colors.red : theme.colorScheme.primary,
+                                color: _currentPost.isActiveLive
+                                    ? Colors.red
+                                    : theme.colorScheme.primary,
                               ),
                               const SizedBox(width: 4),
                               Expanded(
                                 child: Text(
                                   _getLiveActionText(_currentPost),
                                   style: theme.textTheme.bodySmall?.copyWith(
-                                    color: _currentPost.isActiveLive ? Colors.red : theme.colorScheme.primary,
+                                    color: _currentPost.isActiveLive
+                                        ? Colors.red
+                                        : theme.colorScheme.primary,
                                     fontWeight: FontWeight.w500,
                                   ),
                                   maxLines: 1,
@@ -1495,7 +1529,8 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                           ),
                         ],
                         // إضافة اسم المجموعة إذا كان المنشور في مجموعة
-                        if (_currentPost.isGroupPost && _currentPost.groupTitle != null) ...[
+                        if (_currentPost.isGroupPost &&
+                            _currentPost.groupTitle != null) ...[
                           const SizedBox(height: 2),
                           GestureDetector(
                             onTap: () => _onGroupTap(context),
@@ -1523,14 +1558,16 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                           ),
                         ],
                         // إضافة الـ Feelings إذا كانت موجودة
-                        if (_currentPost.feelingAction != null && _currentPost.feelingValue != null) ...[
+                        if (_currentPost.feelingAction != null &&
+                            _currentPost.feelingValue != null) ...[
                           const SizedBox(height: 2),
                           Row(
                             children: [
                               Container(
                                 padding: const EdgeInsets.all(2),
                                 decoration: BoxDecoration(
-                                  color: theme.colorScheme.secondary.withValues(alpha: 0.1),
+                                  color: theme.colorScheme.secondary
+                                      .withOpacity(0.1),
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: Icon(
@@ -1558,31 +1595,43 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                         Row(
                           children: [
                             Text(
-                              TimeAgo.formatFromString(_currentPost.publishedAt, isEnglish: true),
+                              TimeAgo.formatFromString(
+                                _currentPost.publishedAt,
+                                isEnglish: true,
+                              ),
                               style: theme.textTheme.bodySmall?.copyWith(
-                                    color: theme.colorScheme.onSurface
-                                        .withValues(alpha: 0.6),
-                                  ),
+                                color: theme.colorScheme.onSurface.withOpacity(
+                                  0.6,
+                                ),
+                              ),
                             ),
                             const SizedBox(width: 6),
-                            Text('·',
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                    color: theme.colorScheme.onSurface
-                                        .withValues(alpha: 0.5))),
+                            Text(
+                              '·',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurface.withOpacity(
+                                  0.5,
+                                ),
+                              ),
+                            ),
                             const SizedBox(width: 6),
                             Icon(
                               _privacyIcon(_currentPost.privacy),
                               size: 14,
-                              color:
-                                  theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                              color: theme.colorScheme.onSurface.withOpacity(
+                                0.6,
+                              ),
                             ),
                             // إضافة مؤشر المنشور المثبت
                             if (_currentPost.isPinned) ...[
                               const SizedBox(width: 6),
-                              Text('·',
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                      color: theme.colorScheme.onSurface
-                                          .withValues(alpha: 0.5))),
+                              Text(
+                                '·',
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurface
+                                      .withOpacity(0.5),
+                                ),
+                              ),
                               const SizedBox(width: 6),
                               Icon(
                                 Iconsax.bookmark,
@@ -1593,10 +1642,13 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                             // إضافة مؤشر البث المباشر
                             if (_currentPost.isLivePost) ...[
                               const SizedBox(width: 6),
-                              Text('·',
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                      color: theme.colorScheme.onSurface
-                                          .withValues(alpha: 0.5))),
+                              Text(
+                                '·',
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurface
+                                      .withOpacity(0.5),
+                                ),
+                              ),
                               const SizedBox(width: 6),
                               Container(
                                 padding: const EdgeInsets.symmetric(
@@ -1604,8 +1656,8 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                                   vertical: 2,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: _currentPost.isActiveLive 
-                                      ? Colors.red 
+                                  color: _currentPost.isActiveLive
+                                      ? Colors.red
                                       : Colors.grey,
                                   borderRadius: BorderRadius.circular(8),
                                 ),
@@ -1623,7 +1675,9 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                                         ),
                                       ),
                                     Text(
-                                      _currentPost.isActiveLive ? 'live'.tr : 'ended'.tr,
+                                      _currentPost.isActiveLive
+                                          ? 'live_status_live'.tr
+                                          : 'live_status_ended'.tr,
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 8,
@@ -1637,10 +1691,13 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                             // إضافة مؤشر المنشور المشارك
                             if (_currentPost.isSharedPost) ...[
                               const SizedBox(width: 6),
-                              Text('·',
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                      color: theme.colorScheme.onSurface
-                                          .withValues(alpha: 0.5))),
+                              Text(
+                                '·',
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurface
+                                      .withOpacity(0.5),
+                                ),
+                              ),
                               const SizedBox(width: 6),
                               Icon(
                                 Iconsax.share,
@@ -1651,10 +1708,13 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                             // إضافة مؤشر المقال
                             if (_currentPost.isArticlePost) ...[
                               const SizedBox(width: 6),
-                              Text('·',
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                      color: theme.colorScheme.onSurface
-                                          .withValues(alpha: 0.5))),
+                              Text(
+                                '·',
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurface
+                                      .withOpacity(0.5),
+                                ),
+                              ),
                               const SizedBox(width: 6),
                               Icon(
                                 Iconsax.document_text,
@@ -1665,10 +1725,13 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                             // إضافة مؤشر Tip
                             if (_currentPost.tipsEnabled) ...[
                               const SizedBox(width: 6),
-                              Text('·',
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                      color: theme.colorScheme.onSurface
-                                          .withValues(alpha: 0.5))),
+                              Text(
+                                '·',
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurface
+                                      .withOpacity(0.5),
+                                ),
+                              ),
                               const SizedBox(width: 6),
                               Icon(
                                 Iconsax.dollar_circle,
@@ -1679,10 +1742,13 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                             // إضافة مؤشر المنشور المدفوع/المروج
                             if (_currentPost.isPromoted) ...[
                               const SizedBox(width: 6),
-                              Text('·',
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                      color: theme.colorScheme.onSurface
-                                          .withValues(alpha: 0.5))),
+                              Text(
+                                '·',
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurface
+                                      .withOpacity(0.5),
+                                ),
+                              ),
                               const SizedBox(width: 6),
                               Icon(
                                 Iconsax.flash,
@@ -1691,7 +1757,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                               ),
                               const SizedBox(width: 2),
                               Text(
-                                'promoted'.tr,
+                                'post_promoted'.tr,
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: Colors.orange,
                                   fontWeight: FontWeight.w600,
@@ -1705,7 +1771,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                               Text('·',
                                   style: theme.textTheme.bodySmall?.copyWith(
                                       color: theme.colorScheme.onSurface
-                                          .withValues(alpha: 0.5))),
+                                          .withOpacity(0.5))),
                               const SizedBox(width: 6),
                               Icon(
                                 Iconsax.dollar_circle,
@@ -1722,8 +1788,10 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                 IconButton(
                   onPressed: () => _showPostMenu(context),
                   splashRadius: 20,
-                  icon: Icon(Iconsax.more,
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.55)),
+                  icon: Icon(
+                    Iconsax.more,
+                    color: theme.colorScheme.onSurface.withOpacity(0.55),
+                  ),
                 ),
               ],
             ),
@@ -1749,7 +1817,10 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
             const SizedBox(height: 12),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: _ArticleWidget(post: _currentPost, mediaResolver: mediaAsset),
+              child: _ArticleWidget(
+                post: _currentPost,
+                mediaResolver: mediaAsset,
+              ),
             ),
           ],
           // عرض المنشور المشارك إذا كان من نوع shared
@@ -1761,7 +1832,9 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
             ),
           ],
           // عرض الفيديو فقط إذا لم يكن المنشور من نوع مقال أو دورة (لأن لهم card خاص)
-          if (_currentPost.isVideoPost && !_currentPost.isArticlePost && !_currentPost.isCoursePost) ...[
+          if (_currentPost.isVideoPost &&
+              !_currentPost.isArticlePost &&
+              !_currentPost.isCoursePost) ...[
             const SizedBox(height: 12),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -1787,10 +1860,17 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
               ),
             ),
           ],
-          if (_currentPost.hasPhotos && !_currentPost.isOfferPost && !_currentPost.isFundingPost && !_currentPost.isArticlePost && !_currentPost.isCoursePost && !_currentPost.isVideoPost) ...[
-            Builder(builder: (context) {
-              return const SizedBox(height: 12);
-            }),
+          if (_currentPost.hasPhotos &&
+              !_currentPost.isOfferPost &&
+              !_currentPost.isFundingPost &&
+              !_currentPost.isArticlePost &&
+              !_currentPost.isCoursePost &&
+              !_currentPost.isVideoPost) ...[
+            Builder(
+              builder: (context) {
+                return const SizedBox(height: 12);
+              },
+            ),
             _PhotosGrid(
               photos: _currentPost.photos!,
               mediaResolver: mediaAsset,
@@ -1798,10 +1878,19 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
             ),
           ],
           // عرض الصورة من og_image إذا لم توجد photos
-          if (_currentPost.ogImage != null && _currentPost.ogImage!.isNotEmpty && !_currentPost.hasPhotos && !_currentPost.isOfferPost && !_currentPost.isFundingPost && !_currentPost.isArticlePost && !_currentPost.isCoursePost && !_currentPost.isVideoPost) ...[
-            Builder(builder: (context) {
-              return const SizedBox(height: 12);
-            }),
+          if (_currentPost.ogImage != null &&
+              _currentPost.ogImage!.isNotEmpty &&
+              !_currentPost.hasPhotos &&
+              !_currentPost.isOfferPost &&
+              !_currentPost.isFundingPost &&
+              !_currentPost.isArticlePost &&
+              !_currentPost.isCoursePost &&
+              !_currentPost.isVideoPost) ...[
+            Builder(
+              builder: (context) {
+                return const SizedBox(height: 12);
+              },
+            ),
             _PhotosGrid(
               photos: [PostPhoto(id: 0, source: _currentPost.ogImage!)],
               mediaResolver: mediaAsset,
@@ -1838,11 +1927,16 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
             ),
           ],
           // عرض الحدث إذا كان المنشور داخل حدث أو منشور حدث (ما عدا تغيير الغلاف)
-          if (_currentPost.inEvent && _currentPost.event != null && _currentPost.postType != 'event_cover') ...[
+          if (_currentPost.inEvent &&
+              _currentPost.event != null &&
+              _currentPost.postType != 'event_cover') ...[
             const SizedBox(height: 12),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: _EventWidget(event: _currentPost.event!, mediaResolver: mediaAsset),
+              child: _EventWidget(
+                event: _currentPost.event!,
+                mediaResolver: mediaAsset,
+              ),
             ),
           ],
           // عرض widget التبرع
@@ -1850,7 +1944,10 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
             const SizedBox(height: 12),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: _FundingWidget(funding: _currentPost.funding!, mediaResolver: mediaAsset),
+              child: _FundingWidget(
+                funding: _currentPost.funding!,
+                mediaResolver: mediaAsset,
+              ),
             ),
           ],
           // عرض widget العرض
@@ -1858,7 +1955,10 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
             const SizedBox(height: 12),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: _OfferWidget(offer: _currentPost.offer!, mediaResolver: mediaAsset),
+              child: _OfferWidget(
+                offer: _currentPost.offer!,
+                mediaResolver: mediaAsset,
+              ),
             ),
           ],
           // عرض widget الدورة التعليمية
@@ -1879,14 +1979,17 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                           context: context,
                           type: 'post',
                           id: _currentPost.id,
-                          reactionStats: _currentPost.reactionBreakdown.isEmpty 
-                            ? {'like'.tr: _currentPost.reactionsCount}
-                            : _currentPost.reactionBreakdown,
+                          reactionStats: _currentPost.reactionBreakdown.isEmpty
+                              ? {'like': _currentPost.reactionsCount}
+                              : _currentPost.reactionBreakdown,
                         );
                       },
                       borderRadius: BorderRadius.circular(12),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 2,
+                        ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -1898,7 +2001,9 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                             Text(
                               _currentPost.reactionsCountFormatted,
                               style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                                color: theme.colorScheme.onSurface.withOpacity(
+                                  0.6,
+                                ),
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -1912,33 +2017,39 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                 const Spacer(),
                 // عرض إحصائيات متقدمة - Reviews يظهر للجميع
                 Text(
-                  '${_currentPost.reviewsCountFormatted} ${'reviews'.tr}',
+                  'post_reviews'.trParams({
+                    'count': _currentPost.reviewsCountFormatted,
+                  }),
                   style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                      ),
+                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                  ),
                 ),
                 const SizedBox(width: 12),
                 if (_currentPost.viewsCount > 0) ...[
                   Text(
-                    _currentPost.viewsCountFormatted +"views".tr,
+                    'post_views'.trParams({
+                      'count': _currentPost.viewsCountFormatted,
+                    }),
                     style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                        ),
+                      color: theme.colorScheme.onSurface.withOpacity(0.6),
+                    ),
                   ),
                   const SizedBox(width: 12),
                 ],
                 Text(
                   '${_currentPost.commentsCountFormatted} ${'comments'.tr}',
                   style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                      ),
+                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  '${_currentPost.sharesCountFormatted} ${'share'.tr}',
+                  'post_shares2'.trParams({
+                    'count': _currentPost.sharesCountFormatted,
+                  }),
                   style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                      ),
+                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                  ),
                 ),
               ],
             ),
@@ -1951,40 +2062,45 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Row(
                 children: [
-                  _PostAction(post: _currentPost, onReactionChanged: widget.onReactionChanged),
+                  _PostAction(
+                    post: _currentPost,
+                    onReactionChanged: widget.onReactionChanged,
+                  ),
                   const SizedBox(width: 8),
                   _SimpleActionButton(
-                    icon: _currentPost.commentsDisabled 
-                      ? Iconsax.message_minus
-                      : Iconsax.message,
-                    label: _currentPost.commentsDisabled 
-                      ? 'disabled'.tr 
-                      : 'comment'.tr,
+                    icon: _currentPost.commentsDisabled
+                        ? Iconsax.message_minus
+                        : Iconsax.message,
+                    label: _currentPost.commentsDisabled
+                        ? 'disabled'.tr
+                        : 'comment'.tr,
                     isDisabled: _currentPost.commentsDisabled,
-                    onTap: _currentPost.commentsDisabled ? () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('comments_disabled_message'.tr),
-                          behavior: SnackBarBehavior.floating,
-                        ),
-                      );
-                    } : () {
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        backgroundColor: Colors.transparent,
-                        builder: (context) => CommentsBottomSheet(
-                          postId: _currentPost.id,
-                          commentsCount: _currentPost.commentsCount,
-                        ),
-                      );
-                    },
+                    onTap: _currentPost.commentsDisabled
+                        ? () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('comments_disabled_message'.tr),
+                                behavior: SnackBarBehavior.floating,
+                              ),
+                            );
+                          }
+                        : () {
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent,
+                              builder: (context) => CommentsBottomSheet(
+                                postId: _currentPost.id,
+                                commentsCount: _currentPost.commentsCount,
+                              ),
+                            );
+                          },
                   ),
                   const SizedBox(width: 8),
                   // زر Reviews يظهر لجميع المنشورات
                   _SimpleActionButton(
                     icon: Iconsax.star,
-                    label: 'review'.tr,
+                    label: 'action_review'.tr,
                     onTap: () => _showReviewsBottomSheet(context),
                   ),
                   const SizedBox(width: 8),
@@ -1992,7 +2108,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                   if (_currentPost.tipsEnabled) ...[
                     _SimpleActionButton(
                       icon: Iconsax.dollar_circle,
-                      label: 'tip'.tr,
+                      label: 'action_tip'.tr,
                       onTap: () => _showTipBottomSheet(context),
                     ),
                     const SizedBox(width: 8),
@@ -2000,13 +2116,20 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                   // زر Share يظهر دائماً
                   _SimpleActionButton(
                     icon: Iconsax.share,
-                    label: 'share'.tr,
+                    label: 'action_share'.tr,
                     onTap: () {
-                      // TODO: إضافة وظيفة المشاركة
-                      ScaffoldMessenger.of(context).showSnackBar(
-                         SnackBar(
-                          content: Text('share_feature_coming_soon'.tr),
-                          behavior: SnackBarBehavior.floating,
+                      showDialog(
+                        context: context,
+                        builder: (context) => SharePostDialog(
+                          post: _currentPost,
+                          onShareSuccess: () {
+                            // تحديث عدد المشاركات
+                            setState(() {
+                              _currentPost = _currentPost.copyWith(
+                                sharesCount: _currentPost.sharesCount + 1,
+                              );
+                            });
+                          },
                         ),
                       );
                     },
@@ -2028,6 +2151,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
       ),
     );
   }
+
   IconData _privacyIcon(String privacy) {
     switch (privacy) {
       case 'friends':
@@ -2039,31 +2163,43 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
     }
   }
 }
+
 // --- 💡 3. تحسين _Avatar ---
 // --- 💡 3. تحسين _Avatar مع مؤشر حالة الاتصال ---
 class _Avatar extends StatelessWidget {
   const _Avatar({
-    this.url, 
+    this.url,
     this.radius = 20,
     this.showOnlineIndicator = false,
     this.isOnline = false,
   });
+
   final String? url;
   final double radius;
   final bool showOnlineIndicator;
   final bool isOnline;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Stack(
       children: [
         CircleAvatar(
           radius: radius,
           backgroundColor: theme.colorScheme.surfaceContainerHighest,
           // استخدام CachedNetworkImageProvider
-          backgroundImage: url != null ? CachedNetworkImageProvider(url!) : null,
+          backgroundImage: url != null
+              ? CachedNetworkImageProvider(url!)
+              : null,
           // أيقونة fallback
-          child: url == null ? Icon(Iconsax.user, size: radius, color: theme.colorScheme.primary) : null,
+          child: url == null
+              ? Icon(
+                  Iconsax.user,
+                  size: radius,
+                  color: theme.colorScheme.primary,
+                )
+              : null,
         ),
         // مؤشر حالة الاتصال
         if (showOnlineIndicator && isOnline)
@@ -2082,7 +2218,7 @@ class _Avatar extends StatelessWidget {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.2),
+                    color: Colors.black.withOpacity(0.2),
                     offset: const Offset(0, 1),
                     blurRadius: 2,
                   ),
@@ -2095,21 +2231,24 @@ class _Avatar extends StatelessWidget {
   }
 }
 // --- نهاية التحسين ---
+
 class _PostAction extends StatefulWidget {
-  const _PostAction({
-    required this.post,
-    this.onReactionChanged,
-  });
+  const _PostAction({required this.post, this.onReactionChanged});
+
   final Post post;
   final Function(String postId, String reaction)? onReactionChanged;
+
   @override
   State<_PostAction> createState() => _PostActionState();
 }
-class _PostActionState extends State<_PostAction> with SingleTickerProviderStateMixin {
+
+class _PostActionState extends State<_PostAction>
+    with SingleTickerProviderStateMixin {
   OverlayEntry? _overlayEntry;
   late AnimationController _animationController;
   bool _isProcessing = false; // منع الاستدعاءات المتعددة
   String? _lastProcessedReaction; // تتبع آخر تفاعل تمت معالجته
+
   @override
   void initState() {
     super.initState();
@@ -2118,18 +2257,22 @@ class _PostActionState extends State<_PostAction> with SingleTickerProviderState
       vsync: this,
     );
   }
+
   @override
   void dispose() {
     _animationController.dispose();
     _overlayEntry?.remove();
     super.dispose();
   }
+
   void _showReactionsPicker() {
     final renderBox = context.findRenderObject() as RenderBox;
     final offset = renderBox.localToGlobal(Offset.zero);
+
     // تحقق من الاتجاه RTL للحصول على الموضع المناسب
     final localizationController = Get.find<LocalizationController>();
     final isRTL = localizationController.isRTL;
+
     _overlayEntry = OverlayEntry(
       builder: (context) => GestureDetector(
         onTap: () {
@@ -2143,7 +2286,9 @@ class _PostActionState extends State<_PostAction> with SingleTickerProviderState
               Positioned(
                 // في RTL: عرض على اليسار، في LTR: عرض على اليسار كالمعتاد
                 left: isRTL ? 16 : offset.dx, // في RTL نضعها على اليسار تماماً
-                right: isRTL ? null : null, // لا نستخدم right في كلا الحالتين هنا
+                right: isRTL
+                    ? null
+                    : null, // لا نستخدم right في كلا الحالتين هنا
                 bottom: MediaQuery.of(context).size.height - offset.dy,
                 child: GestureDetector(
                   onTap: () {},
@@ -2161,29 +2306,38 @@ class _PostActionState extends State<_PostAction> with SingleTickerProviderState
         ),
       ),
     );
+
     Overlay.of(context).insert(_overlayEntry!);
   }
+
   void _handleReaction(String reaction) {
     // منع الاستدعاءات المتعددة
     if (_isProcessing) {
       return;
     }
+
     // منع إرسال نفس التفاعل مرتين متتاليتين
     if (_lastProcessedReaction == reaction) {
       return;
     }
+
     _isProcessing = true;
     _lastProcessedReaction = reaction;
+
+
     // بدء animation للتأكيد البصري
     _animationController.forward();
+
     if (widget.onReactionChanged != null) {
       widget.onReactionChanged!(widget.post.id.toString(), reaction);
     } else {
       final postsBloc = context.read<PostsBloc>();
       postsBloc.add(ReactToPostEvent(widget.post.id, reaction));
     }
+
     // إعادة تعيين animation والـ flag
     _animationController.reverse();
+
     // السماح بالاستدعاء التالي بعد فترة قصيرة
     Future.delayed(const Duration(milliseconds: 500), () {
       if (mounted) {
@@ -2197,15 +2351,20 @@ class _PostActionState extends State<_PostAction> with SingleTickerProviderState
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     final postData = widget.post;
     final reactionModel = postData.myReaction != null
         ? ReactionsService.instance.getReactionByName(postData.myReaction!)
         : null;
-    final String actionLabel = reactionModel?.title ?? 'like'.tr; // تغيير "أعجبني" إلى "Like" للاتساق
-    final Color actionColor = reactionModel?.colorValue ??
-        Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.65);
+
+    final String actionLabel =
+      reactionModel?.title ?? 'like'.tr; // استخدام الترجمة الافتراضية
+    final Color actionColor =
+        reactionModel?.colorValue ??
+        Theme.of(context).colorScheme.onSurface.withOpacity(0.65);
+
     return AnimatedBuilder(
       animation: _animationController,
       builder: (context, child) {
@@ -2215,10 +2374,11 @@ class _PostActionState extends State<_PostAction> with SingleTickerProviderState
             onTap: () {
               // إذا كان هناك تفاعل حالياً، قم بإزالته، وإلا أضف like
               final currentReaction = postData.myReaction;
+
               if (currentReaction != null) {
-                _handleReaction('remove'.tr); // إزالة التفاعل الحالي
+                _handleReaction('remove'); // إزالة التفاعل الحالي
               } else {
-                _handleReaction('like'.tr); // إضافة إعجاب
+                _handleReaction('like'); // إضافة إعجاب
               }
             },
             onLongPress: _showReactionsPicker,
@@ -2254,15 +2414,15 @@ class _PostActionState extends State<_PostAction> with SingleTickerProviderState
                       color: actionColor,
                       size: 20,
                     ),
-                    const SizedBox(width: 4),
+                  const SizedBox(width: 4),
                   Flexible(
                     child: Text(
                       actionLabel,
                       style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: actionColor,
-                            fontSize: 12,
-                          ),
+                        fontWeight: FontWeight.w600,
+                        color: actionColor,
+                        fontSize: 12,
+                      ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       textAlign: TextAlign.center,
@@ -2277,6 +2437,7 @@ class _PostActionState extends State<_PostAction> with SingleTickerProviderState
     );
   }
 }
+
 class _SimpleActionButton extends StatelessWidget {
   const _SimpleActionButton({
     required this.icon,
@@ -2284,14 +2445,17 @@ class _SimpleActionButton extends StatelessWidget {
     this.onTap,
     this.isDisabled = false,
   });
+
   final IconData icon;
   final String? label;
   final VoidCallback? onTap;
   final bool isDisabled;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final opacity = isDisabled ? 0.4 : 0.7;
+
     return InkWell(
       onTap: isDisabled ? null : onTap,
       child: Container(
@@ -2301,19 +2465,21 @@ class _SimpleActionButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon,
-                color: theme.colorScheme.onSurface.withValues(alpha: opacity),
-                size: 20),
-            if(label != null) ...[
+            Icon(
+              icon,
+              color: theme.colorScheme.onSurface.withOpacity(opacity),
+              size: 20,
+            ),
+            if (label != null) ...[
               const SizedBox(width: 4),
               Flexible(
                 child: Text(
                   label!,
                   style: theme.textTheme.labelMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.onSurface.withValues(alpha: opacity),
-                        fontSize: 12,
-                      ),
+                    fontWeight: FontWeight.w600,
+                    color: theme.colorScheme.onSurface.withOpacity(opacity),
+                    fontSize: 12,
+                  ),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                   textAlign: TextAlign.center,
@@ -2326,17 +2492,22 @@ class _SimpleActionButton extends StatelessWidget {
     );
   }
 }
+
 class ReactionPicker extends StatefulWidget {
   const ReactionPicker({super.key, required this.onSelected});
+
   final Function(String) onSelected;
+
   @override
   State<ReactionPicker> createState() => _ReactionPickerState();
 }
+
 class _ReactionPickerState extends State<ReactionPicker>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   final List<Animation<double>> _scaleAnimations = [];
   final List<Animation<Offset>> _slideAnimations = [];
+
   @override
   void initState() {
     super.initState();
@@ -2344,47 +2515,42 @@ class _ReactionPickerState extends State<ReactionPicker>
       duration: const Duration(milliseconds: 400),
       vsync: this,
     );
+
     final reactions = ReactionsService.instance.getReactions();
     for (int i = 0; i < reactions.length; i++) {
       final delay = i * 0.08;
+
       _scaleAnimations.add(
         Tween<double>(begin: 0.0, end: 1.0).animate(
           CurvedAnimation(
             parent: _controller,
-            curve: Interval(
-              delay,
-              delay + 0.3,
-              curve: Curves.elasticOut,
-            ),
+            curve: Interval(delay, delay + 0.3, curve: Curves.elasticOut),
           ),
         ),
       );
+
       _slideAnimations.add(
-        Tween<Offset>(
-          begin: const Offset(0, 0.5),
-          end: Offset.zero,
-        ).animate(
+        Tween<Offset>(begin: const Offset(0, 0.5), end: Offset.zero).animate(
           CurvedAnimation(
             parent: _controller,
-            curve: Interval(
-              delay,
-              delay + 0.3,
-              curve: Curves.easeOut,
-            ),
+            curve: Interval(delay, delay + 0.3, curve: Curves.easeOut),
           ),
         ),
       );
     }
     _controller.forward();
   }
+
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     final reactions = ReactionsService.instance.getReactions();
+
     return Material(
       elevation: 8,
       borderRadius: BorderRadius.circular(30),
@@ -2419,13 +2585,13 @@ class _ReactionPickerState extends State<ReactionPicker>
     );
   }
 }
+
 class _ReactionButton extends StatelessWidget {
-  const _ReactionButton({
-    required this.reaction,
-    required this.onTap,
-  });
+  const _ReactionButton({required this.reaction, required this.onTap});
+
   final ReactionModel reaction;
   final VoidCallback onTap;
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -2457,13 +2623,17 @@ class _ReactionButton extends StatelessWidget {
     );
   }
 }
+
 class _ReactionIcon extends StatelessWidget {
   const _ReactionIcon({required this.type, this.size = 18});
+
   final String type;
   final double size;
+
   @override
   Widget build(BuildContext context) {
     final reaction = ReactionsService.instance.getReactionByName(type);
+
     if (reaction != null) {
       return CachedNetworkImage(
         imageUrl: reaction.imageUrl,
@@ -2486,9 +2656,11 @@ class _ReactionIcon extends StatelessWidget {
         ),
       );
     }
+
     return SizedBox(width: size, height: size);
   }
 }
+
 // --- 💡 4. تحسين _PhotosGrid ---
 class _PhotosGrid extends StatelessWidget {
   const _PhotosGrid({
@@ -2496,15 +2668,19 @@ class _PhotosGrid extends StatelessWidget {
     required this.mediaResolver,
     this.forAdult = false,
   });
+
   final List<PostPhoto> photos;
   final Uri Function(String) mediaResolver;
   final bool forAdult;
+
   @override
   Widget build(BuildContext context) {
     if (photos.isEmpty) return const SizedBox.shrink();
+
     // استخدام CachedNetworkImage بدلاً من Image.network
     Widget buildImage(int index, {double? height}) {
       final imageUrl = mediaResolver(photos[index].source).toString();
+
       return GestureDetector(
         onTap: () => _showPhotoViewer(context, index, forAdult: forAdult),
         child: CachedNetworkImage(
@@ -2526,9 +2702,18 @@ class _PhotosGrid extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Iconsax.gallery_slash, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  Icon(
+                    Iconsax.gallery_slash,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
                   const SizedBox(height: 8),
-                  Text('Failed to load', style: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                  Text(
+                    'Failed to load',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
                 ],
               ),
             );
@@ -2554,12 +2739,12 @@ class _PhotosGrid extends StatelessWidget {
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
                       child: Container(
-                        color: Colors.black.withValues(alpha: 0.1),
+                        color: Colors.black.withOpacity(0.1),
                         child: Center(
                           child: Icon(
                             Icons.visibility_off,
                             size: 48,
-                            color: Colors.white.withValues(alpha: 0.8),
+                            color: Colors.white.withOpacity(0.8),
                           ),
                         ),
                       ),
@@ -2571,18 +2756,31 @@ class _PhotosGrid extends StatelessWidget {
         ),
       );
     }
+
     final count = photos.length;
     if (count == 1) {
       return buildImage(0, height: 300);
     }
+
     if (count == 2) {
       return Row(
         children: [
-          Expanded(child: Padding(padding: const EdgeInsets.only(right: 2.0), child: buildImage(0, height: 200))),
-          Expanded(child: Padding(padding: const EdgeInsets.only(left: 2.0), child: buildImage(1, height: 200))),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 2.0),
+              child: buildImage(0, height: 200),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 2.0),
+              child: buildImage(1, height: 200),
+            ),
+          ),
         ],
       );
     }
+
     // تصميم لـ 3 صور (1 كبيرة، 2 صغيرتين)
     if (count == 3) {
       return SizedBox(
@@ -2590,13 +2788,29 @@ class _PhotosGrid extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(flex: 2, child: Padding(padding: const EdgeInsets.only(right: 2.0), child: buildImage(0, height: 204))),
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 2.0),
+                child: buildImage(0, height: 204),
+              ),
+            ),
             Expanded(
               flex: 1,
               child: Column(
                 children: [
-                  Expanded(child: Padding(padding: const EdgeInsets.only(left: 2.0, bottom: 2.0), child: buildImage(1, height: 100))),
-                  Expanded(child: Padding(padding: const EdgeInsets.only(left: 2.0, top: 2.0), child: buildImage(2, height: 100))),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 2.0, bottom: 2.0),
+                      child: buildImage(1, height: 100),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 2.0, top: 2.0),
+                      child: buildImage(2, height: 100),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -2604,40 +2818,74 @@ class _PhotosGrid extends StatelessWidget {
         ),
       );
     }
+
     // تصميم لـ 4 صور (شبكة 2x2)
     if (count == 4) {
       return Column(
         children: [
           Row(
             children: [
-              Expanded(child: Padding(padding: const EdgeInsets.only(right: 2.0, bottom: 2.0), child: buildImage(0, height: 150))),
-              Expanded(child: Padding(padding: const EdgeInsets.only(left: 2.0, bottom: 2.0), child: buildImage(1, height: 150))),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 2.0, bottom: 2.0),
+                  child: buildImage(0, height: 150),
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 2.0, bottom: 2.0),
+                  child: buildImage(1, height: 150),
+                ),
+              ),
             ],
           ),
           Row(
             children: [
-              Expanded(child: Padding(padding: const EdgeInsets.only(right: 2.0, top: 2.0), child: buildImage(2, height: 150))),
-              Expanded(child: Padding(padding: const EdgeInsets.only(left: 2.0, top: 2.0), child: buildImage(3, height: 150))),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 2.0, top: 2.0),
+                  child: buildImage(2, height: 150),
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 2.0, top: 2.0),
+                  child: buildImage(3, height: 150),
+                ),
+              ),
             ],
           ),
         ],
       );
     }
+
     // تصميم لـ 5 صور أو أكثر (1 كبيرة، 4 صغيرات + عداد)
     if (count >= 5) {
       return Column(
         children: [
-          Padding(padding: const EdgeInsets.only(bottom: 2.0), child: buildImage(0, height: 200)),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 2.0),
+            child: buildImage(0, height: 200),
+          ),
           Row(
             children: photos.sublist(1, 5).asMap().entries.map((entry) {
               final index = entry.key; // 0..3
               final photoIndex = index + 1; // 1..4
               final bool isLast = index == 3 && count > 5;
+
               return Expanded(
                 child: Padding(
-                  padding: EdgeInsets.only(left: index == 0 ? 0 : 2.0, right: index == 3 ? 0 : 2.0, top: 2.0),
+                  padding: EdgeInsets.only(
+                    left: index == 0 ? 0 : 2.0,
+                    right: index == 3 ? 0 : 2.0,
+                    top: 2.0,
+                  ),
                   child: GestureDetector(
-                    onTap: () => _showPhotoViewer(context, photoIndex, forAdult: forAdult),
+                    onTap: () => _showPhotoViewer(
+                      context,
+                      photoIndex,
+                      forAdult: forAdult,
+                    ),
                     child: Stack(
                       fit: StackFit.passthrough,
                       children: [
@@ -2668,13 +2916,19 @@ class _PhotosGrid extends StatelessWidget {
         ],
       );
     }
+
     return const SizedBox.shrink(); // للحالات غير المتوقعة
   }
+
   // --- 💡 4. تحسين _showPhotoViewer (معرض صور احترافي) ---
-  void _showPhotoViewer(BuildContext context, int initialIndex, {bool forAdult = false}) {
+  void _showPhotoViewer(
+    BuildContext context,
+    int initialIndex, {
+    bool forAdult = false,
+  }) {
     showDialog(
       context: context,
-      barrierColor: Colors.black.withValues(alpha: 0.8),
+      barrierColor: Colors.black.withOpacity(0.8),
       builder: (context) {
         return Dialog.fullscreen(
           backgroundColor: Colors.black,
@@ -2692,22 +2946,30 @@ class _PhotosGrid extends StatelessWidget {
                       fit: StackFit.expand,
                       children: [
                         CachedNetworkImage(
-                          imageUrl: mediaResolver(photos[index].source).toString(),
+                          imageUrl: mediaResolver(
+                            photos[index].source,
+                          ).toString(),
                           fit: BoxFit.contain,
-                          placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
-                          errorWidget: (context, url, error) => const Center(child: Icon(Iconsax.gallery_slash, color: Colors.white)),
+                          placeholder: (context, url) =>
+                              const Center(child: CircularProgressIndicator()),
+                          errorWidget: (context, url, error) => const Center(
+                            child: Icon(
+                              Iconsax.gallery_slash,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                         if (shouldBlur)
                           ClipRect(
                             child: BackdropFilter(
                               filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
                               child: Container(
-                                color: Colors.black.withValues(alpha: 0.1),
+                                color: Colors.black.withOpacity(0.1),
                                 child: Center(
                                   child: Icon(
                                     Icons.visibility_off,
                                     size: 48,
-                                    color: Colors.white.withValues(alpha: 0.8),
+                                    color: Colors.white.withOpacity(0.8),
                                   ),
                                 ),
                               ),
@@ -2722,7 +2984,11 @@ class _PhotosGrid extends StatelessWidget {
                 top: 40,
                 right: 16,
                 child: IconButton(
-                  icon: const Icon(Iconsax.close_circle, color: Colors.white, size: 30),
+                  icon: const Icon(
+                    Iconsax.close_circle,
+                    color: Colors.white,
+                    size: 30,
+                  ),
                   onPressed: () => Navigator.pop(context),
                 ),
               ),
@@ -2734,14 +3000,18 @@ class _PhotosGrid extends StatelessWidget {
   }
 }
 // --- نهاية التحسين ---
+
 // --- 💡 5. تحسين _PollWidget ---
 class _PollWidget extends StatelessWidget {
   const _PollWidget({required this.poll});
+
   final PostPoll poll;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final totalVotes = poll.votes;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -2749,6 +3019,7 @@ class _PollWidget extends StatelessWidget {
           final percentage = totalVotes > 0 ? (option.votes / totalVotes) : 0.0;
           final percentageText = (percentage * 100).toStringAsFixed(1);
           final isSelected = option.checked;
+
           return Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: InkWell(
@@ -2775,12 +3046,15 @@ class _PollWidget extends StatelessWidget {
                       widthFactor: percentage,
                       child: Container(
                         height: 44, // ارتفاع ثابت لضمان التناسق
-                        color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                        color: theme.colorScheme.primary.withOpacity(0.1),
                       ),
                     ),
                     // Layer 2: المحتوى
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 12,
+                      ),
                       child: Row(
                         children: [
                           if (isSelected)
@@ -2794,19 +3068,19 @@ class _PollWidget extends StatelessWidget {
                             child: Text(
                               option.text,
                               style: theme.textTheme.bodyMedium?.copyWith(
-                                    fontWeight: isSelected
-                                        ? FontWeight.bold
-                                        : FontWeight.normal,
-                                  ),
+                                fontWeight: isSelected
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                              ),
                             ),
                           ),
                           const SizedBox(width: 12),
                           Text(
                             '$percentageText%',
                             style: theme.textTheme.bodySmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: theme.colorScheme.primary,
-                                ),
+                              fontWeight: FontWeight.bold,
+                              color: theme.colorScheme.primary,
+                            ),
                           ),
                         ],
                       ),
@@ -2819,27 +3093,29 @@ class _PollWidget extends StatelessWidget {
         }),
         const SizedBox(height: 4),
         Text(
-          '$totalVotes ${totalVotes == 1 ? 'Vote' : 'Votes'}',
+          '$totalVotes ${totalVotes == 1 ? 'vote_singular'.tr : 'vote_plural'.tr}',
           style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-              ),
+            color: theme.colorScheme.onSurface.withOpacity(0.6),
+          ),
         ),
       ],
     );
   }
 }
+
 /// Widget لعرض الروابط المرفقة بالمنشور
 class _LinkWidget extends StatelessWidget {
   const _LinkWidget({required this.link});
+
   final PostLink link;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.3),
-        ),
+        border: Border.all(color: theme.colorScheme.outline.withOpacity(0.3)),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -2859,7 +3135,7 @@ class _LinkWidget extends StatelessWidget {
                     imageUrl: link.sourceThumbnail!,
                     fit: BoxFit.cover,
                     placeholder: (context, url) => Container(
-                      color: theme.colorScheme.surfaceContainerHighest,
+                      color: theme.colorScheme.surfaceVariant,
                       child: Center(
                         child: Icon(
                           Iconsax.link,
@@ -2869,7 +3145,7 @@ class _LinkWidget extends StatelessWidget {
                       ),
                     ),
                     errorWidget: (context, url, error) => Container(
-                      color: theme.colorScheme.surfaceContainerHighest,
+                      color: theme.colorScheme.surfaceVariant,
                       child: Center(
                         child: Icon(
                           Iconsax.link,
@@ -2904,7 +3180,7 @@ class _LinkWidget extends StatelessWidget {
                     Text(
                       link.sourceText,
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                        color: theme.colorScheme.onSurface.withOpacity(0.7),
                       ),
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
@@ -2922,7 +3198,9 @@ class _LinkWidget extends StatelessWidget {
                       const SizedBox(width: 6),
                       Expanded(
                         child: Text(
-                          link.sourceHost.isNotEmpty ? link.sourceHost : Uri.parse(link.sourceUrl).host,
+                          link.sourceHost.isNotEmpty
+                              ? link.sourceHost
+                              : Uri.parse(link.sourceUrl).host,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.primary,
                             fontWeight: FontWeight.w500,
@@ -2941,6 +3219,7 @@ class _LinkWidget extends StatelessWidget {
       ),
     );
   }
+
   void _onLinkTap(BuildContext context) {
     // فتح الرابط في المتصفح
     // يمكنك استخدام url_launcher أو WebView
@@ -2954,25 +3233,26 @@ class _LinkWidget extends StatelessWidget {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('${'failed_open_link'.tr}${e.toString()}'),
+          content: Text('فشل في فتح الرابط: ${e.toString()}'),
           backgroundColor: Colors.red,
         ),
       );
     }
   }
 }
+
 /// Widget لعرض محتوى المقال
 class _ArticleWidget extends StatelessWidget {
-  const _ArticleWidget({
-    required this.post,
-    required this.mediaResolver,
-  });
+  const _ArticleWidget({required this.post, required this.mediaResolver});
+
   final Post post;
   final Uri Function(String) mediaResolver;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final blog = post.blog!;
+
     return GestureDetector(
       onTap: () {
         // الانتقال إلى صفحة المقال
@@ -2986,128 +3266,129 @@ class _ArticleWidget extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(
-            color: theme.colorScheme.outline.withValues(alpha: 0.3),
-          ),
+          border: Border.all(color: theme.colorScheme.outline.withOpacity(0.3)),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-          // عرض الفيديو إذا كان موجوداً، وإلا عرض صورة الغلاف
-          if (post.hasVideo)
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(12),
-              ),
-              child: AdaptiveVideoPlayer(
-                isFullscreen: false,
-                startMuted: false,
-                autoplayWhenVisible: true,
-                video: post.video!,
-                mediaResolver: mediaResolver,
-              ),
-            )
-          else if (blog.cover != null && blog.cover!.isNotEmpty)
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(12),
-              ),
-              child: AspectRatio(
-                aspectRatio: 16 / 9,
-                child: CachedNetworkImage(
-                  imageUrl: blog.cover!,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => Container(
-                    color: theme.colorScheme.surfaceContainerHighest,
-                    child: Center(
-                      child: Icon(
-                        Iconsax.document_text,
-                        size: 32,
-                        color: theme.colorScheme.onSurfaceVariant,
+            // عرض الفيديو إذا كان موجوداً، وإلا عرض صورة الغلاف
+            if (post.hasVideo)
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(12),
+                ),
+                child: AdaptiveVideoPlayer(
+                  isFullscreen: false,
+                  startMuted: false,
+                  autoplayWhenVisible: true,
+                  video: post.video!,
+                  mediaResolver: mediaResolver,
+                ),
+              )
+            else if (blog.cover != null && blog.cover!.isNotEmpty)
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(12),
+                ),
+                child: AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child: CachedNetworkImage(
+                    imageUrl: blog.cover!,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Container(
+                      color: theme.colorScheme.surfaceVariant,
+                      child: Center(
+                        child: Icon(
+                          Iconsax.document_text,
+                          size: 32,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     ),
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    color: theme.colorScheme.surfaceContainerHighest,
-                    child: Center(
-                      child: Icon(
-                        Iconsax.document_text,
-                        size: 32,
-                        color: theme.colorScheme.onSurfaceVariant,
+                    errorWidget: (context, url, error) => Container(
+                      color: theme.colorScheme.surfaceVariant,
+                      child: Center(
+                        child: Icon(
+                          Iconsax.document_text,
+                          size: 32,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-          // محتوى المقال
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // عنوان المقال
-                Text(
-                  blog.title,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                if (blog.textSnippet != null && blog.textSnippet!.isNotEmpty) ...[
-                  const SizedBox(height: 4),
+            // محتوى المقال
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // عنوان المقال
                   Text(
-                    blog.textSnippet!,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                    blog.title,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
                     ),
-                    maxLines: 3,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                ],
-                const SizedBox(height: 8),
-                // تصنيف المقال
-                Row(
-                  children: [
-                    Icon(
-                      Iconsax.document_text,
-                      size: 16,
-                      color: theme.colorScheme.primary,
-                    ),
-                    const SizedBox(width: 6),
+                  if (blog.textSnippet != null &&
+                      blog.textSnippet!.isNotEmpty) ...[
+                    const SizedBox(height: 4),
                     Text(
-                      blog.categoryName ?? 'blog_post'.tr,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.primary,
-                        fontWeight: FontWeight.w500,
+                      blog.textSnippet!,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurface.withOpacity(0.7),
                       ),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
-                ),
-              ],
+                  const SizedBox(height: 8),
+                  // تصنيف المقال
+                  Row(
+                    children: [
+                      Icon(
+                        Iconsax.document_text,
+                        size: 16,
+                        color: theme.colorScheme.primary,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        blog.categoryName ?? 'Article',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.primary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
     );
   }
 }
+
 /// Widget لعرض المنشور المشارك
 class _SharedPostWidget extends StatelessWidget {
   const _SharedPostWidget({required this.originPost});
+
   final Post originPost;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final mediaAsset = context.read<AppConfig>().mediaAsset;
+
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.3),
-        ),
+        border: Border.all(color: theme.colorScheme.outline.withOpacity(0.3)),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Padding(
@@ -3154,9 +3435,12 @@ class _SharedPostWidget extends StatelessWidget {
                         ],
                       ),
                       Text(
-                        TimeAgo.formatFromString(originPost.publishedAt, isEnglish: true),
+                        TimeAgo.formatFromString(
+                          originPost.publishedAt,
+                          isEnglish: true,
+                        ),
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                          color: theme.colorScheme.onSurface.withOpacity(0.6),
                         ),
                       ),
                     ],
@@ -3166,10 +3450,7 @@ class _SharedPostWidget extends StatelessWidget {
             ),
             if (originPost.text.isNotEmpty) ...[
               const SizedBox(height: 8),
-              HtmlTextWidget(
-                htmlContent: originPost.text,
-                maxLength: 200,
-              ),
+              HtmlTextWidget(htmlContent: originPost.text, maxLength: 200),
             ],
             // محتوى إضافي للمنشور الأصلي
             if (originPost.hasPhotos) ...[
@@ -3191,7 +3472,10 @@ class _SharedPostWidget extends StatelessWidget {
             // عرض widget التبرع للمنشور المشترك
             if (originPost.isFundingPost && originPost.funding != null) ...[
               const SizedBox(height: 8),
-              _FundingWidget(funding: originPost.funding!, mediaResolver: mediaAsset),
+              _FundingWidget(
+                funding: originPost.funding!,
+                mediaResolver: mediaAsset,
+              ),
             ],
           ],
         ),
@@ -3199,17 +3483,18 @@ class _SharedPostWidget extends StatelessWidget {
     );
   }
 }
+
 class _EventWidget extends StatelessWidget {
-  const _EventWidget({
-    required this.event,
-    required this.mediaResolver,
-  });
+  const _EventWidget({required this.event, required this.mediaResolver});
+
   final PostEvent event;
   final Uri Function(String) mediaResolver;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: () {
         // Navigate to event detail page
@@ -3218,9 +3503,7 @@ class _EventWidget extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => EventDetailPage(
-                eventId: eventId,
-              ),
+              builder: (_) => EventDetailPage(eventId: eventId),
             ),
           );
         }
@@ -3230,134 +3513,96 @@ class _EventWidget extends StatelessWidget {
           color: isDark ? const Color(0xFF2A2A2A) : Colors.grey[50],
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.2),
+            color: isDark
+                ? Colors.white.withOpacity(0.1)
+                : Colors.grey.withOpacity(0.2),
             width: 1,
           ),
         ),
         child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // صورة غلاف الحدث
-          if (event.eventCover != null) ...[
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-              child: AspectRatio(
-                aspectRatio: 16 / 9,
-                child: CachedNetworkImage(
-                  imageUrl: mediaResolver(event.eventCover!).toString(),
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => Container(
-                    color: Colors.grey[300],
-                    child: const Center(
-                      child: CircularProgressIndicator(),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // صورة غلاف الحدث
+            if (event.eventCover != null) ...[
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(12),
+                ),
+                child: AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child: CachedNetworkImage(
+                    imageUrl: mediaResolver(event.eventCover!).toString(),
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Container(
+                      color: Colors.grey[300],
+                      child: const Center(child: CircularProgressIndicator()),
                     ),
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    color: Colors.grey[300],
-                    child: const Center(
-                      child: Icon(Icons.event, size: 48),
+                    errorWidget: (context, url, error) => Container(
+                      color: Colors.grey[300],
+                      child: const Center(child: Icon(Icons.event, size: 48)),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // أيقونة الحدث والعنوان
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Icon(
-                        event.eventIsOnline ? Icons.videocam : Icons.event,
-                        color: theme.colorScheme.primary,
-                        size: 20,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            event.eventTitle,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          if (event.eventLocation != null) ...[
-                            const SizedBox(height: 4),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.location_on_outlined,
-                                  size: 16,
-                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                                ),
-                                const SizedBox(width: 4),
-                                Expanded(
-                                  child: Text(
-                                    event.eventLocation!,
-                                    style: theme.textTheme.bodySmall?.copyWith(
-                                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                // تاريخ ووقت الحدث
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFF333333) : Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.2),
-                    ),
-                  ),
-                  child: Row(
+            ],
+
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // أيقونة الحدث والعنوان
+                  Row(
                     children: [
-                      Icon(
-                        Icons.schedule,
-                        color: theme.colorScheme.primary,
-                        size: 18,
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.primary.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                          event.eventIsOnline ? Icons.videocam : Icons.event,
+                          color: theme.colorScheme.primary,
+                          size: 20,
+                        ),
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: 12),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              _formatEventDate(event.eventStartDate),
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.w500,
+                              event.eventTitle,
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
                               ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            if (event.eventStartDate != event.eventEndDate) ...[
-                              Text(
-                                'to ${_formatEventDate(event.eventEndDate)}',
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                                ),
+                            if (event.eventLocation != null) ...[
+                              const SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.location_on_outlined,
+                                    size: 16,
+                                    color: theme.colorScheme.onSurface
+                                        .withOpacity(0.6),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Expanded(
+                                    child: Text(
+                                      event.eventLocation!,
+                                      style: theme.textTheme.bodySmall
+                                          ?.copyWith(
+                                            color: theme.colorScheme.onSurface
+                                                .withOpacity(0.6),
+                                          ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ],
@@ -3365,96 +3610,154 @@ class _EventWidget extends StatelessWidget {
                       ),
                     ],
                   ),
-                ),
-                // وصف الحدث
-                if (event.eventDescription != null && event.eventDescription!.isNotEmpty) ...[
+
                   const SizedBox(height: 12),
-                  Text(
-                    event.eventDescription!,
-                    style: theme.textTheme.bodyMedium,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-                const SizedBox(height: 16),
-                // إحصائيات الحدث
-                Row(
-                  children: [
-                    _EventStat(
-                      icon: Icons.star_outline,
-                      label: 'interested_button'.tr,
-                      count: event.formattedInterestedCount,
-                      color: Colors.orange,
-                    ),
-                    const SizedBox(width: 16),
-                    _EventStat(
-                      icon: Icons.check_circle_outline,
-                      label: 'going_events'.tr,
-                      count: event.formattedGoingCount,
-                      color: Colors.green,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                // أزرار الحدث
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                          // TODO: تنفيذ عرض تفاصيل الحدث
-                        },
-                        icon: const Icon(Icons.info_outline, size: 18),
-                        label:  Text('details'.tr),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: theme.colorScheme.primary,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
+
+                  // تاريخ ووقت الحدث
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: isDark ? const Color(0xFF333333) : Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: isDark
+                            ? Colors.white.withOpacity(0.1)
+                            : Colors.grey.withOpacity(0.2),
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: () {
-                          // TODO: تنفيذ الانضمام/إلغاء الانضمام
-                        },
-                        icon: Icon(
-                          event.iJoined ? Icons.check_circle : Icons.star_outline,
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.schedule,
+                          color: theme.colorScheme.primary,
                           size: 18,
                         ),
-                        label: Text(event.iJoined ? 'joined'.tr : 'interested'.tr),
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: theme.colorScheme.primary,
-                          side: BorderSide(color: theme.colorScheme.primary),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                _formatEventDate(event.eventStartDate),
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              if (event.eventStartDate !=
+                                  event.eventEndDate) ...[
+                                Text(
+                                  'to ${_formatEventDate(event.eventEndDate)}',
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.onSurface
+                                        .withOpacity(0.6),
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // وصف الحدث
+                  if (event.eventDescription != null &&
+                      event.eventDescription!.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    Text(
+                      event.eventDescription!,
+                      style: theme.textTheme.bodyMedium,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+
+                  const SizedBox(height: 16),
+
+                  // إحصائيات الحدث
+                  Row(
+                    children: [
+                      _EventStat(
+                        icon: Icons.star_outline,
+                        label: 'interested_button_event'.tr,
+                        count: event.formattedInterestedCount,
+                        color: Colors.orange,
+                      ),
+                      const SizedBox(width: 16),
+                      _EventStat(
+                        icon: Icons.check_circle_outline,
+                        label: 'going_button_event'.tr,
+                        count: event.formattedGoingCount,
+                        color: Colors.green,
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // أزرار الحدث
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            // TODO: تنفيذ عرض تفاصيل الحدث
+                          },
+                          icon: const Icon(Icons.info_outline, size: 18),
+                          label: Text('details_button'.tr),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: theme.colorScheme.primary,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () {
+                            // TODO: تنفيذ الانضمام/إلغاء الانضمام
+                          },
+                          icon: Icon(
+                            event.iJoined
+                                ? Icons.check_circle
+                                : Icons.star_outline,
+                            size: 18,
+                          ),
+                          label: Text(event.iJoined ? 'Joined' : 'Interested'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: theme.colorScheme.primary,
+                            side: BorderSide(color: theme.colorScheme.primary),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
     );
   }
+
   String _formatEventDate(String dateString) {
     try {
       final date = DateTime.parse(dateString);
       final now = DateTime.now();
       final today = DateTime(now.year, now.month, now.day);
       final eventDate = DateTime(date.year, date.month, date.day);
+
       if (eventDate == today) {
-        return 'Today ${_formatTime(date)}';
+        return '${'time_today'.tr} ${_formatTime(date)}';
       } else if (eventDate == today.add(const Duration(days: 1))) {
-        return 'Tomorrow ${_formatTime(date)}';
+        return '${'time_tomorrow'.tr} ${_formatTime(date)}';
       } else {
         return '${date.day}/${date.month}/${date.year} ${_formatTime(date)}';
       }
@@ -3462,14 +3765,16 @@ class _EventWidget extends StatelessWidget {
       return dateString;
     }
   }
+
   String _formatTime(DateTime date) {
     final hour = date.hour;
     final minute = date.minute.toString().padLeft(2, '0');
-    final period = hour >= 12 ? 'PM' : 'AM';
+    final period = hour >= 12 ? 'time_period_pm'.tr : 'time_period_am'.tr;
     final displayHour = hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour);
     return '$displayHour:$minute $period';
   }
 }
+
 class _EventStat extends StatelessWidget {
   const _EventStat({
     required this.icon,
@@ -3477,13 +3782,16 @@ class _EventStat extends StatelessWidget {
     required this.count,
     required this.color,
   });
+
   final IconData icon;
   final String label;
   final String count;
   final Color color;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -3501,7 +3809,7 @@ class _EventStat extends StatelessWidget {
             Text(
               label,
               style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                color: theme.colorScheme.onSurface.withOpacity(0.6),
               ),
             ),
           ],
@@ -3510,44 +3818,42 @@ class _EventStat extends StatelessWidget {
     );
   }
 }
+
 /// Widget لعرض حملة التبرع
 class _FundingWidget extends StatelessWidget {
-  const _FundingWidget({
-    required this.funding,
-    required this.mediaResolver,
-  });
+  const _FundingWidget({required this.funding, required this.mediaResolver});
+
   final PostFunding funding;
   final Uri Function(String) mediaResolver;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = Get.isDarkMode;
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: isDark
               ? [
-                  Colors.green.shade900.withValues(alpha: 0.2),
-                  Colors.green.shade800.withValues(alpha: 0.1),
+                  Colors.green.shade900.withOpacity(0.2),
+                  Colors.green.shade800.withOpacity(0.1),
                 ]
-              : [
-                  Colors.green.shade50,
-                  Colors.green.shade100,
-                ],
+              : [Colors.green.shade50, Colors.green.shade100],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isDark
-              ? Colors.green.withValues(alpha: 0.4)
-              : Colors.green.withValues(alpha: 0.3),
+              ? Colors.green.withOpacity(0.4)
+              : Colors.green.withOpacity(0.3),
         ),
         boxShadow: [
           BoxShadow(
             color: isDark
-                ? Colors.black.withValues(alpha: 0.3)
-                : Colors.green.withValues(alpha: 0.1),
+                ? Colors.black.withOpacity(0.3)
+                : Colors.green.withOpacity(0.1),
             offset: const Offset(0, 2),
             blurRadius: 8,
             spreadRadius: 0,
@@ -3567,15 +3873,12 @@ class _FundingWidget extends StatelessWidget {
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [
-                        Colors.green.shade600,
-                        Colors.green.shade500,
-                      ],
+                      colors: [Colors.green.shade600, Colors.green.shade500],
                     ),
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.green.withValues(alpha: 0.3),
+                        color: Colors.green.withOpacity(0.3),
                         offset: const Offset(0, 2),
                         blurRadius: 6,
                       ),
@@ -3605,7 +3908,7 @@ class _FundingWidget extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '${'goal'.tr}: \$${_formatMoney(funding.amount)}',
+                        'Goal: \$${_formatMoney(funding.amount)}',
                         style: theme.textTheme.bodyLarge?.copyWith(
                           color: isDark
                               ? Colors.green.shade400
@@ -3618,7 +3921,9 @@ class _FundingWidget extends StatelessWidget {
                 ),
               ],
             ),
+
             const SizedBox(height: 24),
+
             // Progress section
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -3627,7 +3932,7 @@ class _FundingWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '${'raised'.tr}: \$${_formatMoney(funding.raisedAmount)}',
+                      'Raised: \$${_formatMoney(funding.raisedAmount)}',
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: isDark
@@ -3647,7 +3952,7 @@ class _FundingWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.green.withValues(alpha: 0.3),
+                            color: Colors.green.withOpacity(0.3),
                             offset: const Offset(0, 2),
                             blurRadius: 4,
                           ),
@@ -3665,14 +3970,13 @@ class _FundingWidget extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 12),
+
                 // Progress Bar
                 Container(
                   height: 10,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: isDark
-                        ? Colors.grey.shade800
-                        : Colors.grey.shade300,
+                    color: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
@@ -3692,7 +3996,9 @@ class _FundingWidget extends StatelessWidget {
                 ),
               ],
             ),
+
             const SizedBox(height: 20),
+
             // Statistics Row
             Row(
               children: [
@@ -3710,14 +4016,18 @@ class _FundingWidget extends StatelessWidget {
                   child: _FundingStatCard(
                     icon: Icons.monetization_on_rounded,
                     value: '\$${_formatMoney(funding.remainingAmount)}',
-                    label: 'remaining'.tr,
-                    color: isDark ? Colors.orange.shade400 : Colors.orange.shade600,
+                    label: 'remaining_label'.tr,
+                    color: isDark
+                        ? Colors.orange.shade400
+                        : Colors.orange.shade600,
                     isDark: isDark,
                   ),
                 ),
               ],
             ),
+
             const SizedBox(height: 20),
+
             // Action Button
             SizedBox(
               width: double.infinity,
@@ -3736,9 +4046,16 @@ class _FundingWidget extends StatelessWidget {
                         if (postIdInt != null) {
                           // First get full funding details using postId
                           try {
-                            final repo = Provider.of<FundingRepository>(context, listen: false);
-                            final fullFunding = await repo.getFundingById(postIdInt);
-                            await Get.to(() => FundingDonatePage(funding: fullFunding));
+                            final repo = Provider.of<FundingRepository>(
+                              context,
+                              listen: false,
+                            );
+                            final fullFunding = await repo.getFundingById(
+                              postIdInt,
+                            );
+                            await Get.to(
+                              () => FundingDonatePage(funding: fullFunding),
+                            );
                           } catch (e) {
                             Get.snackbar('error'.tr, e.toString());
                           }
@@ -3754,7 +4071,7 @@ class _FundingWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   elevation: isDark ? 8 : 4,
-                  shadowColor: Colors.green.withValues(alpha: 0.5),
+                  shadowColor: Colors.green.withOpacity(0.5),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -3767,7 +4084,7 @@ class _FundingWidget extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      funding.isGoalReached ? 'goal_reached'.tr : 'donate_now'.tr,
+                      funding.isGoalReached ? 'Goal Reached!' : 'Donate Now',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -3777,6 +4094,7 @@ class _FundingWidget extends StatelessWidget {
                 ),
               ),
             ),
+
             // Goal reached banner
             if (funding.isGoalReached) ...[
               const SizedBox(height: 12),
@@ -3788,7 +4106,7 @@ class _FundingWidget extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                   color: isDark
-                      ? Colors.green.shade800.withValues(alpha: 0.3)
+                      ? Colors.green.shade800.withOpacity(0.3)
                       : Colors.green.shade100,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
@@ -3809,7 +4127,7 @@ class _FundingWidget extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      'thank_you_supporters!'.tr,
+                      'Thank you to all supporters!',
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: isDark
                             ? Colors.green.shade400
@@ -3826,6 +4144,7 @@ class _FundingWidget extends StatelessWidget {
       ),
     );
   }
+
   String _formatMoney(double amount) {
     if (amount >= 1000000) {
       return '${(amount / 1000000).toStringAsFixed(1)}M';
@@ -3836,6 +4155,7 @@ class _FundingWidget extends StatelessWidget {
     }
   }
 }
+
 /// Widget لعرض إحصائية في حملة التبرع
 class _FundingStatCard extends StatelessWidget {
   const _FundingStatCard({
@@ -3845,37 +4165,36 @@ class _FundingStatCard extends StatelessWidget {
     required this.color,
     required this.isDark,
   });
+
   final IconData icon;
   final String value;
   final String label;
   final Color color;
   final bool isDark;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark
-            ? color.withValues(alpha: 0.15)
-            : color.withValues(alpha: 0.1),
+        color: isDark ? color.withOpacity(0.15) : color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isDark
-              ? color.withValues(alpha: 0.4)
-              : color.withValues(alpha: 0.3),
+          color: isDark ? color.withOpacity(0.4) : color.withOpacity(0.3),
         ),
         boxShadow: isDark
             ? [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.2),
+                  color: Colors.black.withOpacity(0.2),
                   offset: const Offset(0, 2),
                   blurRadius: 4,
                 ),
               ]
             : [
                 BoxShadow(
-                  color: color.withValues(alpha: 0.1),
+                  color: color.withOpacity(0.1),
                   offset: const Offset(0, 2),
                   blurRadius: 6,
                 ),
@@ -3890,26 +4209,20 @@ class _FundingStatCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               boxShadow: [
                 BoxShadow(
-                  color: color.withValues(alpha: 0.3),
+                  color: color.withOpacity(0.3),
                   offset: const Offset(0, 2),
                   blurRadius: 4,
                 ),
               ],
             ),
-            child: Icon(
-              icon,
-              color: Colors.white,
-              size: 20,
-            ),
+            child: Icon(icon, color: Colors.white, size: 20),
           ),
           const SizedBox(height: 8),
           Text(
             value,
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
-              color: isDark
-                  ? theme.colorScheme.onSurface
-                  : color,
+              color: isDark ? theme.colorScheme.onSurface : color,
             ),
           ),
           const SizedBox(height: 2),
@@ -3917,8 +4230,8 @@ class _FundingStatCard extends StatelessWidget {
             label,
             style: theme.textTheme.bodySmall?.copyWith(
               color: isDark
-                  ? theme.colorScheme.onSurface.withValues(alpha: 0.7)
-                  : theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                  ? theme.colorScheme.onSurface.withOpacity(0.7)
+                  : theme.colorScheme.onSurface.withOpacity(0.6),
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -3927,18 +4240,19 @@ class _FundingStatCard extends StatelessWidget {
     );
   }
 }
+
 /// Widget لعرض العرض (Offer)
 class _OfferWidget extends StatelessWidget {
-  const _OfferWidget({
-    required this.offer,
-    required this.mediaResolver,
-  });
+  const _OfferWidget({required this.offer, required this.mediaResolver});
+
   final PostOffer offer;
   final Uri Function(String) mediaResolver;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = Get.isDarkMode;
+
     return GestureDetector(
       onTap: () {
         // Navigate to offer detail page
@@ -3952,27 +4266,24 @@ class _OfferWidget extends StatelessWidget {
           gradient: LinearGradient(
             colors: isDark
                 ? [
-                    Colors.orange.shade900.withValues(alpha: 0.2),
-                    Colors.orange.shade800.withValues(alpha: 0.1),
+                    Colors.orange.shade900.withOpacity(0.2),
+                    Colors.orange.shade800.withOpacity(0.1),
                   ]
-                : [
-                    Colors.orange.shade50,
-                    Colors.orange.shade100,
-                  ],
+                : [Colors.orange.shade50, Colors.orange.shade100],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isDark
-                ? Colors.orange.withValues(alpha: 0.4)
-                : Colors.orange.withValues(alpha: 0.3),
+                ? Colors.orange.withOpacity(0.4)
+                : Colors.orange.withOpacity(0.3),
           ),
           boxShadow: [
             BoxShadow(
               color: isDark
-                  ? Colors.black.withValues(alpha: 0.3)
-                  : Colors.orange.withValues(alpha: 0.1),
+                  ? Colors.black.withOpacity(0.3)
+                  : Colors.orange.withOpacity(0.1),
               offset: const Offset(0, 2),
               blurRadius: 8,
               spreadRadius: 0,
@@ -3983,9 +4294,12 @@ class _OfferWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Thumbnail if available and non-empty to avoid invalid image data
-            if (offer.thumbnail != null && offer.thumbnail!.trim().isNotEmpty) ...[
+            if (offer.thumbnail != null &&
+                offer.thumbnail!.trim().isNotEmpty) ...[
               ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(16),
+                ),
                 child: CachedNetworkImage(
                   imageUrl: mediaResolver(offer.thumbnail!).toString(),
                   height: 200,
@@ -3998,7 +4312,10 @@ class _OfferWidget extends StatelessWidget {
                   errorWidget: (context, url, error) => Container(
                     height: 200,
                     color: theme.colorScheme.surfaceContainerHighest,
-                    child: Icon(Iconsax.gallery_slash, color: theme.colorScheme.onSurfaceVariant),
+                    child: Icon(
+                      Iconsax.gallery_slash,
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 ),
               ),
@@ -4024,17 +4341,13 @@ class _OfferWidget extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.orange.withValues(alpha: 0.3),
+                              color: Colors.orange.withOpacity(0.3),
                               offset: const Offset(0, 2),
                               blurRadius: 6,
                             ),
                           ],
                         ),
-                        child: Icon(
-                          Iconsax.tag,
-                          color: Colors.white,
-                          size: 24,
-                        ),
+                        child: Icon(Iconsax.tag, color: Colors.white, size: 24),
                       ),
                       const SizedBox(width: 16),
                       Expanded(
@@ -4069,7 +4382,9 @@ class _OfferWidget extends StatelessWidget {
                       ),
                     ],
                   ),
+
                   const SizedBox(height: 16),
+
                   // Discount badge
                   if (offer.hasDiscount) ...[
                     Container(
@@ -4084,7 +4399,7 @@ class _OfferWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.orange.withValues(alpha: 0.3),
+                            color: Colors.orange.withOpacity(0.3),
                             offset: const Offset(0, 2),
                             blurRadius: 4,
                           ),
@@ -4112,12 +4427,17 @@ class _OfferWidget extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                   ],
+
                   // Action Button
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        Get.to(() => OfferDetailPage(offerId:int.parse( offer.offerId)));
+                        Get.to(
+                          () => OfferDetailPage(
+                            offerId: int.parse(offer.offerId),
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: isDark
@@ -4129,18 +4449,15 @@ class _OfferWidget extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         elevation: isDark ? 8 : 4,
-                        shadowColor: Colors.orange.withValues(alpha: 0.5),
+                        shadowColor: Colors.orange.withOpacity(0.5),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            Iconsax.shopping_bag,
-                            size: 20,
-                          ),
+                          Icon(Iconsax.shopping_bag, size: 20),
                           const SizedBox(width: 8),
                           Text(
-                            'view_offer'.tr,
+                            'View Offer',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -4158,21 +4475,33 @@ class _OfferWidget extends StatelessWidget {
       ),
     );
   }
+
   String _getDiscountText() {
     if (offer.isPercentDiscount && offer.discountPercent != null) {
-      return '${offer.discountPercent}% ${'off'.tr}';
+      return '${offer.discountPercent}% OFF';
     } else if (offer.isAmountDiscount && offer.discountAmount != null) {
-      return '\$${offer.discountAmount!.toStringAsFixed(0)} ${'off'.tr}';
-    } else if (offer.isBuyGetDiscount && offer.buyX != null && offer.getY != null) {
-      return '${'buy'.tr} ${offer.buyX} ${'get'.tr} ${offer.getY}';
-    } else if (offer.isSpendGetOff && offer.spendX != null && offer.amountY != null) {
-      return '${'spend'.tr} \$${offer.spendX!.toStringAsFixed(0)} ${'get'.tr} \$${offer.amountY!.toStringAsFixed(0)} ${'off'.tr}';
+      return '\$${offer.discountAmount!.toStringAsFixed(0)} OFF';
+    } else if (offer.isBuyGetDiscount &&
+        offer.buyX != null &&
+        offer.getY != null) {
+      return 'offer_discount_buy_get'.trParams({
+        'buy': offer.buyX.toString(),
+        'get': offer.getY.toString(),
+      });
+    } else if (offer.isSpendGetOff &&
+        offer.spendX != null &&
+        offer.amountY != null) {
+      return 'offer_discount_spend_get'.trParams({
+        'spend': offer.spendX!.toStringAsFixed(0),
+        'amount': offer.amountY!.toStringAsFixed(0),
+      });
     } else if (offer.isFreeShipping) {
-      return 'free_shipping'.tr;
+      return 'FREE SHIPPING';
     }
-    return 'special_offer'.tr;
+    return 'offer_special'.tr;
   }
 }
+
 /// Widget لعرض النص مع خلفية ملونة أو منقوشة
 class _ColoredTextWidget extends StatefulWidget {
   const _ColoredTextWidget({
@@ -4180,22 +4509,32 @@ class _ColoredTextWidget extends StatefulWidget {
     required this.htmlContent,
     required this.coloredPattern,
   });
+
   final String htmlContent;
   final PostColoredPattern coloredPattern;
+
   @override
   State<_ColoredTextWidget> createState() => _ColoredTextWidgetState();
 }
-class _ColoredTextWidgetState extends State<_ColoredTextWidget> with AutomaticKeepAliveClientMixin {
+
+class _ColoredTextWidgetState extends State<_ColoredTextWidget>
+    with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true; // منع rebuild غير ضروري
+
   @override
   Widget build(BuildContext context) {
     super.build(context); // مطلوب لـ AutomaticKeepAliveClientMixin
+
     // استخدام LayoutBuilder لمنع layout shifts
     return LayoutBuilder(
       builder: (context, constraints) {
         // حساب حجم ثابت بناء على constraints
-        final calculatedSize = (constraints.maxWidth * 0.85).clamp(250.0, 400.0);
+        final calculatedSize = (constraints.maxWidth * 0.85).clamp(
+          250.0,
+          400.0,
+        );
+
         return Container(
           width: calculatedSize,
           height: calculatedSize,
@@ -4220,19 +4559,30 @@ class _ColoredTextWidgetState extends State<_ColoredTextWidget> with AutomaticKe
                   )
                 : null,
             // خلفية متدرجة إذا كان هناك لونين
-            gradient: widget.coloredPattern.hasGradient && !widget.coloredPattern.isImagePattern
+            gradient:
+                widget.coloredPattern.hasGradient &&
+                    !widget.coloredPattern.isImagePattern
                 ? LinearGradient(
                     colors: [
-                      _parseColor(widget.coloredPattern.backgroundColors!.primary),
-                      _parseColor(widget.coloredPattern.backgroundColors!.secondary!),
+                      _parseColor(
+                        widget.coloredPattern.backgroundColors!.primary,
+                      ),
+                      _parseColor(
+                        widget.coloredPattern.backgroundColors!.secondary!,
+                      ),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   )
                 : null,
             // لون واحد إذا لم يكن هناك تدرج
-            color: widget.coloredPattern.isColorPattern && !widget.coloredPattern.hasGradient
-                ? _parseColor(widget.coloredPattern.backgroundColors?.primary ?? '#4A90E2')
+            color:
+                widget.coloredPattern.isColorPattern &&
+                    !widget.coloredPattern.hasGradient
+                ? _parseColor(
+                    widget.coloredPattern.backgroundColors?.primary ??
+                        '#4A90E2',
+                  )
                 : null,
           ),
           child: Container(
@@ -4240,17 +4590,17 @@ class _ColoredTextWidgetState extends State<_ColoredTextWidget> with AutomaticKe
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center, // توسيط عمودي
               crossAxisAlignment: CrossAxisAlignment.center, // توسيط أفقي
-              children: [
-                _buildCenteredText(),
-              ],
+              children: [_buildCenteredText()],
             ),
           ),
         );
       },
     );
-  }  /// بناء النص مع محاذاة مركزية مثالية
+  }
+
+  /// بناء النص مع محاذاة مركزية مثالية
   Widget _buildCenteredText() {
-    return SizedBox(
+    return Container(
       width: double.infinity,
       child: HtmlTextWidget(
         htmlContent: widget.htmlContent,
@@ -4264,9 +4614,11 @@ class _ColoredTextWidgetState extends State<_ColoredTextWidget> with AutomaticKe
       ),
     );
   }
+
   /// حساب حجم الخط بناءً على طول النص (مثل Facebook)
   double _calculateFontSize(String text) {
     final textLength = text.replaceAll(RegExp(r'<[^>]*>'), '').trim().length;
+
     if (textLength <= 30) {
       return 32; // نص قصير جداً - خط كبير جداً
     } else if (textLength <= 60) {
@@ -4279,15 +4631,18 @@ class _ColoredTextWidgetState extends State<_ColoredTextWidget> with AutomaticKe
       return 18; // نص طويل جداً - خط صغير
     }
   }
+
   /// تحويل النص إلى لون
   Color _parseColor(String colorString) {
     try {
       // إزالة # إذا كانت موجودة
       String cleanColor = colorString.replaceAll('#', '');
+
       // إضافة FF للشفافية إذا كان اللون 6 أحرف فقط
       if (cleanColor.length == 6) {
         cleanColor = 'FF$cleanColor';
       }
+
       // تحويل إلى int ثم إلى Color
       return Color(int.parse(cleanColor, radix: 16));
     } catch (e) {
@@ -4296,6 +4651,7 @@ class _ColoredTextWidgetState extends State<_ColoredTextWidget> with AutomaticKe
     }
   }
 }
+
 /// Widget لعرض البث المباشر
 class _LiveWidget extends StatelessWidget {
   const _LiveWidget({
@@ -4304,41 +4660,41 @@ class _LiveWidget extends StatelessWidget {
     required this.mediaResolver,
     required this.postId, // إضافة postId
   });
+
   final PostLive live;
   final String authorName;
   final Uri Function(String) mediaResolver;
   final String postId; // إضافة postId
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: isDark
               ? [
-                  Colors.red.shade900.withValues(alpha: 0.3),
-                  Colors.red.shade800.withValues(alpha: 0.1),
+                  Colors.red.shade900.withOpacity(0.3),
+                  Colors.red.shade800.withOpacity(0.1),
                 ]
-              : [
-                  Colors.red.shade50,
-                  Colors.red.shade100,
-                ],
+              : [Colors.red.shade50, Colors.red.shade100],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: live.isActive 
-              ? Colors.red.withValues(alpha: 0.6)
-              : Colors.grey.withValues(alpha: 0.3),
+          color: live.isActive
+              ? Colors.red.withOpacity(0.6)
+              : Colors.grey.withOpacity(0.3),
           width: live.isActive ? 2 : 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: live.isActive 
-                ? Colors.red.withValues(alpha: 0.2)
-                : Colors.black.withValues(alpha: 0.1),
+            color: live.isActive
+                ? Colors.red.withOpacity(0.2)
+                : Colors.black.withOpacity(0.1),
             offset: const Offset(0, 2),
             blurRadius: 8,
             spreadRadius: 0,
@@ -4353,12 +4709,16 @@ class _LiveWidget extends StatelessWidget {
             children: [
               // صورة المعاينة
               ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(16),
+                ),
                 child: AspectRatio(
                   aspectRatio: 16 / 9,
                   child: live.videoThumbnail != null
                       ? CachedNetworkImage(
-                          imageUrl: mediaResolver(live.videoThumbnail!).toString(),
+                          imageUrl: mediaResolver(
+                            live.videoThumbnail!,
+                          ).toString(),
                           fit: BoxFit.cover,
                           placeholder: (context, url) => Container(
                             color: theme.colorScheme.surfaceContainerHighest,
@@ -4393,18 +4753,22 @@ class _LiveWidget extends StatelessWidget {
                         ),
                 ),
               ),
+
               // شارة LIVE أو ENDED
               Positioned(
                 top: 12,
                 left: 12,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: live.isActive ? Colors.red : Colors.grey,
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.3),
+                        color: Colors.black.withOpacity(0.3),
                         offset: const Offset(0, 1),
                         blurRadius: 4,
                       ),
@@ -4424,7 +4788,7 @@ class _LiveWidget extends StatelessWidget {
                           ),
                         ),
                       Text(
-                        live.isActive ? 'live'.tr : 'ended'.tr,
+                        live.isActive ? 'LIVE' : 'ENDED',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 10,
@@ -4435,6 +4799,7 @@ class _LiveWidget extends StatelessWidget {
                   ),
                 ),
               ),
+
               // زر التشغيل
               Positioned.fill(
                 child: Center(
@@ -4442,11 +4807,11 @@ class _LiveWidget extends StatelessWidget {
                     width: 64,
                     height: 64,
                     decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.7),
+                      color: Colors.black.withOpacity(0.7),
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.3),
+                          color: Colors.black.withOpacity(0.3),
                           offset: const Offset(0, 2),
                           blurRadius: 8,
                         ),
@@ -4462,6 +4827,7 @@ class _LiveWidget extends StatelessWidget {
               ),
             ],
           ),
+
           // معلومات البث
           Padding(
             padding: const EdgeInsets.all(16),
@@ -4474,14 +4840,16 @@ class _LiveWidget extends StatelessWidget {
                     Icon(
                       live.isActive ? Iconsax.record_circle : Iconsax.video,
                       size: 20,
-                      color: live.isActive ? Colors.red : theme.colorScheme.onSurface,
+                      color: live.isActive
+                          ? Colors.red
+                          : theme.colorScheme.onSurface,
                     ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        live.isActive 
-                            ? '$authorName${'is_live_now'.tr}'
-                            : '$authorName${'was_live'.tr}',
+                        live.isActive
+                            ? '$authorName is live now'
+                            : '$authorName was live',
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: live.isActive ? Colors.red : null,
@@ -4490,25 +4858,32 @@ class _LiveWidget extends StatelessWidget {
                     ),
                   ],
                 ),
+
                 const SizedBox(height: 8),
+
                 // معرف القناة (مخفي للمستخدمين العاديين)
                 if (live.isActive) ...[
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: theme.colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      '${'channel'.tr}: ${live.agoraChannelName.substring(0, 8)}...',
+                      'Channel: ${live.agoraChannelName.substring(0, 8)}...',
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                         fontFamily: 'monospace',
                       ),
                     ),
                   ),
+
                   const SizedBox(height: 12),
                 ],
+
                 // زر المشاهدة
                 if (live.isActive)
                   SizedBox(
@@ -4516,7 +4891,7 @@ class _LiveWidget extends StatelessWidget {
                     child: ElevatedButton.icon(
                       onPressed: () => _joinLiveStream(context),
                       icon: const Icon(Iconsax.video_play),
-                      label:  Text('watch_live'.tr),
+                      label: Text('watch_live_button'.tr),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
                         foregroundColor: Colors.white,
@@ -4531,12 +4906,18 @@ class _LiveWidget extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: OutlinedButton.icon(
-                      onPressed: live.liveRecorded ? () => _watchRecording(context) : null,
+                      onPressed: live.liveRecorded
+                          ? () => _watchRecording(context)
+                          : null,
                       icon: Icon(
-                        live.liveRecorded ? Iconsax.video_play : Iconsax.close_circle,
+                        live.liveRecorded
+                            ? Iconsax.video_play
+                            : Iconsax.close_circle,
                       ),
                       label: Text(
-                        live.liveRecorded ? 'watch_recording'.tr : 'recording_unavailable'.tr,
+                        live.liveRecorded
+                            ? 'Watch Recording'
+                            : 'Recording Unavailable',
                       ),
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 12),
@@ -4553,7 +4934,9 @@ class _LiveWidget extends StatelessWidget {
       ),
     );
   }
+
   void _joinLiveStream(BuildContext context) {
+    // فتح صفحة مشاهدة البث المباشر مع API integration
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -4565,19 +4948,25 @@ class _LiveWidget extends StatelessWidget {
           thumbnailUrl: live.videoThumbnail != null
               ? mediaResolver(live.videoThumbnail!).toString()
               : null,
+          // إضافة postId للتكامل مع API - استخدام postId المُمرر
           postId: postId,
+          // إبقاء liveId للتوافق مع النسخة السابقة
           liveId: live.liveId.toString(),
         ),
       ),
     );
   }
+
   void _watchRecording(BuildContext context) {
+    // TODO: تنفيذ مشاهدة التسجيل
+
     ScaffoldMessenger.of(context).showSnackBar(
-       SnackBar(
+      SnackBar(
         content: Text('recording_coming_soon'.tr),
         backgroundColor: Colors.blue,
       ),
     );
+
     // يمكن هنا فتح مشغل الفيديو للتسجيل
     // if (live.agoraFile != null) {
     //   Navigator.push(
@@ -4591,19 +4980,23 @@ class _LiveWidget extends StatelessWidget {
     // }
   }
 }
+
 /// Simple Boost Action Button
 class _BoostActionButton extends StatelessWidget {
   final bool isBoosted;
   final bool isLoading;
   final VoidCallback onTap;
+
   const _BoostActionButton({
     required this.isBoosted,
     required this.isLoading,
     required this.onTap,
   });
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -4629,9 +5022,9 @@ class _BoostActionButton extends StatelessWidget {
                 Icon(
                   isBoosted ? Iconsax.star_1 : Iconsax.star,
                   size: 18,
-                  color: isBoosted 
+                  color: isBoosted
                       ? const Color(0xFFFF8C00) // Orange for boosted
-                      : theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                      : theme.colorScheme.onSurface.withOpacity(0.7),
                 ),
               const SizedBox(width: 4),
               Text(
@@ -4639,7 +5032,7 @@ class _BoostActionButton extends StatelessWidget {
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: isBoosted
                       ? const Color(0xFFFF8C00)
-                      : theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                      : theme.colorScheme.onSurface.withOpacity(0.7),
                   fontWeight: isBoosted ? FontWeight.w600 : FontWeight.normal,
                 ),
               ),
@@ -4650,4 +5043,5 @@ class _BoostActionButton extends StatelessWidget {
     );
   }
 }
+
 // --- نهاية التحسين ---

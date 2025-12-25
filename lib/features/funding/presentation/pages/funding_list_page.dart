@@ -4,18 +4,22 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:snginepro/core/widgets/skeletons.dart';
 import 'package:snginepro/features/auth/application/auth_notifier.dart';
+
 import '../../../../core/theme/ui_constants.dart';
 import '../../data/models/funding.dart';
 import '../../domain/funding_repository.dart';
 import 'funding_create_page.dart';
 import 'funding_detail_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 class FundingListPage extends StatefulWidget {
   final bool mineOnly;
   const FundingListPage({super.key, this.mineOnly = false});
+
   @override
   State<FundingListPage> createState() => _FundingListPageState();
 }
+
 class _FundingListPageState extends State<FundingListPage> {
   final _scrollCtrl = ScrollController();
   List<Funding> _items = [];
@@ -25,22 +29,26 @@ class _FundingListPageState extends State<FundingListPage> {
   final int _limit = 20;
   bool _hasMore = true;
   bool _loadingMore = false;
+
   @override
   void initState() {
     super.initState();
     _load();
     _scrollCtrl.addListener(_onScroll);
   }
+
   @override
   void dispose() {
     _scrollCtrl.dispose();
     super.dispose();
   }
+
   void _onScroll() {
     if (_scrollCtrl.position.pixels >= _scrollCtrl.position.maxScrollExtent * 0.8) {
       _loadMore();
     }
   }
+
   Future<void> _load() async {
     setState(() {
       _loading = true;
@@ -65,6 +73,7 @@ class _FundingListPageState extends State<FundingListPage> {
       });
     }
   }
+
   Future<void> _loadMore() async {
     if (!_hasMore || _loadingMore || _loading) return;
     setState(() => _loadingMore = true);
@@ -85,6 +94,7 @@ class _FundingListPageState extends State<FundingListPage> {
       setState(() => _loadingMore = false);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -182,6 +192,7 @@ class _FundingListPageState extends State<FundingListPage> {
                     ),
     );
   }
+
   List<Funding> _filterMine(List<Funding> items) {
     // Compare author.userId to current user id
     final auth = context.read<AuthNotifier>();
@@ -189,6 +200,7 @@ class _FundingListPageState extends State<FundingListPage> {
     if (currentId == null || currentId.isEmpty) return const [];
     return items.where((f) => f.author.userId.toString() == currentId).toList();
   }
+
   Widget _buildCard(BuildContext context, Funding f) {
     final scheme = Theme.of(context).colorScheme;
     return GestureDetector(
@@ -227,6 +239,7 @@ class _FundingListPageState extends State<FundingListPage> {
                   ),
                 ],
               ),
+            
             Padding(
               padding: EdgeInsets.all(UI.lg),
               child: Column(
@@ -242,6 +255,7 @@ class _FundingListPageState extends State<FundingListPage> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: UI.sm),
+                  
                   // Progress bar
                   ClipRRect(
                     borderRadius: BorderRadius.circular(4),
@@ -253,6 +267,7 @@ class _FundingListPageState extends State<FundingListPage> {
                     ),
                   ),
                   SizedBox(height: UI.sm),
+                  
                   // Amount info
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -312,6 +327,7 @@ class _FundingListPageState extends State<FundingListPage> {
                     ],
                   ),
                   SizedBox(height: UI.md),
+                  
                   // Publisher row
                   Row(
                     children: [
@@ -363,6 +379,7 @@ class _FundingListPageState extends State<FundingListPage> {
       ),
     );
   }
+
   Widget _buildSkeleton() {
     return ListView.separated(
       padding: EdgeInsets.all(UI.lg),

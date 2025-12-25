@@ -4,15 +4,19 @@
 // import 'package:snginepro/core/theme/app_text_styles.dart';
 // import 'package:snginepro/core/theme/theme_controller.dart';
 // import 'package:snginepro/core/theme/widgets/theme_toggle_button.dart';
+
 // /// Example of using the theme system in the application
 // /// This file is for demonstration only and is not used in the app
 // class ThemeExamplePage extends StatelessWidget {
 //   const ThemeExamplePage({super.key});
+
 //   @override
 //   Widget build(BuildContext context) {
 //     final ThemeController themeController = Get.find();
+
 //     return Obx(() {
 //       final isDark = themeController.isDarkMode;
+
 //       return Scaffold(
 //         backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
 //         appBar: AppBar(
@@ -46,7 +50,9 @@
 //                 Text('Header H6', style: AppTextStyles.h6(isDark: isDark)),
 //               ],
 //             ),
+
 //             const SizedBox(height: 24),
+
 //             // Body Text Section
 //             _buildSection(
 //               'Body Text',
@@ -57,7 +63,9 @@
 //                 Text('Small text - Small', style: AppTextStyles.bodySmall(isDark: isDark)),
 //               ],
 //             ),
+
 //             const SizedBox(height: 24),
+
 //             // Buttons Section
 //             _buildSection(
 //               'Buttons',
@@ -101,7 +109,9 @@
 //                 ),
 //               ],
 //             ),
+
 //             const SizedBox(height: 24),
+
 //             // Cards Section
 //             _buildSection(
 //               'Cards',
@@ -128,7 +138,9 @@
 //                 ),
 //               ],
 //             ),
+
 //             const SizedBox(height: 24),
+
 //             // Colors Section
 //             _buildSection(
 //               'Colors',
@@ -148,7 +160,9 @@
 //                 ),
 //               ],
 //             ),
+
 //             const SizedBox(height: 24),
+
 //             // Input Fields Section
 //             _buildSection(
 //               'Input Fields',
@@ -174,7 +188,9 @@
 //                 ),
 //               ],
 //             ),
+
 //             const SizedBox(height: 24),
+
 //             // Chips Section
 //             _buildSection(
 //               'Chips',
@@ -199,7 +215,9 @@
 //                 ),
 //               ],
 //             ),
+
 //             const SizedBox(height: 24),
+
 //             // Switches & Checkboxes Section
 //             _buildSection(
 //               'Form Controls',
@@ -223,7 +241,9 @@
 //                 ),
 //               ],
 //             ),
+
 //             const SizedBox(height: 24),
+
 //             // Post Types Section
 //             _buildSection(
 //               'Post Type Colors',
@@ -249,7 +269,9 @@
 //                 ),
 //               ],
 //             ),
+
 //             const SizedBox(height: 24),
+
 //             // Gradients Section
 //             _buildSection(
 //               'Gradients',
@@ -264,7 +286,9 @@
 //                 _buildGradientBox('Reel Gradient', AppColors.reelGradient),
 //               ],
 //             ),
+
 //             const SizedBox(height: 24),
+
 //             // Theme Settings Section
 //             _buildSection(
 //               'Theme Settings',
@@ -275,12 +299,14 @@
 //                 const ThemeModeSelector(),
 //               ],
 //             ),
+
 //             const SizedBox(height: 32),
 //           ],
 //         ),
 //       );
 //     });
 //   }
+
 //   Widget _buildSection(String title, bool isDark, List<Widget> children) {
 //     return Container(
 //       padding: const EdgeInsets.all(16),
@@ -302,6 +328,7 @@
 //       ),
 //     );
 //   }
+
 //   Widget _buildColorChip(String label, Color color) {
 //     return Chip(
 //       label: Text(label),
@@ -309,11 +336,12 @@
 //       labelStyle: const TextStyle(color: Colors.white),
 //     );
 //   }
+
 //   Widget _buildPostTypeChip(String label, Color color) {
 //     return Container(
 //       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
 //       decoration: BoxDecoration(
-//         color: color.withValues(alpha: 0.1),
+//         color: color.withOpacity(0.1),
 //         borderRadius: BorderRadius.circular(20),
 //         border: Border.all(color: color, width: 1),
 //       ),
@@ -337,6 +365,7 @@
 //       ),
 //     );
 //   }
+
 //   Widget _buildGradientBox(String label, LinearGradient gradient) {
 //     return Container(
 //       height: 80,

@@ -11,6 +11,7 @@ class ReactionUser {
   final String reaction;
   final String connection;
   final int mutualFriendsCount;
+
   ReactionUser({
     required this.userId,
     required this.userName,
@@ -25,6 +26,7 @@ class ReactionUser {
     required this.connection,
     required this.mutualFriendsCount,
   });
+
   factory ReactionUser.fromJson(Map<String, dynamic> json) {
     return ReactionUser(
       userId: json['user_id'].toString(),
@@ -41,12 +43,14 @@ class ReactionUser {
       mutualFriendsCount: json['mutual_friends_count'] ?? 0,
     );
   }
+
   bool get isFriend => connection == 'friend';
   bool get isFollowing => connection == 'following';
   bool get isFollower => connection == 'follower';
   bool get hasRequest => connection == 'request';
   bool get noConnection => connection == 'none';
 }
+
 class ReactionUsersResponse {
   final List<ReactionUser> users;
   final int total;
@@ -54,6 +58,7 @@ class ReactionUsersResponse {
   final bool hasMore;
   final String reactionFilter;
   final Map<String, int> reactionStats;
+
   ReactionUsersResponse({
     required this.users,
     required this.total,
@@ -62,6 +67,7 @@ class ReactionUsersResponse {
     required this.reactionFilter,
     required this.reactionStats,
   });
+
   factory ReactionUsersResponse.fromJson(Map<String, dynamic> json) {
     final data = json['data'];
     return ReactionUsersResponse(

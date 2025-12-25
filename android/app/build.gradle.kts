@@ -5,6 +5,8 @@ plugins {
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+    // Google Services plugin for Firebase
+    id("com.google.gms.google-services")
 }
 
 val keystorePropertiesFile = rootProject.file("key.properties")
@@ -46,7 +48,7 @@ android {
     }
 
     signingConfigs {
-        create("release") {
+        create("customKey") {
             if (keystorePropertiesFile.exists()) {
                 keystoreProperties.getProperty("storeFile")?.takeIf { it.isNotBlank() }?.let {
                     storeFile = file(it)
@@ -65,9 +67,16 @@ android {
     }
 
     buildTypes {
+        debug {
+            signingConfig = if (keystorePropertiesFile.exists()) {
+                signingConfigs.getByName("customKey")
+            } else {
+                signingConfigs.getByName("debug")
+            }
+        }
         release {
             signingConfig = if (keystorePropertiesFile.exists()) {
-                signingConfigs.getByName("release")
+                signingConfigs.getByName("customKey")
             } else {
                 signingConfigs.getByName("debug")
             }

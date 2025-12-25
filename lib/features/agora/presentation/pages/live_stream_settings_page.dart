@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+
 class LiveStreamSettingsPage extends StatefulWidget {
   const LiveStreamSettingsPage({Key? key}) : super(key: key);
+
   @override
   State<LiveStreamSettingsPage> createState() => _LiveStreamSettingsPageState();
 }
+
 class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
   String _selectedQuality = 'HD';
   bool _isPrivate = false;
@@ -13,6 +16,7 @@ class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
   bool _enableTips = false;
   bool _forSubscribers = false;
   String _selectedCategory = 'عام';
+  
   final List<String> _qualityOptions = ['480p', 'HD', 'Full HD', 'UHD'];
   final List<String> _categories = [
     'عام',
@@ -25,6 +29,7 @@ class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
     'فن',
     'سفر',
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,6 +83,7 @@ class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
       ),
     );
   }
+
   Widget _buildVideoSettings() {
     return _buildSettingsSection(
       title: 'إعدادات الفيديو',
@@ -94,6 +100,7 @@ class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
       ],
     );
   }
+
   Widget _buildPrivacySettings() {
     return _buildSettingsSection(
       title: 'إعدادات الخصوصية',
@@ -116,6 +123,7 @@ class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
       ],
     );
   }
+
   Widget _buildInteractionSettings() {
     return _buildSettingsSection(
       title: 'إعدادات التفاعل',
@@ -138,6 +146,7 @@ class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
       ],
     );
   }
+
   Widget _buildMonetizationSettings() {
     return _buildSettingsSection(
       title: 'إعدادات الربح',
@@ -161,6 +170,7 @@ class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
       ],
     );
   }
+
   Widget _buildCategorySettings() {
     return _buildSettingsSection(
       title: 'تصنيف البث',
@@ -199,6 +209,7 @@ class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
       ],
     );
   }
+
   Widget _buildAdvancedSettings() {
     return _buildSettingsSection(
       title: 'إعدادات متقدمة',
@@ -234,6 +245,7 @@ class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
       ],
     );
   }
+
   Widget _buildSettingsSection({
     required String title,
     required IconData icon,
@@ -273,6 +285,7 @@ class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
       ),
     );
   }
+
   Widget _buildQualitySelector() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -313,6 +326,7 @@ class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
       ),
     );
   }
+
   Widget _buildSwitchTile({
     required String title,
     required String subtitle,
@@ -358,6 +372,7 @@ class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
       ),
     );
   }
+
   Widget _buildActionTile({
     required String title,
     required String subtitle,
@@ -405,6 +420,7 @@ class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
       ),
     );
   }
+
   Widget _buildInfoCard(String text, IconData icon, Color color) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -433,6 +449,7 @@ class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
       ),
     );
   }
+
   void _saveSettings() {
     // Here you would save settings to backend/local storage
     Navigator.of(context).pop({
@@ -445,6 +462,7 @@ class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
       'forSubscribers': _forSubscribers,
       'category': _selectedCategory,
     });
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('تم حفظ الإعدادات بنجاح'),
@@ -453,6 +471,7 @@ class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
       ),
     );
   }
+
   void _showComingSoonDialog(String feature) {
     showDialog(
       context: context,

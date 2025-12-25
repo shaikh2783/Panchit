@@ -1,28 +1,35 @@
 import 'dart:ui' show ImageFilter;
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+
 import '../../data/models/profile_completion_model.dart';
 import '../../data/models/user_profile_model.dart';
 import '../pages/profile_completion_details_page.dart';
+
 class ProfileCompletionCard extends StatelessWidget {
   final ProfileCompletionData completionData;
   final UserProfile? profile;
   final VoidCallback? onTap;
+
   const ProfileCompletionCard({
     super.key,
     required this.completionData,
     this.profile,
     this.onTap,
   });
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final isComplete = completionData.isComplete;
+
     // ✅ تأكدنا أن النوع int (كان num قبل كذا)
     final int percentage = completionData.completionPercentage.clamp(0, 100).toInt();
+
     // Dynamic color palette based on completion percentage
     final Palette p = _paletteFor(percentage, cs);
+
     return Padding(
       padding: const EdgeInsets.all(16),
       child: _SurfaceCard(
@@ -84,7 +91,9 @@ class ProfileCompletionCard extends StatelessWidget {
                             size: 16, color: cs.onSurfaceVariant),
                     ],
                   ),
+
                   const SizedBox(height: 22),
+
                   // Progress + Stats
                   Row(
                     children: [
@@ -127,6 +136,7 @@ class ProfileCompletionCard extends StatelessWidget {
                       ),
                     ],
                   ),
+
                   // Missing fields
                   if (!isComplete && completionData.missingFields.isNotEmpty) ...[
                     const SizedBox(height: 20),
@@ -156,6 +166,7 @@ class ProfileCompletionCard extends StatelessWidget {
                       ),
                     ],
                   ],
+
                   // Actions
                   if (!isComplete) ...[
                     const SizedBox(height: 16),
@@ -216,7 +227,9 @@ class ProfileCompletionCard extends StatelessWidget {
       ),
     );
   }
+
   // ——— Helpers ———
+
   static Widget _statRow(
     BuildContext context, {
     required IconData icon,
@@ -254,6 +267,7 @@ class ProfileCompletionCard extends StatelessWidget {
       ],
     );
   }
+
   static Palette _paletteFor(int percentage, ColorScheme cs) {
     if (percentage >= 90) return Palette(cs.primary, cs.tertiary);
     if (percentage >= 70) return Palette(cs.tertiary, cs.primary);
@@ -261,16 +275,20 @@ class ProfileCompletionCard extends StatelessWidget {
     return Palette(Colors.red, cs.errorContainer);
   }
 }
+
 // ——— Sub-widgets ———
+
 class _SurfaceCard extends StatelessWidget {
   final Widget child;
   final Gradient gradient;
   final Color borderColor;
+
   const _SurfaceCard({
     required this.child,
     required this.gradient,
     required this.borderColor,
   });
+
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
@@ -301,10 +319,13 @@ class _SurfaceCard extends StatelessWidget {
     );
   }
 }
+
 class _IconBadge extends StatelessWidget {
   final IconData icon;
   final Color color;
+
   const _IconBadge({required this.icon, required this.color});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -323,12 +344,14 @@ class _IconBadge extends StatelessWidget {
     );
   }
 }
+
 class _ArcProgress extends StatelessWidget {
   final double size;
   final double progress; // 0..1
   final Color trackColor;
   final List<Color> gradientColors;
   final Color textColor;
+
   const _ArcProgress({
     required this.size,
     required this.progress,
@@ -336,6 +359,7 @@ class _ArcProgress extends StatelessWidget {
     required this.gradientColors,
     required this.textColor,
   });
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -368,21 +392,25 @@ class _ArcProgress extends StatelessWidget {
     );
   }
 }
+
 class _ArcPainter extends CustomPainter {
   final double progress; // 0..1
   final Color trackColor;
   final List<Color> gradientColors;
   final double strokeWidth;
+
   _ArcPainter({
     required this.progress,
     required this.trackColor,
     required this.gradientColors,
     required this.strokeWidth,
   });
+
   @override
   void paint(Canvas canvas, Size size) {
     final center = size.center(Offset.zero);
     final radius = (size.shortestSide - strokeWidth) / 2;
+
     // Background path (full circle)
     final trackPaint = Paint()
       ..color = trackColor
@@ -396,6 +424,7 @@ class _ArcPainter extends CustomPainter {
       false,
       trackPaint,
     );
+
     // Progress path with circular gradient shader
     final sweepPaint = Paint()
       ..style = PaintingStyle.stroke
@@ -406,6 +435,7 @@ class _ArcPainter extends CustomPainter {
         endAngle: -math.pi / 2 + math.pi * 2,
         colors: gradientColors,
       ).createShader(Rect.fromCircle(center: center, radius: radius));
+
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius),
       -math.pi / 2,
@@ -414,6 +444,7 @@ class _ArcPainter extends CustomPainter {
       sweepPaint,
     );
   }
+
   @override
   bool shouldRepaint(covariant _ArcPainter old) {
     return old.progress != progress ||
@@ -422,9 +453,11 @@ class _ArcPainter extends CustomPainter {
         old.gradientColors != gradientColors;
   }
 }
+
 class _FieldChip extends StatelessWidget {
   final MissingField field;
   const _FieldChip({required this.field});
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -454,6 +487,7 @@ class _FieldChip extends StatelessWidget {
     );
   }
 }
+
 // Simple color palette
 class Palette {
   final Color base;

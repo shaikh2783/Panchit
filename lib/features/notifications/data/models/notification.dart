@@ -1,4 +1,5 @@
 import 'package:snginepro/features/notifications/data/models/notification_user.dart';
+
 class NotificationModel {
   final int notificationId;
   final int fromUserId;
@@ -16,6 +17,7 @@ class NotificationModel {
   final NotificationUser user;
   final String? reaction;
   final bool? systemNotification;
+
   NotificationModel({
     required this.notificationId,
     required this.fromUserId,
@@ -34,6 +36,7 @@ class NotificationModel {
     this.reaction,
     this.systemNotification,
   });
+
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
     return NotificationModel(
       notificationId: json['notification_id'] as int,
@@ -54,6 +57,7 @@ class NotificationModel {
       systemNotification: json['system_notification'] as bool?,
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'notification_id': notificationId,
@@ -74,6 +78,7 @@ class NotificationModel {
       'system_notification': systemNotification,
     };
   }
+
   /// Helper to get emoji for reaction
   String? get reactionEmoji {
     if (reaction == null) return null;
@@ -96,8 +101,10 @@ class NotificationModel {
         return null;
     }
   }
+
   /// Helper to check if this is a reaction notification
   bool get isReaction => action.startsWith('react_');
+
   /// Create a copy with updated seen status
   NotificationModel copyWith({bool? seen}) {
     return NotificationModel(

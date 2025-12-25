@@ -3,32 +3,39 @@ import 'package:provider/provider.dart';
 import '../../../core/network/api_client.dart';
 import '../data/api_service/live_stream_api_service.dart';
 import '../presentation/pages/live_stream_viewer_page.dart';
+
 /// صفحة لإنشاء بث مباشر جديد للاختبار
 class CreateLiveTestPage extends StatefulWidget {
   const CreateLiveTestPage({Key? key}) : super(key: key);
+
   @override
   State<CreateLiveTestPage> createState() => _CreateLiveTestPageState();
 }
+
 class _CreateLiveTestPageState extends State<CreateLiveTestPage> {
   late LiveStreamApiService _liveApiService;
   bool _isCreating = false;
   String? _createdLiveId;
   String? _channelName;
   String? _errorMessage;
+
   @override
   void initState() {
     super.initState();
     _liveApiService = LiveStreamApiService(context.read<ApiClient>());
   }
+
   Future<void> _createNewLiveStream() async {
     setState(() {
       _isCreating = true;
       _errorMessage = null;
     });
+
     try {
       final result = await _liveApiService.createLiveStream(
         agoraChannelName: 'test_live_${DateTime.now().millisecondsSinceEpoch}',
       );
+
       if (result['status'] == 'success') {
         final data = result['data'];
         setState(() {
@@ -49,8 +56,10 @@ class _CreateLiveTestPageState extends State<CreateLiveTestPage> {
       });
     }
   }
+
   void _joinCreatedLiveStream() {
     if (_createdLiveId == null || _channelName == null) return;
+
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -63,6 +72,7 @@ class _CreateLiveTestPageState extends State<CreateLiveTestPage> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,12 +90,14 @@ class _CreateLiveTestPageState extends State<CreateLiveTestPage> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
+            
             const Text(
               'هذه الصفحة تنشئ بث مباشر جديد لاختبار زيادة عدد المشاهدين',
               style: TextStyle(fontSize: 16),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 40),
+
             // زر إنشاء بث جديد
             ElevatedButton(
               onPressed: _isCreating ? null : _createNewLiveStream,
@@ -105,6 +117,7 @@ class _CreateLiveTestPageState extends State<CreateLiveTestPage> {
                   : const Text('إنشاء بث مباشر جديد'),
             ),
             const SizedBox(height: 20),
+
             // عرض النتيجة
             if (_errorMessage != null)
               Container(
@@ -119,6 +132,7 @@ class _CreateLiveTestPageState extends State<CreateLiveTestPage> {
                   style: const TextStyle(color: Colors.red),
                 ),
               ),
+
             if (_createdLiveId != null)
               Container(
                 padding: const EdgeInsets.all(16),
@@ -155,7 +169,9 @@ class _CreateLiveTestPageState extends State<CreateLiveTestPage> {
                   ],
                 ),
               ),
+
             const Spacer(),
+
             // معلومات إضافية
             Container(
               padding: const EdgeInsets.all(16),

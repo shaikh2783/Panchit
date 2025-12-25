@@ -15,16 +15,18 @@ class GettingStartedPage extends StatefulWidget {
   State<GettingStartedPage> createState() => _GettingStartedPageState();
 }
 
-class _GettingStartedPageState extends State<GettingStartedPage>
-    with TickerProviderStateMixin {
+class _GettingStartedPageState extends State<GettingStartedPage> with TickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _workController = TextEditingController();
   final _educationController = TextEditingController();
+  
   int _currentStep = 0;
   bool _isSubmitting = false;
+  
   List<Country> _countries = [];
   bool _loadingCountries = true;
   String? _selectedCountryId;
+
   late AnimationController _backgroundController;
   late AnimationController _formController;
 
@@ -35,14 +37,16 @@ class _GettingStartedPageState extends State<GettingStartedPage>
       vsync: this,
       duration: const Duration(seconds: 20),
     )..repeat();
+    
     _formController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
     );
+    
     _formController.forward();
     _fetchCountries();
   }
-
+  
   Future<void> _fetchCountries() async {
     try {
       final apiClient = context.read<ApiClient>();
@@ -74,6 +78,7 @@ class _GettingStartedPageState extends State<GettingStartedPage>
 
   Future<void> _handleUpdate() async {
     if (!_formKey.currentState!.validate()) return;
+
     // Validate current step
     if (_currentStep == 0) {
       if (_selectedCountryId == null || _selectedCountryId!.isEmpty) {
@@ -86,6 +91,7 @@ class _GettingStartedPageState extends State<GettingStartedPage>
         return;
       }
     }
+
     // Move to next step or finish
     if (_currentStep < 2) {
       setState(() => _currentStep++);
@@ -96,21 +102,22 @@ class _GettingStartedPageState extends State<GettingStartedPage>
 
   Future<void> _handleFinish() async {
     setState(() => _isSubmitting = true);
+
     try {
       final authNotifier = context.read<AuthNotifier>();
+      
       // Send all data in one API call
       await authNotifier.updateGettingStarted(
         countryId: _selectedCountryId,
-        work: _workController.text.trim().isNotEmpty
-            ? _workController.text.trim()
-            : null,
-        education: _educationController.text.trim().isNotEmpty
-            ? _educationController.text.trim()
-            : null,
+        work: _workController.text.trim().isNotEmpty ? _workController.text.trim() : null,
+        education: _educationController.text.trim().isNotEmpty ? _educationController.text.trim() : null,
       );
+      
       // Call finish API
       await authNotifier.finishGettingStarted();
+
       if (!mounted) return;
+      
       // Navigate to main app
       Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
     } catch (e) {
@@ -130,6 +137,7 @@ class _GettingStartedPageState extends State<GettingStartedPage>
     try {
       final authNotifier = context.read<AuthNotifier>();
       await authNotifier.finishGettingStarted();
+      
       if (!mounted) return;
       Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
     } catch (e) {
@@ -142,19 +150,25 @@ class _GettingStartedPageState extends State<GettingStartedPage>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Scaffold(
       body: Stack(
         children: [
           // Background
           _buildBackground(isDark),
+          
           // Content
           SafeArea(
             child: Column(
               children: [
                 // Header
                 _buildHeader(isDark),
+                
                 // Stepper
-                Expanded(child: _buildStepper(isDark)),
+                Expanded(
+                  child: _buildStepper(isDark),
+                ),
+                
                 // Actions
                 _buildActions(isDark),
               ],
@@ -224,9 +238,9 @@ class _GettingStartedPageState extends State<GettingStartedPage>
             'complete_profile'.tr,
             style: TextStyle(
               fontSize: 16,
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.7)
-                  : Colors.white.withValues(alpha: 0.9),
+              color: isDark 
+                  ? Colors.white.withOpacity(0.7)
+                  : Colors.white.withOpacity(0.9),
             ),
           ),
         ],
@@ -243,7 +257,7 @@ class _GettingStartedPageState extends State<GettingStartedPage>
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: Colors.black.withOpacity(0.1),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -272,7 +286,7 @@ class _GettingStartedPageState extends State<GettingStartedPage>
         Icon(
           Icons.location_on_rounded,
           size: 64,
-          color: const Color(0xFF5B86E5).withValues(alpha: 0.8),
+          color: const Color(0xFF5B86E5).withOpacity(0.8),
         ),
         const SizedBox(height: 24),
         Text(
@@ -288,8 +302,8 @@ class _GettingStartedPageState extends State<GettingStartedPage>
           'location_description'.tr,
           style: TextStyle(
             fontSize: 14,
-            color: isDark
-                ? Colors.white.withValues(alpha: 0.7)
+            color: isDark 
+                ? Colors.white.withOpacity(0.7)
                 : const Color(0xFF4A5568),
           ),
         ),
@@ -305,16 +319,13 @@ class _GettingStartedPageState extends State<GettingStartedPage>
           )
         else
           DropdownButtonFormField<String>(
-            isExpanded: true,
             value: _selectedCountryId,
             decoration: InputDecoration(
               labelText: 'location'.tr,
               hintText: 'Select your country',
               prefixIcon: const Icon(Icons.pin_drop_rounded),
               filled: true,
-              fillColor: isDark
-                  ? const Color(0xFF1A202C)
-                  : const Color(0xFFF7FAFC),
+              fillColor: isDark ? const Color(0xFF1A202C) : const Color(0xFFF7FAFC),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
                 borderSide: BorderSide.none,
@@ -328,14 +339,7 @@ class _GettingStartedPageState extends State<GettingStartedPage>
             items: _countries.map((country) {
               return DropdownMenuItem<String>(
                 value: country.countryId,
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Text(
-                    country.countryName,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                ),
+                child: Text(country.countryName),
               );
             }).toList(),
             onChanged: (value) {
@@ -355,7 +359,7 @@ class _GettingStartedPageState extends State<GettingStartedPage>
         Icon(
           Icons.work_rounded,
           size: 64,
-          color: const Color(0xFF5B86E5).withValues(alpha: 0.8),
+          color: const Color(0xFF5B86E5).withOpacity(0.8),
         ),
         const SizedBox(height: 24),
         Text(
@@ -371,8 +375,8 @@ class _GettingStartedPageState extends State<GettingStartedPage>
           'work_description'.tr,
           style: TextStyle(
             fontSize: 14,
-            color: isDark
-                ? Colors.white.withValues(alpha: 0.7)
+            color: isDark 
+                ? Colors.white.withOpacity(0.7)
                 : const Color(0xFF4A5568),
           ),
         ),
@@ -384,9 +388,7 @@ class _GettingStartedPageState extends State<GettingStartedPage>
             hintText: 'Software Engineer',
             prefixIcon: const Icon(Icons.business_center_rounded),
             filled: true,
-            fillColor: isDark
-                ? const Color(0xFF1A202C)
-                : const Color(0xFFF7FAFC),
+            fillColor: isDark ? const Color(0xFF1A202C) : const Color(0xFFF7FAFC),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
               borderSide: BorderSide.none,
@@ -404,7 +406,7 @@ class _GettingStartedPageState extends State<GettingStartedPage>
         Icon(
           Icons.school_rounded,
           size: 64,
-          color: const Color(0xFF5B86E5).withValues(alpha: 0.8),
+          color: const Color(0xFF5B86E5).withOpacity(0.8),
         ),
         const SizedBox(height: 24),
         Text(
@@ -420,8 +422,8 @@ class _GettingStartedPageState extends State<GettingStartedPage>
           'education_description'.tr,
           style: TextStyle(
             fontSize: 14,
-            color: isDark
-                ? Colors.white.withValues(alpha: 0.7)
+            color: isDark 
+                ? Colors.white.withOpacity(0.7)
                 : const Color(0xFF4A5568),
           ),
         ),
@@ -433,9 +435,7 @@ class _GettingStartedPageState extends State<GettingStartedPage>
             hintText: 'Computer Science',
             prefixIcon: const Icon(Icons.menu_book_rounded),
             filled: true,
-            fillColor: isDark
-                ? const Color(0xFF1A202C)
-                : const Color(0xFFF7FAFC),
+            fillColor: isDark ? const Color(0xFF1A202C) : const Color(0xFFF7FAFC),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
               borderSide: BorderSide.none,
@@ -453,7 +453,7 @@ class _GettingStartedPageState extends State<GettingStartedPage>
         color: isDark ? const Color(0xFF2D3748) : Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, -5),
           ),
@@ -467,15 +467,17 @@ class _GettingStartedPageState extends State<GettingStartedPage>
             child: Text(
               'skip'.tr,
               style: TextStyle(
-                color: isDark
-                    ? Colors.white.withValues(alpha: 0.7)
+                color: isDark 
+                    ? Colors.white.withOpacity(0.7)
                     : const Color(0xFF4A5568),
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
             ),
           ),
+          
           const SizedBox(width: 16),
+          
           // Progress indicator
           Expanded(
             child: Row(
@@ -489,15 +491,17 @@ class _GettingStartedPageState extends State<GettingStartedPage>
                     borderRadius: BorderRadius.circular(4),
                     color: index <= _currentStep
                         ? const Color(0xFF5B86E5)
-                        : (isDark
-                              ? Colors.white.withValues(alpha: 0.2)
-                              : const Color(0xFFE2E8F0)),
+                        : (isDark 
+                            ? Colors.white.withOpacity(0.2)
+                            : const Color(0xFFE2E8F0)),
                   ),
                 );
               }),
             ),
           ),
+          
           const SizedBox(width: 16),
+          
           // Next/Finish button
           ElevatedButton(
             onPressed: _isSubmitting ? null : _handleUpdate,

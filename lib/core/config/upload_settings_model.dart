@@ -6,6 +6,7 @@ class UploadSettings {
   final List<String> allowedPhotoExtensions;
   final List<String> allowedVideoExtensions;
   final List<String> allowedAudioExtensions;
+
   const UploadSettings({
     required this.maxPhotoSize,
     required this.maxVideoSize,
@@ -14,6 +15,7 @@ class UploadSettings {
     required this.allowedVideoExtensions,
     required this.allowedAudioExtensions,
   });
+
   factory UploadSettings.fromJson(Map<String, dynamic> json) {
     return UploadSettings(
       maxPhotoSize: int.tryParse(json['max_photo_size']?.toString() ?? '') ?? 10240,
@@ -24,6 +26,7 @@ class UploadSettings {
       allowedAudioExtensions: _parseExtensions(json['allowed_audio_extensions']),
     );
   }
+
   static List<String> _parseExtensions(dynamic extensions) {
     if (extensions is List) {
       return extensions.map((e) => e.toString().trim()).toList();
@@ -33,6 +36,7 @@ class UploadSettings {
     }
     return [];
   }
+
   Map<String, dynamic> toJson() {
     return {
       'max_photo_size': maxPhotoSize,
@@ -43,20 +47,26 @@ class UploadSettings {
       'allowed_audio_extensions': allowedAudioExtensions,
     };
   }
+
   /// حجم الصورة بالميجابايت
   double get maxPhotoSizeMB => maxPhotoSize / 1024.0;
+
   /// حجم الفيديو بالميجابايت
   double get maxVideoSizeMB => maxVideoSize / 1024.0;
+
   /// حجم الصوت بالميجابايت
   double get maxAudioSizeMB => maxAudioSize / 1024.0;
+
   /// التحقق من صيغة الصورة
   bool isPhotoExtensionAllowed(String extension) {
     return allowedPhotoExtensions.contains(extension.toLowerCase());
   }
+
   /// التحقق من صيغة الفيديو
   bool isVideoExtensionAllowed(String extension) {
     return allowedVideoExtensions.contains(extension.toLowerCase());
   }
+
   /// التحقق من صيغة الصوت
   bool isAudioExtensionAllowed(String extension) {
     return allowedAudioExtensions.contains(extension.toLowerCase());

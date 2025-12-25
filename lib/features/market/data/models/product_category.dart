@@ -1,16 +1,19 @@
 import 'package:equatable/equatable.dart';
+
 /// Product Category Model - فئة المنتج
 class ProductCategory extends Equatable {
   final int categoryId;
   final String categoryName;
   final String categoryDescription;
   final int categoryOrder;
+
   const ProductCategory({
     required this.categoryId,
     required this.categoryName,
     required this.categoryDescription,
     required this.categoryOrder,
   });
+
   factory ProductCategory.fromJson(Map<String, dynamic> json) {
     return ProductCategory(
       categoryId: int.parse(json['category_id'].toString()),
@@ -19,6 +22,7 @@ class ProductCategory extends Equatable {
       categoryOrder: int.parse(json['category_order']?.toString() ?? '1'),
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'category_id': categoryId,
@@ -27,6 +31,7 @@ class ProductCategory extends Equatable {
       'category_order': categoryOrder,
     };
   }
+
   @override
   List<Object?> get props => [
         categoryId,

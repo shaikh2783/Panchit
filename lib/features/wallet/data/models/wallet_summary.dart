@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+
 class WalletSummary extends Equatable {
   const WalletSummary({
     required this.wallet,
@@ -8,12 +9,14 @@ class WalletSummary extends Equatable {
     required this.withdrawalSources,
     this.updatedAt,
   });
+
   final WalletInfo wallet;
   final WalletBalances balances;
   final WalletPoints points;
   final WalletTips tips;
   final Map<String, WalletWithdrawalSource> withdrawalSources;
   final DateTime? updatedAt;
+
   factory WalletSummary.fromJson(Map<String, dynamic> json) {
     return WalletSummary(
       wallet: WalletInfo.fromJson(_map(json['wallet'])),
@@ -24,6 +27,7 @@ class WalletSummary extends Equatable {
       updatedAt: _parseDateTime(json['updated_at']),
     );
   }
+
   WalletSummary copyWith({
     WalletInfo? wallet,
     WalletBalances? balances,
@@ -41,6 +45,7 @@ class WalletSummary extends Equatable {
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }
+
   static Map<String, WalletWithdrawalSource> _parseWithdrawalSources(
     Object? value,
   ) {
@@ -52,12 +57,14 @@ class WalletSummary extends Equatable {
     }
     return const {};
   }
+
   static Map<String, dynamic> _map(Object? source) {
     if (source is Map<String, dynamic>) {
       return source;
     }
     return const {};
   }
+
   static DateTime? _parseDateTime(Object? value) {
     if (value is String && value.isNotEmpty) {
       try {
@@ -68,6 +75,7 @@ class WalletSummary extends Equatable {
     }
     return null;
   }
+
   @override
   List<Object?> get props => [
     wallet,
@@ -78,6 +86,7 @@ class WalletSummary extends Equatable {
     updatedAt,
   ];
 }
+
 class WalletInfo extends Equatable {
   const WalletInfo({
     required this.balance,
@@ -90,6 +99,7 @@ class WalletInfo extends Equatable {
     required this.minWithdrawal,
     required this.paymentMethods,
   });
+
   final double balance;
   final String currency;
   final String currencySymbol;
@@ -99,6 +109,7 @@ class WalletInfo extends Equatable {
   final bool withdrawalEnabled;
   final double minWithdrawal;
   final List<String> paymentMethods;
+
   factory WalletInfo.fromJson(Map<String, dynamic> json) {
     return WalletInfo(
       balance: _toDouble(json['balance'], fallback: 0),
@@ -112,6 +123,7 @@ class WalletInfo extends Equatable {
       paymentMethods: _parseStringList(json['payment_methods']),
     );
   }
+
   WalletInfo copyWith({
     double? balance,
     String? currency,
@@ -135,6 +147,7 @@ class WalletInfo extends Equatable {
       paymentMethods: paymentMethods ?? this.paymentMethods,
     );
   }
+
   @override
   List<Object?> get props => [
     balance,
@@ -148,9 +161,12 @@ class WalletInfo extends Equatable {
     paymentMethods,
   ];
 }
+
 class WalletBalances extends Equatable {
   const WalletBalances({required this.entries});
+
   final Map<String, double> entries;
+
   factory WalletBalances.fromJson(Map<String, dynamic> json) {
     final mapped = <String, double>{};
     json.forEach((key, value) {
@@ -158,13 +174,17 @@ class WalletBalances extends Equatable {
     });
     return WalletBalances(entries: mapped);
   }
+
   double operator [](String key) => entries[key] ?? 0;
+
   WalletBalances copyWith({Map<String, double>? entries}) {
     return WalletBalances(entries: entries ?? this.entries);
   }
+
   @override
   List<Object?> get props => [entries];
 }
+
 class WalletPoints extends Equatable {
   const WalletPoints({
     required this.enabled,
@@ -173,11 +193,13 @@ class WalletPoints extends Equatable {
     required this.value,
     required this.canWithdraw,
   });
+
   final bool enabled;
   final double balance;
   final double rate;
   final double value;
   final bool canWithdraw;
+
   factory WalletPoints.fromJson(Map<String, dynamic> json) {
     return WalletPoints(
       enabled: _toBool(json['enabled']),
@@ -187,6 +209,7 @@ class WalletPoints extends Equatable {
       canWithdraw: _toBool(json['can_withdraw']),
     );
   }
+
   WalletPoints copyWith({
     bool? enabled,
     double? balance,
@@ -202,18 +225,22 @@ class WalletPoints extends Equatable {
       canWithdraw: canWithdraw ?? this.canWithdraw,
     );
   }
+
   @override
   List<Object?> get props => [enabled, balance, rate, value, canWithdraw];
 }
+
 class WalletTips extends Equatable {
   const WalletTips({
     required this.enabled,
     required this.minAmount,
     required this.maxAmount,
   });
+
   final bool enabled;
   final double minAmount;
   final double maxAmount;
+
   factory WalletTips.fromJson(Map<String, dynamic> json) {
     return WalletTips(
       enabled: _toBool(json['enabled']),
@@ -221,6 +248,7 @@ class WalletTips extends Equatable {
       maxAmount: _toDouble(json['max_amount'], fallback: 0),
     );
   }
+
   WalletTips copyWith({bool? enabled, double? minAmount, double? maxAmount}) {
     return WalletTips(
       enabled: enabled ?? this.enabled,
@@ -228,9 +256,11 @@ class WalletTips extends Equatable {
       maxAmount: maxAmount ?? this.maxAmount,
     );
   }
+
   @override
   List<Object?> get props => [enabled, minAmount, maxAmount];
 }
+
 class WalletWithdrawalSource extends Equatable {
   const WalletWithdrawalSource({
     required this.enabled,
@@ -238,10 +268,12 @@ class WalletWithdrawalSource extends Equatable {
     this.rate,
     this.value,
   });
+
   final bool enabled;
   final double balance;
   final double? rate;
   final double? value;
+
   factory WalletWithdrawalSource.fromJson(Map<String, dynamic> json) {
     return WalletWithdrawalSource(
       enabled: _toBool(json['enabled']),
@@ -250,6 +282,7 @@ class WalletWithdrawalSource extends Equatable {
       value: _toNullableDouble(json['value']),
     );
   }
+
   WalletWithdrawalSource copyWith({
     bool? enabled,
     double? balance,
@@ -263,9 +296,11 @@ class WalletWithdrawalSource extends Equatable {
       value: value ?? this.value,
     );
   }
+
   @override
   List<Object?> get props => [enabled, balance, rate, value];
 }
+
 bool _toBool(Object? value) {
   if (value is bool) return value;
   if (value is num) return value != 0;
@@ -275,6 +310,7 @@ bool _toBool(Object? value) {
   }
   return false;
 }
+
 double _toDouble(Object? value, {double fallback = 0}) {
   if (value is num) return value.toDouble();
   if (value is String) {
@@ -282,16 +318,19 @@ double _toDouble(Object? value, {double fallback = 0}) {
   }
   return fallback;
 }
+
 double? _toNullableDouble(Object? value) {
   if (value == null) return null;
   if (value is num) return value.toDouble();
   if (value is String) return double.tryParse(value);
   return null;
 }
+
 String _toString(Object? value, {String fallback = ''}) {
   if (value == null) return fallback;
   return value.toString();
 }
+
 List<String> _parseStringList(Object? value) {
   if (value is List) {
     return value.map((element) => element.toString()).toList();

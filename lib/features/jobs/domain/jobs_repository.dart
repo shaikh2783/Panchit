@@ -1,9 +1,11 @@
 import '../data/models/job.dart';
 import '../data/services/jobs_api_service.dart';
 import '../data/models/job_currency.dart';
+
 class JobsRepository {
   final JobsApiService _api;
   JobsRepository(this._api);
+
   Future<List<JobCategory>> getCategories() => _api.getCategories();
   Future<List<JobCurrency>> getCurrencies() => _api.getCurrencies();
   Future<List<Job>> getJobs({

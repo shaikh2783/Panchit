@@ -2,27 +2,33 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/reaction_model.dart';
 import 'reactions_api_service.dart';
+
 /// سيرفس Singleton لإدارة التفاعلات مع Cache
 /// يجلب التفاعلات مرة واحدة ويحفظها محلياً
 class ReactionsService {
   ReactionsService._();
   static final ReactionsService instance = ReactionsService._();
+
   static const String _cacheKey = 'cached_reactions';
   static const String _cacheTimestampKey = 'reactions_cache_timestamp';
   static const int _cacheValidityHours = 24; // صلاحية الكاش 24 ساعة
+
   ReactionsApiService? _apiService;
   List<ReactionModel>? _cachedReactions;
   bool _isInitialized = false;
+
   /// تهيئة السيرفس مع API Service
   void initialize(ReactionsApiService apiService) {
     _apiService = apiService;
   }
+
   /// تحميل التفاعلات (من الكاش أو من السيرفر)
   Future<List<ReactionModel>> loadReactions({bool forceRefresh = false}) async {
     // إذا كانت موجودة في الذاكرة وليس force refresh
     if (_cachedReactions != null && !forceRefresh) {
       return _cachedReactions!;
     }
+
     // محاولة تحميل من SharedPreferences
     if (!forceRefresh) {
       final cached = await _loadFromCache();
@@ -32,6 +38,7 @@ class ReactionsService {
         return cached;
       }
     }
+
     // جلب من السيرفر
     if (_apiService != null) {
       try {
@@ -45,13 +52,16 @@ class ReactionsService {
       } catch (e) {
       }
     }
+
     // في حالة الفشل، إرجاع التفاعلات الافتراضية
     return _getDefaultReactions();
   }
+
   /// الحصول على التفاعلات المحفوظة (بدون انتظار)
   List<ReactionModel> getReactions() {
     return _cachedReactions ?? _getDefaultReactions();
   }
+
   /// الحصول على تفاعل معين حسب الاسم
   ReactionModel? getReactionByName(String reactionName) {
     final reactions = getReactions();
@@ -63,43 +73,52 @@ class ReactionsService {
       return null;
     }
   }
+
   /// تحميل من الكاش المحلي
   Future<List<ReactionModel>?> _loadFromCache() async {
     try {
       final prefs = await SharedPreferences.getInstance();
+      
       // فحص صلاحية الكاش
       final timestamp = prefs.getInt(_cacheTimestampKey);
       if (timestamp != null) {
         final cacheDate = DateTime.fromMillisecondsSinceEpoch(timestamp);
         final now = DateTime.now();
         final difference = now.difference(cacheDate).inHours;
+        
         if (difference > _cacheValidityHours) {
           return null;
         }
       }
+      
       final jsonString = prefs.getString(_cacheKey);
       if (jsonString != null) {
         final List<dynamic> jsonList = jsonDecode(jsonString);
         final reactions = jsonList
             .map((json) => ReactionModel.fromJson(json as Map<String, dynamic>))
             .toList();
+        
         return reactions;
       }
     } catch (e) {
     }
     return null;
   }
+
   /// حفظ في الكاش المحلي
   Future<void> _saveToCache(List<ReactionModel> reactions) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final jsonList = reactions.map((r) => r.toJson()).toList();
       final jsonString = jsonEncode(jsonList);
+      
       await prefs.setString(_cacheKey, jsonString);
       await prefs.setInt(_cacheTimestampKey, DateTime.now().millisecondsSinceEpoch);
+      
     } catch (e) {
     }
   }
+
   /// مسح الكاش
   Future<void> clearCache() async {
     try {
@@ -110,6 +129,7 @@ class ReactionsService {
     } catch (e) {
     }
   }
+
   /// تفاعلات افتراضية (في حالة عدم توفر الإنترنت)
   List<ReactionModel> _getDefaultReactions() {
     return [
@@ -169,6 +189,7 @@ class ReactionsService {
       ),
     ];
   }
+
   /// هل السيرفس مهيئ؟
   bool get isInitialized => _isInitialized;
 }

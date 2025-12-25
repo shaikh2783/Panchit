@@ -6,6 +6,7 @@ import '../../bloc/live_stream_creation_bloc.dart';
 import '../../bloc/live_comments_bloc.dart';
 import '../../data/api_service/live_stream_api_service.dart';
 import 'professional_live_stream_page.dart';
+
 /// Wrapper لصفحة البث المباشر مع Providers محلية
 /// يحل مشكلة Provider scope errors
 class ProfessionalLiveStreamWrapper extends StatelessWidget {
@@ -13,6 +14,7 @@ class ProfessionalLiveStreamWrapper extends StatelessWidget {
   final String? initialDescription;
   final String? node; // page أو group
   final int? nodeId; // معرف الصفحة أو المجموعة
+
   const ProfessionalLiveStreamWrapper({
     Key? key,
     this.initialTitle,
@@ -20,6 +22,7 @@ class ProfessionalLiveStreamWrapper extends StatelessWidget {
     this.node,
     this.nodeId,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(

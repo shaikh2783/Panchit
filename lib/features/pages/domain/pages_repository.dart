@@ -4,21 +4,28 @@ import 'package:snginepro/features/pages/data/models/page_category.dart';
 import 'package:snginepro/core/data/models/country.dart';
 import 'package:snginepro/core/data/models/language.dart';
 import 'package:snginepro/features/feed/data/models/posts_response.dart';
+
 class PagesRepository {
   PagesRepository(this._apiService);
+
   final PagesApiService _apiService;
+
   Future<List<PageModel>> fetchMyPages() {
     return _apiService.fetchMyPages();
   }
+
   Future<List<PageModel>> fetchLikedPages() {
     return _apiService.fetchLikedPages();
   }
+
   Future<List<PageModel>> fetchSuggestedPages({int limit = 10}) {
     return _apiService.fetchSuggestedPages(limit: limit);
   }
+
   Future<void> toggleLikePage(int pageId, bool currentlyLiked) {
     return _apiService.toggleLikePage(pageId, currentlyLiked);
   }
+
   Future<PageModel> createPage({
     required String title,
     required String username,
@@ -36,6 +43,7 @@ class PagesRepository {
       description: description,
     );
   }
+
   Future<void> updatePage({
     required int pageId,
     required String title,
@@ -53,6 +61,7 @@ class PagesRepository {
       description: description,
     );
   }
+
   Future<void> updatePageSection({
     required int pageId,
     required String section,
@@ -64,6 +73,7 @@ class PagesRepository {
       data: data,
     );
   }
+
   Future<PageModel> fetchPageInfo({
     int? pageId,
     String? pageName,
@@ -75,6 +85,7 @@ class PagesRepository {
       with_: with_,
     );
   }
+
   Future<PostsResponse> fetchPagePosts({
     required String pageId,
     int limit = 10,
@@ -86,9 +97,11 @@ class PagesRepository {
       offset: offset,
     );
   }
+
   Future<void> reactToPost(int postId, String reaction) {
     return _apiService.reactToPost(postId, reaction);
   }
+
   Future<void> inviteFriendsToPage({
     required int pageId,
     required List<int> userIds,
@@ -98,6 +111,7 @@ class PagesRepository {
       userIds: userIds,
     );
   }
+
   Future<void> addAdmin({
     required int pageId,
     required int userId,
@@ -107,6 +121,7 @@ class PagesRepository {
       userId: userId,
     );
   }
+
   Future<void> removeAdmin({
     required int pageId,
     required int userId,
@@ -116,6 +131,7 @@ class PagesRepository {
       userId: userId,
     );
   }
+
   Future<Map<String, dynamic>> requestVerification({
     required int pageId,
     String? photo,
@@ -133,6 +149,7 @@ class PagesRepository {
       message: message,
     );
   }
+
   Future<Map<String, dynamic>> updatePagePicture({
     required int pageId,
     required String pictureData,
@@ -142,6 +159,7 @@ class PagesRepository {
       pictureData: pictureData,
     );
   }
+
   Future<Map<String, dynamic>> updatePageCover({
     required int pageId,
     required String coverData,
@@ -151,15 +169,19 @@ class PagesRepository {
       coverData: coverData,
     );
   }
+
   Future<List<PageCategory>> getPageCategories() {
     return _apiService.getPageCategories();
   }
+
   Future<List<Country>> getCountries() {
     return _apiService.getCountries();
   }
+
   Future<List<Language>> getLanguages() {
     return _apiService.getLanguages();
   }
+
   Future<void> deletePage({required int pageId}) {
     return _apiService.deletePage(pageId: pageId);
   }

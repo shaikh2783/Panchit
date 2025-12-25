@@ -3,23 +3,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:snginepro/features/pages/data/models/invitable_friend.dart';
 import '../../application/bloc/events_bloc.dart';
 import '../../application/bloc/events_events.dart';
 import '../../application/bloc/events_states.dart';
-import '../../../groups/data/models/invitable_friend.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
+
 class InviteFriendsToEventPage extends StatefulWidget {
   final int eventId;
   final String eventTitle;
+
   const InviteFriendsToEventPage({
     super.key,
     required this.eventId,
     required this.eventTitle,
   });
+
   @override
   State<InviteFriendsToEventPage> createState() => _InviteFriendsToEventPageState();
 }
+
 class _InviteFriendsToEventPageState extends State<InviteFriendsToEventPage> {
   final ScrollController _scrollController = ScrollController();
   final Set<int> _invitingUsers = {}; // Track users being invited
@@ -28,17 +32,22 @@ class _InviteFriendsToEventPageState extends State<InviteFriendsToEventPage> {
   bool _hasMore = true;
   int _offset = 0;
   static const int _limit = 20;
+
   @override
   void initState() {
     super.initState();
     _loadFriends();
     _scrollController.addListener(_onScroll);
   }
+
   Future<void> _loadFriends() async {
     if (!_hasMore || _isLoading) return;
+    
     setState(() => _isLoading = true);
+    
     try {
       final apiClient = context.read<ApiClient>();
+      
       // ✅ استخدم الـ API الجديد المخصص للـ Events
       final response = await apiClient.get(
         '${configCfgP('events_base')}/${widget.eventId}/invitable_friends',
@@ -47,12 +56,14 @@ class _InviteFriendsToEventPageState extends State<InviteFriendsToEventPage> {
           'limit': _limit.toString(),
         },
       );
+      
       if (response['status'] == 'success') {
         // البيانات في data.friends حسب الـ API الجديد
         final dynamic data = response['data'];
         final List<dynamic> friendsData = data is Map 
             ? (data['friends'] as List? ?? [])
             : [];
+            
         final newFriends = friendsData
             .map((json) {
               try {
@@ -63,6 +74,7 @@ class _InviteFriendsToEventPageState extends State<InviteFriendsToEventPage> {
             })
             .whereType<InvitableFriend>()
             .toList();
+        
         setState(() {
           _friends.addAll(newFriends);
           _offset += newFriends.length;
@@ -76,21 +88,25 @@ class _InviteFriendsToEventPageState extends State<InviteFriendsToEventPage> {
       setState(() => _isLoading = false);
     }
   }
+
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent * 0.9) {
       _loadFriends();
     }
   }
+
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
+
   void _inviteFriend(int userId) {
     setState(() {
       _invitingUsers.add(userId);
     });
+    
     // استخدم EventsBloc لإرسال الدعوة
     context.read<EventsBloc>().add(
       InviteFriendsToEventEvent(
@@ -99,13 +115,15 @@ class _InviteFriendsToEventPageState extends State<InviteFriendsToEventPage> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Get.theme;
+
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: Text('دعوة أصدقاء إلى ${widget.eventTitle}'),
+        title: Text('invite_to_event'.trParams({'eventTitle': widget.eventTitle})),
         centerTitle: true,
       ),
       body: BlocListener<EventsBloc, EventsState>(
@@ -118,8 +136,10 @@ class _InviteFriendsToEventPageState extends State<InviteFriendsToEventPage> {
               _offset = 0;
               _hasMore = true;
             });
+            
             // إعادة تحميل القائمة المفلترة
             _loadFriends();
+            
             Get.snackbar(
               'نجحت الدعوة',
               state.message,
@@ -132,6 +152,7 @@ class _InviteFriendsToEventPageState extends State<InviteFriendsToEventPage> {
             setState(() {
               _invitingUsers.clear();
             });
+            
             Get.snackbar(
               'خطأ',
               state.message,
@@ -150,8 +171,10 @@ class _InviteFriendsToEventPageState extends State<InviteFriendsToEventPage> {
       ),
     );
   }
+
   Widget _buildEmptyState() {
     final theme = Get.theme;
+    
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -181,9 +204,11 @@ class _InviteFriendsToEventPageState extends State<InviteFriendsToEventPage> {
       ),
     );
   }
+
   Widget _buildFriendsList() {
     final theme = Get.theme;
     final isDark = Get.isDarkMode;
+
     return ListView.builder(
       controller: _scrollController,
       padding: const EdgeInsets.all(16),
@@ -197,11 +222,13 @@ class _InviteFriendsToEventPageState extends State<InviteFriendsToEventPage> {
             ),
           );
         }
+
         final friend = _friends[index];
         final userId = int.tryParse(friend.userId) ?? 0;
         final isInviting = _invitingUsers.contains(userId);
         final fullName = '${friend.userFirstname} ${friend.userLastname}'.trim();
         final isVerified = friend.userVerified == '1';
+
         return Card(
           margin: const EdgeInsets.only(bottom: 12),
           elevation: isDark ? 2 : 1,
@@ -261,7 +288,7 @@ class _InviteFriendsToEventPageState extends State<InviteFriendsToEventPage> {
                 : ElevatedButton.icon(
                     onPressed: () => _inviteFriend(userId),
                     icon: const Icon(Iconsax.user_add, size: 16),
-                    label: const Text('دعوة'),
+                    label: Text('invite_button'.tr),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: theme.colorScheme.primary,
                       foregroundColor: Colors.white,

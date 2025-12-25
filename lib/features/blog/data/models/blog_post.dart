@@ -1,4 +1,5 @@
 import 'blog_author.dart';
+
 class BlogPost {
   final int postId;
   final String title;
@@ -11,6 +12,7 @@ class BlogPost {
   final String createdTime;
   final BlogAuthor author;
   final bool iOwner;
+
   const BlogPost({
     required this.postId,
     required this.title,
@@ -24,6 +26,7 @@ class BlogPost {
     required this.author,
     this.iOwner = false,
   });
+
   factory BlogPost.fromJson(Map<String, dynamic> json) {
     final rawTags = json['tags'];
     final List<String> tags;
@@ -34,6 +37,7 @@ class BlogPost {
     } else {
       tags = const [];
     }
+
     return BlogPost(
       postId: json['post_id'] is String
           ? int.tryParse(json['post_id']) ?? 0

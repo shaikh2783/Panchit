@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:snginepro/core/localization/localization_controller.dart';
+
 /// مثال على كيفية استخدام نظام الترجمة مع GetX
 class TranslationExampleWidget extends StatelessWidget {
   const TranslationExampleWidget({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final localizationController = Get.find<LocalizationController>();
+    
     return Scaffold(
       appBar: AppBar(
         title: Text('settings'.tr), // يترجم إلى "الإعدادات" أو "Settings"
@@ -31,11 +34,13 @@ class TranslationExampleWidget extends StatelessWidget {
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 16),
+            
             Text(
               'language'.tr, // اللغة / Language
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
+            
             // عرض اللغة الحالية
             Text(
               localizationController.isArabic 
@@ -44,6 +49,7 @@ class TranslationExampleWidget extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 24),
+            
             // أزرار الإجراءات
             Row(
               children: [
@@ -64,9 +70,11 @@ class TranslationExampleWidget extends StatelessWidget {
     );
   }
 }
+
 /// مثال على استخدام الترجمة في المنشورات
 class PostActionsExample extends StatelessWidget {
   const PostActionsExample({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -90,13 +98,16 @@ class PostActionsExample extends StatelessWidget {
     );
   }
 }
+
 /// مثال على كيفية التحقق من حالة التعليقات
 class CommentsStatusExample extends StatelessWidget {
   final bool commentsEnabled;
+  
   const CommentsStatusExample({
     Key? key,
     required this.commentsEnabled,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     if (!commentsEnabled) {
@@ -125,6 +136,7 @@ class CommentsStatusExample extends StatelessWidget {
         ),
       );
     }
+    
     return const SizedBox.shrink();
   }
 }

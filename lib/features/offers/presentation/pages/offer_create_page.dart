@@ -9,11 +9,14 @@ import 'dart:io';
 import '../../data/models/offer_category.dart';
 import '../../domain/offers_repository.dart';
 import '../../data/services/offers_api_service.dart';
+
 class OfferCreatePage extends StatefulWidget {
   const OfferCreatePage({super.key});
+
   @override
   State<OfferCreatePage> createState() => _OfferCreatePageState();
 }
+
 class _OfferCreatePageState extends State<OfferCreatePage> {
   final _titleCtrl = TextEditingController();
   final _descCtrl = TextEditingController();
@@ -21,6 +24,7 @@ class _OfferCreatePageState extends State<OfferCreatePage> {
   final _discountPercentCtrl = TextEditingController();
   final _discountAmountCtrl = TextEditingController();
   final _endDateCtrl = TextEditingController();
+  
   List<OfferCategory> _categories = [];
   int? _categoryId;
   String _discountType = 'discount_percent';
@@ -30,11 +34,13 @@ class _OfferCreatePageState extends State<OfferCreatePage> {
   List<Map<String, dynamic>> _uploadedPhotos = [];
   bool _uploadingPhotos = false;
   double _uploadProgress = 0;
+
   @override
   void initState() {
     super.initState();
     _loadCategories();
   }
+
   @override
   void dispose() {
     _titleCtrl.dispose();
@@ -45,6 +51,7 @@ class _OfferCreatePageState extends State<OfferCreatePage> {
     _endDateCtrl.dispose();
     super.dispose();
   }
+
   Future<void> _loadCategories() async {
     try {
       final repo = context.read<OffersRepository>();
@@ -56,6 +63,7 @@ class _OfferCreatePageState extends State<OfferCreatePage> {
       }
     }
   }
+
   Future<void> _pickImages() async {
     try {
       final picker = ImagePicker();
@@ -69,6 +77,7 @@ class _OfferCreatePageState extends State<OfferCreatePage> {
       Get.snackbar('error'.tr, 'Failed to pick images: $e');
     }
   }
+
   Future<void> _pickDate() async {
     final date = await showDatePicker(
       context: context,
@@ -91,14 +100,17 @@ class _OfferCreatePageState extends State<OfferCreatePage> {
       }
     }
   }
+
   Future<void> _uploadPhotos() async {
     if (_selectedImages.isEmpty) {
       Get.snackbar('info'.tr, 'Please select images first');
       return;
     }
+
     setState(() => _uploadingPhotos = true);
     try {
       final apiService = OffersApiService(context.read());
+
       for (int i = 0; i < _selectedImages.length; i++) {
         try {
           final result = await apiService.uploadImage(
@@ -116,6 +128,7 @@ class _OfferCreatePageState extends State<OfferCreatePage> {
           Get.snackbar('error'.tr, 'Failed to upload image ${i + 1}: $e');
         }
       }
+
       if (_uploadedPhotos.isNotEmpty) {
         Get.snackbar('success'.tr, '${_uploadedPhotos.length} images uploaded');
       }
@@ -130,6 +143,7 @@ class _OfferCreatePageState extends State<OfferCreatePage> {
       }
     }
   }
+
   Future<void> _submit() async {
     if (_titleCtrl.text.trim().isEmpty) {
       Get.snackbar('error'.tr, 'Title is required');
@@ -143,6 +157,7 @@ class _OfferCreatePageState extends State<OfferCreatePage> {
       Get.snackbar('error'.tr, 'category'.tr + ' ' + 'is_required'.tr);
       return;
     }
+
     // Validate discount values
     if (_discountType == 'discount_percent') {
       final discountValue = double.tryParse(_discountPercentCtrl.text.trim());
@@ -151,6 +166,7 @@ class _OfferCreatePageState extends State<OfferCreatePage> {
         return;
       }
     }
+
     setState(() => _loading = true);
     try {
       final repo = context.read<OffersRepository>();
@@ -178,6 +194,7 @@ class _OfferCreatePageState extends State<OfferCreatePage> {
       setState(() => _loading = false);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

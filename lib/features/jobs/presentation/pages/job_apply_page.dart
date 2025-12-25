@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
+
 import '../../../../core/theme/ui_constants.dart';
 import '../../domain/jobs_repository.dart';
+
 class JobApplyPage extends StatefulWidget {
   final int jobId;
   const JobApplyPage({super.key, required this.jobId});
+
   @override
   State<JobApplyPage> createState() => _JobApplyPageState();
 }
+
 class _JobApplyPageState extends State<JobApplyPage> {
   final _formKey = GlobalKey<FormState>();
   final _nameCtrl = TextEditingController();
@@ -22,6 +26,7 @@ class _JobApplyPageState extends State<JobApplyPage> {
   final _toCtrl = TextEditingController();
   final _descCtrl = TextEditingController();
   bool _submitting = false;
+
   @override
   void dispose() {
     _nameCtrl.dispose();
@@ -35,6 +40,7 @@ class _JobApplyPageState extends State<JobApplyPage> {
     _descCtrl.dispose();
     super.dispose();
   }
+
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _submitting = true);
@@ -63,6 +69,7 @@ class _JobApplyPageState extends State<JobApplyPage> {
       if (mounted) setState(() => _submitting = false);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

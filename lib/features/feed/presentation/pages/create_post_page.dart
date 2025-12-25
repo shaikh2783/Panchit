@@ -1,6 +1,6 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:collection/collection.dart';
@@ -9,11 +9,14 @@ import 'package:snginepro/features/feed/application/posts_notifier.dart';
 import 'package:snginepro/core/config/dynamic_app_config_provider.dart';
 import 'package:snginepro/core/config/colored_pattern_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 class CreatePostPage extends StatefulWidget {
   const CreatePostPage({super.key});
+
   @override
   State<CreatePostPage> createState() => _CreatePostPageState();
 }
+
 class _CreatePostPageState extends State<CreatePostPage> {
   final _textController = TextEditingController();
   final _feelingValueController = TextEditingController();
@@ -28,6 +31,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
   String? _selectedFeelingAction;
   String? _selectedActivity;
   bool _feelingsLoading = false;
+
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -40,11 +44,13 @@ class _CreatePostPageState extends State<CreatePostPage> {
       });
     }
   }
+
   void _removeImage(int index) {
     setState(() {
       _images.removeAt(index);
     });
   }
+
   void _toggleColoredPatterns() {
     setState(() {
       _showColoredPatterns = !_showColoredPatterns;
@@ -56,27 +62,33 @@ class _CreatePostPageState extends State<CreatePostPage> {
       }
     });
   }
+
   List<Map<String, dynamic>> get _availableActivities {
     if (_selectedFeelingAction == null) {
       return [];
     }
+
     return _activities
         .where((activity) => activity['action'] == _selectedFeelingAction)
         .toList();
   }
+
   void _syncFeelingsFromConfig(BuildContext context, DynamicAppConfigProvider provider) {
     if (_feelingsSynced && _feelingsEnabled == (provider.features?.posts.feelings ?? false)) {
       return;
     }
+
     final expandable = provider.appConfig?.expandable ?? {};
     final rawFeelings = _normalizeList(expandable['feelings']);
     final rawActivities = _normalizeList(expandable['activities']);
     final enabled = provider.features?.posts.feelings ?? false;
+
     final hasLocalData = rawFeelings.isNotEmpty || rawActivities.isNotEmpty;
     final shouldUpdate = !_feelingsSynced ||
         _feelingsEnabled != enabled ||
         const DeepCollectionEquality().equals(_feelings, rawFeelings) == false ||
         const DeepCollectionEquality().equals(_activities, rawActivities) == false;
+
     if (hasLocalData && shouldUpdate) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
@@ -89,10 +101,12 @@ class _CreatePostPageState extends State<CreatePostPage> {
       });
       return;
     }
+
     if (!hasLocalData && enabled) {
       _loadFeelingsFromAppConfig(context);
     }
   }
+
   List<Map<String, dynamic>> _normalizeList(dynamic data) {
     if (data is List) {
       return data.map((item) {
@@ -107,6 +121,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
     }
     return [];
   }
+
   Future<void> _loadFeelingsFromAppConfig(BuildContext context) async {
     if (_feelingsLoading) return;
     _feelingsLoading = true;
@@ -118,6 +133,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
       final enabled = features?['feelings'] == true || features?['feelings']?.toString() == '1';
       final rawFeelings = _normalizeList(configData['feelings']);
       final rawActivities = _normalizeList(configData['activities'] ?? configData['feeling_activities']);
+
       if (!mounted) return;
       setState(() {
         _feelings = rawFeelings;
@@ -135,21 +151,26 @@ class _CreatePostPageState extends State<CreatePostPage> {
       _feelingsLoading = false;
     }
   }
+
   void _selectColoredPattern(ColoredPattern? pattern) {
     setState(() {
       _selectedColoredPattern = pattern;
     });
   }
+
   Color _getPatternBackground() {
     if (_selectedColoredPattern == null) return Colors.transparent;
+    
     if (_selectedColoredPattern!.backgroundColors != null) {
       // استخدام اللون الأساسي
       final colorStr = _selectedColoredPattern!.backgroundColors!.primary.replaceAll('#', '');
       return Color(int.parse('0xFF$colorStr'));
     }
+    
     // لون افتراضي
     return const Color(0xFF6C5CE7);
   }
+
   Widget _buildPostTypeSelector() {
     return Container(
       padding: const EdgeInsets.all(12),
@@ -176,6 +197,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
       ),
     );
   }
+
   Widget _buildPostTypeButton({
     required IconData icon,
     required String label,
@@ -214,10 +236,12 @@ class _CreatePostPageState extends State<CreatePostPage> {
       ),
     );
   }
+
   Widget _buildColoredPatternsGrid() {
     return Consumer<DynamicAppConfigProvider>(
       builder: (context, configProvider, child) {
         final patterns = configProvider.coloredPatterns ?? [];
+        
         if (patterns.isEmpty) {
           return Container(
             padding: const EdgeInsets.all(24),
@@ -233,6 +257,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
             ),
           );
         }
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -265,6 +290,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
               itemBuilder: (context, index) {
                 final pattern = patterns[index];
                 final isSelected = _selectedColoredPattern?.id == pattern.id;
+                
                 return InkWell(
                   onTap: () => _selectColoredPattern(pattern),
                   borderRadius: BorderRadius.circular(12),
@@ -288,12 +314,16 @@ class _CreatePostPageState extends State<CreatePostPage> {
       },
     );
   }
+
   Widget _buildFeelingsSection(BuildContext context, DynamicAppConfigProvider provider) {
     _syncFeelingsFromConfig(context, provider);
+
     if (!_feelingsEnabled || _feelings.isEmpty) {
       return const SizedBox.shrink();
     }
+
     final availableActivities = _availableActivities;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -367,6 +397,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
       ],
     );
   }
+
   Widget _buildPatternPreview(ColoredPattern pattern) {
     if (pattern.backgroundImage != null && pattern.backgroundImage!.full.isNotEmpty) {
       // صورة خلفية
@@ -382,9 +413,11 @@ class _CreatePostPageState extends State<CreatePostPage> {
       return _buildColorPreview(pattern);
     }
   }
+
   Widget _buildColorPreview(ColoredPattern pattern) {
     if (pattern.backgroundColors != null) {
       final primary = Color(int.parse('0xFF${pattern.backgroundColors!.primary.replaceAll('#', '')}'));
+      
       if (pattern.backgroundColors!.secondary != null) {
         // تدرج لوني
         final secondary = Color(int.parse('0xFF${pattern.backgroundColors!.secondary!.replaceAll('#', '')}'));
@@ -402,25 +435,30 @@ class _CreatePostPageState extends State<CreatePostPage> {
         return Container(color: primary);
       }
     }
+    
     // لون افتراضي
     return Container(
       color: const Color(0xFF6C5CE7),
       child: const Icon(Icons.color_lens, color: Colors.white),
     );
   }
+
   @override
   void dispose() {
     _textController.dispose();
     _feelingValueController.dispose();
     super.dispose();
   }
+
   Future<void> _createPost() async {
     if (_textController.text.isEmpty &&
         _images.isEmpty &&
         _selectedColoredPattern == null) return;
+
     setState(() {
       _isLoading = true;
     });
+
     try {
       await context.read<PostsNotifier>().createPost(
             _textController.text,
@@ -444,6 +482,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
       );
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -454,7 +493,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
             onPressed: _isLoading ? null : _createPost,
             child: _isLoading
                 ? const CircularProgressIndicator(color: Colors.white)
-                :  Text('post'.tr, style: TextStyle(color: Colors.white)),
+                : const Text('Post', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -483,7 +522,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
                   fontWeight: FontWeight.w500,
                 ),
                 decoration: InputDecoration.collapsed(
-                  hintText: 'whats_on_your_mind'.tr,
+                  hintText: 'What\'s on your mind?',
                   hintStyle: TextStyle(
                     color: _selectedColoredPattern != null 
                         ? Colors.white70 
@@ -502,11 +541,13 @@ class _CreatePostPageState extends State<CreatePostPage> {
             // خيارات نوع المنشور
             _buildPostTypeSelector(),
             const SizedBox(height: 16),
+            
             // الأنماط الملونة
             if (_showColoredPatterns) ...[
               _buildColoredPatternsGrid(),
               const SizedBox(height: 16),
             ],
+            
             // شبكة الصور
             if (_images.isNotEmpty) ...[
               GridView.builder(

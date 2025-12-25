@@ -3,39 +3,45 @@ import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:get/get.dart';
+
 import '../../../../core/network/api_client.dart';
 import '../../../feed/data/models/post.dart';
 import '../../../feed/presentation/widgets/post_card.dart';
 import '../../../friends/presentation/widgets/add_friend_button.dart';
 import '../../../friends/data/models/friendship_model.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
-import '../../../groups/presentation/pages/group_page.dart';
-import '../../../groups/data/models/group.dart';
 import '../../../pages/presentation/pages/page_profile_page.dart';
 import '../../data/services/search_api_service.dart';
 import '../../data/models/search_models.dart';
+
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
+
   @override
   State<SearchPage> createState() => _SearchPageState();
 }
+
 class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   late final SearchApiService _searchService;
   late final TextEditingController _searchController;
   late final TabController _tabController;
+  
   // البحث والنتائج
   String _currentQuery = '';
   SearchType _currentTab = SearchType.posts;
   bool _isSearching = false;
   bool _hasSearched = false;
+  
   // النتائج
   List<Post> _posts = [];
   List<SearchResult> _results = [];
+  
   // Pagination
   int _currentPage = 1;
   bool _isLoadingMore = false;
   bool _hasMore = false;
   late final ScrollController _scrollController;
+
   @override
   void initState() {
     super.initState();
@@ -43,9 +49,11 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     _searchController = TextEditingController();
     _tabController = TabController(length: SearchType.values.length, vsync: this);
     _scrollController = ScrollController();
+    
     _tabController.addListener(_onTabChanged);
     _scrollController.addListener(_onScroll);
   }
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -53,18 +61,22 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     _scrollController.dispose();
     super.dispose();
   }
+
   void _onTabChanged() {
     if (!_tabController.indexIsChanging) return;
+    
     final newTab = SearchType.values[_tabController.index];
     if (newTab != _currentTab) {
       setState(() {
         _currentTab = newTab;
       });
+      
       if (_currentQuery.isNotEmpty && _hasSearched) {
         _search(reset: true);
       }
     }
   }
+
   void _onScroll() {
     if (_scrollController.offset >= _scrollController.position.maxScrollExtent - 200) {
       if (_hasMore && !_isLoadingMore && !_isSearching) {
@@ -72,8 +84,10 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       }
     }
   }
+
   Future<void> _search({bool reset = true}) async {
     if (_currentQuery.trim().isEmpty) return;
+
     setState(() {
       _isSearching = true;
       if (reset) {
@@ -83,6 +97,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         _results.clear();
       }
     });
+
     try {
       final response = await _searchService.search(
         query: _currentQuery,
@@ -90,14 +105,18 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         page: _currentPage,
         limit: 20,
       );
+
       if (!mounted) return;
+
       setState(() {
         _hasSearched = true;
         _hasMore = response.pagination.hasMore;
+
         if (reset) {
           _posts.clear();
           _results.clear();
         }
+
         if (response.success && response.results.isNotEmpty) {
           if (_currentTab == SearchType.posts || _currentTab == SearchType.blogs) {
             // تحويل النتائج إلى Post objects للاستخدام مع PostCard
@@ -117,17 +136,22 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       }
     }
   }
+
   Future<void> _loadMore() async {
     if (_isLoadingMore || !_hasMore) return;
+
     setState(() {
       _isLoadingMore = true;
       _currentPage++;
     });
+
     await _search(reset: false);
+
     if (mounted) {
       setState(() => _isLoadingMore = false);
     }
   }
+
   void _onSearchSubmitted(String value) {
     final query = value.trim();
     if (query.isNotEmpty && query != _currentQuery) {
@@ -137,6 +161,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       _search();
     }
   }
+
   void _clearSearch() {
     setState(() {
       _currentQuery = '';
@@ -146,52 +171,13 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     });
     _searchController.clear();
   }
-  /// Convert SearchGroup to Group for navigation
-  Group _createGroupFromSearchResult(SearchGroup searchGroup) {
-    // Create minimal Group object from SearchGroup data
-    return Group(
-      groupId: searchGroup.groupId,
-      groupName: searchGroup.groupName,
-      groupTitle: searchGroup.groupTitle,
-      groupDescription: searchGroup.groupDescription,
-      groupPrivacy: GroupPrivacy.fromString(searchGroup.groupPrivacy),
-      groupPicture: searchGroup.groupPicture,
-      groupPictureFull: searchGroup.groupPicture,
-      groupCover: searchGroup.groupCover,
-      groupCoverFull: searchGroup.groupCover,
-      groupCoverPosition: null,
-      groupMembers: searchGroup.groupMembers,
-      groupRate: 0.0,
-      groupDate: DateTime.now().toIso8601String(),
-      groupPublishEnabled: true,
-      groupPublishApprovalEnabled: false,
-      groupMonetizationEnabled: false,
-      groupMonetizationMinPrice: 0.0,
-      chatboxEnabled: false,
-      isFake: false,
-      admin: GroupAdmin(
-        userId: 0,
-        username: '',
-        firstname: '',
-        lastname: '',
-        fullname: 'Admin',
-        picture: '',
-        verified: false,
-      ),
-      category: GroupCategory(
-        categoryId: searchGroup.groupCategory,
-        categoryName: 'Category',
-      ),
-      membership: GroupMembershipStatus(
-        isMember: searchGroup.iJoined,
-        status: searchGroup.iJoined ? 'approved' : 'not_member',
-        isAdmin: false,
-      ),
-    );
-  }
+
+  // Groups module removed; group navigation disabled
+
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Get.isDarkMode;
+    
     return Scaffold(
       backgroundColor: isDarkMode ? const Color(0xFF121212) : const Color(0xFFF8F9FA),
       appBar: AppBar(
@@ -259,6 +245,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         children: [
           // Search Bar
           _buildSearchBar(),
+          
           // Results
           Expanded(
             child: _buildSearchResults(),
@@ -267,8 +254,10 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       ),
     );
   }
+
   Widget _buildSearchBar() {
     final isDarkMode = Get.isDarkMode;
+    
     return Container(
       margin: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -330,6 +319,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       ),
     );
   }
+
   Widget _buildSearchResults() {
     if (!_hasSearched) {
       return _buildEmptyState(
@@ -338,12 +328,15 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         subtitle: 'Enter search terms to find ${_currentTab.title.toLowerCase()}',
       );
     }
+
     if (_isSearching && (_posts.isEmpty && _results.isEmpty)) {
       return _buildLoadingState();
     }
+
     final isEmpty = (_currentTab == SearchType.posts || _currentTab == SearchType.blogs) 
         ? _posts.isEmpty 
         : _results.isEmpty;
+
     if (isEmpty && !_isSearching) {
       return _buildEmptyState(
         icon: Iconsax.search_status,
@@ -351,14 +344,17 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         subtitle: 'Try different keywords or check your spelling',
       );
     }
+
     if (_currentTab == SearchType.posts || _currentTab == SearchType.blogs) {
       return _buildPostsList();
     } else {
       return _buildResultsList();
     }
   }
+
   Widget _buildPostsList() {
     final isDarkMode = Get.isDarkMode;
+    
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -403,6 +399,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
               ),
             );
           }
+
           final post = _posts[index];
           return Container(
             margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -426,8 +423,10 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       ),
     );
   }
+
   Widget _buildResultsList() {
     final isDarkMode = Get.isDarkMode;
+    
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -472,14 +471,17 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
               ),
             );
           }
+
           final result = _results[index];
           return _buildResultCard(result);
         },
       ),
     );
   }
+
   Widget _buildResultCard(SearchResult result) {
     final isDarkMode = Get.isDarkMode;
+    
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
       decoration: BoxDecoration(
@@ -591,8 +593,10 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       ),
     );
   }
+
   Widget _buildResultAvatar(SearchResult result) {
     final isDarkMode = Get.isDarkMode;
+    
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
@@ -671,6 +675,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       ),
     );
   }
+
   IconData _getIconForType(String type) {
     switch (type) {
       case 'user': return Iconsax.user;
@@ -680,6 +685,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       default: return Iconsax.search_normal;
     }
   }
+
   Widget _buildActionButton(SearchResult result) {
     switch (result.type) {
       case 'user':
@@ -695,6 +701,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         return const SizedBox.shrink();
     }
   }
+
   Widget _buildUserActionButton(SearchUser user) {
     // Map connection status to FriendshipStatus
     FriendshipStatus status;
@@ -711,6 +718,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       default:
         status = FriendshipStatus.none;
     }
+
     return AddFriendButton(
       userId: user.userId,
       initialStatus: status,
@@ -719,6 +727,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       showText: false, // إظهار الأيقونة فقط في نتائج البحث
     );
   }
+
   Widget _buildPageActionButton(SearchPageResult page) {
     return Container(
       decoration: BoxDecoration(
@@ -766,25 +775,20 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       ),
     );
   }
-  Widget _buildGroupActionButton(SearchGroup group) {
-    final isJoined = group.iJoined;
+
+  Widget _buildGroupActionButton(SearchGroup _group) {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: isJoined 
-            ? [
-                Colors.blue.withOpacity(0.8),
-                Colors.cyan.withOpacity(0.8),
-              ]
-            : [
-                Colors.orange.withOpacity(0.8),
-                Colors.red.withOpacity(0.8),
-              ],
+          colors: [
+            Colors.grey.withOpacity(0.7),
+            Colors.blueGrey.withOpacity(0.7),
+          ],
         ),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: (isJoined ? Colors.blue : Colors.orange).withOpacity(0.3),
+            color: Colors.black.withOpacity(0.15),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -792,14 +796,10 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       ),
       child: TextButton(
         onPressed: () {
-          // Navigate to group page with full group data
-          final groupData = _createGroupFromSearchResult(group);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => GroupPage.withGroup(
-                group: groupData,
-              ),
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Groups are no longer available.'),
+              duration: Duration(seconds: 2),
             ),
           );
         },
@@ -809,9 +809,9 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        child: Text(
-          isJoined ? 'View' : 'Join',
-          style: const TextStyle(
+        child: const Text(
+          'Unavailable',
+          style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w600,
             color: Colors.white,
@@ -820,6 +820,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       ),
     );
   }
+
   void _onResultTap(SearchResult result) {
     switch (result.type) {
       case 'user':
@@ -850,15 +851,11 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         }
         break;
       case 'group':
-        // Navigate to group detail
         if (result is SearchGroup) {
-          final group = _createGroupFromSearchResult(result);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => GroupPage.withGroup(
-                group: group,
-              ),
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Groups are no longer available.'),
+              duration: Duration(seconds: 2),
             ),
           );
         }
@@ -873,8 +870,10 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       default:
     }
   }
+
   Widget _buildLoadingState() {
     final isDarkMode = Get.isDarkMode;
+    
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -1026,12 +1025,14 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       ),
     );
   }
+
   Widget _buildEmptyState({
     required IconData icon,
     required String title,
     required String subtitle,
   }) {
     final isDarkMode = Get.isDarkMode;
+    
     return Center(
       child: Container(
         margin: const EdgeInsets.all(32),

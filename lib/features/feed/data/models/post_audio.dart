@@ -9,6 +9,7 @@ class PostAudio {
     this.size,
     this.fileExtension,
   });
+
   final String audioId;
   final String postId;
   final String source;
@@ -17,6 +18,7 @@ class PostAudio {
   final Duration? duration;
   final int? size;
   final String? fileExtension;
+
   /// حصول على صيغة مدة الملف الصوتي
   String get formattedDuration {
     if (duration == null) return '0:00';
@@ -25,9 +27,11 @@ class PostAudio {
     final seconds = totalSeconds % 60;
     return '$minutes:${seconds.toString().padLeft(2, '0')}';
   }
+
   /// حصول على حجم الملف المنسق
   String get formattedSize {
     if (size == null) return '';
+    
     if (size! < 1024) {
       return '${size}B';
     } else if (size! < 1024 * 1024) {
@@ -36,11 +40,13 @@ class PostAudio {
       return '${(size! / (1024 * 1024)).toStringAsFixed(1)}MB';
     }
   }
+
   /// التحقق من صيغة الملف الصوتي
   bool get isMP3 => fileExtension?.toLowerCase() == 'mp3';
   bool get isWAV => fileExtension?.toLowerCase() == 'wav';
   bool get isM4A => fileExtension?.toLowerCase() == 'm4a';
   bool get isOGG => fileExtension?.toLowerCase() == 'ogg';
+
   factory PostAudio.fromJson(Map<String, dynamic> json) {
     // استخراج مدة الملف الصوتي إذا كانت متوفرة
     Duration? duration;
@@ -50,12 +56,14 @@ class PostAudio {
         duration = Duration(seconds: durationSeconds);
       }
     }
+
     // استخراج امتداد الملف من المصدر
     String? fileExtension;
     final source = json['source']?.toString();
     if (source != null && source.contains('.')) {
       fileExtension = source.split('.').last.toLowerCase();
     }
+
     return PostAudio(
       audioId: json['audio_id']?.toString() ?? '',
       postId: json['post_id']?.toString() ?? '',
@@ -67,6 +75,7 @@ class PostAudio {
       fileExtension: fileExtension,
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'audio_id': audioId,
@@ -79,6 +88,7 @@ class PostAudio {
       if (fileExtension != null) 'file_extension': fileExtension,
     };
   }
+
   static PostAudio? maybeFromJson(Object? value) {
     if (value is! Map<String, dynamic>) {
       return null;
@@ -89,6 +99,7 @@ class PostAudio {
       return null;
     }
   }
+
   PostAudio copyWith({
     String? audioId,
     String? postId,
@@ -110,10 +121,12 @@ class PostAudio {
       fileExtension: fileExtension ?? this.fileExtension,
     );
   }
+
   @override
   String toString() {
     return 'PostAudio(audioId: $audioId, source: $source, duration: $formattedDuration)';
   }
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
@@ -122,6 +135,7 @@ class PostAudio {
         other.postId == postId &&
         other.source == source;
   }
+
   @override
   int get hashCode {
     return audioId.hashCode ^ postId.hashCode ^ source.hashCode;

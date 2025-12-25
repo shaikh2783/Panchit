@@ -1,5 +1,6 @@
 /// نماذج البيانات للبث المباشر
 /// تستخدم مع LiveStreamApiService
+
 /// نموذج بيانات البث المباشر
 class LiveStreamModel {
   final String liveId;
@@ -16,6 +17,7 @@ class LiveStreamModel {
   final bool isPrivate;
   final String? agoraChannel;
   final String? agoraToken;
+
   const LiveStreamModel({
     required this.liveId,
     required this.title,
@@ -32,6 +34,7 @@ class LiveStreamModel {
     this.agoraChannel,
     this.agoraToken,
   });
+
   factory LiveStreamModel.fromJson(Map<String, dynamic> json) {
     return LiveStreamModel(
       liveId: json['live_id']?.toString() ?? '',
@@ -50,6 +53,7 @@ class LiveStreamModel {
       agoraToken: json['agora_token']?.toString(),
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'live_id': liveId,
@@ -69,6 +73,7 @@ class LiveStreamModel {
     };
   }
 }
+
 /// نموذج تعليق البث المباشر
 class LiveCommentModel {
   final String commentId;
@@ -84,6 +89,7 @@ class LiveCommentModel {
   final Map<String, int> reactions;
   final bool canEdit;
   final bool canDelete;
+
   const LiveCommentModel({
     required this.commentId,
     required this.liveId,
@@ -99,6 +105,7 @@ class LiveCommentModel {
     required this.canEdit,
     required this.canDelete,
   });
+
   factory LiveCommentModel.fromJson(Map<String, dynamic> json) {
     return LiveCommentModel(
       commentId: json['comment_id']?.toString() ?? '', // API يرسل string بالفعل
@@ -118,6 +125,7 @@ class LiveCommentModel {
       canDelete: json['can_delete'] == true || json['can_delete'] == 1,
     );
   }
+
   static Map<String, int> _parseReactions(dynamic reactions) {
     if (reactions == null) {
       return {
@@ -129,6 +137,7 @@ class LiveCommentModel {
         'angry': 0,
       };
     }
+
     if (reactions is Map) {
       final Map<String, int> result = {};
       reactions.forEach((key, value) {
@@ -136,6 +145,7 @@ class LiveCommentModel {
       });
       return result;
     }
+
     return {
       'like': 0,
       'love': 0,
@@ -145,6 +155,7 @@ class LiveCommentModel {
       'angry': 0,
     };
   }
+
   Map<String, dynamic> toJson() {
     return {
       'comment_id': commentId,
@@ -163,6 +174,7 @@ class LiveCommentModel {
     };
   }
 }
+
 /// نموذج إحصائيات البث المباشر
 class LiveStatsModel {
   final String liveId;
@@ -173,6 +185,7 @@ class LiveStatsModel {
   final Duration duration;
   final Map<String, int> reactionsCounts;
   final DateTime lastUpdate;
+
   const LiveStatsModel({
     required this.liveId,
     required this.totalViewers,
@@ -183,6 +196,7 @@ class LiveStatsModel {
     required this.reactionsCounts,
     required this.lastUpdate,
   });
+
   factory LiveStatsModel.fromJson(Map<String, dynamic> json) {
     // حساب عدد التعليقات بشكل آمن
     int commentsCount = 0;
@@ -190,6 +204,7 @@ class LiveStatsModel {
     if (comments is List) {
       commentsCount = comments.length;
     }
+    
     return LiveStatsModel(
       liveId: json['live_id']?.toString() ?? '',
       totalViewers: int.tryParse(json['total_viewers']?.toString() ?? '0') ?? 0,
@@ -203,6 +218,7 @@ class LiveStatsModel {
       lastUpdate: DateTime.now(), // استخدام الوقت الحالي
     );
   }
+
   static Map<String, int> _parseReactionsCounts(dynamic reactions) {
     if (reactions == null) {
       return {
@@ -214,6 +230,7 @@ class LiveStatsModel {
         'angry': 0,
       };
     }
+
     if (reactions is Map) {
       final Map<String, int> result = {};
       reactions.forEach((key, value) {
@@ -221,6 +238,7 @@ class LiveStatsModel {
       });
       return result;
     }
+
     return {
       'like': 0,
       'love': 0,
@@ -230,6 +248,7 @@ class LiveStatsModel {
       'angry': 0,
     };
   }
+
   Map<String, dynamic> toJson() {
     return {
       'live_id': liveId,
@@ -243,27 +262,32 @@ class LiveStatsModel {
     };
   }
 }
+
 /// نموذج استجابة API للتعليقات
 class LiveCommentsResponse {
   final bool success;
   final String message;
   final List<LiveCommentModel> comments;
   final LiveCommentsMetadata metadata;
+
   const LiveCommentsResponse({
     required this.success,
     required this.message,
     required this.comments,
     required this.metadata,
   });
+
   factory LiveCommentsResponse.fromJson(Map<String, dynamic> json) {
     // جلب التعليقات بشكل آمن
     List<LiveCommentModel> commentsList = [];
     final commentsData = json['data']?['comments'];
+    
     if (commentsData is List) {
       commentsList = commentsData
           .map((commentJson) => LiveCommentModel.fromJson(commentJson))
           .toList();
     }
+    
     return LiveCommentsResponse(
       success: json['status'] == 'success',
       message: json['message']?.toString() ?? '',
@@ -279,6 +303,7 @@ class LiveCommentsResponse {
     );
   }
 }
+
 /// بيانات وصفية للتعليقات
 class LiveCommentsMetadata {
   final int currentPage;
@@ -287,6 +312,7 @@ class LiveCommentsMetadata {
   final int limit;
   final bool hasMore;
   final String? nextPageToken;
+
   const LiveCommentsMetadata({
     required this.currentPage,
     required this.totalPages,
@@ -295,6 +321,7 @@ class LiveCommentsMetadata {
     required this.hasMore,
     this.nextPageToken,
   });
+
   factory LiveCommentsMetadata.fromJson(Map<String, dynamic> json) {
     return LiveCommentsMetadata(
       currentPage: int.tryParse(json['current_page']?.toString() ?? '1') ?? 1,
@@ -306,6 +333,7 @@ class LiveCommentsMetadata {
     );
   }
 }
+
 /// نموذج التفاعل المباشر
 class LiveReactionModel {
   final String reactionId;
@@ -315,6 +343,7 @@ class LiveReactionModel {
   final String userAvatar;
   final String reactionType;
   final DateTime timestamp;
+
   const LiveReactionModel({
     required this.reactionId,
     required this.liveId,
@@ -324,6 +353,7 @@ class LiveReactionModel {
     required this.reactionType,
     required this.timestamp,
   });
+
   factory LiveReactionModel.fromJson(Map<String, dynamic> json) {
     return LiveReactionModel(
       reactionId: json['reaction_id']?.toString() ?? '',

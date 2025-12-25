@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+
 /// Cart Item Model - منتج في سلة التسوق
 /// 
 /// يمثل منتج واحد مضاف إلى سلة التسوق مع تفاصيله الكاملة.
@@ -7,8 +8,8 @@ import 'package:equatable/equatable.dart';
 /// الاستخدام:
 /// ```dart
 /// final item = CartItem.fromJson(json);
-/// 
-/// 
+/// print('${item.productName} x ${item.quantity} = ${item.total}');
+/// print('البائع: ${item.seller.userName}');
 /// ```
 /// 
 /// Properties:
@@ -33,6 +34,7 @@ class CartItem extends Equatable {
   final String total;
   final String productPicture;
   final CartSeller seller;
+
   /// Creates a CartItem instance
   const CartItem({
     required this.id,
@@ -44,6 +46,7 @@ class CartItem extends Equatable {
     required this.productPicture,
     required this.seller,
   });
+
   /// Creates CartItem from JSON response
   factory CartItem.fromJson(Map<String, dynamic> json) {
     return CartItem(
@@ -57,6 +60,7 @@ class CartItem extends Equatable {
       seller: CartSeller.fromJson(json['seller'] ?? {}),
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -69,6 +73,7 @@ class CartItem extends Equatable {
       'seller': seller.toJson(),
     };
   }
+
   /// Creates a copy with modified fields
   CartItem copyWith({
     String? id,
@@ -91,6 +96,7 @@ class CartItem extends Equatable {
       seller: seller ?? this.seller,
     );
   }
+
   @override
   List<Object?> get props => [
         id,
@@ -103,6 +109,7 @@ class CartItem extends Equatable {
         seller,
       ];
 }
+
 /// Cart Seller Model - معلومات البائع
 /// 
 /// يحتوي على المعلومات الأساسية للبائع المرتبط بكل منتج في السلة.
@@ -115,11 +122,13 @@ class CartSeller extends Equatable {
   final String userId;
   final String userName;
   final String userPicture;
+
   const CartSeller({
     required this.userId,
     required this.userName,
     required this.userPicture,
   });
+
   factory CartSeller.fromJson(Map<String, dynamic> json) {
     return CartSeller(
       userId: json['user_id']?.toString() ?? '',
@@ -127,6 +136,7 @@ class CartSeller extends Equatable {
       userPicture: json['user_picture']?.toString() ?? '',
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'user_id': userId,
@@ -134,6 +144,7 @@ class CartSeller extends Equatable {
       'user_picture': userPicture,
     };
   }
+
   @override
   List<Object?> get props => [userId, userName, userPicture];
 }

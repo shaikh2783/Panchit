@@ -4,11 +4,14 @@ import 'package:get/get.dart';
 import '../../application/bloc/cart/cart.dart';
 import '../../data/models/shipping_address.dart';
 import '../../../../core/theme/ui_constants.dart';
+
 class CheckoutPage extends StatefulWidget {
   const CheckoutPage({super.key});
+
   @override
   State<CheckoutPage> createState() => _CheckoutPageState();
 }
+
 class _CheckoutPageState extends State<CheckoutPage> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
@@ -17,8 +20,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
   final _cityController = TextEditingController();
   final _zipController = TextEditingController();
   final _countryController = TextEditingController();
+
   String _selectedPaymentMethod = 'cash_on_delivery';
   bool _isProcessing = false;
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -29,11 +34,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
     _countryController.dispose();
     super.dispose();
   }
+
   Future<void> _handleCheckout() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
+
     setState(() => _isProcessing = true);
+
     final shippingAddress = ShippingAddress(
       name: _nameController.text,
       phone: _phoneController.text,
@@ -43,12 +51,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
       zip: _zipController.text,
       country: _countryController.text,
     );
+
     context.read<CartBloc>().add(CheckoutCartEvent(
       shippingAddress: shippingAddress,
       paymentMethod: _selectedPaymentMethod,
       notes: '',
     ));
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<CartBloc, CartState>(
@@ -104,10 +114,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
               _buildSectionTitle('market_shipping_info'.tr),
               const SizedBox(height: 16),
               _buildShippingForm(),
+              
               const SizedBox(height: 24),
               _buildSectionTitle('market_payment_method'.tr),
               const SizedBox(height: 16),
               _buildPaymentMethods(),
+              
               const SizedBox(height: 24),
               _buildSectionTitle('market_order_summary'.tr),
               const SizedBox(height: 16),
@@ -119,6 +131,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       ),
     );
   }
+
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
@@ -129,6 +142,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       ),
     );
   }
+
   Widget _buildShippingForm() {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -163,6 +177,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             },
           ),
           const SizedBox(height: 16),
+          
           TextFormField(
             controller: _phoneController,
             style: TextStyle(color: Get.isDarkMode ? Colors.white : Colors.black),
@@ -188,6 +203,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             },
           ),
           const SizedBox(height: 16),
+          
           TextFormField(
             controller: _addressController,
             style: TextStyle(color: Get.isDarkMode ? Colors.white : Colors.black),
@@ -213,6 +229,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             },
           ),
           const SizedBox(height: 16),
+          
           Row(
             children: [
               Expanded(
@@ -262,6 +279,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             ],
           ),
           const SizedBox(height: 16),
+          
           TextFormField(
             controller: _countryController,
             style: TextStyle(color: Get.isDarkMode ? Colors.white : Colors.black),
@@ -289,6 +307,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       ),
     );
   }
+
   Widget _buildPaymentMethods() {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -320,6 +339,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       ),
     );
   }
+
   Widget _buildPaymentOption(String value, String title, IconData icon) {
     final isSelected = _selectedPaymentMethod == value;
     return InkWell(
@@ -372,12 +392,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
       ),
     );
   }
+
   Widget _buildOrderSummary() {
     return BlocBuilder<CartBloc, CartState>(
       builder: (context, state) {
         if (state is! CartLoaded) {
           return const SizedBox.shrink();
         }
+
         final cart = state.cart;
         return Container(
           padding: const EdgeInsets.all(16),
@@ -401,6 +423,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       },
     );
   }
+
   Widget _buildSummaryRow(String label, String value, {bool isTotal = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -424,6 +447,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       ],
     );
   }
+
   Widget _buildBottomBar() {
     return Container(
       padding: const EdgeInsets.all(16),

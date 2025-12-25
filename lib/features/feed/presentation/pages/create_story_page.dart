@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -6,26 +7,33 @@ import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:video_player/video_player.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:snginepro/features/stories/application/bloc/stories_bloc.dart';
+
 class CreateStoryPage extends StatefulWidget {
   const CreateStoryPage({super.key});
+
   @override
   State<CreateStoryPage> createState() => _CreateStoryPageState();
 }
+
 class _CreateStoryPageState extends State<CreateStoryPage> {
   XFile? _mediaFile;
   CachedVideoPlayerPlus? _videoController;
   bool _isLoading = false;
   bool _isVideo = false;
+
   /// اختيار صورة من المعرض أو الكاميرا
   Future<void> _pickImage(ImageSource source) async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: source, imageQuality: 80);
+
     if (pickedFile == null) return;
+
     setState(() {
       _mediaFile = pickedFile;
       _isVideo = false;
     });
   }
+
   /// اختيار فيديو من المعرض أو الكاميرا
   Future<void> _pickVideo(ImageSource source) async {
     final picker = ImagePicker();
@@ -33,14 +41,18 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
       source: source,
       maxDuration: const Duration(seconds: 30),
     );
+
     if (pickedFile == null) return;
+
     // تهيئة video player للمعاينة
     final videoFile = File(pickedFile.path);
     final controller = CachedVideoPlayerPlus.file(videoFile);
+    
     try {
       await controller.initialize();
       controller.controller.setLooping(true);
       controller.controller.play();
+
       setState(() {
         _mediaFile = pickedFile;
         _isVideo = true;
@@ -57,17 +69,22 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
       }
     }
   }
+
   Future<void> _createStory() async {
     if (_mediaFile == null) return;
+
     setState(() { _isLoading = true; });
+
     try {
       final path = _mediaFile!.path;
+      
       context.read<StoriesBloc>().add(
         CreateStoryEvent(
           imagePath: _isVideo ? null : path,
           videoPath: _isVideo ? path : null,
         ),
       );
+      
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -92,12 +109,14 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
         }
     }
   }
+  
   @override
   void dispose() {
     _videoController?.controller.dispose();
     _videoController?.dispose();
     super.dispose();
   }
+
   Widget _buildMediaPreview() {
     if (_isVideo && _videoController != null) {
       return AspectRatio(
@@ -105,11 +124,13 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
         child: VideoPlayer(_videoController!.controller),
       );
     }
+    
     return Image.file(
       File(_mediaFile!.path),
       fit: BoxFit.contain,
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -121,8 +142,10 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
             _buildEmptyState(context)
           else
             _buildPreviewWithControls(context),
+          
           // شريط العلوي
           _buildTopBar(context),
+          
           // مؤشر التحميل
           if (_isLoading)
             Container(
@@ -152,6 +175,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
       ),
     );
   }
+
   Widget _buildTopBar(BuildContext context) {
     return SafeArea(
       child: Padding(
@@ -227,6 +251,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
       ),
     );
   }
+
   Widget _buildEmptyState(BuildContext context) {
     return SafeArea(
       child: Center(
@@ -257,6 +282,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
                 ),
               ),
               const SizedBox(height: 32),
+              
               // العنوان
               Text(
                 'Add to Your Story',
@@ -275,7 +301,9 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
                   fontSize: 16,
                 ),
               ),
+              
               const SizedBox(height: 48),
+              
               // بطاقة الصور
               _buildMediaCard(
                 context: context,
@@ -288,7 +316,9 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
                 onGalleryTap: () => _pickImage(ImageSource.gallery),
                 onCameraTap: () => _pickImage(ImageSource.camera),
               ),
+              
               const SizedBox(height: 16),
+              
               // بطاقة الفيديو
               _buildMediaCard(
                 context: context,
@@ -307,6 +337,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
       ),
     );
   }
+
   Widget _buildMediaCard({
     required BuildContext context,
     required IconData icon,
@@ -393,6 +424,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
       ),
     );
   }
+
   Widget _buildActionButton({
     required IconData icon,
     required String label,
@@ -432,6 +464,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
       ),
     );
   }
+
   Widget _buildPreviewWithControls(BuildContext context) {
     return Stack(
       children: [
@@ -439,6 +472,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
         Positioned.fill(
           child: _buildMediaPreview(),
         ),
+        
         // طبقة تعتيم خفيفة
         Positioned.fill(
           child: Container(
@@ -455,6 +489,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
             ),
           ),
         ),
+        
         // أدوات التحكم السفلية
         Positioned(
           bottom: 0,

@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+
 class ProfileCompletionResponse {
   final String status;
   final String message;
   final ProfileCompletionData data;
+
   ProfileCompletionResponse({
     required this.status,
     required this.message,
     required this.data,
   });
+
   factory ProfileCompletionResponse.fromJson(Map<String, dynamic> json) {
     return ProfileCompletionResponse(
       status: json['status'] ?? 'error',
@@ -16,6 +19,7 @@ class ProfileCompletionResponse {
     );
   }
 }
+
 class ProfileCompletionData {
   final int completionPercentage;
   final int totalSteps;
@@ -24,6 +28,7 @@ class ProfileCompletionData {
   final bool isComplete;
   final List<MissingField> missingFields;
   final List<String> completedFields;
+
   ProfileCompletionData({
     required this.completionPercentage,
     required this.totalSteps,
@@ -33,6 +38,7 @@ class ProfileCompletionData {
     required this.missingFields,
     required this.completedFields,
   });
+
   factory ProfileCompletionData.fromJson(Map<String, dynamic> json) {
     return ProfileCompletionData(
       completionPercentage: json['completion_percentage'] ?? 0,
@@ -55,12 +61,14 @@ class ProfileCompletionData {
     );
   }
 }
+
 class MissingField {
   final String field;
   final String label;
   final String type;
   final bool required;
   final Map<String, bool>? subFields;
+
   MissingField({
     required this.field,
     required this.label,
@@ -68,6 +76,7 @@ class MissingField {
     required this.required,
     this.subFields,
   });
+
   factory MissingField.fromJson(Map<String, dynamic> json) {
     return MissingField(
       field: json['field'] ?? '',
@@ -79,6 +88,7 @@ class MissingField {
           : null,
     );
   }
+
   // Field labels in English
   String get labelAr {
     const translations = {
@@ -97,6 +107,7 @@ class MissingField {
     };
     return translations[label] ?? translations[field] ?? label;
   }
+
   // Get icon for field type
   IconData get icon {
     switch (field) {

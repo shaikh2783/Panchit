@@ -1,16 +1,20 @@
 import 'dart:convert';
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
+
 /// خدمة إدارة المنشورات - حفظ، تثبيت، إخفاء، حذف، تفاعل، تعديل
 class PostManagementApiService {
   final ApiClient _apiClient;
+
   PostManagementApiService(this._apiClient);
+
   /// إجراءات إدارة المنشورات
   Future<Map<String, dynamic>> managePost({
     required int postId,
     required PostAction action,
   }) async {
     try {
+
       final response = await _apiClient.post(
         configCfgP('post_manage'),
         body: {
@@ -18,6 +22,8 @@ class PostManagementApiService {
           'action': action.value,
         },
       );
+
+
       if (response['status'] == 'success') {
         return response;
       } else {
@@ -30,6 +36,7 @@ class PostManagementApiService {
       rethrow;
     }
   }
+
   /// تفاعل مع المنشور (إعجاب، حب، إلخ)
   Future<Map<String, dynamic>> reactToPost({
     required int postId,
@@ -37,6 +44,7 @@ class PostManagementApiService {
     required bool isReacting, // true للتفاعل، false لإلغاء التفاعل
   }) async {
     try {
+
       final response = await _apiClient.post(
         configCfgP('post_react'),
         body: {
@@ -45,6 +53,8 @@ class PostManagementApiService {
           'react_type': isReacting ? 'react' : 'unreact',
         },
       );
+
+
       if (response['status'] == 'success') {
         return response;
       } else {
@@ -57,6 +67,7 @@ class PostManagementApiService {
       rethrow;
     }
   }
+
   /// تعديل المنشور
   Future<Map<String, dynamic>> editPost({
     required int postId,
@@ -65,16 +76,22 @@ class PostManagementApiService {
     String? location,
   }) async {
     try {
+      
       final body = <String, dynamic>{
         'post_id': postId,
       };
+      
       if (text != null) body['text'] = text;
       if (privacy != null) body['privacy'] = privacy;
       if (location != null) body['location'] = location;
+      
+
       final response = await _apiClient.post(
         configCfgP('post_edit'),
         body: body,
       );
+
+
       if (response['status'] == 'success') {
         return response;
       } else {
@@ -87,15 +104,19 @@ class PostManagementApiService {
       rethrow;
     }
   }
+
   /// الحصول على تفاصيل المنشور
   Future<Map<String, dynamic>> getPostDetails(int postId) async {
     try {
+
       final response = await _apiClient.get(
         configCfgP('post_details'),
         queryParameters: {
           'post_id': postId.toString(),
         },
       );
+
+
       if (response['status'] == 'success') {
         return response;
       } else {
@@ -109,6 +130,7 @@ class PostManagementApiService {
     }
   }
 }
+
 /// أنواع الإجراءات المتاحة للمنشورات
 enum PostAction {
   savePost('save_post'),
@@ -133,14 +155,18 @@ enum PostAction {
   disallowPost('disallow_post'),
   markAsAdult('mark_as_adult'),  // 🆕 تعليم المنشور كـ للبالغين + blur
   unmarkAsAdult('unmark_as_adult');  // 🆕 إلغاء تعليم المنشور كـ للبالغين
+
   const PostAction(this.value);
   final String value;
 }
+
 /// استثناء API
 class ApiException implements Exception {
   final int code;
   final String message;
+
   ApiException({required this.code, required this.message});
+
   @override
   String toString() => 'ApiException (code: $code): $message';
 }

@@ -4,12 +4,14 @@ class Reaction {
   final String displayName;
   final bool enabled;
   final String? icon;
+
   const Reaction({
     required this.name,
     required this.displayName,
     required this.enabled,
     this.icon,
   });
+
   factory Reaction.fromJson(Map<String, dynamic> json) {
     return Reaction(
       name: json['name']?.toString() ?? '',
@@ -18,6 +20,7 @@ class Reaction {
       icon: json['icon']?.toString(),
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'name': name,

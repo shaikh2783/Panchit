@@ -4,28 +4,35 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
 import '../../../../core/config/app_config.dart';
 import '../../../feed/data/models/post.dart';
 import '../../../feed/data/models/post_course.dart';
+
 /// صفحة تعديل دورة موجودة
 class CourseEditPage extends StatefulWidget {
   const CourseEditPage({
     super.key,
     required this.post,
   });
+
   final Post post;
+
   @override
   State<CourseEditPage> createState() => _CourseEditPageState();
 }
+
 class _CourseEditPageState extends State<CourseEditPage> {
   final _formKey = GlobalKey<FormState>();
   final _picker = ImagePicker();
+
   late final TextEditingController _titleCtrl;
   late final TextEditingController _descriptionCtrl;
   late final TextEditingController _locationCtrl;
   late final TextEditingController _feesCtrl;
+
   DateTime? _startDate;
   DateTime? _endDate;
   late bool _isFree;
@@ -33,14 +40,18 @@ class _CourseEditPageState extends State<CourseEditPage> {
   bool _submitting = false;
   int _feesCurrencyId = 1;
   int _categoryId = 1;
+
   String? _coverSource;
   String? _coverUrl;
   bool _uploadingCover = false;
   double _uploadProgress = 0;
+
   @override
   void initState() {
     super.initState();
+    
     final course = widget.post.course!;
+    
     // Initialize with existing course data
     _titleCtrl = TextEditingController(text: course.title);
     _descriptionCtrl = TextEditingController(text: widget.post.text);
@@ -48,6 +59,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
     _feesCtrl = TextEditingController(
       text: course.fees != null && course.fees != '0' ? course.fees! : '',
     );
+    
     _isFree = course.isFree;
     _isAvailable = course.available;
     _startDate = course.startDate != null ? DateTime.tryParse(course.startDate!) : null;
@@ -58,6 +70,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
         ? int.tryParse(course.feesCurrency!.currencyId.toString()) ?? 1 
         : 1;
   }
+
   @override
   void dispose() {
     _titleCtrl.dispose();
@@ -66,6 +79,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
     _feesCtrl.dispose();
     super.dispose();
   }
+
   Future<void> _pickCover() async {
     try {
       final XFile? picked = await _picker.pickImage(
@@ -73,10 +87,12 @@ class _CourseEditPageState extends State<CourseEditPage> {
         imageQuality: 85,
       );
       if (picked == null) return;
+
       setState(() {
         _uploadingCover = true;
         _uploadProgress = 0;
       });
+
       final client = context.read<ApiClient>();
       final response = await client.multipartPost(
         configCfgP('file_upload'),
@@ -88,6 +104,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
           setState(() => _uploadProgress = total == 0 ? 0 : sent / total);
         },
       );
+
       if (response['status'] == 'success') {
         final data = response['data'] as Map<String, dynamic>;
         setState(() {
@@ -112,6 +129,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
       }
     }
   }
+
   void _removeCover() {
     setState(() {
       _coverSource = null;
@@ -119,6 +137,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
       _uploadProgress = 0;
     });
   }
+
   Future<void> _selectDate(BuildContext context, bool isStartDate) async {
     final tomorrow = DateTime.now().add(const Duration(days: 1));
     final DateTime? picked = await showDatePicker(
@@ -129,6 +148,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
       firstDate: isStartDate ? tomorrow : (_startDate ?? tomorrow),
       lastDate: DateTime.now().add(const Duration(days: 365 * 2)),
     );
+
     if (picked != null) {
       setState(() {
         if (isStartDate) {
@@ -139,8 +159,10 @@ class _CourseEditPageState extends State<CourseEditPage> {
       });
     }
   }
+
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
+
     // Validate description length
     final description = _descriptionCtrl.text.trim();
     if (description.length < 32) {
@@ -153,6 +175,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
       );
       return;
     }
+
     if (description.length > 1000) {
       Get.snackbar(
         'خطأ',
@@ -163,13 +186,17 @@ class _CourseEditPageState extends State<CourseEditPage> {
       );
       return;
     }
+
     if (!_isFree && _feesCtrl.text.trim().isEmpty) {
       Get.snackbar('خطأ', 'يرجى إدخال رسوم الدورة');
       return;
     }
+
     setState(() => _submitting = true);
+
     try {
       final client = context.read<ApiClient>();
+      
       final body = <String, dynamic>{
         'post_id': widget.post.id,
         'title': _titleCtrl.text.trim(),
@@ -183,11 +210,14 @@ class _CourseEditPageState extends State<CourseEditPage> {
         if (_endDate != null) 'end_date': _endDate!.toIso8601String().split('T')[0],
         if (_coverSource != null) 'cover_image': _coverSource,
       };
+
       final response = await client.post(
         configCfgP('courses_edit'),
         body: body,
       );
+
       if (!mounted) return;
+
       if (response['status'] == 'success') {
         Get.snackbar(
           'نجح',
@@ -219,10 +249,12 @@ class _CourseEditPageState extends State<CourseEditPage> {
       }
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Get.isDarkMode;
     final appConfig = context.read<AppConfig>();
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text('تعديل الدورة'),
@@ -262,6 +294,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
                         color: isDark ? Colors.grey[600] : Colors.grey[400],
                       ),
                     ),
+                  
                   if (_uploadingCover)
                     Container(
                       decoration: BoxDecoration(
@@ -286,6 +319,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
                         ),
                       ),
                     ),
+                  
                   Positioned(
                     top: 8,
                     right: 8,
@@ -315,7 +349,9 @@ class _CourseEditPageState extends State<CourseEditPage> {
                 ],
               ),
             ),
+
             const SizedBox(height: 24),
+
             // Title Field
             TextFormField(
               controller: _titleCtrl,
@@ -330,7 +366,9 @@ class _CourseEditPageState extends State<CourseEditPage> {
               validator: (v) => v?.trim().isEmpty ?? true ? 'مطلوب' : null,
               textInputAction: TextInputAction.next,
             ),
+
             const SizedBox(height: 16),
+
             // Description Field
             TextFormField(
               controller: _descriptionCtrl,
@@ -350,7 +388,9 @@ class _CourseEditPageState extends State<CourseEditPage> {
               validator: (v) => v?.trim().isEmpty ?? true ? 'مطلوب' : null,
               textInputAction: TextInputAction.newline,
             ),
+
             const SizedBox(height: 16),
+
             // Location Field
             TextFormField(
               controller: _locationCtrl,
@@ -365,7 +405,9 @@ class _CourseEditPageState extends State<CourseEditPage> {
               validator: (v) => v?.trim().isEmpty ?? true ? 'مطلوب' : null,
               textInputAction: TextInputAction.next,
             ),
+
             const SizedBox(height: 16),
+
             // Free/Paid Switch
             SwitchListTile(
               title: const Text('دورة مجانية'),
@@ -378,8 +420,10 @@ class _CourseEditPageState extends State<CourseEditPage> {
                 ),
               ),
             ),
+
             if (!_isFree) ...[
               const SizedBox(height: 16),
+              
               // Fees Field
               TextFormField(
                 controller: _feesCtrl,
@@ -397,7 +441,9 @@ class _CourseEditPageState extends State<CourseEditPage> {
                     : null,
               ),
             ],
+
             const SizedBox(height: 16),
+
             // Available Switch
             SwitchListTile(
               title: const Text('متاحة للتسجيل'),
@@ -410,7 +456,9 @@ class _CourseEditPageState extends State<CourseEditPage> {
                 ),
               ),
             ),
+
             const SizedBox(height: 16),
+
             // Date Selection
             Row(
               children: [
@@ -451,7 +499,9 @@ class _CourseEditPageState extends State<CourseEditPage> {
                 ),
               ],
             ),
+
             const SizedBox(height: 32),
+
             // Submit Button
             SizedBox(
               height: 50,
@@ -482,6 +532,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
                       ),
               ),
             ),
+
             const SizedBox(height: 16),
           ],
         ),

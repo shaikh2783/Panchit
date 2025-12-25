@@ -1,11 +1,13 @@
 import 'job_author.dart';
 import 'job_currency.dart';
+
 class JobCategory {
   final int categoryId;
   final int parentId;
   final String name;
   final String description;
   final int order;
+
   const JobCategory({
     required this.categoryId,
     required this.parentId,
@@ -13,6 +15,7 @@ class JobCategory {
     required this.description,
     required this.order,
   });
+
   factory JobCategory.fromJson(Map<String, dynamic> json) => JobCategory(
         categoryId: json['category_id'] is String
             ? int.tryParse(json['category_id']) ?? 0
@@ -27,6 +30,7 @@ class JobCategory {
             : (json['category_order'] ?? 0) as int,
       );
 }
+
 class Job {
   final int postId;
   final String title;
@@ -46,6 +50,7 @@ class Job {
   final String createdTime;
   final JobAuthor author;
     final bool iOwner;
+
     const Job({
     required this.postId,
     required this.title,
@@ -66,6 +71,7 @@ class Job {
     required this.author,
         this.iOwner = false,
   });
+
     factory Job.fromJson(Map<String, dynamic> json) => Job(
         postId: json['post_id'] is String
             ? int.tryParse(json['post_id']) ?? 0

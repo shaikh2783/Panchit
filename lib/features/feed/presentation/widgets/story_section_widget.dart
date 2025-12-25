@@ -3,10 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:snginepro/features/stories/application/bloc/stories_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 /// Stories section widget for the feed
 /// Shows horizontal scrollable stories with create story button
 class StorySectionWidget extends StatelessWidget {
   const StorySectionWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,6 +25,7 @@ class StorySectionWidget extends StatelessWidget {
                 // Create story button
                 return _CreateStoryCard();
               }
+              
               if (state is StoriesLoaded) {
                 final story = state.stories[index - 1];
                 return _StoryCard(
@@ -33,6 +36,7 @@ class StorySectionWidget extends StatelessWidget {
                   isViewed: false, // For now, we'll assume not viewed
                 );
               }
+              
               return const SizedBox.shrink();
             },
           );
@@ -41,6 +45,7 @@ class StorySectionWidget extends StatelessWidget {
     );
   }
 }
+
 class _CreateStoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -82,6 +87,7 @@ class _CreateStoryCard extends StatelessWidget {
     );
   }
 }
+
 class _StoryCard extends StatelessWidget {
   const _StoryCard({
     required this.storyId,
@@ -90,11 +96,13 @@ class _StoryCard extends StatelessWidget {
     required this.storyImage,
     required this.isViewed,
   });
+
   final String storyId;
   final String userName;
   final String? userAvatar;
   final String? storyImage;
   final bool isViewed;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -146,6 +154,7 @@ class _StoryCard extends StatelessWidget {
       ),
     );
   }
+
   Widget _defaultAvatar(BuildContext context) {
     return Container(
       color: Colors.grey[300],

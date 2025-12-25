@@ -1,4 +1,5 @@
 import 'offer_author.dart';
+
 class Offer {
   final String postId;
   final String title;
@@ -17,6 +18,7 @@ class Offer {
   final String? thumbnail;
   final String createdTime;
   final OfferAuthor author;
+
   Offer({
     required this.postId,
     required this.title,
@@ -36,6 +38,7 @@ class Offer {
     required this.createdTime,
     required this.author,
   });
+
   factory Offer.fromJson(Map<String, dynamic> json) => Offer(
         postId: json['post_id']?.toString() ?? '',
         title: json['title']?.toString() ?? '',

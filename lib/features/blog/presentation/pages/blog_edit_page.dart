@@ -9,11 +9,13 @@ import '../../../../core/theme/ui_constants.dart';
 import '../../domain/blog_repository.dart';
 import '../../data/models/models.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 class BlogEditPage extends StatefulWidget {
   const BlogEditPage({super.key});
   @override
   State<BlogEditPage> createState() => _BlogEditPageState();
 }
+
 class _BlogEditPageState extends State<BlogEditPage> {
   final _formKey = GlobalKey<FormState>();
   final _titleCtrl = TextEditingController();
@@ -29,6 +31,7 @@ class _BlogEditPageState extends State<BlogEditPage> {
   List<BlogCategory> _categories = [];
   final ImagePicker _picker = ImagePicker();
   BlogPost? _originalPost;
+
   @override
   void initState() {
     super.initState();
@@ -42,6 +45,7 @@ class _BlogEditPageState extends State<BlogEditPage> {
       _coverUrl = _originalPost!.cover;
     }
   }
+
   Future<void> _loadCategories() async {
     try {
       final repo = context.read<BlogRepository>();
@@ -49,6 +53,7 @@ class _BlogEditPageState extends State<BlogEditPage> {
       if (mounted) setState(() => _categories = cats);
     } catch (_) {}
   }
+
   Future<void> _pickCover() async {
     final img = await _picker.pickImage(source: ImageSource.gallery);
     if (img == null) return;
@@ -83,6 +88,7 @@ class _BlogEditPageState extends State<BlogEditPage> {
       }
     }
   }
+
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _submitting = true);
@@ -107,9 +113,11 @@ class _BlogEditPageState extends State<BlogEditPage> {
       }
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       backgroundColor: UI.surfacePage(context),
       appBar: AppBar(
@@ -254,6 +262,7 @@ class _BlogEditPageState extends State<BlogEditPage> {
       ),
     );
   }
+
   void _addTag() {
     Get.dialog(
       AlertDialog(
@@ -277,6 +286,7 @@ class _BlogEditPageState extends State<BlogEditPage> {
       ),
     );
   }
+
   Widget _label(String txt, {bool requiredField = false}) {
     return Padding(
       padding: EdgeInsets.only(bottom: UI.sm),
@@ -288,6 +298,7 @@ class _BlogEditPageState extends State<BlogEditPage> {
       ),
     );
   }
+
   InputDecoration _inputDecoration({IconData? icon, String? hint}) {
     final scheme = Theme.of(context).colorScheme;
     return InputDecoration(

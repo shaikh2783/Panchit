@@ -3,28 +3,35 @@ import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
 import '../../../../core/theme/ui_constants.dart';
 import '../../domain/funding_repository.dart';
 import 'funding_detail_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 class FundingCreatePage extends StatefulWidget {
   const FundingCreatePage({super.key});
+
   @override
   State<FundingCreatePage> createState() => _FundingCreatePageState();
 }
+
 class _FundingCreatePageState extends State<FundingCreatePage> {
   final _formKey = GlobalKey<FormState>();
   final _picker = ImagePicker();
+
   final _titleCtrl = TextEditingController();
   final _descriptionCtrl = TextEditingController();
   final _amountCtrl = TextEditingController();
+
   bool _submitting = false;
   String? _coverSource;
   String? _coverUrl;
   bool _uploadingCover = false;
   double _uploadProgress = 0;
+
   @override
   void dispose() {
     _titleCtrl.dispose();
@@ -32,6 +39,7 @@ class _FundingCreatePageState extends State<FundingCreatePage> {
     _amountCtrl.dispose();
     super.dispose();
   }
+
   Future<void> _pickCover() async {
     try {
       final XFile? picked = await _picker.pickImage(source: ImageSource.gallery, imageQuality: 85);
@@ -66,6 +74,7 @@ class _FundingCreatePageState extends State<FundingCreatePage> {
       if (mounted) setState(() => _uploadingCover = false);
     }
   }
+
   void _removeCover() {
     setState(() {
       _coverSource = null;
@@ -73,12 +82,15 @@ class _FundingCreatePageState extends State<FundingCreatePage> {
       _uploadProgress = 0;
     });
   }
+
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
+    
     if (_coverSource == null) {
       Get.snackbar('error'.tr, 'cover_image_required'.tr);
       return;
     }
+
     setState(() => _submitting = true);
     try {
       final repo = context.read<FundingRepository>();
@@ -99,6 +111,7 @@ class _FundingCreatePageState extends State<FundingCreatePage> {
       if (mounted) setState(() => _submitting = false);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -215,12 +228,14 @@ class _FundingCreatePageState extends State<FundingCreatePage> {
               ]),
             ),
             SizedBox(height: UI.lg),
+
             TextFormField(
               controller: _titleCtrl,
               decoration: InputDecoration(labelText: 'funding_title'.tr, prefixIcon: const Icon(Iconsax.document_text_1_copy)),
               validator: (v) => (v == null || v.trim().length < 3) ? 'min_3_chars'.tr : null,
             ),
             SizedBox(height: UI.md),
+            
             TextFormField(
               controller: _amountCtrl,
               decoration: InputDecoration(labelText: 'goal_amount'.tr, prefixIcon: const Icon(Iconsax.money_recive_copy)),
@@ -233,6 +248,7 @@ class _FundingCreatePageState extends State<FundingCreatePage> {
               },
             ),
             SizedBox(height: UI.md),
+            
             TextFormField(
               controller: _descriptionCtrl,
               decoration: InputDecoration(labelText: 'description'.tr, prefixIcon: const Icon(Iconsax.message_text_copy)),

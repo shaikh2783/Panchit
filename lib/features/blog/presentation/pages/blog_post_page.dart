@@ -11,29 +11,35 @@ import '../../domain/blog_repository.dart';
 import '../../data/models/blog_post.dart';
 import 'blog_edit_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 class BlogPostPage extends StatefulWidget {
   final int postId;
   const BlogPostPage({super.key, required this.postId});
+
   @override
   State<BlogPostPage> createState() => _BlogPostPageState();
 }
+
 class _BlogPostPageState extends State<BlogPostPage> {
   BlogPost? _post;
   bool _loading = true;
   String? _error;
   final ScrollController _scrollController = ScrollController();
   bool _showTitle = false;
+
   @override
   void initState() {
     super.initState();
     _load();
     _scrollController.addListener(_onScroll);
   }
+
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
+
   void _onScroll() {
     if (_scrollController.hasClients) {
       final showTitle = _scrollController.offset > 200;
@@ -42,6 +48,7 @@ class _BlogPostPageState extends State<BlogPostPage> {
       }
     }
   }
+
   Future<void> _load() async {
     setState(() {
       _loading = true;
@@ -65,6 +72,7 @@ class _BlogPostPageState extends State<BlogPostPage> {
       }
     }
   }
+
   void _handleMenuAction(String action) {
     if (action == 'edit') {
       _editPost();
@@ -72,10 +80,12 @@ class _BlogPostPageState extends State<BlogPostPage> {
       _confirmDelete();
     }
   }
+
   void _editPost() {
     if (_post == null) return;
     Get.to(() => const BlogEditPage(), arguments: _post)?.then((_) => _load());
   }
+
   Future<void> _confirmDelete() async {
     final confirm = await Get.dialog<bool>(
       AlertDialog(
@@ -100,6 +110,7 @@ class _BlogPostPageState extends State<BlogPostPage> {
       _deletePost();
     }
   }
+
   Future<void> _deletePost() async {
     if (_post == null) return;
     try {
@@ -117,6 +128,7 @@ class _BlogPostPageState extends State<BlogPostPage> {
       Get.snackbar('error'.tr, e.toString());
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
@@ -126,6 +138,7 @@ class _BlogPostPageState extends State<BlogPostPage> {
       _post!.iOwner == true ||
       (currentUserId != null && _post!.author.userId == currentUserId)
     );
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -214,6 +227,7 @@ class _BlogPostPageState extends State<BlogPostPage> {
               : _buildContent(),
     );
   }
+
   Widget _buildSkeleton() {
     return SingleChildScrollView(
       child: Column(
@@ -239,9 +253,11 @@ class _BlogPostPageState extends State<BlogPostPage> {
       ),
     );
   }
+
   Widget _buildContent() {
     final p = _post!;
     final scheme = Theme.of(context).colorScheme;
+
     return ListView(
       controller: _scrollController,
       padding: EdgeInsets.zero,
@@ -278,6 +294,7 @@ class _BlogPostPageState extends State<BlogPostPage> {
               ),
             ],
           ),
+
         // Content Container
         Container(
           color: UI.surfacePage(context),
@@ -320,6 +337,7 @@ class _BlogPostPageState extends State<BlogPostPage> {
                 ),
               ),
               SizedBox(height: UI.lg),
+
               // Title
               Text(
                 p.title,
@@ -330,6 +348,7 @@ class _BlogPostPageState extends State<BlogPostPage> {
                     ),
               ),
               SizedBox(height: UI.lg),
+
               // Author Card
               Container(
                 padding: EdgeInsets.all(UI.md),
@@ -405,6 +424,7 @@ class _BlogPostPageState extends State<BlogPostPage> {
                 ),
               ),
               SizedBox(height: UI.xl),
+
               // Content
               HtmlTextWidget(
                 htmlContent: p.textHtml,
@@ -413,6 +433,7 @@ class _BlogPostPageState extends State<BlogPostPage> {
                 maxLength: 50000,
               ),
               SizedBox(height: UI.xl),
+
               // Tags
               if (p.tags.isNotEmpty) ...[
                 Divider(color: UI.subtleText(context).withOpacity(0.2)),

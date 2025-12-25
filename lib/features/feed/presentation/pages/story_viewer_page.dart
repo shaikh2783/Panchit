@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:snginepro/core/config/app_config.dart';
@@ -6,31 +7,39 @@ import 'package:snginepro/features/feed/data/models/story.dart';
 import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:video_player/video_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 class StoryViewerPage extends StatefulWidget {
   const StoryViewerPage({
     super.key,
     required this.stories,
     required this.initialStoryIndex,
   });
+
   final List<Story> stories;
   final int initialStoryIndex;
+
   @override
   State<StoryViewerPage> createState() => _StoryViewerPageState();
 }
+
 class _StoryViewerPageState extends State<StoryViewerPage> {
   late final PageController _pageController;
+
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: widget.initialStoryIndex);
+    
     // Pre-cache الفيديوهات في الستوريز
     _precacheVideoStories();
   }
+
   /// Pre-cache جميع فيديوهات الستوريز
   void _precacheVideoStories() {
     try {
       final mediaAsset = context.read<AppConfig>().mediaAsset;
       final precacheService = VideoPrecacheService();
+      
       for (final story in widget.stories) {
         for (final item in story.items) {
           if (item.type == 'video') {
@@ -43,11 +52,13 @@ class _StoryViewerPageState extends State<StoryViewerPage> {
       // تجاهل الأخطاء
     }
   }
+
   @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,18 +80,23 @@ class _StoryViewerPageState extends State<StoryViewerPage> {
     );
   }
 }
+
 class StoryView extends StatefulWidget {
   const StoryView({super.key, required this.story, required this.onComplete});
+
   final Story story;
   final VoidCallback onComplete;
+
   @override
   State<StoryView> createState() => _StoryViewState();
 }
+
 class _StoryViewState extends State<StoryView> with TickerProviderStateMixin {
   late final PageController _pageController;
   CachedVideoPlayerPlus? _videoController;
   AnimationController? _animationController;
   int _currentItemIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -89,11 +105,13 @@ class _StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       _playStoryItem(0);
     }
   }
+
   Future<void> _playStoryItem(int index) async {
     // إيقاف الأنيميشن
     _animationController?.stop();
     _animationController?.dispose();
     _animationController = null;
+    
     // التخلص من الفيديو بشكل آمن
     if (_videoController != null) {
       try {
@@ -105,25 +123,32 @@ class _StoryViewState extends State<StoryView> with TickerProviderStateMixin {
         _videoController = null;
       }
     }
+
     if (!mounted) return;
+    
     final item = widget.story.items[index];
+
     if (item.type == 'video') {
       final mediaAsset = context.read<AppConfig>().mediaAsset;
       _videoController = CachedVideoPlayerPlus.networkUrl(
         mediaAsset(item.source),
         invalidateCacheIfOlderThan: const Duration(days: 7),
       );
+      
       try {
         await _videoController!.initialize();
         if (!mounted) return;
+        
         // انتظار حتى يكون الفيديو جاهز للتشغيل
         final controller = _videoController!.controller;
+        
         // التأكد من أن الفيديو محمل بالكامل
         if (!controller.value.isInitialized) {
           // استخدام مدة افتراضية إذا فشل التحميل
           _startAnimation(const Duration(seconds: 10));
         } else {
           final videoDuration = controller.value.duration;
+          
           // التأكد من أن المدة صحيحة
           if (videoDuration.inSeconds > 0) {
             _startAnimation(videoDuration);
@@ -132,9 +157,11 @@ class _StoryViewState extends State<StoryView> with TickerProviderStateMixin {
             _startAnimation(const Duration(seconds: 10));
           }
         }
+        
         if (mounted) {
           setState(() {});
         }
+        
         // تشغيل الفيديو
         if (mounted && controller.value.isInitialized) {
           await controller.play();
@@ -147,10 +174,12 @@ class _StoryViewState extends State<StoryView> with TickerProviderStateMixin {
     } else {
       _startAnimation(const Duration(seconds: 5));
     }
+
     setState(() {
       _currentItemIndex = index;
     });
   }
+
   void _startAnimation(Duration duration) {
     _animationController = AnimationController(vsync: this, duration: duration);
     _animationController!.forward();
@@ -163,6 +192,7 @@ class _StoryViewState extends State<StoryView> with TickerProviderStateMixin {
         }
     });
   }
+
   void _nextItem() {
     if (_currentItemIndex < widget.story.items.length - 1) {
       _pageController.nextPage(
@@ -171,12 +201,14 @@ class _StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       widget.onComplete();
     }
   }
+
   void _previousItem() {
     if (_currentItemIndex > 0) {
       _pageController.previousPage(
           duration: const Duration(milliseconds: 300), curve: Curves.ease);
     }
   }
+
   void _pause() {
     if (!mounted) return;
     _animationController?.stop();
@@ -184,6 +216,7 @@ class _StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       _videoController?.controller.pause();
     }
   }
+
   void _resume() {
     if (!mounted) return;
     _animationController?.forward();
@@ -191,10 +224,12 @@ class _StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       _videoController?.controller.play();
     }
   }
+
   @override
   void dispose() {
     _pageController.dispose();
     _animationController?.dispose();
+    
     // التخلص من الفيديو بشكل آمن
     if (_videoController != null) {
       try {
@@ -203,11 +238,14 @@ class _StoryViewState extends State<StoryView> with TickerProviderStateMixin {
         // تجاهل أخطاء التخلص
       }
     }
+    
     super.dispose();
   }
+
   void _onPageChanged(int index) {
     _playStoryItem(index);
   }
+
   @override
   Widget build(BuildContext context) {
     final mediaAsset = context.read<AppConfig>().mediaAsset;
@@ -230,6 +268,7 @@ class _StoryViewState extends State<StoryView> with TickerProviderStateMixin {
         ),
       );
     }
+
     return GestureDetector(
       onTapUp: (details) {
         final screenWidth = MediaQuery.of(context).size.width;
@@ -294,6 +333,7 @@ class _StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                       ),
                     );
                   }
+                  
                   return CachedNetworkImage(
                     imageUrl: mediaAsset(item.source).toString(),
                     fit: BoxFit.contain,
@@ -357,6 +397,7 @@ class _StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 }
               },
             ),
+            
             // Gradient overlay للقراءة الأفضل
             Positioned.fill(
               child: IgnorePointer(
@@ -390,6 +431,7 @@ class _StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 ),
               ),
             ),
+            
             // Progress bars والمعلومات العلوية
             Positioned(
               top: 0,
@@ -487,6 +529,7 @@ class _StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 ),
               ),
             ),
+            
             // Link text في الأسفل
             if (widget.story.items[_currentItemIndex].linkText.isNotEmpty)
               Positioned(

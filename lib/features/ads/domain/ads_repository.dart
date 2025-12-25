@@ -1,7 +1,9 @@
 import '../data/services/ads_api_service.dart';
+
 class AdsRepository {
   final AdsApiService api;
   AdsRepository(AdsApiService service) : api = service;
+
   Future<List<Map<String, dynamic>>> listCampaigns({
     int offset = 0,
     int limit = 20,
@@ -30,6 +32,7 @@ class AdsRepository {
         [];
     return List<Map<String, dynamic>>.from(campaigns);
   }
+
   Future<bool> setCampaignActive({required int campaignId, required bool active}) async {
     final res = await api.setCampaignActive(campaignId: campaignId, active: active);
     final ok = (res['success'] ?? res['status']) == true || (res['code'] == 200);

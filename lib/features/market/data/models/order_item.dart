@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+
 /// Order Item Model - منتج في الطلب
 class OrderItem extends Equatable {
   final String productId;
@@ -7,6 +8,7 @@ class OrderItem extends Equatable {
   final int quantity;
   final String total;
   final String productPicture;
+
   const OrderItem({
     required this.productId,
     required this.productName,
@@ -15,6 +17,7 @@ class OrderItem extends Equatable {
     required this.total,
     required this.productPicture,
   });
+
   factory OrderItem.fromJson(Map<String, dynamic> json) {
     return OrderItem(
       productId: json['product_id'].toString(),
@@ -25,6 +28,7 @@ class OrderItem extends Equatable {
       productPicture: json['product_picture']?.toString() ?? '',
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'product_id': productId,
@@ -35,6 +39,7 @@ class OrderItem extends Equatable {
       'product_picture': productPicture,
     };
   }
+
   @override
   List<Object?> get props => [
         productId,

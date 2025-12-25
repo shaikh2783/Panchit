@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:get/get.dart';
+
 import 'package:snginepro/core/config/app_config.dart';
 import 'package:snginepro/core/localization/localization_controller.dart';
 import 'package:snginepro/features/feed/data/models/post.dart';
@@ -15,15 +16,27 @@ import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/features/comments/presentation/pages/comments_bottom_sheet.dart';
 import 'package:snginepro/features/feed/presentation/widgets/reaction_users_bottom_sheet.dart';
 import 'package:snginepro/features/feed/presentation/pages/create_reel_page.dart';
+import 'package:snginepro/features/feed/presentation/widgets/share_post_dialog.dart';
+import 'package:snginepro/features/feed/presentation/widgets/post_menu_bottom_sheet.dart';
+import 'package:snginepro/features/auth/application/auth_notifier.dart';
+import 'package:snginepro/features/friends/data/services/friends_api_service.dart';
+import 'package:snginepro/features/friends/data/models/friendship_model.dart';
+import 'package:provider/provider.dart';
+import 'package:snginepro/features/feed/data/services/post_management_api_service.dart';
+import 'package:snginepro/features/profile/presentation/pages/profile_page.dart';
+
 typedef MediaPathResolver = Uri Function(String);
+
 class ReelsPage extends StatefulWidget {
   const ReelsPage({super.key});
   @override
   State<ReelsPage> createState() => _ReelsPageState();
 }
+
 class _ReelsPageState extends State<ReelsPage> {
   late final PageController _pageController;
   int _currentPage = 0;
+
   @override
   void initState() {
     super.initState();
@@ -33,12 +46,14 @@ class _ReelsPageState extends State<ReelsPage> {
       context.read<ReelsBloc>().add(LoadReelsEvent());
     });
   }
+
   @override
   void dispose() {
     _pageController.removeListener(_onPageScroll);
     _pageController.dispose();
     super.dispose();
   }
+
   void _onPageScroll() {
     // Only update if page has actually changed
     if (_pageController.hasClients) {
@@ -50,28 +65,18 @@ class _ReelsPageState extends State<ReelsPage> {
       }
     }
   }
+
   void _maybeLoadMore(int index, List<Post> reels, bool hasMore, bool isLoadingMore) {
     final nearEnd = reels.length - 2;
     if (index >= nearEnd && hasMore && !isLoadingMore) {
       context.read<ReelsBloc>().add(LoadMoreReelsEvent());
     }
   }
-  void _navigateToCreateReel(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => const CreateReelPage(),
-      ),
-    ).then((result) {
-      // Refresh reels after creating new one
-      if (result == true) {
-        context.read<ReelsBloc>().add(RefreshReelsEvent());
-      }
-    });
-  }
+
   @override
   Widget build(BuildContext context) {
     final mediaResolver = context.read<AppConfig>().mediaAsset;
+
     return BlocBuilder<ReelsBloc, ReelsState>(
       builder: (context, state) {
         if (state is ReelsLoadingState) {
@@ -79,27 +84,31 @@ class _ReelsPageState extends State<ReelsPage> {
             child: Center(child: CircularProgressIndicator()),
           );
         }
+
         if (state is ReelsErrorState) {
           return _DarkScaffold(
             child: _ReelsMessage(
               icon: Iconsax.warning_2,
               message: state.message,
-              actionLabel: 'try_again'.tr,
+              actionLabel: 'Try Again',
               onAction: () => context.read<ReelsBloc>().add(LoadReelsEvent(source: state.source)),
             ),
           );
         }
+
         if (state is! ReelsLoadedState || state.reels.isEmpty) {
-          return  _DarkScaffold(
+          return const _DarkScaffold(
             child: _ReelsMessage(
               icon: Iconsax.video,
-              message: 'no_reels_available'.tr,
+              message: 'No reels available right now.',
             ),
           );
         }
+
         final reels = state.reels;
         final hasMore = state.hasMore;
         final isLoadingMore = state.isLoadingMore;
+
         return _DarkScaffold(
           child: Stack(
             children: [
@@ -136,6 +145,7 @@ class _ReelsPageState extends State<ReelsPage> {
     );
   }
 }
+
 class _DarkScaffold extends StatelessWidget {
   const _DarkScaffold({required this.child});
   final Widget child;
@@ -147,8 +157,8 @@ class _DarkScaffold extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title:  Text(
-          'reels'.tr,
+        title: const Text(
+          'Reels',
           style: TextStyle(
             color: Colors.white,
             fontSize: 24,
@@ -181,6 +191,7 @@ class _DarkScaffold extends StatelessWidget {
     );
   }
 }
+
 class _ReelsMessage extends StatelessWidget {
   const _ReelsMessage({
     this.icon,
@@ -192,6 +203,7 @@ class _ReelsMessage extends StatelessWidget {
   final String message;
   final VoidCallback? onAction;
   final String? actionLabel;
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -203,18 +215,18 @@ class _ReelsMessage extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Colors.grey.withValues(alpha: 0.1),
-              Colors.grey.withValues(alpha: 0.05),
+              Colors.grey.withOpacity(0.1),
+              Colors.grey.withOpacity(0.05),
             ],
           ),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: Colors.white.withValues(alpha: 0.1),
+            color: Colors.white.withOpacity(0.1),
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.3),
+              color: Colors.black.withOpacity(0.3),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -229,14 +241,14 @@ class _ReelsMessage extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      Colors.white.withValues(alpha: 0.2),
-                      Colors.white.withValues(alpha: 0.1),
+                      Colors.white.withOpacity(0.2),
+                      Colors.white.withOpacity(0.1),
                     ],
                   ),
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.white.withValues(alpha: 0.1),
+                      color: Colors.white.withOpacity(0.1),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),
@@ -273,7 +285,7 @@ class _ReelsMessage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.white.withValues(alpha: 0.3),
+                      color: Colors.white.withOpacity(0.3),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),
@@ -305,6 +317,7 @@ class _ReelsMessage extends StatelessWidget {
     );
   }
 }
+
 class _ReelView extends StatefulWidget {
   const _ReelView({
     super.key,
@@ -313,13 +326,16 @@ class _ReelView extends StatefulWidget {
   });
   final Post post;
   final MediaPathResolver mediaResolver;
+
   @override
   State<_ReelView> createState() => _ReelViewState();
 }
+
 class _ReelViewState extends State<_ReelView>
     with SingleTickerProviderStateMixin {
   bool _uiVisible = true;
   late final AnimationController _discCtrl;
+
   @override
   void initState() {
     super.initState();
@@ -327,24 +343,28 @@ class _ReelViewState extends State<_ReelView>
         AnimationController(vsync: this, duration: const Duration(seconds: 5))
           ..repeat();
   }
+
   @override
   void dispose() {
     _discCtrl.dispose();
     super.dispose();
   }
+
   void _toggleUI() => setState(() => _uiVisible = !_uiVisible);
+
   @override
   Widget build(BuildContext context) {
     final p = widget.post;
     final mediaResolver = widget.mediaResolver;
+
     return GestureDetector(
       onTap: _toggleUI,
       onDoubleTap: () {
         // TODO: send like
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(
-           SnackBar(
-            content: Text('❤️ ${'liked'.tr}'),
+          const SnackBar(
+            content: Text('❤️ Liked'),
             duration: Duration(milliseconds: 600),
             behavior: SnackBarBehavior.floating,
           ),
@@ -365,9 +385,12 @@ class _ReelViewState extends State<_ReelView>
             )
           else
             Container(color: Colors.black),
+
           // Cinematic gradient
           const _GlassGradients(),
+
           // Top glass bar
+          if(false)
           AnimatedPositioned(
             duration: const Duration(milliseconds: 200),
             top: _uiVisible ? MediaQuery.of(context).padding.top + 8 : -72,
@@ -375,6 +398,7 @@ class _ReelViewState extends State<_ReelView>
             right: 12,
             child: const _TopGlassBar(),
           ),
+
           // Bottom: caption + profile pill + hashtags
           AnimatedOpacity(
             duration: const Duration(milliseconds: 200),
@@ -392,6 +416,7 @@ class _ReelViewState extends State<_ReelView>
               ),
             ),
           ),
+
           // Right rail actions
           AnimatedOpacity(
             duration: const Duration(milliseconds: 200),
@@ -418,8 +443,10 @@ class _ReelViewState extends State<_ReelView>
     );
   }
 }
+
 class _GlassGradients extends StatelessWidget {
   const _GlassGradients();
+
   @override
   Widget build(BuildContext context) {
     return IgnorePointer(
@@ -430,10 +457,10 @@ class _GlassGradients extends StatelessWidget {
             end: Alignment.bottomCenter,
             stops: const [0, .18, .6, 1],
             colors: [
-              Colors.black.withValues(alpha: .55),
+              Colors.black.withOpacity(.55),
               Colors.transparent,
               Colors.transparent,
-              Colors.black.withValues(alpha: .75),
+              Colors.black.withOpacity(.75),
             ],
           ),
         ),
@@ -441,8 +468,10 @@ class _GlassGradients extends StatelessWidget {
     );
   }
 }
+
 class _TopGlassBar extends StatelessWidget {
   const _TopGlassBar();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -451,18 +480,18 @@ class _TopGlassBar extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Colors.black.withValues(alpha: 0.4),
-            Colors.black.withValues(alpha: 0.2),
+            Colors.black.withOpacity(0.4),
+            Colors.black.withOpacity(0.2),
           ],
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.15),
+          color: Colors.white.withOpacity(0.15),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.3),
+            color: Colors.black.withOpacity(0.3),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -479,8 +508,8 @@ class _TopGlassBar extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      Colors.white.withValues(alpha: 0.2),
-                      Colors.white.withValues(alpha: 0.1),
+                      Colors.white.withOpacity(0.2),
+                      Colors.white.withOpacity(0.1),
                     ],
                   ),
                   shape: BoxShape.circle,
@@ -492,8 +521,8 @@ class _TopGlassBar extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-               Text(
-                'reels'.tr,
+              const Text(
+                'Reels',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w700,
@@ -505,13 +534,13 @@ class _TopGlassBar extends StatelessWidget {
               _buildGlassButton(
                 icon: Iconsax.search_normal_1,
                 onTap: () {},
-                tooltip: 'search'.tr,
+                tooltip: 'Search',
               ),
               const SizedBox(width: 8),
               _buildGlassButton(
                 icon: Iconsax.setting_2,
                 onTap: () {},
-                tooltip: 'settings'.tr,
+                tooltip: 'Settings',
               ),
             ],
           ),
@@ -519,6 +548,7 @@ class _TopGlassBar extends StatelessWidget {
       ),
     );
   }
+
   Widget _buildGlassButton({
     required IconData icon,
     required VoidCallback onTap,
@@ -536,13 +566,13 @@ class _TopGlassBar extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Colors.white.withValues(alpha: 0.15),
-                  Colors.white.withValues(alpha: 0.05),
+                  Colors.white.withOpacity(0.15),
+                  Colors.white.withOpacity(0.05),
                 ],
               ),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: Colors.white.withValues(alpha: 0.1),
+                color: Colors.white.withOpacity(0.1),
                 width: 0.5,
               ),
             ),
@@ -557,138 +587,258 @@ class _TopGlassBar extends StatelessWidget {
     );
   }
 }
-class _CaptionAndOwner extends StatelessWidget {
+
+class _CaptionAndOwner extends StatefulWidget {
   const _CaptionAndOwner({required this.post, required this.mediaResolver});
   final Post post;
   final MediaPathResolver mediaResolver;
+
+  @override
+  State<_CaptionAndOwner> createState() => _CaptionAndOwnerState();
+}
+
+class _CaptionAndOwnerState extends State<_CaptionAndOwner> {
+  bool _isFollowing = false;
+  bool _isLoadingFollow = false;
+  bool _didLoadStatus = false;
+  bool _isOwner = false;
+  int? _authorId;
+  FriendsApiService? _friendsService;
+
+  @override
+  void initState() {
+    super.initState();
+    _authorId = int.tryParse(widget.post.authorId ?? '');
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // إعداد خدمة المتابعة وحساب ملكية الريل
+    _friendsService ??= FriendsApiService(context.read<ApiClient>());
+    _computeOwnership();
+
+    if (!_didLoadStatus) {
+      _didLoadStatus = true;
+      _loadFollowStatus();
+    }
+  }
+
+  void _computeOwnership() {
+    final auth = context.read<AuthNotifier>();
+    final currentUserId = int.tryParse(auth.currentUser?['user_id']?.toString() ?? '');
+    final authorId = _authorId;
+    final isOwnerNow = currentUserId != null && authorId != null && currentUserId == authorId;
+    if (isOwnerNow != _isOwner) {
+      setState(() => _isOwner = isOwnerNow);
+    }
+  }
+
+  Future<void> _loadFollowStatus() async {
+    if (_isOwner) return;
+    final authorId = _authorId;
+    final service = _friendsService;
+    if (authorId == null || service == null) return;
+
+    try {
+      final data = await service.getUserRelationshipStatus(authorId);
+      final statusString = (data?['friendship_status'] ?? data?['status'] ?? '').toString().toLowerCase();
+      final isFollowing = data?['is_following'] == true || statusString == 'following' || statusString == 'friends';
+      if (mounted) {
+        setState(() => _isFollowing = isFollowing);
+      }
+    } catch (_) {
+      // تجاهل الخطأ والاكتفاء بالقيمة الافتراضية
+    }
+  }
+
+  Future<void> _toggleFollow() async {
+    final authorId = _authorId;
+    final service = _friendsService;
+    if (authorId == null || service == null || _isOwner) return;
+    if (_isLoadingFollow) return;
+
+    setState(() => _isLoadingFollow = true);
+    try {
+      final result = _isFollowing
+          ? await service.unfollowUser(authorId)
+          : await service.followUser(authorId);
+
+      if (!mounted) return;
+
+      setState(() {
+        final newStatus = result.newStatus;
+        _isFollowing = newStatus == FriendshipStatus.following || newStatus == FriendshipStatus.friends;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result.message)),
+      );
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('action_failed'.tr)),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoadingFollow = false);
+      }
+    }
+  }
+
+  void _goToProfile() {
+    final authorId = _authorId;
+    if (authorId == null) return;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ProfilePage(userId: authorId),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final avatar = (post.authorAvatarUrl != null &&
-            post.authorAvatarUrl!.isNotEmpty)
-        ? CachedNetworkImageProvider(
-            mediaResolver(post.authorAvatarUrl!).toString())
+    final post = widget.post;
+    final avatar = (post.authorAvatarUrl != null && post.authorAvatarUrl!.isNotEmpty)
+        ? CachedNetworkImageProvider(widget.mediaResolver(post.authorAvatarUrl!).toString())
         : null;
+    final canFollow = post.authorType == 'user' && !_isOwner && _authorId != null;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
         // Enhanced owner pill + follow
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.black.withValues(alpha: 0.6),
-                Colors.black.withValues(alpha: 0.4),
-              ],
-            ),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: Colors.white.withValues(alpha: 0.15),
-              width: 1,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.4),
-                blurRadius: 12,
-                offset: const Offset(0, 6),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Stack(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.white.withValues(alpha: 0.3),
-                          Colors.white.withValues(alpha: 0.1),
-                        ],
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.white.withValues(alpha: 0.2),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: CircleAvatar(
-                      radius: 16,
-                      backgroundColor: Colors.transparent,
-                      backgroundImage: avatar,
-                      child: avatar == null
-                          ? const Icon(Iconsax.user, color: Colors.white, size: 18)
-                          : null,
-                    ),
-                  ),
-                  if (post.authorType == 'user' && post.authorIsOnline)
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Container(
-                        width: 10,
-                        height: 10,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.green,
-                          border: Border.all(
-                            color: Colors.white,
-                            width: 2,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.3),
-                              offset: const Offset(0, 1),
-                              blurRadius: 2,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+        InkWell(
+          onTap: (widget.post.authorType == 'user' && _authorId != null)
+              ? _goToProfile
+              : null,
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.black.withOpacity(0.6),
+                  Colors.black.withOpacity(0.4),
                 ],
               ),
-              const SizedBox(width: 12),
-              Text(
-                post.authorName,
-                style: const TextStyle(
-                  color: Colors.white, 
-                  fontWeight: FontWeight.w700,
-                  fontSize: 15,
-                ),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.15),
+                width: 1,
               ),
-              const SizedBox(width: 12),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Colors.white, Color(0xFFF0F0F0)],
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.white.withValues(alpha: 0.3),
-                      blurRadius: 6,
-                      offset: const Offset(0, 2),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.4),
+                  blurRadius: 12,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Stack(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.white.withOpacity(0.3),
+                            Colors.white.withOpacity(0.1),
+                          ],
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.white.withOpacity(0.2),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: CircleAvatar(
+                        radius: 16,
+                        backgroundColor: Colors.transparent,
+                        backgroundImage: avatar,
+                        child: avatar == null
+                            ? const Icon(Iconsax.user, color: Colors.white, size: 18)
+                            : null,
+                      ),
                     ),
+                    // مؤشر حالة الاتصال للمستخدمين فقط
+                    if (post.authorType == 'user' && post.authorIsOnline)
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Container(
+                          width: 10,
+                          height: 10,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.green,
+                            border: Border.all(
+                              color: Colors.white,
+                              width: 2,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.3),
+                                offset: const Offset(0, 1),
+                                blurRadius: 2,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                   ],
                 ),
-                child:  Text(
-                  'follow'.tr,
-                  style: TextStyle(
-                    color: Colors.black, 
+                const SizedBox(width: 12),
+                Text(
+                  post.authorName,
+                  style: const TextStyle(
+                    color: Colors.white, 
                     fontWeight: FontWeight.w700,
-                    fontSize: 13,
+                    fontSize: 15,
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(width: 12),
+                if (canFollow)
+                  SizedBox(
+                    height: 34,
+                    child: ElevatedButton(
+                      onPressed: _isLoadingFollow ? null : _toggleFollow,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: _isFollowing ? Colors.white : const Color(0xFFE1306C),
+                        foregroundColor: _isFollowing ? Colors.black87 : Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                      ),
+                      child: _isLoadingFollow
+                          ? const SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : Text(
+                              _isFollowing ? 'following'.tr : 'Follow',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 13,
+                              ),
+                            ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
         const SizedBox(height: 12),
@@ -698,13 +848,13 @@ class _CaptionAndOwner extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Colors.black.withValues(alpha: 0.4),
-                  Colors.black.withValues(alpha: 0.2),
+                  Colors.black.withOpacity(0.4),
+                  Colors.black.withOpacity(0.2),
                 ],
               ),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: Colors.white.withValues(alpha: 0.1),
+                color: Colors.white.withOpacity(0.1),
                 width: 0.5,
               ),
             ),
@@ -713,7 +863,7 @@ class _CaptionAndOwner extends StatelessWidget {
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.95),
+                color: Colors.white.withOpacity(0.95),
                 height: 1.4,
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
@@ -727,13 +877,13 @@ class _CaptionAndOwner extends StatelessWidget {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Colors.black.withValues(alpha: 0.3),
-                Colors.black.withValues(alpha: 0.1),
+                Colors.black.withOpacity(0.3),
+                Colors.black.withOpacity(0.1),
               ],
             ),
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: Colors.white.withValues(alpha: 0.08),
+              color: Colors.white.withOpacity(0.08),
               width: 0.5,
             ),
           ),
@@ -744,8 +894,8 @@ class _CaptionAndOwner extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      Colors.white.withValues(alpha: 0.2),
-                      Colors.white.withValues(alpha: 0.1),
+                      Colors.white.withOpacity(0.2),
+                      Colors.white.withOpacity(0.1),
                     ],
                   ),
                   shape: BoxShape.circle,
@@ -759,7 +909,7 @@ class _CaptionAndOwner extends StatelessWidget {
               const SizedBox(width: 8),
               Flexible(
                 child: Text(
-                  '${'original_audio'.tr} • ${post.authorName}',
+                  'Original audio • ${post.authorName}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
@@ -776,38 +926,47 @@ class _CaptionAndOwner extends StatelessWidget {
     );
   }
 }
+
 class _ActionsRail extends StatefulWidget {
   const _ActionsRail({
     required this.post,
     required this.discController,
     required this.mediaResolver,
   });
+
   final Post post;
   final AnimationController discController;
   final MediaPathResolver mediaResolver;
+
   @override
   State<_ActionsRail> createState() => _ActionsRailState();
 }
+
 class _ActionsRailState extends State<_ActionsRail> {
   late Post _currentPost;
   late ReelsManagementApiService _reelsService;
   OverlayEntry? _overlayEntry;
+
   @override
   void initState() {
     super.initState();
     _currentPost = widget.post;
   }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _reelsService = ReelsManagementApiService(context.read<ApiClient>());
   }
+
   void _showReactionsPicker() {
     final renderBox = context.findRenderObject() as RenderBox;
     final offset = renderBox.localToGlobal(Offset.zero);
+    
     // تحقق من الاتجاه RTL للحصول على الموضع المناسب
     final localizationController = Get.find<LocalizationController>();
     final isRTL = localizationController.isRTL;
+
     _overlayEntry = OverlayEntry(
       builder: (context) => GestureDetector(
         onTap: () {
@@ -839,11 +998,14 @@ class _ActionsRailState extends State<_ActionsRail> {
         ),
       ),
     );
+
     Overlay.of(context).insert(_overlayEntry!);
   }
+
   Future<void> _handleSpecificReaction(String reaction) async {
     try {
       final isCurrentlyReacting = _currentPost.myReaction == reaction;
+      
       // Update UI immediately (Optimistic Update)
       setState(() {
         if (isCurrentlyReacting) {
@@ -854,14 +1016,17 @@ class _ActionsRailState extends State<_ActionsRail> {
           _currentPost = _currentPost.copyWithReaction(reaction);
         }
       });
+      
       // Send update to ReelsBloc
       context.read<ReelsBloc>().add(UpdateReelEvent(_currentPost));
+      
       // API call - نرسل 'remove' إذا كان نفس التفاعل
       await _reelsService.reactToReel(
         reelId: _currentPost.id,
         reaction: isCurrentlyReacting ? 'remove' : reaction,
         isReacting: !isCurrentlyReacting,
       );
+      
     } catch (e) {
       if (mounted) {
         // Restore previous state on failure
@@ -869,14 +1034,16 @@ class _ActionsRailState extends State<_ActionsRail> {
           _currentPost = widget.post;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-           SnackBar(content: Text('error_adding_reaction'.tr)),
+          const SnackBar(content: Text('Error occurred while adding reaction')),
         );
       }
     }
   }
+
   Future<void> _handleReaction() async {
     try {
       final isCurrentlyLiked = _currentPost.myReaction != null;
+      
       // Update UI immediately (Optimistic Update)
       setState(() {
         if (isCurrentlyLiked) {
@@ -887,14 +1054,17 @@ class _ActionsRailState extends State<_ActionsRail> {
           _currentPost = _currentPost.copyWithReaction('like');
         }
       });
+      
       // Send update to ReelsBloc
       context.read<ReelsBloc>().add(UpdateReelEvent(_currentPost));
+      
       // API call - نرسل 'remove' إذا كان يريد إزالة التفاعل
       await _reelsService.reactToReel(
         reelId: _currentPost.id,
         reaction: isCurrentlyLiked ? 'remove' : 'like',
         isReacting: !isCurrentlyLiked,
       );
+      
     } catch (e) {
       if (mounted) {
         // Restore previous state on failure
@@ -902,11 +1072,12 @@ class _ActionsRailState extends State<_ActionsRail> {
           _currentPost = widget.post;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-           SnackBar(content: Text('error_adding_reaction'.tr)),
+          const SnackBar(content: Text('Error occurred while adding reaction')),
         );
       }
     }
   }
+
   void _showComments() {
     showModalBottomSheet(
       context: context,
@@ -918,11 +1089,16 @@ class _ActionsRailState extends State<_ActionsRail> {
       ),
     );
   }
+
   void _showReactionUsers() {
+    // استخدام reactionBreakdown الفعلي لحساب العدد الصحيح
     final reactionStats = Map<String, int>.from(_currentPost.reactionBreakdown);
+    
+    // إذا لم تكن هناك breakdown ولكن هناك تفاعلات، اعتبرها likes
     if (reactionStats.isEmpty && _currentPost.reactionsCount > 0) {
       reactionStats['like'] = _currentPost.reactionsCount;
     }
+    
     showReactionUsersSheet(
       context: context,
       type: 'post',
@@ -930,12 +1106,144 @@ class _ActionsRailState extends State<_ActionsRail> {
       reactionStats: reactionStats,
     );
   }
+
+  void _showShareDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => SharePostDialog(
+        post: _currentPost,
+        onShareSuccess: () {
+          // تحديث عدد المشاركات
+          setState(() {
+            _currentPost = _currentPost.copyWith(
+              sharesCount: _currentPost.sharesCount + 1,
+            );
+          });
+          // إرسال التحديث للـ Bloc
+          context.read<ReelsBloc>().add(UpdateReelEvent(_currentPost));
+        },
+      ),
+    );
+  }
+
+  void _showMenu() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => PostMenuBottomSheet(
+        post: _currentPost,
+        onAction: _handlePostAction,
+      ),
+    );
+  }
+
+  Future<void> _handlePostAction(PostAction action) async {
+    // معالجة الحذف
+    if (action == PostAction.deletePost) {
+      final confirm = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('confirm_delete'.tr),
+          content: Text('delete_post_message'.tr),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text('cancel_button'.tr),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context, true),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+              ),
+              child: Text('delete_button'.tr),
+            ),
+          ],
+        ),
+      );
+
+      if (confirm == true && mounted) {
+        try {
+          await _reelsService.manageReel(
+            reelId: _currentPost.id,
+            action: 'delete_post',
+          );
+          if (mounted) {
+            context.read<ReelsBloc>().add(DeleteReelEvent(_currentPost.id));
+            Navigator.pop(context); // Close the menu
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('reel_deleted_success'.tr)),
+            );
+          }
+        } catch (e) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('error_deleting_post'.tr)),
+            );
+          }
+        }
+      }
+      return;
+    }
+
+    // معالجة باقي الأوامر
+    try {
+      await _reelsService.manageReel(
+        reelId: _currentPost.id,
+        action: action.value,
+      );
+
+      // تحديث الحالة حسب النوع
+      setState(() {
+        switch (action) {
+          case PostAction.savePost:
+            _currentPost = _currentPost.copyWith(isSaved: true);
+            break;
+          case PostAction.unsavePost:
+            _currentPost = _currentPost.copyWith(isSaved: false);
+            break;
+          case PostAction.pinPost:
+            _currentPost = _currentPost.copyWith(isPinned: true);
+            break;
+          case PostAction.unpinPost:
+            _currentPost = _currentPost.copyWith(isPinned: false);
+            break;
+          case PostAction.hidePost:
+            _currentPost = _currentPost.copyWith(isHidden: true);
+            break;
+          case PostAction.unhidePost:
+            _currentPost = _currentPost.copyWith(isHidden: false);
+            break;
+          default:
+            break;
+        }
+      });
+
+      // تحديث Bloc
+      context.read<ReelsBloc>().add(UpdateReelEvent(_currentPost));
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('action_completed'.tr)),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('action_failed'.tr)),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final hasReaction = _currentPost.myReaction != null;
     final reactionModel = hasReaction 
         ? ReactionsService.instance.getReactionByName(_currentPost.myReaction!)
         : null;
+
     Widget btn(IconData i, {String? label, Color? activeColor, bool active = false, VoidCallback? onTap, VoidCallback? onLongPress}) {
       final c = active ? (activeColor ?? Colors.red) : Colors.white;
       return InkWell(
@@ -954,26 +1262,26 @@ class _ActionsRailState extends State<_ActionsRail> {
                     end: Alignment.bottomRight,
                     colors: active 
                       ? [
-                          (activeColor ?? Colors.red).withValues(alpha: 0.3),
-                          (activeColor ?? Colors.red).withValues(alpha: 0.1),
+                          (activeColor ?? Colors.red).withOpacity(0.3),
+                          (activeColor ?? Colors.red).withOpacity(0.1),
                         ]
                       : [
-                          Colors.black.withValues(alpha: 0.5),
-                          Colors.black.withValues(alpha: 0.3),
+                          Colors.black.withOpacity(0.5),
+                          Colors.black.withOpacity(0.3),
                         ],
                   ),
                   shape: BoxShape.circle,
                   border: Border.all(
                     color: active 
-                      ? (activeColor ?? Colors.red).withValues(alpha: 0.4)
-                      : Colors.white.withValues(alpha: 0.15),
+                      ? (activeColor ?? Colors.red).withOpacity(0.4)
+                      : Colors.white.withOpacity(0.15),
                     width: 1.5,
                   ),
                   boxShadow: [
                     BoxShadow(
                       color: active 
-                        ? (activeColor ?? Colors.red).withValues(alpha: 0.3)
-                        : Colors.black.withValues(alpha: 0.4),
+                        ? (activeColor ?? Colors.red).withOpacity(0.3)
+                        : Colors.black.withOpacity(0.4),
                       blurRadius: active ? 12 : 8,
                       offset: const Offset(0, 4),
                     ),
@@ -992,13 +1300,13 @@ class _ActionsRailState extends State<_ActionsRail> {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          Colors.black.withValues(alpha: 0.4),
-                          Colors.black.withValues(alpha: 0.2),
+                          Colors.black.withOpacity(0.4),
+                          Colors.black.withOpacity(0.2),
                         ],
                       ),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.1),
+                        color: Colors.white.withOpacity(0.1),
                         width: 0.5,
                       ),
                     ),
@@ -1018,11 +1326,13 @@ class _ActionsRailState extends State<_ActionsRail> {
         ),
       );
     }
+
     final avatar = (_currentPost.authorAvatarUrl != null &&
             _currentPost.authorAvatarUrl!.isNotEmpty)
         ? CachedNetworkImageProvider(
             widget.mediaResolver(_currentPost.authorAvatarUrl!).toString())
         : null;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -1035,8 +1345,8 @@ class _ActionsRailState extends State<_ActionsRail> {
           onLongPress: _showReactionsPicker,
         ),
         btn(Iconsax.message, label: _currentPost.commentsCountFormatted, onTap: _showComments),
-        btn(Iconsax.send_2, label: 'share'.tr, onTap: () {}),
-        btn(Iconsax.more, onTap: () {}),
+        btn(Iconsax.send_2, label: _currentPost.sharesCountFormatted, onTap: _showShareDialog),
+        btn(Iconsax.more, onTap: _showMenu),
         const SizedBox(height: 8),
         // spinning music disc
         RotationTransition(
@@ -1051,23 +1361,23 @@ class _ActionsRailState extends State<_ActionsRail> {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  Colors.purple.withValues(alpha: 0.3),
-                  Colors.blue.withValues(alpha: 0.2),
-                  Colors.black.withValues(alpha: 0.4),
+                  Colors.purple.withOpacity(0.3),
+                  Colors.blue.withOpacity(0.2),
+                  Colors.black.withOpacity(0.4),
                 ],
               ),
               border: Border.all(
-                color: Colors.white.withValues(alpha: 0.2),
+                color: Colors.white.withOpacity(0.2),
                 width: 1.5,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.purple.withValues(alpha: 0.2),
+                  color: Colors.purple.withOpacity(0.2),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.3),
+                  color: Colors.black.withOpacity(0.3),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -1078,12 +1388,12 @@ class _ActionsRailState extends State<_ActionsRail> {
                 shape: BoxShape.circle,
               ),
               child: CircleAvatar(
-                backgroundColor: Colors.grey.withValues(alpha: 0.2),
+                backgroundColor: Colors.grey.withOpacity(0.2),
                 backgroundImage: avatar,
                 child: avatar == null
                     ? Icon(
                         Iconsax.music,
-                        color: Colors.white.withValues(alpha: 0.9),
+                        color: Colors.white.withOpacity(0.9),
                         size: 18,
                       )
                     : null,
@@ -1095,17 +1405,23 @@ class _ActionsRailState extends State<_ActionsRail> {
     );
   }
 }
+
+/// Reaction Picker Widget for Reels
 class _ReactionPicker extends StatefulWidget {
   const _ReactionPicker({required this.onSelected});
+
   final Function(String) onSelected;
+
   @override
   State<_ReactionPicker> createState() => _ReactionPickerState();
 }
+
 class _ReactionPickerState extends State<_ReactionPicker>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   final List<Animation<double>> _scaleAnimations = [];
   final List<Animation<Offset>> _slideAnimations = [];
+
   @override
   void initState() {
     super.initState();
@@ -1113,9 +1429,11 @@ class _ReactionPickerState extends State<_ReactionPicker>
       duration: const Duration(milliseconds: 400),
       vsync: this,
     );
+
     final reactions = ReactionsService.instance.getReactions();
     for (int i = 0; i < reactions.length; i++) {
       final delay = i * 0.08;
+      
       _scaleAnimations.add(
         Tween<double>(begin: 0.0, end: 1.0).animate(
           CurvedAnimation(
@@ -1128,6 +1446,7 @@ class _ReactionPickerState extends State<_ReactionPicker>
           ),
         ),
       );
+
       _slideAnimations.add(
         Tween<Offset>(
           begin: const Offset(0, 0.5),
@@ -1146,23 +1465,26 @@ class _ReactionPickerState extends State<_ReactionPicker>
     }
     _controller.forward();
   }
+
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     final reactions = ReactionsService.instance.getReactions();
+
     return Material(
       elevation: 8,
       borderRadius: BorderRadius.circular(30),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         decoration: BoxDecoration(
-          color: Colors.black.withValues(alpha: 0.8),
+          color: Colors.black.withOpacity(0.8),
           borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+          border: Border.all(color: Colors.white.withOpacity(0.1)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -1189,13 +1511,17 @@ class _ReactionPickerState extends State<_ReactionPicker>
     );
   }
 }
+
+/// Reaction Button Widget
 class _ReactionButton extends StatelessWidget {
   const _ReactionButton({
     required this.reaction,
     required this.onTap,
   });
+
   final ReactionModel reaction;
   final VoidCallback onTap;
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -1227,13 +1553,18 @@ class _ReactionButton extends StatelessWidget {
     );
   }
 }
+
+/// Reaction Icon Widget
 class _ReactionIcon extends StatelessWidget {
   const _ReactionIcon({required this.type, this.size = 18});
+
   final String type;
   final double size;
+
   @override
   Widget build(BuildContext context) {
     final reaction = ReactionsService.instance.getReactionByName(type);
+    
     if (reaction != null) {
       return CachedNetworkImage(
         imageUrl: reaction.imageUrl,
@@ -1256,6 +1587,7 @@ class _ReactionIcon extends StatelessWidget {
         ),
       );
     }
+    
     return SizedBox(width: size, height: size);
   }
 }

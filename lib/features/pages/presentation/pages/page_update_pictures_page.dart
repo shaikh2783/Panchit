@@ -2,32 +2,41 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+
 import 'package:snginepro/core/config/app_config.dart';
 import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/main.dart' show configCfgP;
 import 'package:snginepro/features/pages/data/models/page.dart';
 import 'package:snginepro/features/pages/domain/pages_repository.dart';
+
 /// صفحة تحديث صورة الملف الشخصي والغلاف للصفحة
 class PageUpdatePicturesPage extends StatefulWidget {
   const PageUpdatePicturesPage({super.key, required this.page});
+
   final PageModel page;
+
   @override
   State<PageUpdatePicturesPage> createState() => _PageUpdatePicturesPageState();
 }
+
 class _PageUpdatePicturesPageState extends State<PageUpdatePicturesPage> {
   final ImagePicker _picker = ImagePicker();
+  
   File? _selectedAvatar;
   File? _selectedCover;
+  
   bool _isUploadingAvatar = false;
   bool _isUploadingCover = false;
   double _uploadProgress = 0.0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Update Page Pictures'),
+        title: Text('update_page_pictures_title'.tr),
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -46,9 +55,11 @@ class _PageUpdatePicturesPageState extends State<PageUpdatePicturesPage> {
               onUpload: _uploadAvatar,
               aspectRatio: 1.0,
             ),
+            
             const SizedBox(height: 32),
             const Divider(),
             const SizedBox(height: 32),
+            
             // Cover Photo Section
             _buildPictureSection(
               title: 'Cover Photo',
@@ -65,6 +76,7 @@ class _PageUpdatePicturesPageState extends State<PageUpdatePicturesPage> {
       ),
     );
   }
+
   Widget _buildPictureSection({
     required String title,
     required String subtitle,
@@ -76,6 +88,7 @@ class _PageUpdatePicturesPageState extends State<PageUpdatePicturesPage> {
     required double aspectRatio,
   }) {
     final mediaAsset = context.read<AppConfig>().mediaAsset;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -96,6 +109,7 @@ class _PageUpdatePicturesPageState extends State<PageUpdatePicturesPage> {
           ),
         ),
         const SizedBox(height: 16),
+        
         // Image Preview
         GestureDetector(
           onTap: onPickImage,
@@ -173,7 +187,9 @@ class _PageUpdatePicturesPageState extends State<PageUpdatePicturesPage> {
             ),
           ),
         ),
+        
         const SizedBox(height: 16),
+        
         // Upload Progress
         if (isUploading)
           Column(
@@ -194,6 +210,7 @@ class _PageUpdatePicturesPageState extends State<PageUpdatePicturesPage> {
               const SizedBox(height: 16),
             ],
           ),
+        
         // Action Buttons
         Row(
           children: [
@@ -201,7 +218,7 @@ class _PageUpdatePicturesPageState extends State<PageUpdatePicturesPage> {
               child: ElevatedButton.icon(
                 onPressed: onPickImage,
                 icon: const Icon(Iconsax.gallery),
-                label: const Text('Choose Photo'),
+                label: Text('choose_photo_button'.tr),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.grey[300],
                   foregroundColor: Colors.black87,
@@ -217,7 +234,7 @@ class _PageUpdatePicturesPageState extends State<PageUpdatePicturesPage> {
               child: ElevatedButton.icon(
                 onPressed: (selectedImage != null && !isUploading) ? onUpload : null,
                 icon: const Icon(Iconsax.tick_circle),
-                label: const Text('Upload'),
+                label: Text('upload_button'.tr),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF4A90E2),
                   foregroundColor: Colors.white,
@@ -234,6 +251,7 @@ class _PageUpdatePicturesPageState extends State<PageUpdatePicturesPage> {
       ],
     );
   }
+
   Future<void> _pickImage({required bool isAvatar}) async {
     try {
       final XFile? image = await _picker.pickImage(
@@ -242,6 +260,7 @@ class _PageUpdatePicturesPageState extends State<PageUpdatePicturesPage> {
         maxWidth: isAvatar ? 1000 : 1920,
         maxHeight: isAvatar ? 1000 : 1080,
       );
+
       if (image != null) {
         setState(() {
           if (isAvatar) {
@@ -262,17 +281,22 @@ class _PageUpdatePicturesPageState extends State<PageUpdatePicturesPage> {
       }
     }
   }
+
   Future<void> _uploadAvatar() async {
     if (_selectedAvatar == null) return;
+
     setState(() {
       _isUploadingAvatar = true;
       _uploadProgress = 0.0;
     });
+
     try {
       // Upload directly using multipart (like profile picture)
       final apiClient = context.read<ApiClient>();
       final repo = context.read<PagesRepository>();
+      
       setState(() => _uploadProgress = 0.3);
+      
       final response = await apiClient.multipartPost(
         '/data/pages/${widget.page.id}/picture',
         body: {},
@@ -286,10 +310,13 @@ class _PageUpdatePicturesPageState extends State<PageUpdatePicturesPage> {
           }
         },
       );
+
       if (response['status'] != 'success') {
         throw Exception(response['message'] ?? 'Upload failed');
       }
+
       setState(() => _uploadProgress = 1.0);
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -297,10 +324,12 @@ class _PageUpdatePicturesPageState extends State<PageUpdatePicturesPage> {
             backgroundColor: Colors.green,
           ),
         );
+        
         // Clear selection and return
         setState(() {
           _selectedAvatar = null;
         });
+        
         // Return to previous page with refresh flag
         Navigator.pop(context, true);
       }
@@ -322,17 +351,22 @@ class _PageUpdatePicturesPageState extends State<PageUpdatePicturesPage> {
       }
     }
   }
+
   Future<void> _uploadCover() async {
     if (_selectedCover == null) return;
+
     setState(() {
       _isUploadingCover = true;
       _uploadProgress = 0.0;
     });
+
     try {
       // Upload directly using multipart (like profile cover)
       final apiClient = context.read<ApiClient>();
       final repo = context.read<PagesRepository>();
+      
       setState(() => _uploadProgress = 0.3);
+      
       final response = await apiClient.multipartPost(
         '/data/pages/${widget.page.id}/cover',
         body: {},
@@ -346,10 +380,13 @@ class _PageUpdatePicturesPageState extends State<PageUpdatePicturesPage> {
           }
         },
       );
+
       if (response['status'] != 'success') {
         throw Exception(response['message'] ?? 'Upload failed');
       }
+
       setState(() => _uploadProgress = 1.0);
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -357,10 +394,12 @@ class _PageUpdatePicturesPageState extends State<PageUpdatePicturesPage> {
             backgroundColor: Colors.green,
           ),
         );
+        
         // Clear selection and return
         setState(() {
           _selectedCover = null;
         });
+        
         // Return to previous page with refresh flag
         Navigator.pop(context, true);
       }

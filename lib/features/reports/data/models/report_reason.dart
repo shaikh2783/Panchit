@@ -3,11 +3,13 @@ class ReportCategoryModel {
   final int id;
   final String name;
   final String description;
+
   const ReportCategoryModel({
     required this.id,
     required this.name,
     required this.description,
   });
+
   factory ReportCategoryModel.fromJson(Map<String, dynamic> json) {
     return ReportCategoryModel(
       id: json['id'] as int? ?? 0,
@@ -16,12 +18,14 @@ class ReportCategoryModel {
     );
   }
 }
+
 /// نموذج أسباب الإبلاغ
 class ReportReason {
   final int id;  // تغيير من String إلى int
   final String title;
   final String description;
   final String icon;
+
   const ReportReason({
     required this.id,
     required this.title,
@@ -29,6 +33,7 @@ class ReportReason {
     required this.icon,
   });
 }
+
 /// فئات الإبلاغ
 enum ReportCategory {
   spam('spam', 'Spam'),
@@ -38,10 +43,12 @@ enum ReportCategory {
   copyright('copyright', 'Copyright Violation'),
   misinformation('misinformation', 'Misinformation'),
   other('other', 'Other');
+
   const ReportCategory(this.id, this.title);
   final String id;
   final String title;
 }
+
 /// أسباب الإبلاغ المحددة مسبقاً
 class ReportReasons {
   static const List<ReportReason> reasons = [
@@ -58,6 +65,7 @@ class ReportReasons {
       description: 'This post is being posted repeatedly',
       icon: '🔄',
     ),
+    
     // Harassment
     ReportReason(
       id: 3,
@@ -71,6 +79,7 @@ class ReportReasons {
       description: 'This post promotes hatred against individuals or groups',
       icon: '💬',
     ),
+    
     // Inappropriate Content
     ReportReason(
       id: 5,
@@ -84,6 +93,7 @@ class ReportReasons {
       description: 'This post contains disturbing or graphic content',
       icon: '⚠️',
     ),
+    
     // Violence
     ReportReason(
       id: 7,
@@ -91,6 +101,7 @@ class ReportReasons {
       description: 'This post contains threats of violence or promotes violence',
       icon: '🔪',
     ),
+    
     // Copyright
     ReportReason(
       id: 8,
@@ -98,6 +109,7 @@ class ReportReasons {
       description: 'This post violates copyright or intellectual property rights',
       icon: '©️',
     ),
+    
     // Misinformation
     ReportReason(
       id: 9,
@@ -105,6 +117,7 @@ class ReportReasons {
       description: 'This post contains false or misleading information',
       icon: '❌',
     ),
+    
     // Other
     ReportReason(
       id: 10,

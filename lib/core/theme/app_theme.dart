@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:snginepro/core/theme/app_colors.dart';
 import 'package:snginepro/core/theme/app_text_styles.dart';
+
 /// نظام الثيمات الكامل للتطبيق
 /// يدعم الوضع الفاتح والداكن مع التبديل السلس
 class AppTheme {
   AppTheme._();
+
   // ========== الثيم الفاتح ==========
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
+    
     // الألوان الأساسية
     colorScheme: const ColorScheme.light(
       primary: AppColors.primary,
@@ -21,8 +24,10 @@ class AppTheme {
       onSurface: AppColors.textPrimaryLight,
       onError: Colors.white,
     ),
+    
     // لون الخلفية
     scaffoldBackgroundColor: AppColors.backgroundLight,
+    
     // شريط التطبيق
     appBarTheme: AppBarTheme(
       backgroundColor: AppColors.surfaceLight,
@@ -34,6 +39,7 @@ class AppTheme {
       systemOverlayStyle: SystemUiOverlayStyle.dark,
       scrolledUnderElevation: 1,
     ),
+    
     // البطاقات
     cardTheme: CardThemeData(
       color: AppColors.cardLight,
@@ -43,6 +49,7 @@ class AppTheme {
       ),
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
     ),
+    
     // الأزرار المرتفعة
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
@@ -57,6 +64,7 @@ class AppTheme {
         textStyle: AppTextStyles.button(),
       ),
     ),
+    
     // الأزرار النصية
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
@@ -68,6 +76,7 @@ class AppTheme {
         textStyle: AppTextStyles.button(color: AppColors.primary),
       ),
     ),
+    
     // الأزرار المحددة
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
@@ -80,6 +89,7 @@ class AppTheme {
         textStyle: AppTextStyles.button(color: AppColors.primary),
       ),
     ),
+    
     // الأزرار العائمة
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: AppColors.primary,
@@ -87,6 +97,7 @@ class AppTheme {
       elevation: 4,
       shape: CircleBorder(),
     ),
+    
     // حقول الإدخال
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
@@ -116,17 +127,20 @@ class AppTheme {
       hintStyle: AppTextStyles.inputHint(isDark: false),
       errorStyle: AppTextStyles.inputError(isDark: false),
     ),
+    
     // الأيقونات
     iconTheme: const IconThemeData(
       color: AppColors.textSecondaryLight,
       size: 24,
     ),
+    
     // الفواصل
     dividerTheme: const DividerThemeData(
       color: AppColors.dividerLight,
       thickness: 1,
       space: 1,
     ),
+    
     // الحوارات
     dialogTheme: DialogThemeData(
       backgroundColor: AppColors.surfaceLight,
@@ -137,6 +151,7 @@ class AppTheme {
       titleTextStyle: AppTextStyles.h4(isDark: false),
       contentTextStyle: AppTextStyles.bodyMedium(isDark: false),
     ),
+    
     // القوائم المنبثقة
     popupMenuTheme: PopupMenuThemeData(
       color: AppColors.surfaceLight,
@@ -146,6 +161,7 @@ class AppTheme {
       ),
       textStyle: AppTextStyles.bodyMedium(isDark: false),
     ),
+    
     // الـ Bottom Sheet
     bottomSheetTheme: const BottomSheetThemeData(
       backgroundColor: AppColors.surfaceLight,
@@ -154,6 +170,7 @@ class AppTheme {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
     ),
+    
     // الـ Switch
     switchTheme: SwitchThemeData(
       thumbColor: WidgetStateProperty.resolveWith((states) {
@@ -164,11 +181,12 @@ class AppTheme {
       }),
       trackColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
-          return AppColors.primary.withValues(alpha: 0.5);
+          return AppColors.primary.withOpacity(0.5);
         }
         return AppColors.dividerLight;
       }),
     ),
+    
     // الـ Checkbox
     checkboxTheme: CheckboxThemeData(
       fillColor: WidgetStateProperty.resolveWith((states) {
@@ -182,6 +200,7 @@ class AppTheme {
         borderRadius: BorderRadius.circular(4),
       ),
     ),
+    
     // الـ Radio
     radioTheme: RadioThemeData(
       fillColor: WidgetStateProperty.resolveWith((states) {
@@ -191,6 +210,7 @@ class AppTheme {
         return AppColors.textTertiaryLight;
       }),
     ),
+    
     // الـ Chip
     chipTheme: ChipThemeData(
       backgroundColor: AppColors.backgroundLight,
@@ -203,10 +223,12 @@ class AppTheme {
         borderRadius: BorderRadius.circular(20),
       ),
     ),
+    
     // مؤشر التقدم
     progressIndicatorTheme: const ProgressIndicatorThemeData(
       color: AppColors.primary,
     ),
+    
     // الـ Snackbar
     snackBarTheme: SnackBarThemeData(
       backgroundColor: AppColors.textPrimaryLight,
@@ -217,10 +239,12 @@ class AppTheme {
       behavior: SnackBarBehavior.floating,
     ),
   );
+
   // ========== الثيم الداكن ==========
   static ThemeData darkTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.dark,
+    
     // الألوان الأساسية
     colorScheme: const ColorScheme.dark(
       primary: AppColors.primary,
@@ -232,8 +256,10 @@ class AppTheme {
       onSurface: AppColors.textPrimaryDark,
       onError: Colors.white,
     ),
+    
     // لون الخلفية
     scaffoldBackgroundColor: AppColors.backgroundDark,
+    
     // شريط التطبيق
     appBarTheme: AppBarTheme(
       backgroundColor: AppColors.surfaceDark,
@@ -245,6 +271,7 @@ class AppTheme {
       systemOverlayStyle: SystemUiOverlayStyle.light,
       scrolledUnderElevation: 1,
     ),
+    
     // البطاقات
     cardTheme: CardThemeData(
       color: AppColors.cardDark,
@@ -254,6 +281,7 @@ class AppTheme {
       ),
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
     ),
+    
     // الأزرار المرتفعة
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
@@ -268,6 +296,7 @@ class AppTheme {
         textStyle: AppTextStyles.button(),
       ),
     ),
+    
     // الأزرار النصية
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
@@ -279,6 +308,7 @@ class AppTheme {
         textStyle: AppTextStyles.button(color: AppColors.primaryLight),
       ),
     ),
+    
     // الأزرار المحددة
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
@@ -291,6 +321,7 @@ class AppTheme {
         textStyle: AppTextStyles.button(color: AppColors.primaryLight),
       ),
     ),
+    
     // الأزرار العائمة
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: AppColors.primary,
@@ -298,6 +329,7 @@ class AppTheme {
       elevation: 4,
       shape: CircleBorder(),
     ),
+    
     // حقول الإدخال
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
@@ -327,17 +359,20 @@ class AppTheme {
       hintStyle: AppTextStyles.inputHint(isDark: true),
       errorStyle: AppTextStyles.inputError(isDark: true),
     ),
+    
     // الأيقونات
     iconTheme: const IconThemeData(
       color: AppColors.textSecondaryDark,
       size: 24,
     ),
+    
     // الفواصل
     dividerTheme: const DividerThemeData(
       color: AppColors.dividerDark,
       thickness: 1,
       space: 1,
     ),
+    
     // الحوارات
     dialogTheme: DialogThemeData(
       backgroundColor: AppColors.surfaceDark,
@@ -348,6 +383,7 @@ class AppTheme {
       titleTextStyle: AppTextStyles.h4(isDark: true),
       contentTextStyle: AppTextStyles.bodyMedium(isDark: true),
     ),
+    
     // القوائم المنبثقة
     popupMenuTheme: PopupMenuThemeData(
       color: AppColors.surfaceDark,
@@ -357,6 +393,7 @@ class AppTheme {
       ),
       textStyle: AppTextStyles.bodyMedium(isDark: true),
     ),
+    
     // الـ Bottom Sheet
     bottomSheetTheme: const BottomSheetThemeData(
       backgroundColor: AppColors.surfaceDark,
@@ -365,6 +402,7 @@ class AppTheme {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
     ),
+    
     // الـ Switch
     switchTheme: SwitchThemeData(
       thumbColor: WidgetStateProperty.resolveWith((states) {
@@ -375,11 +413,12 @@ class AppTheme {
       }),
       trackColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
-          return AppColors.primary.withValues(alpha: 0.5);
+          return AppColors.primary.withOpacity(0.5);
         }
         return AppColors.dividerDark;
       }),
     ),
+    
     // الـ Checkbox
     checkboxTheme: CheckboxThemeData(
       fillColor: WidgetStateProperty.resolveWith((states) {
@@ -393,6 +432,7 @@ class AppTheme {
         borderRadius: BorderRadius.circular(4),
       ),
     ),
+    
     // الـ Radio
     radioTheme: RadioThemeData(
       fillColor: WidgetStateProperty.resolveWith((states) {
@@ -402,6 +442,7 @@ class AppTheme {
         return AppColors.textTertiaryDark;
       }),
     ),
+    
     // الـ Chip
     chipTheme: ChipThemeData(
       backgroundColor: AppColors.backgroundDark,
@@ -414,10 +455,12 @@ class AppTheme {
         borderRadius: BorderRadius.circular(20),
       ),
     ),
+    
     // مؤشر التقدم
     progressIndicatorTheme: const ProgressIndicatorThemeData(
       color: AppColors.primary,
     ),
+    
     // الـ Snackbar
     snackBarTheme: SnackBarThemeData(
       backgroundColor: AppColors.surfaceDark,

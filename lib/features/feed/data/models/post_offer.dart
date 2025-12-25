@@ -15,6 +15,7 @@ class PostOffer {
     this.price,
     this.thumbnail,
   });
+
   final String offerId;
   final String title;
   final String? description;
@@ -29,12 +30,14 @@ class PostOffer {
   final String? endDate;
   final double? price;
   final String? thumbnail;
+
   bool get hasDiscount => discountPercent != null || discountAmount != null;
   bool get isPercentDiscount => discountType == 'discount_percent';
   bool get isAmountDiscount => discountType == 'discount_amount';
   bool get isBuyGetDiscount => discountType == 'buy_get_discount';
   bool get isSpendGetOff => discountType == 'spend_get_off';
   bool get isFreeShipping => discountType == 'free_shipping';
+
   factory PostOffer.fromJson(Map<String, dynamic> json) {
     return PostOffer(
       offerId: json['post_id']?.toString() ?? '',
@@ -67,6 +70,7 @@ class PostOffer {
       thumbnail: json['thumbnail'],
     );
   }
+
   static PostOffer? maybeFromJson(dynamic json) {
     if (json == null) return null;
     if (json is! Map<String, dynamic>) return null;
@@ -77,6 +81,7 @@ class PostOffer {
       return null;
     }
   }
+
   Map<String, dynamic> toJson() {
     return {
       'post_id': offerId,

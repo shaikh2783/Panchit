@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' show Color;
 import 'package:snginepro/core/config/app_config.dart';
+
 class ReactionModel {
   final String reactionId;
   final String reaction;
@@ -8,6 +9,7 @@ class ReactionModel {
   final String image;
   final int order;
   final bool enabled;
+
   ReactionModel({
     required this.reactionId,
     required this.reaction,
@@ -17,6 +19,7 @@ class ReactionModel {
     required this.order,
     required this.enabled,
   });
+
   factory ReactionModel.fromJson(Map<String, dynamic> json) {
     return ReactionModel(
       reactionId: json['reaction_id']?.toString() ?? '',
@@ -31,6 +34,7 @@ class ReactionModel {
                json['enabled']?.toString().toLowerCase() == 'true',
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'reaction_id': reactionId,
@@ -42,6 +46,7 @@ class ReactionModel {
       'enabled': enabled,
     };
   }
+
   ReactionModel copyWith({
     String? reactionId,
     String? reaction,
@@ -61,6 +66,7 @@ class ReactionModel {
       enabled: enabled ?? this.enabled,
     );
   }
+
   /// الحصول على رابط الصورة الكامل
   String get imageUrl {
     if (image.startsWith('http://') || image.startsWith('https://')) {
@@ -69,6 +75,7 @@ class ReactionModel {
     String baseUrl = '${appConfig.baseUrl}/content/uploads/';
     return baseUrl + image;
   }
+
   /// تحويل اللون من HEX إلى Flutter Color
   Color get colorValue {
     try {

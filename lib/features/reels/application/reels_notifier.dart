@@ -2,9 +2,12 @@ import 'package:flutter/foundation.dart';
 import 'package:snginepro/core/network/api_exception.dart';
 import 'package:snginepro/features/feed/data/models/post.dart';
 import 'package:snginepro/features/reels/domain/reels_repository.dart';
+
 class ReelsNotifier extends ChangeNotifier {
   ReelsNotifier(this._repository);
+
   final ReelsRepository _repository;
+
   final List<Post> _reels = [];
   bool _isLoading = false;
   bool _isRefreshing = false;
@@ -14,6 +17,7 @@ class ReelsNotifier extends ChangeNotifier {
   int _page = 0;
   final int _limit = 10;
   String _source = 'all';
+
   List<Post> get reels => List.unmodifiable(_reels);
   bool get isLoading => _isLoading;
   bool get isRefreshing => _isRefreshing;
@@ -21,6 +25,7 @@ class ReelsNotifier extends ChangeNotifier {
   bool get hasMore => _hasMore;
   String? get error => _error;
   String get source => _source;
+
   Future<void> loadInitial({String? source}) async {
     if (_isLoading) return;
     _isLoading = true;
@@ -49,6 +54,7 @@ class ReelsNotifier extends ChangeNotifier {
       notifyListeners();
     }
   }
+
   Future<void> refresh() async {
     if (_isRefreshing) return;
     _isRefreshing = true;
@@ -74,6 +80,7 @@ class ReelsNotifier extends ChangeNotifier {
       notifyListeners();
     }
   }
+
   Future<void> loadMore() async {
     if (_isLoadingMore || !_hasMore) return;
     _isLoadingMore = true;
@@ -99,12 +106,14 @@ class ReelsNotifier extends ChangeNotifier {
       notifyListeners();
     }
   }
+
   void changeSource(String source) {
     if (source == _source) return;
     _source = source;
     clear();
     loadInitial();
   }
+
   void clear() {
     _reels.clear();
     _page = 0;
@@ -116,3 +125,4 @@ class ReelsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 }
+
