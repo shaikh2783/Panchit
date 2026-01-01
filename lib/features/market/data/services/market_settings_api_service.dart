@@ -35,6 +35,7 @@ class MarketSettingsApiService {
               ? response['data']
               : <String, dynamic>{},
         );
+
         return {
           'success': true,
           'data': settings,
@@ -46,6 +47,7 @@ class MarketSettingsApiService {
         'message': response['message'] ?? 'Failed to load settings',
       };
     } catch (e) {
+
       return {
         'success': false,
         'message': 'Error: $e',
@@ -92,6 +94,7 @@ class MarketSettingsApiService {
         'message': response['message'] ?? 'Failed to load payments',
       };
     } catch (e) {
+
       return {
         'success': false,
         'message': 'Error: $e',
@@ -140,6 +143,7 @@ class MarketSettingsApiService {
       final isError = response['error'] == true;
 
       if (!isError) {
+
         return {
           'success': true,
           'message': response['message'] ?? 'Withdrawal request submitted',
@@ -151,6 +155,7 @@ class MarketSettingsApiService {
         'message': response['message'] ?? 'Withdrawal request failed',
       };
     } catch (e) {
+
       return {
         'success': false,
         'message': 'Error: $e',
@@ -177,6 +182,7 @@ class MarketSettingsApiService {
       final isError = response['error'] == true;
 
       if (!isError) {
+
         return {
           'success': true,
           'message': response['message'] ?? 'Transfer completed',
@@ -188,6 +194,7 @@ class MarketSettingsApiService {
         'message': response['message'] ?? 'Transfer failed',
       };
     } catch (e) {
+
       return {
         'success': false,
         'message': 'Error: $e',
@@ -217,6 +224,7 @@ class MarketSettingsApiService {
               ? response['data']
               : <String, dynamic>{},
         );
+
         return {
           'success': true,
           'data': stats,
@@ -228,6 +236,7 @@ class MarketSettingsApiService {
         'message': response['message'] ?? 'Failed to load stats',
       };
     } catch (e) {
+
       return {
         'success': false,
         'message': 'Error: $e',

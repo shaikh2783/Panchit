@@ -21,6 +21,7 @@ class DynamicAppConfigService {
   Future<AppConfig?> getAppConfig({bool forceRefresh = false}) async {
     try {
       if (kDebugMode) {
+
       }
       
       // إذا لم يطلب تحديث إجباري، جرب الكاش أولاً
@@ -28,11 +29,13 @@ class DynamicAppConfigService {
         final cachedConfig = await _getCachedConfig();
         if (cachedConfig != null) {
           if (kDebugMode) {
+
           }
           return cachedConfig;
         }
       } else {
         if (kDebugMode) {
+
         }
       }
 
@@ -50,6 +53,7 @@ class DynamicAppConfigService {
       final fallbackConfig = await _getCachedConfig(ignoreCacheExpiry: true);
       if (fallbackConfig != null) {
         if (kDebugMode) {
+
         }
         return fallbackConfig;
       }
@@ -57,6 +61,7 @@ class DynamicAppConfigService {
       return null;
     } catch (e) {
       if (kDebugMode) {
+
       }
       // في حالة الخطأ، جرب الكاش
       return await _getCachedConfig(ignoreCacheExpiry: true);
@@ -67,6 +72,7 @@ class DynamicAppConfigService {
   Future<AppConfig?> _fetchConfigFromServer() async {
     try {
       if (kDebugMode) {
+
       }
 
       // استخدام endpoint الموجود في config.md
@@ -79,6 +85,7 @@ class DynamicAppConfigService {
       }
     } catch (e) {
       if (kDebugMode) {
+
       }
       return null;
     }
@@ -97,6 +104,7 @@ class DynamicAppConfigService {
           final lastUpdate = DateTime.parse(lastUpdateString);
           if (DateTime.now().difference(lastUpdate) > _cacheExpiry) {
             if (kDebugMode) {
+
             }
             return null;
           }
@@ -107,6 +115,7 @@ class DynamicAppConfigService {
       }
     } catch (e) {
       if (kDebugMode) {
+
       }
     }
     return null;
@@ -122,9 +131,11 @@ class DynamicAppConfigService {
       await prefs.setString(_lastUpdateKey, DateTime.now().toIso8601String());
       
       if (kDebugMode) {
+
       }
     } catch (e) {
       if (kDebugMode) {
+
       }
     }
   }
@@ -137,9 +148,11 @@ class DynamicAppConfigService {
       await prefs.remove(_lastUpdateKey);
       
       if (kDebugMode) {
+
       }
     } catch (e) {
       if (kDebugMode) {
+
       }
     }
   }
@@ -156,6 +169,7 @@ class DynamicAppConfigService {
       }
     } catch (e) {
       if (kDebugMode) {
+
       }
     }
     return false;
@@ -172,6 +186,7 @@ class DynamicAppConfigService {
       }
     } catch (e) {
       if (kDebugMode) {
+
       }
     }
     return null;
@@ -181,6 +196,7 @@ class DynamicAppConfigService {
   Future<bool> updateSettings(Map<String, dynamic> updates) async {
     try {
       if (kDebugMode) {
+
       }
 
       // استخدام endpoint لتحديث الإعدادات
@@ -196,6 +212,7 @@ class DynamicAppConfigService {
       return false;
     } catch (e) {
       if (kDebugMode) {
+
       }
       return false;
     }

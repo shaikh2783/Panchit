@@ -55,10 +55,10 @@ class MarketApiService {
         queryParameters: queryParams,
       );
 
-
       final productsList = response['data']['products'] as List<dynamic>? ?? [];
       return productsList.map((json) => Product.fromJson(json)).toList();
     } catch (e) {
+
       rethrow;
     }
   }
@@ -73,9 +73,9 @@ class MarketApiService {
         configCfgP('market_products') + '/$productId',
       );
 
-
       return Product.fromJson(response['data']['product']);
     } catch (e) {
+
       rethrow;
     }
   }
@@ -116,6 +116,7 @@ class MarketApiService {
       final productsList = response['data']['products'] as List<dynamic>? ?? [];
       return productsList.map((json) => Product.fromJson(json)).toList();
     } catch (e) {
+
       rethrow;
     }
   }
@@ -171,6 +172,7 @@ class MarketApiService {
 
       return Product.fromJson(response['data']['product']);
     } catch (e) {
+
       rethrow;
     }
   }
@@ -185,9 +187,9 @@ class MarketApiService {
 
       final response = await _apiClient.get(configCfgP('market_cart'));
 
-
       return Cart.fromJson(response['data']['cart']);
     } catch (e) {
+
       rethrow;
     }
   }
@@ -212,6 +214,7 @@ class MarketApiService {
 
       return response['data'];
     } catch (e) {
+
       rethrow;
     }
   }
@@ -236,6 +239,7 @@ class MarketApiService {
 
       return response['data'];
     } catch (e) {
+
       rethrow;
     }
   }
@@ -253,6 +257,7 @@ class MarketApiService {
 
       return response['data'];
     } catch (e) {
+
       rethrow;
     }
   }
@@ -268,6 +273,7 @@ class MarketApiService {
 
       return response['data'];
     } catch (e) {
+
       rethrow;
     }
   }
@@ -297,9 +303,9 @@ class MarketApiService {
         },
       );
 
-
       return CheckoutResult.fromJson(response['data']);
     } catch (e) {
+
       rethrow;
     }
   }
@@ -329,10 +335,10 @@ class MarketApiService {
         },
       );
 
-
       final ordersList = response['data']['orders'] as List<dynamic>;
       return ordersList.map((json) => Order.fromJson(json)).toList();
     } catch (e) {
+
       rethrow;
     }
   }
@@ -347,9 +353,9 @@ class MarketApiService {
         configCfgP('market_orders') + '/$orderHash',
       );
 
-
       return Order.fromJson(response['data']['order']);
     } catch (e) {
+
       rethrow;
     }
   }
@@ -364,12 +370,12 @@ class MarketApiService {
 
       final response = await _apiClient.get(configCfgP('market_categories'));
 
-
       final categoriesList = response['data']['categories'] as List<dynamic>;
       return categoriesList
           .map((json) => ProductCategory.fromJson(json))
           .toList();
     } catch (e) {
+
       rethrow;
     }
   }

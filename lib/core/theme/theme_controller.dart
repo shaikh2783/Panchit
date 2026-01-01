@@ -32,6 +32,7 @@ class ThemeController extends GetxController {
         _updateThemeMode();
       }
     } catch (e) {
+
     }
   }
 
@@ -41,6 +42,7 @@ class ThemeController extends GetxController {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool(_themeKey, isDark);
     } catch (e) {
+
     }
   }
 

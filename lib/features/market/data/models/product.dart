@@ -8,11 +8,11 @@ import 'package:equatable/equatable.dart';
 /// الاستخدام:
 /// ```dart
 /// final product = Product.fromJson(json);
-/// print('${product.name} - ${product.price} ${product.currency}');
-/// print('الحالة: ${product.conditionDisplay}');
-/// print('البائع: ${product.seller.userName}');
-/// print('الكمية المتوفرة: ${product.quantity}');
-/// print('نوع: ${product.isDigital ? "رقمي" : "فيزيائي"}');
+
+
+
+
+
 /// ```
 /// 
 /// Properties:

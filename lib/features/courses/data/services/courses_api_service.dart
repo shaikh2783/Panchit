@@ -37,6 +37,7 @@ class CoursesApiService {
 
       return CoursesResponse.fromJson(response);
     } catch (e) {
+
       rethrow;
     }
   }
@@ -50,6 +51,7 @@ class CoursesApiService {
 
       return Post.fromJson(response['data']);
     } catch (e) {
+
       rethrow;
     }
   }
@@ -79,6 +81,7 @@ class CoursesApiService {
         message: response['message'] ?? 'تم التسجيل في الدورة بنجاح',
       );
     } catch (e) {
+
       return CourseEnrollmentResult(
         success: false,
         message: 'فشل التسجيل في الدورة',
@@ -99,6 +102,7 @@ class CoursesApiService {
         message: response['message'] ?? 'تم إلغاء التسجيل من الدورة',
       );
     } catch (e) {
+
       return CourseEnrollmentResult(
         success: false,
         message: 'فشل إلغاء التسجيل من الدورة',
@@ -119,6 +123,7 @@ class CoursesApiService {
         message: response['message'] ?? 'تم حذف الدورة بنجاح',
       );
     } catch (e) {
+
       return CourseEnrollmentResult(
         success: false,
         message: 'فشل حذف الدورة',

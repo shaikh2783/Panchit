@@ -1,9 +1,13 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:snginepro/core/config/app_config.dart';
 import 'package:snginepro/core/services/video_precache_service.dart';
+import 'package:snginepro/features/auth/application/auth_notifier.dart';
 import 'package:snginepro/features/feed/data/models/story.dart';
+import 'package:snginepro/features/stories/application/bloc/stories_bloc.dart';
 import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:video_player/video_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -144,16 +148,18 @@ class _StoryViewState extends State<StoryView> with TickerProviderStateMixin {
         
         // التأكد من أن الفيديو محمل بالكامل
         if (!controller.value.isInitialized) {
+
           // استخدام مدة افتراضية إذا فشل التحميل
           _startAnimation(const Duration(seconds: 10));
         } else {
           final videoDuration = controller.value.duration;
-          
+
           // التأكد من أن المدة صحيحة
           if (videoDuration.inSeconds > 0) {
             _startAnimation(videoDuration);
           } else {
             // مدة افتراضية إذا كانت المدة = 0
+
             _startAnimation(const Duration(seconds: 10));
           }
         }
@@ -165,8 +171,10 @@ class _StoryViewState extends State<StoryView> with TickerProviderStateMixin {
         // تشغيل الفيديو
         if (mounted && controller.value.isInitialized) {
           await controller.play();
+
         }
       } catch (e) {
+
         // في حالة الخطأ، استخدم مدة افتراضية وانتقل للتالي
         _startAnimation(const Duration(seconds: 10));
         setState(() {});
@@ -223,6 +231,80 @@ class _StoryViewState extends State<StoryView> with TickerProviderStateMixin {
     if (_videoController?.controller.value.isInitialized ?? false) {
       _videoController?.controller.play();
     }
+  }
+
+  /// عرض تأكيد حذف القصة
+  void _showDeleteConfirmation(BuildContext context) {
+    _pause(); // إيقاف القصة مؤقتاً أثناء عرض الحوار
+    
+    showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text('delete_story'.tr),
+        content: Text('delete_story_confirmation'.tr),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: Text('cancel'.tr),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: Text('delete'.tr),
+          ),
+        ],
+      ),
+    ).then((confirmed) {
+      if (confirmed == true) {
+        _deleteStory(context);
+      } else {
+        _resume(); // استئناف القصة إذا تم الإلغاء
+      }
+    });
+  }
+
+  /// التحقق مما إذا كان المستخدم الحالي هو صاحب القصة
+  bool _isStoryOwner(BuildContext context) {
+    // أولاً: تحقق من isOwner (يأتي من is_user في الـ API)
+    if (widget.story.isOwner) {
+      return true;
+    }
+    
+    // ثانياً: مقارنة authorId مع المستخدم الحالي
+    final currentUserId = context.read<AuthNotifier>().currentUser?['user_id']?.toString();
+    final storyAuthorId = widget.story.authorId;
+    if (currentUserId != null && storyAuthorId != null) {
+      if (currentUserId == storyAuthorId) {
+        return true;
+      }
+    }
+    
+    return false;
+  }
+
+  /// حذف القصة الحالية
+  void _deleteStory(BuildContext context) {
+    // الحصول على media_id من العنصر الحالي
+    final currentItem = widget.story.items[_currentItemIndex];
+    final mediaId = currentItem.id;
+    
+    // طباعة للتصحيح
+
+    context.read<StoriesBloc>().add(DeleteStoryEvent(
+      mediaId: mediaId,
+      storyId: widget.story.id,
+    ));
+    
+    // عرض رسالة نجاح
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('story_deleted_successfully'.tr),
+        backgroundColor: Colors.green,
+      ),
+    );
+    
+    // الخروج من صفحة القصة
+    Navigator.of(context).pop();
   }
 
   @override
@@ -506,6 +588,24 @@ class _StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
+                          // زر حذف القصة - يظهر فقط لصاحب القصة
+                          if (_isStoryOwner(context))
+                            Container(
+                              margin: const EdgeInsets.only(right: 8),
+                              decoration: BoxDecoration(
+                                color: Colors.red.withOpacity(0.7),
+                                shape: BoxShape.circle,
+                              ),
+                              child: IconButton(
+                                onPressed: () => _showDeleteConfirmation(context),
+                                icon: const Icon(Icons.delete, color: Colors.white, size: 22),
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(
+                                    minWidth: 40,
+                                    minHeight: 40,
+                                  ),
+                                ),
+                              ),
                           // زر الإغلاق
                           Container(
                             decoration: BoxDecoration(

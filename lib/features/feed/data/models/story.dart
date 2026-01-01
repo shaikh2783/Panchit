@@ -2,24 +2,30 @@ class Story {
   Story({
     required this.id,
     required this.authorName,
+    this.authorId,
     this.authorAvatarUrl,
     this.items = const [],
+    this.isOwner = false,
   });
 
   final String id;
   final String authorName;
+  final String? authorId;
   final String? authorAvatarUrl;
   final List<StoryItem> items;
+  final bool isOwner;
 
   factory Story.fromJson(Map<String, dynamic> json) {
     return Story(
       id: _string(json['id']) ?? '',
       authorName: _string(json['name']) ?? 'مستخدم',
+      authorId: _string(json['user_id']),
       authorAvatarUrl: _string(json['photo']),
       items: (json['items'] as List?)
               ?.map((item) => StoryItem.fromJson(item))
               .toList() ??
           const [],
+      isOwner: json['is_user'] == true || json['is_user'] == 1 || json['is_user'] == '1',
     );
   }
 

@@ -50,6 +50,7 @@ class AuthNotifier extends ChangeNotifier {
         deviceType: deviceType,
       );
       _lastResponse = response;
+
       final token = response.authToken;
       if (token != null && token.isNotEmpty) {
         final session = AuthSession.fromResponse(response);
@@ -58,13 +59,17 @@ class AuthNotifier extends ChangeNotifier {
         // تسجيل OneSignal Player ID بعد تسجيل الدخول الناجح
         _registerOneSignalInBackground();
       } else {
+
       }
       return response;
     } on ApiException catch (error) {
+
       if (error.details != null) {
+
       }
       _errorMessage = error.message;
     } catch (error) {
+
       _errorMessage = 'حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى.';
     } finally {
       _setLoading(false);
@@ -96,6 +101,7 @@ class AuthNotifier extends ChangeNotifier {
         deviceType: deviceType,
       );
       _lastResponse = response;
+
       final token = response.authToken;
       if (token != null && token.isNotEmpty) {
         final session = AuthSession.fromResponse(response);
@@ -104,13 +110,17 @@ class AuthNotifier extends ChangeNotifier {
         // تسجيل OneSignal Player ID بعد إنشاء الحساب الناجح
         _registerOneSignalInBackground();
       } else {
+
       }
       return response;
     } on ApiException catch (error) {
+
       if (error.details != null) {
+
       }
       _errorMessage = error.message;
     } catch (error) {
+
       _errorMessage = 'حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى.';
     } finally {
       _setLoading(false);
@@ -142,6 +152,7 @@ class AuthNotifier extends ChangeNotifier {
         deviceType: deviceType,
       );
       _lastResponse = response;
+
       final token = response.authToken;
       if (token != null && token.isNotEmpty) {
         final session = AuthSession.fromResponse(response);
@@ -150,13 +161,17 @@ class AuthNotifier extends ChangeNotifier {
         // تسجيل OneSignal Player ID بعد تسجيل الدخول الناجح
         _registerOneSignalInBackground();
       } else {
+
       }
       return response;
     } on ApiException catch (error) {
+
       if (error.details != null) {
+
       }
       _errorMessage = error.message;
     } catch (error) {
+
       _errorMessage = 'حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى.';
     } finally {
       _setLoading(false);
@@ -175,6 +190,7 @@ class AuthNotifier extends ChangeNotifier {
         _registerOneSignalInBackground();
       }
     } catch (error) {
+
     } finally {
       _isInitialized = true;
       notifyListeners();
@@ -186,6 +202,7 @@ class AuthNotifier extends ChangeNotifier {
     try {
       await _oneSignalService.removeOneSignalPlayerId();
     } catch (e) {
+
     }
 
     await _storage.clearSession();
@@ -199,12 +216,14 @@ class AuthNotifier extends ChangeNotifier {
   /// يتم استدعاؤها بعد تسجيل الدخول أو إنشاء الحساب
   Future<bool> registerOneSignalPlayerId(String playerId) async {
     if (playerId.isEmpty) {
+
       return false;
     }
 
     try {
       return await _oneSignalService.updateOneSignalPlayerId(playerId);
     } catch (e) {
+
       return false;
     }
   }
@@ -228,10 +247,13 @@ class AuthNotifier extends ChangeNotifier {
         configCfgP('auth_getting_started_update'),
         body: body,
       );
+
     } on ApiException catch (error) {
+
       _errorMessage = error.message;
       rethrow;
     } catch (error) {
+
       _errorMessage = 'حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى.';
       rethrow;
     } finally {
@@ -247,10 +269,13 @@ class AuthNotifier extends ChangeNotifier {
         configCfgP('auth_getting_started_finish'),
         body: {},
       );
+
     } on ApiException catch (error) {
+
       _errorMessage = error.message;
       rethrow;
     } catch (error) {
+
       _errorMessage = 'حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى.';
       rethrow;
     } finally {
@@ -274,13 +299,19 @@ class AuthNotifier extends ChangeNotifier {
 
   /// تسجيل OneSignal Player ID في الخلفية (لا ننتظر النتيجة)
   void _registerOneSignalInBackground() {
+
     Future.microtask(() async {
       try {
+
         final result = await _oneSignalService.registerCurrentPlayerId();
         if (result) {
+
         } else {
+
         }
+
       } catch (e) {
+
       }
     });
   }

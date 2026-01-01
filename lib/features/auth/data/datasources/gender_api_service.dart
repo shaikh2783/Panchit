@@ -7,13 +7,16 @@ class GenderApiService {
   GenderApiService(this._client);
 
   Future<List<Gender>> getGenders() async {
+
     final response = await _client.get('/app/genders');
     
     if (response['status'] == 'success' && response['data'] is List) {
       final List<dynamic> data = response['data'];
-      return data.map((json) => Gender.fromJson(json)).toList();
+      final genders = data.map((json) => Gender.fromJson(json)).toList();
+
+      return genders;
     }
-    
+
     return [];
   }
 }

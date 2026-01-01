@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:crypto/crypto.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:snginepro/core/config/app_config.dart';
+import 'package:snginepro/core/localization/localization_controller.dart';
 import 'package:snginepro/core/network/api_exception.dart';
 
 class ApiClient {
@@ -33,12 +34,15 @@ class ApiClient {
     final requestBody = data ?? body;
 
     final uri = _buildUri(relativePath);
+
     if (requestBody != null) {
       final encoded = jsonEncode(requestBody);
       final preview = encoded.length > 300
           ? '${encoded.substring(0, 300)}...'
           : encoded;
+
     } else {
+
     }
 
     final response = await _httpClient.post(
@@ -56,12 +60,15 @@ class ApiClient {
     bool asJson = true,
   }) async {
     final uri = _buildUri(relativePath);
+
     if (body != null) {
       final encoded = jsonEncode(body);
       final preview = encoded.length > 300
           ? '${encoded.substring(0, 300)}...'
           : encoded;
+
     } else {
+
     }
 
     final response = await _httpClient.put(
@@ -131,6 +138,20 @@ class ApiClient {
     return _handleResponse(response);
   }
 
+  Future<Map<String, dynamic>> delete(
+    String relativePath, {
+    Map<String, String>? queryParameters,
+    Map<String, String>? headers,
+  }) async {
+    final uri = _buildUri(relativePath, queryParameters: queryParameters);
+
+    final response = await _httpClient.delete(
+      uri,
+      headers: _buildHeaders(headers, asJson: true),
+    );
+    return _handleResponse(response);
+  }
+
   /// GET request without authentication
   Future<Map<String, dynamic>> getPublic(
     String relativePath, {
@@ -149,12 +170,17 @@ class ApiClient {
         .toString();
     final hmac = Hmac(sha256, utf8.encode(_config.apiSecret));
     final signature = hmac.convert(utf8.encode(timestamp)).toString();
+    
+    // 🌐 Get current language code for API requests
+    final langCode = _getCurrentLanguageCode();
+    
     return {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'x-api-key': _config.apiKey,
       'x-timestamp': timestamp,
       'x-signature': signature,
+      'x-lang': langCode, // 🌐 Language header for server-side translation
       // No x-auth-token for public endpoints
       if (extra != null) ...extra,
     };
@@ -168,6 +194,9 @@ class ApiClient {
         .toString();
     final hmac = Hmac(sha256, utf8.encode(_config.apiSecret));
     final signature = hmac.convert(utf8.encode(timestamp)).toString();
+    
+    // 🌐 Get current language code for API requests
+    final langCode = _getCurrentLanguageCode();
 
     return {
       if (asJson) 'Content-Type': 'application/json',
@@ -175,10 +204,26 @@ class ApiClient {
       'x-api-key': _config.apiKey,
       'x-timestamp': timestamp,
       'x-signature': signature,
+      'x-lang': langCode, // 🌐 Language header for server-side translation
       if (_authToken != null && _authToken!.isNotEmpty)
         'x-auth-token': _authToken!,
       if (extra != null) ...extra,
     };
+  }
+  
+  /// 🌐 Get current language code in API format (e.g., "ar_sa", "en_us")
+  String _getCurrentLanguageCode() {
+    try {
+      if (Get.isRegistered<LocalizationController>()) {
+        final controller = Get.find<LocalizationController>();
+        final locale = controller.currentLocale;
+        // API format: ar_sa, en_us, fr_fr (language_country)
+        return '${locale.languageCode}_${locale.countryCode ?? locale.languageCode}'.toLowerCase();
+      }
+    } catch (e) {
+
+    }
+    return 'en_us'; // Default fallback
   }
 
   Uri _buildUri(String relativePath, {Map<String, String>? queryParameters}) {
@@ -203,8 +248,6 @@ class ApiClient {
   }
 
   Map<String, dynamic> _handleResponse(http.Response response) {
-
-
     final decodedBody = _safeDecodeBody(response.body);
     final isSuccess = response.statusCode >= 200 && response.statusCode < 300;
     if (isSuccess) {

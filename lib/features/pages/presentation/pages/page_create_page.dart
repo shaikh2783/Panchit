@@ -68,6 +68,7 @@ class _PageCreatePageState extends State<PageCreatePage> {
         });
       }
     } catch (e) {
+
       if (mounted) {
         setState(() => _isLoadingCategories = false);
       }
@@ -89,6 +90,7 @@ class _PageCreatePageState extends State<PageCreatePage> {
         });
       }
     } catch (e) {
+
       if (mounted) {
         setState(() => _isLoadingCountries = false);
       }
@@ -110,6 +112,7 @@ class _PageCreatePageState extends State<PageCreatePage> {
         });
       }
     } catch (e) {
+
       if (mounted) {
         setState(() => _isLoadingLanguages = false);
       }

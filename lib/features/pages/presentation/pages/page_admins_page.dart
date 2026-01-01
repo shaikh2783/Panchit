@@ -78,6 +78,7 @@ class _PageAdminsPageState extends State<PageAdminsPage> {
         _isLoading = false;
       });
     } catch (e) {
+
       setState(() => _isLoading = false);
 
       if (mounted) {
@@ -110,12 +111,14 @@ class _PageAdminsPageState extends State<PageAdminsPage> {
         _isLoadingMore = false;
       });
     } catch (e) {
+
       setState(() => _isLoadingMore = false);
     }
   }
 
   Future<void> _toggleAdmin(InvitableFriend friend, bool isAdmin) async {
     if (_processingUsers.contains(friend.userId)) {
+
       return;
     }
 
@@ -146,6 +149,7 @@ class _PageAdminsPageState extends State<PageAdminsPage> {
     try {
       if (isAdmin) {
         // Remove admin
+
         await _pagesRepository.removeAdmin(
           pageId: widget.page.id,
           userId: int.parse(friend.userId),
@@ -162,6 +166,7 @@ class _PageAdminsPageState extends State<PageAdminsPage> {
         }
       } else {
         // Add admin - المستخدم معجب بالفعل (من قائمة المعجبين)
+
         await _pagesRepository.addAdmin(
           pageId: widget.page.id,
           userId: int.parse(friend.userId),
@@ -177,9 +182,9 @@ class _PageAdminsPageState extends State<PageAdminsPage> {
           );
         }
       }
-      
+
     } catch (e) {
-      
+
       // Rollback on error
       setState(() {
         _friends[index] = previousState;
@@ -196,6 +201,7 @@ class _PageAdminsPageState extends State<PageAdminsPage> {
     } finally {
       // Always remove from processing set
       setState(() => _processingUsers.remove(friend.userId));
+
     }
   }
 

@@ -2,27 +2,35 @@
 /// يحتوي على جميع المتغيرات والإعدادات القابلة للتخصيص
 class AppSettings {
   // ==================== معلومات التطبيق ====================
+
   /// اسم التطبيق
   static const String appName = 'Panchit';
   // ==================== إعدادات PayPal ====================
   // احصل على بيانات الاعتماد من: https://developer.paypal.com/
+
   /// معرف العميل - وضع الاختبار (Sandbox)
   /// احصل عليه من: https://developer.paypal.com/dashboard/applications/sandbox
   static const String paypalSandboxClientId =
       'AQZ9cJfUrNDIeaN01OBTx-SsfFGQdHLdsW27phb2lHUx630547ZGhVOBXUQk8JgPvn571rre7cr1NE-m';
+
   /// المفتاح السري - وضع الاختبار (Sandbox)
   static const String paypalSandboxSecretKey =
       'EDoeQOfeM-S86IbmWhVYJN21rGuAzUJ0i10sV_047d47hhxoEsubWoOxJb7Ff0uAlkxFW32vMKmzSx-U';
+
   /// معرف العميل - الوضع الحقيقي (Production)
   /// احصل عليه من: https://developer.paypal.com/dashboard/applications/live
   static const String paypalProductionClientId = 'YOUR_PRODUCTION_CLIENT_ID';
+
   /// المفتاح السري - الوضع الحقيقي (Production)
   static const String paypalProductionSecretKey = 'YOUR_PRODUCTION_SECRET_KEY';
+
   /// استخدام وضع الاختبار؟ (true = Sandbox, false = Production)
   static const bool paypalUseSandbox = true;
+
   /// اسم البيئة الحالية
   static String get paypalEnvironment =>
       paypalUseSandbox ? 'Sandbox' : 'Production';
+
   /// التحقق من صحة إعدادات PayPal قبل المعالجة
   static String? validatePayPalConfig() {
     if (!isPayPalConfigured) {
@@ -30,27 +38,36 @@ class AppSettings {
     }
     return null;
   }
+
   // ==================== إعدادات Agora (البث المباشر) ====================
   // احصل على App ID من: https://console.agora.io/
+
   /// App ID الخاص بـ Agora
   /// احصل عليه من: https://console.agora.io/
   static const String agoraAppId = '06e8cc01e5ce4a1ba6d1254c2a5aa7da';
+
   /// Token (اختياري للاختبار - يمكن أن يكون null في بيئة الاختبار)
   static const String? agoraToken = null;
+
   // إعدادات جودة الفيديو للبث
   static const int agoraVideoWidth = 1280;
   static const int agoraVideoHeight = 720;
   static const int agoraFrameRate = 30;
   static const int agoraBitrate = 1500; // kbps
+
   // إعدادات الصوت للبث
   static const int agoraAudioSampleRate = 48000;
   static const int agoraAudioChannels = 2;
+
   // مدة انتظار الاتصال
   static const int agoraConnectionTimeoutSeconds = 10;
+
   // أقصى عدد مستخدمين في البث
   static const int agoraMaxUsers = 100;
+
   // ==================== إعدادات OneSignal (الإشعارات) ====================
   // احصل على App ID من: https://app.onesignal.com/
+
   /// App ID الخاص بـ OneSignal
   /// احصل عليه من: https://app.onesignal.com/ > Settings > Keys & IDs
   static const String oneSignalAppId = '0dc8d96f-0113-4a2b-ab63-e0cd64d751c7';

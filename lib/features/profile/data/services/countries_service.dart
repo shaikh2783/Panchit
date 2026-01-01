@@ -2,7 +2,6 @@ import 'package:snginepro/main.dart' show configCfgP;
 
 import '../../../../core/network/api_client.dart';
 
-
 class CountryData {
   final int countryId;
   final String countryCode;
@@ -33,13 +32,15 @@ class CountriesService {
 
   Future<List<CountryData>> getCountries() async {
     try {
+
       final response = await _apiClient.get(configCfgP('countries'));
       
       final List<dynamic> countriesData = response['data']['countries'] ?? [];
       final countries = countriesData.map((json) => CountryData.fromJson(json)).toList();
-      
+
       return countries;
     } catch (e) {
+
       rethrow;
     }
   }

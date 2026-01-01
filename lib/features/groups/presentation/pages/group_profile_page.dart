@@ -77,7 +77,6 @@ class _GroupProfilePageState extends State<GroupProfilePage>
     try {
       final groupDetails = await _repository.getGroupDetails(widget.groupId);
 
-
       if (mounted) {
         setState(() {
           _currentGroup = groupDetails;
@@ -86,11 +85,14 @@ class _GroupProfilePageState extends State<GroupProfilePage>
 
         // جلب المنشورات بعد تحميل بيانات المجموعة
         if (groupDetails != null) {
+
           _loadInitialPosts();
         } else {
+
         }
       }
     } catch (e) {
+
       if (mounted) {
         setState(() {
           _isLoadingGroupInfo = false;
@@ -751,10 +753,12 @@ class _GroupProfilePageState extends State<GroupProfilePage>
                             scrollInfo.metrics.pixels;
 
                         if (hasMore && !isLoadingMore) {
+
                           context.read<GroupPostsBloc>().add(
                             LoadMoreGroupPostsEvent(),
                           );
                         } else {
+
                         }
                       }
                       return false;

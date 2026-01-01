@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
@@ -226,7 +227,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Error loading countries: $e')));
+          .showSnackBar(SnackBar(content: Text('${'error_loading_countries'.tr}: $e')));
     } finally {
       if (mounted) setState(() => _loadingCountries = false);
     }
@@ -408,7 +409,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
                   ),
                   _pickTile(
                     icon: Iconsax.camera,
-                    label: 'Camera',
+                    label: 'camera'.tr,
                     gradient: AppGradients.photos,
                     onTap: () async {
                       final x = await _imagePicker.pickImage(
@@ -472,7 +473,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Error uploading image: $e')));
+          .showSnackBar(SnackBar(content: Text('${'error_uploading_image'.tr}: $e')));
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -489,7 +490,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Error uploading cover photo: $e')));
+          .showSnackBar(SnackBar(content: Text('${'error_uploading_cover'.tr}: $e')));
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -511,22 +512,22 @@ class _ProfileEditPageState extends State<ProfileEditPage>
             children: [
               const GradientIcon(Iconsax.key, gradient: AppGradients.password),
               const SizedBox(width: 8),
-              const Text('Change Password'),
+              Text('change_password_title'.tr),
             ],
           ),
           content: SingleChildScrollView(
             child: Column(
               children: [
-                _pwdField('Current Password', current, obC, () => setS(() => obC = !obC)),
+                _pwdField('current_password'.tr, current, obC, () => setS(() => obC = !obC)),
                 const SizedBox(height: 12),
-                _pwdField('New Password (≥ 6)', newer, obN, () => setS(() => obN = !obN)),
+                _pwdField('new_password'.tr, newer, obN, () => setS(() => obN = !obN)),
                 const SizedBox(height: 12),
-                _pwdField('Confirm Password', confirm, obK, () => setS(() => obK = !obK)),
+                _pwdField('confirm_password_label'.tr, confirm, obK, () => setS(() => obK = !obK)),
               ],
             ),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+            TextButton(onPressed: () => Navigator.pop(context), child: Text('cancel'.tr)),
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
@@ -540,17 +541,17 @@ class _ProfileEditPageState extends State<ProfileEditPage>
                 onPressed: () async {
                   if (current.text.isEmpty) {
                     ScaffoldMessenger.of(context)
-                        .showSnackBar(const SnackBar(content: Text('Please enter your current password')));
+                        .showSnackBar(SnackBar(content: Text('please_enter_current_password'.tr)));
                     return;
                   }
                   if (newer.text.length < 6) {
                     ScaffoldMessenger.of(context)
-                        .showSnackBar(const SnackBar(content: Text('New password is too short')));
+                        .showSnackBar(SnackBar(content: Text('new_password_too_short'.tr)));
                     return;
                   }
                   if (newer.text != confirm.text) {
                     ScaffoldMessenger.of(context)
-                        .showSnackBar(const SnackBar(content: Text('Passwords do not match')));
+                        .showSnackBar(SnackBar(content: Text('passwords_do_not_match'.tr)));
                     return;
                   }
                   Navigator.pop(context);
@@ -573,7 +574,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
                     if (mounted) setState(() => _isLoading = false);
                   }
                 },
-                child: const Text('Change'),
+                child: Text('change'.tr),
               ),
             ),
           ],
@@ -698,13 +699,13 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       onTap: _loadingCountries ? null : _openCountrySheet,
       borderRadius: BorderRadius.circular(12),
       child: InputDecorator(
-        decoration: _decoration('Country', icon: Iconsax.global, gradient: AppGradients.location)
+        decoration: _decoration('country_label'.tr, icon: Iconsax.global, gradient: AppGradients.location)
             .copyWith(contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8)),
         child: Row(
           children: [
             Expanded(
               child: Text(
-                selectedName ?? (_loadingCountries ? 'Loading…' : 'Select Country'),
+                selectedName ?? (_loadingCountries ? 'loading_text'.tr : 'select_country'.tr),
                 style: TextStyle(
                   fontSize: 16,
                   color: selectedName != null ? cs.onSurface : cs.onSurfaceVariant,
@@ -746,7 +747,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
                 children: [
                   TextField(
                     decoration: InputDecoration(
-                      hintText: 'Search for a country…',
+                      hintText: 'search_country'.tr,
                       prefixIcon: const Icon(Iconsax.search_normal_1, size: 20),
                       filled: true,
                       fillColor: cs.surfaceContainerHighest,
@@ -814,7 +815,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       children: [
         Scaffold(
           appBar: AppBar(
-            title: const Text('Edit Profile'),
+            title: Text('edit_profile'.tr),
             elevation: 0,
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight(48),
@@ -830,13 +831,13 @@ class _ProfileEditPageState extends State<ProfileEditPage>
                     insets: const EdgeInsets.symmetric(horizontal: 16),
                   ),
                   labelStyle: const TextStyle(fontWeight: FontWeight.w700),
-                  tabs: const [
-                    Tab(icon: GradientIcon(Iconsax.user_edit, gradient: AppGradients.basic), text: 'Basic'),
-                    Tab(icon: GradientIcon(Iconsax.briefcase, gradient: AppGradients.work), text: 'Work'),
-                    Tab(icon: GradientIcon(Iconsax.location, gradient: AppGradients.location), text: 'Location'),
-                    Tab(icon: GradientIcon(Iconsax.book, gradient: AppGradients.education), text: 'Education'),
-                    Tab(icon: GradientIcon(Iconsax.global, gradient: AppGradients.social), text: 'Social'),
-                    Tab(icon: GradientIcon(Iconsax.gallery, gradient: AppGradients.photos), text: 'Photos'),
+                  tabs: [
+                    Tab(icon: const GradientIcon(Iconsax.user_edit, gradient: AppGradients.basic), text: 'tab_basic'.tr),
+                    Tab(icon: const GradientIcon(Iconsax.briefcase, gradient: AppGradients.work), text: 'tab_work'.tr),
+                    Tab(icon: const GradientIcon(Iconsax.location, gradient: AppGradients.location), text: 'tab_location'.tr),
+                    Tab(icon: const GradientIcon(Iconsax.book, gradient: AppGradients.education), text: 'tab_education'.tr),
+                    Tab(icon: const GradientIcon(Iconsax.global, gradient: AppGradients.social), text: 'tab_social'.tr),
+                    Tab(icon: const GradientIcon(Iconsax.gallery, gradient: AppGradients.photos), text: 'tab_photos'.tr),
                   ],
                 ),
               ),
@@ -875,27 +876,27 @@ class _ProfileEditPageState extends State<ProfileEditPage>
           children: [
             _field(
               controller: _firstname,
-              label: 'First Name',
+              label: 'first_name_label'.tr,
               icon: Iconsax.user_edit,
               gradient: AppGradients.basic,
-              validator: (v) => v!.trim().isEmpty ? 'First name is required' : null,
+              validator: (v) => v!.trim().isEmpty ? 'first_name_required'.tr : null,
             ),
             const SizedBox(height: 12),
             _field(
               controller: _lastname,
-              label: 'Last Name',
+              label: 'last_name_label'.tr,
               icon: Iconsax.user_octagon,
               gradient: AppGradients.basic,
-              validator: (v) => v!.trim().isEmpty ? 'Last name is required' : null,
+              validator: (v) => v!.trim().isEmpty ? 'last_name_required'.tr : null,
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
               value: _selectedGender,
-              decoration: _decoration('Gender', icon: Iconsax.woman, gradient: AppGradients.basic),
-              items: const [
-                DropdownMenuItem(value: 'male', child: Text('Male')),
-                DropdownMenuItem(value: 'female', child: Text('Female')),
-                DropdownMenuItem(value: 'other', child: Text('Other')),
+              decoration: _decoration('gender'.tr, icon: Iconsax.woman, gradient: AppGradients.basic),
+              items: [
+                DropdownMenuItem(value: 'male', child: Text('gender_male'.tr)),
+                DropdownMenuItem(value: 'female', child: Text('gender_female'.tr)),
+                DropdownMenuItem(value: 'other', child: Text('gender_other'.tr)),
               ],
               onChanged: (v) => setState(() => _selectedGender = v),
             ),
@@ -912,7 +913,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
               },
               borderRadius: BorderRadius.circular(12),
               child: InputDecorator(
-                decoration: _decoration('Birthdate', icon: Iconsax.cake, gradient: AppGradients.basic)
+                decoration: _decoration('birthdate_label'.tr, icon: Iconsax.cake, gradient: AppGradients.basic)
                     .copyWith(contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8)),
                 child: Row(
                   children: [
@@ -920,7 +921,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
                       child: Text(
                         _selectedBirthDate != null
                             ? '${_selectedBirthDate!.day}/${_selectedBirthDate!.month}/${_selectedBirthDate!.year}'
-                            : 'Select birth date',
+                            : 'select_birth_date'.tr,
                         style: TextStyle(
                           fontSize: 16,
                           color: _selectedBirthDate != null ? cs.onSurface : cs.onSurfaceVariant,
@@ -935,15 +936,15 @@ class _ProfileEditPageState extends State<ProfileEditPage>
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
               value: _selectedRelationship,
-              decoration: _decoration('Relationship Status', icon: Iconsax.heart, gradient: AppGradients.basic),
-              items: const [
-                DropdownMenuItem(value: 'single', child: Text('Single')),
-                DropdownMenuItem(value: 'relationship', child: Text('In a relationship')),
-                DropdownMenuItem(value: 'married', child: Text('Married')),
-                DropdownMenuItem(value: 'complicated', child: Text('It\'s complicated')),
-                DropdownMenuItem(value: 'separated', child: Text('Separated')),
-                DropdownMenuItem(value: 'divorced', child: Text('Divorced')),
-                DropdownMenuItem(value: 'widowed', child: Text('Widowed')),
+              decoration: _decoration('relationship_status'.tr, icon: Iconsax.heart, gradient: AppGradients.basic),
+              items: [
+                DropdownMenuItem(value: 'single', child: Text('relationship_single'.tr)),
+                DropdownMenuItem(value: 'relationship', child: Text('relationship_in_relationship'.tr)),
+                DropdownMenuItem(value: 'married', child: Text('relationship_married'.tr)),
+                DropdownMenuItem(value: 'complicated', child: Text('relationship_complicated'.tr)),
+                DropdownMenuItem(value: 'separated', child: Text('relationship_separated'.tr)),
+                DropdownMenuItem(value: 'divorced', child: Text('relationship_divorced'.tr)),
+                DropdownMenuItem(value: 'widowed', child: Text('relationship_widowed'.tr)),
               ],
               onChanged: (v) => setState(() => _selectedRelationship = v),
             ),
@@ -952,7 +953,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
             const SizedBox(height: 12),
             _field(
               controller: _bio,
-              label: 'About you',
+              label: 'about_you'.tr,
               icon: Iconsax.note_text,
               gradient: AppGradients.basic,
               maxLines: 3,
@@ -960,7 +961,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
             const SizedBox(height: 12),
             _field(
               controller: _website,
-              label: 'Website',
+              label: 'website_label'.tr,
               icon: Iconsax.link,
               gradient: AppGradients.basic,
               keyboardType: TextInputType.url,
@@ -969,16 +970,16 @@ class _ProfileEditPageState extends State<ProfileEditPage>
                 if (t.isEmpty) return null;
                 final uri = Uri.tryParse(t);
                 final ok = uri != null && (uri.hasScheme && uri.host.isNotEmpty);
-                return ok ? null : 'Invalid URL';
+                return ok ? null : 'invalid_url'.tr;
               },
             ),
             const SizedBox(height: 20),
-            _saveButton(onPressed: _saveBasicInfo, label: 'Save'),
+            _saveButton(onPressed: _saveBasicInfo, label: 'save_button'.tr),
             const SizedBox(height: 12),
             OutlinedButton.icon(
               onPressed: _showPasswordChangeDialog,
               icon: const GradientIcon(Iconsax.key, gradient: AppGradients.password, size: 20),
-              label: const Text('Change Password'),
+              label: Text('change_password'.tr),
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
@@ -1000,28 +1001,28 @@ class _ProfileEditPageState extends State<ProfileEditPage>
           children: [
             _field(
               controller: _workTitle,
-              label: 'Job Title',
+              label: 'job_title_label'.tr,
               icon: Iconsax.briefcase,
               gradient: AppGradients.work,
-              validator: (v) => v!.trim().isEmpty ? 'Enter job title' : null,
+              validator: (v) => v!.trim().isEmpty ? 'enter_job_title'.tr : null,
             ),
             const SizedBox(height: 12),
             _field(
               controller: _workPlace,
-              label: 'Company',
+              label: 'company_label'.tr,
               icon: Iconsax.building,
               gradient: AppGradients.work,
             ),
             const SizedBox(height: 12),
             _field(
               controller: _workUrl,
-              label: 'Company Website',
+              label: 'company_website_label'.tr,
               icon: Iconsax.link,
               gradient: AppGradients.work,
               keyboardType: TextInputType.url,
             ),
             const SizedBox(height: 20),
-            _saveButton(onPressed: _saveWorkInfo, label: 'Save'),
+            _saveButton(onPressed: _saveWorkInfo, label: 'save_button'.tr),
           ],
         ),
       ),
@@ -1038,19 +1039,19 @@ class _ProfileEditPageState extends State<ProfileEditPage>
           children: [
             _field(
               controller: _city,
-              label: 'Current City',
+              label: 'current_city_label'.tr,
               icon: Iconsax.location_tick,
               gradient: AppGradients.location,
             ),
             const SizedBox(height: 12),
             _field(
               controller: _hometown,
-              label: 'Hometown',
+              label: 'hometown_label'.tr,
               icon: Iconsax.home_2,
               gradient: AppGradients.location,
             ),
             const SizedBox(height: 20),
-            _saveButton(onPressed: _saveLocation, label: 'Save'),
+            _saveButton(onPressed: _saveLocation, label: 'save_button'.tr),
           ],
         ),
       ),
@@ -1067,26 +1068,26 @@ class _ProfileEditPageState extends State<ProfileEditPage>
           children: [
             _field(
               controller: _eduMajor,
-              label: 'Major',
+              label: 'major_label'.tr,
               icon: Iconsax.book_1,
               gradient: AppGradients.education,
             ),
             const SizedBox(height: 12),
             _field(
               controller: _eduSchool,
-              label: 'Educational Institution',
+              label: 'educational_institution_label'.tr,
               icon: Iconsax.building,
               gradient: AppGradients.education,
             ),
             const SizedBox(height: 12),
             _field(
               controller: _eduClass,
-              label: 'Graduation Year',
+              label: 'graduation_year_label'.tr,
               icon: Iconsax.calendar_1,
               gradient: AppGradients.education,
             ),
             const SizedBox(height: 20),
-            _saveButton(onPressed: _saveEducation, label: 'Save'),
+            _saveButton(onPressed: _saveEducation, label: 'save_button'.tr),
           ],
         ),
       ),
@@ -1115,7 +1116,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
             const SizedBox(height: 12),
             _socialField(_vkontakte, 'VKontakte', Iconsax.user_square),
             const SizedBox(height: 20),
-            _saveButton(onPressed: _saveSocialLinks, label: 'Save'),
+            _saveButton(onPressed: _saveSocialLinks, label: 'save_button'.tr),
           ],
         ),
       ),
@@ -1129,7 +1130,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text('Profile Picture', style: Theme.of(context).textTheme.titleLarge),
+          Text('profile_picture'.tr, style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 16),
           Center(
             child: SizedBox(
@@ -1187,7 +1188,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
             ),
           ),
           const SizedBox(height: 32),
-          Text('Cover Photo', style: Theme.of(context).textTheme.titleLarge),
+          Text('cover_photo'.tr, style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 16),
           GestureDetector(
             onTap: _pickCoverImage,
@@ -1219,7 +1220,7 @@ class _ProfileEditPageState extends State<ProfileEditPage>
                                 children: [
                                   const GradientIcon(Iconsax.gallery_add, size: 48, gradient: AppGradients.photos),
                                   const SizedBox(height: 12),
-                                  Text('Tap to add a cover photo',
+                                  Text('tap_to_add_cover'.tr,
                                       style: TextStyle(color: cs.onSurfaceVariant)),
                                 ],
                               ),

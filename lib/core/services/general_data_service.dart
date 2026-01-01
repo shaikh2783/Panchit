@@ -12,15 +12,22 @@ class GeneralDataService {
   /// جلب قائمة الدول
   Future<List<Country>> getCountries() async {
     try {
+
       final response = await _apiClient.get(configCfgP('countries'));
 
       if (response['status'] == 'success') {
         final data = response['data']['countries'] as List? ?? [];
-        return data.map((c) => Country.fromJson(c)).toList();
+        final countries = data.map((c) => Country.fromJson(c)).toList();
+
+        if (countries.isNotEmpty) {
+
+        }
+        return countries;
       }
 
       return [];
     } catch (e) {
+
       return [];
     }
   }
@@ -28,15 +35,22 @@ class GeneralDataService {
   /// جلب قائمة اللغات
   Future<List<Language>> getLanguages() async {
     try {
+
       final response = await _apiClient.get(configCfgP('languages'));
 
       if (response['status'] == 'success') {
         final data = response['data']['languages'] as List? ?? [];
-        return data.map((l) => Language.fromJson(l)).toList();
+        final languages = data.map((l) => Language.fromJson(l)).toList();
+
+        if (languages.isNotEmpty) {
+
+        }
+        return languages;
       }
 
       return [];
     } catch (e) {
+
       return [];
     }
   }

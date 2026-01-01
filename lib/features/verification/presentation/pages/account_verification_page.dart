@@ -59,6 +59,7 @@ class _AccountVerificationPageState extends State<AccountVerificationPage> {
       );
       setState(() => _statusData = res['data']);
     } catch (e) {
+
     } finally {
       if (mounted) setState(() => _loadingStatus = false);
     }

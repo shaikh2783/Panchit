@@ -1082,6 +1082,7 @@ class _ActionsRailState extends State<_ActionsRail> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      useSafeArea: false,
       backgroundColor: Colors.transparent,
       builder: (context) => CommentsBottomSheet(
         postId: _currentPost.id,

@@ -8,13 +8,18 @@ class NotificationsApiService {
 
   final ApiClient _client;
 
+  String _deleteEndpointPath() {
+    final cfg = configCfgP('notifications_delete');
+    return cfg.isNotEmpty ? cfg : 'data/notifications/delete';
+  }
+
   /// Fetch notifications with pagination
   Future<NotificationsResponse> getNotifications({
     int offset = 0,
     int limit = 20,
     int? lastNotificationId,
   }) async {
-    
+
     final params = <String, String>{
       'offset': offset.toString(),
       'limit': limit.toString(),
@@ -29,7 +34,6 @@ class NotificationsApiService {
       queryParameters: params,
     );
 
-
     if (response['status'] != 'success') {
       throw ApiException(
         response['message'] ?? 'Failed to fetch notifications',
@@ -38,6 +42,45 @@ class NotificationsApiService {
     }
 
     return NotificationsResponse.fromJson(response);
+  }
+
+  /// Delete a specific notification
+  Future<Map<String, dynamic>> deleteNotification(int notificationId) async {
+    final path = _deleteEndpointPath();
+    final response = await _client.post(
+      path,
+      body: {
+        'notification_id': notificationId,
+      },
+    );
+
+    if (response['status'] != 'success') {
+      throw ApiException(
+        response['message'] ?? 'Failed to delete notification',
+        details: response,
+      );
+    }
+
+    return response;
+  }
+
+  /// Delete all notifications (optionally seen only)
+  Future<Map<String, dynamic>> deleteAllNotifications({bool seenOnly = false}) async {
+    final path = _deleteEndpointPath();
+    final body = {
+      'delete_all': true,
+      if (seenOnly) 'seen_only': true,
+    };
+    final response = await _client.post(path, body: body);
+
+    if (response['status'] != 'success') {
+      throw ApiException(
+        response['message'] ?? 'Failed to delete notifications',
+        details: response,
+      );
+    }
+
+    return response;
   }
 
   /// Mark a specific notification as read
@@ -51,6 +94,7 @@ class NotificationsApiService {
       );
 
       if (response['status'] == 'success') {
+
       }
     } on ApiException catch (e) {
       // If the notification is already read, this is not an error - we'll ignore it silently
@@ -60,13 +104,14 @@ class NotificationsApiService {
       }
       
       // Re-throw the error if it's a real error
+
       rethrow;
     }
   }
 
   /// Mark all notifications as read
   Future<int> markAllNotificationsRead() async {
-    
+
     final response = await _client.post(
       configCfgP('notifications_read'),
       body: {
@@ -82,7 +127,7 @@ class NotificationsApiService {
     }
 
     final markedCount = response['data']?['marked_count'] as int? ?? 0;
-    
+
     return markedCount;
   }
 }

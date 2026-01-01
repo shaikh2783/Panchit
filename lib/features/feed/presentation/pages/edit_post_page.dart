@@ -95,27 +95,31 @@ class _EditPostPageState extends State<EditPostPage> {
   }
 
   Future<void> _saveChanges() async {
+
     if (_isLoading) {
+
       return;
     }
     
     final isValid = _formKey.currentState?.validate() ?? false;
+
     if (!isValid) {
+
       return;
     }
 
     setState(() => _isLoading = true);
 
     try {
-      
+
       final result = await _postService.editPost(
         postId: widget.post.id,
         text: _textController.text.trim(),
         privacy: _selectedPrivacy,
       );
 
-
       if (result['status'] == 'success' && mounted) {
+
         final updatedPost = Post(
           id: widget.post.id,
           authorName: widget.post.authorName,
@@ -147,19 +151,22 @@ class _EditPostPageState extends State<EditPostPage> {
         );
 
         widget.onPostUpdated?.call(updatedPost);
-        
+
         Navigator.pop(context, updatedPost);
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Post updated successfully'), backgroundColor: Colors.green),
         );
       } else {
+
         _showError(result['message']?.toString() ?? 'Failed to update the post.');
       }
     } catch (e) {
+
       _showError(e.toString());
     } finally {
       if (mounted) {
+
         setState(() => _isLoading = false);
       }
     }

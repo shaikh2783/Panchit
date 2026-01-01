@@ -99,6 +99,7 @@ class _PageProfilePageState extends State<PageProfilePage>
       _loadInitialPosts();
     } catch (e) {
       setState(() => _isLoadingPageInfo = false);
+
     }
   }
 
@@ -192,6 +193,7 @@ class _PageProfilePageState extends State<PageProfilePage>
     try {
       final repo = context.read<PagesRepository>();
       await repo.toggleLikePage(pageId, currentLikeStatus);
+
     } catch (e) {
       // إذا فشل، إرجاع الحالة السابقة
       setState(() {
@@ -227,6 +229,7 @@ class _PageProfilePageState extends State<PageProfilePage>
           vkontakte: _currentPage!.vkontakte,
         );
       });
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -455,10 +458,12 @@ class _PageProfilePageState extends State<PageProfilePage>
                             scrollInfo.metrics.pixels;
 
                         if (hasMore && !isLoadingMore) {
+
                           context.read<PagePostsBloc>().add(
                             LoadMorePagePostsEvent(),
                           );
                         } else {
+
                         }
                       }
                       return false;

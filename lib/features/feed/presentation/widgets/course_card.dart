@@ -37,7 +37,7 @@ class CourseCard extends StatelessWidget {
     final isOwner = currentUserId != null && post.authorId == currentUserId;
     
     // Debug: Check ownership
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(

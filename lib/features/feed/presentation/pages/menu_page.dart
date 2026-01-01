@@ -1187,8 +1187,6 @@ if(false)
             ),
     
 
-
-                       SizedBox(height: Get.height *0.1),
           ],
         ),
       ),

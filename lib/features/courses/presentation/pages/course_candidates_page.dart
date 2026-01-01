@@ -35,14 +35,16 @@ class _CourseCandidatesPageState extends State<CourseCandidatesPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
     if (!_initialized) {
       _initialized = true;
+
       _loadCandidates();
     }
   }
 
   Future<void> _loadCandidates({bool refresh = false}) async {
-    
+
     if (refresh) {
       setState(() {
         _offset = 0;
@@ -53,9 +55,11 @@ class _CourseCandidatesPageState extends State<CourseCandidatesPage> {
     } else {
       // Don't load if already loading or no more data
       if (_loading) {
+
         return;
       }
       if (!_hasMore) {
+
         return;
       }
       setState(() => _loading = true);
@@ -65,20 +69,17 @@ class _CourseCandidatesPageState extends State<CourseCandidatesPage> {
       final client = context.read<ApiClient>();
       
       final uri = '${configCfgP('courses_base')}/candidates?offset=$_offset';
-      
-      
+
       final response = await client.post(
         uri,
         body: {'course_id': widget.courseId},
       );
-
 
       if (response['status'] == 'success') {
         final data = response['data'] as Map<String, dynamic>;
         final candidatesList = (data['candidates'] as List? ?? [])
             .map((json) => CourseCandidate.fromJson(json as Map<String, dynamic>))
             .toList();
-
 
         setState(() {
           _candidates.addAll(candidatesList);
@@ -88,9 +89,11 @@ class _CourseCandidatesPageState extends State<CourseCandidatesPage> {
         });
       } else {
         final errorMsg = response['message'] ?? 'فشل تحميل المتقدمين';
+
         setState(() => _error = errorMsg);
       }
     } catch (e) {
+
       setState(() => _error = 'حدث خطأ أثناء تحميل المتقدمين');
     } finally {
       setState(() => _loading = false);

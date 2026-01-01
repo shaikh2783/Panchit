@@ -177,8 +177,7 @@ class _ReportBugPageState extends State<ReportBugPage> {
                        'Unknown User';
       final userEmail = auth.currentUser?['user_email'] ?? 'no-email@example.com';
       final userId = auth.currentUser?['user_id']?.toString() ?? 'unknown';
-      
-      
+
       // Step 1: Upload video file
       final apiClient = Get.find<ApiClient>();
       
@@ -186,12 +185,13 @@ class _ReportBugPageState extends State<ReportBugPage> {
       apiClient.updateAuthToken(auth.authToken);
       
       final postsService = PostsApiService(apiClient);
-      
+
       final uploadedVideo = await postsService.uploadFile(
         _videoFile!,
         type: FileUploadType.video,
         onProgress: (sent, total) {
           final progress = (sent / total * 100).toStringAsFixed(1);
+
         },
       );
 
@@ -199,9 +199,8 @@ class _ReportBugPageState extends State<ReportBugPage> {
         throw Exception('Failed to upload video');
       }
 
-
       // Step 2: Send report data via email using simple-send
-      
+
       final emailBodyHtml = '''
 <!DOCTYPE html>
 <html>
@@ -263,7 +262,6 @@ class _ReportBugPageState extends State<ReportBugPage> {
           'subtype': 'html',
         },
       );
-
 
       if (mounted) {
         HapticFeedback.heavyImpact();

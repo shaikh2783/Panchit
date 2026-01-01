@@ -475,13 +475,13 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
     Emitter<EventsState> emit,
   ) async {
     try {
+
       emit(EventsLoading());
 
       final result = await _eventsService.updateEventCover(
         eventId: event.eventId,
         coverData: event.coverData,
       );
-
 
       if (result['status'] == 'success') {
         emit(EventCoverUpdated(

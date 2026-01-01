@@ -13,7 +13,6 @@ class AddressesApiService {
 
       final response = await _apiClient.get(configCfgP('addresses'));
 
-
       if (response['error'] == false) {
         final data = response['data'] as List;
         return {
@@ -27,6 +26,7 @@ class AddressesApiService {
         };
       }
     } catch (e) {
+
       return {'success': false, 'message': 'Error: ${e.toString()}'};
     }
   }
@@ -40,7 +40,6 @@ class AddressesApiService {
         queryParameters: {'id': addressId},
       );
 
-
       if (response['error'] == false) {
         return {'success': true, 'address': Address.fromJson(response['data'])};
       } else {
@@ -50,6 +49,7 @@ class AddressesApiService {
         };
       }
     } catch (e) {
+
       return {'success': false, 'message': 'Error: ${e.toString()}'};
     }
   }
@@ -63,7 +63,6 @@ class AddressesApiService {
         body: address.toJson(),
       );
 
-
       if (response['error'] == false) {
         return {
           'success': true,
@@ -76,6 +75,7 @@ class AddressesApiService {
         };
       }
     } catch (e) {
+
       return {'success': false, 'message': 'Error: ${e.toString()}'};
     }
   }
@@ -89,7 +89,6 @@ class AddressesApiService {
         body: address.toUpdateJson(),
       );
 
-
       if (response['error'] == false) {
         return {
           'success': true,
@@ -102,6 +101,7 @@ class AddressesApiService {
         };
       }
     } catch (e) {
+
       return {'success': false, 'message': 'Error: ${e.toString()}'};
     }
   }
@@ -115,7 +115,6 @@ class AddressesApiService {
         body: {'address_id': addressId},
       );
 
-
       if (response['error'] == false) {
         return {
           'success': true,
@@ -128,6 +127,7 @@ class AddressesApiService {
         };
       }
     } catch (e) {
+
       return {'success': false, 'message': 'Error: ${e.toString()}'};
     }
   }

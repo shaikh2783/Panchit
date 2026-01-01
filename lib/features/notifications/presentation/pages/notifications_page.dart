@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snginepro/features/notifications/application/notifications_notifier.dart';
 import 'package:snginepro/features/notifications/data/models/notification.dart';
 import 'package:snginepro/features/feed/presentation/pages/post_detail_page.dart';
+import 'package:snginepro/features/profile/presentation/pages/profile_page.dart';
+import 'package:snginepro/features/pages/presentation/pages/page_profile_page.dart';
+import 'package:snginepro/features/groups/presentation/pages/group_profile_page.dart';
+import 'package:snginepro/features/friends/presentation/pages/friend_requests_page.dart';
+import 'package:snginepro/features/groups/application/bloc/group_posts_bloc.dart';
+import 'package:snginepro/features/groups/data/repositories/groups_repository.dart';
+import 'package:snginepro/core/network/api_client.dart';
+import 'package:snginepro/features/groups/data/services/groups_api_service.dart';
+import 'package:snginepro/features/funding/presentation/pages/funding_detail_page.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -16,6 +26,7 @@ class NotificationsPage extends StatefulWidget {
 
 class _NotificationsPageState extends State<NotificationsPage> {
   final ScrollController _scrollController = ScrollController();
+  bool _isLoadingMore = false;
 
   @override
   void initState() {
@@ -37,9 +48,25 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 200) {
-      context.read<NotificationsNotifier>().loadMoreNotifications();
+    final notifier = context.read<NotificationsNotifier>();
+    final currentPosition = _scrollController.position.pixels;
+    final maxExtent = _scrollController.position.maxScrollExtent;
+    final scrollPercentage = maxExtent > 0 ? (currentPosition / maxExtent) * 100 : 0.0;
+    
+    // عند الوصول إلى 70% من نهاية القائمة، جلب المزيد
+    if (scrollPercentage >= 70 &&
+        !_isLoadingMore &&
+        !notifier.isLoadingMore &&
+        notifier.hasMore) {
+
+      _isLoadingMore = true;
+      
+      notifier.loadMoreNotifications().then((_) {
+        _isLoadingMore = false;
+      }).catchError((e) {
+
+        _isLoadingMore = false;
+      });
     }
   }
 
@@ -65,21 +92,227 @@ class _NotificationsPageState extends State<NotificationsPage> {
         'notifications_error'.tr,
         'notifications_mark_error'.tr,
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.withValues(alpha: 0.85),
+        backgroundColor: Colors.red.withOpacity(0.85),
         colorText: Colors.white,
       );
     }
   }
 
   void _handleNotificationTap(NotificationModel n) {
-    if (n.nodeType == 'post' && n.nodeId != null) {
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => PostDetailPage(postId: n.nodeId!)),
-      );
-    } else if (n.nodeType == 'page' && n.nodeId != null) {
-      // TODO: صفحة Page
-    } else if (n.nodeType == 'group' && n.nodeId != null) {
-      // TODO: صفحة Group
+    // Mark notification as read
+    context.read<NotificationsNotifier>().markAsRead(n.notificationId);
+
+    // Navigate based on action type
+    switch (n.action.toLowerCase()) {
+      // Group notifications
+      case 'group_join':
+        if (n.nodeId != null) {
+          // Navigate to group profile with bloc provider
+          final groupsApiService = GroupsApiService(context.read<ApiClient>());
+          final groupsRepository = GroupsRepository(groupsApiService);
+          
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => BlocProvider(
+                create: (_) => GroupPostsBloc(groupsRepository)
+                  ..add(LoadGroupPostsEvent(n.nodeId!.toString())),
+                child: GroupProfilePage(groupId: n.nodeId!),
+              ),
+            ),
+          );
+        } else {
+          // Fallback: try to navigate from URL if possible
+          if (n.url.isNotEmpty || n.nodeUrl.isNotEmpty) {
+            _navigateFromUrl(n.url.isNotEmpty ? n.url : n.nodeUrl);
+          } else {
+            Get.snackbar(
+              'notification'.tr,
+              'group_not_available'.tr,
+              snackPosition: SnackPosition.BOTTOM,
+            );
+          }
+        }
+        break;
+
+      // Funding notifications
+      case 'funding_donation':
+        // Funding items use the postId as the fundingId
+        if (n.nodeId != null && n.nodeId! > 0) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => FundingDetailPage(fundingId: n.nodeId!),
+            ),
+          );
+        } else if (n.url.isNotEmpty || n.nodeUrl.isNotEmpty) {
+          // Try to extract postId from URL and treat it as fundingId
+          final match = RegExp(r'posts?[/=](\d+)').firstMatch(n.url.isNotEmpty ? n.url : n.nodeUrl);
+          final fundingId = match != null ? int.tryParse(match.group(1) ?? '') : null;
+          if (fundingId != null && fundingId > 0) {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => FundingDetailPage(fundingId: fundingId),
+              ),
+            );
+          }
+        }
+        break;
+
+      // Live stream notifications -> open the related post
+      case 'live_stream':
+        if (n.nodeId != null) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => PostDetailPage(postId: n.nodeId!),
+            ),
+          );
+        } else if (n.url.isNotEmpty || n.nodeUrl.isNotEmpty) {
+          _navigateFromUrl(n.url.isNotEmpty ? n.url : n.nodeUrl);
+        }
+        break;
+
+      // Friend notifications
+      case 'friend_add':
+        // Navigate to the user's profile or friend requests page
+        if (n.fromUserId > 0) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => ProfilePage(userId: n.fromUserId),
+            ),
+          );
+        } else {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const FriendRequestsPage()),
+          );
+        }
+        break;
+
+      // Post interaction notifications
+      case 'react_like':
+      case 'like':
+      case 'comment':
+      case 'post_review':
+      case 'post':
+        if (n.nodeType == 'post' && n.nodeId != null) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => PostDetailPage(postId: n.nodeId!),
+            ),
+          );
+        } else if (n.nodeType == 'post') {
+          // Parse nodeId from nodeUrl if available
+          _navigateFromUrl(n.nodeUrl);
+        }
+        break;
+
+      // User follow notification
+      case 'follow':
+        if (n.fromUserId > 0) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => ProfilePage(userId: n.fromUserId),
+            ),
+          );
+        }
+        break;
+
+      // Page notifications
+      case 'page_follow':
+      case 'page_like':
+        if (n.nodeType == 'page' && n.nodeId != null) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => PageProfilePage.fromId(pageId: n.nodeId!),
+            ),
+          );
+        }
+        break;
+
+      // Event notifications
+      case 'event_join':
+      case 'event_invite':
+        if (n.nodeType == 'event' && n.nodeId != null) {
+
+          // TODO: Implement EventDetailPage navigation when available
+        }
+        break;
+
+      // System notifications or unknown actions
+      default:
+        // Try to navigate using the URL or nodeType as fallback
+        if (n.nodeType == 'post' && n.nodeId != null) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => PostDetailPage(postId: n.nodeId!),
+            ),
+          );
+        } else if (n.nodeType == 'user' && n.fromUserId > 0) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => ProfilePage(userId: n.fromUserId),
+            ),
+          );
+        } else {
+
+        }
+        break;
+    }
+  }
+
+  /// Navigate using URL fallback when nodeId is not available
+  void _navigateFromUrl(String url) {
+    try {
+      // Try to extract ID from URL
+      // Example: /api/posts/123 or posts/123
+      final match = RegExp(r'posts?[/=](\d+)').firstMatch(url);
+      if (match != null) {
+        final postId = int.tryParse(match.group(1) ?? '');
+        if (postId != null && postId > 0) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => PostDetailPage(postId: postId),
+            ),
+          );
+          return;
+        }
+      }
+
+      // Try for users
+      final userMatch = RegExp(r'users?[/=](\d+)').firstMatch(url);
+      if (userMatch != null) {
+        final userId = int.tryParse(userMatch.group(1) ?? '');
+        if (userId != null && userId > 0) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => ProfilePage(userId: userId),
+            ),
+          );
+          return;
+        }
+      }
+
+      // Try for groups
+      final groupMatch = RegExp(r'groups?[/=](\d+)').firstMatch(url);
+      if (groupMatch != null) {
+        final groupId = int.tryParse(groupMatch.group(1) ?? '');
+        if (groupId != null && groupId > 0) {
+          final groupsApiService = GroupsApiService(context.read<ApiClient>());
+          final groupsRepository = GroupsRepository(groupsApiService);
+          
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => BlocProvider(
+                create: (_) => GroupPostsBloc(groupsRepository)
+                  ..add(LoadGroupPostsEvent(groupId.toString())),
+                child: GroupProfilePage(groupId: groupId),
+              ),
+            ),
+          );
+          return;
+        }
+      }
+
+    } catch (e) {
+
     }
   }
 
@@ -114,12 +347,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   margin: const EdgeInsets.only(right: 8),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [cs.primary, cs.primary.withValues(alpha: 0.8)],
+                      colors: [cs.primary, cs.primary.withOpacity(0.8)],
                     ),
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: cs.primary.withValues(alpha: 0.3),
+                        color: cs.primary.withOpacity(0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
                       ),
@@ -178,7 +411,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
               color: cs.primary,
               child: ListView.separated(
                 controller: _scrollController,
-                padding: const EdgeInsets.fromLTRB(16, 20, 16, 70),
+                padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
                 itemCount: n.notifications.length + (n.isLoadingMore ? 1 : 0),
                 separatorBuilder: (_, __) => const SizedBox(height: 12),
                 itemBuilder: (context, index) {
@@ -214,15 +447,34 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     ),
                     confirmDismiss: (dir) async {
                       if (dir == DismissDirection.startToEnd) {
-                        // Mark read
+                        // Mark as read on swipe right
                         await context.read<NotificationsNotifier>().markAsRead(
                           item.notificationId,
                         );
-                        return false; // لا تمسح من القائمة
-                      } else {
-                        // حذف (إن أردت لاحقًا)
-                        // TODO: call delete API إن وُجد
                         return false;
+                      }
+                      // Allow dismissal for swipe left (endToStart)
+                      return true;
+                    },
+                    onDismissed: (dir) {
+                      if (dir == DismissDirection.endToStart) {
+                        context
+                            .read<NotificationsNotifier>()
+                            .removeNotificationById(item.notificationId)
+                            .then((_) {
+                          Get.snackbar(
+                            'notification'.tr,
+                            'notifications_deleted'.tr,
+                            snackPosition: SnackPosition.BOTTOM,
+                            duration: const Duration(seconds: 2),
+                          );
+                        }).catchError((e) {
+                          Get.snackbar(
+                            'notifications_error'.tr,
+                            e.toString(),
+                            snackPosition: SnackPosition.BOTTOM,
+                          );
+                        });
                       }
                     },
                     child: _NotificationCard(
@@ -271,7 +523,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: isDark ? Colors.black26 : Colors.grey.withValues(alpha: 0.1),
+                  color: isDark ? Colors.black26 : Colors.grey.withOpacity(0.1),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -346,7 +598,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
           padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 40.0),
           child: Card(
             elevation: isDark ? 8 : 4,
-            shadowColor: isDark ? Colors.black54 : Colors.grey.withValues(alpha: 0.3),
+            shadowColor: isDark ? Colors.black54 : Colors.grey.withOpacity(0.3),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
@@ -380,7 +632,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.red.withValues(alpha: 0.3),
+                          color: Colors.red.withOpacity(0.3),
                           blurRadius: 20,
                           spreadRadius: 2,
                         ),
@@ -421,7 +673,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.blue.withValues(alpha: 0.3),
+                          color: Colors.blue.withOpacity(0.3),
                           blurRadius: 8,
                           offset: const Offset(0, 4),
                         ),
@@ -478,7 +730,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
           padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 40.0),
           child: Card(
             elevation: isDark ? 8 : 4,
-            shadowColor: isDark ? Colors.black54 : Colors.grey.withValues(alpha: 0.3),
+            shadowColor: isDark ? Colors.black54 : Colors.grey.withOpacity(0.3),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
@@ -512,7 +764,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.blue.withValues(alpha: 0.3),
+                          color: Colors.blue.withOpacity(0.3),
                           blurRadius: 20,
                           spreadRadius: 2,
                         ),
@@ -571,11 +823,11 @@ class _NotificationsPageState extends State<NotificationsPage> {
       alignment: alignStart ? Alignment.centerLeft : Alignment.centerRight,
       padding: const EdgeInsets.symmetric(horizontal: 24),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [color, color.withValues(alpha: 0.8)]),
+        gradient: LinearGradient(colors: [color, color.withOpacity(0.8)]),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: color.withValues(alpha: 0.3),
+            color: color.withOpacity(0.3),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -687,15 +939,15 @@ class _NotificationCard extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: isDark
-                ? Colors.black.withValues(alpha: 0.3)
-                : Colors.grey.withValues(alpha: 0.15),
+                ? Colors.black.withOpacity(0.3)
+                : Colors.grey.withOpacity(0.15),
             blurRadius: isUnread ? 12 : 6,
             spreadRadius: isUnread ? 1 : 0,
             offset: const Offset(0, 3),
           ),
         ],
         border: isUnread
-            ? Border.all(color: cs.primary.withValues(alpha: 0.5), width: 1.5)
+            ? Border.all(color: cs.primary.withOpacity(0.5), width: 1.5)
             : null,
       ),
       child: Material(
@@ -722,7 +974,7 @@ class _NotificationCard extends StatelessWidget {
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: cs.primary.withValues(alpha: isUnread ? 0.3 : 0.1),
+                            color: cs.primary.withOpacity(isUnread ? 0.3 : 0.1),
                             blurRadius: 8,
                             spreadRadius: 1,
                           ),
@@ -773,7 +1025,7 @@ class _NotificationCard extends StatelessWidget {
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: _iconColor(cs).withValues(alpha: 0.4),
+                              color: _iconColor(cs).withOpacity(0.4),
                               blurRadius: 6,
                               spreadRadius: 1,
                             ),
@@ -828,7 +1080,7 @@ class _NotificationCard extends StatelessWidget {
                             decoration: BoxDecoration(
                               color:
                                   (isDark ? Colors.grey[800] : Colors.grey[100])
-                                      ?.withValues(alpha: 0.8),
+                                      ?.withOpacity(0.8),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Row(
@@ -879,13 +1131,13 @@ class _NotificationCard extends StatelessWidget {
                                 gradient: LinearGradient(
                                   colors: [
                                     cs.primary,
-                                    cs.primary.withValues(alpha: 0.8),
+                                    cs.primary.withOpacity(0.8),
                                   ],
                                 ),
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: cs.primary.withValues(alpha: 0.4),
+                                    color: cs.primary.withOpacity(0.4),
                                     blurRadius: 4,
                                     spreadRadius: 1,
                                   ),

@@ -14,8 +14,8 @@ class PagesApiService {
 
   /// Get my pages (pages I manage)
   Future<List<PageModel>> fetchMyPages() async {
-    final response = await _client.get(configCfgP('pages_my'));
 
+    final response = await _client.get(configCfgP('pages_my'));
 
     if (response['status'] != 'success') {
       throw ApiException(
@@ -88,7 +88,6 @@ class PagesApiService {
 
     final path = endpoint.replaceAll('{id}', pageId.toString());
 
-
     final response = await _client.post(path);
 
     if (response['status'] != 'success') {
@@ -128,7 +127,6 @@ class PagesApiService {
       body['description'] = description;
     }
 
-
     final response = await _client.post(path, body: body);
 
     if (response['status'] != 'success') {
@@ -144,6 +142,7 @@ class PagesApiService {
     }
 
     final page = PageModel.fromJson(pageData);
+
     return page;
   }
 
@@ -176,7 +175,6 @@ class PagesApiService {
       body['description'] = description;
     }
 
-
     final response = await _client.post(path, body: body);
 
     if (response['status'] != 'success') {
@@ -203,7 +201,6 @@ class PagesApiService {
 
     // Add section to body
     final body = <String, dynamic>{'section': section, ...data};
-
 
     final response = await _client.post(path, body: body);
 
@@ -237,7 +234,6 @@ class PagesApiService {
       queryParameters: queryParams,
     );
 
-
     if (response['status'] != 'success') {
       throw ApiException(
         response['message'] ?? 'Failed to load page information',
@@ -268,7 +264,6 @@ class PagesApiService {
         'limit': '$limit',
       },
     );
-
 
     final postsResponse = PostsResponse.fromJson(response);
 
@@ -310,7 +305,6 @@ class PagesApiService {
 
     final body = {'users': userIds.map((id) => id.toString()).toList()};
 
-
     final response = await _client.post(path, body: body);
 
     if (response['status'] != 'success') {
@@ -331,7 +325,6 @@ class PagesApiService {
 
     final body = {'user_id': userId};
 
-
     final response = await _client.post(path, body: body);
 
     if (response['status'] != 'success') {
@@ -351,7 +344,6 @@ class PagesApiService {
         : '/data/pages/$pageId/remove_admin';
 
     final body = {'user_id': userId};
-
 
     final response = await _client.post(path, body: body);
 
@@ -385,7 +377,6 @@ class PagesApiService {
     if (businessAddress != null) body['business_address'] = businessAddress;
     if (message != null) body['message'] = message;
 
-
     final response = await _client.post(path, body: body);
 
     if (response['status'] != 'success') {
@@ -409,7 +400,6 @@ class PagesApiService {
         : '/data/pages/$pageId/picture';
 
     final body = {'picture': pictureData};
-
 
     final response = await _client.post(path, body: body);
 
@@ -435,7 +425,6 @@ class PagesApiService {
 
     final body = {'cover': coverData};
 
-
     final response = await _client.post(path, body: body);
 
     if (response['status'] != 'success') {
@@ -452,10 +441,9 @@ class PagesApiService {
   /// Endpoint: GET /data/pages/categories
   Future<List<PageCategory>> getPageCategories() async {
     try {
-      
+
       final endpoint = configCfgP('pages_categories');
       final response = await _client.get(endpoint.isNotEmpty ? endpoint : '/data/pages/categories');
-
 
       if (response['status'] == 'success' && response['data'] != null) {
         final categoriesData = response['data']['categories'] as List<dynamic>;
@@ -467,6 +455,7 @@ class PagesApiService {
         );
       }
     } catch (e) {
+
       rethrow;
     }
   }
@@ -475,10 +464,9 @@ class PagesApiService {
   /// Endpoint: GET /data/countries
   Future<List<Country>> getCountries() async {
     try {
-      
+
       final endpoint = configCfgP('countries');
       final response = await _client.get(endpoint.isNotEmpty ? endpoint : '/data/countries');
-
 
       if (response['status'] == 'success' && response['data'] != null) {
         final countriesData = response['data']['countries'] as List<dynamic>;
@@ -490,6 +478,7 @@ class PagesApiService {
         );
       }
     } catch (e) {
+
       rethrow;
     }
   }
@@ -498,10 +487,9 @@ class PagesApiService {
   /// Endpoint: GET /data/languages
   Future<List<Language>> getLanguages() async {
     try {
-      
+
       final endpoint = configCfgP('languages');
       final response = await _client.get(endpoint.isNotEmpty ? endpoint : '/data/languages');
-
 
       if (response['status'] == 'success' && response['data'] != null) {
         final languagesData = response['data']['languages'] as List<dynamic>;
@@ -513,6 +501,7 @@ class PagesApiService {
         );
       }
     } catch (e) {
+
       rethrow;
     }
   }
@@ -520,13 +509,12 @@ class PagesApiService {
   /// Delete a page
   Future<void> deletePage({required int pageId}) async {
     try {
-      
+
       final endpoint = configCfgP('pages_delete');
       final response = await _client.post(
         endpoint.isNotEmpty ? endpoint : '/data/pages/delete',
         body: {'page_id': pageId},
       );
-
 
       if (response['status'] != 'success') {
         throw ApiException(
@@ -535,6 +523,7 @@ class PagesApiService {
         );
       }
     } catch (e) {
+
       rethrow;
     }
   }

@@ -37,6 +37,7 @@ class _AdsCampaignsPageState extends State<AdsCampaignsPage> {
   Future<void> _load() async {
     setState(() => _loading = true);
     try {
+
       _items = await _repo.listCampaigns(
         sortBy: _sortBy,
         sortDir: _sortDir,
@@ -45,6 +46,7 @@ class _AdsCampaignsPageState extends State<AdsCampaignsPage> {
         placement: _placement,
         q: _search.isEmpty ? null : _search,
       );
+
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to load campaigns: $e')),

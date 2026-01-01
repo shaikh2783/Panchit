@@ -47,6 +47,7 @@ class VideoCacheService {
         _cachedVideos.clear();
       }
     } catch (e) {
+
     }
   }
 
@@ -63,6 +64,7 @@ class VideoCacheService {
       await CachedVideoPlayerPlus.removeFileFromCache(Uri.parse(videoUrl));
       _cachedVideos.remove(videoUrl);
     } catch (e) {
+
     }
   }
 
@@ -71,6 +73,7 @@ class VideoCacheService {
     try {
       await CachedVideoPlayerPlus.removeFileFromCacheByKey(cacheKey);
     } catch (e) {
+
     }
   }
 
@@ -80,6 +83,7 @@ class VideoCacheService {
       await CachedVideoPlayerPlus.clearAllCache();
       _cachedVideos.clear();
     } catch (e) {
+
     }
   }
 

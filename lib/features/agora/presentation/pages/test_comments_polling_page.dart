@@ -28,7 +28,7 @@ class _TestCommentsPollingPageState extends State<TestCommentsPollingPage> {
     // تحميل التعليقات وبدء الـ polling
     _commentsBloc.add(LoadLiveComments(postId: widget.liveId));
     _commentsBloc.add(StartLiveCommentsPolling(postId: widget.liveId));
-    
+
   }
 
   @override

@@ -34,6 +34,7 @@ class FriendsApiService {
         );
       }
     } catch (e) {
+
       return FriendActionResult.error(
         'Failed to send friend request',
         FriendshipStatus.none,
@@ -62,6 +63,7 @@ class FriendsApiService {
         );
       }
     } catch (e) {
+
       return FriendActionResult.error(
         'Failed to cancel friend request',
         FriendshipStatus.pending,
@@ -90,6 +92,7 @@ class FriendsApiService {
         );
       }
     } catch (e) {
+
       return FriendActionResult.error(
         'Failed to accept friend request',
         FriendshipStatus.requested,
@@ -118,6 +121,7 @@ class FriendsApiService {
         );
       }
     } catch (e) {
+
       return FriendActionResult.error(
         'Failed to decline friend request',
         FriendshipStatus.requested,
@@ -145,6 +149,7 @@ class FriendsApiService {
         );
       }
     } catch (e) {
+
       return FriendActionResult.error(
         'Failed to remove friend',
         FriendshipStatus.friends,
@@ -163,6 +168,7 @@ class FriendsApiService {
       }
       return [];
     } catch (e) {
+
       return [];
     }
   }
@@ -178,6 +184,7 @@ class FriendsApiService {
       }
       return [];
     } catch (e) {
+
       return [];
     }
   }
@@ -206,6 +213,7 @@ class FriendsApiService {
         );
       }
     } catch (e) {
+
       return FriendActionResult.error(
         'Failed to follow user',
         FriendshipStatus.none,
@@ -233,6 +241,7 @@ class FriendsApiService {
         );
       }
     } catch (e) {
+
       return FriendActionResult.error(
         'Failed to unfollow user',
         FriendshipStatus.following,
@@ -254,6 +263,7 @@ class FriendsApiService {
       }
       return null;
     } catch (e) {
+
       return null;
     }
   }
@@ -268,6 +278,7 @@ class FriendsApiService {
       }
       return null;
     } catch (e) {
+
       return null;
     }
   }

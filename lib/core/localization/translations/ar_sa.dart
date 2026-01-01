@@ -67,6 +67,31 @@ const Map<String, String> arSA = {
   'work': 'العمل',
   'education': 'التعليم',
   'skip': 'تخطي',
+  'skip_all': 'تخطي الكل',
+  'back': 'رجوع',
+  'step': 'الخطوة',
+  'of': 'من',
+  'profile_setup_complete': 'تم إكمال إعداد الملف الشخصي!',
+  'please_select_country': 'يرجى اختيار بلدك',
+  'country': 'البلد',
+  'select_your_country': 'اختر بلدك',
+  'job_title': 'المسمى الوظيفي',
+  'job_title_hint': 'مثال: مهندس برمجيات',
+  'field_of_study': 'مجال الدراسة',
+  'field_of_study_hint': 'مثال: علوم الحاسوب',
+  'add_profile_photo': 'أضف صورة شخصية',
+  'profile_photo_description': 'أضف صورة ليتعرف عليك الآخرون',
+  'tap_to_change_photo': 'اضغط لتغيير الصورة',
+  'choose_photo_source': 'اختر مصدر الصورة',
+  'camera': 'الكاميرا',
+  'gallery': 'المعرض',
+  'photo_uploaded_successfully': 'تم رفع الصورة بنجاح!',
+  'error_uploading_photo': 'خطأ في رفع الصورة',
+  'error_picking_image': 'خطأ في اختيار الصورة',
+  'tell_us_about_yourself': 'أخبرنا عن نفسك',
+  'bio_description': 'اكتب نبذة قصيرة ليعرفك الآخرون',
+  'bio': 'نبذة عني',
+  'write_something_about_yourself': 'اكتب شيئاً عن نفسك...',
 
   // Navigation
   'home': 'الرئيسية',
@@ -137,6 +162,9 @@ const Map<String, String> arSA = {
     'adult_confirm_action_mark': 'تعليم 18+',
     'adult_confirm_action_remove': 'إزالة 18+',
   'delete': 'حذف',
+  'delete_story': 'حذف القصة',
+  'delete_story_confirmation': 'هل أنت متأكد من حذف قصتك؟ لا يمكن التراجع عن هذا الإجراء.',
+  'story_deleted_successfully': 'تم حذف القصة بنجاح',
   'report': 'إبلاغ',
   'share': 'مشاركة',
 
@@ -259,7 +287,6 @@ const Map<String, String> arSA = {
   'confirm': 'تأكيد',
   'close': 'إغلاق',
   'continue': 'متابعة',
-  'back': 'رجوع',
   'next': 'التالي',
   'finish': 'إنهاء',
 
@@ -578,7 +605,6 @@ const Map<String, String> arSA = {
   'address': 'العنوان',
   'city': 'المدينة',
   'zip_code': 'الرمز البريدي',
-  'country': 'الدولة',
 
   // Jobs
   'jobs': 'الوظائف',
@@ -593,7 +619,6 @@ const Map<String, String> arSA = {
   'salary_max': 'الراتب الأعلى',
   'currency_id': 'معرّف العملة',
   'select_currency': 'اختر العملة',
-  'job_title': 'عنوان الوظيفة',
   'select_category': 'اختر تصنيفاً',
   'candidates': 'المتقدمون',
   'apply_now': 'قدّم الآن',
@@ -965,6 +990,9 @@ const Map<String, String> arSA = {
   'profile_not_following': 'لم تتابع أحداً بعد',
   'profile_no_subscriptions': 'لا توجد اشتراكات بعد',
   'profile_mutual_friends': '@count معارف مشتركة',
+  'send_message': 'رسالة',
+  'more_options': 'المزيد',
+  'anonymous_user': 'مجهول',
   'profile_videos_coming_soon': 'الفيديوهات قريباً...',
   'profile_no_social_links': 'لا توجد روابط اجتماعية',
   'profile_tab_posts': 'المنشورات',
@@ -1111,6 +1139,30 @@ const Map<String, String> arSA = {
   'sounds': 'الأصوات',
   'notifications_sound': 'صوت الإشعارات',
   'chat_sound': 'صوت المحادثة',
+  
+  // 🌐 Notification Messages (translated from message_key)
+  'notification_started_following': 'بدأ بمتابعتك',
+  'notification_friend_request_sent': 'أرسل لك طلب صداقة',
+  'notification_friend_request_accepted': 'قبل طلب صداقتك',
+  'notification_commented_post': 'علّق على منشورك',
+  'notification_reacted_like_to_post': 'أعجب بمنشورك',
+  'notification_reacted_love_to_post': 'أحب منشورك',
+  'notification_reacted_haha_to_post': 'تفاعل هاها على منشورك',
+  'notification_reacted_wow_to_post': 'تفاعل واو على منشورك',
+  'notification_reacted_sad_to_post': 'تفاعل حزين على منشورك',
+  'notification_reacted_angry_to_post': 'تفاعل غاضب على منشورك',
+  'notification_shared_your_post': 'شارك منشورك',
+  'notification_group_join_request': 'طلب الانضمام لمجموعتك',
+  'notification_group_join_approved': 'وافق على طلب انضمامك',
+  'notification_mentioned_you_post': 'أشار إليك في منشور',
+  'notification_mentioned_you_comment': 'أشار إليك في تعليق',
+  'notification_posted_on_wall': 'نشر على حائطك',
+  'notification_replied_comment': 'رد على تعليقك',
+  'notification_page_invitation': 'دعاك للإعجاب بصفحة',
+  'notification_group_invitation': 'دعاك للانضمام لمجموعة',
+  'notification_event_invitation': 'دعاك لحدث',
+  'notification_tagged_photo': 'أشار إليك في صورة',
+  'notification_birthday': 'يحتفل بعيد ميلاده اليوم',
 
   // Blocked Users Page
   'blocked_users_title': 'المستخدمون المحظورون',
@@ -1394,6 +1446,7 @@ const Map<String, String> arSA = {
   'notifications_marked_success': 'تم وضع علامة على جميع الإشعارات كمقروءة',
   'notifications_error': 'خطأ',
   'notifications_mark_error': 'فشل وضع علامة على الإشعارات كمقروءة',
+    'notifications_deleted': 'تم حذف الإشعار',
   'friend_requests_title': 'طلبات الموادقة',
   'friend_requests_received': 'مستلمة',
   'friend_requests_sent': 'مرسلة',
@@ -1905,4 +1958,126 @@ const Map<String, String> arSA = {
   'delete_button': 'حذف',
   'error_deleting_post': 'فشل حذف المنشور',
   'report_feature_coming': 'ستتوفر ميزة الإبلاغ قريباً',
+
+  // قسم التعليقات
+  'error_loading_comments': 'خطأ في تحميل التعليقات',
+  'no_comments_yet': 'لا توجد تعليقات بعد',
+  'be_first_to_comment': 'كن أول من يعلق',
+  'hide_replies': 'إخفاء الردود',
+  'show_replies': 'عرض @count @label',
+  'reply_singular': 'رد',
+  'replies_plural': 'ردود',
+  'replying_to': 'الرد على @name',
+  'write_reply': 'اكتب ردك...',
+  'write_comment': 'اكتب تعليقاً...',
+  'uploading_image': 'جاري رفع الصورة...',
+  'failed_upload_image': 'فشل رفع الصورة',
+  'uploading_voice': 'جاري رفع التسجيل الصوتي...',
+  'failed_upload_voice': 'فشل رفع التسجيل',
+  'voice_recording': 'تسجيل صوتي',
+  'ready_to_send': 'جاهز للإرسال',
+  'recording': 'جاري التسجيل...',
+  'edit_comment': 'تعديل',
+  'delete_comment': 'حذف',
+  'delete_comment_title': 'حذف التعليق',
+  'delete_comment_message': 'هل أنت متأكد من حذف هذا التعليق؟',
+  'comment_deleted': 'تم حذف التعليق بنجاح',
+  'comment_updated': 'تم تحديث التعليق بنجاح',
+  'failed_delete_comment': 'فشل حذف التعليق',
+  'failed_update_comment': 'فشل تحديث التعليق',
+  'reply': 'رد',
+  'show_more_replies': 'عرض المزيد من الردود',
+
+  // المصادقة - تسجيل الدخول/إنشاء حساب
+  'welcome_back_user': 'مرحباً بعودتك، @name! 🎉',
+  'login_success': 'تم تسجيل الدخول بنجاح.',
+  'login_failed': 'فشل تسجيل الدخول. يرجى المحاولة مرة أخرى.',
+  'or': 'أو',
+  'google_sign_in_disabled': 'تسجيل الدخول عبر Google معطل حالياً',
+  'google_sign_in_failed': 'فشل تسجيل الدخول عبر Google',
+
+  // التعريف بالتطبيق
+  'onboarding_connect_title': 'تواصل مع الأصدقاء',
+  'onboarding_connect_desc': 'ابنِ علاقات هادفة مع أشخاص يشاركونك اهتماماتك وشغفك.',
+  'onboarding_share_title': 'شارك قصتك',
+  'onboarding_share_desc': 'عبّر عن نفسك من خلال المنشورات والصور والفيديوهات والقصص مع مجتمعك.',
+  'onboarding_discover_title': 'اكتشف محتوى جديد',
+  'onboarding_discover_desc': 'استكشف المواضيع الرائجة، وانضم إلى المجموعات، واكتشف محتوى مخصص لك.',
+  'onboarding_secure_title': 'آمن ومحمي',
+  'onboarding_secure_desc': 'خصوصيتك مهمة. نحافظ على بياناتك محمية بإجراءات أمان متقدمة.',
+  'onboarding_next': 'التالي',
+  'onboarding_get_started': 'ابدأ الآن',
+
+  // الحالة الاجتماعية
+  'relationship_single': 'أعزب',
+  'relationship_in_relationship': 'في علاقة',
+  'relationship_married': 'متزوج',
+  'relationship_complicated': 'معقدة',
+  'relationship_separated': 'منفصل',
+  'relationship_divorced': 'مطلق',
+  'relationship_widowed': 'أرمل',
+
+  // خيارات الجنس
+  'gender_male': 'ذكر',
+  'gender_female': 'أنثى',
+  'gender_other': 'آخر',
+  'gender_all': 'الكل',
+  'relationship_all': 'الكل',
+
+  // تسميات الملف الشخصي
+  'select_birth_date': 'اختر تاريخ الميلاد',
+  'about_you': 'نبذة عنك',
+
+  // صفحة تعديل الملف الشخصي
+  'edit_profile': 'تعديل الملف الشخصي',
+  'tab_basic': 'الأساسية',
+  'tab_work': 'العمل',
+  'tab_location': 'الموقع',
+  'tab_education': 'التعليم',
+  'tab_social': 'التواصل',
+  'tab_photos': 'الصور',
+  
+  // المعلومات الأساسية
+  'first_name_label': 'الاسم الأول',
+  'last_name_label': 'اسم العائلة',
+  'birthdate_label': 'تاريخ الميلاد',
+  'website_label': 'الموقع الإلكتروني',
+  'save_button': 'حفظ',
+  
+  // معلومات العمل
+  'job_title_label': 'المسمى الوظيفي',
+  'enter_job_title': 'أدخل المسمى الوظيفي',
+  'company_label': 'الشركة',
+  'company_website_label': 'موقع الشركة',
+  
+  // الموقع
+  'current_city_label': 'المدينة الحالية',
+  'hometown_label': 'المدينة الأصلية',
+  
+  // التعليم
+  'major_label': 'التخصص',
+  'educational_institution_label': 'المؤسسة التعليمية',
+  'graduation_year_label': 'سنة التخرج',
+  
+  // الصور
+  'profile_picture': 'صورة الملف الشخصي',
+  'cover_photo': 'صورة الغلاف',
+  'tap_to_add_cover': 'اضغط لإضافة صورة غلاف',
+  'choose_image': 'اختر صورة',
+  
+  // نافذة كلمة المرور
+  'confirm_password_label': 'تأكيد كلمة المرور',
+  'change': 'تغيير',
+  'new_password_too_short': 'كلمة المرور الجديدة قصيرة جداً',
+  
+  // اختيار الدولة
+  'country_label': 'الدولة',
+  'loading_text': 'جاري التحميل\u2026',
+  'select_country': 'اختر الدولة',
+  'search_country': 'ابحث عن دولة\u2026',
+  
+  // رسائل الخطأ
+  'error_loading_countries': 'خطأ في تحميل الدول',
+  'error_uploading_image': 'خطأ في رفع الصورة',
+  'error_uploading_cover': 'خطأ في رفع صورة الغلاف',
 };

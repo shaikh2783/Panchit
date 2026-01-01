@@ -168,6 +168,7 @@ class PostMenuBottomSheet extends StatelessWidget {
                       final action = post.isSaved
                           ? PostAction.unsavePost
                           : PostAction.savePost;
+
                       Navigator.pop(context);
                       onAction(action);
                     },
@@ -363,6 +364,7 @@ class PostMenuBottomSheet extends StatelessWidget {
                         final action = post.isPinned
                             ? PostAction.unpinPost
                             : PostAction.pinPost;
+
                         Navigator.pop(context);
                         onAction(action);
                       },

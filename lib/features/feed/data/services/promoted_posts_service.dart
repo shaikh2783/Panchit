@@ -101,6 +101,7 @@ class PromotedPostsService {
       
       return null;
     } catch (e) {
+
       return null;
     }
   }
@@ -118,6 +119,7 @@ class PromotedPostsService {
       
       return false;
     } catch (e) {
+
       return false;
     }
   }

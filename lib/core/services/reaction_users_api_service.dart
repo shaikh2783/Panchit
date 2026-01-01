@@ -36,6 +36,7 @@ class ReactionUsersApiService {
         throw Exception(response['message'] ?? 'Failed to load reaction users');
       }
     } catch (e) {
+
       rethrow;
     }
   }

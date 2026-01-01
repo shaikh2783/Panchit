@@ -35,7 +35,6 @@ class GroupMemberRequest {
         '${json['user_firstname']?.toString() ?? ''} ${json['user_lastname']?.toString() ?? ''}'
             .trim();
 
-
     return GroupMemberRequest(
       userId: userId,
       username: username,

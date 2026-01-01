@@ -78,8 +78,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     if (response != null) {
       final displayName = response.userDisplayName;
       final message = displayName != null
-          ? 'Welcome back, $displayName! 🎉'
-          : (response.message ?? 'Successfully logged in.');
+          ? 'welcome_back_user'.trParams({'name': displayName})
+          : (response.message ?? 'login_success'.tr);
       messenger.showSnackBar(
         SnackBar(
           content: Text(message),
@@ -93,7 +93,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       );
     } else {
       final error =
-          authNotifier.errorMessage ?? 'Login failed. Please try again.';
+          authNotifier.errorMessage ?? 'login_failed'.tr;
       messenger.showSnackBar(
         SnackBar(
           content: Text(error),
@@ -110,17 +110,17 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
 
   String? _validateIdentity(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return 'Email or username is required';
+      return 'email_username_required'.tr;
     }
     return null;
   }
 
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Password is required';
+      return 'password_required'.tr;
     }
     if (value.length < 6) {
-      return 'Password must be at least 6 characters';
+      return 'password_min_length'.tr;
     }
     return null;
   }
@@ -145,6 +145,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     // التحقق من اكتمال الإعدادات
     final validationError = AppSettings.validateGoogleSignInConfig();
     if (validationError != null) {
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(validationError),
@@ -170,8 +171,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       final googleAuth = await googleUser.authentication;
       final idToken = googleAuth.idToken;
       final serverAuthCode = googleUser.serverAuthCode; // قد يكون موجود بدلاً من idToken
-      
-      
+
       final authNotifier = context.read<AuthNotifier>();
       final AuthResponse? response = await authNotifier.signInWithGoogle(
         googleId: googleUser.id,
@@ -492,7 +492,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Welcome Back!',
+          'welcome_back'.tr,
           style: TextStyle(
             fontSize: 32,
             fontWeight: FontWeight.bold,
@@ -502,7 +502,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         ),
         const SizedBox(height: 8),
         Text(
-          'Sign in to continue your journey',
+          'sign_in_continue'.tr,
           style: TextStyle(
             fontSize: 15,
             color: isDark
@@ -559,8 +559,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           // Email/Username Field
           _buildTextField(
             controller: _identityController,
-            label: 'Email or Username',
-            hint: 'enter_email_or_username'.tr,
+            label: 'email_username'.tr,
+            hint: 'enter_email_username'.tr,
             icon: Icons.person_outline_rounded,
             keyboardType: TextInputType.emailAddress,
             validator: _validateIdentity,
@@ -571,8 +571,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           // Password Field
           _buildTextField(
             controller: _passwordController,
-            label: 'Password',
-            hint: 'enter_password_text'.tr,
+            label: 'password'.tr,
+            hint: 'enter_password'.tr,
             icon: Icons.lock_outline_rounded,
             obscureText: _obscurePassword,
             validator: _validatePassword,
@@ -602,9 +602,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               ),
-              child: const Text(
-                'Forgot Password?',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+              child: Text(
+                'forgot_password'.tr,
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
               ),
             ),
           ),
@@ -746,20 +746,20 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
                   )
-                : const Row(
+                : Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Sign In',
-                        style: TextStyle(
+                        'sign_in'.tr,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 17,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 0.5,
                         ),
                       ),
-                      SizedBox(width: 8),
-                      Icon(
+                      const SizedBox(width: 8),
+                      const Icon(
                         Icons.arrow_forward_rounded,
                         color: Colors.white,
                         size: 20,
@@ -860,7 +860,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
-            'OR',
+            'or'.tr,
             style: TextStyle(
               color: isDark
                   ? Colors.white.withOpacity(0.5)
@@ -929,10 +929,10 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         ),
         const SizedBox(height: 16),
         Text(
-          '© 2025 Panchit All rights reserved.',
+          '© 2024 Panchit. All rights reserved.',
           style: TextStyle(
             color: isDark
-                ? Colors.white.withValues(alpha: 0.4)
+                ? Colors.white.withOpacity(0.4)
                 : const Color(0xFF718096),
             fontSize: 12,
           ),

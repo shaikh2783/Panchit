@@ -22,6 +22,7 @@ class NotificationNavigationService {
     // في حالة الفتح البارد (التطبيق مغلق) نخزن الطلب حتى يصبح الـ Navigator جاهز
     if (!_isNavigationReady) {
       _queuedData = data;
+
       return;
     }
 
@@ -31,8 +32,7 @@ class NotificationNavigationService {
   static void _process(Map<String, dynamic> data) {
     final type = data['type'] as String?;
     final url = (data['url'] ?? data['u'] ?? data['launchURL']) as String?;
-    
-    
+
     if (url != null && url.isNotEmpty) {
       _navigateFromUrl(url);
     } else if (type != null) {
@@ -42,6 +42,7 @@ class NotificationNavigationService {
       final nodeType = data['node_type'];
       final nodeId = data['node_id']?.toString();
       if (nodeType == 'post' && nodeId != null && nodeId.isNotEmpty) {
+
         Get.toNamed('/post/$nodeId', arguments: {'id': nodeId});
       }
     }
@@ -62,6 +63,7 @@ class NotificationNavigationService {
         case 'posts':
           if (pathSegments.length > 1) {
             final postId = pathSegments[1];
+
             Get.toNamed('/post/$postId', arguments: {'id': postId});
           }
           break;
@@ -70,6 +72,7 @@ class NotificationNavigationService {
         case 'photos':
           if (pathSegments.length > 1) {
             final photoId = pathSegments[1];
+
             Get.toNamed('/photo/$photoId');
           }
           break;
@@ -78,8 +81,10 @@ class NotificationNavigationService {
         case 'messages':
           if (pathSegments.length > 1) {
             final conversationId = pathSegments[1];
+
             Get.toNamed('/messages/$conversationId');
           } else {
+
             Get.toNamed('/messages');
           }
           break;
@@ -88,8 +93,10 @@ class NotificationNavigationService {
         case 'groups':
           if (pathSegments.length > 1) {
             final groupName = pathSegments[1];
+
             Get.toNamed('/group/$groupName');
           } else {
+
             Get.toNamed('/groups');
           }
           break;
@@ -98,8 +105,10 @@ class NotificationNavigationService {
         case 'pages':
           if (pathSegments.length > 1) {
             final pageName = pathSegments[1];
+
             Get.toNamed('/page/$pageName');
           } else {
+
             Get.toNamed('/pages');
           }
           break;
@@ -108,8 +117,10 @@ class NotificationNavigationService {
         case 'events':
           if (pathSegments.length > 1) {
             final eventId = pathSegments[1];
+
             Get.toNamed('/event/$eventId');
           } else {
+
             Get.toNamed('/events');
           }
           break;
@@ -118,8 +129,10 @@ class NotificationNavigationService {
         case 'market':
           if (pathSegments.length > 1) {
             final orderHash = pathSegments[1];
+
             Get.toNamed('/market/order/$orderHash');
           } else {
+
             Get.toNamed('/market');
           }
           break;
@@ -129,13 +142,16 @@ class NotificationNavigationService {
           // If scheme is custom like sngine:// or sngine_timeline:// and path looks like posts/<id>
           if (firstSegment.isNotEmpty && pathSegments.length > 1 && firstSegment == 'posts') {
             final postId = pathSegments[1];
+
             Get.toNamed('/post/$postId', arguments: {'id': postId});
           } else {
             final username = firstSegment;
+
             Get.toNamed('/profile/$username');
           }
       }
     } catch (e) {
+
     }
   }
   
@@ -153,6 +169,7 @@ class NotificationNavigationService {
       case 'gift':
       case 'profile_visit':
         if (username != null) {
+
           Get.toNamed('/profile/$username');
         }
         break;
@@ -172,6 +189,7 @@ class NotificationNavigationService {
       case 'mention':
       case 'wall':
         if (id != null) {
+
           Get.toNamed('/post/$id', arguments: {'id': id.toString()});
         }
         break;
@@ -179,8 +197,10 @@ class NotificationNavigationService {
       // 💬 رسائل
       case 'chat_message':
         if (id != null) {
+
           Get.toNamed('/messages/$id');
         } else {
+
           Get.toNamed('/messages');
         }
         break;
@@ -198,10 +218,12 @@ class NotificationNavigationService {
         final nodeType = data['node_type'];
         final nodeId = data['node_id']?.toString();
         if (nodeType == 'post' && nodeId != null && nodeId.isNotEmpty) {
+
           Get.toNamed('/post/$nodeId', arguments: {'id': nodeId});
         } else {
           final groupName = data['group_name'];
           if (groupName != null) {
+
             Get.toNamed('/group/$groupName');
           }
         }
@@ -217,10 +239,12 @@ class NotificationNavigationService {
         final nodeType = data['node_type'];
         final nodeId = data['node_id']?.toString();
         if (nodeType == 'post' && nodeId != null && nodeId.isNotEmpty) {
+
           Get.toNamed('/post/$nodeId', arguments: {'id': nodeId});
         } else {
           final pageName = data['page_name'];
           if (pageName != null) {
+
             Get.toNamed('/page/$pageName');
           }
         }
@@ -237,8 +261,10 @@ class NotificationNavigationService {
         final nodeType = data['node_type'];
         final nodeId = data['node_id']?.toString();
         if (nodeType == 'post' && nodeId != null && nodeId.isNotEmpty) {
+
           Get.toNamed('/post/$nodeId', arguments: {'id': nodeId});
         } else if (id != null) {
+
           Get.toNamed('/event/$id');
         }
         break;
@@ -249,6 +275,7 @@ class NotificationNavigationService {
       case 'market_order_delivered':
         final orderHash = data['order_hash'];
         if (orderHash != null) {
+
           Get.toNamed('/market/order/$orderHash');
         }
         break;
@@ -261,6 +288,7 @@ class NotificationNavigationService {
       case 'merit_received':
       case 'video_converted':
         if (id != null) {
+
           Get.toNamed('/post/$id');
         }
         break;
@@ -271,8 +299,10 @@ class NotificationNavigationService {
         final nodeType = data['node_type'];
         final nodeId = data['node_id']?.toString();
         if (nodeType == 'post' && nodeId != null && nodeId.isNotEmpty) {
+
           Get.toNamed('/post/$nodeId', arguments: {'id': nodeId});
         } else {
+
           Get.toNamed('/notifications');
         }
     }

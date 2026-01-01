@@ -16,11 +16,12 @@ class AdsTrackingService {
     
     // Avoid duplicate view tracking
     if (_trackedViews.contains(key)) {
+
       return false;
     }
 
     try {
-      
+
       final response = await _client.post(
         '/data/ads/track',
         data: {
@@ -34,9 +35,11 @@ class AdsTrackingService {
         
         if (tracked) {
           _trackedViews.add(key);
+
           return true;
         } else {
           final reason = response['data']?['reason'] ?? 'unknown';
+
           return false;
         }
       }
@@ -44,6 +47,7 @@ class AdsTrackingService {
       return false;
     } catch (e) {
       // Silent fail - don't break the app
+
       return false;
     }
   }
@@ -55,11 +59,12 @@ class AdsTrackingService {
     
     // Avoid duplicate click tracking (optional - you might want multiple clicks)
     if (_trackedClicks.contains(key)) {
+
       return false;
     }
 
     try {
-      
+
       final response = await _client.post(
         '/data/ads/track',
         data: {
@@ -75,15 +80,18 @@ class AdsTrackingService {
           _trackedClicks.add(key);
           final cost = response['data']?['cost'];
           final remainingBudget = response['data']?['remaining_budget'];
+
           return true;
         } else {
           final reason = response['data']?['reason'] ?? 'unknown';
+
           return false;
         }
       }
       
       return false;
     } catch (e) {
+
       return false;
     }
   }
@@ -92,5 +100,6 @@ class AdsTrackingService {
   void clearCache() {
     _trackedViews.clear();
     _trackedClicks.clear();
+
   }
 }

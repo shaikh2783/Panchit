@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:get/get.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/network/api_client.dart';
 import '../../../feed/data/models/post.dart';
@@ -11,6 +12,11 @@ import '../../../friends/presentation/widgets/add_friend_button.dart';
 import '../../../friends/data/models/friendship_model.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
 import '../../../pages/presentation/pages/page_profile_page.dart';
+import '../../../groups/presentation/pages/group_profile_page.dart';
+import '../../../groups/application/bloc/group_posts_bloc.dart';
+import '../../../groups/data/repositories/groups_repository.dart';
+import '../../../groups/data/services/groups_api_service.dart';
+import '../../../events/presentation/pages/event_detail_page.dart';
 import '../../data/services/search_api_service.dart';
 import '../../data/models/search_models.dart';
 
@@ -130,6 +136,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         }
       });
     } catch (e) {
+
     } finally {
       if (mounted) {
         setState(() => _isSearching = false);
@@ -851,23 +858,41 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         }
         break;
       case 'group':
+        // Navigate to group detail
         if (result is SearchGroup) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Groups are no longer available.'),
-              duration: Duration(seconds: 2),
+          final groupsApiService = GroupsApiService(context.read<ApiClient>());
+          final groupsRepository = GroupsRepository(groupsApiService);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (context) => GroupPostsBloc(groupsRepository),
+                child: GroupProfilePage(
+                  groupId: result.groupId,
+                ),
+              ),
             ),
           );
         }
         break;
       case 'event':
-        // TODO: Navigate to event detail
+        // Navigate to event detail
+        if (result is SearchEvent) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EventDetailPage(eventId: result.eventId),
+            ),
+          );
+        }
         break;
       case 'post':
       case 'blog':
         // TODO: Navigate to post detail
+
         break;
       default:
+
     }
   }
 

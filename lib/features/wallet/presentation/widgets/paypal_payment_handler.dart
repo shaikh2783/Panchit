@@ -26,7 +26,6 @@ class PayPalPaymentHandler {
     final clientId = AppSettings.paypalClientId;
     final secret = AppSettings.paypalSecretKey;
 
-
     try {
       await Navigator.of(context).push(
         MaterialPageRoute(
@@ -65,21 +64,26 @@ class PayPalPaymentHandler {
                 final normalized = (params is Map)
                     ? params.map((k, v) => MapEntry(k.toString(), v))
                     : <String, dynamic>{};
+
                 onSuccess(normalized);
               } catch (e) {
+
                 onError('Failed to process PayPal response');
               }
             },
             onError: (error) {
+
               onError(error.toString());
             },
             onCancel: () {
+
               onCancel();
             },
           ),
         ),
       );
     } catch (e) {
+
       onError('Failed to start PayPal checkout: $e');
     }
   }
@@ -98,6 +102,7 @@ class PayPalPaymentHandler {
       }
       return '';
     } catch (e) {
+
       return '';
     }
   }
@@ -118,6 +123,7 @@ class PayPalPaymentHandler {
       }
       return '';
     } catch (e) {
+
       return '';
     }
   }

@@ -19,9 +19,11 @@ class AppSettingsService {
 
         return settings;
       } else {
+
         return null;
       }
     } catch (e) {
+
       return null;
     }
   }

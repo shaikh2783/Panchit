@@ -10,8 +10,8 @@ import 'cart_item.dart';
 /// ```dart
 /// final cart = Cart.fromJson(response['data']['cart']);
 /// if (cart.isNotEmpty) {
-///   print('عدد المنتجات: ${cart.itemsCount}');
-///   print('المجموع: ${cart.total}');
+
+
 /// }
 /// ```
 /// 

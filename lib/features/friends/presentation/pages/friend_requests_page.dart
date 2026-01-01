@@ -76,6 +76,7 @@ class _FriendRequestsPageState extends State<FriendRequestsPage>
           .map((data) => _mapToFriendRequest(data))
           .toList();
     } catch (e) {
+
       // في حالة الخطأ، عرض قائمة فارغة
       _receivedRequests = [];
       _sentRequests = [];

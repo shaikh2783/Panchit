@@ -63,12 +63,10 @@ class ShareApiService {
           throw Exception('Invalid share_to value: $shareTo');
       }
 
-
       final response = await _apiClient.post(
         configCfgP('posts_share'),
         body: body,
       );
-
 
       if (response['status'] == 'success' || response['error'] == false) {
         return {
@@ -82,6 +80,7 @@ class ShareApiService {
         );
       }
     } catch (e) {
+
       rethrow;
     }
   }
@@ -104,6 +103,7 @@ class ShareApiService {
         throw Exception('فشل في جلب الصفحات');
       }
     } catch (e) {
+
       return [];
     }
   }
@@ -132,6 +132,7 @@ class ShareApiService {
         throw Exception('فشل في جلب المجموعات');
       }
     } catch (e) {
+
       return [];
     }
   }
@@ -157,6 +158,7 @@ class ShareApiService {
         throw Exception('فشل في جلب الأحداث');
       }
     } catch (e) {
+
       return [];
     }
   }

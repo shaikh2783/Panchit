@@ -49,6 +49,7 @@ class ReelsNotifier extends ChangeNotifier {
       _error = error.message;
     } catch (error, stackTrace) {
       _error = 'تعذر تحميل الريلز، يرجى المحاولة لاحقاً.';
+
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -75,6 +76,7 @@ class ReelsNotifier extends ChangeNotifier {
       _error = error.message;
     } catch (error, stackTrace) {
       _error = 'حدث خطأ أثناء تحديث الريلز.';
+
     } finally {
       _isRefreshing = false;
       notifyListeners();
@@ -101,6 +103,7 @@ class ReelsNotifier extends ChangeNotifier {
       _error = error.message;
     } catch (error, stackTrace) {
       _error = 'حدث خطأ أثناء جلب المزيد من الريلز.';
+
     } finally {
       _isLoadingMore = false;
       notifyListeners();

@@ -347,36 +347,77 @@ class NotificationsBloc extends BaseBloc<NotificationsEvent, NotificationsState>
     ClearAllNotificationsEvent event,
     Emitter<NotificationsState> emit,
   ) async {
-    // Simple local clear since API doesn't support it
-    emit(const NotificationsLoaded(
-      notifications: [],
-      unreadCount: 0,
-      hasMore: false,
-      currentOffset: 0,
-    ));
+    try {
+      // Backend bulk delete (all)
+      final resp = await _repository.deleteAllNotifications(seenOnly: false);
+      final unread = (resp['data']?['unread_count'] as int?) ?? 0;
+      emit(NotificationsLoaded(
+        notifications: const [],
+        unreadCount: unread,
+        hasMore: false,
+        currentOffset: 0,
+      ));
+    } on ApiException catch (e) {
+      emit(NotificationsError(
+        e.message,
+        notifications: state.notifications,
+        unreadCount: state.unreadCount,
+        hasMore: state.hasMore,
+        currentOffset: state.currentOffset,
+      ));
+    } catch (e) {
+      emit(NotificationsError(
+        e.toString(),
+        notifications: state.notifications,
+        unreadCount: state.unreadCount,
+        hasMore: state.hasMore,
+        currentOffset: state.currentOffset,
+      ));
+    }
   }
 
   Future<void> _onDeleteNotification(
     DeleteNotificationEvent event,
     Emitter<NotificationsState> emit,
   ) async {
-    // Simple local deletion since API doesn't support it
-    final updatedNotifications = state.notifications
-        .where((notification) => notification.notificationId.toString() != event.notificationId)
+    // Optimistic remove
+    final prev = state.notifications;
+    final updatedNotifications = prev
+        .where((n) => n.notificationId.toString() != event.notificationId)
         .toList();
 
-    // Calculate new unread count
-    final newUnreadCount = updatedNotifications
-        .where((notification) => !notification.seen)
-        .length;
+    final prevUnread = state.unreadCount;
+    final newUnreadCount = updatedNotifications.where((n) => !n.seen).length;
 
     emit(NotificationDeleted(
       notificationId: event.notificationId,
       notifications: updatedNotifications,
       unreadCount: newUnreadCount,
       hasMore: state.hasMore,
-      currentOffset: state.currentOffset - 1,
+      currentOffset: state.currentOffset > 0 ? state.currentOffset - 1 : 0,
     ));
+
+    try {
+      final id = int.tryParse(event.notificationId);
+      if (id != null) {
+        final resp = await _repository.deleteNotification(id);
+        final unread = (resp['data']?['unread_count'] as int?) ?? newUnreadCount;
+        emit(NotificationsLoaded(
+          notifications: updatedNotifications,
+          unreadCount: unread,
+          hasMore: state.hasMore,
+          currentOffset: state.currentOffset > 0 ? state.currentOffset - 1 : 0,
+        ));
+      }
+    } catch (e) {
+      // Revert on failure
+      emit(NotificationsLoaded(
+        notifications: prev,
+        unreadCount: prevUnread,
+        hasMore: state.hasMore,
+        currentOffset: state.currentOffset,
+      ));
+    }
   }
 
   Future<void> _onUpdateNotificationSettings(

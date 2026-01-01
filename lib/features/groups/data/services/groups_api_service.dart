@@ -22,6 +22,7 @@ class GroupsApiService {
 
       return GroupsOverviewResponse.fromJson(response);
     } catch (e) {
+
       rethrow;
     }
   }
@@ -44,6 +45,7 @@ class GroupsApiService {
 
       return GroupsResponse.fromJson(response);
     } catch (e) {
+
       rethrow;
     }
   }
@@ -61,6 +63,7 @@ class GroupsApiService {
 
       return GroupsResponse.fromJson(response);
     } catch (e) {
+
       rethrow;
     }
   }
@@ -78,6 +81,7 @@ class GroupsApiService {
 
       return GroupsResponse.fromJson(response);
     } catch (e) {
+
       rethrow;
     }
   }
@@ -112,6 +116,7 @@ class GroupsApiService {
 
       return GroupsResponse.fromJson(response);
     } catch (e) {
+
       rethrow;
     }
   }
@@ -119,11 +124,13 @@ class GroupsApiService {
   /// جلب تفاصيل مجموعة
   Future<Group?> getGroupDetails(int groupId) async {
     try {
+
       final response = await _apiClient.get('${configCfgP('groups')}/$groupId');
 
       final groupResponse = GroupResponse.fromJson(response);
       return groupResponse.group;
     } catch (e) {
+
       return null;
     }
   }
@@ -137,6 +144,7 @@ class GroupsApiService {
 
       return response['status'] == 'success';
     } catch (e) {
+
       return false;
     }
   }
@@ -150,6 +158,7 @@ class GroupsApiService {
 
       return response['status'] == 'success';
     } catch (e) {
+
       return false;
     }
   }
@@ -183,6 +192,7 @@ class GroupsApiService {
       }
       return null;
     } catch (e) {
+
       return null;
     }
   }
@@ -216,6 +226,7 @@ class GroupsApiService {
 
       return response['status'] == 'success';
     } catch (e) {
+
       return false;
     }
   }
@@ -231,6 +242,7 @@ class GroupsApiService {
 
       return response['status'] == 'success';
     } catch (e) {
+
       return false;
     }
   }
@@ -251,7 +263,6 @@ class GroupsApiService {
       },
     );
 
-
     final postsResponse = PostsResponse.fromJson(response);
 
     if (!postsResponse.isSuccess) {
@@ -264,16 +275,17 @@ class GroupsApiService {
   /// جلب طلبات الانضمام المعلقة (للمشرف فقط)
   Future<List<GroupMemberRequest>> getPendingRequests(int groupId) async {
     try {
+
       final response = await _apiClient.get(
         '${configCfgP('groups')}/$groupId/requests',
       );
-
 
       if (response['status'] == 'success') {
         final data = response['data'] as Map<String, dynamic>;
         final requestsList = data['requests'] as List<dynamic>;
 
         if (requestsList.isNotEmpty) {
+
         }
 
         return requestsList
@@ -283,6 +295,7 @@ class GroupsApiService {
 
       return [];
     } catch (e) {
+
       rethrow;
     }
   }
@@ -296,6 +309,7 @@ class GroupsApiService {
 
       return response['status'] == 'success';
     } catch (e) {
+
       return false;
     }
   }
@@ -309,6 +323,7 @@ class GroupsApiService {
 
       return response['status'] == 'success';
     } catch (e) {
+
       return false;
     }
   }
@@ -329,6 +344,7 @@ class GroupsApiService {
 
       return [];
     } catch (e) {
+
       return [];
     }
   }
@@ -345,6 +361,7 @@ class GroupsApiService {
 
       return [];
     } catch (e) {
+
       return [];
     }
   }
@@ -361,6 +378,7 @@ class GroupsApiService {
 
       return [];
     } catch (e) {
+
       return [];
     }
   }
@@ -384,11 +402,13 @@ class GroupsApiService {
       );
 
       if (response['status'] == 'success') {
+
         return GroupMembersResponse.fromJson(response['data']);
       }
 
       throw Exception(response['message'] ?? 'Failed to fetch members');
     } catch (e) {
+
       rethrow;
     }
   }
@@ -403,11 +423,13 @@ class GroupsApiService {
       );
 
       if (response['status'] == 'success') {
+
         return true;
       }
 
       throw Exception(response['message'] ?? 'Failed to remove member');
     } catch (e) {
+
       rethrow;
     }
   }
@@ -425,11 +447,13 @@ class GroupsApiService {
       );
 
       if (response['status'] == 'success') {
+
         return true;
       }
 
       throw Exception(response['message'] ?? 'Failed to make admin');
     } catch (e) {
+
       rethrow;
     }
   }
@@ -445,11 +469,13 @@ class GroupsApiService {
       );
 
       if (response['status'] == 'success') {
+
         return true;
       }
 
       throw Exception(response['message'] ?? 'Failed to remove admin');
     } catch (e) {
+
       rethrow;
     }
   }
@@ -468,12 +494,14 @@ class GroupsApiService {
           final friends = (data['friends'] as List)
               .map((friend) => friend as Map<String, dynamic>)
               .toList();
+
           return friends;
         }
       }
 
       return [];
     } catch (e) {
+
       rethrow;
     }
   }
@@ -488,11 +516,13 @@ class GroupsApiService {
       );
 
       if (response['status'] == 'success') {
+
         return true;
       }
 
       throw Exception(response['message'] ?? 'Failed to send invitation');
     } catch (e) {
+
       rethrow;
     }
   }
@@ -510,6 +540,7 @@ class GroupsApiService {
       } catch (e) {
         failedCount++;
         failedUsers.add(userId);
+
       }
     }
 

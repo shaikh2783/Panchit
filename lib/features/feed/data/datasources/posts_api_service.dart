@@ -51,11 +51,13 @@ class PostsApiService {
 
     // Debug: Show ALL post IDs to check for missing posts
     if (postsResponse.posts.isNotEmpty) {
+
       for (var i = 0; i < postsResponse.posts.length; i++) {
         final p = postsResponse.posts[i];
         final textPreview = p.text.length > 30
             ? p.text.substring(0, 30)
             : p.text;
+
       }
 
       // Check for post ID 0 specifically
@@ -65,8 +67,10 @@ class PostsApiService {
       if (postsResponse.posts.length > 1) {
         final oldest = postsResponse.posts.last;
         final newest = postsResponse.posts.first;
+
       }
     } else {
+
     }
 
     return postsResponse;
@@ -91,6 +95,7 @@ class PostsApiService {
     );
 
     if (response['data'] != null && response['data']['posts'] != null) {
+
     }
 
     final postsResponse = PostsResponse.fromJson(response);
@@ -102,7 +107,9 @@ class PostsApiService {
     }
 
     if (postsResponse.posts.isNotEmpty) {
+
     } else {
+
     }
 
     return postsResponse;
@@ -125,6 +132,7 @@ class PostsApiService {
     );
 
     if (response['data'] != null && response['data']['posts'] != null) {
+
     }
 
     final postsResponse = PostsResponse.fromJson(
@@ -139,7 +147,9 @@ class PostsApiService {
     }
 
     if (postsResponse.posts.isNotEmpty) {
+
     } else {
+
     }
 
     return postsResponse;
@@ -174,7 +184,9 @@ class PostsApiService {
     }
 
     if (postsResponse.posts.isNotEmpty) {
+
     } else {
+
     }
 
     return postsResponse;
@@ -207,7 +219,9 @@ class PostsApiService {
     }
 
     if (postsResponse.posts.isNotEmpty) {
+
     } else {
+
     }
 
     return postsResponse;
@@ -240,7 +254,9 @@ class PostsApiService {
     }
 
     if (postsResponse.posts.isNotEmpty) {
+
     } else {
+
     }
 
     return postsResponse;
@@ -275,7 +291,9 @@ class PostsApiService {
     }
 
     if (postsResponse.posts.isNotEmpty) {
+
     } else {
+
     }
 
     return postsResponse;
@@ -383,6 +401,7 @@ class PostsApiService {
           );
 
           if (response['status'] == 'success' && response['data'] != null) {
+
             final data = response['data'];
             return UploadedFileData(
               source: data['source'],
@@ -399,10 +418,13 @@ class PostsApiService {
               meta: data['meta'], // Additional metadata
             );
           } else {
+            // Log diagnostic info for failed attempt
 
-            if (response.containsKey('errors'));
+      
+
           }
         } catch (e) {
+
           if (e is ApiException) {
             lastError = e;
             // Continue to next attempt
@@ -412,7 +434,6 @@ class PostsApiService {
           }
         }
       }
-
 
       // If we reach here, all attempts failed
       if (lastError != null) throw lastError;
@@ -582,6 +603,7 @@ class PostsApiService {
     if (request.groupId != null) {
       // Try endpoint 1: groups/{id}/create_post
       try {
+
         final response = await _client.post(
           configCfgP('groups_list') + '/${request.groupId}/create_post',
           body: request.toJson(),
@@ -589,13 +611,16 @@ class PostsApiService {
 
         final createResponse = CreatePostResponse.fromJson(response);
         if (createResponse.isSuccess) {
+
           return createResponse;
         }
       } catch (e) {
+
       }
 
       // Try endpoint 2: publisher (sometimes used for group posts)
       try {
+
         final response = await _client.post(
           configCfgP('posts_base') + '/publisher',
           body: request.toJson(),
@@ -603,13 +628,16 @@ class PostsApiService {
 
         final createResponse = CreatePostResponse.fromJson(response);
         if (createResponse.isSuccess) {
+
           return createResponse;
         }
       } catch (e) {
+
       }
     }
 
     // Fall back to main endpoint
+
     final response = await _client.post(
       configCfgP('posts_base') + '/create',
       body: request.toJson(),
@@ -625,6 +653,5 @@ class PostsApiService {
     return createResponse;
   }
 }
-
 
 // ✅ تم نقل configCfgP إلى main.dart - استيراد من هناك

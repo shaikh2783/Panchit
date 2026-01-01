@@ -8,8 +8,8 @@ import 'package:equatable/equatable.dart';
 /// الاستخدام:
 /// ```dart
 /// final item = CartItem.fromJson(json);
-/// print('${item.productName} x ${item.quantity} = ${item.total}');
-/// print('البائع: ${item.seller.userName}');
+
+
 /// ```
 /// 
 /// Properties:

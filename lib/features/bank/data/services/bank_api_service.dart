@@ -31,6 +31,7 @@ class BankApiService {
               ? response['data']
               : <String, dynamic>{},
         );
+
         return {
           'success': true,
           'data': settings,
@@ -42,6 +43,7 @@ class BankApiService {
         'message': response['message'] ?? 'Failed to load bank settings',
       };
     } catch (e) {
+
       return {
         'success': false,
         'message': 'Error: $e',
@@ -86,6 +88,7 @@ class BankApiService {
         'message': response['message'] ?? 'Failed to load transfers',
       };
     } catch (e) {
+
       return {
         'success': false,
         'message': 'Error: $e',

@@ -27,6 +27,7 @@ class InformationApiService {
         };
       }
     } catch (e) {
+
       return {'success': false, 'message': 'Error: ${e.toString()}'};
     }
   }
@@ -56,6 +57,7 @@ class InformationApiService {
       if (!isError) {
         // Response is HTML content (file download)
         // The API returns raw HTML with proper headers
+
         return {
           'success': true,
           'message': response['message'] ?? 'Your data has been prepared for download',
@@ -68,6 +70,7 @@ class InformationApiService {
         };
       }
     } catch (e) {
+
       return {'success': false, 'message': 'Error: ${e.toString()}'};
     }
   }

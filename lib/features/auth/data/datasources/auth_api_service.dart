@@ -80,7 +80,9 @@ class AuthApiService {
     if (username != null && username.isNotEmpty) body['username'] = username;
     if (idToken != null && idToken.isNotEmpty) {
       body['id_token'] = idToken;
+
     } else {
+
     }
 
     final response = await _client.post('/data/auth/google', body: body);

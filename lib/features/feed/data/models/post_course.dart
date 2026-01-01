@@ -79,6 +79,7 @@ class PostCourse {
     try {
       return PostCourse.fromJson(json);
     } catch (e) {
+
       return null;
     }
   }

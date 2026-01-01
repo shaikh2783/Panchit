@@ -49,6 +49,7 @@ class PostsNotifier extends ChangeNotifier {
       _error = error.message;
     } catch (error) {
       _error = 'تعذر تحميل المنشورات، يرجى المحاولة لاحقاً.';
+
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -88,6 +89,7 @@ class PostsNotifier extends ChangeNotifier {
       _error = error.message;
     } catch (error) {
       _error = 'حدث خطأ أثناء التحديث.';
+
     } finally {
       _isRefreshing = false;
       notifyListeners();
@@ -113,6 +115,7 @@ class PostsNotifier extends ChangeNotifier {
       _error = error.message;
     } catch (error) {
       _error = 'حدث خطأ أثناء جلب المزيد من المنشورات.';
+
     } finally {
       _isLoadingMore = false;
       notifyListeners();

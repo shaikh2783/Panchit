@@ -2,6 +2,7 @@ class Story {
   Story({
     required this.id,
     required this.authorName,
+    this.authorId,
     this.authorAvatarUrl,
     this.previewImageUrl,
     List<StoryMedia>? media,
@@ -12,6 +13,7 @@ class Story {
 
   final String id;
   final String authorName;
+  final String? authorId;
   final String? authorAvatarUrl;
   final String? previewImageUrl;
   final List<StoryMedia> media;
@@ -34,6 +36,7 @@ class Story {
   Story copyWith({
     String? id,
     String? authorName,
+    String? authorId,
     String? authorAvatarUrl,
     String? previewImageUrl,
     List<StoryMedia>? media,
@@ -44,6 +47,7 @@ class Story {
     return Story(
       id: id ?? this.id,
       authorName: authorName ?? this.authorName,
+      authorId: authorId ?? this.authorId,
       authorAvatarUrl: authorAvatarUrl ?? this.authorAvatarUrl,
       previewImageUrl: previewImageUrl ?? this.previewImageUrl,
       media: media ?? this.media,
@@ -117,9 +121,16 @@ class Story {
     final isOwner = _bool(json['is_user'] ?? json['is_owner']);
     final isSeen = _bool(json['is_seen'] ?? json['seen']);
 
+    // Extract author ID from various possible fields
+    final authorId = _string(json['user_id']) ??
+        _string(json['story_author_id']) ??
+        _string(json['author_id']) ??
+        (publisher != null ? _string(publisher['user_id']) : null);
+
     return Story(
       id: id,
       authorName: authorName,
+      authorId: authorId,
       authorAvatarUrl: authorAvatar,
       previewImageUrl: preview,
       media: mediaItems.where((item) => item.isValid).toList(),

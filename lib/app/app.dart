@@ -87,6 +87,7 @@ import 'package:snginepro/features/feed/data/services/share_api_service.dart';
 import 'package:snginepro/features/feed/domain/share_repository.dart';
 import 'package:snginepro/features/feed/data/services/reviews_api_service.dart';
 import 'package:snginepro/features/feed/domain/reviews_repository.dart';
+import 'package:snginepro/features/onboarding/presentation/pages/onboarding_page.dart';
 
 class App extends StatelessWidget {
   const App({super.key, required this.sharedPreferences});
@@ -460,11 +461,50 @@ class App extends StatelessWidget {
   }
 }
 
-class _AuthSwitcher extends StatelessWidget {
+class _AuthSwitcher extends StatefulWidget {
   const _AuthSwitcher();
 
   @override
+  State<_AuthSwitcher> createState() => _AuthSwitcherState();
+}
+
+class _AuthSwitcherState extends State<_AuthSwitcher> {
+  bool? _onboardingCompleted;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkOnboarding();
+  }
+
+  Future<void> _checkOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    final completed = prefs.getBool('onboarding_completed') ?? false;
+    if (mounted) {
+      setState(() {
+        _onboardingCompleted = completed;
+      });
+    }
+  }
+
+  void _onOnboardingComplete() {
+    setState(() {
+      _onboardingCompleted = true;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // Still checking onboarding status
+    if (_onboardingCompleted == null) {
+      return const SplashPage();
+    }
+
+    // Show onboarding if not completed
+    if (!_onboardingCompleted!) {
+      return OnboardingPage(onComplete: _onOnboardingComplete);
+    }
+
     return Consumer<AuthNotifier>(
       builder: (context, auth, _) {
         if (!auth.isInitialized) {

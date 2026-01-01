@@ -118,4 +118,44 @@ class StoriesApiService {
       throw ApiException('خطأ في إنشاء القصة: $e');
     }
   }
+
+  /// Delete a specific story by media_id
+  /// If mediaId is provided, deletes only that story
+  /// If mediaId is null, deletes all user's stories
+  Future<Map<String, dynamic>> deleteStory({String? mediaId}) async {
+    try {
+      final queryParams = <String, String>{};
+      if (mediaId != null && mediaId.isNotEmpty) {
+        // استخراج الرقم فقط من media_id (مثلاً: "media_35" -> "35")
+        final numericId = mediaId.replaceAll(RegExp(r'[^0-9]'), '');
+        if (numericId.isNotEmpty) {
+          queryParams['media_id'] = numericId;
+        }
+      }
+      
+      // طباعة للتصحيح
+
+      final response = await _client.delete(
+        configCfgP('stories'),
+        queryParameters: queryParams.isNotEmpty ? queryParams : null,
+      );
+
+      // التحقق من النجاح: status == "success" أو api_status == 200
+      final isSuccess = response['status'] == 'success' || 
+                       response['api_status'] == 200 ||
+                       response['code'] == 200;
+      
+      if (!isSuccess) {
+        throw ApiException(
+          response['message'] ?? 'فشل في حذف القصة',
+          details: response,
+        );
+      }
+
+      return response;
+    } catch (e) {
+      if (e is ApiException) rethrow;
+      throw ApiException('خطأ في حذف القصة: $e');
+    }
+  }
 }

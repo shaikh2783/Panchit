@@ -157,6 +157,11 @@ class _PostCardState extends State<PostCard>
   }
 
   void _onAuthorTap(BuildContext context) {
+    // 🔒 Anonymous posts: Don't navigate to profile
+    if (_currentPost.isAnonymous) {
+      return;
+    }
+    
     // إذا كان المنشور من صفحة، افتح صفحة الـ Page
     if (_currentPost.isPagePost) {
       final pageModel = page_model.PageModel(
@@ -438,7 +443,11 @@ class _PostCardState extends State<PostCard>
             style: ElevatedButton.styleFrom(
               backgroundColor: isMarkingAsAdult ? Colors.orange : Colors.blue,
             ),
-            child: Text(isMarkingAsAdult ? 'adult_confirm_action_mark'.tr : 'adult_confirm_action_remove'.tr),
+            child: Text(
+              isMarkingAsAdult
+                  ? 'adult_confirm_action_mark'.tr
+                  : 'adult_confirm_action_remove'.tr,
+            ),
           ),
         ],
       ),
@@ -512,6 +521,7 @@ class _PostCardState extends State<PostCard>
         }
       }
     } catch (e) {
+
       if (mounted) {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -533,7 +543,6 @@ class _PostCardState extends State<PostCard>
 
   /// التعامل مع إجراءات المنشور
   Future<void> _handlePostAction(PostAction action) async {
-
     // معالجة خاصة لتعديل المنشور
     if (action == PostAction.editPost) {
       await Navigator.push(
@@ -580,7 +589,6 @@ class _PostCardState extends State<PostCard>
       );
 
       if (result['status'] == 'success' && result['data']?['success'] == true) {
-
         // إشعار الكاتب الرئيسي بالتحديث
         widget.onPostUpdated?.call(_currentPost);
 
@@ -759,7 +767,6 @@ class _PostCardState extends State<PostCard>
 
     final adsType = _currentPost.adsType;
 
-
     if (adsType == 'page' && _currentPost.adPageId != null) {
       // Navigate to page
       final pageModel = page_model.PageModel(
@@ -815,8 +822,10 @@ class _PostCardState extends State<PostCard>
         Get.snackbar('error'.tr, 'could_not_open_url'.tr);
       }
     } catch (e) {
-      Get.snackbar('error'.tr,
-          'could_not_open_url_with_error'.trParams({'error': e.toString()}));
+      Get.snackbar(
+        'error'.tr,
+        'could_not_open_url_with_error'.trParams({'error': e.toString()}),
+      );
     }
   }
 
@@ -1297,6 +1306,7 @@ class _PostCardState extends State<PostCard>
         }
       }
     } catch (e) {
+
       if (context.mounted) {
         // التحقق من نوع الخطأ
         final errorMessage = e.toString();
@@ -1409,7 +1419,9 @@ class _PostCardState extends State<PostCard>
                           children: [
                             Flexible(
                               child: Text(
-                                _currentPost.authorName,
+                                _currentPost.isAnonymous 
+                                    ? 'anonymous_user'.tr 
+                                    : _currentPost.authorName,
                                 style: theme.textTheme.titleSmall?.copyWith(
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -1417,8 +1429,8 @@ class _PostCardState extends State<PostCard>
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            // إضافة علامة التحقق إذا كان المستخدم محقق
-                            if (_currentPost.isVerified) ...[
+                            // إضافة علامة التحقق إذا كان المستخدم محقق (لا تظهر للمستخدم المجهول)
+                            if (_currentPost.isVerified && !_currentPost.isAnonymous) ...[
                               const SizedBox(width: 4),
                               Icon(
                                 Iconsax.verify,
@@ -1840,8 +1852,9 @@ class _PostCardState extends State<PostCard>
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: AdaptiveVideoPlayer(
                 isFullscreen: false,
-                startMuted: false,
-                autoplayWhenVisible: true,
+                startMuted: true, // تشغيل صامت لتحسين الأداء
+                autoplayWhenVisible:
+                    false, // تعطيل التشغيل التلقائي لتحسين الأداء
                 video: _currentPost.video!,
                 mediaResolver: context.read<AppConfig>().mediaAsset,
               ),
@@ -1866,11 +1879,7 @@ class _PostCardState extends State<PostCard>
               !_currentPost.isArticlePost &&
               !_currentPost.isCoursePost &&
               !_currentPost.isVideoPost) ...[
-            Builder(
-              builder: (context) {
-                return const SizedBox(height: 12);
-              },
-            ),
+            const SizedBox(height: 12),
             _PhotosGrid(
               photos: _currentPost.photos!,
               mediaResolver: mediaAsset,
@@ -1886,11 +1895,7 @@ class _PostCardState extends State<PostCard>
               !_currentPost.isArticlePost &&
               !_currentPost.isCoursePost &&
               !_currentPost.isVideoPost) ...[
-            Builder(
-              builder: (context) {
-                return const SizedBox(height: 12);
-              },
-            ),
+            const SizedBox(height: 12),
             _PhotosGrid(
               photos: [PostPhoto(id: 0, source: _currentPost.ogImage!)],
               mediaResolver: mediaAsset,
@@ -2055,96 +2060,91 @@ class _PostCardState extends State<PostCard>
             ),
           ),
           const Divider(height: 1),
-          SizedBox(
-            height: 48,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Row(
-                children: [
-                  _PostAction(
-                    post: _currentPost,
-                    onReactionChanged: widget.onReactionChanged,
-                  ),
-                  const SizedBox(width: 8),
-                  _SimpleActionButton(
-                    icon: _currentPost.commentsDisabled
-                        ? Iconsax.message_minus
-                        : Iconsax.message,
-                    label: _currentPost.commentsDisabled
-                        ? 'disabled'.tr
-                        : 'comment'.tr,
-                    isDisabled: _currentPost.commentsDisabled,
-                    onTap: _currentPost.commentsDisabled
-                        ? () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('comments_disabled_message'.tr),
-                                behavior: SnackBarBehavior.floating,
-                              ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              alignment: WrapAlignment.spaceEvenly,
+              children: [
+                // Like / Reactions
+                _PostAction(
+                  post: _currentPost,
+                  onReactionChanged: widget.onReactionChanged,
+                ),
+                // Comment
+                _SimpleActionButton(
+                  icon: _currentPost.commentsDisabled
+                      ? Iconsax.message_minus
+                      : Iconsax.message,
+                  label: _currentPost.commentsDisabled
+                      ? 'disabled'.tr
+                      : 'comment'.tr,
+                  isDisabled: _currentPost.commentsDisabled,
+                  onTap: _currentPost.commentsDisabled
+                      ? () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('comments_disabled_message'.tr),
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                          );
+                        }
+                      : () {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            useSafeArea: false,
+                            backgroundColor: Colors.transparent,
+                            builder: (context) => CommentsBottomSheet(
+                              postId: _currentPost.id,
+                              commentsCount: _currentPost.commentsCount,
+                            ),
+                          );
+                        },
+                ),
+                // Review
+                _SimpleActionButton(
+                  icon: Iconsax.star,
+                  label: 'action_review'.tr,
+                  onTap: () => _showReviewsBottomSheet(context),
+                ),
+                // Share
+                _SimpleActionButton(
+                  icon: Iconsax.share,
+                  label: 'action_share'.tr,
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => SharePostDialog(
+                        post: _currentPost,
+                        onShareSuccess: () {
+                          // تحديث عدد المشاركات
+                          setState(() {
+                            _currentPost = _currentPost.copyWith(
+                              sharesCount: _currentPost.sharesCount + 1,
                             );
-                          }
-                        : () {
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              backgroundColor: Colors.transparent,
-                              builder: (context) => CommentsBottomSheet(
-                                postId: _currentPost.id,
-                                commentsCount: _currentPost.commentsCount,
-                              ),
-                            );
-                          },
+                          });
+                        },
+                      ),
+                    );
+                  },
+                ),
+                // Boost (owner only)
+                if (_isOwner(_currentPost))
+                  _BoostActionButton(
+                    isBoosted: _isBoosted,
+                    isLoading: _isBoostLoading,
+                    onTap: () => _handleBoost(context),
                   ),
-                  const SizedBox(width: 8),
-                  // زر Reviews يظهر لجميع المنشورات
+                // Tip (optional)
+                if (_currentPost.tipsEnabled)
                   _SimpleActionButton(
-                    icon: Iconsax.star,
-                    label: 'action_review'.tr,
-                    onTap: () => _showReviewsBottomSheet(context),
+                    icon: Iconsax.dollar_circle,
+                    label: 'action_tip'.tr,
+                    onTap: () => _showTipBottomSheet(context),
                   ),
-                  const SizedBox(width: 8),
-                  // زر Tip إذا كانت مفعلة
-                  if (_currentPost.tipsEnabled) ...[
-                    _SimpleActionButton(
-                      icon: Iconsax.dollar_circle,
-                      label: 'action_tip'.tr,
-                      onTap: () => _showTipBottomSheet(context),
-                    ),
-                    const SizedBox(width: 8),
-                  ],
-                  // زر Share يظهر دائماً
-                  _SimpleActionButton(
-                    icon: Iconsax.share,
-                    label: 'action_share'.tr,
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => SharePostDialog(
-                          post: _currentPost,
-                          onShareSuccess: () {
-                            // تحديث عدد المشاركات
-                            setState(() {
-                              _currentPost = _currentPost.copyWith(
-                                sharesCount: _currentPost.sharesCount + 1,
-                              );
-                            });
-                          },
-                        ),
-                      );
-                    },
-                  ),
-                  // زر Boost يظهر فقط للمالك
-                  if (_isOwner(_currentPost)) ...[
-                    const SizedBox(width: 8),
-                    _BoostActionButton(
-                      isBoosted: _isBoosted,
-                      isLoading: _isBoostLoading,
-                      onTap: () => _handleBoost(context),
-                    ),
-                  ],
-                ],
-              ),
+              ],
             ),
           ),
         ],
@@ -2324,7 +2324,6 @@ class _PostActionState extends State<_PostAction>
     _isProcessing = true;
     _lastProcessedReaction = reaction;
 
-
     // بدء animation للتأكيد البصري
     _animationController.forward();
 
@@ -2360,7 +2359,7 @@ class _PostActionState extends State<_PostAction>
         : null;
 
     final String actionLabel =
-      reactionModel?.title ?? 'like'.tr; // استخدام الترجمة الافتراضية
+        reactionModel?.title ?? 'like'.tr; // استخدام الترجمة الافتراضية
     final Color actionColor =
         reactionModel?.colorValue ??
         Theme.of(context).colorScheme.onSurface.withOpacity(0.65);
@@ -2677,9 +2676,16 @@ class _PhotosGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     if (photos.isEmpty) return const SizedBox.shrink();
 
-    // استخدام CachedNetworkImage بدلاً من Image.network
+    // حساب عرض الشاشة لتحديد حجم cache الصور
+    final screenWidth = MediaQuery.of(context).size.width;
+    final pixelRatio = MediaQuery.of(context).devicePixelRatio;
+
+    // استخدام CachedNetworkImage مع تحسين الذاكرة
     Widget buildImage(int index, {double? height}) {
       final imageUrl = mediaResolver(photos[index].source).toString();
+      // حساب حجم cache مناسب للصورة
+      final cacheWidth = (screenWidth * pixelRatio).toInt();
+      final cacheHeight = height != null ? (height * pixelRatio).toInt() : null;
 
       return GestureDetector(
         onTap: () => _showPhotoViewer(context, index, forAdult: forAdult),
@@ -2688,38 +2694,30 @@ class _PhotosGrid extends StatelessWidget {
           fit: BoxFit.cover,
           height: height,
           width: double.infinity,
-          placeholder: (context, url) {
-            return Container(
-              height: height ?? 200,
-              color: Theme.of(context).colorScheme.surfaceContainerHighest,
-              child: const Center(child: CircularProgressIndicator()),
-            );
-          },
-          errorWidget: (context, url, error) {
-            return Container(
-              height: height ?? 200,
-              color: Theme.of(context).colorScheme.surfaceContainerHighest,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Iconsax.gallery_slash,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Failed to load',
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
+          memCacheWidth: cacheWidth,
+          memCacheHeight: cacheHeight,
+          fadeInDuration: const Duration(milliseconds: 150),
+          fadeOutDuration: const Duration(milliseconds: 150),
+          placeholder: (context, url) => Container(
+            height: height ?? 200,
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+            child: const Center(
+              child: SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(strokeWidth: 2),
               ),
-            );
-          },
+            ),
+          ),
+          errorWidget: (context, url, error) => Container(
+            height: height ?? 200,
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+            child: Icon(
+              Iconsax.gallery_slash,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ),
           imageBuilder: (context, imageProvider) {
-            // الاعتماد فقط على forAdult وليس على blur
             final shouldBlur = forAdult;
             return Stack(
               fit: StackFit.expand,
@@ -3230,6 +3228,7 @@ class _LinkWidget extends StatelessWidget {
       //     builder: (context) => WebViewPage(url: link.sourceUrl),
       //   ),
       // );
+      // Link opening handled by WebView
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

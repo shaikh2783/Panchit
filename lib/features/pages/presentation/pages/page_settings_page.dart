@@ -103,6 +103,7 @@ class _PageSettingsPageState extends State<PageSettingsPage>
         });
       }
     } catch (e) {
+
       if (mounted) {
         setState(() => _isLoadingCategories = false);
       }
@@ -121,6 +122,7 @@ class _PageSettingsPageState extends State<PageSettingsPage>
         });
       }
     } catch (e) {
+
       if (mounted) {
         setState(() => _isLoadingCountries = false);
       }
@@ -139,6 +141,7 @@ class _PageSettingsPageState extends State<PageSettingsPage>
         });
       }
     } catch (e) {
+
       if (mounted) {
         setState(() => _isLoadingLanguages = false);
       }

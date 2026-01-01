@@ -46,7 +46,7 @@ class Obfuscation {
       
       // التحقق من السلامة
       final hash = sha256.convert(utf8.encode(decoded)).toString();
-      
+
       return decoded;
     } catch (e) {
       throw Exception('Failed to get hidden value for $key: $e');
@@ -59,6 +59,7 @@ class Obfuscation {
       final actual = getHiddenValue(key);
       return actual == expectedValue;
     } catch (e) {
+
       return false;
     }
   }

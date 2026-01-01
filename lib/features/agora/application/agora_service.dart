@@ -36,17 +36,18 @@ class AgoraService extends ChangeNotifier {
   Future<bool> initialize() async {
     try {
       if (!AgoraConfig.isConfigured) {
+
         return false;
       }
 
-
       // طلب الصلاحيات مع معالجة محسنة
+
       final permissionsGranted = await _requestPermissionsImproved();
       
       if (!permissionsGranted) {
+
         return false;
       }
-
 
       // إنشاء محرك Agora
       _engine = createAgoraRtcEngine();
@@ -70,10 +71,11 @@ class AgoraService extends ChangeNotifier {
       
       _isInitialized = true;
       notifyListeners();
-      
+
       return true;
       
     } catch (e) {
+
       return false;
     }
   }
@@ -81,23 +83,26 @@ class AgoraService extends ChangeNotifier {
   /// طلب الصلاحيات المطلوبة بطريقة محسنة
   Future<bool> _requestPermissionsImproved() async {
     try {
-      
+
       // التحقق من حالة الصلاحيات الحالية أولاً
       final cameraCurrentStatus = await Permission.camera.status;
       final micCurrentStatus = await Permission.microphone.status;
-      
-      
+
       // إذا كانت الصلاحيات ممنوحة مسبقاً، لا نحتاج لطلبها مجدداً
       if (cameraCurrentStatus.isGranted && micCurrentStatus.isGranted) {
+
         return true;
       }
       
       // طلب صلاحية الكاميرا إذا لم تكن ممنوحة
       if (!cameraCurrentStatus.isGranted) {
+
         final cameraStatus = await Permission.camera.request();
-        
+
         if (!cameraStatus.isGranted) {
+
           if (cameraStatus.isPermanentlyDenied) {
+
           }
           return false;
         }
@@ -105,18 +110,22 @@ class AgoraService extends ChangeNotifier {
       
       // طلب صلاحية المايكروفون إذا لم تكن ممنوحة
       if (!micCurrentStatus.isGranted) {
+
         final micStatus = await Permission.microphone.request();
-        
+
         if (!micStatus.isGranted) {
+
           if (micStatus.isPermanentlyDenied) {
+
           }
           return false;
         }
       }
-      
+
       return true;
       
     } catch (e) {
+
       return false;
     }
   }
@@ -159,6 +168,7 @@ class AgoraService extends ChangeNotifier {
           _currentChannel = connection.channelId;
           _currentUid = connection.localUid;
           notifyListeners();
+
         },
 
         // عند مغادرة القناة
@@ -168,18 +178,21 @@ class AgoraService extends ChangeNotifier {
           _currentUid = null;
           _remoteUsers.clear();
           notifyListeners();
+
         },
 
         // عند انضمام مستخدم آخر
         onUserJoined: (connection, remoteUid, elapsed) {
           _remoteUsers[remoteUid] = true;
           notifyListeners();
+
         },
 
         // عند مغادرة مستخدم آخر
         onUserOffline: (connection, remoteUid, reason) {
           _remoteUsers.remove(remoteUid);
           notifyListeners();
+
         },
 
         // عند تحديث إحصائيات الشبكة
@@ -190,6 +203,7 @@ class AgoraService extends ChangeNotifier {
 
         // عند حدوث خطأ
         onError: (err, msg) {
+
         },
       ),
     );
@@ -202,6 +216,7 @@ class AgoraService extends ChangeNotifier {
     int uid = 0,
   }) async {
     if (!_isInitialized || _engine == null) {
+
       return false;
     }
 
@@ -216,10 +231,11 @@ class AgoraService extends ChangeNotifier {
           channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
         ),
       );
-      
+
       return true;
       
     } catch (e) {
+
       return false;
     }
   }
@@ -228,6 +244,7 @@ class AgoraService extends ChangeNotifier {
   Future<void> leaveChannel() async {
     if (_engine != null && _isJoined) {
       await _engine!.leaveChannel();
+
     }
   }
 
@@ -238,6 +255,7 @@ class AgoraService extends ChangeNotifier {
     _isMuted = !_isMuted;
     await _engine!.muteLocalAudioStream(_isMuted);
     notifyListeners();
+
   }
 
   /// تشغيل/إيقاف الكاميرا المحلية
@@ -247,6 +265,7 @@ class AgoraService extends ChangeNotifier {
     _isCameraEnabled = !_isCameraEnabled;
     await _engine!.muteLocalVideoStream(!_isCameraEnabled);
     notifyListeners();
+
   }
 
   /// تشغيل/إيقاف السماعة
@@ -256,6 +275,7 @@ class AgoraService extends ChangeNotifier {
     _isSpeakerEnabled = !_isSpeakerEnabled;
     await _engine!.setEnableSpeakerphone(_isSpeakerEnabled);
     notifyListeners();
+
   }
 
   /// تبديل الكاميرا (أمامية/خلفية)
@@ -263,6 +283,7 @@ class AgoraService extends ChangeNotifier {
     if (_engine == null) return;
     
     await _engine!.switchCamera();
+
   }
 
   /// الحصول على معرف المستخدم المحلي
@@ -291,5 +312,6 @@ class AgoraService extends ChangeNotifier {
     _remoteUsers.clear();
     
     super.dispose();
+
   }
 }

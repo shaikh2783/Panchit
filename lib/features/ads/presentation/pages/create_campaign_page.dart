@@ -493,10 +493,10 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                     label: 'gender'.tr,
                     value: _gender,
                     icon: Iconsax.user,
-                    items: const [
-                      DropdownMenuItem(value: 'all', child: Text('All')),
-                      DropdownMenuItem(value: 'male', child: Text('Male')),
-                      DropdownMenuItem(value: 'female', child: Text('Female')),
+                    items: [
+                      DropdownMenuItem(value: 'all', child: Text('gender_all'.tr)),
+                      DropdownMenuItem(value: 'male', child: Text('gender_male'.tr)),
+                      DropdownMenuItem(value: 'female', child: Text('gender_female'.tr)),
                     ],
                     onChanged: (v) => setState(() => _gender = v),
                   ),
@@ -507,10 +507,10 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                     label: 'relationship'.tr,
                     value: _relationship,
                     icon: Iconsax.heart,
-                    items: const [
-                      DropdownMenuItem(value: 'all', child: Text('All')),
-                      DropdownMenuItem(value: 'single', child: Text('Single')),
-                      DropdownMenuItem(value: 'married', child: Text('Married')),
+                    items: [
+                      DropdownMenuItem(value: 'all', child: Text('relationship_all'.tr)),
+                      DropdownMenuItem(value: 'single', child: Text('relationship_single'.tr)),
+                      DropdownMenuItem(value: 'married', child: Text('relationship_married'.tr)),
                     ],
                     onChanged: (v) => setState(() => _relationship = v),
                   ),

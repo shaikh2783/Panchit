@@ -67,6 +67,31 @@ const Map<String, String> enUS = {
   'work': 'Work',
   'education': 'Education',
   'skip': 'Skip',
+  'skip_all': 'Skip All',
+  'back': 'Back',
+  'step': 'Step',
+  'of': 'of',
+  'profile_setup_complete': 'Profile setup complete!',
+  'please_select_country': 'Please select your country',
+  'country': 'Country',
+  'select_your_country': 'Select your country',
+  'job_title': 'Job Title',
+  'job_title_hint': 'e.g. Software Engineer',
+  'field_of_study': 'Field of Study',
+  'field_of_study_hint': 'e.g. Computer Science',
+  'add_profile_photo': 'Add a Profile Photo',
+  'profile_photo_description': 'Add a photo so people can recognize you',
+  'tap_to_change_photo': 'Tap to change photo',
+  'choose_photo_source': 'Choose Photo Source',
+  'camera': 'Camera',
+  'gallery': 'Gallery',
+  'photo_uploaded_successfully': 'Photo uploaded successfully!',
+  'error_uploading_photo': 'Error uploading photo',
+  'error_picking_image': 'Error picking image',
+  'tell_us_about_yourself': 'Tell us about yourself',
+  'bio_description': 'Write a short bio to let others know who you are',
+  'bio': 'Bio',
+  'write_something_about_yourself': 'Write something about yourself...',
 
   // Navigation
   'home': 'Home',
@@ -137,6 +162,9 @@ const Map<String, String> enUS = {
     'adult_confirm_action_mark': 'Mark as 18+',
     'adult_confirm_action_remove': 'Remove 18+',
   'delete': 'Delete',
+  'delete_story': 'Delete Story',
+  'delete_story_confirmation': 'Are you sure you want to delete your story? This action cannot be undone.',
+  'story_deleted_successfully': 'Story deleted successfully',
   'report': 'Report',
   'share': 'Share',
 
@@ -250,7 +278,7 @@ const Map<String, String> enUS = {
   'publish': 'Publish',
   'try_different_search': 'Try a different search or filter',
   'filter': 'Filter',
-//TODO pending
+
   // Post Actions
   'post_saved_successfully': 'Post saved successfully',
   'post_removed_from_saved': 'Post removed from saved posts',
@@ -295,7 +323,6 @@ const Map<String, String> enUS = {
   'confirm': 'Confirm',
   'close': 'Close',
   'continue': 'Continue',
-  'back': 'Back',
   'next': 'Next',
   'finish': 'Finish',
 
@@ -622,7 +649,6 @@ const Map<String, String> enUS = {
   'address': 'Address',
   'city': 'City',
   'zip_code': 'ZIP Code',
-  'country': 'Country',
 
   // Jobs
   'jobs': 'Jobs',
@@ -637,7 +663,6 @@ const Map<String, String> enUS = {
   'salary_max': 'Maximum Salary',
   'currency_id': 'Currency ID',
   'select_currency': 'Select currency',
-  'job_title': 'Job Title',
   'select_category': 'Select a category',
   'candidates': 'Candidates',
   'apply_now': 'Apply Now',
@@ -972,6 +997,9 @@ const Map<String, String> enUS = {
   'profile_not_following': 'Not following anyone yet',
   'profile_no_subscriptions': 'No subscriptions yet',
   'profile_mutual_friends': '@count mutual friends',
+  'send_message': 'Message',
+  'more_options': 'More',
+  'anonymous_user': 'Anonymous',
   'profile_videos_coming_soon': 'Videos coming soon...',
   'profile_no_social_links': 'No social links',
   'profile_tab_posts': 'Posts',
@@ -1063,7 +1091,8 @@ const Map<String, String> enUS = {
   'terms_policies_subtitle': 'Terms of Service and Privacy Policy',
   'delete_account_title': 'Delete Account',
   'delete_account_confirm': 'Are you sure you want to delete your account?',
-  'delete_account_warning': 'This action cannot be undone. All your data will be permanently deleted.',
+  'delete_account_warning':
+      'This action cannot be undone. All your data will be permanently deleted.',
 
   // Privacy Settings Page
   'privacy_settings_title': 'Privacy Settings',
@@ -1115,6 +1144,30 @@ const Map<String, String> enUS = {
   'sounds': 'Sounds',
   'notifications_sound': 'Notifications sound',
   'chat_sound': 'Chat sound',
+  
+  // 🌐 Notification Messages (translated from message_key)
+  'notification_started_following': 'started following you',
+  'notification_friend_request_sent': 'sent you a friend request',
+  'notification_friend_request_accepted': 'accepted your friend request',
+  'notification_commented_post': 'commented on your post',
+  'notification_reacted_like_to_post': 'liked your post',
+  'notification_reacted_love_to_post': 'loved your post',
+  'notification_reacted_haha_to_post': 'reacted haha to your post',
+  'notification_reacted_wow_to_post': 'reacted wow to your post',
+  'notification_reacted_sad_to_post': 'reacted sad to your post',
+  'notification_reacted_angry_to_post': 'reacted angry to your post',
+  'notification_shared_your_post': 'shared your post',
+  'notification_group_join_request': 'requested to join your group',
+  'notification_group_join_approved': 'approved your request to join',
+  'notification_mentioned_you_post': 'mentioned you in a post',
+  'notification_mentioned_you_comment': 'mentioned you in a comment',
+  'notification_posted_on_wall': 'posted on your wall',
+  'notification_replied_comment': 'replied to your comment',
+  'notification_page_invitation': 'invited you to like a page',
+  'notification_group_invitation': 'invited you to join a group',
+  'notification_event_invitation': 'invited you to an event',
+  'notification_tagged_photo': 'tagged you in a photo',
+  'notification_birthday': 'is celebrating their birthday today',
 
   // Blocked Users Page
   'blocked_users_title': 'Blocked Users',
@@ -1405,6 +1458,7 @@ const Map<String, String> enUS = {
   'notifications_marked_success': 'All notifications marked as read',
   'notifications_error': 'Error',
   'notifications_mark_error': 'Failed to mark notifications as read',
+    'notifications_deleted': 'Notification deleted',
   'friend_requests_title': 'Friend Requests',
   'friend_requests_received': 'Received',
   'friend_requests_sent': 'Sent',
@@ -1916,4 +1970,127 @@ const Map<String, String> enUS = {
   'delete_button': 'Delete',
   'error_deleting_post': 'Failed to delete post',
   'report_feature_coming': 'Report feature coming soon',
+
+  // Comments Section
+  'error_loading_comments': 'Error loading comments',
+  'no_comments_yet': 'No comments yet',
+  'be_first_to_comment': 'Be the first to comment',
+  'hide_replies': 'Hide replies',
+  'show_replies': 'Show @count @label',
+  'reply_singular': 'reply',
+  'replies_plural': 'replies',
+  'replying_to': 'Replying to @name',
+  'write_reply': 'Write your reply...',
+  'write_comment': 'Write a comment...',
+  'uploading_image': 'Uploading image...',
+  'failed_upload_image': 'Failed to upload image',
+  'uploading_voice': 'Uploading voice recording...',
+  'failed_upload_voice': 'Failed to upload recording',
+  'voice_recording': 'Voice recording',
+  'ready_to_send': 'Ready to send',
+  'recording': 'Recording...',
+  'edit_comment': 'Edit',
+  'delete_comment': 'Delete',
+  'delete_comment_title': 'Delete Comment',
+  'delete_comment_message': 'Are you sure you want to delete this comment?',
+  'comment_deleted': 'Comment deleted successfully',
+  'comment_updated': 'Comment updated successfully',
+  'failed_delete_comment': 'Failed to delete comment',
+  'failed_update_comment': 'Failed to update comment',
+  'reply': 'Reply',
+  'show_more_replies': 'Show more replies',
+
+  // Auth - Login/Signup
+  'welcome_back_user': 'Welcome back, @name! 🎉',
+  'login_success': 'Successfully logged in.',
+  'login_failed': 'Login failed. Please try again.',
+  'or': 'OR',
+  'google_sign_in_disabled': 'Google Sign-In is currently disabled',
+  'google_sign_in_failed': 'Google Sign-In failed',
+
+  // Onboarding
+  'onboarding_connect_title': 'Connect with Friends',
+  'onboarding_connect_desc': 'Build meaningful connections with people who share your interests and passions.',
+  'onboarding_share_title': 'Share Your Story',
+  'onboarding_share_desc': 'Express yourself through posts, photos, videos, and stories with your community.',
+  'onboarding_discover_title': 'Discover New Content',
+  'onboarding_discover_desc': 'Explore trending topics, join groups, and discover content tailored just for you.',
+  'onboarding_secure_title': 'Safe & Secure',
+  'onboarding_secure_desc': 'Your privacy matters. We keep your data protected with advanced security measures.',
+  'onboarding_next': 'Next',
+  'onboarding_get_started': 'Get Started',
+
+  // Relationship Status
+  'relationship_single': 'Single',
+  'relationship_in_relationship': 'In a relationship',
+  'relationship_married': 'Married',
+  'relationship_complicated': "It's complicated",
+  'relationship_separated': 'Separated',
+  'relationship_divorced': 'Divorced',
+  'relationship_widowed': 'Widowed',
+
+  // Gender Options
+  'gender_male': 'Male',
+  'gender_female': 'Female',
+  'gender_other': 'Other',
+  'gender_all': 'All',
+  'relationship_all': 'All',
+
+  // Profile Labels (for server data)
+  'select_birth_date': 'Select birth date',
+  'about_you': 'About you',
+
+  // Edit Profile Page
+  'edit_profile': 'Edit Profile',
+  'tab_basic': 'Basic',
+  'tab_work': 'Work',
+  'tab_location': 'Location',
+  'tab_education': 'Education',
+  'tab_social': 'Social',
+  'tab_photos': 'Photos',
+  
+  // Basic Info
+  'first_name_label': 'First Name',
+  'last_name_label': 'Last Name',
+  'birthdate_label': 'Birthdate',
+  'website_label': 'Website',
+  'save_button': 'Save',
+  
+  // Work Info
+  'job_title_label': 'Job Title',
+  'enter_job_title': 'Enter job title',
+  'company_label': 'Company',
+  'company_website_label': 'Company Website',
+  
+  // Location
+  'current_city_label': 'Current City',
+  'hometown_label': 'Hometown',
+  
+  // Education
+  'major_label': 'Major',
+  'educational_institution_label': 'Educational Institution',
+  'graduation_year_label': 'Graduation Year',
+  
+  // Photos
+  'profile_picture': 'Profile Picture',
+  'cover_photo': 'Cover Photo',
+  'tap_to_add_cover': 'Tap to add a cover photo',
+  'choose_image': 'Choose Image',
+
+  // Password Dialog
+
+  'confirm_password_label': 'Confirm Password',
+  'change': 'Change',
+  'new_password_too_short': 'New password is too short',
+  
+  // Country Picker
+  'country_label': 'Country',
+  'loading_text': 'Loading\u2026',
+  'select_country': 'Select Country',
+  'search_country': 'Search for a country\u2026',
+  
+  // Error Messages
+  'error_loading_countries': 'Error loading countries',
+  'error_uploading_image': 'Error uploading image',
+  'error_uploading_cover': 'Error uploading cover photo',
 };

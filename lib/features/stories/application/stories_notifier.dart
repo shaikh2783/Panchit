@@ -43,6 +43,7 @@ class StoriesNotifier extends ChangeNotifier {
       _error = error.message;
     } catch (error, stackTrace) {
       _error = 'تعذر تحميل القصص، يرجى المحاولة لاحقاً.';
+
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -63,6 +64,7 @@ class StoriesNotifier extends ChangeNotifier {
       _error = error.message;
     } catch (error, stackTrace) {
       _error = 'حدث خطأ أثناء تحديث القصص.';
+
     } finally {
       _isRefreshing = false;
       notifyListeners();

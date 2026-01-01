@@ -52,6 +52,7 @@ String configCfgP(String key) {
       'Endpoint "$key" (mapped to "$actualKey") not found in encrypted config',
     );
   } catch (e) {
+
     return '';
   }
 }
@@ -83,8 +84,10 @@ Future<void> main() async {
   ReactionsService.instance
       .loadReactions()
       .then((reactions) {
+
       })
       .catchError((e) {
+
       });
 
   // Register Controllers with GetX
@@ -99,10 +102,13 @@ Future<void> main() async {
 
 /// Initialize OneSignal SDK
 Future<void> _initializeOneSignal(ApiClient apiClient) async {
+
   try {
     if (_oneSignalInitialized) {
+
       // Ensure handlers are set once
       _setupNotificationHandlers();
+
       return;
     }
     // استخدام OneSignal App ID من AppSettings
@@ -112,22 +118,28 @@ Future<void> _initializeOneSignal(ApiClient apiClient) async {
     OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
 
     // Set app ID directly
+
     OneSignal.initialize(oneSignalAppId);
 
     // Request notification permission
+
     OneSignal.Notifications.requestPermission(true);
 
     // Setup notification handlers
+
     _setupNotificationHandlers();
 
     _oneSignalInitialized = true;
+
   } catch (e) {
+
   }
 }
 
 /// Setup notification click and receive handlers
 void _setupNotificationHandlers() {
   if (_oneSignalHandlersSet) {
+
     return;
   }
   _oneSignalHandlersSet = true;
@@ -135,6 +147,7 @@ void _setupNotificationHandlers() {
   OneSignal.User.pushSubscription.addObserver((state) {
     final playerId = state.current.id;
     if (playerId != null && playerId.isNotEmpty) {
+
       // يمكن حفظ Player ID هنا للاستخدام لاحقاً
     }
   });
@@ -145,10 +158,12 @@ void _setupNotificationHandlers() {
   DateTime? _lastClickTime;
 
   OneSignal.Notifications.addClickListener((event) {
+
     final now = DateTime.now();
     if (_lastClickedId == event.notification.notificationId &&
         _lastClickTime != null &&
         now.difference(_lastClickTime!).inMilliseconds < 800) {
+
       return;
     }
     _lastClickedId = event.notification.notificationId;
@@ -163,6 +178,7 @@ void _setupNotificationHandlers() {
     };
 
     if (data.isEmpty) {
+
       return;
     }
 
@@ -171,6 +187,7 @@ void _setupNotificationHandlers() {
 
   // Handle notification received in foreground
   OneSignal.Notifications.addForegroundWillDisplayListener((event) {
+
     // Prevent default display to avoid duplicates, then display exactly once
     event.preventDefault();
     event.notification.display();

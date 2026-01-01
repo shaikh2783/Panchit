@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -80,7 +79,9 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
     // Set initial post type if provided
     if (widget.initialPostType != null) {
       _selectedType = widget.initialPostType!;
+
     } else {
+
     }
     // إضافة listeners للتحديث عند تغيير النص أو التركيز
     _textController.addListener(() => setState(() {}));
@@ -112,9 +113,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       
       // التحقق من تفعيل الـ Feelings من الـ Provider
       final features = configProvider.features;
-      final feelingsEnabled = features?.posts.feelings ?? false;
-      
-      
+
       // جلب البيانات من الـ Provider مباشرة باستخدام الـ getters الجديدة
       final feelingsData = configProvider.feelings ?? [];
       final activitiesData = configProvider.activities ?? [];
@@ -124,8 +123,6 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         _setDefaultFeelingsData();
         return;
       }
-      
-      
 
       setState(() {
         _feelingsEnabled = true; // نمكن الـ feelings دائماً إذا كانت البيانات متوفرة
@@ -141,6 +138,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           allActions.add(action);
         }
       }
+
     } catch (e) {
       // في حالة الخطأ، نستخدم البيانات الافتراضية
       _setDefaultFeelingsData();
@@ -169,7 +167,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       ];
       _feelingsSynced = true;
     });
-    
+
   }
 
   @override
@@ -554,19 +552,23 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       if (_images.isNotEmpty) {
         uploadedPhotos = [];
         for (final image in _images) {
+
           final result = await apiService.uploadFile(
             image,
             type: FileUploadType.photo,
           );
           if (result != null) {
             uploadedPhotos.add(result);
+
           } else {
+
           }
         }
       }
 
       // Upload video if present
       if (_video != null) {
+
         _videoUploadProgress = 0.0;
         setState(() {});
 
@@ -586,9 +588,12 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           );
 
           if (_uploadedVideo != null) {
+
             if (_uploadedVideo!.thumb != null) {
+
             }
           } else {
+
             Get.snackbar(
               'Warning',
               'Video upload failed - Post will be created without video',
@@ -599,6 +604,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
             );
           }
         } catch (videoError) {
+
           Get.snackbar(
             'Video upload error',
             videoError.toString(),
@@ -615,15 +621,18 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       // Upload audio if present
       UploadedFileData? uploadedAudio;
       if (_audio != null) {
+
         uploadedAudio = await apiService.uploadFile(
           _audio!,
           type: FileUploadType.audio,
         );
         if (uploadedAudio != null) {
+
         }
       }
 
       // Build the request
+
       final request = _buildPostRequest(
         photos: uploadedPhotos,
         video: _uploadedVideo,
@@ -634,6 +643,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       final requestJson = request.toJson();
 
       // Create the post
+
       final postResponse = await apiService.createPostAdvanced(request);
 
       // Update list and go back to main page
@@ -656,18 +666,24 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         // Add new post immediately instead of full reload
         if (postResponse.isSuccess && postResponse.postData != null) {
           try {
+
             final newPost = Post.fromJson(postResponse.postData!);
+
             context.read<PostsBloc>().add(AddPostEvent(newPost));
+
           } catch (e, stackTrace) {
+
             // In case of parsing failure, fall back to reload
             context.read<PostsBloc>().add(RefreshPostsEvent());
           }
         } else {
+
           // If we didn't get post data, refresh the list
           context.read<PostsBloc>().add(RefreshPostsEvent());
         }
       }
     } catch (e) {
+
       Get.snackbar(
         'error'.tr,
         'failed_to_create_post'.trParams({'error': e.toString()}),
@@ -693,8 +709,8 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
     final handle = widget.handle ?? 'me';
     final handleId = widget.handleId;
     final feeling = _buildFeelingData();
-    
-    
+
+
     switch (_selectedType) {
       case PostTypeOption.photos:
         // Convert UploadedFileData to PhotoData with size and extension
@@ -719,6 +735,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           // Don't include coloredPattern for photo posts
           feeling: feeling,
           forAdult: _isAdultContent, // 🆕 محتوى للبالغين
+          isAnonymous: _isAnonymous, // 🔒 منشور مجهول
         );
       case PostTypeOption.video:
         // Pass full video data object from upload response with all metadata
@@ -738,7 +755,6 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
               }
             : null;
 
-
         return CreatePostRequest(
           handle: handle,
           pageId: handle == 'page' && handleId != null ? handleId.toString() : null,
@@ -750,6 +766,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           // Don't include coloredPattern for video posts
           feeling: feeling,
           forAdult: _isAdultContent, // 🆕 محتوى للبالغين
+          isAnonymous: _isAnonymous, // 🔒 منشور مجهول
         );
       case PostTypeOption.reel:
         // Reel is similar to video but with reel property
@@ -771,7 +788,6 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
               }
             : null;
 
-
         return CreatePostRequest(
           handle: handle,
           pageId: handle == 'page' && handleId != null ? handleId.toString() : null,
@@ -784,6 +800,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           // Don't include coloredPattern for reel posts
           feeling: feeling,
           forAdult: _isAdultContent, // 🆕 محتوى للبالغين
+          isAnonymous: _isAnonymous, // 🔒 منشور مجهول
         );
       case PostTypeOption.audio:
         return CreatePostRequest(
@@ -797,6 +814,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           // Don't include coloredPattern for audio posts
           feeling: feeling,
           forAdult: _isAdultContent, // 🆕 محتوى للبالغين
+          isAnonymous: _isAnonymous, // 🔒 منشور مجهول
         );
       case PostTypeOption.poll:
         return CreatePostRequest(
@@ -813,6 +831,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           // Don't include coloredPattern for poll posts
           feeling: feeling,
           forAdult: _isAdultContent, // 🆕 محتوى للبالغين
+          isAnonymous: _isAnonymous, // 🔒 منشور مجهول
         );
       case PostTypeOption.colored:
         return CreatePostRequest(
@@ -825,6 +844,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           coloredPattern: _selectedColoredPattern?.id,
           feeling: feeling,
           forAdult: _isAdultContent, // 🆕 محتوى للبالغين
+          isAnonymous: _isAnonymous, // 🔒 منشور مجهول
         );
       default:
         return CreatePostRequest(
@@ -837,6 +857,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           // Don't include coloredPattern for regular text posts
           feeling: feeling,
           forAdult: _isAdultContent, // 🆕 محتوى للبالغين
+          isAnonymous: _isAnonymous, // 🔒 منشور مجهول
         );
     }
   }
@@ -1835,6 +1856,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                             : IconButton(
                                 onPressed: () async {
                                   try {
+
                                     await configProvider.loadConfig(forceRefresh: true);
                                     if (mounted) {
                                       final patternsCount = configProvider.coloredPatterns?.length ?? 0;
@@ -1847,6 +1869,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                                       );
                                     }
                                   } catch (e) {
+
                                     if (mounted) {
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
@@ -2853,14 +2876,22 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       context: context,
       isScrollControlled: true,
       builder: (sheetContext) {
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
-            left: 16,
-            right: 16,
-            top: 16,
+        final media = MediaQuery.of(sheetContext);
+        final bottomInset = media.viewInsets.bottom; // keyboard
+        final safeBottom = media.padding.bottom; // safe area (e.g., iPhone home indicator)
+        final bottomPadding = bottomInset > 0 ? bottomInset : safeBottom;
+
+        return SafeArea(
+          top: false,
+          child: Padding(
+            padding: EdgeInsets.only(
+              bottom: bottomPadding,
+              left: 16,
+              right: 16,
+              top: 16,
+            ),
+            child: _buildFeelingSheet(sheetContext),
           ),
-          child: _buildFeelingSheet(sheetContext),
         );
       },
     );
@@ -2901,6 +2932,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
+            
               value: _selectedFeelingAction,
               isExpanded: true,
               decoration: const InputDecoration(
@@ -2912,29 +2944,29 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
               items: () {
                 final uniqueFeelingsActions = <String>{};
                 final items = <DropdownMenuItem<String>>[];
-                
-                
+
                 for (var feeling in _feelings) {
                   final action = feeling['action']?.toString();
                   if (action != null && action.isNotEmpty && !uniqueFeelingsActions.contains(action)) {
                     uniqueFeelingsActions.add(action);
                     final translatedLabel = _getTranslatedAction(action);
-                    
-                    
+
                     items.add(DropdownMenuItem<String>(
                       value: action,
                       child: Text(translatedLabel),
                     ));
                   }
                 }
-                
+
                 return items;
               }(),
               onChanged: (value) {
+
                 setSheetState(() {
                   _selectedFeelingAction = value;
                   _selectedFeelingActivity = null;
                   _feelingValueController.clear();
+
                 });
               },
             ),
@@ -2954,8 +2986,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
               hint: Text('select_a_feeling'.tr),
               items: () {
                 final items = <DropdownMenuItem<String>>[];
-                
-                
+
                 // جمع جميع الـ activities المتاحة (هذه هي المشاعر الفعلية)
                 final uniqueFeelings = <String>{};
                 for (var activity in _activities) {
@@ -2964,6 +2995,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                   if (feelingValue != null && feelingValue.isNotEmpty && !uniqueFeelings.contains(feelingValue)) {
                     uniqueFeelings.add(feelingValue);
                     final translatedEmotion = _getTranslatedEmotion(feelingValue);
+
                     items.add(DropdownMenuItem<String>(
                       value: feelingValue,
                       child: Row(
@@ -2979,13 +3011,14 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                     ));
                   }
                 }
-                
+
                 return items;
               }(),
               onChanged: (value) {
                 setState(() {
                   _selectedFeelingActivity = value;
                   _feelingValueController.clear();
+
                 });
               },
             )

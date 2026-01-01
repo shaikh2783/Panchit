@@ -47,6 +47,7 @@ class _PromotedPostWidgetState extends State<PromotedPostWidget> {
     });
 
     try {
+
       final promotedPost = await _promotedPostsService.getRandomPromotedPost();
       
       if (mounted) {
@@ -56,12 +57,15 @@ class _PromotedPostWidgetState extends State<PromotedPostWidget> {
         });
         
         if (promotedPost != null) {
+
           // مسح ذاكرة الصور المؤقتة عند تحميل منشور جديد
           PaintingBinding.instance.imageCache.clear();
         } else {
+
         }
       }
     } catch (e) {
+
       if (mounted) {
         setState(() {
           _error = e.toString();
@@ -73,7 +77,7 @@ class _PromotedPostWidgetState extends State<PromotedPostWidget> {
 
   /// تحديث المنشور المدفوع (يستدعى عند Pull to Refresh)
   Future<void> refreshPromotedPost() async {
-    
+
     // مسح ذاكرة الصور المؤقتة لضمان تحديث الصور
     PaintingBinding.instance.imageCache.clear();
     
@@ -174,7 +178,7 @@ class _PromotedPostWidgetState extends State<PromotedPostWidget> {
             key: ValueKey('promoted-post-${_promotedPost!.id}'),
             post: _promotedPost!,
             onReactionChanged: (postId, reaction) async {
-              
+
               // تحديث حالة المنشور المدفوع محلياً (Optimistic Update)
               if (_promotedPost != null) {
                 final updatedPost = _promotedPost!.copyWithReaction(
@@ -198,9 +202,9 @@ class _PromotedPostWidgetState extends State<PromotedPostWidget> {
                     reaction: reaction == 'remove' ? 'like' : reaction, // استخدام like كقيمة افتراضية عند الإزالة
                     isReacting: isReacting,
                   );
-                  
+
                 } catch (e) {
-                  
+
                   // في حالة الخطأ، نعيد الحالة السابقة (Revert)
                   if (_promotedPost != null) {
                     final originalReaction = _promotedPost!.myReaction;

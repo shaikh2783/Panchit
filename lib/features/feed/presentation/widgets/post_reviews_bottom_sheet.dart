@@ -18,6 +18,7 @@ class PostReviewsBottomSheet extends StatefulWidget {
   @override
   State<PostReviewsBottomSheet> createState() => _PostReviewsBottomSheetState();
 }
+
 class _PostReviewsBottomSheetState extends State<PostReviewsBottomSheet> {
   late ReviewsRepository _reviewsRepo;
   late AuthNotifier _auth;
@@ -255,19 +256,15 @@ class _PostReviewsBottomSheetState extends State<PostReviewsBottomSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(Iconsax.star, color: Theme.of(context).colorScheme.primary),
                 const SizedBox(width: 8),
                 Text('add_review_title'.tr, style: Theme.of(context).textTheme.titleMedium),
-                const SizedBox(width: 10,),
+                const Spacer(),
                 if (_isOwner)
-                  Expanded(
-                    child: Chip(
-                      padding: EdgeInsets.all(5),
-                      label: Text('review_owner_cannot_rate'.tr, style: Theme.of(context).textTheme.labelSmall,maxLines: 2,overflow: TextOverflow.ellipsis,),
-                      backgroundColor: Colors.grey.shade200,
-                    ),
+                  Chip(
+                    label: Text('review_owner_cannot_rate'.tr),
+                    backgroundColor: Colors.grey.shade200,
                   ),
               ],
             ),

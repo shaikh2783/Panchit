@@ -130,6 +130,7 @@ class _HtmlTextWidgetState extends State<HtmlTextWidget> {
               // التحقق من وجود data-uid في الـ attributes (يعني أنها mention)
               final dataUid = attributes['data-uid'];
               if (dataUid != null) {
+
                 if (widget.onMentionTap != null) {
                   widget.onMentionTap!(username);
                 }
@@ -145,7 +146,9 @@ class _HtmlTextWidgetState extends State<HtmlTextWidget> {
               
               if (username.startsWith('searchhashta')) {
                 //go to hashtag page
+
               } else {
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -155,6 +158,7 @@ class _HtmlTextWidgetState extends State<HtmlTextWidget> {
               }
             } else {
               //go to external link
+
               launchUrl(Uri.parse(url));
             }
           },

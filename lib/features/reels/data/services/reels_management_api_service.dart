@@ -36,6 +36,7 @@ class ReelsManagementApiService {
         );
       }
     } catch (e) {
+
       rethrow;
     }
   }
@@ -46,6 +47,7 @@ class ReelsManagementApiService {
     required String action, // save_post, unsave_post, etc.
   }) async {
     try {
+
       final response = await _apiClient.post(
         configCfgP('post_manage'), // نفس API إدارة المنشورات
         body: {
@@ -63,6 +65,7 @@ class ReelsManagementApiService {
         );
       }
     } catch (e) {
+
       rethrow;
     }
   }
@@ -70,13 +73,16 @@ class ReelsManagementApiService {
   /// إبلاغ عن مشاهدة الريل
   Future<void> recordView(int reelId) async {
     try {
+
       await _apiClient.post(
         configCfgP('reel_view'),
         body: {
           'reel_id': reelId,
         },
       );
+
     } catch (e) {
+
       // لا نرمي الخطأ لأن تسجيل المشاهدة ليس عملية حرجة
     }
   }

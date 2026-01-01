@@ -14,6 +14,7 @@ class OneSignalService {
     try {
       String? playerId = OneSignal.User.pushSubscription.id;
       if (playerId != null && playerId.isNotEmpty) {
+
         return playerId;
       }
 
@@ -22,12 +23,15 @@ class OneSignalService {
         await Future.delayed(Duration(seconds: i + 1));
         playerId = OneSignal.User.pushSubscription.id;
         if (playerId != null && playerId.isNotEmpty) {
+
           return playerId;
         }
+
       }
 
       return null;
     } catch (e) {
+
       return null;
     }
   }
@@ -36,6 +40,7 @@ class OneSignalService {
   Future<bool> registerCurrentPlayerId() async {
     final playerId = await getPlayerId();
     if (playerId == null || playerId.isEmpty) {
+
       return false;
     }
     return updateOneSignalPlayerId(playerId);
@@ -55,6 +60,7 @@ class OneSignalService {
           .timeout(
             const Duration(seconds: 15),
             onTimeout: () {
+
               return {
                 'status': 'error',
                 'message': 'timeout',
@@ -63,11 +69,14 @@ class OneSignalService {
           );
 
       if (response['status'] == 'success') {
+
         return true;
       } else {
+
         return false;
       }
     } catch (e) {
+
       return false;
     }
   }
@@ -75,6 +84,7 @@ class OneSignalService {
   /// حذف Player ID من الخادم (عند تسجيل الخروج)
   Future<bool> removeOneSignalPlayerId() async {
     try {
+
       final response = await _apiClient.post(
         configCfgP('user_onesignal'),
         body: {
@@ -83,11 +93,14 @@ class OneSignalService {
       );
 
       if (response['status'] == 'success') {
+
         return true;
       } else {
+
         return false;
       }
     } catch (e) {
+
       return false;
     }
   }

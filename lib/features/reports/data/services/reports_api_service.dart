@@ -26,7 +26,6 @@ class ReportsApiService {
         },
       );
 
-
       if (response['status'] == 'success') {
         return response;
       } else {
@@ -36,6 +35,7 @@ class ReportsApiService {
         );
       }
     } catch (e) {
+
       rethrow;
     }
   }
@@ -45,7 +45,6 @@ class ReportsApiService {
     try {
 
       final response = await _apiClient.get(configCfgP('report_categories'));
-
 
       if (response['status'] == 'success') {
         final categoriesData = response['data'] as List?;
@@ -62,6 +61,7 @@ class ReportsApiService {
         );
       }
     } catch (e) {
+
       rethrow;
     }
   }
@@ -84,7 +84,6 @@ class ReportsApiService {
         },
       );
 
-
       if (response['status'] == 'success') {
         return response;
       } else {
@@ -94,6 +93,7 @@ class ReportsApiService {
         );
       }
     } catch (e) {
+
       rethrow;
     }
   }
@@ -116,7 +116,6 @@ class ReportsApiService {
         },
       );
 
-
       if (response['status'] == 'success') {
         return response;
       } else {
@@ -126,6 +125,7 @@ class ReportsApiService {
         );
       }
     } catch (e) {
+
       rethrow;
     }
   }

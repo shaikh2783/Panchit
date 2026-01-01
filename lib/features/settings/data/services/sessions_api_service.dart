@@ -13,7 +13,6 @@ class SessionsApiService {
 
       final response = await _apiClient.get(configCfgP('sessions'));
 
-
       if (response['status'] == 'success') {
         final data = response['data'];
         return {
@@ -31,6 +30,7 @@ class SessionsApiService {
         };
       }
     } catch (e) {
+
       return {'success': false, 'message': 'Error: ${e.toString()}'};
     }
   }
@@ -44,7 +44,6 @@ class SessionsApiService {
         body: {'session_id': sessionId},
       );
 
-
       if (response['status'] == 'success') {
         return {
           'success': true,
@@ -57,6 +56,7 @@ class SessionsApiService {
         };
       }
     } catch (e) {
+
       return {'success': false, 'message': 'Error: ${e.toString()}'};
     }
   }
@@ -69,7 +69,6 @@ class SessionsApiService {
         configCfgP('sessions_delete_all'),
         body: {},
       );
-
 
       if (response['status'] == 'success') {
         final data = response['data'];
@@ -85,6 +84,7 @@ class SessionsApiService {
         };
       }
     } catch (e) {
+
       return {'success': false, 'message': 'Error: ${e.toString()}'};
     }
   }

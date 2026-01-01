@@ -129,7 +129,7 @@ class LanguageSettingsPage extends StatelessWidget {
                 ),
 
                 // Quick Toggle Button
-                SizedBox(
+                Container(
                   width: double.infinity,
                   child: ElevatedButton.icon(
                     icon: const Icon(Icons.swap_horiz),

@@ -61,7 +61,9 @@ class Post {
     this.isPromoted = false,
     // 📢 AD FIELD
     this.isAd = false,
-    // 📢 AD DATA FIELDS
+    // � ANONYMOUS POST FIELD
+    this.isAnonymous = false,
+    // �📢 AD DATA FIELDS
     this.campaignTitle,
     this.campaignDescription,
     this.campaignUrl,
@@ -94,13 +96,13 @@ class Post {
     this.feelingAction,
     this.feelingValue,
     this.feelingIcon,
-  })  : reactionBreakdown = reactionBreakdown ?? const <String, int>{},
-        topReactions = _topReactions(reactionBreakdown ?? const {}),
-        reactionsCountFormatted = _formatCount(reactionsCount),
-        commentsCountFormatted = _formatCount(commentsCount),
-        sharesCountFormatted = _formatCount(sharesCount),
-        viewsCountFormatted = _formatCount(viewsCount),
-        reviewsCountFormatted = _formatCount(reviewsCount);
+  }) : reactionBreakdown = reactionBreakdown ?? const <String, int>{},
+       topReactions = _topReactions(reactionBreakdown ?? const {}),
+       reactionsCountFormatted = _formatCount(reactionsCount),
+       commentsCountFormatted = _formatCount(commentsCount),
+       sharesCountFormatted = _formatCount(sharesCount),
+       viewsCountFormatted = _formatCount(viewsCount),
+       reviewsCountFormatted = _formatCount(reviewsCount);
 
   final int id;
   final String authorName;
@@ -129,23 +131,24 @@ class Post {
   final int commentsCount;
   final int reactionsCount;
   final int sharesCount;
-  final int viewsCount;        // عدد المشاهدات
-  final int reviewsCount;      // عدد التقييمات/المراجعات
+  final int viewsCount; // عدد المشاهدات
+  final int reviewsCount; // عدد التقييمات/المراجعات
   final bool isVerified;
   final String? myReaction;
   final String privacy;
   final Map<String, int> reactionBreakdown;
-  
+
   // 🚀 POST MANAGEMENT FIELDS
-  final bool isSaved;          // هل المنشور محفوظ (i_save)
-  final bool isPinned;         // هل المنشور مثبت (pinned)
-  final bool isHidden;         // هل المنشور مخفي (is_hidden)
+  final bool isSaved; // هل المنشور محفوظ (i_save)
+  final bool isPinned; // هل المنشور مثبت (pinned)
+  final bool isHidden; // هل المنشور مخفي (is_hidden)
   final bool commentsDisabled; // هل التعليقات معطلة (comments_disabled)
-  final bool tipsEnabled;      // هل الـ Tips مفعلة للمنشور
-  final bool forAdult;         // 🔞 هل المحتوى للبالغين فقط (for_adult)
-  final bool isPromoted;       // 💰 هل المنشور مدفوع/مروج (promoted/boosted)
-  final bool isAd;             // 📢 هل هذا إعلان (is_ad)
-  
+  final bool tipsEnabled; // هل الـ Tips مفعلة للمنشور
+  final bool forAdult; // 🔞 هل المحتوى للبالغين فقط (for_adult)
+  final bool isPromoted; // 💰 هل المنشور مدفوع/مروج (promoted/boosted)
+  final bool isAd; // 📢 هل هذا إعلان (is_ad)
+  final bool isAnonymous; // 👤 هل المنشور مجهول الهوية (is_anonymous)
+
   // 📢 AD FIELDS (only used when isAd = true)
   final String? campaignTitle;
   final String? campaignDescription;
@@ -154,41 +157,42 @@ class Post {
   final String? actionButtonText;
   final String? actionButtonUrl;
   final int? campaignId;
-  final String? adsType;        // نوع الإعلان: "page", "group", "url", "post", "event"
+  final String? adsType; // نوع الإعلان: "page", "group", "url", "post", "event"
   final String? campaignBidding; // نوع التتبع: "click" أو "view"
-  final String? targetName;     // اسم الهدف
-  final String? targetPicture;  // صورة الهدف
-  final int? adPageId;          // معرف الصفحة (إذا كان ads_type = "page")
-  final int? adGroupId;         // معرف المجموعة (إذا كان ads_type = "group")
-  final int? adEventId;         // معرف الحدث (إذا كان ads_type = "event")
-  final int? adPostId;          // معرف المنشور (إذا كان ads_type = "post")
-  
+  final String? targetName; // اسم الهدف
+  final String? targetPicture; // صورة الهدف
+  final int? adPageId; // معرف الصفحة (إذا كان ads_type = "page")
+  final int? adGroupId; // معرف المجموعة (إذا كان ads_type = "group")
+  final int? adEventId; // معرف الحدث (إذا كان ads_type = "event")
+  final int? adPostId; // معرف المنشور (إذا كان ads_type = "post")
+
   final List<String> topReactions;
   final String? permalink;
   final PostVideo? video;
   final List<PostPhoto>? photos;
-  final String? ogImage;  // 📷 الصورة الافتراضية من og_image عندما لا توجد photos
+  final String?
+  ogImage; // 📷 الصورة الافتراضية من og_image عندما لا توجد photos
   final PostPoll? poll;
   final PostLink? link;
   final PostAudio? audio;
-  
+
   // ⚠️ NEW FIELDS FOR SHARED POSTS AND ARTICLES
-  final Post? originPost;      // المنشور الأصلي للمنشورات المشاركة
-  final PostBlog? blog;        // محتوى المقال
-  // 💰 FUNDING FIELD  
-  final PostFunding? funding;  // معلومات حملة التبرع
+  final Post? originPost; // المنشور الأصلي للمنشورات المشاركة
+  final PostBlog? blog; // محتوى المقال
+  // 💰 FUNDING FIELD
+  final PostFunding? funding; // معلومات حملة التبرع
   // 🏷️ OFFER FIELD
-  final PostOffer? offer;      // معلومات العرض
+  final PostOffer? offer; // معلومات العرض
   // 📚 COURSE FIELD
-  final PostCourse? course;    // معلومات الدورة التعليمية
+  final PostCourse? course; // معلومات الدورة التعليمية
   // 🎨 COLORED PATTERN FIELD
   final PostColoredPattern? coloredPattern; // خلفية ملونة أو منقوشة
   // 📺 LIVE STREAMING FIELD
-  final PostLive? live;        // معلومات البث المباشر
+  final PostLive? live; // معلومات البث المباشر
   // 😊 FEELINGS FIELDS
   final String? feelingAction; // نوع الشعور (Feeling, Listening To, إلخ)
-  final String? feelingValue;  // قيمة الشعور (Happy, Song Name, إلخ)
-  final String? feelingIcon;   // أيقونة الشعور
+  final String? feelingValue; // قيمة الشعور (Happy, Song Name, إلخ)
+  final String? feelingIcon; // أيقونة الشعور
 
   final String reactionsCountFormatted;
   final String commentsCountFormatted;
@@ -201,49 +205,49 @@ class Post {
   bool get hasVideo => video?.hasAnySource ?? false;
 
   bool get isVideoPost =>
-      hasVideo && (postType == 'video' || postType == 'live' || postType == 'reel');
-  
+      hasVideo &&
+      (postType == 'video' || postType == 'live' || postType == 'reel');
+
   bool get hasPhotos => photos != null && photos!.isNotEmpty;
-  
+
   bool get hasAnyPhoto => hasPhotos || (ogImage != null && ogImage!.isNotEmpty);
-  
+
   bool get hasPoll => poll != null;
-  
+
   bool get hasLink => link != null;
-  
+
   bool get hasAudio => audio != null;
-  
+
   bool get isAudioPost => postType == 'audio' && hasAudio;
-  
+
   bool get isPagePost => authorType == 'page' && pageId != null;
-  
+
   bool get isGroupPost => inGroup && groupId != null;
-  
+
   bool get isEventPost => inEvent && event != null;
-  
+
   bool get isSharedPost => postType == 'shared' && originPost != null;
-  
+
   bool get isArticlePost => postType == 'article' && blog != null;
-  
+
   bool get isFundingPost => postType == 'funding' && funding != null;
-  
+
   bool get isOfferPost => postType == 'offer' && offer != null;
-  
+
   bool get isCoursePost => postType == 'course' && course != null;
-  
+
   bool get hasColoredPattern => coloredPattern != null;
-  
+
   bool get hasBlog => blog != null;
 
   bool get hasLive => live != null;
-  
+
   bool get isLivePost => postType == 'live' && hasLive;
-  
+
   bool get isActiveLive => isLivePost && live!.isActive;
 
   factory Post.fromJson(Map<String, dynamic> json) {
     try {
-      
       String? myReaction;
 
       if (json['viewer_reaction'] is Map<String, dynamic>) {
@@ -265,43 +269,35 @@ class Post {
       }
 
       // Debug: Print author information
-      final userId = _string(json['user_id']) ?? _string(json['post_author_id']);
-      final username = _string(json['user_name']) ?? _string(json['post_author_username']);
+      final userId =
+          _string(json['user_id']) ?? _string(json['post_author_id']);
+      final username =
+          _string(json['user_name']) ?? _string(json['post_author_username']);
       final authorType = _string(json['user_type']) ?? 'user';
       final pageId = _string(json['page_id']);
       final pageName = _string(json['page_name']);
       final pageTitle = _string(json['page_title']);
-      
+
       // ⚠️ NEW: Parse group information
       final inGroup = _bool(json['in_group']);
       final tipsEnabled = _bool(json['tips_enabled']);
       final forAdult = _bool(json['for_adult']);
-      
-      // 🔍 DEBUG: Log all keys in JSON for forAdult posts
-      if (forAdult) {
-      }
-      
+      final isAnonymous = _bool(json['is_anonymous']);
+
       final photos = PostPhoto.listFromJson(json['photos']);
       final ogImage = _string(json['og_image']);
-      
-      if (forAdult || photos != null) {
-      }
-      
-      final postType = _string(json['post_type']);
-      
-      // 🎨 Debug colored_pattern parsing
-      if (json['colored_pattern'] != null) {
-      }
 
       return Post(
         id: _int(json['post_id']),
-        authorName: _authorName(json),
+        // 👤 Handle anonymous posts - show "anonymous_user" key for translation
+        authorName: isAnonymous ? 'anonymous_user' : _authorName(json),
         publishedAt: _string(json['time']) ?? '',
         text: _string(json['text']) ?? _string(json['text']) ?? '',
         postType: _string(json['post_type']) ?? '',
-        authorAvatarUrl: _authorAvatar(json),
-        authorId: userId,
-        authorUsername: username,
+        // 👤 Handle anonymous posts - hide avatar
+        authorAvatarUrl: isAnonymous ? null : _authorAvatar(json),
+        authorId: isAnonymous ? null : userId,
+        authorUsername: isAnonymous ? null : username,
         authorType: authorType,
         // ⚠️ ONLINE STATUS FIELDS
         authorIsOnline: _bool(json['author_is_online']),
@@ -316,14 +312,20 @@ class Post {
         groupTitle: _string(json['group_title']),
         groupPicture: _string(json['group_picture']),
         // ⚠️ NEW: Event fields - Handle different event data structures
-        inEvent: _bool(json['in_event']) || json['post_type'] == 'event' || json['post_type'] == 'event_cover',
+        inEvent:
+            _bool(json['in_event']) ||
+            json['post_type'] == 'event' ||
+            json['post_type'] == 'event_cover',
         event: _parseEventData(json),
         commentsCount: _int(json['comments']),
         reactionsCount: _int(json['reactions_total_count']),
         sharesCount: _int(json['shares']),
         viewsCount: _int(json['views']),
-        reviewsCount: _int(json['reviews_count']) != 0 ? _int(json['reviews_count']) : 0,
-        isVerified: _bool(json['post_author_verified']) || _bool(json['user_verified']),
+        reviewsCount: _int(json['reviews_count']) != 0
+            ? _int(json['reviews_count'])
+            : 0,
+        isVerified:
+            _bool(json['post_author_verified']) || _bool(json['user_verified']),
         myReaction: myReaction,
         privacy: _string(json['privacy']) ?? 'public',
         reactionBreakdown: _parseReactions(json['reactions']),
@@ -343,48 +345,75 @@ class Post {
         // 🔞 FOR ADULT SUPPORT
         forAdult: forAdult,
         // 💰 PROMOTED POST SUPPORT
-        isPromoted: _bool(json['is_promoted']) || _bool(json['is_boosted']) || _bool(json['boosted']),
+        isPromoted:
+            _bool(json['is_promoted']) ||
+            _bool(json['is_boosted']) ||
+            _bool(json['boosted']),
         // 📢 AD SUPPORT
         isAd: _bool(json['is_ad']),
-        // 📢 AD DATA FIELDS
-        campaignTitle: _string(json['campaign_title']) ?? _string(json['ads_title']) ?? _string(json['title']),
-        campaignDescription: _string(json['campaign_description']) ?? _string(json['ads_description']) ?? _string(json['description']),
+        // � ANONYMOUS POST SUPPORT
+        isAnonymous: isAnonymous,
+        // �📢 AD DATA FIELDS
+        campaignTitle:
+            _string(json['campaign_title']) ??
+            _string(json['ads_title']) ??
+            _string(json['title']),
+        campaignDescription:
+            _string(json['campaign_description']) ??
+            _string(json['ads_description']) ??
+            _string(json['description']),
         campaignUrl: _string(json['campaign_url']) ?? _string(json['url']),
         adsImage: _string(json['ads_image']),
-        actionButtonText: json['action_button'] != null ? _string((json['action_button'] as Map<String, dynamic>)['text']) : null,
-        actionButtonUrl: json['action_button'] != null ? _string((json['action_button'] as Map<String, dynamic>)['url']) : null,
-        campaignId: _int(json['campaign_id']) != 0 ? _int(json['campaign_id']) : null,
+        actionButtonText: json['action_button'] != null
+            ? _string((json['action_button'] as Map<String, dynamic>)['text'])
+            : null,
+        actionButtonUrl: json['action_button'] != null
+            ? _string((json['action_button'] as Map<String, dynamic>)['url'])
+            : null,
+        campaignId: _int(json['campaign_id']) != 0
+            ? _int(json['campaign_id'])
+            : null,
         adsType: _string(json['ads_type']),
         campaignBidding: _string(json['campaign_bidding']),
         targetName: _string(json['target_name']),
-        targetPicture: _string(json['target_picture']) ?? (json['target'] != null ? _string((json['target'] as Map<String, dynamic>)['picture']) : null),
+        targetPicture:
+            _string(json['target_picture']) ??
+            (json['target'] != null
+                ? _string((json['target'] as Map<String, dynamic>)['picture'])
+                : null),
         adPageId: _int(json['page_id']) != 0 ? _int(json['page_id']) : null,
         adGroupId: _int(json['group_id']) != 0 ? _int(json['group_id']) : null,
         adEventId: _int(json['event_id']) != 0 ? _int(json['event_id']) : null,
         adPostId: _int(json['post_id']) != 0 ? _int(json['post_id']) : null,
         // ⚠️ NEW FIELDS FOR SHARED POSTS AND ARTICLES
-        originPost: json['origin'] != null ? Post.fromJson(json['origin']) : null,
-        blog: PostBlog.maybeFromJson(json['blog'], fallbackPostId: _string(json['post_id'])),
+        originPost: json['origin'] != null
+            ? Post.fromJson(json['origin'])
+            : null,
+        blog: PostBlog.maybeFromJson(
+          json['blog'],
+          fallbackPostId: _string(json['post_id']),
+        ),
         // 💰 FUNDING SUPPORT
         funding: PostFunding.maybeFromJson(json['funding']),
         // 🏷️ OFFER SUPPORT
         offer: PostOffer.maybeFromJson(json['offer']),
         // 📚 COURSE SUPPORT
         course: PostCourse.maybeFromJson(json['course']),
-        // 🎨 COLORED PATTERN SUPPORT - Added detailed logging
-        coloredPattern: () {
-          final coloredPatternData = json['colored_pattern'];
-          final parsed = PostColoredPattern.maybeFromJson(coloredPatternData);
-          return parsed;
-        }(),
+        // 🎨 COLORED PATTERN SUPPORT
+        coloredPattern: PostColoredPattern.maybeFromJson(
+          json['colored_pattern'],
+        ),
         // 📺 LIVE STREAMING SUPPORT
-        live: json['live'] != null ? PostLive.fromJson(json['live'] as Map<String, dynamic>) : null,
+        live: json['live'] != null
+            ? PostLive.fromJson(json['live'] as Map<String, dynamic>)
+            : null,
         // 😊 FEELINGS SUPPORT
         feelingAction: _string(json['feeling_action']),
         feelingValue: _string(json['feeling_value']),
         feelingIcon: _string(json['feeling_icon']),
       );
     } catch (e, stackTrace) {
+
       rethrow; // Re-throw to let the caller handle it
     }
   }
@@ -440,6 +469,7 @@ class Post {
     bool? forAdult,
     bool? isPromoted,
     bool? isAd,
+    bool? isAnonymous,
     // 📢 AD DATA PARAMETERS
     String? campaignTitle,
     String? campaignDescription,
@@ -505,7 +535,9 @@ class Post {
       viewsCount: viewsCount ?? this.viewsCount,
       reviewsCount: reviewsCount ?? this.reviewsCount,
       isVerified: isVerified ?? this.isVerified,
-      myReaction: clearMyReaction == true ? null : myReaction ?? this.myReaction,
+      myReaction: clearMyReaction == true
+          ? null
+          : myReaction ?? this.myReaction,
       privacy: privacy ?? this.privacy,
       reactionBreakdown: reactionBreakdown ?? this.reactionBreakdown,
       permalink: permalink ?? this.permalink,
@@ -524,6 +556,7 @@ class Post {
       forAdult: forAdult ?? this.forAdult,
       isPromoted: isPromoted ?? this.isPromoted,
       isAd: isAd ?? this.isAd,
+      isAnonymous: isAnonymous ?? this.isAnonymous,
       // 📢 AD DATA FIELDS
       campaignTitle: campaignTitle ?? this.campaignTitle,
       campaignDescription: campaignDescription ?? this.campaignDescription,
@@ -596,12 +629,12 @@ class Post {
     if (pageTitle != null && pageTitle.trim().isNotEmpty) {
       return pageTitle.trim();
     }
-    
+
     final pageName = _string(json['page_name']);
     if (pageName != null && pageName.trim().isNotEmpty) {
       return pageName.trim();
     }
-    
+
     // If it's from a regular user
     final fromPost = _string(json['post_author_name']);
     if (fromPost != null && fromPost.trim().isNotEmpty) {
@@ -630,7 +663,7 @@ class Post {
     if (pagePicture != null && pagePicture.isNotEmpty) {
       return pagePicture;
     }
-    
+
     // If it's from a regular user
     final postAvatar = _string(json['post_author_picture']);
     if (postAvatar != null && postAvatar.isNotEmpty) {
@@ -645,9 +678,7 @@ class Post {
 
   static Map<String, int> _parseReactions(Object? value) {
     if (value is Map<String, dynamic>) {
-      return value.map(
-        (key, dynamic val) => MapEntry(key, _int(val)),
-      );
+      return value.map((key, dynamic val) => MapEntry(key, _int(val)));
     }
     return const {};
   }
@@ -683,15 +714,17 @@ class Post {
     if (json['event'] != null && json['event'] is Map<String, dynamic>) {
       return PostEvent.fromJson(json['event']);
     }
-    
+
     // If this is an event-related post but event data is in main level
-    if (json['post_type'] == 'event' || json['post_type'] == 'event_cover' || _bool(json['in_event'])) {
+    if (json['post_type'] == 'event' ||
+        json['post_type'] == 'event_cover' ||
+        _bool(json['in_event'])) {
       // Check if we have event fields at root level
       if (json['event_title'] != null || json['event_id'] != null) {
         return PostEvent.fromJson(json);
       }
     }
-    
+
     return null;
   }
 
@@ -699,10 +732,10 @@ class Post {
   Post copyWithReaction(String? reaction) {
     // إذا كان التفاعل 'remove'، نعتبره null
     final newReaction = (reaction == 'remove') ? null : reaction;
-    
+
     // Calculate new reaction breakdown
     final newBreakdown = Map<String, int>.from(reactionBreakdown);
-    
+
     // Remove old reaction
     if (myReaction != null) {
       newBreakdown[myReaction!] = (newBreakdown[myReaction!] ?? 1) - 1;
@@ -710,19 +743,18 @@ class Post {
         newBreakdown.remove(myReaction!);
       }
     }
-    
+
     // Add new reaction (only if not 'remove')
     if (newReaction != null) {
       newBreakdown[newReaction] = (newBreakdown[newReaction] ?? 0) + 1;
     }
-    
+
     // Calculate new total count
     final hadReaction = myReaction != null;
     final hasReaction = newReaction != null;
-    final newReactionsCount = reactionsCount + 
-        (hasReaction ? 1 : 0) - 
-        (hadReaction ? 1 : 0);
-    
+    final newReactionsCount =
+        reactionsCount + (hasReaction ? 1 : 0) - (hadReaction ? 1 : 0);
+
     return Post(
       id: id,
       authorName: authorName,
@@ -825,7 +857,8 @@ class PostVideo {
   final String categoryName;
   final int viewCount;
 
-  bool get hasAnySource => originalSource.isNotEmpty || availableSources.isNotEmpty;
+  bool get hasAnySource =>
+      originalSource.isNotEmpty || availableSources.isNotEmpty;
 
   Uri? bestSourceUri() {
     if (availableSources.isNotEmpty) {
@@ -907,17 +940,18 @@ class PostPhoto {
     if (id == 0 || source == null || source.isEmpty) {
       return null;
     }
-    
+
     // تجاهل الفيديوهات التي تأتي في حقل photos بالخطأ
     final lowerSource = source.toLowerCase();
-    if (lowerSource.endsWith('.mp4') || 
-        lowerSource.endsWith('.mov') || 
+    if (lowerSource.endsWith('.mp4') ||
+        lowerSource.endsWith('.mov') ||
         lowerSource.endsWith('.avi') ||
         lowerSource.endsWith('.webm') ||
         lowerSource.contains('/videos/')) {
+
       return null;
     }
-    
+
     return PostPhoto(
       id: id,
       source: source,
@@ -927,17 +961,9 @@ class PostPhoto {
   }
 
   static List<PostPhoto>? listFromJson(Object? value) {
-    if (value is! List) {
-      return null;
-    }
+    if (value is! List) return null;
     final photos = value
-        .map((item) {
-          final photo = PostPhoto.maybeFromJson(item);
-          if (photo == null) {
-          } else {
-          }
-          return photo;
-        })
+        .map((item) => PostPhoto.maybeFromJson(item))
         .whereType<PostPhoto>()
         .toList();
     return photos.isEmpty ? null : photos;
@@ -945,11 +971,7 @@ class PostPhoto {
 }
 
 class PostPoll {
-  PostPoll({
-    required this.id,
-    required this.votes,
-    required this.options,
-  });
+  PostPoll({required this.id, required this.votes, required this.options});
 
   final int id;
   final int votes;
@@ -964,11 +986,7 @@ class PostPoll {
     if (id == 0 || options.isEmpty) {
       return null;
     }
-    return PostPoll(
-      id: id,
-      votes: Post._int(value['votes']),
-      options: options,
-    );
+    return PostPoll(id: id, votes: Post._int(value['votes']), options: options);
   }
 }
 
@@ -1042,23 +1060,24 @@ class PostBlog {
     if (value is! Map<String, dynamic>) {
       return null;
     }
-    
+
     // استخدام article_id أولاً، ثم post_id من blog، ثم fallbackPostId من parent Post
     final post_id = Post._string(value['post_id']);
-             
+
     final title = Post._string(value['title']);
-    final text = Post._string(value['parsed_text']) ?? Post._string(value['text']);
-    
-    
+    final text =
+        Post._string(value['parsed_text']) ?? Post._string(value['text']);
+
     if (post_id == null || title == null || text == null) {
       return null;
     }
-    
+
     return PostBlog(
       articleId: post_id,
       title: title,
       text: text,
-      cover: Post._string(value['parsed_cover']) ?? Post._string(value['cover']),
+      cover:
+          Post._string(value['parsed_cover']) ?? Post._string(value['cover']),
       categoryName: Post._string(value['category_name']),
       tags: Post._string(value['tags']),
       textSnippet: Post._string(value['text_snippet']),

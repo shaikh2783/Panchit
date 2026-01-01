@@ -12,10 +12,10 @@ import 'shipping_address.dart';
 /// الاستخدام:
 /// ```dart
 /// final order = Order.fromJson(json);
-/// print('الطلب: ${order.orderHash}');
-/// print('الحالة: ${order.statusDisplay}');
-/// print('البائع: ${order.seller.fullName}');
-/// print('المشتري: ${order.buyer.fullName}');
+
+
+
+
 /// ```
 /// 
 /// Order Status Flow:

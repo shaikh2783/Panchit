@@ -105,6 +105,7 @@ class GroupPostsBloc extends Bloc<GroupPostsEvent, GroupPostsState> {
     emit(GroupPostsLoadingState());
 
     try {
+
       _currentPage = 0;
       _currentGroupId = event.groupId;
 
@@ -114,7 +115,6 @@ class GroupPostsBloc extends Bloc<GroupPostsEvent, GroupPostsState> {
         offset: _currentPage,
       );
 
-
       emit(
         GroupPostsLoadedState(
           posts: response.posts,
@@ -123,6 +123,7 @@ class GroupPostsBloc extends Bloc<GroupPostsEvent, GroupPostsState> {
         ),
       );
     } catch (e) {
+
       emit(GroupPostsErrorState(e.toString()));
     }
   }
@@ -163,6 +164,7 @@ class GroupPostsBloc extends Bloc<GroupPostsEvent, GroupPostsState> {
 
     // تجنب التحميل المتعدد
     if (currentState.isLoadingMore || !currentState.hasMore) {
+
       return;
     }
 
@@ -178,7 +180,6 @@ class GroupPostsBloc extends Bloc<GroupPostsEvent, GroupPostsState> {
         offset: _currentPage,
       );
 
-
       final updatedPosts = [...currentState.posts, ...response.posts];
 
       emit(
@@ -190,6 +191,7 @@ class GroupPostsBloc extends Bloc<GroupPostsEvent, GroupPostsState> {
         ),
       );
     } catch (e) {
+
       // إرجاع الحالة السابقة في حالة الخطأ
       emit(currentState.copyWith(isLoadingMore: false));
     }

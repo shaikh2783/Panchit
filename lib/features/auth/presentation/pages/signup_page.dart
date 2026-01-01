@@ -1019,7 +1019,7 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 14),
           child: Text(
-            'OR',
+            'or'.tr,
             style: TextStyle(
               color: isDark
                   ? Colors.white.withOpacity(0.5)
@@ -1089,7 +1089,7 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
         ),
         const SizedBox(height: 14),
         Text(
-          '© 2024 Panchit. All rights reserved.',
+          '© 2025 Panchit. All rights reserved.',
           style: TextStyle(
             color: isDark
                 ? Colors.white.withOpacity(0.4)

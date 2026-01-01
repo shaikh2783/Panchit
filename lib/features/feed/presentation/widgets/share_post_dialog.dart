@@ -59,6 +59,7 @@ class _SharePostDialogState extends State<SharePostDialog> {
         });
       }
     } catch (e) {
+
     }
   }
 

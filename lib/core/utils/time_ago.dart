@@ -132,6 +132,7 @@ class TimeAgo {
 
       return isEnglish ? formatEnglish(dateTime) : formatArabic(dateTime);
     } catch (e) {
+
       return isEnglish ? 'unknown' : 'غير معروف';
     }
   }
@@ -142,6 +143,7 @@ class TimeAgo {
       final dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
       return isEnglish ? formatEnglish(dateTime) : formatArabic(dateTime);
     } catch (e) {
+
       return isEnglish ? 'unknown' : 'غير معروف';
     }
   }
@@ -152,6 +154,7 @@ class TimeAgo {
       final dateTime = DateTime.fromMillisecondsSinceEpoch(milliseconds);
       return isEnglish ? formatEnglish(dateTime) : formatArabic(dateTime);
     } catch (e) {
+
       return isEnglish ? 'unknown' : 'غير معروف';
     }
   }

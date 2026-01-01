@@ -109,8 +109,8 @@ class MarketRepository {
   /// Example:
   /// ```dart
   /// final product = await repository.getProductDetails('351');
-  /// print('${product.name} - ${product.formattedPrice}');
-  /// print('البائع: ${product.seller.fullName}');
+
+
   /// ```
   Future<Product> getProductDetails(String productId) async {
     try {
@@ -193,9 +193,9 @@ class MarketRepository {
   /// ```dart
   /// try {
   ///   final cart = await repository.getCart();
-  ///   print('Items: ${cart.itemsCount}, Total: ${cart.total}');
+
   /// } catch (e) {
-  ///   print('Error: $e');
+
   /// }
   /// ```
   Future<Cart> getCart() async {
@@ -331,7 +331,7 @@ class MarketRepository {
   ///   notes: 'التوصيل بين 9 ص - 5 م',
   /// );
   /// 
-  /// print('تم إنشاء ${result.totalOrders} طلب');
+
   /// ```
   Future<CheckoutResult> checkout({
     required ShippingAddress address,
@@ -438,7 +438,7 @@ class MarketRepository {
   /// ```dart
   /// final categories = await repository.getCategories();
   /// for (var cat in categories) {
-  ///   print('${cat.categoryId}: ${cat.categoryName}');
+
   /// }
   /// ```
   Future<List<ProductCategory>> getCategories() async {
@@ -457,6 +457,7 @@ class MarketRepository {
   /// 
   /// Wraps errors with context message
   Exception _handleError(String message, dynamic error) {
+
     return Exception('$message: ${error.toString()}');
   }
 }

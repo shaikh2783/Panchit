@@ -18,6 +18,7 @@ class FundingSettingsApiService {
       final paths = ['/data/funding/settings/info', '/data/funding/settings'];
       for (final path in paths) {
         try {
+
           final response = await _apiClient.get(path);
           final isError = response['error'] == true;
 
@@ -27,12 +28,14 @@ class FundingSettingsApiService {
                   ? response['data']
                   : <String, dynamic>{},
             );
+
             return {
               'success': true,
               'data': settings,
             };
           }
         } catch (e) {
+
           // try next path
         }
       }
@@ -42,6 +45,7 @@ class FundingSettingsApiService {
         'message': 'Failed to load funding settings',
       };
     } catch (e) {
+
       return {
         'success': false,
         'message': 'Error: $e',
@@ -79,6 +83,7 @@ class FundingSettingsApiService {
         'message': response['message'] ?? 'Failed to load payments',
       };
     } catch (e) {
+
       return {
         'success': false,
         'message': 'Error: $e',
@@ -113,6 +118,7 @@ class FundingSettingsApiService {
 
       final isError = response['error'] == true;
       if (!isError) {
+
         return {
           'success': true,
           'message': response['message'] ?? 'Withdrawal request submitted',
@@ -124,6 +130,7 @@ class FundingSettingsApiService {
         'message': response['message'] ?? 'Withdrawal request failed',
       };
     } catch (e) {
+
       return {
         'success': false,
         'message': 'Error: $e',
@@ -143,6 +150,7 @@ class FundingSettingsApiService {
 
       final isError = response['error'] == true;
       if (!isError) {
+
         return {
           'success': true,
           'message': response['message'] ?? 'Transfer completed',
@@ -154,6 +162,7 @@ class FundingSettingsApiService {
         'message': response['message'] ?? 'Transfer failed',
       };
     } catch (e) {
+
       return {
         'success': false,
         'message': 'Error: $e',
@@ -169,6 +178,7 @@ class FundingSettingsApiService {
       final paths = ['/data/funding/settings/stats', '/data/funding/settings/statistics'];
       for (final path in paths) {
         try {
+
           final response = await _apiClient.get(path);
           final isError = response['error'] == true;
 
@@ -178,12 +188,14 @@ class FundingSettingsApiService {
                   ? response['data']
                   : <String, dynamic>{},
             );
+
             return {
               'success': true,
               'data': stats,
             };
           }
         } catch (e) {
+
           // try next path
         }
       }
@@ -193,6 +205,7 @@ class FundingSettingsApiService {
         'message': 'Failed to load stats',
       };
     } catch (e) {
+
       return {
         'success': false,
         'message': 'Error: $e',

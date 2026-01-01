@@ -13,7 +13,6 @@ class TwoFactorApiService {
 
       final response = await _apiClient.get(configCfgP('two_factor_status'));
 
-
       if (response['status'] == 'success') {
         final data = response['data'];
         return {'success': true, 'status': TwoFactorStatus.fromJson(data)};
@@ -24,6 +23,7 @@ class TwoFactorApiService {
         };
       }
     } catch (e) {
+
       return {'success': false, 'message': 'Error: ${e.toString()}'};
     }
   }
@@ -39,7 +39,6 @@ class TwoFactorApiService {
         body: body,
       );
 
-
       if (response['status'] == 'success') {
         return {
           'success': true,
@@ -53,6 +52,7 @@ class TwoFactorApiService {
         };
       }
     } catch (e) {
+
       return {'success': false, 'message': 'Error: ${e.toString()}'};
     }
   }
@@ -66,7 +66,6 @@ class TwoFactorApiService {
         body: {},
       );
 
-
       if (response['status'] == 'success') {
         return {
           'success': true,
@@ -79,6 +78,7 @@ class TwoFactorApiService {
         };
       }
     } catch (e) {
+
       return {'success': false, 'message': 'Error: ${e.toString()}'};
     }
   }

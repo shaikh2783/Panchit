@@ -99,6 +99,7 @@ class _EditGroupPageState extends State<EditGroupPage>
         });
       }
     } catch (e) {
+
       if (mounted) {
         setState(() => _isLoadingData = false);
       }
@@ -741,6 +742,7 @@ class _EditGroupPageState extends State<EditGroupPage>
         Navigator.pop(context, true); // true = تم التحديث
       }
     } catch (e) {
+
     }
   }
 

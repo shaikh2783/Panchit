@@ -35,6 +35,7 @@ class ReactionsApiService {
     } catch (e) {
       // Use debugPrint in development, silent in production
       if (kDebugMode) {
+
       }
       
       // If authentication fails, return default reactions as fallback

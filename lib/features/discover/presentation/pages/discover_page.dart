@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:snginepro/features/pages/presentation/pages/page_profile_page.dart';
+// Groups module removed; discover page no longer links to groups
 import 'package:snginepro/features/profile/presentation/pages/profile_page.dart';
 import '../controllers/discover_controller.dart';
 import '../../data/services/homepage_widgets_api_service.dart';
@@ -82,7 +83,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.blue.withValues(alpha: 0.1),
+                color: Colors.blue.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(Iconsax.discover, color: Colors.blue, size: 18),
@@ -267,7 +268,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.amber.withValues(alpha: 0.3),
+            color: Colors.amber.withOpacity(0.3),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -278,7 +279,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
+              color: Colors.white.withOpacity(0.2),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Icon(Iconsax.medal_star, color: Colors.white, size: 28),
@@ -302,7 +303,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     widget.balance.remaining.toString(),
                   ]),
                   style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.9),
+                    color: Colors.white.withOpacity(0.9),
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
@@ -330,7 +331,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
         Text(
           labelKey.tr,
           style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.8),
+            color: Colors.white.withOpacity(0.8),
             fontSize: 12,
             fontWeight: FontWeight.w500,
           ),
@@ -360,8 +361,9 @@ class _DiscoverPageState extends State<DiscoverPage> {
           subtitleKey: 'premium_members_subtitle',
         ),
         const SizedBox(height: 12),
-        SizedBox(
-          height: Get.height * 0.32,
+        Container(
+                 height: Get.height *0.26,
+
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -378,7 +380,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.08),
+                        color: Colors.black.withOpacity(0.08),
                         blurRadius: 20,
                         offset: const Offset(0, 4),
                       ),
@@ -388,7 +390,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     children: [
                       // Cover area with gradient
                       Container(
-                        height: 50,
+                        height: 60,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
@@ -445,7 +447,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                                           _buildImageUrl(user.picture!),
                                         )
                                       : null,
-                                  backgroundColor: Colors.blue.withValues(alpha: 0.1),
+                                  backgroundColor: Colors.blue.withOpacity(0.1),
                                   child: user.picture == null
                                       ? Text(
                                           user.fullName.isNotEmpty
@@ -587,8 +589,9 @@ class _DiscoverPageState extends State<DiscoverPage> {
           subtitleKey: 'premium_pages_subtitle',
         ),
         const SizedBox(height: 12),
-        SizedBox(
-          height: Get.height *0.28,
+        Container(
+               height: Get.height *0.25,
+
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -605,7 +608,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.08),
+                        color: Colors.black.withOpacity(0.08),
                         blurRadius: 20,
                         offset: const Offset(0, 4),
                       ),
@@ -658,144 +661,147 @@ class _DiscoverPageState extends State<DiscoverPage> {
                         ),
                       ),
                       // Page content
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            // Page picture positioned to overlap
-                            Transform.translate(
-                              offset: const Offset(0, -25),
-                              child: Stack(
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: isDarkMode
-                                            ? const Color(0xFF1A1A1A)
-                                            : Colors.white,
-                                        width: 3,
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Column(
+                            children: [
+                              // Page picture positioned to overlap
+                              Transform.translate(
+                                offset: const Offset(0, -25),
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: isDarkMode
+                                              ? const Color(0xFF1A1A1A)
+                                              : Colors.white,
+                                          width: 3,
+                                        ),
+                                      ),
+                                      child: CircleAvatar(
+                                        radius: 28,
+                                        backgroundImage:
+                                            page.pagePicture != null
+                                            ? CachedNetworkImageProvider(
+                                                _buildImageUrl(
+                                                  page.pagePicture!,
+                                                ),
+                                              )
+                                            : null,
+                                        backgroundColor: Colors.indigo
+                                            .withOpacity(0.1),
+                                        child: page.pagePicture == null
+                                            ? Icon(
+                                                Iconsax.building,
+                                                color: Colors.indigo,
+                                                size: 20,
+                                              )
+                                            : null,
                                       ),
                                     ),
-                                    child: CircleAvatar(
-                                      radius: 28,
-                                      backgroundImage:
-                                          page.pagePicture != null
-                                          ? CachedNetworkImageProvider(
-                                              _buildImageUrl(
-                                                page.pagePicture!,
-                                              ),
-                                            )
-                                          : null,
-                                      backgroundColor: Colors.indigo
-                                          .withValues(alpha: 0.1),
-                                      child: page.pagePicture == null
-                                          ? Icon(
-                                              Iconsax.building,
-                                              color: Colors.indigo,
-                                              size: 20,
-                                            )
-                                          : null,
-                                    ),
-                                  ),
-                                  if (page.pageVerified)
-                                    Positioned(
-                                      right: 0,
-                                      bottom: 0,
-                                      child: Container(
-                                        padding: const EdgeInsets.all(3),
-                                        decoration: BoxDecoration(
-                                          color: Colors.blue,
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                            color: isDarkMode
-                                                ? const Color(0xFF1A1A1A)
-                                                : Colors.white,
-                                            width: 2,
+                                    if (page.pageVerified)
+                                      Positioned(
+                                        right: 0,
+                                        bottom: 0,
+                                        child: Container(
+                                          padding: const EdgeInsets.all(3),
+                                          decoration: BoxDecoration(
+                                            color: Colors.blue,
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                              color: isDarkMode
+                                                  ? const Color(0xFF1A1A1A)
+                                                  : Colors.white,
+                                              width: 2,
+                                            ),
+                                          ),
+                                          child: const Icon(
+                                            Iconsax.verify,
+                                            color: Colors.white,
+                                            size: 10,
                                           ),
                                         ),
-                                        child: const Icon(
-                                          Iconsax.verify,
-                                          color: Colors.white,
-                                          size: 10,
-                                        ),
                                       ),
-                                    ),
-                                ],
-                              ),
-                            ),
-                            // Page info
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  page.pageTitle,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 14,
-                                    color: isDarkMode
-                                        ? Colors.white
-                                        : Colors.grey[900],
-                                  ),
-                                  textAlign: TextAlign.center,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
+                                  ],
                                 ),
-                                const SizedBox(height: 4),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.center,
+                              ),
+                              // Page info
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(
-                                      Iconsax.heart,
-                                      size: 12,
-                                      color: Colors.grey[600],
-                                    ),
-                                    const SizedBox(width: 4),
                                     Text(
-                                      '${page.pageLikes} likes',
+                                      page.pageTitle,
                                       style: TextStyle(
-                                        color: Colors.grey[600],
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w500,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 14,
+                                        color: isDarkMode
+                                            ? Colors.white
+                                            : Colors.grey[900],
+                                      ),
+                                      textAlign: TextAlign.center,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Iconsax.heart,
+                                          size: 12,
+                                          color: Colors.grey[600],
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          '${page.pageLikes} likes',
+                                          style: TextStyle(
+                                            color: Colors.grey[600],
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: ElevatedButton(
+                                        onPressed: () => _navigateToPageById(
+                                          page.pageId
+                                    
+                                        ),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.indigo,
+                                          foregroundColor: Colors.white,
+                                          elevation: 0,
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 6,
+                                          ),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'visit_page_button'.tr,
+                                          style: const TextStyle(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 8),
-                                SizedBox(
-                                  width: double.infinity,
-                                  child: ElevatedButton(
-                                    onPressed: () => _navigateToPageById(
-                                      page.pageId
-
-                                    ),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.indigo,
-                                      foregroundColor: Colors.white,
-                                      elevation: 0,
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 6,
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                          8,
-                                        ),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      'visit_page_button'.tr,
-                                      style: const TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -829,7 +835,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.08),
+                color: Colors.black.withOpacity(0.08),
                 blurRadius: 20,
                 offset: const Offset(0, 4),
               ),
@@ -911,7 +917,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.green.withValues(alpha: 0.1),
+                            color: Colors.green.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Row(
@@ -972,8 +978,9 @@ class _DiscoverPageState extends State<DiscoverPage> {
           subtitleKey: 'people_you_may_know_subtitle',
         ),
         const SizedBox(height: 12),
-        SizedBox(
-          height: Get.height *0.32,
+        Container(
+              height: Get.height *0.27,
+
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -991,7 +998,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.08),
+                        color: Colors.black.withOpacity(0.08),
                         blurRadius: 20,
                         offset: const Offset(0, 4),
                       ),
@@ -1024,7 +1031,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                                             _buildImageUrl(person.picture!),
                                           )
                                         : null,
-                                    backgroundColor: Colors.blue.withValues(alpha:
+                                    backgroundColor: Colors.blue.withOpacity(
                                       0.1,
                                     ),
                                     child: person.picture == null
@@ -1097,7 +1104,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                                   vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Colors.blue.withValues(alpha: 0.1),
+                                  color: Colors.blue.withOpacity(0.1),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Text(
@@ -1188,7 +1195,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.08),
+                        color: Colors.black.withOpacity(0.08),
                         blurRadius: 20,
                         offset: const Offset(0, 4),
                       ),
@@ -1211,7 +1218,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                                             _buildImageUrl(page.pagePicture!),
                                           )
                                         : null,
-                                    backgroundColor: Colors.indigo.withValues(alpha:
+                                    backgroundColor: Colors.indigo.withOpacity(
                                       0.1,
                                     ),
                                     child: page.pagePicture == null
@@ -1366,7 +1373,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.08),
+                        color: Colors.black.withOpacity(0.08),
                         blurRadius: 20,
                         offset: const Offset(0, 4),
                       ),
@@ -1383,8 +1390,8 @@ class _DiscoverPageState extends State<DiscoverPage> {
                           ),
                           gradient: LinearGradient(
                             colors: [
-                              Colors.deepPurple.withValues(alpha: 0.8),
-                              Colors.purple.withValues(alpha: 0.6),
+                              Colors.deepPurple.withOpacity(0.8),
+                              Colors.purple.withOpacity(0.6),
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -1414,7 +1421,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                                     _buildImageUrl(group.groupPicture!),
                                   )
                                 : null,
-                            backgroundColor: Colors.purple.withValues(alpha: 0.1),
+                            backgroundColor: Colors.purple.withOpacity(0.1),
                             child: group.groupPicture == null
                                 ? Icon(
                                     Iconsax.people,
@@ -1454,8 +1461,8 @@ class _DiscoverPageState extends State<DiscoverPage> {
                               ),
                               decoration: BoxDecoration(
                                 color: group.groupPrivacy == 1
-                                    ? Colors.green.withValues(alpha: 0.1)
-                                    : Colors.orange.withValues(alpha: 0.1),
+                                    ? Colors.green.withOpacity(0.1)
+                                    : Colors.orange.withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
@@ -1573,7 +1580,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.08),
+                        color: Colors.black.withOpacity(0.08),
                         blurRadius: 20,
                         offset: const Offset(0, 4),
                       ),
@@ -1590,8 +1597,8 @@ class _DiscoverPageState extends State<DiscoverPage> {
                           ),
                           gradient: LinearGradient(
                             colors: [
-                              Colors.cyan.withValues(alpha: 0.8),
-                              Colors.blue.withValues(alpha: 0.6),
+                              Colors.cyan.withOpacity(0.8),
+                              Colors.blue.withOpacity(0.6),
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -1619,7 +1626,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                                 vertical: 6,
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.cyan.withValues(alpha: 0.1),
+                                color: Colors.cyan.withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Row(

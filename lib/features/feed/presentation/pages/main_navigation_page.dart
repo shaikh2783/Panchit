@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:get/instance_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 // Bloc Pages
@@ -32,22 +34,32 @@ class MainNavigationPage extends StatefulWidget {
   State<MainNavigationPage> createState() => _MainNavigationPageState();
 }
 
-class _MainNavigationPageState extends State<MainNavigationPage> 
+class _MainNavigationPageState extends State<MainNavigationPage>
     with TickerProviderStateMixin {
   int _currentIndex = 0;
   late final FriendsApiService _friendsService;
   int _friendRequestsCount = 0;
   late AnimationController _badgeAnimationController;
+  bool _showNavBar = true;
+
+  // Global Keys للوصول إلى ScrollControllers
+  late final GlobalKey<HomePageState> _homePageKey;
 
   @override
   void initState() {
     super.initState();
-    
+
+    // Initialize Global Keys
+    _homePageKey = GlobalKey<HomePageState>();
+
     // Initialize badge animation
     _badgeAnimationController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
+
+    // Initialize items list
+    // (items are const and initialized above)
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeFriendsService();
@@ -84,13 +96,13 @@ class _MainNavigationPageState extends State<MainNavigationPage>
         setState(() {
           final oldCount = _friendRequestsCount;
           _friendRequestsCount = requests.length;
-          
+
           // Animate badge when count changes
           if (_friendRequestsCount != oldCount) {
             _badgeAnimationController.reset();
             _badgeAnimationController.forward();
           }
-          
+
           // Add haptic feedback for new friend requests
           if (_friendRequestsCount > oldCount && oldCount > 0) {
             HapticFeedback.mediumImpact();
@@ -98,21 +110,33 @@ class _MainNavigationPageState extends State<MainNavigationPage>
         });
       }
     } catch (e) {
+
     }
   }
 
   // 🔄 Migration: Using Bloc pages for specific features while keeping Provider for others
   List<Widget> get _pages => [
-    const HomePage(), // ✅ Bloc Migration: Feed page using Bloc pattern
+    HomePage(
+      key: _homePageKey,
+      onScrollDirectionChanged: (isScrollingDown) {
+        if (_currentIndex != 0) return; // only react on Home tab
+        final shouldShow = !isScrollingDown;
+        if (shouldShow != _showNavBar) {
+          setState(() => _showNavBar = shouldShow);
+        }
+      },
+    ), // ✅ Bloc Migration: Feed page using Bloc pattern
     const FriendRequestsPage(), // Provider (to be migrated later)
     const DiscoverPage(), // New discover page
     const ReelsPage(), // Provider (to be migrated later)
     const NotificationsPage(), // ✅ Bloc Migration: Notifications page using Bloc pattern
-    MenuPage(onNavigateToTab: (index) => setState(() => _currentIndex = index)), // Pass callback to MenuPage
+    MenuPage(
+      onNavigateToTab: (index) => setState(() => _currentIndex = index),
+    ), // Pass callback to MenuPage
   ];
 
   // --- 💡 2. تحديث الأيقونات لاستخدام Iconsax ---
-  static const List<_NavItem> _items = [
+  final List<_NavItem> _items = const [
     _NavItem(icon: Iconsax.home, activeIcon: Iconsax.home),
     _NavItem(icon: Iconsax.people, activeIcon: Iconsax.profile_2user),
     _NavItem(icon: Iconsax.search_normal, activeIcon: Iconsax.search_favorite),
@@ -133,9 +157,9 @@ class _MainNavigationPageState extends State<MainNavigationPage>
           : SystemUiOverlayStyle.dark,
       child: Scaffold(
         extendBody: true,
-        backgroundColor: theme.brightness == Brightness.dark 
-          ? const Color(0xFF0A0A0A)
-          : const Color(0xFFF8F9FA),
+        backgroundColor: theme.brightness == Brightness.dark
+            ? const Color(0xFF0A0A0A)
+            : const Color(0xFFF8F9FA),
         body: AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
           switchInCurve: Curves.easeInOutCubic,
@@ -144,42 +168,67 @@ class _MainNavigationPageState extends State<MainNavigationPage>
             return FadeTransition(
               opacity: animation,
               child: SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(0.0, 0.02),
-                  end: Offset.zero,
-                ).animate(CurvedAnimation(
-                  parent: animation,
-                  curve: Curves.easeInOutCubic,
-                )),
+                position:
+                    Tween<Offset>(
+                      begin: const Offset(0.0, 0.02),
+                      end: Offset.zero,
+                    ).animate(
+                      CurvedAnimation(
+                        parent: animation,
+                        curve: Curves.easeInOutCubic,
+                      ),
+                    ),
                 child: child,
               ),
             );
           },
-          child: IndexedStack(
-            key: ValueKey(_currentIndex),
-            index: _currentIndex, 
-            children: _pages
+          child: Padding(
+            padding: EdgeInsets.only(
+              bottom: _currentIndex == 3 || !_showNavBar
+                  ? 0
+                  : LayoutTokens.navBarHeight +
+                        MediaQuery.of(context).padding.bottom,
+            ),
+            child: IndexedStack(
+              key: ValueKey(_currentIndex),
+              index: _currentIndex,
+              children: _pages,
+            ),
           ),
         ),
-        bottomNavigationBar: _BottomNavBar(
-          currentIndex: _currentIndex,
-          items: _items,
-          friendRequestsCount: _friendRequestsCount,
-          onItemSelected: (index) {
-            if (index == _currentIndex) {
-              // Add haptic feedback for same tab tap
-              HapticFeedback.selectionClick();
-              return;
-            }
-            
-            HapticFeedback.lightImpact();
-            setState(() => _currentIndex = index);
+        bottomNavigationBar: AnimatedSlide(
+          duration: const Duration(milliseconds: 220),
+          curve: Curves.easeInOut,
+          offset: Offset(0, _showNavBar ? 0 : 1),
+          child: _BottomNavBar(
+            currentIndex: _currentIndex,
+            items: _items,
+            friendRequestsCount: _friendRequestsCount,
+            onItemSelected: (index) {
+              if (index == _currentIndex) {
+                // Add haptic feedback for same tab tap
+                HapticFeedback.selectionClick();
 
-            // إعادة تحديث العدادات عند التبديل إلى صفحة الأصدقاء
-            if (index == 1) {
-              _loadFriendRequestsCount();
-            }
-          },
+                // إذا كان Home والمستخدم ضغط عليه مرة أخرى، scroll to top
+                if (index == 0) {
+                  _homePageKey.currentState?.scrollToTop();
+                  // Show navbar when tapping home again
+                  if (!_showNavBar) setState(() => _showNavBar = true);
+                }
+                return;
+              }
+
+              HapticFeedback.lightImpact();
+              setState(() => _currentIndex = index);
+              // Ensure navbar visible when switching tabs
+              if (!_showNavBar) _showNavBar = true;
+
+              // إعادة تحديث العدادات عند التبديل إلى صفحة الأصدقاء
+              if (index == 1) {
+                _loadFriendRequestsCount();
+              }
+            },
+          ),
         ),
       ),
     );
@@ -204,7 +253,7 @@ class _BottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
+
     return ClipRRect(
       borderRadius: const BorderRadius.only(
         topLeft: Radius.circular(24),
@@ -213,7 +262,10 @@ class _BottomNavBar extends StatelessWidget {
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
         child: Container(
-          height: LayoutTokens.navBarHeight + MediaQuery.of(context).padding.bottom + 8,
+          height:
+              LayoutTokens.navBarHeight +
+              MediaQuery.of(context).padding.bottom +
+              8,
           padding: EdgeInsets.only(
             bottom: MediaQuery.of(context).padding.bottom,
             top: 8,
@@ -222,37 +274,37 @@ class _BottomNavBar extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: isDark 
-                ? [
-                    const Color(0xFF1A1A1A).withOpacity(0.95),
-                    const Color(0xFF0A0A0A).withOpacity(0.98),
-                  ]
-                : [
-                    Colors.white.withOpacity(0.95),
-                    const Color(0xFFF8F9FA).withOpacity(0.98),
-                  ],
+              colors: isDark
+                  ? [
+                      const Color(0xFF1A1A1A).withOpacity(0.95),
+                      const Color(0xFF0A0A0A).withOpacity(0.98),
+                    ]
+                  : [
+                      Colors.white.withOpacity(0.95),
+                      const Color(0xFFF8F9FA).withOpacity(0.98),
+                    ],
             ),
             border: Border(
               top: BorderSide(
-                color: isDark 
-                  ? Colors.white.withOpacity(0.1)
-                  : Colors.black.withOpacity(0.08),
+                color: isDark
+                    ? Colors.white.withOpacity(0.1)
+                    : Colors.black.withOpacity(0.08),
                 width: 1,
               ),
             ),
             boxShadow: [
               BoxShadow(
-                color: isDark 
-                  ? Colors.black.withOpacity(0.4)
-                  : Colors.black.withOpacity(0.08),
+                color: isDark
+                    ? Colors.black.withOpacity(0.4)
+                    : Colors.black.withOpacity(0.08),
                 blurRadius: 20,
                 spreadRadius: 0,
                 offset: const Offset(0, -4),
               ),
               BoxShadow(
-                color: isDark 
-                  ? Colors.black.withOpacity(0.2)
-                  : Colors.black.withOpacity(0.04),
+                color: isDark
+                    ? Colors.black.withOpacity(0.2)
+                    : Colors.black.withOpacity(0.04),
                 blurRadius: 40,
                 spreadRadius: 0,
                 offset: const Offset(0, -8),
@@ -299,7 +351,7 @@ class _NavButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
+
     return Expanded(
       child: GestureDetector(
         onTap: () {
@@ -310,112 +362,115 @@ class _NavButton extends StatelessWidget {
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOutCubic,
           margin: const EdgeInsets.symmetric(horizontal: 4),
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-            decoration: BoxDecoration(
-              gradient: isActive
-                ? LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      theme.colorScheme.primary.withOpacity(0.15),
-                      theme.colorScheme.primary.withOpacity(0.08),
-                    ],
-                  )
-                : null,
-              borderRadius: BorderRadius.circular(20),
-              border: isActive
-                ? Border.all(
-                    color: theme.colorScheme.primary.withOpacity(0.3),
-                    width: 1.5,
-                  )
-                : null,
-              boxShadow: isActive
-                ? [
-                    BoxShadow(
-                      color: theme.colorScheme.primary.withOpacity(0.2),
-                      blurRadius: 12,
-                      spreadRadius: 0,
-                      offset: const Offset(0, 4),
-                    ),
-                  ]
-                : null,
-            ),
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Center(
+          child: Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.center,
+            children: [
+              // Background container
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+                decoration: BoxDecoration(
+                  gradient: isActive
+                      ? LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            theme.colorScheme.primary.withOpacity(0.15),
+                            theme.colorScheme.primary.withOpacity(0.08),
+                          ],
+                        )
+                      : null,
+                  borderRadius: BorderRadius.circular(20),
+                  border: isActive
+                      ? Border.all(
+                          color: theme.colorScheme.primary.withOpacity(0.3),
+                          width: 1.5,
+                        )
+                      : null,
+                  boxShadow: isActive
+                      ? [
+                          BoxShadow(
+                            color: theme.colorScheme.primary.withOpacity(0.2),
+                            blurRadius: 12,
+                            spreadRadius: 0,
+                            offset: const Offset(0, 4),
+                          ),
+                        ]
+                      : null,
+                ),
+                child: Center(
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOutCubic,
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: isActive
-                        ? theme.colorScheme.primary.withOpacity(0.1)
-                        : Colors.transparent,
+                          ? theme.colorScheme.primary.withOpacity(0.1)
+                          : Colors.transparent,
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
                       isActive ? item.activeIcon : item.icon,
                       color: isActive
                           ? theme.colorScheme.primary
-                          : isDark 
-                            ? Colors.grey[400]
-                            : Colors.grey[600],
+                          : isDark
+                          ? Colors.grey[400]
+                          : Colors.grey[600],
                       size: 24,
                     ),
                   ),
                 ),
-                // Enhanced Badge Design
-                if (badgeCount > 0)
-                  Positioned(
-                    right: 8,
-                    top: 4,
-                    child: ScaleTransition(
-                      scale: CurvedAnimation(
-                        parent: ModalRoute.of(context)?.animation ?? 
-                               const AlwaysStoppedAnimation(1.0),
-                        curve: Curves.elasticOut,
+              ),
+              // Enhanced Badge Design
+              if (badgeCount > 0)
+                Positioned(
+                  right: 16,
+                  top: 8,
+                  child: ScaleTransition(
+                    scale: CurvedAnimation(
+                      parent:
+                          ModalRoute.of(context)?.animation ??
+                          const AlwaysStoppedAnimation(1.0),
+                      curve: Curves.elasticOut,
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 3,
                       ),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 3,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFFFF4757), Color(0xFFFF3742)],
                         ),
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFFFF4757), Color(0xFFFF3742)],
-                          ),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: isDark 
-                              ? const Color(0xFF1A1A1A) 
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: isDark
+                              ? const Color(0xFF1A1A1A)
                               : Colors.white,
-                            width: 2,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFFFF4757).withOpacity(0.4),
-                              blurRadius: 8,
-                              spreadRadius: 0,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
+                          width: 2,
                         ),
-                        child: Text(
-                          badgeCount > 99 ? '99+' : '$badgeCount',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                            height: 1,
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFFFF4757).withOpacity(0.4),
+                            blurRadius: 8,
+                            spreadRadius: 0,
+                            offset: const Offset(0, 2),
                           ),
+                        ],
+                      ),
+                      child: Text(
+                        badgeCount > 99 ? '99+' : '$badgeCount',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          height: 1,
                         ),
                       ),
                     ),
                   ),
-              ],
-            ),
+                ),
+            ],
           ),
         ),
       ),

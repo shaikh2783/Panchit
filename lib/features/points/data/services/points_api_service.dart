@@ -24,6 +24,7 @@ class PointsApiService {
         'message': response['message'] ?? 'Failed to load points settings',
       };
     } catch (e) {
+
       return {'success': false, 'message': 'Error: $e'};
     }
   }
@@ -55,6 +56,7 @@ class PointsApiService {
         'message': response['message'] ?? 'Failed to load transactions',
       };
     } catch (e) {
+
       return {'success': false, 'message': 'Error: $e'};
     }
   }
@@ -86,6 +88,7 @@ class PointsApiService {
         'message': response['message'] ?? 'Failed to load payments',
       };
     } catch (e) {
+
       return {'success': false, 'message': 'Error: $e'};
     }
   }
@@ -105,6 +108,7 @@ class PointsApiService {
         'message': response['message'] ?? 'Failed to load points stats',
       };
     } catch (e) {
+
       return {'success': false, 'message': 'Error: $e'};
     }
   }
@@ -137,6 +141,7 @@ class PointsApiService {
         'message': response['message'] ?? 'Failed to submit withdrawal',
       };
     } catch (e) {
+
       return {'success': false, 'message': 'Error: $e'};
     }
   }

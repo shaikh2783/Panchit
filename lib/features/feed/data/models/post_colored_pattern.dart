@@ -5,10 +5,7 @@ class BackgroundImage {
   final String relative;
   final String full;
 
-  const BackgroundImage({
-    required this.relative,
-    required this.full,
-  });
+  const BackgroundImage({required this.relative, required this.full});
 
   factory BackgroundImage.fromJson(Map<String, dynamic> json) {
     return BackgroundImage(
@@ -18,10 +15,7 @@ class BackgroundImage {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'relative': relative,
-      'full': full,
-    };
+    return {'relative': relative, 'full': full};
   }
 
   @override
@@ -30,9 +24,9 @@ class BackgroundImage {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is BackgroundImage && 
-           other.relative == relative && 
-           other.full == full;
+    return other is BackgroundImage &&
+        other.relative == relative &&
+        other.full == full;
   }
 
   @override
@@ -44,10 +38,7 @@ class BackgroundColors {
   final String primary;
   final String? secondary;
 
-  const BackgroundColors({
-    required this.primary,
-    this.secondary,
-  });
+  const BackgroundColors({required this.primary, this.secondary});
 
   factory BackgroundColors.fromJson(Map<String, dynamic> json) {
     return BackgroundColors(
@@ -57,21 +48,19 @@ class BackgroundColors {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'primary': primary,
-      if (secondary != null) 'secondary': secondary,
-    };
+    return {'primary': primary, if (secondary != null) 'secondary': secondary};
   }
 
   @override
-  String toString() => 'BackgroundColors(primary: $primary, secondary: $secondary)';
+  String toString() =>
+      'BackgroundColors(primary: $primary, secondary: $secondary)';
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is BackgroundColors && 
-           other.primary == primary && 
-           other.secondary == secondary;
+    return other is BackgroundColors &&
+        other.primary == primary &&
+        other.secondary == secondary;
   }
 
   @override
@@ -105,13 +94,13 @@ class PostColoredPattern {
         // البنية القديمة: string URL
         backgroundImage = BackgroundImage(
           relative: bgImage,
-          full: bgImage.startsWith('http') 
-              ? bgImage 
+          full: bgImage.startsWith('http')
+              ? bgImage
               : 'https://sngine.fluttercrafters.com/content/uploads/$bgImage',
         );
       }
     }
-    
+
     // معالجة background_colors - قد يكون object أو قيم منفصلة
     BackgroundColors? backgroundColors;
     if (json['background_colors'] != null) {
@@ -154,7 +143,9 @@ class PostColoredPattern {
           return PostColoredPattern(
             patternId: json,
             type: 'color', // افتراضي
-            backgroundColors: const BackgroundColors(primary: '#6C5CE7'), // لون افتراضي
+            backgroundColors: const BackgroundColors(
+              primary: '#6C5CE7',
+            ), // لون افتراضي
             textColor: '#FFFFFF',
           );
         }
@@ -169,7 +160,9 @@ class PostColoredPattern {
         return PostColoredPattern(
           patternId: json.toString(),
           type: 'color',
-          backgroundColors: const BackgroundColors(primary: '#6C5CE7'), // لون افتراضي
+          backgroundColors: const BackgroundColors(
+            primary: '#6C5CE7',
+          ), // لون افتراضي
           textColor: '#FFFFFF',
         );
       }
@@ -186,8 +179,10 @@ class PostColoredPattern {
       'id': patternId,
       'pattern_id': patternId,
       'type': type,
-      if (backgroundImage != null) 'background_image': backgroundImage!.toJson(),
-      if (backgroundColors != null) 'background_colors': backgroundColors!.toJson(),
+      if (backgroundImage != null)
+        'background_image': backgroundImage!.toJson(),
+      if (backgroundColors != null)
+        'background_colors': backgroundColors!.toJson(),
       if (textColor != null) 'text_color': textColor,
     };
   }

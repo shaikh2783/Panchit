@@ -15,11 +15,13 @@ class PrivacySettingsService {
       final response = await _apiClient.get(configCfgP('settings_privacy'));
 
       if (response['status'] == 'success') {
+
         return PrivacySettings.fromJson(response['data']);
       } else {
         throw Exception(response['message'] ?? 'Failed to fetch settings');
       }
     } catch (e) {
+
       rethrow;
     }
   }
@@ -34,9 +36,11 @@ class PrivacySettingsService {
       );
 
       if (response['status'] == 'success') {
+
         if (response['data'] != null &&
             response['data']['updated_fields'] != null) {
           final updatedFields = response['data']['updated_fields'] as List;
+
         }
       } else {
         throw Exception(
@@ -44,6 +48,7 @@ class PrivacySettingsService {
         );
       }
     } catch (e) {
+
       rethrow;
     }
   }
@@ -60,9 +65,11 @@ class PrivacySettingsService {
       );
 
       if (response['status'] == 'success') {
+
         if (response['data'] != null &&
             response['data']['updated_fields'] != null) {
           final updatedFields = response['data']['updated_fields'] as List;
+
         }
       } else {
         throw Exception(
@@ -70,6 +77,7 @@ class PrivacySettingsService {
         );
       }
     } catch (e) {
+
       rethrow;
     }
   }
@@ -94,7 +102,6 @@ class PrivacySettingsService {
         throw Exception('No settings to update');
       }
 
-
       final data = <String, dynamic>{};
       if (privacy != null) data['privacy'] = privacy;
       if (notifications != null) data['notifications'] = notifications;
@@ -105,14 +112,17 @@ class PrivacySettingsService {
       );
 
       if (response['status'] == 'success') {
+
         if (response['data'] != null &&
             response['data']['updated_fields'] != null) {
           final updatedFields = response['data']['updated_fields'] as List;
+
         }
       } else {
         throw Exception(response['message'] ?? 'Failed to update settings');
       }
     } catch (e) {
+
       rethrow;
     }
   }

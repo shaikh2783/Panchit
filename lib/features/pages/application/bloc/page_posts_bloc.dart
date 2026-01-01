@@ -102,6 +102,7 @@ class PagePostsBloc extends Bloc<PagePostsEvent, PagePostsState> {
     emit(PagePostsLoadingState());
     
     try {
+
       _currentPage = 0; // إعادة تعيين الصفحة
       _currentPageId = event.pageId; // حفظ معرف الصفحة الحالية
       
@@ -110,14 +111,14 @@ class PagePostsBloc extends Bloc<PagePostsEvent, PagePostsState> {
         limit: _pageSize,
         offset: _currentPage,
       );
-      
-      
+
       emit(PagePostsLoadedState(
         posts: response.posts,
         pageId: event.pageId,
         hasMore: response.hasMore,
       ));
     } catch (e) {
+
       emit(PagePostsErrorState(e.toString()));
     }
   }
@@ -148,13 +149,15 @@ class PagePostsBloc extends Bloc<PagePostsEvent, PagePostsState> {
     
     final currentState = state as PagePostsLoadedState;
     if (!currentState.hasMore || currentState.isLoadingMore) {
+
       return;
     }
 
     if (_currentPageId == null) {
+
       return;
     }
-    
+
     emit(currentState.copyWith(isLoadingMore: true));
     
     try {
@@ -165,12 +168,11 @@ class PagePostsBloc extends Bloc<PagePostsEvent, PagePostsState> {
         limit: _pageSize,
         offset: _currentPage,
       );
-      
-      
+
       // تجنب المنشورات المكررة
       final currentPostIds = currentState.posts.map((p) => p.id).toSet();
       final uniqueNewPosts = response.posts.where((post) => !currentPostIds.contains(post.id)).toList();
-      
+
       final newPosts = List<Post>.from(currentState.posts)..addAll(uniqueNewPosts);
       
       emit(PagePostsLoadedState(
@@ -180,6 +182,7 @@ class PagePostsBloc extends Bloc<PagePostsEvent, PagePostsState> {
         isLoadingMore: false,
       ));
     } catch (e) {
+
       _currentPage--; // التراجع عن زيادة الصفحة في حالة الخطأ
       emit(currentState.copyWith(isLoadingMore: false));
     }

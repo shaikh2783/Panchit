@@ -166,6 +166,7 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
         _errorMessage = e.toString();
         _isLoading = false;
       });
+
     }
   }
 
@@ -192,6 +193,7 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
         _errorMessage = e.toString();
         _isLoading = false;
       });
+
     }
   }
 
@@ -255,6 +257,7 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
         _errorMessage = e.toString();
         _isLoading = false;
       });
+
     }
   }
 
@@ -275,6 +278,7 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
         _isLoading = false;
       });
     } catch (e) {
+
     }
   }
 
@@ -317,6 +321,7 @@ class _PostAudioWidgetState extends State<PostAudioWidget>
       // ملاحظة: لما يكون الصوت متوقف بسبب pause (مش completed)،
       // ما نشغّله تلقائيًا هنا، يخليه مثل سبوتيفاي: تقدر تحرك الشريط وهو متوقف.
     } catch (e) {
+
     }
   }
 

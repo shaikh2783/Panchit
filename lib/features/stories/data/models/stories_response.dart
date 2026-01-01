@@ -38,6 +38,7 @@ class StoriesResponse {
             try {
               storiesList.add(Story.fromJson(item));
             } catch (e) {
+
               continue;
             }
           }
@@ -50,6 +51,7 @@ class StoriesResponse {
           try {
             storiesList.add(Story.fromJson(item));
           } catch (e) {
+
             continue;
           }
         }

@@ -27,6 +27,7 @@ class GroupsRepository {
       );
       return response.groups;
     } catch (e) {
+
       return [];
     }
   }
@@ -43,6 +44,7 @@ class GroupsRepository {
       );
       return response.groups;
     } catch (e) {
+
       return [];
     }
   }
@@ -63,6 +65,7 @@ class GroupsRepository {
           .toList();
       return filteredGroups;
     } catch (e) {
+
       return [];
     }
   }
@@ -87,6 +90,7 @@ class GroupsRepository {
           .toList();
       return filteredGroups;
     } catch (e) {
+
       return [];
     }
   }

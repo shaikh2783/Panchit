@@ -24,6 +24,16 @@ class NotificationsRepository {
     return await _apiService.markNotificationRead(notificationId);
   }
 
+  /// Delete a single notification
+  Future<Map<String, dynamic>> deleteNotification(int notificationId) async {
+    return await _apiService.deleteNotification(notificationId);
+  }
+
+  /// Delete all notifications (optionally seen only)
+  Future<Map<String, dynamic>> deleteAllNotifications({bool seenOnly = false}) async {
+    return await _apiService.deleteAllNotifications(seenOnly: seenOnly);
+  }
+
   /// Mark all notifications as read
   Future<int> markAllNotificationsRead() async {
     return await _apiService.markAllNotificationsRead();

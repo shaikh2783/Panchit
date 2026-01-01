@@ -154,8 +154,10 @@ class _UserInformationPageState extends State<UserInformationPage> {
       if (mounted) {
         _showSuccess('✅ File saved: $filename\nLocation: ${directory.path}');
       }
+
     } catch (e) {
       _showError('Failed to save file: ${e.toString()}');
+
     }
   }
 

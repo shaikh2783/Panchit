@@ -75,6 +75,7 @@ class _InviteFriendsToPagePageState extends State<InviteFriendsToPagePage> {
         _isLoading = false;
       });
     } catch (e) {
+
       setState(() => _isLoading = false);
 
       if (mounted) {
@@ -106,6 +107,7 @@ class _InviteFriendsToPagePageState extends State<InviteFriendsToPagePage> {
         _isLoadingMore = false;
       });
     } catch (e) {
+
       setState(() => _isLoadingMore = false);
     }
   }
@@ -152,6 +154,7 @@ class _InviteFriendsToPagePageState extends State<InviteFriendsToPagePage> {
         }
       }
     } catch (e) {
+
       setState(() => _invitingUsers.remove(friend.userId));
 
       if (mounted) {

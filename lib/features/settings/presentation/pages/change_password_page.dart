@@ -76,6 +76,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         _showSnackBar(response.message, isError: true);
       }
     } catch (e) {
+
       _showSnackBar('failed_change_password'.tr, isError: true);
     } finally {
       if (mounted) {

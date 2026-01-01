@@ -246,15 +246,16 @@ class LiveCommentsBloc extends Bloc<LiveCommentsEvent, LiveCommentsState> {
         // stickerUrl: event.stickerUrl,
       );
 
-      
       // API التعليقات يرجع comment object مباشرة (وليس status: success)
       if (result['comment'] != null || result['callback'] == 'commentCreated') {
+
         // Refresh comments after adding new one
         add(RefreshLiveComments(postId: event.postId));
       } else if (result['status'] == 'success') {
         // Fallback للـ API الذي يستخدم status: success
         add(RefreshLiveComments(postId: event.postId));
       } else {
+
         emit(LiveCommentsError(
           message: result['message'] ?? 'خطأ في إضافة التعليق',
         ));
@@ -405,6 +406,7 @@ class LiveCommentsBloc extends Bloc<LiveCommentsEvent, LiveCommentsState> {
       }
     } catch (e) {
       // Silent error for polling - don't emit error state
+
     }
   }
 }

@@ -89,6 +89,7 @@ class _PageVerificationRequestPageState
       
       // رفع صورة الصفحة إذا كانت موجودة
       if (_photoFile != null) {
+
         setState(() => _uploadProgress = 0.1);
         
         final photoResponse = await apiClient.multipartPost(
@@ -100,6 +101,7 @@ class _PageVerificationRequestPageState
 
         if (photoResponse['status'] == 'success' && photoResponse['data'] != null) {
           photoUrl = photoResponse['data']['source'] ?? photoResponse['data']['url'];
+
         }
       }
 
@@ -107,7 +109,7 @@ class _PageVerificationRequestPageState
 
       // رفع صورة الجواز إذا كانت موجودة
       if (_passportFile != null) {
-        
+
         final passportResponse = await apiClient.multipartPost(
           configCfgP('file_upload'),
           body: {'type': 'photo'},
@@ -117,6 +119,7 @@ class _PageVerificationRequestPageState
 
         if (passportResponse['status'] == 'success' && passportResponse['data'] != null) {
           passportUrl = passportResponse['data']['source'] ?? passportResponse['data']['url'];
+
         }
       }
 
@@ -150,7 +153,6 @@ class _PageVerificationRequestPageState
             duration: Duration(seconds: 3),
           ),
         );
-
 
         Navigator.pop(context, true);
       }

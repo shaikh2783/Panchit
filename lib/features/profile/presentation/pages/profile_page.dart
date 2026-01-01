@@ -361,10 +361,10 @@ class _ProfilePageState extends State<ProfilePage>
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _buildHeaderStat('posts', stats.posts),
-                  _buildHeaderStat('photos', stats.photos),
-                  _buildHeaderStat('friends', stats.friends),
-                  _buildHeaderStat('followers', stats.followers),
+                  _buildHeaderStat('Posts', stats.posts),
+                  _buildHeaderStat('Photos', stats.photos),
+                  _buildHeaderStat('Friends', stats.friends),
+                  _buildHeaderStat('Followers', stats.followers),
                 ],
               ),
             ],
@@ -387,7 +387,7 @@ class _ProfilePageState extends State<ProfilePage>
         ),
         const SizedBox(height: 4),
         Text(
-          label.tr,
+          label,
           style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 12),
         ),
       ],
@@ -404,19 +404,70 @@ class _ProfilePageState extends State<ProfilePage>
   Widget _buildActionButtons(ProfileRelationship relationship) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-      child: Row(
+      child: Column(
         children: [
-          // زر إضافة صديق
-          Expanded(child: _buildFriendButton(relationship)),
+          // الصف الأول: زر إضافة صديق + زر متابعة
+          Row(
+            children: [
+              Expanded(child: _buildFriendButton(relationship)),
+              const SizedBox(width: 10),
+              Expanded(child: _buildFollowButton(relationship)),
+            ],
+          ),
+          const SizedBox(height: 10),
+          // الصف الثاني: زر الرسالة + زر المزيد
+          Row(
+            children: [
+              Expanded(
+                child: _buildActionButton(
+                  icon: Iconsax.message,
+                  label: 'send_message'.tr,
+                  onPressed: () {
+                    /* open chat */
+                  },
+                  isPrimary: false,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _buildActionButton(
+                  icon: Iconsax.more,
+                  label: 'more_options'.tr,
+                  onPressed: _showMoreOptions,
+                  isPrimary: false,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback onPressed,
+    bool isPrimary = true,
+  }) {
+    return FilledButton.tonal(
+      onPressed: onPressed,
+      style: FilledButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 18),
           const SizedBox(width: 8),
-          // زر متابعة
-          Expanded(child: _buildFollowButton(relationship)),
-          const SizedBox(width: 8),
-          _buildSecondaryButton(Iconsax.message, 'Message', () {
-            /* open chat */
-          }),
-          const SizedBox(width: 8),
-          _buildSecondaryButton(Iconsax.more, 'More', _showMoreOptions),
+          Text(
+            label,
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 14,
+            ),
+          ),
         ],
       ),
     );
@@ -737,8 +788,10 @@ class _ProfilePageState extends State<ProfilePage>
                   scrollInfo.metrics.pixels;
 
               if (hasMore && !isLoadingMore) {
+
                 context.read<ProfilePostsBloc>().add(LoadMoreUserPostsEvent());
               } else {
+
               }
             }
             return false;
@@ -796,6 +849,7 @@ class _ProfilePageState extends State<ProfilePage>
                       key: ValueKey('profile-post-${p.id}'),
                       post: p,
                       onReactionChanged: (postId, reaction) {
+
                         // تحديث التفاعل في ProfilePostsBloc فقط (لتجنب الطلبات المكررة)
                         context.read<ProfilePostsBloc>().add(
                           ReactToPostInProfileEvent(

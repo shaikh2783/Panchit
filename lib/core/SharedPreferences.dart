@@ -1,7 +1,6 @@
 // ignore: file_names
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class SharedP {
   static Remove() async {
     final prefs = await SharedPreferences.getInstance();

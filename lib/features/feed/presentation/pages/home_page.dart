@@ -22,15 +22,19 @@ import 'package:snginepro/features/agora/presentation/pages/professional_live_st
 import 'package:cached_network_image/cached_network_image.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({super.key, this.onScrollDirectionChanged});
+
+  // true => scrolling down, false => scrolling up
+  final ValueChanged<bool>? onScrollDirectionChanged;
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePage> createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> {
   late final ScrollController _scrollController;
   VoidCallback? _refreshPromotedPost;
+  double _lastScrollOffset = 0.0;
 
   void _onScroll() {
     if (!_scrollController.hasClients) return;
@@ -38,13 +42,28 @@ class _HomePageState extends State<HomePage> {
     final current = _scrollController.position.pixels;
     final remaining = max - current;
 
+    // Detect scroll direction with a small threshold to avoid noise
+    const threshold = 4.0;
+    if ((current - _lastScrollOffset).abs() > threshold) {
+      final isScrollingDown = current > _lastScrollOffset;
+      // Avoid notifying when overscrolling at top
+      if (current <= 0) {
+        widget.onScrollDirectionChanged?.call(false);
+      } else {
+        widget.onScrollDirectionChanged?.call(isScrollingDown);
+      }
+      _lastScrollOffset = current;
+    }
+
     if (remaining <= 200) {
       final postsBloc = context.read<PostsBloc>();
       final state = postsBloc.state;
 
       if (state is PostsLoadedState && state.hasMore && !state.isLoadingMore) {
+
         postsBloc.add(LoadMorePostsEvent());
       } else if (state is PostsLoadedState) {
+
       }
     }
   }
@@ -75,6 +94,17 @@ class _HomePageState extends State<HomePage> {
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     super.dispose();
+  }
+
+  // Method للـ scroll to top
+  void scrollToTop() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOutCubic,
+      );
+    }
   }
 
   Future<void> _handleRefresh() async {
@@ -128,7 +158,7 @@ class _HomePageState extends State<HomePage> {
                   BoxShadow(
                     color: isDark
                         ? Colors.black26
-                        : Colors.grey.withValues(alpha: 0.2),
+                        : Colors.grey.withOpacity(0.2),
                     blurRadius: 20,
                     spreadRadius: 2,
                   ),
@@ -174,7 +204,7 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 40.0),
           child: Card(
             elevation: isDark ? 8 : 4,
-            shadowColor: isDark ? Colors.black54 : Colors.grey.withValues(alpha: 0.3),
+            shadowColor: isDark ? Colors.black54 : Colors.grey.withOpacity(0.3),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
@@ -208,7 +238,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.red.withValues(alpha: 0.3),
+                          color: Colors.red.withOpacity(0.3),
                           blurRadius: 20,
                           spreadRadius: 2,
                         ),
@@ -249,7 +279,7 @@ class _HomePageState extends State<HomePage> {
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.blue.withValues(alpha: 0.3),
+                          color: Colors.blue.withOpacity(0.3),
                           blurRadius: 8,
                           offset: const Offset(0, 4),
                         ),
@@ -318,7 +348,7 @@ class _HomePageState extends State<HomePage> {
                     BoxShadow(
                       color: isDark
                           ? Colors.black26
-                          : Colors.grey.withValues(alpha: 0.2),
+                          : Colors.grey.withOpacity(0.2),
                       blurRadius: 20,
                       spreadRadius: 2,
                     ),
@@ -372,7 +402,7 @@ class _HomePageState extends State<HomePage> {
                   elevation: 4,
                   shadowColor: Theme.of(
                     context,
-                  ).colorScheme.primary.withValues(alpha: 0.4),
+                  ).colorScheme.primary.withOpacity(0.4),
                 ),
               ),
             ],
@@ -398,69 +428,6 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: isDark
           ? const Color(0xFF0A0A0A)
           : const Color(0xFFF8F9FA),
-      appBar: AppBar(
-        backgroundColor: isDark
-            ? const Color(0xFF1A1A1A).withValues(alpha: 0.95)
-            : Colors.white.withValues(alpha: 0.95),
-        elevation: 0,
-        shadowColor: Colors.transparent,
-        surfaceTintColor: Colors.transparent,
-        titleSpacing: 16,
-        toolbarHeight: 64,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: isDark
-                  ? [
-                      const Color(0xFF1A1A1A).withValues(alpha: 0.98),
-                      const Color(0xFF0A0A0A).withValues(alpha: 0.95),
-                    ]
-                  : [
-                      Colors.white.withValues(alpha: 0.98),
-                      const Color(0xFFF8F9FA).withValues(alpha: 0.95),
-                    ],
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: isDark
-                    ? Colors.black.withValues(alpha: 0.3)
-                    : Colors.black.withValues(alpha: 0.05),
-                blurRadius: 12,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-        ),
-        title: Row(
-          children: [
-            Image.asset('assets/app_icon.png',width: 40,height: 40),
-            const SizedBox(width: 12),
-            Text(
-              'Panchit',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: cs.primary,
-                fontSize: 26,
-                fontWeight: FontWeight.w900,
-                letterSpacing: -0.8,
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          _AppBarAction(
-            icon: Icons.search,
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const SearchPage()),
-              );
-            },
-          ),
-          _AppBarAction(icon: Iconsax.message, onTap: () {}),
-          const SizedBox(width: 12),
-        ],
-      ),
       body: BlocConsumer<PostsBloc, PostsState>(
         listener: (context, state) {
           // Handle any side effects here if needed
@@ -489,6 +456,7 @@ class _HomePageState extends State<HomePage> {
                 controller: _scrollController,
                 physics: const AlwaysScrollableScrollPhysics(),
                 slivers: [
+                  _buildHomeSliverAppBar(context, isDark, cs),
                   SliverToBoxAdapter(
                     child: _ComposerCard(
                       displayName: displayName,
@@ -506,8 +474,9 @@ class _HomePageState extends State<HomePage> {
             child: CustomScrollView(
               controller: _scrollController,
               physics: const ClampingScrollPhysics(), // منع scroll jump
-              cacheExtent: 500.0, // تحسين cache للـ widgets
+              cacheExtent: 1000.0, // زيادة cache للـ widgets لتحسين السكرول
               slivers: [
+                _buildHomeSliverAppBar(context, isDark, cs),
                 // 📖 قسم القصص
                 BlocBuilder<StoriesBloc, StoriesState>(
                   builder: (context, storiesState) {
@@ -574,7 +543,7 @@ class _HomePageState extends State<HomePage> {
                                       BoxShadow(
                                         color: isDark
                                             ? Colors.black26
-                                            : Colors.grey.withValues(alpha: 0.15),
+                                            : Colors.grey.withOpacity(0.15),
                                         blurRadius: 12,
                                         spreadRadius: 1,
                                       ),
@@ -611,6 +580,77 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  SliverAppBar _buildHomeSliverAppBar(
+    BuildContext context,
+    bool isDark,
+    ColorScheme cs,
+  ) {
+    return SliverAppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      shadowColor: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
+      titleSpacing: 16,
+      toolbarHeight: 64,
+      floating: true,
+      snap: true,
+      pinned: false,
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: isDark
+                ? [
+                    const Color(0xFF1A1A1A).withOpacity(0.98),
+                    const Color(0xFF0A0A0A).withOpacity(0.95),
+                  ]
+                : [
+                    Colors.white.withOpacity(0.98),
+                    const Color(0xFFF8F9FA).withOpacity(0.95),
+                  ],
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: isDark
+                  ? Colors.black.withOpacity(0.3)
+                  : Colors.black.withOpacity(0.05),
+              blurRadius: 12,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+      ),
+      title: Row(
+        children: [
+          Image.asset('assets/app_icon.png',width: 40,height: 40),
+          const SizedBox(width: 12),
+          Text(
+            'Panchit',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              color: cs.primary,
+              fontSize: 26,
+              fontWeight: FontWeight.w900,
+              letterSpacing: -0.8,
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        _AppBarAction(
+          icon: Icons.search,
+          onTap: () {
+            Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (context) => const SearchPage()));
+          },
+        ),
+        _AppBarAction(icon: Iconsax.message, onTap: () {}),
+        const SizedBox(width: 12),
+      ],
+    );
+  }
 }
 
 class _AppBarAction extends StatelessWidget {
@@ -635,8 +675,8 @@ class _AppBarAction extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: isDark
-                ? Colors.black.withValues(alpha: 0.4)
-                : Colors.black.withValues(alpha: 0.08),
+                ? Colors.black.withOpacity(0.4)
+                : Colors.black.withOpacity(0.08),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -655,8 +695,8 @@ class _AppBarAction extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(
                 color: isDark
-                    ? Colors.white.withValues(alpha: 0.1)
-                    : Colors.black.withValues(alpha: 0.05),
+                    ? Colors.white.withOpacity(0.1)
+                    : Colors.black.withOpacity(0.05),
                 width: 1,
               ),
             ),
@@ -700,12 +740,12 @@ class _StoriesRail extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [cs.surface, cs.surface.withValues(alpha: 0.95)],
+          colors: [cs.surface, cs.surface.withOpacity(0.95)],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
         border: Border(
-          bottom: BorderSide(color: cs.outlineVariant.withValues(alpha: 0.25)),
+          bottom: BorderSide(color: cs.outlineVariant.withOpacity(0.25)),
         ),
       ),
       padding: const EdgeInsets.symmetric(vertical: 12),
@@ -764,7 +804,7 @@ class _CreateStoryCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          Colors.black.withValues(alpha: 0.6),
+                          Colors.black.withOpacity(0.6),
                           Colors.transparent,
                         ],
                         begin: Alignment.topCenter,
@@ -778,7 +818,7 @@ class _CreateStoryCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          Colors.black.withValues(alpha: 0.6),
+                          Colors.black.withOpacity(0.6),
                           Colors.transparent,
                         ],
                         begin: Alignment.bottomCenter,
@@ -809,7 +849,7 @@ class _CreateStoryCard extends StatelessWidget {
                   right: 0,
                   child: Container(
                     height: 52,
-                    color: cs.surface.withValues(alpha: 0.92),
+                    color: cs.surface.withOpacity(0.92),
                     alignment: Alignment.bottomCenter,
                     padding: const EdgeInsets.only(bottom: 8),
                     child: Text(
@@ -862,7 +902,7 @@ class _StoryCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          Colors.black.withValues(alpha: 0.55),
+                          Colors.black.withOpacity(0.55),
                           Colors.transparent,
                         ],
                         begin: Alignment.topCenter,
@@ -876,7 +916,7 @@ class _StoryCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          Colors.black.withValues(alpha: 0.55),
+                          Colors.black.withOpacity(0.55),
                           Colors.transparent,
                         ],
                         begin: Alignment.bottomCenter,
@@ -954,15 +994,15 @@ class _ComposerCard extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: isDark
-                ? Colors.black.withValues(alpha: 0.3)
-                : Colors.black.withValues(alpha: 0.06),
+                ? Colors.black.withOpacity(0.3)
+                : Colors.black.withOpacity(0.06),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
           BoxShadow(
             color: isDark
-                ? Colors.black.withValues(alpha: 0.1)
-                : Colors.black.withValues(alpha: 0.02),
+                ? Colors.black.withOpacity(0.1)
+                : Colors.black.withOpacity(0.02),
             blurRadius: 6,
             offset: const Offset(0, 1),
           ),
@@ -978,12 +1018,12 @@ class _ComposerCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: cs.primary.withValues(alpha: 0.2),
+                      color: cs.primary.withOpacity(0.2),
                       width: 2,
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: cs.primary.withValues(alpha: 0.1),
+                        color: cs.primary.withOpacity(0.1),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -1018,16 +1058,16 @@ class _ComposerCard extends StatelessWidget {
                         ),
                         border: Border.all(
                           color: isDark
-                              ? Colors.white.withValues(alpha: 0.1)
-                              : Colors.black.withValues(alpha: 0.08),
+                              ? Colors.white.withOpacity(0.1)
+                              : Colors.black.withOpacity(0.08),
                           width: 1,
                         ),
                         borderRadius: BorderRadius.circular(28),
                         boxShadow: [
                           BoxShadow(
                             color: isDark
-                                ? Colors.black.withValues(alpha: 0.2)
-                                : Colors.black.withValues(alpha: 0.04),
+                                ? Colors.black.withOpacity(0.2)
+                                : Colors.black.withOpacity(0.04),
                             blurRadius: 4,
                             offset: const Offset(0, 2),
                           ),
@@ -1054,7 +1094,7 @@ class _ComposerCard extends StatelessWidget {
                 gradient: LinearGradient(
                   colors: [
                     Colors.transparent,
-                    (isDark ? Colors.white : Colors.black).withValues(alpha: 0.1),
+                    (isDark ? Colors.white : Colors.black).withOpacity(0.1),
                     Colors.transparent,
                   ],
                 ),
@@ -1130,8 +1170,8 @@ class _ComposerAction extends StatelessWidget {
           boxShadow: [
             BoxShadow(
               color: isDark
-                  ? Colors.black.withValues(alpha: 0.2)
-                  : Colors.black.withValues(alpha: 0.04),
+                  ? Colors.black.withOpacity(0.2)
+                  : Colors.black.withOpacity(0.04),
               blurRadius: 6,
               offset: const Offset(0, 2),
             ),
@@ -1151,11 +1191,11 @@ class _ComposerAction extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: color.withValues(alpha: 0.1),
+                      color: color.withOpacity(0.1),
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: color.withValues(alpha: 0.2),
+                          color: color.withOpacity(0.2),
                           blurRadius: 4,
                           offset: const Offset(0, 2),
                         ),

@@ -14,6 +14,7 @@ class ProfileUpdateService {
   Future<ProfileUpdateResponse> updateBasicInfo(
       BasicInfoUpdateRequest request) async {
     try {
+
       final response = await _apiClient.post(
         configCfgP('profile_update_basic'),
         data: request.toJson(),
@@ -21,6 +22,7 @@ class ProfileUpdateService {
 
       return ProfileUpdateResponse.fromJson(response);
     } catch (e) {
+
       rethrow;
     }
   }
@@ -29,6 +31,7 @@ class ProfileUpdateService {
   Future<ProfileUpdateResponse> updateWorkInfo(
       WorkInfoUpdateRequest request) async {
     try {
+
       final response = await _apiClient.post(
         configCfgP('profile_update_work'),
         data: request.toJson(),
@@ -36,6 +39,7 @@ class ProfileUpdateService {
 
       return ProfileUpdateResponse.fromJson(response);
     } catch (e) {
+
       rethrow;
     }
   }
@@ -44,6 +48,7 @@ class ProfileUpdateService {
   Future<ProfileUpdateResponse> updateLocation(
       LocationUpdateRequest request) async {
     try {
+
       final response = await _apiClient.post(
         configCfgP('profile_update_location'),
         data: request.toJson(),
@@ -51,6 +56,7 @@ class ProfileUpdateService {
 
       return ProfileUpdateResponse.fromJson(response);
     } catch (e) {
+
       rethrow;
     }
   }
@@ -59,6 +65,7 @@ class ProfileUpdateService {
   Future<ProfileUpdateResponse> updateEducation(
       EducationUpdateRequest request) async {
     try {
+
       final response = await _apiClient.post(
         configCfgP('profile_update_education'),
         data: request.toJson(),
@@ -66,6 +73,7 @@ class ProfileUpdateService {
 
       return ProfileUpdateResponse.fromJson(response);
     } catch (e) {
+
       rethrow;
     }
   }
@@ -74,6 +82,7 @@ class ProfileUpdateService {
   Future<ProfileUpdateResponse> updateSocialLinks(
       SocialLinksUpdateRequest request) async {
     try {
+
       final response = await _apiClient.post(
         configCfgP('profile_update_social'),
         data: request.toJson(),
@@ -81,6 +90,7 @@ class ProfileUpdateService {
 
       return ProfileUpdateResponse.fromJson(response);
     } catch (e) {
+
       rethrow;
     }
   }
@@ -89,6 +99,7 @@ class ProfileUpdateService {
   Future<ProfileUpdateResponse> updateDesign(
       DesignUpdateRequest request) async {
     try {
+
       final response = await _apiClient.post(
         configCfgP('profile_update_design'),
         data: request.toJson(),
@@ -96,6 +107,7 @@ class ProfileUpdateService {
 
       return ProfileUpdateResponse.fromJson(response);
     } catch (e) {
+
       rethrow;
     }
   }
@@ -104,6 +116,7 @@ class ProfileUpdateService {
   Future<ProfileUpdateResponse> updatePassword(
       PasswordUpdateRequest request) async {
     try {
+
       final response = await _apiClient.post(
         configCfgP('profile_update_password'),
         data: request.toJson(),
@@ -111,6 +124,7 @@ class ProfileUpdateService {
 
       return ProfileUpdateResponse.fromJson(response);
     } catch (e) {
+
       rethrow;
     }
   }
@@ -129,6 +143,7 @@ class ProfileUpdateService {
 
       return ProfileUpdateResponse.fromJson(response);
     } catch (e) {
+
       rethrow;
     }
   }
@@ -147,6 +162,7 @@ class ProfileUpdateService {
 
       return ProfileUpdateResponse.fromJson(response);
     } catch (e) {
+
       rethrow;
     }
   }

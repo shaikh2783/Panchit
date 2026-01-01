@@ -78,6 +78,7 @@ class PostOffer {
     try {
       return PostOffer.fromJson(json);
     } catch (e) {
+
       return null;
     }
   }

@@ -23,4 +23,9 @@ class StoriesRepository {
       text: text,
     );
   }
+
+  /// Delete a specific story by mediaId, or all stories if mediaId is null
+  Future<Map<String, dynamic>> deleteStory({String? mediaId}) {
+    return _apiService.deleteStory(mediaId: mediaId);
+  }
 }
