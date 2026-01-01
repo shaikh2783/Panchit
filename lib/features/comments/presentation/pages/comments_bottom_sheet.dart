@@ -4,6 +4,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:record/record.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:snginepro/core/widgets/html_text_widget.dart';
+import 'package:snginepro/features/auth/application/auth_notifier.dart';
 import 'package:get/get.dart';
 import 'dart:io';
 
@@ -13,16 +15,20 @@ import '../../data/models/comment.dart';
 import '../../data/datasources/comments_api_service.dart';
 import '../widgets/reactions_menu.dart';
 import '../../../../core/services/reactions_service.dart';
+import '../../../../services/ai_comment_service.dart';
+import '../../../../App_Settings.dart';
 
 class CommentsBottomSheet extends StatefulWidget {
   const CommentsBottomSheet({
     super.key,
     required this.postId,
     required this.commentsCount,
+    this.postText,
   });
 
   final int postId;
   final int commentsCount;
+  final String? postText;
 
   @override
   State<CommentsBottomSheet> createState() => _CommentsBottomSheetState();
@@ -40,6 +46,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
   File? _selectedImage;
   File? _recordedAudio;
   bool _isRecording = false;
+  bool _isSendingComment = false; // منع التكرار
   Duration _recordingDuration = Duration.zero;
   DateTime? _recordingStartTime;
 
@@ -60,9 +67,16 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
   }
 
   Future<void> _handleSendComment() async {
+    // منع إرسال التعليق مرتين
+    if (_isSendingComment) return;
+
     final text = _commentController.text.trim();
     if (text.isEmpty && _selectedImage == null && _recordedAudio == null)
       return;
+
+    setState(() {
+      _isSendingComment = true;
+    });
 
     String? imagePath;
     String? voiceNotePath;
@@ -79,6 +93,9 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
         imagePath = await apiService.uploadImage(_selectedImage!);
       } catch (e) {
         if (mounted) {
+          setState(() {
+            _isSendingComment = false;
+          });
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text('Failed to upload image: $e')));
@@ -99,6 +116,9 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
         voiceNotePath = await apiService.uploadAudio(_recordedAudio!);
       } catch (e) {
         if (mounted) {
+          setState(() {
+            _isSendingComment = false;
+          });
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Failed to upload recording: $e')),
           );
@@ -121,6 +141,18 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
         context.read<CommentsNotifier>().incrementRepliesCount(
           _replyingToComment!.commentId,
         );
+
+        // التحقق من وجود منشن للبوت AI والرد عليه
+        if (AppSettings.enableAIAutoReply &&
+            AppSettings.aiReplyToReplies &&
+            AICommentService.containsBotMention(text)) {
+          _handleAIAutoReply(
+            userCommentText: text,
+            userCommentId: int.parse(reply.commentId),
+            parentCommentId: int.parse(_replyingToComment!.commentId),
+          );
+        }
+
         setState(() {
           _expandedReplies[_replyingToComment!.commentId] = true;
           // عند أول فتح نعرض ردّين مثل فيسبوك
@@ -129,25 +161,208 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
           _replyingToComment = null;
           _selectedImage = null;
           _recordedAudio = null;
+          _isSendingComment = false;
+        });
+      } else {
+        setState(() {
+          _isSendingComment = false;
         });
       }
     } else {
       // إرسال تعليق
       final commentsNotifier = context.read<CommentsNotifier>();
-      await commentsNotifier.createComment(
+      final newComment = await commentsNotifier.createComment(
         postId: widget.postId,
         text: text,
         image: imagePath,
         voiceNote: voiceNotePath,
       );
+
+      // التحقق من وجود منشن للبوت AI والرد عليه
+      if (newComment != null &&
+          AppSettings.enableAIAutoReply &&
+          AICommentService.containsBotMention(text)) {
+        _handleAIAutoReply(
+          userCommentText: text,
+          userCommentId: int.parse(newComment.commentId),
+        );
+      }
+
       setState(() {
         _selectedImage = null;
         _recordedAudio = null;
+        _isSendingComment = false;
       });
     }
 
     _commentController.clear();
     _commentFocus.unfocus();
+  }
+
+  /// معالجة الرد التلقائي من البوت AI
+  /// يقوم البوت بالرد على تعليق المستخدم الذي يحتوي المنشن
+  Future<void> _handleAIAutoReply({
+    required String userCommentText,
+    required int userCommentId,
+    int? parentCommentId,
+  }) async {
+    try {
+      // معلومات المستخدم الحالي للحد اليومي
+      final auth = context.read<AuthNotifier?>();
+      final userId = auth?.currentUser?['user_id']?.toString();
+      final isProUser =
+          auth?.currentUser?['user_pro'] == true ||
+          auth?.currentUser?['pro'] == true;
+      final isVipUser =
+          auth?.currentUser?['user_vip'] == true ||
+          auth?.currentUser?['vip'] == true;
+      final userType = isVipUser
+          ? 'vip'
+          : isProUser
+              ? 'pro'
+              : 'free';
+
+      // الحصول على الرد من AI (مع سياق المنشور إن وُجد)
+      final aiResponse = await AICommentService.generateAutoReply(
+        commentText: userCommentText,
+        postContext: widget.postText,
+        userId: userId,
+        userType: userType,
+      );
+
+      if (!mounted) return;
+
+      // إرسال رد البوت باستخدام توكن البوت
+      final success = await AICommentService.createBotReply(
+        commentId: userCommentId,
+        replyText: '🤖 $aiResponse',
+      );
+
+      if (!mounted) return;
+
+      if (success) {
+        // تحديث عدد الردود
+        if (parentCommentId != null) {
+          // إذا كان رد على رد، نحدّث التعليق الأب
+          context.read<CommentsNotifier>().incrementRepliesCount(
+            parentCommentId.toString(),
+          );
+        } else {
+          // إذا كان رد على تعليق رئيسي
+          context.read<CommentsNotifier>().incrementRepliesCount(
+            userCommentId.toString(),
+          );
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'ai_bot_replied'.tr.replaceAll(
+                '@username',
+                AppSettings.aiBotUsername,
+              ),
+            ),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('ai_bot_reply_failed'.tr),
+            backgroundColor: Colors.orange,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to get AI response: $e'),
+            backgroundColor: Colors.orange,
+          ),
+        );
+      }
+    }
+  }
+
+  /// عرض معلومات البوت AI
+  void _showAIBotInfo(BuildContext context) {
+    final theme = Theme.of(context);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            const Icon(Icons.smart_toy, color: Colors.blue),
+            const SizedBox(width: 8),
+            Text('@${AppSettings.aiBotUsername}'),
+          ],
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                AICommentService.getBotInfo(),
+                style: theme.textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.tips_and_updates,
+                          size: 16,
+                          color: theme.colorScheme.primary,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'ai_bot_tip_title'.tr,
+                          style: theme.textTheme.labelLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'ai_bot_tip_body'.tr,
+                      style: theme.textTheme.bodySmall,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('ai_bot_understood'.tr),
+          ),
+          ElevatedButton.icon(
+            onPressed: () {
+              Navigator.pop(context);
+              // وضع منشن البوت في حقل التعليق
+              _commentController.text = '@${AppSettings.aiBotUsername} ';
+              _commentFocus.requestFocus();
+            },
+            icon: const Icon(Icons.edit),
+            label: Text('ai_bot_try_now'.tr),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _pickImage() async {
@@ -350,6 +565,13 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                         ),
                       ),
                       const Spacer(),
+                      // زر المساعدة لشرح استخدام AI Bot
+                      if (AppSettings.enableAIAutoReply)
+                        IconButton(
+                          onPressed: () => _showAIBotInfo(context),
+                          icon: const Icon(Icons.smart_toy_outlined),
+                          tooltip: 'AI Bot Help',
+                        ),
                       IconButton(
                         onPressed: () => Navigator.pop(context),
                         icon: const Icon(Icons.close),
@@ -512,8 +734,14 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                             isExpanded
                                                 ? 'hide_replies'.tr
                                                 : 'show_replies'.trParams({
-                                                    'count': comment.repliesCount.toString(),
-                                                    'label': comment.repliesCount == 1 ? 'reply_singular'.tr : 'replies_plural'.tr,
+                                                    'count': comment
+                                                        .repliesCount
+                                                        .toString(),
+                                                    'label':
+                                                        comment.repliesCount ==
+                                                            1
+                                                        ? 'reply_singular'.tr
+                                                        : 'replies_plural'.tr,
                                                   }),
                                             style: theme.textTheme.bodySmall,
                                           ),
@@ -637,7 +865,9 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  'replying_to'.trParams({'name': _replyingToComment!.authorName}),
+                                  'replying_to'.trParams({
+                                    'name': _replyingToComment!.authorName,
+                                  }),
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: theme.colorScheme.primary,
                                   ),
@@ -847,14 +1077,30 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                           ),
                           const SizedBox(width: 8),
                           Material(
-                            color: theme.colorScheme.primary,
+                            color: _isSendingComment
+                                ? theme.colorScheme.primary.withOpacity(0.5)
+                                : theme.colorScheme.primary,
                             shape: const CircleBorder(),
                             child: InkWell(
                               customBorder: const CircleBorder(),
-                              onTap: _handleSendComment,
-                              child: const Padding(
-                                padding: EdgeInsets.all(12),
-                                child: Icon(Icons.send, color: Colors.white),
+                              onTap: _isSendingComment
+                                  ? null
+                                  : _handleSendComment,
+                              child: Padding(
+                                padding: const EdgeInsets.all(12),
+                                child: _isSendingComment
+                                    ? const SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : const Icon(
+                                        Icons.send,
+                                        color: Colors.white,
+                                      ),
                               ),
                             ),
                           ),
@@ -1072,122 +1318,131 @@ class _CommentTileState extends State<_CommentTile> {
                   )
                 else
                   Container(
-                  decoration: BoxDecoration(
-                    color: theme.brightness == Brightness.dark
-                        ? cs.surfaceContainerHighest.withOpacity(0.35)
-                        : cs.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // الاسم + الوقت + قائمة الخيارات
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              comment.authorName,
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.w700,
+                    decoration: BoxDecoration(
+                      color: theme.brightness == Brightness.dark
+                          ? cs.surfaceContainerHighest.withOpacity(0.35)
+                          : cs.surfaceContainerHighest,
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // الاسم + الوقت + قائمة الخيارات
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                comment.authorName,
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              overflow: TextOverflow.ellipsis,
                             ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            comment.time,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: cs.onSurface.withOpacity(0.6),
-                            ),
-                          ),
-                          // زر القائمة للتعديل والحذف
-                          if (comment.canEdit || comment.canDelete)
-                            PopupMenuButton<String>(
-                              padding: EdgeInsets.zero,
-                              icon: Icon(
-                                Icons.more_horiz,
-                                size: 18,
+                            const SizedBox(width: 8),
+                            Text(
+                              comment.time,
+                              style: theme.textTheme.bodySmall?.copyWith(
                                 color: cs.onSurface.withOpacity(0.6),
                               ),
-                              onSelected: (value) {
-                                if (value == 'edit') {
-                                  setState(() => _isEditing = true);
-                                } else if (value == 'delete') {
-                                  _handleDelete();
-                                }
-                              },
-                              itemBuilder: (context) => [
-                                if (comment.canEdit)
-                                  PopupMenuItem(
-                                    value: 'edit',
-                                    child: Row(
-                                      children: [
-                                        const Icon(Icons.edit, size: 20),
-                                        const SizedBox(width: 8),
-                                        Text('edit_comment'.tr),
-                                      ],
+                            ),
+                            // زر القائمة للتعديل والحذف
+                            if (comment.canEdit || comment.canDelete)
+                              PopupMenuButton<String>(
+                                padding: EdgeInsets.zero,
+                                icon: Icon(
+                                  Icons.more_horiz,
+                                  size: 18,
+                                  color: cs.onSurface.withOpacity(0.6),
+                                ),
+                                onSelected: (value) {
+                                  if (value == 'edit') {
+                                    setState(() => _isEditing = true);
+                                  } else if (value == 'delete') {
+                                    _handleDelete();
+                                  }
+                                },
+                                itemBuilder: (context) => [
+                                  if (comment.canEdit)
+                                    PopupMenuItem(
+                                      value: 'edit',
+                                      child: Row(
+                                        children: [
+                                          const Icon(Icons.edit, size: 20),
+                                          const SizedBox(width: 8),
+                                          Text('edit_comment'.tr),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                if (comment.canDelete)
-                                  PopupMenuItem(
-                                    value: 'delete',
-                                    child: Row(
-                                      children: [
-                                        const Icon(Icons.delete, size: 20, color: Colors.red),
-                                        const SizedBox(width: 8),
-                                        Text('delete_comment'.tr, style: const TextStyle(color: Colors.red)),
-                                      ],
+                                  if (comment.canDelete)
+                                    PopupMenuItem(
+                                      value: 'delete',
+                                      child: Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.delete,
+                                            size: 20,
+                                            color: Colors.red,
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            'delete_comment'.tr,
+                                            style: const TextStyle(
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
+                                ],
+                              ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+
+                        // النص
+                        if (comment.text.isNotEmpty)
+                          HtmlTextWidget(htmlContent: comment.text,),
+
+                        // صورة مرفقة
+                        if (comment.image != null && comment.image!.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.network(
+                                comment.image!,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+
+                        // مرفق صوتي بسيط (أيقونة/نص)
+                        if (comment.voiceNote != null &&
+                            comment.voiceNote!.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.mic, size: 18),
+                                const SizedBox(width: 6),
+                                Expanded(
+                                  child: Text(
+                                    'Voice message',
+                                    style: theme.textTheme.bodySmall,
                                   ),
+                                ),
+                                // يمكن لاحقًا إضافة مشغل صوتي فعلي
                               ],
                             ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-
-                      // النص
-                      if (comment.text.isNotEmpty)
-                        Text(comment.text, style: theme.textTheme.bodyMedium),
-
-                      // صورة مرفقة
-                      if (comment.image != null && comment.image!.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.network(
-                              comment.image!,
-                              fit: BoxFit.cover,
-                            ),
                           ),
-                        ),
-
-                      // مرفق صوتي بسيط (أيقونة/نص)
-                      if (comment.voiceNote != null &&
-                          comment.voiceNote!.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.mic, size: 18),
-                              const SizedBox(width: 6),
-                              Expanded(
-                                child: Text(
-                                  'Voice message',
-                                  style: theme.textTheme.bodySmall,
-                                ),
-                              ),
-                              // يمكن لاحقًا إضافة مشغل صوتي فعلي
-                            ],
-                          ),
-                        ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
 
                 // شريط “إعجاب · ردّ” + عدّاد التفاعلات
                 Padding(

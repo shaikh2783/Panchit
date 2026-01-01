@@ -410,7 +410,7 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
               ),
               const SizedBox(height: 16),
               const Text(
-                'Panchit',
+                'Sngine',
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
@@ -1089,7 +1089,7 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
         ),
         const SizedBox(height: 14),
         Text(
-          '© 2025 Panchit. All rights reserved.',
+          '© 2024 Sngine. All rights reserved.',
           style: TextStyle(
             color: isDark
                 ? Colors.white.withOpacity(0.4)

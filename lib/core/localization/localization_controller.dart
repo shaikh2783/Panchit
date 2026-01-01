@@ -286,9 +286,7 @@ class LocalizationController extends GetxController {
   Future<void> _refreshReactionsForNewLanguage() async {
     try {
       await ReactionsService.instance.loadReactions(forceRefresh: true);
-
     } catch (e) {
-
     }
   }
   
@@ -299,12 +297,9 @@ class LocalizationController extends GetxController {
       final result = await apiService.updateLanguage(languageCode: languageCode);
       
       if (result['success'] == true) {
-
       } else {
-
       }
     } catch (e) {
-
       // Don't throw - local change is already applied
     }
   }
@@ -319,9 +314,7 @@ class LocalizationController extends GetxController {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_keyLanguage, languageCode);
-
     } catch (e) {
-
     }
   }
 
@@ -337,9 +330,7 @@ class LocalizationController extends GetxController {
           : fallbackLocale;
       _locale.value = locale;
       Get.updateLocale(locale);
-
     } catch (e) {
-
     }
   }
 

@@ -10,11 +10,18 @@ import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/core/services/reactions_api_service.dart';
 import 'package:snginepro/core/services/reactions_service.dart';
 import 'package:snginepro/core/services/notification_navigation_service.dart';
+import 'package:snginepro/core/services/admob_service.dart';
+import 'package:snginepro/features/messenger/presentation/services/global_call_service.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:snginepro/features/settings/data/models/seeting.dart';
 import 'package:snginepro/license_fluttercrafters.dart';
 
 import 'core/config/app_config.dart' show appConfig;
+
+// ============ UPDATE SYSTEM - START ============
+// يمكنك حذف هذا القسم بالكامل إذا لم تعد بحاجة لنظام التحديث
+import 'package:snginepro/update/update.dart';
+// ============ UPDATE SYSTEM - END ============
 
 // Global API Client instance
 late final ApiClient globalApiClient;
@@ -52,7 +59,6 @@ String configCfgP(String key) {
       'Endpoint "$key" (mapped to "$actualKey") not found in encrypted config',
     );
   } catch (e) {
-
     return '';
   }
 }
@@ -73,6 +79,9 @@ Future<void> main() async {
   final apiClient = ApiClient(config: appConfig);
   globalApiClient = apiClient; // Store in global variable
 
+  // Initialize AdMob
+  await AdMobService.instance.initialize();
+
   // Initialize OneSignal with app settings from API
   await _initializeOneSignal(apiClient);
 
@@ -84,10 +93,8 @@ Future<void> main() async {
   ReactionsService.instance
       .loadReactions()
       .then((reactions) {
-
       })
       .catchError((e) {
-
       });
 
   // Register Controllers with GetX
@@ -97,6 +104,27 @@ Future<void> main() async {
   // Register ApiClient for dependency injection
   Get.put(apiClient);
 
+  // Initialize NotificationNavigationService with navigatorKey
+  NotificationNavigationService.navigatorKey = App.navigatorKey;
+
+  // Initialize Global Call Service (for incoming calls from anywhere)
+  await Get.putAsync(() => GlobalCallService().init(apiClient));
+
+  // ============ UPDATE SYSTEM - START ============
+  // فحص التحديث تلقائياً عند بدء التطبيق
+  // لحذف نظام التحديث: احذف هذا القسم بالكامل
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    final context = App.navigatorKey.currentContext;
+    if (context != null) {
+      checkAndShowUpdate(
+        context,
+        isArabic: false, // غير إلى false للإنجليزية
+        showOnlyIfAvailable: false,
+      );
+    }
+  });
+  // ============ UPDATE SYSTEM - END ============
+
   runApp(App(sharedPreferences: sharedPreferences));
 }
 
@@ -105,41 +133,34 @@ Future<void> _initializeOneSignal(ApiClient apiClient) async {
 
   try {
     if (_oneSignalInitialized) {
-
       // Ensure handlers are set once
       _setupNotificationHandlers();
-
       return;
     }
     // استخدام OneSignal App ID من AppSettings
     final oneSignalAppId = AppSettings.oneSignalAppId;
 
+
     // Remove this method to debug issues
     OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
 
     // Set app ID directly
-
     OneSignal.initialize(oneSignalAppId);
 
     // Request notification permission
-
     OneSignal.Notifications.requestPermission(true);
 
     // Setup notification handlers
-
     _setupNotificationHandlers();
 
     _oneSignalInitialized = true;
-
   } catch (e) {
-
   }
 }
 
 /// Setup notification click and receive handlers
 void _setupNotificationHandlers() {
   if (_oneSignalHandlersSet) {
-
     return;
   }
   _oneSignalHandlersSet = true;
@@ -147,7 +168,6 @@ void _setupNotificationHandlers() {
   OneSignal.User.pushSubscription.addObserver((state) {
     final playerId = state.current.id;
     if (playerId != null && playerId.isNotEmpty) {
-
       // يمكن حفظ Player ID هنا للاستخدام لاحقاً
     }
   });
@@ -158,12 +178,10 @@ void _setupNotificationHandlers() {
   DateTime? _lastClickTime;
 
   OneSignal.Notifications.addClickListener((event) {
-
     final now = DateTime.now();
     if (_lastClickedId == event.notification.notificationId &&
         _lastClickTime != null &&
         now.difference(_lastClickTime!).inMilliseconds < 800) {
-
       return;
     }
     _lastClickedId = event.notification.notificationId;
@@ -172,13 +190,14 @@ void _setupNotificationHandlers() {
     // معالجة التنقل من البيانات الإضافية + رابط التشغيل (launchURL)
     final additional = event.notification.additionalData;
     final launchUrl = event.notification.launchUrl;
+
+
     final data = <String, dynamic>{
       if (additional != null) ...additional,
       if (launchUrl != null && launchUrl.isNotEmpty) 'url': launchUrl,
     };
 
     if (data.isEmpty) {
-
       return;
     }
 
@@ -187,10 +206,8 @@ void _setupNotificationHandlers() {
 
   // Handle notification received in foreground
   OneSignal.Notifications.addForegroundWillDisplayListener((event) {
-
-    // Prevent default display to avoid duplicates, then display exactly once
-    event.preventDefault();
-    event.notification.display();
+    // Display notification normally (don't prevent default display)
+    // If you want to prevent notification display in foreground, uncomment: event.preventDefault();
   });
 }
 

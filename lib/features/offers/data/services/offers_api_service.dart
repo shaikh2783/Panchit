@@ -95,6 +95,7 @@ class OffersApiService {
   }
 }
 
+
 Uint8List _sha256Bytes(List<int> data) =>
     Uint8List.fromList(crypto.sha256.convert(data).bytes);
 

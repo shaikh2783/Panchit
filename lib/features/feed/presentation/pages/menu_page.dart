@@ -4,8 +4,10 @@ import 'package:provider/provider.dart';
 
 import 'package:snginepro/App_Settings.dart';
 import 'package:snginepro/core/config/app_config.dart';
+import 'package:snginepro/core/services/admob_service.dart';
 import 'package:snginepro/core/theme/widgets/GradineCard.dart';
 import 'package:snginepro/core/theme/widgets/theme_toggle_button.dart';
+import 'package:snginepro/core/widgets/admob_widgets.dart';
 import 'package:snginepro/features/auth/application/auth_notifier.dart';
 import 'package:snginepro/core/theme/design_tokens.dart';
 import 'package:snginepro/features/pages/presentation/pages/my_pages_page.dart';
@@ -26,6 +28,7 @@ import 'package:snginepro/features/wallet/presentation/pages/wallet_packages_pag
 import 'package:snginepro/features/boost/presentation/pages/boosted_posts_page.dart';
 import 'package:snginepro/features/boost/presentation/pages/boosted_pages_page.dart';
 import 'package:snginepro/features/courses/presentation/pages/my_courses_page.dart';
+import 'package:snginepro/features/ads/presentation/pages/ads_campaigns_page.dart';
 import 'package:snginepro/features/groups/presentation/pages/groups_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:snginepro/features/feed/presentation/pages/saved_posts_page.dart';
@@ -34,6 +37,7 @@ import 'package:snginepro/features/feed/presentation/pages/scheduled_posts_page.
 import 'package:snginepro/features/people/presentation/pages/people_page.dart';
 import 'package:snginepro/features/feed/presentation/pages/watch_posts_page.dart';
 import 'package:snginepro/features/movies/presentation/pages/movies_list_page.dart';
+import 'package:snginepro/features/ai_chat/pages/ai_chat_page.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({super.key, this.onNavigateToTab});
@@ -50,6 +54,12 @@ class _MenuPageState extends State<MenuPage> {
   bool _isMineExpanded = false;
   bool _isAdvertisingExpanded = false;
   bool _isExploreExpanded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshUserStats();
+  }
 
   @override
   void dispose() {
@@ -77,6 +87,13 @@ class _MenuPageState extends State<MenuPage> {
       }
     });
     _hapticTap();
+  }
+
+  Future<void> _refreshUserStats() async {
+    try {
+      await context.read<AuthNotifier>().refreshCurrentUser();
+    } catch (e) {
+    }
   }
 
   @override
@@ -131,6 +148,11 @@ class _MenuPageState extends State<MenuPage> {
                       const _UserProfileCard(),
                       const SizedBox(height: 16),
                       _GlassySearch(controller: _searchCtrl),
+                      // AdMob Banner Ad in Menu (only for non-Pro users)
+                      if (AdMobService.shouldShowAds(context) && AppSettings.enableAdMobInMenu) ...[
+                        const SizedBox(height: 16),
+                        const BannerAdWidget(),
+                      ],
                     ],
                   ),
                 ),
@@ -677,7 +699,12 @@ if(false)
                         gradient: const [Color(0xFFFFD54F), Color(0xFFF57F17)],
                         onTap: () {
                           _hapticTap();
-                          Get.toNamed('/ads/campaigns');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AdsCampaignsPage(),
+                            ),
+                          );
                         },
                       ),
                     if (AppSettings.enablePremiumPackages)
@@ -1133,6 +1160,24 @@ if(false)
                               );
                             },
                           ),
+                        // AI Chat Feature
+                        _FeedItem(
+                          icon: Iconsax.message_question,
+                          label: 'AI Assistant',
+                          gradient: const [
+                            Color(0xFF9C27B0),
+                            Color(0xFF2196F3),
+                          ],
+                          onTap: () {
+                            _hapticTap();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const AIChatPage(),
+                              ),
+                            );
+                          },
+                        ),
                         if (AppSettings.enableDevelopers)
                           _FeedItem(
                             icon: Iconsax.code,
@@ -1186,6 +1231,7 @@ if(false)
               ),
             ),
     
+
 
           ],
         ),
@@ -1543,6 +1589,21 @@ class _UserProfileCard extends StatelessWidget {
     final mediaAsset = context.read<AppConfig>().mediaAsset;
     final avatarUrl = user?['user_picture'];
     final name = user?['user_fullname'] ?? user?['user_name'] ?? 'Your Profile';
+    final pointsCount = _formatCount(
+      _readNumber(user, ['user_points', 'points', 'points_balance']),
+    );
+    final followersCount = _formatCount(
+      _readNumber(
+        user,
+        ['followers', 'followers_count', 'user_followers', 'user_subscribers'],
+      ),
+    );
+    final followingCount = _formatCount(
+      _readNumber(
+        user,
+        ['following', 'followings', 'followings_count', 'user_following'],
+      ),
+    );
 
     return GestureDetector(
       onTap: () {
@@ -1651,7 +1712,7 @@ class _UserProfileCard extends StatelessWidget {
               ),
             ),
             const Divider(color: Colors.white30, height: 1, thickness: 1),
-            const Padding(
+            Padding(
               padding: EdgeInsets.fromLTRB(
                 Spacing.lg,
                 Spacing.lg,
@@ -1662,17 +1723,17 @@ class _UserProfileCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _StatItem(
-                    count: '97.8k',
+                    count: pointsCount,
                     label: 'menu_points',
                     color: Color(0xFFE040FB),
                   ),
                   _StatItem(
-                    count: '172',
+                    count: followersCount,
                     label: 'menu_followers',
                     color: Color(0xFF29B6F6),
                   ),
                   _StatItem(
-                    count: '0',
+                    count: followingCount,
                     label: 'menu_following',
                     color: Color(0xFFFFA726),
                   ),
@@ -1683,6 +1744,24 @@ class _UserProfileCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  num _readNumber(Map<String, dynamic>? source, List<String> keys) {
+    for (final key in keys) {
+      final value = source?[key];
+      if (value == null) continue;
+      if (value is num) return value;
+      final parsed = num.tryParse(value.toString());
+      if (parsed != null) return parsed;
+    }
+    return 0;
+  }
+
+  String _formatCount(num value) {
+    if (value >= 1000000) return '${(value / 1000000).toStringAsFixed(1)}M';
+    if (value >= 1000) return '${(value / 1000).toStringAsFixed(1)}K';
+    if (value % 1 == 0) return value.toInt().toString();
+    return value.toStringAsFixed(1);
   }
 }
 

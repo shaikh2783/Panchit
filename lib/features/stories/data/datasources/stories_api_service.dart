@@ -2,6 +2,7 @@ import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/core/network/api_exception.dart';
 import 'package:snginepro/main.dart' show configCfgP;
 import 'package:snginepro/features/stories/data/models/stories_response.dart';
+import 'package:flutter/foundation.dart';
 
 class StoriesApiService {
   StoriesApiService(this._client);
@@ -134,11 +135,12 @@ class StoriesApiService {
       }
       
       // طباعة للتصحيح
-
+      
       final response = await _client.delete(
         configCfgP('stories'),
         queryParameters: queryParams.isNotEmpty ? queryParams : null,
       );
+      
 
       // التحقق من النجاح: status == "success" أو api_status == 200
       final isSuccess = response['status'] == 'success' || 

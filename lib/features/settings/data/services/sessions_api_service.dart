@@ -1,6 +1,7 @@
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
 import '../models/session_model.dart';
+import 'package:flutter/foundation.dart';
 
 class SessionsApiService {
   final ApiClient _apiClient;
@@ -12,6 +13,7 @@ class SessionsApiService {
     try {
 
       final response = await _apiClient.get(configCfgP('sessions'));
+
 
       if (response['status'] == 'success') {
         final data = response['data'];
@@ -30,7 +32,6 @@ class SessionsApiService {
         };
       }
     } catch (e) {
-
       return {'success': false, 'message': 'Error: ${e.toString()}'};
     }
   }
@@ -44,6 +45,7 @@ class SessionsApiService {
         body: {'session_id': sessionId},
       );
 
+
       if (response['status'] == 'success') {
         return {
           'success': true,
@@ -56,7 +58,6 @@ class SessionsApiService {
         };
       }
     } catch (e) {
-
       return {'success': false, 'message': 'Error: ${e.toString()}'};
     }
   }
@@ -69,6 +70,7 @@ class SessionsApiService {
         configCfgP('sessions_delete_all'),
         body: {},
       );
+
 
       if (response['status'] == 'success') {
         final data = response['data'];
@@ -84,7 +86,6 @@ class SessionsApiService {
         };
       }
     } catch (e) {
-
       return {'success': false, 'message': 'Error: ${e.toString()}'};
     }
   }

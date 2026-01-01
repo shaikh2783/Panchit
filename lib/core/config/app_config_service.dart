@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart';
 
 /// Service for handling app configuration including feelings and activities
 class AppConfigService {
@@ -18,17 +19,15 @@ class AppConfigService {
           'Content-Type': 'application/json',
         },
       );
-
+      
+      
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body);
-
         return result;
       } else {
-
         return {'status': 'error', 'message': 'Failed to get config'};
       }
     } catch (e) {
-
       return {'status': 'error', 'message': e.toString()};
     }
   }
@@ -48,7 +47,6 @@ class AppConfigService {
       }
       return [];
     } catch (e) {
-
       return [];
     }
   }
@@ -68,7 +66,6 @@ class AppConfigService {
       }
       return [];
     } catch (e) {
-
       return [];
     }
   }
@@ -82,7 +79,6 @@ class AppConfigService {
       }
       return false;
     } catch (e) {
-
       return false;
     }
   }
@@ -97,7 +93,6 @@ class AppConfigService {
       }
       return [];
     } catch (e) {
-
       return [];
     }
   }

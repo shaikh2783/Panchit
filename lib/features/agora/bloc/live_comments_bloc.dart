@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 
 import '../data/models/live_stream_models.dart';
 import '../data/api_service/live_stream_api_service.dart';
+import 'package:flutter/foundation.dart';
 
 /// Events للتعليقات المباشرة
 abstract class LiveCommentsEvent extends Equatable {
@@ -246,16 +247,15 @@ class LiveCommentsBloc extends Bloc<LiveCommentsEvent, LiveCommentsState> {
         // stickerUrl: event.stickerUrl,
       );
 
+      
       // API التعليقات يرجع comment object مباشرة (وليس status: success)
       if (result['comment'] != null || result['callback'] == 'commentCreated') {
-
         // Refresh comments after adding new one
         add(RefreshLiveComments(postId: event.postId));
       } else if (result['status'] == 'success') {
         // Fallback للـ API الذي يستخدم status: success
         add(RefreshLiveComments(postId: event.postId));
       } else {
-
         emit(LiveCommentsError(
           message: result['message'] ?? 'خطأ في إضافة التعليق',
         ));
@@ -406,7 +406,6 @@ class LiveCommentsBloc extends Bloc<LiveCommentsEvent, LiveCommentsState> {
       }
     } catch (e) {
       // Silent error for polling - don't emit error state
-
     }
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:snginepro/core/config/app_config.dart';
 import 'package:snginepro/core/network/api_client.dart';
@@ -53,7 +54,7 @@ class _GroupPendingRequestsPageState extends State<GroupPendingRequestsPage> {
     } catch (e) {
       if (mounted) {
         setState(() {
-          _errorMessage = 'فشل تحميل الطلبات: $e';
+          _errorMessage = '${'pending_requests_load_failed'.tr}: $e';
           _isLoading = false;
         });
       }
@@ -74,7 +75,9 @@ class _GroupPendingRequestsPageState extends State<GroupPendingRequestsPage> {
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('تم قبول ${request.fullname} في المجموعة'),
+            content: Text(
+              'pending_requests_accepted'.trParams({'name': request.fullname}),
+            ),
             backgroundColor: Colors.green,
           ),
         );
@@ -85,8 +88,8 @@ class _GroupPendingRequestsPageState extends State<GroupPendingRequestsPage> {
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('فشل قبول الطلب، حاول مرة أخرى'),
+          SnackBar(
+            content: Text('pending_requests_accept_failed'.tr),
             backgroundColor: Colors.red,
           ),
         );
@@ -94,7 +97,10 @@ class _GroupPendingRequestsPageState extends State<GroupPendingRequestsPage> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('حدث خطأ: $e'), backgroundColor: Colors.red),
+        SnackBar(
+          content: Text('${'error'.tr}: $e'),
+          backgroundColor: Colors.red,
+        ),
       );
     } finally {
       if (mounted) {
@@ -108,17 +114,21 @@ class _GroupPendingRequestsPageState extends State<GroupPendingRequestsPage> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('رفض الطلب'),
-        content: Text('هل تريد رفض طلب ${request.fullname} للانضمام للمجموعة؟'),
+        title: Text('pending_requests_decline_title'.tr),
+        content: Text(
+          'pending_requests_decline_message'.trParams({
+            'name': request.fullname,
+          }),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('إلغاء'),
+            child: Text('cancel'.tr),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('رفض'),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: Text('pending_requests_decline'.tr),
           ),
         ],
       ),
@@ -139,7 +149,9 @@ class _GroupPendingRequestsPageState extends State<GroupPendingRequestsPage> {
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('تم رفض طلب ${request.fullname}'),
+            content: Text(
+              'pending_requests_declined'.trParams({'name': request.fullname}),
+            ),
             backgroundColor: Colors.orange,
           ),
         );
@@ -150,8 +162,8 @@ class _GroupPendingRequestsPageState extends State<GroupPendingRequestsPage> {
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('فشل رفض الطلب، حاول مرة أخرى'),
+          SnackBar(
+            content: Text('pending_requests_decline_failed'.tr),
             backgroundColor: Colors.red,
           ),
         );
@@ -175,12 +187,12 @@ class _GroupPendingRequestsPageState extends State<GroupPendingRequestsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('طلبات الانضمام'),
+        title: Text('pending_requests_title'.tr),
         actions: [
           IconButton(
             icon: const Icon(Iconsax.refresh),
             onPressed: _loadRequests,
-            tooltip: 'تحديث',
+            tooltip: 'pending_requests_refresh'.tr,
           ),
         ],
       ),
@@ -211,7 +223,7 @@ class _GroupPendingRequestsPageState extends State<GroupPendingRequestsPage> {
               ElevatedButton.icon(
                 onPressed: _loadRequests,
                 icon: const Icon(Iconsax.refresh),
-                label: const Text('إعادة المحاولة'),
+                label: Text('pending_requests_retry'.tr),
               ),
             ],
           ),
@@ -227,12 +239,12 @@ class _GroupPendingRequestsPageState extends State<GroupPendingRequestsPage> {
             Icon(Iconsax.task_square, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text(
-              'لا توجد طلبات معلقة',
+              'pending_requests_empty'.tr,
               style: TextStyle(fontSize: 18, color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
             Text(
-              'جميع الطلبات تمت معالجتها',
+              'pending_requests_empty_subtitle'.tr,
               style: TextStyle(fontSize: 14, color: Colors.grey[500]),
             ),
           ],
@@ -339,7 +351,7 @@ class _GroupPendingRequestsPageState extends State<GroupPendingRequestsPage> {
                       Icon(Iconsax.clock, size: 16, color: Colors.grey[600]),
                       const SizedBox(width: 6),
                       Text(
-                        'تاريخ الطلب: ${request.requestDate}',
+                        '${'pending_requests_date'.tr}: ${request.requestDate}',
                         style: TextStyle(fontSize: 13, color: Colors.grey[600]),
                       ),
                     ],
@@ -368,7 +380,7 @@ class _GroupPendingRequestsPageState extends State<GroupPendingRequestsPage> {
                                   ),
                                 )
                               : const Icon(Iconsax.tick_circle, size: 20),
-                          label: const Text('قبول'),
+                          label: Text('pending_requests_accept'.tr),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green,
                             foregroundColor: Colors.white,
@@ -387,7 +399,7 @@ class _GroupPendingRequestsPageState extends State<GroupPendingRequestsPage> {
                               ? null
                               : () => _declineRequest(request),
                           icon: const Icon(Iconsax.close_circle, size: 20),
-                          label: const Text('رفض'),
+                          label: Text('pending_requests_decline'.tr),
                           style: OutlinedButton.styleFrom(
                             foregroundColor: Colors.red,
                             side: const BorderSide(color: Colors.red),

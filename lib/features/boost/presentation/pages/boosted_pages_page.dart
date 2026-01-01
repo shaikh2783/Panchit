@@ -80,7 +80,6 @@ class _BoostedPagesPageState extends State<BoostedPagesPage> {
           final pageDetails = await pagesRepository.fetchPageInfo(pageId: pageId);
           fullPages.add(pageDetails);
         } catch (e) {
-
         }
       }
 
@@ -143,7 +142,6 @@ class _BoostedPagesPageState extends State<BoostedPagesPage> {
           final pageDetails = await pagesRepository.fetchPageInfo(pageId: pageId);
           newPages.add(pageDetails);
         } catch (e) {
-
         }
       }
 

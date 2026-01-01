@@ -66,10 +66,12 @@ class Story {
 
     final publisher = _map(json['publisher']) ?? _map(json['user']);
     final authorName = _resolveAuthorName(json, publisher);
-    final authorAvatar =
-        _string(json['photo']) ??
-        _resolveAuthorAvatar(json, publisher) ??
-        _string(json['avatar']);
+    
+    // استخراج صورة البروفايل فقط للـ author avatar
+    // لا نستخدمها كجزء من محتوى القصة
+    final authorAvatar = _resolveAuthorAvatar(json, publisher) ??
+        _string(json['avatar']) ??
+        _string(json['profile_photo']);  // هذا للبروفايل، لا للقصة
 
     final mediaItems = <StoryMedia>[];
     void addMedia(Object? value) {
@@ -90,26 +92,21 @@ class Story {
     addMedia(json['stories']);
     addMedia(json['reels']); // Add support for reels array
     
-    // Handle direct photo/video fields from API
-    final photo = _string(json['photo']);
-    if (photo != null && photo.isNotEmpty) {
-      mediaItems.add(StoryMedia(
-        id: '${id}_photo',
-        type: 'photo',
-        source: photo,
-        previewUrl: photo,
-      ));
-    }
+    // ❌ لا نضيف صورة البروفايل كقصة!
+    // صورة البروفايل توجد في حقل 'photo' ويجب تجاهلها
+    // تُستخدم فقط كصورة شخصية في الـ header
     
-    final video = _string(json['video']);
-    if (video != null && video.isNotEmpty) {
-      mediaItems.add(StoryMedia(
-        id: '${id}_video',
-        type: 'video',
-        source: video,
-        thumbnail: photo, // Use photo as thumbnail for video
-        previewUrl: photo ?? video,
-      ));
+    // فقط إذا لم تكن هناك media items، تحقق من حقول الفيديو
+    if (mediaItems.isEmpty) {
+      final video = _string(json['video']);
+      if (video != null && video.isNotEmpty) {
+        mediaItems.add(StoryMedia(
+          id: '${id}_video',
+          type: 'video',
+          source: video,
+          previewUrl: video,
+        ));
+      }
     }
 
     final preview = _string(json['thumbnail']) ??

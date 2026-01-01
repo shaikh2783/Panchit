@@ -87,7 +87,6 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
       });
 
     } catch (e) {
-
       _showErrorSnackBar('فشل في تهيئة محرك البث');
     }
   }
@@ -100,7 +99,6 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
       await _engine.leaveChannel();
       await _engine.release();
     } catch (e) {
-
     }
   }
 
@@ -130,7 +128,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
     required int uid,
   }) async {
     try {
-
+      
       await _engine.joinChannel(
         token: token,
         channelId: channelName,
@@ -143,11 +141,9 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
       });
 
       // بدء تحديث الإحصائيات
-
       _startStatsPolling();
 
     } catch (e) {
-
       _showErrorSnackBar('فشل في الانضمام لقناة البث');
     }
   }
@@ -156,7 +152,6 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
     try {
       // إيقاف التحديث التلقائي للتعليقات والإحصائيات
       if (_currentStreamId != null) {
-
         context.read<LiveCommentsBloc>().add(StopLiveCommentsPolling());
         _stopStatsPolling();
       }
@@ -177,7 +172,6 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
 
       _showSuccessSnackBar('تم إنهاء البث بنجاح');
     } catch (e) {
-
       _showErrorSnackBar('فشل في إنهاء البث');
     }
   }
@@ -185,16 +179,16 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
   /// بدء تحديث الإحصائيات كل 3 ثوان
   void _startStatsPolling() {
     _stopStatsPolling(); // إيقاف المؤقت السابق إن وجد
-
+    
+    
     _statsTimer = Timer.periodic(const Duration(seconds: 3), (timer) async {
       if (!mounted || !_isLiveStreamActive || _currentStreamId == null || _isUpdatingStats) {
         if (!mounted || !_isLiveStreamActive || _currentStreamId == null) {
-
           timer.cancel();
         }
         return;
       }
-
+      
       _isUpdatingStats = true;
       
       try {
@@ -203,7 +197,8 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
         
         if (response['status'] == 'success' && response['data'] != null) {
           final liveCount = response['data']['live_count'] ?? 0;
-
+          
+          
           // التأكد من أن الـ widget ما زال مُثبت وأن القيمة تغيرت فعلاً
           if (mounted && liveCount != _currentViewers) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -211,15 +206,12 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
                 setState(() {
                   _currentViewers = liveCount;
                 });
-
               }
             });
           }
         } else {
-
         }
       } catch (e) {
-
       } finally {
         if (mounted) {
           _isUpdatingStats = false;
@@ -241,7 +233,6 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
         _isCameraEnabled = !_isCameraEnabled;
       });
     } catch (e) {
-
     }
   }
 
@@ -252,7 +243,6 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
         _isMicrophoneEnabled = !_isMicrophoneEnabled;
       });
     } catch (e) {
-
     }
   }
 
@@ -263,7 +253,6 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
         _isFrontCamera = !_isFrontCamera;
       });
     } catch (e) {
-
     }
   }
 
@@ -301,15 +290,15 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
               _currentStreamId = state.postId.toString();
             });
 
-            if (state.agoraToken != null && state.agoraUid != null) {
 
+            if (state.agoraToken != null && state.agoraUid != null) {
               _joinAgoraChannel(
                 channelName: state.channelName,
                 token: state.agoraToken!,
                 uid: state.agoraUid!,
               );
             } else {
-
+              
               // إنشاء البث بدون token (للتجربة)
               setState(() {
                 _isLiveStreamActive = true;
@@ -325,11 +314,9 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
             commentsBloc.add(LoadLiveComments(postId: _currentStreamId!));
             
             // تشغيل التحديث التلقائي للتعليقات كل 3 ثوان
-
             commentsBloc.add(StartLiveCommentsPolling(postId: _currentStreamId!));
             
             // تشغيل تحديث الإحصائيات حتى لو لم يكن هناك Agora token
-
             _startStatsPolling();
           } else if (state is LiveStreamCreationError) {
             _showErrorSnackBar(state.message);

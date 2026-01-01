@@ -12,6 +12,7 @@ import 'package:snginepro/core/models/country.dart';
 import 'package:snginepro/core/models/language.dart';
 import 'package:snginepro/core/services/general_data_service.dart';
 import 'package:snginepro/core/network/api_client.dart';
+import '../../../../core/utils/html_decoder.dart';
 import 'package:intl/intl.dart';
 
 class CreateEventPage extends StatefulWidget {
@@ -68,19 +69,19 @@ class _CreateEventPageState extends State<CreateEventPage> {
         _categories = results[0] as List<EventCategory>;
         _countries = results[1] as List<Country>;
         _languages = results[2] as List<Language>;
-
+        
+        
         if (_languages.isNotEmpty) {
-
         }
         if (_countries.isNotEmpty) {
-
         }
         
         // Set defaults first
         if (_categories.isNotEmpty) _selectedCategory = _categories.first;
         if (_countries.isNotEmpty) _selectedCountry = _countries.first;
         if (_languages.isNotEmpty) _selectedLanguage = _languages.first;
-
+        
+        
         _isLoadingData = false;
         
         // Load event data after dropdown data is loaded
@@ -89,7 +90,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
         }
       });
     } catch (e) {
-
       setState(() => _isLoadingData = false);
     }
   }
@@ -275,7 +275,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     items: _categories.map((category) {
                       return DropdownMenuItem(
                         value: category,
-                        child: Text(category.categoryName),
+                        child: Text(HtmlDecoder.decode(category.categoryName)),
                       );
                     }).toList(),
                     onChanged: (value) {

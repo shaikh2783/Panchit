@@ -7,6 +7,7 @@ import 'package:snginepro/features/ads/data/services/ads_api_service.dart';
 import '../../domain/ads_repository.dart';
 import '../widgets/campaign_card.dart';
 import '../widgets/filters_bar.dart';
+import 'create_campaign_page.dart';
 
 class AdsCampaignsPage extends StatefulWidget {
   const AdsCampaignsPage({super.key});
@@ -37,7 +38,6 @@ class _AdsCampaignsPageState extends State<AdsCampaignsPage> {
   Future<void> _load() async {
     setState(() => _loading = true);
     try {
-
       _items = await _repo.listCampaigns(
         sortBy: _sortBy,
         sortDir: _sortDir,
@@ -46,7 +46,6 @@ class _AdsCampaignsPageState extends State<AdsCampaignsPage> {
         placement: _placement,
         q: _search.isEmpty ? null : _search,
       );
-
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to load campaigns: $e')),
@@ -128,6 +127,8 @@ class _AdsCampaignsPageState extends State<AdsCampaignsPage> {
                               final isApproved = c['campaign_is_approved'] == true || c['campaign_is_approved'] == 1;
                               final rawImage = (c['ads_image'] ?? c['campaign_image'] ?? c['image'] ?? '').toString();
                               final imageUri = rawImage.isNotEmpty ? appConfig.mediaAsset(rawImage) : null;
+                              final rawVideo = (c['ads_video'] ?? c['campaign_video'] ?? c['video'] ?? '').toString();
+                              final videoUri = rawVideo.isNotEmpty ? appConfig.mediaAsset(rawVideo) : null;
                               
                               return CampaignCard(
                                 key: ValueKey('campaign_$id'),
@@ -139,12 +140,20 @@ class _AdsCampaignsPageState extends State<AdsCampaignsPage> {
                                 active: c['campaign_is_active'] == true,
                                 isApproved: isApproved,
                                 imageUrl: imageUri?.toString(),
+                                videoUrl: videoUri?.toString(),
                                 bidding: bidding,
                                 status: status,
                                 createdAt: created,
                                 onTap: () async {
                                   if (id <= 0) return;
-                                  final updated = await Get.toNamed('/ads/campaigns/edit', arguments: c);
+                                  final updated = await Navigator.push<bool>(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => CreateCampaignPage(
+                                        initialCampaign: c,
+                                      ),
+                                    ),
+                                  );
                                   if (updated == true) {
                                     _load();
                                   }
@@ -185,7 +194,12 @@ class _AdsCampaignsPageState extends State<AdsCampaignsPage> {
         color: theme.colorScheme.primary,
         child: InkWell(
           onTap: () async {
-            final created = await Get.toNamed('/ads/campaigns/create');
+            final created = await Navigator.push<bool>(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const CreateCampaignPage(),
+              ),
+            );
             if (created == true) {
               _load();
             }

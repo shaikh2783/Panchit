@@ -46,12 +46,10 @@ class DynamicAppConfigProvider extends ChangeNotifier {
       _lastUpdate = await _configService.getLastCacheUpdate();
       
       if (kDebugMode) {
-
       }
     } catch (e) {
       _error = e.toString();
       if (kDebugMode) {
-
       }
     } finally {
       _isLoading = false;
@@ -77,7 +75,6 @@ class DynamicAppConfigProvider extends ChangeNotifier {
     } catch (e) {
       _error = e.toString();
       if (kDebugMode) {
-
       }
       return false;
     } finally {

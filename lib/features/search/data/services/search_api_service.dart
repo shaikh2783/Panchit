@@ -43,7 +43,6 @@ class SearchApiService {
         );
       }
     } catch (e) {
-
       return SearchApiResponse.error('Failed to perform search');
     }
   }

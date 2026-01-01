@@ -148,18 +148,16 @@ class _StoryViewState extends State<StoryView> with TickerProviderStateMixin {
         
         // التأكد من أن الفيديو محمل بالكامل
         if (!controller.value.isInitialized) {
-
           // استخدام مدة افتراضية إذا فشل التحميل
           _startAnimation(const Duration(seconds: 10));
         } else {
           final videoDuration = controller.value.duration;
-
+          
           // التأكد من أن المدة صحيحة
           if (videoDuration.inSeconds > 0) {
             _startAnimation(videoDuration);
           } else {
             // مدة افتراضية إذا كانت المدة = 0
-
             _startAnimation(const Duration(seconds: 10));
           }
         }
@@ -171,10 +169,8 @@ class _StoryViewState extends State<StoryView> with TickerProviderStateMixin {
         // تشغيل الفيديو
         if (mounted && controller.value.isInitialized) {
           await controller.play();
-
         }
       } catch (e) {
-
         // في حالة الخطأ، استخدم مدة افتراضية وانتقل للتالي
         _startAnimation(const Duration(seconds: 10));
         setState(() {});
@@ -289,7 +285,7 @@ class _StoryViewState extends State<StoryView> with TickerProviderStateMixin {
     final mediaId = currentItem.id;
     
     // طباعة للتصحيح
-
+    
     context.read<StoriesBloc>().add(DeleteStoryEvent(
       mediaId: mediaId,
       storyId: widget.story.id,

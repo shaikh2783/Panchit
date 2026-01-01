@@ -69,7 +69,6 @@ class _InviteFriendsToEventPageState extends State<InviteFriendsToEventPage> {
               try {
                 return InvitableFriend.fromJson(json);
               } catch (e) {
-
                 return null;
               }
             })
@@ -86,7 +85,6 @@ class _InviteFriendsToEventPageState extends State<InviteFriendsToEventPage> {
         setState(() => _isLoading = false);
       }
     } catch (e) {
-
       setState(() => _isLoading = false);
     }
   }

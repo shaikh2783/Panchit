@@ -177,7 +177,8 @@ class _ReportBugPageState extends State<ReportBugPage> {
                        'Unknown User';
       final userEmail = auth.currentUser?['user_email'] ?? 'no-email@example.com';
       final userId = auth.currentUser?['user_id']?.toString() ?? 'unknown';
-
+      
+      
       // Step 1: Upload video file
       final apiClient = Get.find<ApiClient>();
       
@@ -185,13 +186,12 @@ class _ReportBugPageState extends State<ReportBugPage> {
       apiClient.updateAuthToken(auth.authToken);
       
       final postsService = PostsApiService(apiClient);
-
+      
       final uploadedVideo = await postsService.uploadFile(
         _videoFile!,
         type: FileUploadType.video,
         onProgress: (sent, total) {
           final progress = (sent / total * 100).toStringAsFixed(1);
-
         },
       );
 
@@ -199,8 +199,9 @@ class _ReportBugPageState extends State<ReportBugPage> {
         throw Exception('Failed to upload video');
       }
 
-      // Step 2: Send report data via email using simple-send
 
+      // Step 2: Send report data via email using simple-send
+      
       final emailBodyHtml = '''
 <!DOCTYPE html>
 <html>
@@ -219,7 +220,7 @@ class _ReportBugPageState extends State<ReportBugPage> {
 <body>
   <div class="container">
     <div class="header">
-      <h2>🐛 Bug Report from Panchit App</h2>
+      <h2>🐛 Bug Report from Sngine Pro App</h2>
     </div>
     <div class="content">
       <div class="section">
@@ -246,7 +247,7 @@ class _ReportBugPageState extends State<ReportBugPage> {
       </div>
       
       <div class="footer">
-        <p>This bug report was automatically generated from Panchit mobile app.</p>
+        <p>This bug report was automatically generated from Sngine Pro mobile app.</p>
       </div>
     </div>
   </div>
@@ -262,6 +263,7 @@ class _ReportBugPageState extends State<ReportBugPage> {
           'subtype': 'html',
         },
       );
+
 
       if (mounted) {
         HapticFeedback.heavyImpact();

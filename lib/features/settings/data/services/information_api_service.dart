@@ -1,6 +1,7 @@
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
 import '../models/download_settings.dart';
+import 'package:flutter/foundation.dart';
 
 class InformationApiService {
   final ApiClient _apiClient;
@@ -27,7 +28,6 @@ class InformationApiService {
         };
       }
     } catch (e) {
-
       return {'success': false, 'message': 'Error: ${e.toString()}'};
     }
   }
@@ -57,7 +57,6 @@ class InformationApiService {
       if (!isError) {
         // Response is HTML content (file download)
         // The API returns raw HTML with proper headers
-
         return {
           'success': true,
           'message': response['message'] ?? 'Your data has been prepared for download',
@@ -70,7 +69,6 @@ class InformationApiService {
         };
       }
     } catch (e) {
-
       return {'success': false, 'message': 'Error: ${e.toString()}'};
     }
   }

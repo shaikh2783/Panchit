@@ -259,6 +259,7 @@ class _AddFriendButtonState extends State<AddFriendButton> {
 
   @override
   Widget build(BuildContext context) {
+    
     // لا نعرض زر للمحظورين
     if (_currentStatus == FriendshipStatus.blocked) {
       return const SizedBox.shrink();

@@ -111,8 +111,6 @@ class _EventDetailPageState extends State<EventDetailPage> {
               setState(() {
                 _currentEvent = state.event;
               });
-              // Debug: Print i_admin value
-
             }
           } else if (state is EventPostsLoaded) {
             setState(() {
@@ -121,7 +119,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
               _hasMorePosts = state.hasMore;
               _isLoadingPosts = false;
             });
-
+            
           } else if (state is EventJoined) {
             Get.snackbar(
               'success'.tr,
@@ -780,7 +778,6 @@ class _EventDetailPageState extends State<EventDetailPage> {
               key: ValueKey('event-post-${_posts[index].id}'),
               post: _posts[index],
               onReactionChanged: (postId, reaction) {
-
                 // Update post reaction locally
                 setState(() {
                   final postIndex = _posts.indexWhere((p) => p.id.toString() == postId);
@@ -792,7 +789,6 @@ class _EventDetailPageState extends State<EventDetailPage> {
                 });
               },
               onPostUpdated: (updatedPost) {
-
                 setState(() {
                   final postIndex = _posts.indexWhere((p) => p.id == updatedPost.id);
                   if (postIndex != -1) {
@@ -890,6 +886,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
             handle: 'event',
             handleId: _currentEvent!.eventId,
             handleName: _currentEvent!.eventTitle,
+            showPrivacySelector: false,
           ),
         ))
         .then((_) {
@@ -933,20 +930,18 @@ class _EventDetailPageState extends State<EventDetailPage> {
         // إغلاق loading
         if (Get.isDialogOpen ?? false) Get.back();
 
+
         if (uploadResult != null) {
-
+          
           if (mounted) {
-
             // إرسال source للـ API
             context.read<EventsBloc>().add(UpdateEventCoverEvent(
                   eventId: _currentEvent!.eventId,
                   coverData: uploadResult.source,
                 ));
           } else {
-
           }
         } else {
-
           Get.snackbar(
             'error'.tr,
             'failed_to_upload_image'.tr,
@@ -956,7 +951,6 @@ class _EventDetailPageState extends State<EventDetailPage> {
           );
         }
       } catch (e) {
-
         // إغلاق loading
         if (Get.isDialogOpen ?? false) Get.back();
         
@@ -1001,7 +995,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
         if (Get.isDialogOpen ?? false) Get.back();
 
         if (uploadResult != null) {
-
+          
           if (mounted) {
             // إرسال source للـ API
             context.read<EventsBloc>().add(UpdateEventPictureEvent(

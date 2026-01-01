@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:video_player/video_player.dart';
 
-class CampaignCard extends StatelessWidget {
+class CampaignCard extends StatefulWidget {
   const CampaignCard({
     super.key,
     required this.title,
@@ -13,6 +13,7 @@ class CampaignCard extends StatelessWidget {
     required this.clicks,
     required this.active,
     this.imageUrl,
+    this.videoUrl,
     this.bidding,
     this.status,
     this.createdAt,
@@ -28,6 +29,7 @@ class CampaignCard extends StatelessWidget {
   final String clicks;
   final bool active;
   final String? imageUrl;
+  final String? videoUrl;
   final String? bidding;
   final String? status;
   final String? createdAt;
@@ -36,12 +38,56 @@ class CampaignCard extends StatelessWidget {
   final VoidCallback? onToggleActive;
 
   @override
+  State<CampaignCard> createState() => _CampaignCardState();
+}
+
+class _CampaignCardState extends State<CampaignCard> {
+  VideoPlayerController? _videoController;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeVideo();
+  }
+
+  @override
+  void didUpdateWidget(CampaignCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.videoUrl != widget.videoUrl) {
+      _initializeVideo();
+    }
+  }
+
+  void _initializeVideo() {
+    _videoController?.dispose();
+    _videoController = null;
+
+    if (widget.videoUrl != null && widget.videoUrl!.isNotEmpty) {
+      _videoController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl!))
+        ..setLooping(true)
+        ..setVolume(0)
+        ..initialize().then((_) {
+          if (mounted) {
+            setState(() {});
+            _videoController?.play();
+          }
+        });
+    }
+  }
+
+  @override
+  void dispose() {
+    _videoController?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
     return InkWell(
-      onTap: onTap,
+      onTap: widget.onTap,
       borderRadius: BorderRadius.circular(20),
       child: Container(
         decoration: BoxDecoration(
@@ -68,7 +114,7 @@ class CampaignCard extends StatelessWidget {
             ),
           ],
           border: Border.all(
-            color: active
+            color: widget.active
                 ? theme.colorScheme.primary.withOpacity(0.3)
                 : theme.dividerColor.withOpacity(0.1),
             width: 1.5,
@@ -82,33 +128,14 @@ class CampaignCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-              // Image Header with Overlay
-              if (imageUrl != null)
+              // Media Header with Overlay (Image or Video)
+              if (widget.imageUrl != null || widget.videoUrl != null)
                 Stack(
                   children: [
                     SizedBox(
                       height: 140,
                       width: double.infinity,
-                      child: Image.network(
-                        imageUrl!,
-                        fit: BoxFit.cover,
-                        errorBuilder: (ctx, err, stack) => Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                theme.colorScheme.primary.withOpacity(0.3),
-                                theme.colorScheme.secondary.withOpacity(0.3),
-                              ],
-                            ),
-                          ),
-                          alignment: Alignment.center,
-                          child: Icon(
-                            Icons.broken_image_outlined,
-                            color: theme.colorScheme.primary,
-                            size: 32,
-                          ),
-                        ),
-                      ),
+                      child: _buildMediaPreview(theme),
                     ),
                     // Gradient Overlay
                     Positioned.fill(
@@ -126,13 +153,13 @@ class CampaignCard extends StatelessWidget {
                       ),
                     ),
                     // Status Badge
-                    if (status != null && status!.isNotEmpty)
+                    if (widget.status != null && widget.status!.isNotEmpty)
                       Positioned(
                         top: 12,
                         right: 12,
                         child: _StatusBadge(
-                          text: status!,
-                          isApproved: isApproved,
+                          text: widget.status!,
+                          isApproved: widget.isApproved,
                         ),
                       ),
                     // Active Indicator
@@ -145,13 +172,13 @@ class CampaignCard extends StatelessWidget {
                           vertical: 6,
                         ),
                         decoration: BoxDecoration(
-                          color: active
+                          color: widget.active
                               ? Colors.green.withOpacity(0.9)
                               : Colors.grey.withOpacity(0.9),
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
-                              color: (active ? Colors.green : Colors.grey)
+                              color: (widget.active ? Colors.green : Colors.grey)
                                   .withOpacity(0.3),
                               blurRadius: 8,
                               spreadRadius: 0,
@@ -171,7 +198,7 @@ class CampaignCard extends StatelessWidget {
                             ),
                             const SizedBox(width: 6),
                             Text(
-                              active ? 'active'.tr : 'paused'.tr,
+                              widget.active ? 'active'.tr : 'paused'.tr,
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 11,
@@ -196,7 +223,7 @@ class CampaignCard extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            title,
+                            widget.title,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: theme.textTheme.titleMedium?.copyWith(
@@ -205,16 +232,16 @@ class CampaignCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                        if (onToggleActive != null && isApproved)
+                        if (widget.onToggleActive != null && widget.isApproved)
                           IconButton(
-                            tooltip: active
+                            tooltip: widget.active
                                 ? 'pause_campaign'.tr
                                 : 'activate_campaign'.tr,
                             icon: Icon(
-                              active ? Iconsax.pause : Iconsax.play,
+                              widget.active ? Iconsax.pause : Iconsax.play,
                               color: theme.colorScheme.primary,
                             ),
-                            onPressed: onToggleActive,
+                            onPressed: widget.onToggleActive,
                             style: IconButton.styleFrom(
                               backgroundColor:
                                   theme.colorScheme.primary.withOpacity(0.1),
@@ -239,7 +266,7 @@ class CampaignCard extends StatelessWidget {
                                 child: _StatItem(
                                   icon: Iconsax.wallet_money,
                                   label: 'budget'.tr,
-                                  value: budget,
+                                  value: widget.budget,
                                   color: theme.colorScheme.primary,
                                 ),
                               ),
@@ -252,7 +279,7 @@ class CampaignCard extends StatelessWidget {
                                 child: _StatItem(
                                   icon: Iconsax.chart_21,
                                   label: 'spent'.tr,
-                                  value: spend,
+                                  value: widget.spend,
                                   color: Colors.orange,
                                 ),
                               ),
@@ -270,7 +297,7 @@ class CampaignCard extends StatelessWidget {
                                 child: _StatItem(
                                   icon: Iconsax.eye,
                                   label: 'views'.tr,
-                                  value: views,
+                                  value: widget.views,
                                   color: Colors.blue,
                                 ),
                               ),
@@ -283,7 +310,7 @@ class CampaignCard extends StatelessWidget {
                                 child: _StatItem(
                                   icon: Iconsax.mouse_1,
                                   label: 'clicks'.tr,
-                                  value: clicks,
+                                  value: widget.clicks,
                                   color: Colors.green,
                                 ),
                               ),
@@ -294,22 +321,22 @@ class CampaignCard extends StatelessWidget {
                     ),
 
                     // Bidding & Created
-                    if (bidding != null || createdAt != null) ...[
+                    if (widget.bidding != null || widget.createdAt != null) ...[
                       const SizedBox(height: 12),
                       Wrap(
                         spacing: 8,
                         runSpacing: 8,
                         children: [
-                          if (bidding != null && bidding!.isNotEmpty)
+                          if (widget.bidding != null && widget.bidding!.isNotEmpty)
                             _InfoChip(
                               icon: Iconsax.chart_1,
-                              text: bidding!,
+                              text: widget.bidding!,
                               color: Colors.purple,
                             ),
-                          if (createdAt != null && createdAt!.isNotEmpty)
+                          if (widget.createdAt != null && widget.createdAt!.isNotEmpty)
                             _InfoChip(
                               icon: Iconsax.clock,
-                              text: createdAt!,
+                              text: widget.createdAt!,
                               color: theme.colorScheme.primary,
                             ),
                         ],
@@ -324,6 +351,84 @@ class CampaignCard extends StatelessWidget {
       ),
     ));
   }
+
+  Widget _buildMediaPreview(ThemeData theme) {
+    // Show video if available
+    if (_videoController != null && _videoController!.value.isInitialized) {
+      return Stack(
+        fit: StackFit.expand,
+        children: [
+          FittedBox(
+            fit: BoxFit.cover,
+            child: SizedBox(
+              width: _videoController!.value.size.width,
+              height: _videoController!.value.size.height,
+              child: VideoPlayer(_videoController!),
+            ),
+          ),
+          // Video icon indicator
+          Positioned(
+            bottom: 8,
+            right: 8,
+            child: Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.6),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(
+                Icons.play_circle_filled,
+                color: Colors.white,
+                size: 20,
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
+    // Show image if available
+    if (widget.imageUrl != null && widget.imageUrl!.isNotEmpty) {
+      return Image.network(
+        widget.imageUrl!,
+        fit: BoxFit.cover,
+        errorBuilder: (ctx, err, stack) => Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                theme.colorScheme.primary.withOpacity(0.3),
+                theme.colorScheme.secondary.withOpacity(0.3),
+              ],
+            ),
+          ),
+          alignment: Alignment.center,
+          child: Icon(
+            Icons.broken_image_outlined,
+            color: theme.colorScheme.primary,
+            size: 32,
+          ),
+        ),
+      );
+    }
+
+    // Fallback placeholder
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            theme.colorScheme.primary.withOpacity(0.3),
+            theme.colorScheme.secondary.withOpacity(0.3),
+          ],
+        ),
+      ),
+      alignment: Alignment.center,
+      child: Icon(
+        Icons.image_outlined,
+        color: theme.colorScheme.primary,
+        size: 32,
+      ),
+    );
+  }
 }
 
 class _StatusBadge extends StatelessWidget {
@@ -337,7 +442,6 @@ class _StatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final color = isApproved ? Colors.green : Colors.orange;
 
     return Container(

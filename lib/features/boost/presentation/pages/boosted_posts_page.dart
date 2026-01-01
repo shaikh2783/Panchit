@@ -75,7 +75,6 @@ class _BoostedPostsPageState extends State<BoostedPostsPage> {
           final post = Post.fromJson(postDetails);
           fullPosts.add(post);
         } catch (e) {
-
         }
       }
       
@@ -138,7 +137,6 @@ class _BoostedPostsPageState extends State<BoostedPostsPage> {
           final post = Post.fromJson(postDetails);
           newPosts.add(post);
         } catch (e) {
-
         }
       }
       

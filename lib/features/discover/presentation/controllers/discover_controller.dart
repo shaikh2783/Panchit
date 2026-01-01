@@ -38,9 +38,7 @@ class DiscoverController extends GetxController {
         _authNotifier = context.read<AuthNotifier>();
         // Build the listener callback
         _authListener = () {
-
           if (_authNotifier!.isInitialized) {
-
             loadWidgets();
           }
         };
@@ -48,16 +46,12 @@ class DiscoverController extends GetxController {
         _authNotifier!.addListener(_authListener!);
       }
     } catch (e) {
-
     }
     
     // If AuthNotifier is already ready, load widgets right away
-
     if (_authNotifier?.isInitialized ?? false) {
-
       loadWidgets();
     } else {
-
     }
   }
 
@@ -67,19 +61,19 @@ class DiscoverController extends GetxController {
       _isLoading.value = true;
       _errorMessage.value = '';
 
+
       // Ensure AuthNotifier is initialized
       if (_authNotifier != null && !_authNotifier!.isInitialized) {
-
         _isLoading.value = false;
         return;
       }
 
       // Check authentication status
       if (_authNotifier != null && !_authNotifier!.isAuthenticated) {
-
         _errorMessage.value = 'Please log in to see personalized content';
         return;
       }
+
 
       // Retrieve auth token from AuthNotifier
       final authToken = _authNotifier?.authToken;
@@ -92,7 +86,7 @@ class DiscoverController extends GetxController {
         _errorMessage.value = response.message ?? 'Failed to load data';
       }
     } catch (e) {
-
+      
       // Handle authentication-related errors specifically
       String errorString = e.toString().toLowerCase();
       if (errorString.contains('401') || 

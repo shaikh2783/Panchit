@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snginepro/features/feed/data/models/post.dart';
 import 'package:snginepro/features/feed/domain/posts_repository.dart';
+import 'package:flutter/foundation.dart';
 
 // Events
 abstract class ProfilePostsEvent {}
@@ -102,7 +103,6 @@ class ProfilePostsBloc extends Bloc<ProfilePostsEvent, ProfilePostsState> {
     emit(ProfilePostsLoadingState());
     
     try {
-
       _currentPage = 0; // إعادة تعيين الصفحة
       _currentUserId = event.userId; // حفظ المستخدم الحالي
       
@@ -111,14 +111,14 @@ class ProfilePostsBloc extends Bloc<ProfilePostsEvent, ProfilePostsState> {
         limit: _pageSize,
         offset: _currentPage,
       );
-
+      
+      
       emit(ProfilePostsLoadedState(
         posts: response.posts,
         userId: event.userId,
         hasMore: response.hasMore,
       ));
     } catch (e) {
-
       emit(ProfilePostsErrorState(e.toString()));
     }
   }
@@ -149,15 +149,13 @@ class ProfilePostsBloc extends Bloc<ProfilePostsEvent, ProfilePostsState> {
     
     final currentState = state as ProfilePostsLoadedState;
     if (!currentState.hasMore || currentState.isLoadingMore) {
-
       return;
     }
 
     if (_currentUserId == null) {
-
       return;
     }
-
+    
     emit(currentState.copyWith(isLoadingMore: true));
     
     try {
@@ -168,11 +166,12 @@ class ProfilePostsBloc extends Bloc<ProfilePostsEvent, ProfilePostsState> {
         limit: _pageSize,
         offset: _currentPage,
       );
-
+      
+      
       // تجنب المنشورات المكررة
       final currentPostIds = currentState.posts.map((p) => p.id).toSet();
       final uniqueNewPosts = response.posts.where((post) => !currentPostIds.contains(post.id)).toList();
-
+      
       final newPosts = List<Post>.from(currentState.posts)..addAll(uniqueNewPosts);
       
       emit(ProfilePostsLoadedState(
@@ -182,7 +181,6 @@ class ProfilePostsBloc extends Bloc<ProfilePostsEvent, ProfilePostsState> {
         isLoadingMore: false,
       ));
     } catch (e) {
-
       _currentPage--; // التراجع عن زيادة الصفحة في حالة الخطأ
       emit(currentState.copyWith(isLoadingMore: false));
     }
@@ -217,7 +215,8 @@ class ProfilePostsBloc extends Bloc<ProfilePostsEvent, ProfilePostsState> {
   Future<void> _onReactToPostInProfile(ReactToPostInProfileEvent event, Emitter<ProfilePostsState> emit) async {
     if (state is ProfilePostsLoadedState) {
       final currentState = state as ProfilePostsLoadedState;
-
+      
+      
       // Optimistic update
       final newPosts = currentState.posts.map((post) {
         if (post.id == event.postId) {
@@ -228,11 +227,8 @@ class ProfilePostsBloc extends Bloc<ProfilePostsEvent, ProfilePostsState> {
       emit(currentState.copyWith(posts: newPosts));
       
       try {
-
         await _repository.reactToPost(event.postId, event.reaction);
-
       } catch (e) {
-
         // Revert on error
         emit(currentState);
       }

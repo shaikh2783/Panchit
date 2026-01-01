@@ -6,6 +6,9 @@ import 'post_course.dart';
 import 'post_colored_pattern.dart';
 import 'post_live.dart';
 import 'post_audio.dart';
+import 'post_media.dart';
+import 'package:snginepro/features/merits/data/models/merit_models.dart';
+import 'package:flutter/foundation.dart';
 
 class Post {
   Post({
@@ -68,6 +71,7 @@ class Post {
     this.campaignDescription,
     this.campaignUrl,
     this.adsImage,
+    this.adsVideo,
     this.actionButtonText,
     this.actionButtonUrl,
     this.campaignId,
@@ -96,6 +100,28 @@ class Post {
     this.feelingAction,
     this.feelingValue,
     this.feelingIcon,
+    // 📺 MEDIA FIELD (YouTube, Vimeo, etc.)
+    this.media,
+    // 💳 PAID POST FIELDS
+    this.isPaid = false,
+    this.needsPayment = false,
+    this.forSubscriptions = false,
+    this.postPrice,
+    this.paidText,
+    // 🎖️ MERIT FIELD
+    this.merit,
+    // ⏱️ VIDEO DURATION (seconds)
+    this.videoDurationSeconds,
+    // 📦 PRODUCT FIELDS
+    this.available = true,
+    this.productId,
+    this.productName,
+    this.productStatus,
+    this.productLocation,
+    this.productCategoryName,
+    this.isDigital = false,
+    this.productUrl,
+    this.productFile,
   }) : reactionBreakdown = reactionBreakdown ?? const <String, int>{},
        topReactions = _topReactions(reactionBreakdown ?? const {}),
        reactionsCountFormatted = _formatCount(reactionsCount),
@@ -148,12 +174,22 @@ class Post {
   final bool isPromoted; // 💰 هل المنشور مدفوع/مروج (promoted/boosted)
   final bool isAd; // 📢 هل هذا إعلان (is_ad)
   final bool isAnonymous; // 👤 هل المنشور مجهول الهوية (is_anonymous)
+  final bool available; // متاح (للمنتجات)
+  final String? productId; // معرف المنتج (للمنتجات)
+  final String? productName; // اسم المنتج
+  final String? productStatus; // حالة المنتج (new/old)
+  final String? productLocation; // موقع المنتج
+  final String? productCategoryName; // اسم فئة المنتج
+  final bool isDigital; // هل المنتج رقمي
+  final String? productUrl; // رابط التحميل للمنتجات الرقمية
+  final String? productFile; // معرف الملف المرفوع
 
   // 📢 AD FIELDS (only used when isAd = true)
   final String? campaignTitle;
   final String? campaignDescription;
   final String? campaignUrl;
   final String? adsImage;
+  final String? adsVideo;
   final String? actionButtonText;
   final String? actionButtonUrl;
   final int? campaignId;
@@ -175,6 +211,7 @@ class Post {
   final PostPoll? poll;
   final PostLink? link;
   final PostAudio? audio;
+  final PostMedia? media; // 📺 معلومات الوسائط (YouTube, Vimeo, etc.)
 
   // ⚠️ NEW FIELDS FOR SHARED POSTS AND ARTICLES
   final Post? originPost; // المنشور الأصلي للمنشورات المشاركة
@@ -193,6 +230,19 @@ class Post {
   final String? feelingAction; // نوع الشعور (Feeling, Listening To, إلخ)
   final String? feelingValue; // قيمة الشعور (Happy, Song Name, إلخ)
   final String? feelingIcon; // أيقونة الشعور
+
+  // 💳 PAID POST FIELDS
+  final bool isPaid; // هل المنشور مدفوع
+  final bool needsPayment; // هل يحتاج إلى دفع لعرض المحتوى
+  final bool forSubscriptions; // هل الدفع عبر الاشتراكات فقط
+  final double? postPrice; // سعر المنشور (إن وجد)
+  final String? paidText; // نص المعاينة للمنشور المدفوع
+
+  // 🎖️ MERIT FIELD
+  final Merit? merit; // معلومات الجدارة إذا كان المنشور عن جدارة
+
+  // ⏱️ VIDEO DURATION (seconds)
+  final int? videoDurationSeconds;
 
   final String reactionsCountFormatted;
   final String commentsCountFormatted;
@@ -236,6 +286,10 @@ class Post {
 
   bool get isCoursePost => postType == 'course' && course != null;
 
+  bool get isMeritPost => postType == 'merit' && merit != null;
+
+  bool get isProductPost => postType == 'product';
+
   bool get hasColoredPattern => coloredPattern != null;
 
   bool get hasBlog => blog != null;
@@ -268,7 +322,6 @@ class Post {
         myReaction = 'like';
       }
 
-      // Debug: Print author information
       final userId =
           _string(json['user_id']) ?? _string(json['post_author_id']);
       final username =
@@ -287,7 +340,13 @@ class Post {
       final photos = PostPhoto.listFromJson(json['photos']);
       final ogImage = _string(json['og_image']);
 
-      return Post(
+        // Try parse nested product object
+        final Map<String, dynamic>? productObj =
+          json['product'] is Map<String, dynamic>
+            ? json['product'] as Map<String, dynamic>
+            : null;
+
+        return Post(
         id: _int(json['post_id']),
         // 👤 Handle anonymous posts - show "anonymous_user" key for translation
         authorName: isAnonymous ? 'anonymous_user' : _authorName(json),
@@ -336,6 +395,7 @@ class Post {
         poll: PostPoll.maybeFromJson(json['poll']),
         link: PostLink.maybeFromJson(json['link']),
         audio: PostAudio.maybeFromJson(json['audio']),
+        media: json['media'] != null ? PostMedia.fromJson(json['media']) : null,
         // ⚠️ HIGH PRIORITY - Parse new fields (handle both string and boolean values)
         isSaved: _bool(json['i_save']),
         isPinned: _bool(json['pinned']),
@@ -353,7 +413,26 @@ class Post {
         isAd: _bool(json['is_ad']),
         // � ANONYMOUS POST SUPPORT
         isAnonymous: isAnonymous,
+        // 📦 PRODUCT FIELDS
+        available: productObj != null
+          ? _bool(productObj['available'])
+          : _bool(json['available']),
+        productId: productObj != null ? _string(productObj['product_id']) : null,
+        productName: productObj != null
+          ? _string(productObj['name'])
+          : (_string(json['og_title']) ?? _string(json['title'])),
+        productStatus:
+          productObj != null ? _string(productObj['status']) : null,
+        productLocation: productObj != null
+          ? _string(productObj['location'])
+          : _string(json['location']),
+        productCategoryName: productObj != null
+          ? _string(productObj['category_name'])
+          : null,
         // �📢 AD DATA FIELDS
+        isDigital: productObj != null ? _bool(productObj['is_digital']) : false,
+        productUrl: productObj != null ? (_string(productObj['product_download_url']) ?? _string(productObj['product_url'])) : null,
+        productFile: productObj != null ? (_string(productObj['product_file_source']) ?? _string(productObj['product_file'])) : null,
         campaignTitle:
             _string(json['campaign_title']) ??
             _string(json['ads_title']) ??
@@ -364,6 +443,7 @@ class Post {
             _string(json['description']),
         campaignUrl: _string(json['campaign_url']) ?? _string(json['url']),
         adsImage: _string(json['ads_image']),
+        adsVideo: _string(json['ads_video']),
         actionButtonText: json['action_button'] != null
             ? _string((json['action_button'] as Map<String, dynamic>)['text'])
             : null,
@@ -411,9 +491,34 @@ class Post {
         feelingAction: _string(json['feeling_action']),
         feelingValue: _string(json['feeling_value']),
         feelingIcon: _string(json['feeling_icon']),
+        // 💳 PAID POST SUPPORT
+        isPaid: _bool(json['is_paid']),
+        needsPayment: _bool(json['needs_payment']),
+        forSubscriptions: _bool(json['for_subscriptions']),
+        postPrice: productObj != null
+          ? _double(productObj['price'])
+          : _double(json['post_price']),
+        paidText: _string(json['paid_text']),
+        // 🎖️ MERIT SUPPORT
+        merit: json['merit'] != null
+            ? Merit.fromJson(json['merit'] as Map<String, dynamic>)
+            : null,
+        // ⏱️ VIDEO DURATION
+        videoDurationSeconds:
+            _int(
+                  json['video_duration'] ??
+                      json['duration'] ??
+                      json['video_length'],
+                ) !=
+                0
+            ? _int(
+                json['video_duration'] ??
+                    json['duration'] ??
+                    json['video_length'],
+              )
+            : null,
       );
     } catch (e, stackTrace) {
-
       rethrow; // Re-throw to let the caller handle it
     }
   }
@@ -470,11 +575,22 @@ class Post {
     bool? isPromoted,
     bool? isAd,
     bool? isAnonymous,
+    // 📦 PRODUCT PARAMETER
+    bool? available,
+    String? productId,
+    String? productName,
+    String? productStatus,
+    String? productLocation,
+    String? productCategoryName,
+    bool? isDigital,
+    String? productUrl,
+    String? productFile,
     // 📢 AD DATA PARAMETERS
     String? campaignTitle,
     String? campaignDescription,
     String? campaignUrl,
     String? adsImage,
+    String? adsVideo,
     String? actionButtonText,
     String? actionButtonUrl,
     int? campaignId,
@@ -503,6 +619,16 @@ class Post {
     String? feelingAction,
     String? feelingValue,
     String? feelingIcon,
+    // 💳 PAID POST PARAMETERS
+    bool? isPaid,
+    bool? needsPayment,
+    bool? forSubscriptions,
+    double? postPrice,
+    String? paidText,
+    // 🎖️ MERIT PARAMETER
+    Merit? merit,
+    // ⏱️ VIDEO DURATION
+    int? videoDurationSeconds,
   }) {
     return Post(
       id: id ?? this.id,
@@ -557,11 +683,23 @@ class Post {
       isPromoted: isPromoted ?? this.isPromoted,
       isAd: isAd ?? this.isAd,
       isAnonymous: isAnonymous ?? this.isAnonymous,
+      // 📦 PRODUCT FIELD
+      available: available ?? this.available,
+        productId: productId ?? this.productId,
+        productName: productName ?? this.productName,
+        productStatus: productStatus ?? this.productStatus,
+        productLocation: productLocation ?? this.productLocation,
+        productCategoryName:
+          productCategoryName ?? this.productCategoryName,
+        isDigital: isDigital ?? this.isDigital,
+        productUrl: productUrl ?? this.productUrl,
+        productFile: productFile ?? this.productFile,
       // 📢 AD DATA FIELDS
       campaignTitle: campaignTitle ?? this.campaignTitle,
       campaignDescription: campaignDescription ?? this.campaignDescription,
       campaignUrl: campaignUrl ?? this.campaignUrl,
       adsImage: adsImage ?? this.adsImage,
+      adsVideo: adsVideo ?? this.adsVideo,
       actionButtonText: actionButtonText ?? this.actionButtonText,
       actionButtonUrl: actionButtonUrl ?? this.actionButtonUrl,
       campaignId: campaignId ?? this.campaignId,
@@ -590,6 +728,16 @@ class Post {
       feelingAction: feelingAction ?? this.feelingAction,
       feelingValue: feelingValue ?? this.feelingValue,
       feelingIcon: feelingIcon ?? this.feelingIcon,
+      // 💳 PAID POST FIELDS
+      isPaid: isPaid ?? this.isPaid,
+      needsPayment: needsPayment ?? this.needsPayment,
+      forSubscriptions: forSubscriptions ?? this.forSubscriptions,
+      postPrice: postPrice ?? this.postPrice,
+      paidText: paidText ?? this.paidText,
+      // 🎖️ MERIT FIELD
+      merit: merit ?? this.merit,
+      // ⏱️ VIDEO DURATION
+      videoDurationSeconds: videoDurationSeconds ?? this.videoDurationSeconds,
     );
   }
 
@@ -621,6 +769,14 @@ class Post {
     if (value is num) return value.toInt();
     final parsed = int.tryParse(value.toString());
     return parsed ?? 0;
+  }
+
+  static double? _double(Object? value) {
+    if (value == null) return null;
+    if (value is double) return value;
+    if (value is num) return value.toDouble();
+    final parsed = double.tryParse(value.toString());
+    return parsed;
   }
 
   static String _authorName(Map<String, dynamic> json) {
@@ -838,6 +994,16 @@ class Post {
       feelingAction: feelingAction,
       feelingValue: feelingValue,
       feelingIcon: feelingIcon,
+      // 💳 PAID POST FIELDS - الحفاظ على حالة الدفع
+      isPaid: isPaid,
+      needsPayment: needsPayment,
+      forSubscriptions: forSubscriptions,
+      postPrice: postPrice,
+      paidText: paidText,
+      // 🎖️ MERIT FIELD - الحفاظ على بيانات الجدارة
+      merit: merit,
+      // ⏱️ VIDEO DURATION
+      videoDurationSeconds: videoDurationSeconds,
     );
   }
 }
@@ -948,7 +1114,6 @@ class PostPhoto {
         lowerSource.endsWith('.avi') ||
         lowerSource.endsWith('.webm') ||
         lowerSource.contains('/videos/')) {
-
       return null;
     }
 

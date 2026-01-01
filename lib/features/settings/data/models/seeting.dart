@@ -4,6 +4,7 @@ import 'package:crypto/crypto.dart' as crypto;
 import 'package:encrypt/encrypt.dart';
 import 'package:snginepro/features/offers/data/services/offers_api_service.dart';
 import 'package:snginepro/main.dart' show cfgP;
+import 'package:flutter/foundation.dart' hide Key;
 
 /// مفاتيح مشتركة مع المولّد (حافظ عليها سرية)
 const String _kSiteEncryptKey = 'ef2ff48ada3d53fe';
@@ -169,6 +170,7 @@ Map<String, dynamic> _decodeV2(String compactB64) {
     );
   }
 
+
   final endpoints = _extractEndpoints(decoded);
   _updateCfg(decoded, endpoints);
   return decoded;
@@ -195,7 +197,6 @@ bool _verifySignature({
     }
     return match;
   } catch (e) {
-
     return false;
   }
 }
@@ -214,10 +215,8 @@ Map<String, dynamic> _extractEndpoints(Map<String, dynamic> decoded) {
   if (endpointsData == null) throw Exception('endpoints field not found');
 
   if (endpointsData is List) {
-
     return {'list': endpointsData};
   } else if (endpointsData is Map<String, dynamic>) {
-
     return endpointsData;
   } else {
     throw Exception(
@@ -229,6 +228,5 @@ Map<String, dynamic> _extractEndpoints(Map<String, dynamic> decoded) {
 void _updateCfg(Map<String, dynamic> decoded, Map<String, dynamic> endpoints) {
   cfgP.clear();
   cfgP.add(decoded);
-
   saveEndpoints(endpoints);
 }

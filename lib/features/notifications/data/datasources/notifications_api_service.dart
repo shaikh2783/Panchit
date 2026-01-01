@@ -2,6 +2,7 @@ import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/core/network/api_exception.dart';
 import 'package:snginepro/main.dart' show configCfgP;
 import 'package:snginepro/features/notifications/data/models/notifications_response.dart';
+import 'package:flutter/foundation.dart';
 
 class NotificationsApiService {
   NotificationsApiService(this._client);
@@ -19,7 +20,7 @@ class NotificationsApiService {
     int limit = 20,
     int? lastNotificationId,
   }) async {
-
+    
     final params = <String, String>{
       'offset': offset.toString(),
       'limit': limit.toString(),
@@ -33,6 +34,7 @@ class NotificationsApiService {
       configCfgP('notifications'),
       queryParameters: params,
     );
+
 
     if (response['status'] != 'success') {
       throw ApiException(
@@ -94,7 +96,6 @@ class NotificationsApiService {
       );
 
       if (response['status'] == 'success') {
-
       }
     } on ApiException catch (e) {
       // If the notification is already read, this is not an error - we'll ignore it silently
@@ -104,14 +105,13 @@ class NotificationsApiService {
       }
       
       // Re-throw the error if it's a real error
-
       rethrow;
     }
   }
 
   /// Mark all notifications as read
   Future<int> markAllNotificationsRead() async {
-
+    
     final response = await _client.post(
       configCfgP('notifications_read'),
       body: {
@@ -127,7 +127,7 @@ class NotificationsApiService {
     }
 
     final markedCount = response['data']?['marked_count'] as int? ?? 0;
-
+    
     return markedCount;
   }
 }

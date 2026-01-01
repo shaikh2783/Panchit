@@ -34,15 +34,12 @@ class ApiClient {
     final requestBody = data ?? body;
 
     final uri = _buildUri(relativePath);
-
     if (requestBody != null) {
       final encoded = jsonEncode(requestBody);
       final preview = encoded.length > 300
           ? '${encoded.substring(0, 300)}...'
           : encoded;
-
     } else {
-
     }
 
     final response = await _httpClient.post(
@@ -60,15 +57,12 @@ class ApiClient {
     bool asJson = true,
   }) async {
     final uri = _buildUri(relativePath);
-
     if (body != null) {
       final encoded = jsonEncode(body);
       final preview = encoded.length > 300
           ? '${encoded.substring(0, 300)}...'
           : encoded;
-
     } else {
-
     }
 
     final response = await _httpClient.put(
@@ -221,7 +215,6 @@ class ApiClient {
         return '${locale.languageCode}_${locale.countryCode ?? locale.languageCode}'.toLowerCase();
       }
     } catch (e) {
-
     }
     return 'en_us'; // Default fallback
   }
@@ -248,7 +241,8 @@ class ApiClient {
   }
 
   Map<String, dynamic> _handleResponse(http.Response response) {
-    final decodedBody = _safeDecodeBody(response.body);
+    final rawBody = response.body;
+    final decodedBody = _safeDecodeBody(rawBody);
     final isSuccess = response.statusCode >= 200 && response.statusCode < 300;
     if (isSuccess) {
       if (decodedBody == null) {
@@ -259,6 +253,9 @@ class ApiClient {
       }
       return {'data': decodedBody};
     }
+
+    // Debug unexpected errors to ease backend troubleshooting
+    final rawPreview = rawBody.length > 800 ? '${rawBody.substring(0, 800)}...' : rawBody;
 
     final message =
         _extractErrorMessage(decodedBody) ??

@@ -59,7 +59,6 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
         _videoController = controller;
       });
     } catch (e) {
-
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

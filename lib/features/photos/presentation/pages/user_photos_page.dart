@@ -84,7 +84,6 @@ class _UserPhotosGridState extends State<UserPhotosGrid> {
           _totalCount = int.tryParse(total.toString()) ?? _totalCount;
         }
         _currentPage++;
-
         _isLoading = false;
       });
     } catch (e) {

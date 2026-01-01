@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../data/models/group.dart';
@@ -29,7 +30,11 @@ class _GroupMembersPageState extends State<GroupMembersPage>
   late GroupsApiService _groupsService;
 
   // Tab data
-  final List<String> _tabLabels = ['الكل', 'المسؤولين', 'الأعضاء'];
+  List<String> get _tabLabels => [
+    'group_members_tab_all'.tr,
+    'group_members_tab_admins'.tr,
+    'group_members_tab_members'.tr,
+  ];
   final List<String> _statusFilters = ['all', 'approved', 'approved'];
   bool _filterAdminsOnly = false;
 
@@ -46,8 +51,7 @@ class _GroupMembersPageState extends State<GroupMembersPage>
     final currentUserId = int.tryParse(
       auth.currentUser?['user_id']?.toString() ?? '',
     );
-    return currentUserId != null && 
-           currentUserId == widget.group.admin.userId;
+    return currentUserId != null && currentUserId == widget.group.admin.userId;
   }
 
   @override
@@ -55,11 +59,11 @@ class _GroupMembersPageState extends State<GroupMembersPage>
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(_onTabChanged);
-    
+
     // تهيئة GroupsApiService مع ApiClient
     final apiClient = context.read<ApiClient>();
     _groupsService = GroupsApiService(apiClient);
-    
+
     _loadMembers(refresh: true);
   }
 
@@ -125,7 +129,9 @@ class _GroupMembersPageState extends State<GroupMembersPage>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('خطأ في تحميل الأعضاء: $e'),
+            content: Text(
+              'group_members_error_loading'.trParams({'error': e.toString()}),
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -142,7 +148,7 @@ class _GroupMembersPageState extends State<GroupMembersPage>
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('أعضاء المجموعة'),
+            Text('group_members_title'.tr),
             Text(
               widget.group.groupTitle,
               style: theme.textTheme.bodySmall?.copyWith(
@@ -158,10 +164,7 @@ class _GroupMembersPageState extends State<GroupMembersPage>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: List.generate(
-          3,
-          (index) => _buildMembersList(),
-        ),
+        children: List.generate(3, (index) => _buildMembersList()),
       ),
     );
   }
@@ -183,13 +186,10 @@ class _GroupMembersPageState extends State<GroupMembersPage>
             ),
             const SizedBox(height: 16),
             Text(
-              'لا يوجد أعضاء',
+              'group_members_no_members'.tr,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withOpacity(0.5),
-                  ),
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+              ),
             ),
           ],
         ),
@@ -229,16 +229,14 @@ class _GroupMembersPageState extends State<GroupMembersPage>
             CircleAvatar(
               radius: 28,
               backgroundColor: Colors.grey[300],
-              backgroundImage: member.picture != null
+              backgroundImage: member.picture.isNotEmpty
                   ? CachedNetworkImageProvider(
-                      member.picture!.startsWith('http')
-                          ? member.picture!
-                          : appConfig.mediaAsset(member.picture!).toString(),
+                      member.picture.startsWith('http')
+                          ? member.picture
+                          : appConfig.mediaAsset(member.picture).toString(),
                     )
                   : null,
-              child: member.picture == null
-                  ? const Icon(Iconsax.user)
-                  : null,
+              child: member.picture.isEmpty ? const Icon(Iconsax.user) : null,
             ),
             if (member.verified)
               Positioned(
@@ -265,7 +263,9 @@ class _GroupMembersPageState extends State<GroupMembersPage>
               child: Text(
                 member.fullname.isNotEmpty
                     ? member.fullname
-                    : member.username ?? 'مستخدم',
+                    : member.username.isNotEmpty
+                    ? member.username
+                    : 'group_members_user_default'.tr,
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -288,7 +288,7 @@ class _GroupMembersPageState extends State<GroupMembersPage>
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      'مسؤول',
+                      'group_members_admin_badge'.tr,
                       style: theme.textTheme.labelSmall?.copyWith(
                         color: theme.colorScheme.primary,
                         fontWeight: FontWeight.w600,
@@ -299,7 +299,7 @@ class _GroupMembersPageState extends State<GroupMembersPage>
               ),
           ],
         ),
-        subtitle: member.username != null
+        subtitle: member.username.isNotEmpty
             ? Text(
                 '@${member.username}',
                 style: theme.textTheme.bodyMedium?.copyWith(
@@ -307,45 +307,60 @@ class _GroupMembersPageState extends State<GroupMembersPage>
                 ),
               )
             : null,
-        trailing: (widget.isAdmin || _isOwner) && 
-                  member.userId != widget.group.admin.userId
+        trailing:
+            (widget.isAdmin || _isOwner) &&
+                member.userId != widget.group.admin.userId
             ? PopupMenuButton<String>(
                 icon: const Icon(Icons.more_vert),
                 onSelected: (value) => _handleMemberAction(value, member),
                 itemBuilder: (context) => [
                   // تعيين كمسؤول: للمالك فقط
                   if (!member.isAdmin && _isOwner)
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'make_admin',
                       child: Row(
                         children: [
-                          Icon(Iconsax.shield_tick, size: 20),
-                          SizedBox(width: 12),
-                          Text('تعيين كمسؤول'),
+                          const Icon(Iconsax.shield_tick, size: 20),
+                          const SizedBox(width: 12),
+                          Text('group_members_make_admin'.tr),
                         ],
                       ),
                     ),
                   // إزالة صلاحيات المشرف: للمالك فقط
                   if (member.isAdmin && _isOwner)
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'remove_admin',
                       child: Row(
                         children: [
-                          Icon(Iconsax.shield_cross, size: 20, color: Colors.orange),
-                          SizedBox(width: 12),
-                          Text('إزالة صلاحيات المشرف', style: TextStyle(color: Colors.orange)),
+                          const Icon(
+                            Iconsax.shield_cross,
+                            size: 20,
+                            color: Colors.orange,
+                          ),
+                          const SizedBox(width: 12),
+                          Text(
+                            'group_members_remove_admin'.tr,
+                            style: const TextStyle(color: Colors.orange),
+                          ),
                         ],
                       ),
                     ),
                   // إزالة عضو عادي: للمالك والأدمن
                   if (!member.isAdmin && (widget.isAdmin || _isOwner))
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'remove',
                       child: Row(
                         children: [
-                          Icon(Iconsax.user_remove, size: 20, color: Colors.red),
-                          SizedBox(width: 12),
-                          Text('إزالة العضو', style: TextStyle(color: Colors.red)),
+                          const Icon(
+                            Iconsax.user_remove,
+                            size: 20,
+                            color: Colors.red,
+                          ),
+                          const SizedBox(width: 12),
+                          Text(
+                            'group_members_remove_member'.tr,
+                            style: const TextStyle(color: Colors.red),
+                          ),
                         ],
                       ),
                     ),
@@ -374,18 +389,24 @@ class _GroupMembersPageState extends State<GroupMembersPage>
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('تعيين مسؤول'),
+        title: Text('group_members_make_admin_title'.tr),
         content: Text(
-          'هل تريد تعيين ${member.fullname.isNotEmpty ? member.fullname : member.username} كمسؤول للمجموعة؟',
+          'group_members_make_admin_confirm'.trParams({
+            'name': member.fullname.isNotEmpty
+                ? member.fullname
+                : (member.username.isNotEmpty
+                      ? member.username
+                      : 'group_members_user_default'.tr),
+          }),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('إلغاء'),
+            child: Text('group_members_cancel'.tr),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('تأكيد'),
+            child: Text('group_members_confirm'.tr),
           ),
         ],
       ),
@@ -400,8 +421,8 @@ class _GroupMembersPageState extends State<GroupMembersPage>
 
         if (success && mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('تم تعيين العضو كمسؤول بنجاح'),
+            SnackBar(
+              content: Text('group_members_make_admin_success'.tr),
               backgroundColor: Colors.green,
             ),
           );
@@ -412,7 +433,13 @@ class _GroupMembersPageState extends State<GroupMembersPage>
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('خطأ: ${e.toString().contains('404') ? 'الميزة قيد التطوير' : 'فشل تعيين المسؤول'}'),
+              content: Text(
+                'error'.tr +
+                    ': ' +
+                    (e.toString().contains('404')
+                        ? 'group_members_feature_development'.tr
+                        : 'group_members_make_admin_failed'.tr),
+              ),
               backgroundColor: Colors.red,
             ),
           );
@@ -425,21 +452,25 @@ class _GroupMembersPageState extends State<GroupMembersPage>
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('إزالة صلاحيات المشرف'),
+        title: Text('group_members_remove_admin_title'.tr),
         content: Text(
-          'هل تريد إزالة صلاحيات المشرف من ${member.fullname.isNotEmpty ? member.fullname : member.username} وتحويله إلى عضو عادي؟',
+          'group_members_remove_admin_confirm'.trParams({
+            'name': member.fullname.isNotEmpty
+                ? member.fullname
+                : (member.username.isNotEmpty
+                      ? member.username
+                      : 'group_members_user_default'.tr),
+          }),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('إلغاء'),
+            child: Text('group_members_cancel'.tr),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            style: FilledButton.styleFrom(
-              backgroundColor: Colors.orange,
-            ),
-            child: const Text('إزالة الصلاحيات'),
+            style: FilledButton.styleFrom(backgroundColor: Colors.orange),
+            child: Text('group_members_remove_permissions'.tr),
           ),
         ],
       ),
@@ -454,8 +485,8 @@ class _GroupMembersPageState extends State<GroupMembersPage>
 
         if (success && mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('تم إزالة صلاحيات المشرف بنجاح'),
+            SnackBar(
+              content: Text('group_members_remove_admin_success'.tr),
               backgroundColor: Colors.green,
             ),
           );
@@ -466,7 +497,13 @@ class _GroupMembersPageState extends State<GroupMembersPage>
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('خطأ: ${e.toString().contains('404') ? 'الميزة قيد التطوير' : 'فشل إزالة صلاحيات المشرف'}'),
+              content: Text(
+                'error'.tr +
+                    ': ' +
+                    (e.toString().contains('404')
+                        ? 'group_members_feature_development'.tr
+                        : 'group_members_remove_admin_failed'.tr),
+              ),
               backgroundColor: Colors.red,
             ),
           );
@@ -479,21 +516,25 @@ class _GroupMembersPageState extends State<GroupMembersPage>
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('إزالة عضو'),
+        title: Text('group_members_remove_member_title'.tr),
         content: Text(
-          'هل تريد إزالة ${member.fullname.isNotEmpty ? member.fullname : member.username} من المجموعة؟',
+          'group_members_remove_member_confirm'.trParams({
+            'name': member.fullname.isNotEmpty
+                ? member.fullname
+                : (member.username.isNotEmpty
+                      ? member.username
+                      : 'group_members_user_default'.tr),
+          }),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('إلغاء'),
+            child: Text('group_members_cancel'.tr),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            style: FilledButton.styleFrom(
-              backgroundColor: Colors.red,
-            ),
-            child: const Text('إزالة'),
+            style: FilledButton.styleFrom(backgroundColor: Colors.red),
+            child: Text('group_members_remove'.tr),
           ),
         ],
       ),
@@ -508,8 +549,8 @@ class _GroupMembersPageState extends State<GroupMembersPage>
 
         if (success && mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('تم إزالة العضو بنجاح'),
+            SnackBar(
+              content: Text('group_members_remove_member_success'.tr),
               backgroundColor: Colors.green,
             ),
           );
@@ -520,7 +561,7 @@ class _GroupMembersPageState extends State<GroupMembersPage>
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('خطأ: فشل إزالة العضو'),
+              content: Text('group_members_remove_member_failed'.tr),
               backgroundColor: Colors.red,
             ),
           );

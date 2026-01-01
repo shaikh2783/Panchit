@@ -1,6 +1,7 @@
 import 'package:snginepro/core/network/api_client.dart';
 import '../models/follower.dart';
 import '../models/subscription.dart';
+import 'package:flutter/foundation.dart';
 
 class UserRelationshipsService {
   final ApiClient _apiClient;
@@ -23,6 +24,7 @@ class UserRelationshipsService {
         params['user_id'] = userId.toString();
       }
 
+
       final response = await _apiClient.get(
         '/data/users/friends',
         queryParameters: params,
@@ -32,12 +34,12 @@ class UserRelationshipsService {
           .map((json) => Follower.fromJson(json as Map<String, dynamic>))
           .toList();
 
+
       return {
         'friends': friendsList,
         'pagination': response['data']['pagination'] ?? {},
       };
     } catch (e) {
-
       rethrow;
     }
   }
@@ -58,6 +60,7 @@ class UserRelationshipsService {
         params['user_id'] = userId.toString();
       }
 
+
       final response = await _apiClient.get(
         '/data/users/followers',
         queryParameters: params,
@@ -67,12 +70,12 @@ class UserRelationshipsService {
           .map((json) => Follower.fromJson(json as Map<String, dynamic>))
           .toList();
 
+
       return {
         'followers': followersList,
         'pagination': response['data']['pagination'] ?? {},
       };
     } catch (e) {
-
       rethrow;
     }
   }
@@ -93,6 +96,7 @@ class UserRelationshipsService {
         params['user_id'] = userId.toString();
       }
 
+
       final response = await _apiClient.get(
         '/data/users/followings',
         queryParameters: params,
@@ -102,12 +106,12 @@ class UserRelationshipsService {
           .map((json) => Follower.fromJson(json as Map<String, dynamic>))
           .toList();
 
+
       return {
         'followings': followingsList,
         'pagination': response['data']['pagination'] ?? {},
       };
     } catch (e) {
-
       rethrow;
     }
   }
@@ -128,6 +132,7 @@ class UserRelationshipsService {
         params['user_id'] = userId.toString();
       }
 
+
       final response = await _apiClient.get(
         '/data/users/subscriptions',
         queryParameters: params,
@@ -138,12 +143,12 @@ class UserRelationshipsService {
               .map((json) => Subscription.fromJson(json as Map<String, dynamic>))
               .toList();
 
+
       return {
         'subscriptions': subscriptionsList,
         'pagination': response['data']['pagination'] ?? {},
       };
     } catch (e) {
-
       rethrow;
     }
   }

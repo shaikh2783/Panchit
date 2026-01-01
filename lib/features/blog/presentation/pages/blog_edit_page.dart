@@ -4,6 +4,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../core/network/api_client.dart';
+import '../../../../core/utils/html_decoder.dart';
 import '../../../../main.dart' show configCfgP;
 import '../../../../core/theme/ui_constants.dart';
 import '../../domain/blog_repository.dart';
@@ -147,7 +148,7 @@ class _BlogEditPageState extends State<BlogEditPage> {
             _label('blog_category'.tr),
             DropdownButtonFormField<int>(
               decoration: _inputDecoration(icon: Iconsax.category_copy),
-              items: _categories.map((c)=>DropdownMenuItem(value:c.categoryId, child: Text(c.categoryName))).toList(),
+              items: _categories.map((c)=>DropdownMenuItem(value:c.categoryId, child: Text(HtmlDecoder.decode(c.categoryName)))).toList(),
               value: _selectedCategoryId,
               onChanged: (v)=>setState(()=>_selectedCategoryId=v),
             ),

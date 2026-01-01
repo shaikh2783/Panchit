@@ -30,7 +30,6 @@ class MonetizationApiService {
         };
       }
     } catch (e) {
-
       return {'success': false, 'message': 'Error: $e'};
     }
   }
@@ -58,7 +57,6 @@ class MonetizationApiService {
         'message': response['message'] ?? 'Unknown error',
       };
     } catch (e) {
-
       return {'success': false, 'message': 'Error: $e'};
     }
   }
@@ -83,7 +81,6 @@ class MonetizationApiService {
         };
       }
     } catch (e) {
-
       return {'success': false, 'message': 'Error: $e'};
     }
   }
@@ -108,7 +105,6 @@ class MonetizationApiService {
         };
       }
     } catch (e) {
-
       return {'success': false, 'message': 'Error: $e'};
     }
   }
@@ -141,7 +137,6 @@ class MonetizationApiService {
         };
       }
     } catch (e) {
-
       return {'success': false, 'message': 'Error: $e'};
     }
   }

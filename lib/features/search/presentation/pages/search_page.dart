@@ -5,6 +5,9 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:get/get.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:snginepro/App_Settings.dart';
+import 'package:snginepro/core/services/admob_service.dart';
+import 'package:snginepro/core/widgets/admob_widgets.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../feed/data/models/post.dart';
 import '../../../feed/presentation/widgets/post_card.dart';
@@ -136,7 +139,6 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         }
       });
     } catch (e) {
-
     } finally {
       if (mounted) {
         setState(() => _isSearching = false);
@@ -381,8 +383,71 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       child: ListView.builder(
         controller: _scrollController,
         padding: const EdgeInsets.symmetric(vertical: 8),
-        itemCount: _posts.length + (_isLoadingMore ? 1 : 0),
+        itemCount: AdMobService.shouldShowAds(context) && AppSettings.enableAdMobInSearch
+            ? _posts.length + (_posts.length ~/ AppSettings.adMobSearchResultFrequency) + (_isLoadingMore ? 1 : 0)
+            : _posts.length + (_isLoadingMore ? 1 : 0),
         itemBuilder: (context, index) {
+          // Calculate considering ads
+          if (AdMobService.shouldShowAds(context) && AppSettings.enableAdMobInSearch) {
+            final adsCount = index ~/ (AppSettings.adMobSearchResultFrequency + 1);
+            final postIndex = index - adsCount;
+            
+            // Show ad every X results
+            if ((index + 1) % (AppSettings.adMobSearchResultFrequency + 1) == 0) {
+              return const NativeAdWidget();
+            }
+            
+            // Loading indicator
+            if (postIndex >= _posts.length) {
+              if (_isLoadingMore) {
+                return Container(
+                  padding: const EdgeInsets.all(20),
+                  child: Center(
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.blue.withOpacity(0.3),
+                            Colors.purple.withOpacity(0.3),
+                          ],
+                        ),
+                        shape: BoxShape.circle,
+                      ),
+                      child: CircularProgressIndicator(
+                        color: isDarkMode ? Colors.white : Colors.grey[700],
+                        strokeWidth: 2,
+                      ),
+                    ),
+                  ),
+                );
+              }
+              return const SizedBox.shrink();
+            }
+            
+            // Show post
+            final post = _posts[postIndex];
+            return Container(
+              margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: isDarkMode 
+                      ? Colors.black.withOpacity(0.3)
+                      : Colors.grey.withOpacity(0.2),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: PostCard(
+                post: post,
+              ),
+            );
+          }
+          
+          // No ads - original behavior
           if (index == _posts.length) {
             return Container(
               padding: const EdgeInsets.all(20),
@@ -889,10 +954,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       case 'post':
       case 'blog':
         // TODO: Navigate to post detail
-
         break;
       default:
-
     }
   }
 

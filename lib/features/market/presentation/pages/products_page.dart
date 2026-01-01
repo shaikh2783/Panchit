@@ -6,11 +6,14 @@ import '../../domain/market_repository.dart';
 import '../widgets/product_card.dart';
 import 'product_details_page.dart';
 import 'cart_page.dart';
+import 'orders_page.dart';
+import 'add_product_page.dart';
 import '../../../../core/theme/ui_constants.dart';
+import '../../../../core/utils/html_decoder.dart';
 import '../../../../core/widgets/skeletons.dart';
 
 /// Products Page - صفحة المنتجات
-/// 
+///
 /// عرض قائمة المنتجات مع إمكانية البحث والفلترة حسب الفئة
 class ProductsPage extends StatefulWidget {
   const ProductsPage({Key? key}) : super(key: key);
@@ -22,7 +25,7 @@ class ProductsPage extends StatefulWidget {
 class _ProductsPageState extends State<ProductsPage> {
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  
+
   List<Product> _products = [];
   List<ProductCategory> _categories = [];
   int? _selectedCategoryId;
@@ -30,7 +33,7 @@ class _ProductsPageState extends State<ProductsPage> {
   bool _hasMore = true;
   int _offset = 0;
   final int _limit = 20;
-  
+
   late MarketRepository _repository;
 
   @override
@@ -50,7 +53,7 @@ class _ProductsPageState extends State<ProductsPage> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >= 
+    if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent * 0.8) {
       if (!_isLoading && _hasMore) {
         _loadMore();
@@ -71,7 +74,7 @@ class _ProductsPageState extends State<ProductsPage> {
 
   Future<void> _loadProducts({bool refresh = false}) async {
     if (_isLoading) return;
-    
+
     setState(() {
       _isLoading = true;
       if (refresh) {
@@ -134,6 +137,21 @@ class _ProductsPageState extends State<ProductsPage> {
       appBar: AppBar(
         title: Text('market_title'.tr),
         actions: [
+          // Add Product
+          IconButton(
+            icon: const Icon(Icons.add_box_outlined),
+            tooltip: 'market_create_product'.tr,
+            onPressed: () {
+              Get.to(() => const AddProductPage());
+            },
+          ),
+          // Orders Icon
+          IconButton(
+            icon: const Icon(Icons.receipt_long),
+            onPressed: () {
+              Get.to(() => const OrdersPage());
+            },
+          ),
           // Cart Icon
           IconButton(
             icon: const Icon(Icons.shopping_cart),
@@ -163,14 +181,24 @@ class _ProductsPageState extends State<ProductsPage> {
                       )
                     : null,
                 filled: true,
-                fillColor: Get.isDarkMode ? const Color(0xFF252d48) : Colors.white,
+                fillColor: Get.isDarkMode
+                    ? const Color(0xFF252d48)
+                    : Colors.white,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(UI.rMd),
-                  borderSide: BorderSide(color: Get.isDarkMode ? Colors.grey[700]! : Colors.grey[300]!),
+                  borderSide: BorderSide(
+                    color: Get.isDarkMode
+                        ? Colors.grey[700]!
+                        : Colors.grey[300]!,
+                  ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(UI.rMd),
-                  borderSide: BorderSide(color: Get.isDarkMode ? Colors.grey[700]! : Colors.grey[300]!),
+                  borderSide: BorderSide(
+                    color: Get.isDarkMode
+                        ? Colors.grey[700]!
+                        : Colors.grey[300]!,
+                  ),
                 ),
               ),
               onSubmitted: (_) => _onSearchChanged(),
@@ -195,7 +223,7 @@ class _ProductsPageState extends State<ProductsPage> {
                   }
                   final category = _categories[index - 1];
                   return _CategoryChip(
-                    label: category.categoryName,
+                    label: HtmlDecoder.decode(category.categoryName),
                     isSelected: _selectedCategoryId == category.categoryId,
                     onTap: () => _onCategoryChanged(category.categoryId),
                   );
@@ -209,21 +237,27 @@ class _ProductsPageState extends State<ProductsPage> {
           Expanded(
             child: _products.isEmpty
                 ? (_isLoading
-                    ? const SkeletonProductGrid()
-                    : Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.inventory_2_outlined,
-                                size: 64, color: UI.subtleText(context)),
-                            const SizedBox(height: 16),
-                            Text('market_empty'.tr,
+                      ? const SkeletonProductGrid()
+                      : Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.inventory_2_outlined,
+                                size: 64,
+                                color: UI.subtleText(context),
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                'market_empty'.tr,
                                 style: TextStyle(
-                                    fontSize: 18,
-                                    color: UI.subtleText(context))),
-                          ],
-                        ),
-                      ))
+                                  fontSize: 18,
+                                  color: UI.subtleText(context),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ))
                 : RefreshIndicator(
                     onRefresh: () => _loadProducts(refresh: true),
                     child: GridView.builder(
@@ -231,22 +265,26 @@ class _ProductsPageState extends State<ProductsPage> {
                       padding: const EdgeInsets.all(16),
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.7,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12,
-                      ),
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.7,
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 12,
+                          ),
                       itemCount: _products.length + (_hasMore ? 1 : 0),
                       itemBuilder: (context, index) {
                         if (index >= _products.length) {
-                          return const Center(child: CircularProgressIndicator());
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
                         }
                         return ProductCard(
                           product: _products[index],
                           onTap: () {
-                            Get.to(() => ProductDetailsPage(
-                                  productId: _products[index].productId,
-                                ));
+                            Get.to(
+                              () => ProductDetailsPage(
+                                productId: _products[index].productId,
+                              ),
+                            );
                           },
                         );
                       },
@@ -254,6 +292,11 @@ class _ProductsPageState extends State<ProductsPage> {
                   ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => Get.to(() => const AddProductPage()),
+        icon: const Icon(Icons.add),
+        label: Text('market_create_product'.tr),
       ),
     );
   }
@@ -279,12 +322,14 @@ class _CategoryChip extends StatelessWidget {
         label: Text(label),
         selected: isSelected,
         onSelected: (_) => onTap(),
-        backgroundColor: Get.isDarkMode ? const Color(0xFF252d48) : Colors.grey[200],
+        backgroundColor: Get.isDarkMode
+            ? const Color(0xFF252d48)
+            : Colors.grey[200],
         selectedColor: Theme.of(context).colorScheme.primary.withOpacity(0.15),
         checkmarkColor: Theme.of(context).colorScheme.primary,
         labelStyle: TextStyle(
-          color: isSelected 
-              ? Theme.of(context).colorScheme.primary 
+          color: isSelected
+              ? Theme.of(context).colorScheme.primary
               : (Get.isDarkMode ? Colors.white : Colors.black87),
           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
         ),

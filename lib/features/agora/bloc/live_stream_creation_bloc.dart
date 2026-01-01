@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import '../data/api_service/live_stream_api_service.dart';
+import 'package:flutter/foundation.dart';
 
 // Events
 abstract class LiveStreamCreationEvent extends Equatable {
@@ -132,6 +133,7 @@ class LiveStreamCreationBloc extends Bloc<LiveStreamCreationEvent, LiveStreamCre
         postPrice: event.postPrice,
       );
 
+
       // استخراج البيانات من الاستجابة
       final liveId = createResponse['live_id'];
       final postId = createResponse['post_id'];
@@ -148,7 +150,7 @@ class LiveStreamCreationBloc extends Bloc<LiveStreamCreationEvent, LiveStreamCre
 
       // إذا كان agora_token موجود مباشرة، استخدمه
       if (directAgoraToken != null) {
-
+        
         emit(LiveStreamCreationSuccess(
           liveId: int.parse(liveId.toString()),
           postId: int.parse(postId.toString()),
@@ -170,12 +172,14 @@ class LiveStreamCreationBloc extends Bloc<LiveStreamCreationEvent, LiveStreamCre
           role: 'publisher',
         );
 
+
         final tokenData = tokenResponse['data'];
         
         // استخراج البيانات الصحيحة من الاستجابة
         final agoraToken = tokenData?['agora_audience_token']; // البيانات الحقيقية من API
         final agoraUid = tokenData?['agora_audience_uid'];
         final realChannelName = tokenData?['agora_channel_name'] ?? channelName.toString();
+        
 
         emit(LiveStreamCreationSuccess(
           liveId: int.parse(liveId.toString()),
@@ -186,7 +190,7 @@ class LiveStreamCreationBloc extends Bloc<LiveStreamCreationEvent, LiveStreamCre
           agoraUid: agoraUid != null ? int.tryParse(agoraUid.toString()) : null,
         ));
       } catch (tokenError) {
-
+        
         // البث تم إنشاؤه بنجاح حتى لو فشل token - نولد token مؤقت
         // يمكن للمستخدم المتابعة والتطبيق سيعمل مع Agora بدون backend token
         emit(LiveStreamCreationSuccess(
@@ -201,7 +205,7 @@ class LiveStreamCreationBloc extends Bloc<LiveStreamCreationEvent, LiveStreamCre
       }
 
     } catch (e) {
-
+      
       String errorMessage = 'فشل في إنشاء البث المباشر';
       String? errorType;
 

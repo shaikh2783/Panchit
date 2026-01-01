@@ -51,7 +51,7 @@ class ThemeToggleButton extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  isDark ? 'تم التبديل للوضع الفاتح' : 'تم التبديل للوضع الداكن',
+                  isDark ? 'switched_to_light_mode'.tr : 'switched_to_dark_mode'.tr,
                   style: const TextStyle(color: Colors.white),
                 ),
               ],
@@ -63,7 +63,7 @@ class ThemeToggleButton extends StatelessWidget {
             borderRadius: 8,
           );
         },
-        tooltip: isDark ? 'الوضع الفاتح' : 'الوضع الداكن',
+        tooltip: isDark ? 'light_mode'.tr : 'dark_mode'.tr,
       );
     });
   }
@@ -81,9 +81,9 @@ class ThemeToggleSwitch extends StatelessWidget {
       final isDark = themeController.isDarkMode;
       
       return SwitchListTile(
-        title: const Text('الوضع الداكن'),
+        title: Text('dark_mode'.tr),
         subtitle: Text(
-          isDark ? 'تم التفعيل' : 'تم التعطيل',
+          isDark ? 'enabled'.tr : 'disabled'.tr,
         ),
         secondary: Icon(
           isDark ? Icons.dark_mode : Icons.light_mode,
@@ -113,8 +113,8 @@ class ThemeModeSelector extends StatelessWidget {
       return Column(
         children: [
           RadioListTile<bool>(
-            title: const Text('الوضع الفاتح'),
-            subtitle: const Text('مناسب للاستخدام النهاري'),
+            title: Text('light_mode'.tr),
+            subtitle: Text('suitable_for_daytime_use'.tr),
             secondary: const Icon(Icons.light_mode, color: Colors.amber),
             value: false,
             groupValue: isDark,
@@ -126,8 +126,8 @@ class ThemeModeSelector extends StatelessWidget {
             activeColor: AppColors.primary,
           ),
           RadioListTile<bool>(
-            title: const Text('الوضع الداكن'),
-            subtitle: const Text('مناسب للاستخدام الليلي'),
+            title: Text('dark_mode'.tr),
+            subtitle: Text('suitable_for_nighttime_use'.tr),
             secondary: Icon(Icons.dark_mode, color: AppColors.primary),
             value: true,
             groupValue: isDark,

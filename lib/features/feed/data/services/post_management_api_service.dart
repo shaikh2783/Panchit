@@ -1,6 +1,7 @@
 import 'dart:convert';
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
+import 'package:flutter/foundation.dart';
 
 /// خدمة إدارة المنشورات - حفظ، تثبيت، إخفاء، حذف، تفاعل، تعديل
 class PostManagementApiService {
@@ -23,6 +24,7 @@ class PostManagementApiService {
         },
       );
 
+
       if (response['status'] == 'success') {
         return response;
       } else {
@@ -32,7 +34,6 @@ class PostManagementApiService {
         );
       }
     } catch (e) {
-
       rethrow;
     }
   }
@@ -54,6 +55,7 @@ class PostManagementApiService {
         },
       );
 
+
       if (response['status'] == 'success') {
         return response;
       } else {
@@ -63,7 +65,6 @@ class PostManagementApiService {
         );
       }
     } catch (e) {
-
       rethrow;
     }
   }
@@ -76,7 +77,7 @@ class PostManagementApiService {
     String? location,
   }) async {
     try {
-
+      
       final body = <String, dynamic>{
         'post_id': postId,
       };
@@ -84,11 +85,13 @@ class PostManagementApiService {
       if (text != null) body['text'] = text;
       if (privacy != null) body['privacy'] = privacy;
       if (location != null) body['location'] = location;
+      
 
       final response = await _apiClient.post(
         configCfgP('post_edit'),
         body: body,
       );
+
 
       if (response['status'] == 'success') {
         return response;
@@ -99,7 +102,6 @@ class PostManagementApiService {
         );
       }
     } catch (e) {
-
       rethrow;
     }
   }
@@ -115,6 +117,7 @@ class PostManagementApiService {
         },
       );
 
+
       if (response['status'] == 'success') {
         return response;
       } else {
@@ -124,7 +127,6 @@ class PostManagementApiService {
         );
       }
     } catch (e) {
-
       rethrow;
     }
   }

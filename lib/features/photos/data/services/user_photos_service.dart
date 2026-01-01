@@ -1,6 +1,7 @@
 import 'package:snginepro/core/network/api_client.dart';
 import '../models/user_photo.dart';
 import '../models/user_album.dart';
+import 'package:flutter/foundation.dart';
 
 class UserPhotosService {
   final ApiClient _apiClient;
@@ -23,6 +24,7 @@ class UserPhotosService {
         params['username'] = username;
       }
 
+
       final response = await _apiClient.get(
         '/data/users/photos',
         queryParameters: params,
@@ -32,12 +34,12 @@ class UserPhotosService {
           .map((json) => UserPhoto.fromJson(json as Map<String, dynamic>))
           .toList();
 
+
       return {
         'photos': photosList,
         'pagination': response['data']['pagination'] ?? {},
       };
     } catch (e) {
-
       rethrow;
     }
   }
@@ -58,6 +60,7 @@ class UserPhotosService {
         params['username'] = username;
       }
 
+
       final response = await _apiClient.get(
         '/data/users/albums',
         queryParameters: params,
@@ -67,12 +70,12 @@ class UserPhotosService {
           .map((json) => UserAlbum.fromJson(json as Map<String, dynamic>))
           .toList();
 
+
       return {
         'albums': albumsList,
         'pagination': response['data']['pagination'] ?? {},
       };
     } catch (e) {
-
       rethrow;
     }
   }
@@ -90,6 +93,7 @@ class UserPhotosService {
         'limit': limit.toString(),
       };
 
+
       final response = await _apiClient.get(
         '/data/albums/photos',
         queryParameters: params,
@@ -99,13 +103,13 @@ class UserPhotosService {
           .map((json) => UserPhoto.fromJson(json as Map<String, dynamic>))
           .toList();
 
+
       return {
         'photos': photosList,
         'pagination': response['data']['pagination'] ?? {},
         'album_info': response['data']['album_info'] ?? {},
       };
     } catch (e) {
-
       rethrow;
     }
   }

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:snginepro/core/network/api_client.dart';
 
 class AdsApiService {
@@ -55,6 +54,7 @@ class AdsApiService {
     String? adsGroupId,
     String? adsEventId,
     String? imageFilename,
+    String? videoFilename,
     String? adsTitle,
     String? adsDescription,
   }) async {
@@ -80,6 +80,7 @@ class AdsApiService {
       if (adsGroupId != null) 'ads_group': adsGroupId,
       if (adsEventId != null) 'ads_event': adsEventId,
       if (imageFilename != null) 'ads_image': imageFilename,
+      if (videoFilename != null) 'ads_video': videoFilename,
       if (adsTitle != null) 'ads_title': adsTitle,
       if (adsDescription != null) 'ads_description': adsDescription,
     };
@@ -107,6 +108,7 @@ class AdsApiService {
     String? adsGroupId,
     String? adsEventId,
     String? imageFilename,
+    String? videoFilename,
     String? adsTitle,
     String? adsDescription,
     bool? isActive,
@@ -133,6 +135,7 @@ class AdsApiService {
       if (adsGroupId != null) 'ads_group': adsGroupId,
       if (adsEventId != null) 'ads_event': adsEventId,
       if (imageFilename != null) 'ads_image': imageFilename,
+      if (videoFilename != null) 'ads_video': videoFilename,
       if (adsTitle != null) 'ads_title': adsTitle,
       if (adsDescription != null) 'ads_description': adsDescription,
       if (isActive != null) 'campaign_is_active': isActive ? '1' : '0',

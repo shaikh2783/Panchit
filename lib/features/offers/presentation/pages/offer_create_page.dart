@@ -9,6 +9,7 @@ import 'dart:io';
 import '../../data/models/offer_category.dart';
 import '../../domain/offers_repository.dart';
 import '../../data/services/offers_api_service.dart';
+import 'package:snginepro/core/utils/html_decoder.dart';
 
 class OfferCreatePage extends StatefulWidget {
   const OfferCreatePage({super.key});
@@ -219,9 +220,42 @@ class _OfferCreatePageState extends State<OfferCreatePage> {
           SizedBox(height: UI.md),
           TextField(
             controller: _descCtrl,
-            decoration: InputDecoration(labelText: 'description'.tr, border: const OutlineInputBorder()),
+            decoration: InputDecoration(
+              labelText: 'description'.tr,
+              border: const OutlineInputBorder(),
+              hintText: 'enter_description'.tr,
+            ),
             maxLines: 4,
+            onChanged: (_) => setState(() {}),
           ),
+          if (_descCtrl.text.isNotEmpty) ...[
+            SizedBox(height: UI.sm),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(UI.md),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey.shade300),
+                borderRadius: BorderRadius.circular(UI.rMd),
+                color: Colors.grey.shade50,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'preview'.tr + ':',
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: UI.sm),
+                  Text(
+                    HtmlDecoder.decode(_descCtrl.text),
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
+              ),
+            ),
+          ],
           SizedBox(height: UI.md),
           DropdownButtonFormField<int>(
             value: _categoryId,
@@ -232,7 +266,10 @@ class _OfferCreatePageState extends State<OfferCreatePage> {
             ),
             items: [
               const DropdownMenuItem(value: null, child: Text('Select Category')),
-              ..._categories.map((c) => DropdownMenuItem(value: c.id, child: Text(c.title))).toList(),
+              ..._categories.map((c) => DropdownMenuItem(
+                value: c.id, 
+                child: Text(HtmlDecoder.decode(c.title))
+              )).toList(),
             ],
             onChanged: (val) => setState(() => _categoryId = val),
             validator: (val) => val == null || val == 0 ? 'category'.tr + ' ' + 'is_required'.tr : null,

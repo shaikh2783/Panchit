@@ -1,36 +1,45 @@
 import 'package:equatable/equatable.dart';
-import 'order.dart';
 
 /// Checkout Result Model - نتيجة عملية الدفع
+/// 
+/// حسب التوثيق الجديد، API يرجع:
+/// ```json
+/// {
+///   "status": "success",
+///   "message": "Checkout completed successfully",
+///   "data": {
+///     "orders_collection_id": "5f7a3e8c1b2d9",
+///     "total": 2029.97
+///   }
+/// }
+/// ```
 class CheckoutResult extends Equatable {
-  final List<Order> orders;
-  final int totalOrders;
+  final String ordersCollectionId;
   final String totalAmount;
 
   const CheckoutResult({
-    required this.orders,
-    required this.totalOrders,
+    required this.ordersCollectionId,
     required this.totalAmount,
   });
 
   factory CheckoutResult.fromJson(Map<String, dynamic> json) {
-    final ordersList = json['orders'] as List<dynamic>? ?? [];
-    
+    // API الجديد يرجع orders_collection_id و total
+    final ordersCollectionId = json['orders_collection_id']?.toString() ?? '';
+    final totalAmount = json['total']?.toString() ?? '0.00';
+
     return CheckoutResult(
-      orders: ordersList.map((order) => Order.fromJson(order)).toList(),
-      totalOrders: int.parse(json['total_orders']?.toString() ?? '0'),
-      totalAmount: json['total_amount']?.toString() ?? '0.00',
+      ordersCollectionId: ordersCollectionId,
+      totalAmount: totalAmount,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'orders': orders.map((order) => order.toJson()).toList(),
-      'total_orders': totalOrders,
-      'total_amount': totalAmount,
+      'orders_collection_id': ordersCollectionId,
+      'total': totalAmount,
     };
   }
 
   @override
-  List<Object?> get props => [orders, totalOrders, totalAmount];
+  List<Object?> get props => [ordersCollectionId, totalAmount];
 }

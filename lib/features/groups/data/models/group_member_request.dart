@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 /// نموذج طلب انضمام لمجموعة
 class GroupMemberRequest {
   final int userId;
@@ -34,6 +35,7 @@ class GroupMemberRequest {
     final fullname =
         '${json['user_firstname']?.toString() ?? ''} ${json['user_lastname']?.toString() ?? ''}'
             .trim();
+
 
     return GroupMemberRequest(
       userId: userId,

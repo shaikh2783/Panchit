@@ -31,8 +31,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
   @override
   void initState() {
     super.initState();
-    // العربية لـ timeago
-    timeago.setLocaleMessages('en', timeago.ArMessages());
+    // تسجيل رسائل timeago للغات المدعومة
+    timeago.setLocaleMessages('ar', timeago.ArMessages());
+    timeago.setLocaleMessages('en', timeago.EnMessages());
 
     _scrollController.addListener(_onScroll);
 
@@ -58,13 +59,11 @@ class _NotificationsPageState extends State<NotificationsPage> {
         !_isLoadingMore &&
         !notifier.isLoadingMore &&
         notifier.hasMore) {
-
       _isLoadingMore = true;
       
       notifier.loadMoreNotifications().then((_) {
         _isLoadingMore = false;
       }).catchError((e) {
-
         _isLoadingMore = false;
       });
     }
@@ -231,7 +230,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
       case 'event_join':
       case 'event_invite':
         if (n.nodeType == 'event' && n.nodeId != null) {
-
           // TODO: Implement EventDetailPage navigation when available
         }
         break;
@@ -252,7 +250,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
             ),
           );
         } else {
-
         }
         break;
     }
@@ -312,7 +309,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
       }
 
     } catch (e) {
-
     }
   }
 
@@ -869,7 +865,9 @@ class _NotificationCard extends StatelessWidget {
 
   String _t(String t) {
     try {
-      return timeago.format(DateTime.parse(t), locale: 'ar');
+      // استخدام لغة التطبيق الحالية
+      final currentLocale = Get.locale?.languageCode ?? 'en';
+      return timeago.format(DateTime.parse(t), locale: currentLocale);
     } catch (_) {
       return t;
     }

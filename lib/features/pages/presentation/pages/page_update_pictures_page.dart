@@ -334,7 +334,6 @@ class _PageUpdatePicturesPageState extends State<PageUpdatePicturesPage> {
         Navigator.pop(context, true);
       }
     } catch (e) {
-
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -405,7 +404,6 @@ class _PageUpdatePicturesPageState extends State<PageUpdatePicturesPage> {
         Navigator.pop(context, true);
       }
     } catch (e) {
-
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

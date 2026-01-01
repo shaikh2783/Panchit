@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 class CreatePostRequest {
   CreatePostRequest({
     this.message,
@@ -21,6 +22,9 @@ class CreatePostRequest {
     this.eventId,
     this.forAdult = false, // 🆕 محتوى للبالغين
     this.isAnonymous = false, // 🔒 منشور مجهول
+    this.isPaid = false, // 💰 منشور مدفوع
+    this.postPrice, // سعر المنشور المدفوع
+    this.forSubscriptions = false, // للمشتركين فقط
   });
 
   final String? message;
@@ -44,9 +48,12 @@ class CreatePostRequest {
   final String? eventId;
   final bool forAdult; // 🆕 محتوى للبالغين (سيُطبق blur تلقائياً)
   final bool isAnonymous; // 🔒 منشور مجهول
+  final bool isPaid; // 💰 منشور مدفوع
+  final String? postPrice; // سعر المنشور المدفوع
+  final bool forSubscriptions; // للمشتركين فقط
 
   Map<String, dynamic> toJson() {
-
+    
     final json = <String, dynamic>{
       'privacy': privacy,
     };
@@ -55,19 +62,16 @@ class CreatePostRequest {
       // Send pageId as integer for in_page parameter
       final pageIdInt = int.tryParse(pageId!) ?? 0;
       json['in_page'] = pageIdInt;
-
     }
     if (groupId != null) {
       // Simple approach - just use in_group
       final groupIdInt = int.tryParse(groupId!) ?? 0;
       json['in_group'] = groupIdInt;
-
     }
     if (eventId != null) {
       // Send eventId as integer for in_event parameter
       final eventIdInt = int.tryParse(eventId!) ?? 0;
       json['in_event'] = eventIdInt;
-
     }
 
     if (message != null && message!.isNotEmpty) {
@@ -117,7 +121,6 @@ class CreatePostRequest {
       // Use the new API format for feelings
       json['feeling_action'] = feeling!.action;
       json['feeling_value'] = feeling!.value;
-
     }
 
     if (coloredPattern != null && coloredPattern! > 0) {
@@ -136,16 +139,25 @@ class CreatePostRequest {
       json['schedule_date'] = scheduleDate;
     }
 
+    // 💰 إضافة منشور مدفوع
+    if (isPaid) {
+      json['is_paid'] = 1;
+      if (postPrice != null && postPrice!.isNotEmpty) {
+        json['post_price'] = postPrice;
+      }
+      if (forSubscriptions) {
+        json['for_subscriptions'] = 1;
+      }
+    }
+
     // 🆕 إضافة for_adult
     if (forAdult) {
       json['for_adult'] = 1; // سيُطبق blur تلقائياً على جميع الصور
-
     }
 
     // 🔒 إضافة is_anonymous
     if (isAnonymous) {
       json['is_anonymous'] = 1;
-
     }
 
     // Set default post_type if not already set

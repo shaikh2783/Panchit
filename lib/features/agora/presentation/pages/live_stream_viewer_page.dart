@@ -75,7 +75,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
     _liveApiService = LiveStreamApiService(context.read<ApiClient>());
     
     // طباعة القيم المُمررة للتطوير
-
+    
     _initializeAnimations();
     _initializeAgora();
     _hideSystemUI();
@@ -108,19 +108,18 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
   Future<void> _joinLiveStream() async {
     final postId = widget.postId ?? widget.liveId;
     if (postId == null) {
-
       return;
     }
 
     try {
-
       final result = await _liveApiService.joinLiveStream(postId: postId);
-
+      
+      
       if (result['status'] == 'success') {
         setState(() {
           _hasJoinedLive = true;
         });
-
+        
         // بدء مراقبة الإحصائيات فقط بعد نجاح الانضمام
         _startStatsUpdates();
         
@@ -144,11 +143,10 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
           setState(() {
             _currentViewers = viewerCount!;
           });
-
+          
           // طباعة تفاصيل إضافية للتطوير
           if (data['post'] != null) {
             final post = data['post'];
-
           }
         }
         
@@ -160,15 +158,12 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
         });
         
         if (result['error_type'] == 'stream_ended') {
-
           _showStreamEndedMessage();
         } else {
-
           _showJoinFailedMessage(result['message'] ?? 'فشل في الانضمام للبث');
         }
       }
     } catch (e) {
-
       _showJoinFailedMessage('خطأ في الاتصال: ${e.toString()}');
     }
   }
@@ -221,16 +216,15 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
   void _startStatsUpdates() {
     final postId = widget.postId ?? widget.liveId;
     if (postId == null) {
-
       return;
     }
 
+    
     // تحديث الإحصائيات كل 3 ثوانٍ (أسرع للتفاعل)
     _statsUpdateTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
       if (mounted && _hasJoinedLive && !_isStreamEnded) {
         _fetchLiveStats();
       } else {
-
         timer.cancel();
       }
     });
@@ -256,15 +250,15 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
       if (result['status'] == 'success') {
         final data = result['data'];
         final newViewerCount = data['live_count'];
-
+        
+        
         // معلومات إضافية للتطوير
         if (data['comments'] != null) {
           final comments = data['comments'] as List;
-
+          
           // تحديث آخر comment ID لللاستعلامات المستقبلية
           if (comments.isNotEmpty) {
             _lastCommentId = comments.last['comment_id']?.toString();
-
           }
         }
         
@@ -274,12 +268,10 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
             _liveStats = data;
             _currentViewers = newViewerCount;
           });
-
         }
         
         // التحقق من حالة البث
         if (data['is_live'] == false || data['status'] == 'ended') {
-
           setState(() {
             _isStreamEnded = true;
           });
@@ -288,7 +280,6 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
         }
       } else {
         // إذا فشل جلب الإحصائيات، قد يكون البث انتهى
-
         if (result['error_type'] == 'stream_ended') {
           setState(() {
             _isStreamEnded = true;
@@ -298,7 +289,6 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
         }
       }
     } catch (e) {
-
       // لا نوقف التحديثات عند خطأ واحد، قد يكون مؤقت
     } finally {
       if (mounted) {
@@ -315,9 +305,8 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
     if (postId == null || !_hasJoinedLive) return;
 
     try {
-
       await _liveApiService.leaveLiveStream(postId: postId);
-
+      
       // إيقاف التحديثات
       _statsUpdateTimer?.cancel();
       
@@ -328,7 +317,6 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
         });
       }
     } catch (e) {
-
       // حتى لو فشلت مغادرة API، نوقف التحديثات محلياً
       _statsUpdateTimer?.cancel();
       if (mounted) {
@@ -529,16 +517,14 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
       _agoraService = AgoraService();
       
       // تهيئة Agora
-
       final initialized = await _agoraService.initialize();
       if (!initialized) {
         // التحقق من نوع الخطأ
         await _handlePermissionsError();
         return;
       }
-
+      
       // الانضمام للقناة
-
       final joined = await _agoraService.joinChannel(
         channelName: widget.channelName,
         token: widget.token,
@@ -548,7 +534,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
       if (!joined) {
         throw Exception('فشل في الانضمام للقناة - تحقق من معرف القناة والتوكن');
       }
-
+      
       setState(() {
         _isLoading = false;
       });
@@ -556,7 +542,6 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
       _loadingAnimationController.stop();
       
     } catch (e) {
-
       setState(() {
         _isLoading = false;
         _hasError = true;
@@ -704,7 +689,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
       // استخدام package:permission_handler
       final opened = await openAppSettings();
       if (opened) {
-
+        
         // إظهار رسالة تعليمية
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -734,7 +719,6 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
         );
       }
     } catch (e) {
-
     }
   }
 
@@ -979,7 +963,6 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
           // تفاعلات مباشرة
           LiveReactionsWidget(
             onReactionSent: (reaction) {
-
               // TODO: إرسال التفاعل عبر Agora أو API
             },
           ),
@@ -1280,7 +1263,6 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
                     GestureDetector(
                       onTap: () {
                         // TODO: تطبيق مشاركة البث
-
                       },
                     child: Container(
                       width: 45,
@@ -1347,14 +1329,14 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
 
   @override
   void dispose() {
-
+    
     // إيقاف جميع المؤقتات
     _hideControlsTimer?.cancel();
     _statsUpdateTimer?.cancel();
     
     // مغادرة البث المباشر عند الخروج (بدون انتظار)
     if (_hasJoinedLive && (widget.postId != null || widget.liveId != null)) {
-      _leaveLiveStream();
+      _leaveLiveStream().catchError((e) => null);
     }
     
     // تنظيف الموارد
@@ -1363,10 +1345,9 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
     _interfaceAnimationController.dispose();
     
     // تنظيف Agora والنظام
-    _agoraService.leaveChannel();
+    _agoraService.leaveChannel().catchError((e) => null);
     _showSystemUI();
     
     super.dispose();
-
   }
 }

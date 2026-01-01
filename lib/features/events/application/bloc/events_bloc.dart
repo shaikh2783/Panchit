@@ -4,6 +4,7 @@ import '../../data/models/event_member.dart';
 import '../../data/services/events_service.dart';
 import 'events_events.dart';
 import 'events_states.dart';
+import 'package:flutter/foundation.dart';
 
 /// Events Bloc
 class EventsBloc extends Bloc<EventsEvent, EventsState> {
@@ -475,13 +476,13 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
     Emitter<EventsState> emit,
   ) async {
     try {
-
       emit(EventsLoading());
 
       final result = await _eventsService.updateEventCover(
         eventId: event.eventId,
         coverData: event.coverData,
       );
+
 
       if (result['status'] == 'success') {
         emit(EventCoverUpdated(

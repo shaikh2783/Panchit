@@ -1,8 +1,10 @@
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:collection/collection.dart';
 
@@ -28,13 +30,19 @@ class CreatePostPageModern extends StatefulWidget {
     this.handle,
     this.handleId,
     this.handleName,
+    this.handleAvatar,
     this.initialPostType,
+    this.showPrivacySelector = true,
+    this.initialPrivacy,
   });
 
   final String? handle; // 'me', 'page', 'group', 'event'
   final int? handleId; // ID for page/group/event
   final String? handleName; // Display name for page/group/event
+  final String? handleAvatar; // Avatar for page/group/event
   final PostTypeOption? initialPostType; // Initial post type (e.g., Reel)
+  final bool showPrivacySelector; // Toggle privacy picker visibility
+  final String? initialPrivacy; // Optional starting privacy value
 
   @override
   State<CreatePostPageModern> createState() => _CreatePostPageModernState();
@@ -54,10 +62,14 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
   ];
 
   PostTypeOption _selectedType = PostTypeOption.text;
-  String _privacy = 'public';
+  late String _privacy;
   bool _isAnonymous = false;
   bool _isScheduled = false;
   bool _isAdultContent = false;
+  bool _isPaid = false;
+  String? _scheduledDateTime; // تاريخ الجدولة بصيغة YYYY-MM-DD HH:mm:ss
+  String? _postPrice; // سعر المنشور المدفوع
+  bool _forSubscriptions = false; // للمشتركين فقط
   bool _isCreating = false;
   double _videoUploadProgress = 0.0; // 0.0 - 1.0
   
@@ -76,12 +88,11 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
   @override
   void initState() {
     super.initState();
+    _privacy = widget.initialPrivacy ?? 'public';
     // Set initial post type if provided
     if (widget.initialPostType != null) {
       _selectedType = widget.initialPostType!;
-
     } else {
-
     }
     // إضافة listeners للتحديث عند تغيير النص أو التركيز
     _textController.addListener(() => setState(() {}));
@@ -113,7 +124,9 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       
       // التحقق من تفعيل الـ Feelings من الـ Provider
       final features = configProvider.features;
-
+      final feelingsEnabled = features?.posts.feelings ?? false;
+      
+      
       // جلب البيانات من الـ Provider مباشرة باستخدام الـ getters الجديدة
       final feelingsData = configProvider.feelings ?? [];
       final activitiesData = configProvider.activities ?? [];
@@ -123,7 +136,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         _setDefaultFeelingsData();
         return;
       }
-
+      
       setState(() {
         _feelingsEnabled = true; // نمكن الـ feelings دائماً إذا كانت البيانات متوفرة
         _feelings = feelingsData.map((f) => Map<String, dynamic>.from(f)).toList();
@@ -138,7 +151,6 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           allActions.add(action);
         }
       }
-
     } catch (e) {
       // في حالة الخطأ، نستخدم البيانات الافتراضية
       _setDefaultFeelingsData();
@@ -167,7 +179,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       ];
       _feelingsSynced = true;
     });
-
+    
   }
 
   @override
@@ -223,6 +235,32 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         _images.clear();
         _video = null;
       });
+    }
+  }
+
+  Future<void> _pickFile() async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.any,
+        allowMultiple: false,
+      );
+      if (result != null && result.files.isNotEmpty) {
+        final file = File(result.files.first.path!);
+        setState(() {
+          _video = file; // Store file as video temporarily
+          _selectedType = PostTypeOption.file;
+          _images.clear();
+          _audio = null;
+        });
+      }
+    } catch (e) {
+      Get.snackbar(
+        'error'.tr,
+        'failed_to_pick_file'.tr,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
   }
 
@@ -552,23 +590,19 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       if (_images.isNotEmpty) {
         uploadedPhotos = [];
         for (final image in _images) {
-
           final result = await apiService.uploadFile(
             image,
             type: FileUploadType.photo,
           );
           if (result != null) {
             uploadedPhotos.add(result);
-
           } else {
-
           }
         }
       }
 
       // Upload video if present
       if (_video != null) {
-
         _videoUploadProgress = 0.0;
         setState(() {});
 
@@ -588,12 +622,9 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           );
 
           if (_uploadedVideo != null) {
-
             if (_uploadedVideo!.thumb != null) {
-
             }
           } else {
-
             Get.snackbar(
               'Warning',
               'Video upload failed - Post will be created without video',
@@ -604,7 +635,6 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
             );
           }
         } catch (videoError) {
-
           Get.snackbar(
             'Video upload error',
             videoError.toString(),
@@ -621,18 +651,15 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       // Upload audio if present
       UploadedFileData? uploadedAudio;
       if (_audio != null) {
-
         uploadedAudio = await apiService.uploadFile(
           _audio!,
           type: FileUploadType.audio,
         );
         if (uploadedAudio != null) {
-
         }
       }
 
       // Build the request
-
       final request = _buildPostRequest(
         photos: uploadedPhotos,
         video: _uploadedVideo,
@@ -643,7 +670,6 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       final requestJson = request.toJson();
 
       // Create the post
-
       final postResponse = await apiService.createPostAdvanced(request);
 
       // Update list and go back to main page
@@ -666,24 +692,18 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         // Add new post immediately instead of full reload
         if (postResponse.isSuccess && postResponse.postData != null) {
           try {
-
             final newPost = Post.fromJson(postResponse.postData!);
-
             context.read<PostsBloc>().add(AddPostEvent(newPost));
-
           } catch (e, stackTrace) {
-
             // In case of parsing failure, fall back to reload
             context.read<PostsBloc>().add(RefreshPostsEvent());
           }
         } else {
-
           // If we didn't get post data, refresh the list
           context.read<PostsBloc>().add(RefreshPostsEvent());
         }
       }
     } catch (e) {
-
       Get.snackbar(
         'error'.tr,
         'failed_to_create_post'.trParams({'error': e.toString()}),
@@ -709,8 +729,8 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
     final handle = widget.handle ?? 'me';
     final handleId = widget.handleId;
     final feeling = _buildFeelingData();
-
-
+    
+    
     switch (_selectedType) {
       case PostTypeOption.photos:
         // Convert UploadedFileData to PhotoData with size and extension
@@ -729,13 +749,17 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           pageId: handle == 'page' && handleId != null ? handleId.toString() : null,
           groupId: handle == 'group' && handleId != null ? handleId.toString() : null,
           eventId: handle == 'event' && handleId != null ? handleId.toString() : null,
-          privacy: 'public',
+          privacy: _privacy,
           message: _textController.text,
           photos: photoData,
           // Don't include coloredPattern for photo posts
           feeling: feeling,
+          scheduleDate: _isScheduled ? _scheduledDateTime : null,
           forAdult: _isAdultContent, // 🆕 محتوى للبالغين
           isAnonymous: _isAnonymous, // 🔒 منشور مجهول
+          isPaid: _isPaid, // 💰 منشور مدفوع
+          postPrice: _postPrice,
+          forSubscriptions: _forSubscriptions,
         );
       case PostTypeOption.video:
         // Pass full video data object from upload response with all metadata
@@ -755,12 +779,13 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
               }
             : null;
 
+
         return CreatePostRequest(
           handle: handle,
           pageId: handle == 'page' && handleId != null ? handleId.toString() : null,
           groupId: handle == 'group' && handleId != null ? handleId.toString() : null,
           eventId: handle == 'event' && handleId != null ? handleId.toString() : null,
-          privacy: 'public',
+          privacy: _privacy,
           message: _textController.text,
           video: videoData,
           // Don't include coloredPattern for video posts
@@ -788,12 +813,13 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
               }
             : null;
 
+
         return CreatePostRequest(
           handle: handle,
           pageId: handle == 'page' && handleId != null ? handleId.toString() : null,
           groupId: handle == 'group' && handleId != null ? handleId.toString() : null,
           eventId: handle == 'event' && handleId != null ? handleId.toString() : null,
-          privacy: 'public',
+          privacy: _privacy,
           message: _textController.text,
           reel: reelData,
           reelThumbnail: thumbPath,
@@ -808,13 +834,17 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           pageId: handle == 'page' && handleId != null ? handleId.toString() : null,
           groupId: handle == 'group' && handleId != null ? handleId.toString() : null,
           eventId: handle == 'event' && handleId != null ? handleId.toString() : null,
-          privacy: 'public',
+          privacy: _privacy,
           message: _textController.text,
           audio: audio != null ? AudioData(source: audio.source) : null,
           // Don't include coloredPattern for audio posts
           feeling: feeling,
+          scheduleDate: _isScheduled ? _scheduledDateTime : null,
           forAdult: _isAdultContent, // 🆕 محتوى للبالغين
           isAnonymous: _isAnonymous, // 🔒 منشور مجهول
+          isPaid: _isPaid, // 💰 منشور مدفوع
+          postPrice: _postPrice,
+          forSubscriptions: _forSubscriptions,
         );
       case PostTypeOption.poll:
         return CreatePostRequest(
@@ -822,7 +852,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           pageId: handle == 'page' && handleId != null ? handleId.toString() : null,
           groupId: handle == 'group' && handleId != null ? handleId.toString() : null,
           eventId: handle == 'event' && handleId != null ? handleId.toString() : null,
-          privacy: 'public',
+          privacy: _privacy,
           message: _textController.text,
           pollOptions: _pollOptions
               .map((c) => c.text)
@@ -830,8 +860,12 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
               .toList(),
           // Don't include coloredPattern for poll posts
           feeling: feeling,
+          scheduleDate: _isScheduled ? _scheduledDateTime : null,
           forAdult: _isAdultContent, // 🆕 محتوى للبالغين
           isAnonymous: _isAnonymous, // 🔒 منشور مجهول
+          isPaid: _isPaid, // 💰 منشور مدفوع
+          postPrice: _postPrice,
+          forSubscriptions: _forSubscriptions,
         );
       case PostTypeOption.colored:
         return CreatePostRequest(
@@ -839,12 +873,16 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           pageId: handle == 'page' && handleId != null ? handleId.toString() : null,
           groupId: handle == 'group' && handleId != null ? handleId.toString() : null,
           eventId: handle == 'event' && handleId != null ? handleId.toString() : null,
-          privacy: 'public',
+          privacy: _privacy,
           message: _textController.text,
           coloredPattern: _selectedColoredPattern?.id,
           feeling: feeling,
+          scheduleDate: _isScheduled ? _scheduledDateTime : null,
           forAdult: _isAdultContent, // 🆕 محتوى للبالغين
           isAnonymous: _isAnonymous, // 🔒 منشور مجهول
+          isPaid: _isPaid, // 💰 منشور مدفوع
+          postPrice: _postPrice,
+          forSubscriptions: _forSubscriptions,
         );
       default:
         return CreatePostRequest(
@@ -852,12 +890,16 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           pageId: handle == 'page' && handleId != null ? handleId.toString() : null,
           groupId: handle == 'group' && handleId != null ? handleId.toString() : null,
           eventId: handle == 'event' && handleId != null ? handleId.toString() : null,
-          privacy: 'public',
+          privacy: _privacy,
           message: _textController.text,
           // Don't include coloredPattern for regular text posts
           feeling: feeling,
+          scheduleDate: _isScheduled ? _scheduledDateTime : null,
           forAdult: _isAdultContent, // 🆕 محتوى للبالغين
           isAnonymous: _isAnonymous, // 🔒 منشور مجهول
+          isPaid: _isPaid, // 💰 منشور مدفوع
+          postPrice: _postPrice,
+          forSubscriptions: _forSubscriptions,
         );
     }
   }
@@ -870,7 +912,9 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         auth.currentUser?['user_firstname'] ??
         auth.currentUser?['user_name'] ??
         'User';
-    final userAvatar = auth.currentUser?['user_picture'];
+    final userAvatar = (widget.handle == 'page' && widget.handleAvatar != null) 
+        ? widget.handleAvatar 
+        : auth.currentUser?['user_picture'];
     
     // Use handleName if posting to page/group/event, otherwise use userName
     final displayName = widget.handleName ?? userName;
@@ -1303,8 +1347,10 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                       color: isDark ? Colors.white : Colors.grey[800],
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  _buildPrivacyDropdown(isDark),
+                  if (widget.showPrivacySelector) ...[
+                    const SizedBox(height: 8),
+                    _buildPrivacyDropdown(isDark),
+                  ],
                 ],
               ),
             ),
@@ -1450,10 +1496,11 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
               margin: const EdgeInsets.only(right: 10),
               child: InkWell(
                 onTap: () {
-                  // Prevent changing type if initialPostType is set
-                  if (widget.initialPostType != null) return;
+                  // Allow picking files even if initialPostType is set
+                  if (widget.initialPostType == null) {
+                    setState(() => _selectedType = type);
+                  }
                   
-                  setState(() => _selectedType = type);
                   if (type == PostTypeOption.photos) {
                     _pickImages();
                   } else if (type == PostTypeOption.video) {
@@ -1462,6 +1509,8 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                     _pickVideo(); // Reel uses same video picker
                   } else if (type == PostTypeOption.audio) {
                     _pickAudio();
+                  } else if (type == PostTypeOption.file) {
+                    _pickFile();
                   }
                 },
                 borderRadius: BorderRadius.circular(16),
@@ -1856,7 +1905,6 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                             : IconButton(
                                 onPressed: () async {
                                   try {
-
                                     await configProvider.loadConfig(forceRefresh: true);
                                     if (mounted) {
                                       final patternsCount = configProvider.coloredPatterns?.length ?? 0;
@@ -1869,7 +1917,6 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                                       );
                                     }
                                   } catch (e) {
-
                                     if (mounted) {
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
@@ -2331,7 +2378,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                   child: Material(
                     color: Colors.transparent,
                     child: InkWell(
-                      onTap: _pickImages,
+                      onTap: () => _pickImages(),
                       borderRadius: BorderRadius.circular(8),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
@@ -2704,14 +2751,8 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                     const Color(0xFFfecfef),
                     () {},
                   ),
-                  const SizedBox(width: 12),
-                  _buildToolButton(
-                    Icons.tag_rounded,
-                    'tag_button'.tr,
-                    const Color(0xFF4facfe),
-                    const Color(0xFF00f2fe),
-                    () {},
-                  ),
+      
+            
                 ],
               ),
             ),
@@ -2944,29 +2985,29 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
               items: () {
                 final uniqueFeelingsActions = <String>{};
                 final items = <DropdownMenuItem<String>>[];
-
+                
+                
                 for (var feeling in _feelings) {
                   final action = feeling['action']?.toString();
                   if (action != null && action.isNotEmpty && !uniqueFeelingsActions.contains(action)) {
                     uniqueFeelingsActions.add(action);
                     final translatedLabel = _getTranslatedAction(action);
-
+                    
+                    
                     items.add(DropdownMenuItem<String>(
                       value: action,
                       child: Text(translatedLabel),
                     ));
                   }
                 }
-
+                
                 return items;
               }(),
               onChanged: (value) {
-
                 setSheetState(() {
                   _selectedFeelingAction = value;
                   _selectedFeelingActivity = null;
                   _feelingValueController.clear();
-
                 });
               },
             ),
@@ -2986,7 +3027,8 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
               hint: Text('select_a_feeling'.tr),
               items: () {
                 final items = <DropdownMenuItem<String>>[];
-
+                
+                
                 // جمع جميع الـ activities المتاحة (هذه هي المشاعر الفعلية)
                 final uniqueFeelings = <String>{};
                 for (var activity in _activities) {
@@ -2995,7 +3037,6 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                   if (feelingValue != null && feelingValue.isNotEmpty && !uniqueFeelings.contains(feelingValue)) {
                     uniqueFeelings.add(feelingValue);
                     final translatedEmotion = _getTranslatedEmotion(feelingValue);
-
                     items.add(DropdownMenuItem<String>(
                       value: feelingValue,
                       child: Row(
@@ -3011,14 +3052,13 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                     ));
                   }
                 }
-
+                
                 return items;
               }(),
               onChanged: (value) {
                 setState(() {
                   _selectedFeelingActivity = value;
                   _feelingValueController.clear();
-
                 });
               },
             )
@@ -3167,9 +3207,62 @@ List<Map<String, dynamic>> _normalizeList(dynamic data) {
           _buildSettingSwitch(
             'Schedule post',
             _isScheduled,
-            (value) => setState(() => _isScheduled = value),
+            (value) => setState(() {
+              _isScheduled = value;
+              if (value) {
+                _showScheduleDatePicker();
+              } else {
+                _scheduledDateTime = null;
+              }
+            }),
             isDark,
           ),
+          if (_isScheduled && _scheduledDateTime != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(
+                'Scheduled: $_scheduledDateTime',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: isDark ? Colors.grey[400] : Colors.grey[600],
+                ),
+              ),
+            ),
+          _buildSettingSwitch(
+            'Paid post',
+            _isPaid,
+            (value) => setState(() {
+              _isPaid = value;
+              if (!value) {
+                _postPrice = null;
+                _forSubscriptions = false;
+              }
+            }),
+            isDark,
+          ),
+          if (_isPaid) ...[
+            Padding(
+              padding: const EdgeInsets.only(top: 12, bottom: 8),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Enter post price',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  isDense: true,
+                ),
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                onChanged: (value) => setState(() => _postPrice = value),
+              ),
+            ),
+            _buildSettingSwitch(
+              'For subscriptions only',
+              _forSubscriptions,
+              (value) => setState(() => _forSubscriptions = value),
+              isDark,
+            ),
+          ],
           _buildSettingSwitch(
             'Adult content',
             _isAdultContent,
@@ -3201,5 +3294,38 @@ List<Map<String, dynamic>> _normalizeList(dynamic data) {
         ],
       ),
     );
+  }
+
+  Future<void> _showScheduleDatePicker() async {
+    final now = DateTime.now();
+    final future = now.add(const Duration(days: 365));
+
+    final selectedDate = await showDatePicker(
+      context: context,
+      initialDate: now,
+      firstDate: now,
+      lastDate: future,
+    );
+
+    if (selectedDate != null && mounted) {
+      final selectedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+      );
+
+      if (selectedTime != null) {
+        final scheduledDate = DateTime(
+          selectedDate.year,
+          selectedDate.month,
+          selectedDate.day,
+          selectedTime.hour,
+          selectedTime.minute,
+        );
+        // Format: YYYY-MM-DD HH:mm:ss
+        final formatted =
+            '${scheduledDate.year}-${scheduledDate.month.toString().padLeft(2, '0')}-${scheduledDate.day.toString().padLeft(2, '0')} ${scheduledDate.hour.toString().padLeft(2, '0')}:${scheduledDate.minute.toString().padLeft(2, '0')}:00';
+        setState(() => _scheduledDateTime = formatted);
+      }
+    }
   }
 }

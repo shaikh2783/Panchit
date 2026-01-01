@@ -169,6 +169,7 @@ class SettingsPage extends StatelessWidget {
           // Account
           _SectionTitle('account'.tr),
           const SizedBox(height: 10),
+
           // _SettingsTile(
           //   title: 'my_information'.tr,
           //   subtitle: 'my_information_subtitle'.tr,
@@ -184,8 +185,6 @@ class SettingsPage extends StatelessWidget {
           //     );
           //   },
           // ),
-         
-         
           _SettingsTile(
             title: 'my_addresses'.tr,
             subtitle: 'my_addresses_subtitle'.tr,
@@ -242,6 +241,7 @@ class SettingsPage extends StatelessWidget {
           // Membership & Monetization
           _SectionTitle('membership_monetization'.tr),
           const SizedBox(height: 10),
+
           // _SettingsTile(
           //   title: 'membership'.tr,
           //   subtitle: 'membership_subtitle'.tr,
@@ -254,8 +254,6 @@ class SettingsPage extends StatelessWidget {
           //     ).showSnackBar(SnackBar(content: Text('coming_soon'.tr)));
           //   },
           // ),
-        
-        
           _ExpandableSettingsSection(
             title: 'monetization'.tr,
             subtitle: 'monetization_subtitle'.tr,
@@ -519,6 +517,7 @@ class SettingsPage extends StatelessWidget {
               );
             },
           ),
+
           // _SettingsTile(
           //   title: 'help_center'.tr,
           //   subtitle: 'help_center_subtitle'.tr,
@@ -543,7 +542,6 @@ class SettingsPage extends StatelessWidget {
           //     ).showSnackBar(SnackBar(content: Text('coming_soon'.tr)));
           //   },
           // ),
-
           const SizedBox(height: 22),
 
           // Danger Zone
@@ -726,8 +724,10 @@ class SettingsPage extends StatelessWidget {
           children: [
             GetBuilder<ThemeController>(
               builder: (controller) => _ThemeTile(
-                title: 'light_mode'.tr, // 'الوضع الفاتح'
-                subtitle: 'clean_bright_interface'.tr, // 'واجهة نظيفة ومشرقة'
+                title: 'light_mode'.tr,
+                // 'الوضع الفاتح'
+                subtitle: 'clean_bright_interface'.tr,
+                // 'واجهة نظيفة ومشرقة'
                 icon: Icons.light_mode,
                 isSelected: !controller.isDarkMode,
                 onTap: () {
@@ -742,8 +742,10 @@ class SettingsPage extends StatelessWidget {
             ),
             GetBuilder<ThemeController>(
               builder: (controller) => _ThemeTile(
-                title: 'dark_mode'.tr, // 'الوضع الداكن'
-                subtitle: 'easy_eyes_interface'.tr, // 'واجهة مريحة للعيون'
+                title: 'dark_mode'.tr,
+                // 'الوضع الداكن'
+                subtitle: 'easy_eyes_interface'.tr,
+                // 'واجهة مريحة للعيون'
                 icon: Icons.dark_mode,
                 isSelected: controller.isDarkMode,
                 onTap: () {
@@ -767,6 +769,7 @@ class SettingsPage extends StatelessWidget {
 
 class _GlassHeader extends StatelessWidget {
   const _GlassHeader({required this.title, required this.subtitle});
+
   final String title;
   final String subtitle;
 
@@ -841,6 +844,7 @@ class _GlassHeader extends StatelessWidget {
 
 class _SectionTitle extends StatelessWidget {
   const _SectionTitle(this.title);
+
   final String title;
 
   @override
@@ -965,6 +969,7 @@ class _SettingsTile extends StatelessWidget {
 
 class _GradientIconBadge extends StatelessWidget {
   const _GradientIconBadge({required this.icon, required this.gradient});
+
   final IconData icon;
   final List<Color> gradient;
 

@@ -79,6 +79,7 @@ class _MyProductsPageState extends State<MyProductsPage> {
         limit: _limit,
       );
 
+
       setState(() {
         if (refresh) {
           _products = results;
@@ -88,11 +89,12 @@ class _MyProductsPageState extends State<MyProductsPage> {
         _hasMore = results.length == _limit;
         _offset += results.length;
       });
+
     } catch (e) {
       setState(() => _error = e.toString());
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString())),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.toString())));
     } finally {
       if (mounted) {
         setState(() {
@@ -147,9 +149,7 @@ class _MyProductsPageState extends State<MyProductsPage> {
             children: [
               _buildSearchField(),
               const SizedBox(height: UI.md),
-              Expanded(
-                child: _buildBody(isDark),
-              ),
+              Expanded(child: _buildBody(isDark)),
             ],
           ),
         ),
@@ -172,9 +172,7 @@ class _MyProductsPageState extends State<MyProductsPage> {
                 },
               )
             : null,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(UI.rMd),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(UI.rMd)),
       ),
       textInputAction: TextInputAction.search,
       onSubmitted: (_) => _loadProducts(refresh: true),
@@ -234,9 +232,8 @@ class _MyProductsPageState extends State<MyProductsPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => ProductDetailsPage(
-                      productId: product.productId,
-                    ),
+                    builder: (_) =>
+                        ProductDetailsPage(productId: product.productId),
                   ),
                 );
               },

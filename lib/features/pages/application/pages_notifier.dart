@@ -105,16 +105,13 @@ class PagesNotifier extends ChangeNotifier {
 
     try {
       final pages = await _repository.fetchMyPages();
-
       _myPages
         ..clear()
         ..addAll(pages);
     } on ApiException catch (e) {
       _errorMyPages = e.message;
-
     } catch (e) {
       _errorMyPages = 'Failed to load my pages';
-
     } finally {
       _isLoadingMyPages = false;
       notifyListeners();
@@ -134,10 +131,8 @@ class PagesNotifier extends ChangeNotifier {
         ..addAll(pages);
     } on ApiException catch (e) {
       _errorLikedPages = e.message;
-
     } catch (e) {
       _errorLikedPages = 'Failed to load liked pages';
-
     } finally {
       _isLoadingLikedPages = false;
       notifyListeners();
@@ -157,10 +152,8 @@ class PagesNotifier extends ChangeNotifier {
         ..addAll(pages);
     } on ApiException catch (e) {
       _errorSuggestedPages = e.message;
-
     } catch (e) {
       _errorSuggestedPages = 'Failed to load suggested pages';
-
     } finally {
       _isLoadingSuggestedPages = false;
       notifyListeners();
@@ -227,7 +220,6 @@ class PagesNotifier extends ChangeNotifier {
       
       notifyListeners();
     } catch (e) {
-
       // Could show snackbar error here
     }
   }

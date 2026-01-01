@@ -20,11 +20,11 @@ class OrderItem extends Equatable {
 
   factory OrderItem.fromJson(Map<String, dynamic> json) {
     return OrderItem(
-      productId: json['product_id'].toString(),
-      productName: json['product_name'].toString(),
-      productPrice: json['product_price'].toString(),
-      quantity: int.parse(json['quantity'].toString()),
-      total: json['total'].toString(),
+      productId: json['product_id']?.toString() ?? '0',
+      productName: json['product_name']?.toString() ?? 'Unknown Product',
+      productPrice: json['product_price']?.toString() ?? '0',
+      quantity: int.tryParse(json['quantity']?.toString() ?? '1') ?? 1,
+      total: json['total']?.toString() ?? '0',
       productPicture: json['product_picture']?.toString() ?? '',
     );
   }
@@ -42,11 +42,11 @@ class OrderItem extends Equatable {
 
   @override
   List<Object?> get props => [
-        productId,
-        productName,
-        productPrice,
-        quantity,
-        total,
-        productPicture,
-      ];
+    productId,
+    productName,
+    productPrice,
+    quantity,
+    total,
+    productPicture,
+  ];
 }

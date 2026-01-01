@@ -3,6 +3,7 @@ import '../../../../main.dart' show configCfgP;
 import '../models/event.dart';
 import '../models/event_member.dart';
 import '../models/event_category.dart';
+import 'package:flutter/foundation.dart';
 
 /// خدمة إدارة الفعاليات
 class EventsService {
@@ -22,7 +23,6 @@ class EventsService {
 
       return [];
     } catch (e) {
-
       return [];
     }
   }
@@ -57,7 +57,6 @@ class EventsService {
 
       return {'status': 'error', 'message': 'Failed to search events'};
     } catch (e) {
-
       return {'status': 'error', 'message': e.toString()};
     }
   }
@@ -105,9 +104,9 @@ class EventsService {
       final response = await _apiClient.get(configCfgP('events_base') + '/$eventId');
 
       if (response['status'] == 'success') {
-
+        
         final event = Event.fromJson(response['data']);
-
+        
         return {
           'status': 'success',
           'event': event,
@@ -116,7 +115,6 @@ class EventsService {
 
       return {'status': 'error', 'message': 'Failed to get event'};
     } catch (e) {
-
       return {'status': 'error', 'message': e.toString()};
     }
   }
@@ -153,20 +151,17 @@ class EventsService {
       if (eventPicture != null) body['event_picture'] = eventPicture;
       if (eventCover != null) body['event_cover'] = eventCover;
 
+      
       // Try PUT first (RESTful standard for updates)
       try {
         final response = await _apiClient.put(configCfgP('events_base') + '/$eventId/update', body: body);
-
         return response;
       } catch (e) {
-
         // Fallback to POST if PUT fails
         final response = await _apiClient.post(configCfgP('events_base') + '/$eventId/update', body: body);
-
         return response;
       }
     } catch (e) {
-
       return {'status': 'error', 'message': e.toString()};
     }
   }
@@ -238,7 +233,6 @@ class EventsService {
 
       return {'status': 'error', 'message': 'Failed to get members'};
     } catch (e) {
-
       return {'status': 'error', 'message': e.toString()};
     }
   }
@@ -278,7 +272,6 @@ class EventsService {
         'message': response['message'] ?? 'فشلت الدعوة',
       };
     } catch (e) {
-
       return {'status': 'error', 'message': e.toString()};
     }
   }
@@ -368,7 +361,6 @@ class EventsService {
 
       return {'status': 'error', 'message': 'Failed to get my events'};
     } catch (e) {
-
       return {'status': 'error', 'message': e.toString()};
     }
   }
@@ -413,7 +405,6 @@ class EventsService {
 
       return {'status': 'error', 'message': 'Failed to get suggested events'};
     } catch (e) {
-
       return {'status': 'error', 'message': e.toString()};
     }
   }
@@ -443,7 +434,6 @@ class EventsService {
         'message': response['message'] ?? 'Failed to update event picture'
       };
     } catch (e) {
-
       return {'status': 'error', 'message': e.toString()};
     }
   }
@@ -454,11 +444,12 @@ class EventsService {
     required String coverData, // base64 or URL
   }) async {
     try {
-
+      
       final response = await _apiClient.post(
         '/data/events/$eventId/cover',
         data: {'cover': coverData},
       );
+
 
       if (response['status'] == 'success') {
         final data = response['data'] as Map<String, dynamic>;
@@ -474,7 +465,6 @@ class EventsService {
         'message': response['message'] ?? 'Failed to update event cover'
       };
     } catch (e) {
-
       return {'status': 'error', 'message': e.toString()};
     }
   }

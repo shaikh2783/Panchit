@@ -10,6 +10,7 @@ import 'package:snginepro/App_Settings.dart';
 import 'package:snginepro/features/auth/application/auth_notifier.dart';
 import 'package:snginepro/features/auth/data/models/auth_response.dart';
 import 'package:snginepro/features/auth/presentation/pages/signup_page.dart';
+import 'package:snginepro/features/auth/presentation/pages/forgot_password_page.dart';
 
 /// 🎨 Ultra Modern Login Page - Complete Redesign
 class LoginPage extends StatefulWidget {
@@ -145,7 +146,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     // التحقق من اكتمال الإعدادات
     final validationError = AppSettings.validateGoogleSignInConfig();
     if (validationError != null) {
-
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(validationError),
@@ -161,6 +161,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     }
 
     try {
+      // تسجيل الخروج أولاً لإظهار قائمة الحسابات في كل مرة
+      await _googleSignIn.signOut();
+      
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
         // User cancelled sign in
@@ -171,7 +174,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       final googleAuth = await googleUser.authentication;
       final idToken = googleAuth.idToken;
       final serverAuthCode = googleUser.serverAuthCode; // قد يكون موجود بدلاً من idToken
-
+      
+      
       final authNotifier = context.read<AuthNotifier>();
       final AuthResponse? response = await authNotifier.signInWithGoogle(
         googleId: googleUser.id,
@@ -389,37 +393,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           scale: value,
           child: Column(
             children: [
-              Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFFFFFFFF), Color(0xFFE0E7FF)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(30),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      blurRadius: 30,
-                      spreadRadius: 5,
-                      offset: const Offset(0, 10),
-                    ),
-                    BoxShadow(
-                      color: Colors.white.withOpacity(0.2),
-                      blurRadius: 20,
-                      spreadRadius: -5,
-                      offset: const Offset(0, -5),
-                    ),
-                  ],
-                ),
-                child: const Icon(
-                  Icons.rocket_launch_rounded,
-                  size: 50,
-                  color: Color(0xFF667EEA),
-                ),
-              ),
+              Image.asset('assets/app_icon.png',height: 100,width: 100),
               const SizedBox(height: 20),
               const Text(
                 'Panchit',
@@ -596,7 +570,12 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             alignment: AlignmentDirectional.centerEnd,
             child: TextButton(
               onPressed: () {
-                // TODO: Implement forgot password
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const ForgotPasswordPage(),
+                  ),
+                );
               },
               style: TextButton.styleFrom(
                 foregroundColor: Colors.white,
@@ -929,7 +908,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         ),
         const SizedBox(height: 16),
         Text(
-          '© 2024 Panchit. All rights reserved.',
+          '© 2025 Panchit. All rights reserved.',
           style: TextStyle(
             color: isDark
                 ? Colors.white.withOpacity(0.4)

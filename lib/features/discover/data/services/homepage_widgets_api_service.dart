@@ -12,16 +12,14 @@ class HomepageWidgetsApiService {
   /// Fetch all homepage widgets
   Future<HomepageWidgetsResponse> getHomepageWidgets({String? authToken}) async {
     try {
-
+      
       // Try the primary path first
       try {
         final response = await _apiClient.get(configCfgP('homepage_widgets'));
 
         if (response['status'] == 'success') {
-
           return HomepageWidgetsResponse.fromJson(response['data']);
         } else {
-
           return HomepageWidgetsResponse.error(
             response['message'] ?? 'Failed to load homepage widgets',
           );
@@ -29,7 +27,7 @@ class HomepageWidgetsApiService {
       } catch (e) {
         // If the primary path fails, try an alternative endpoint with different headers
         if (e.toString().contains('401') || e.toString().contains('not logged in')) {
-
+          
           try {
             // Use the same headers that work in Postman with credentials from appConfig
             final alternativeHeaders = <String, String>{
@@ -52,16 +50,13 @@ class HomepageWidgetsApiService {
             );
 
             if (response['status'] == 'success') {
-
               return HomepageWidgetsResponse.fromJson(response['data']);
             } else {
-
               return HomepageWidgetsResponse.error(
                 response['message'] ?? 'Failed to load homepage widgets',
               );
             }
           } catch (altError) {
-
             throw e; // Rethrow the original error
           }
         } else {
@@ -69,10 +64,9 @@ class HomepageWidgetsApiService {
         }
       }
     } catch (e) {
-
+      
       // If the API call fails, use temporary mock data
       if (e.toString().contains('401') || e.toString().contains('not logged in')) {
-
         return _generateMockResponse();
       }
       
@@ -142,7 +136,7 @@ class HomepageWidgetsApiService {
         }
       }
     };
-
+    
     return HomepageWidgetsResponse.fromJson(mockData);
   }
 }

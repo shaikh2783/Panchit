@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/reaction_model.dart';
 import 'reactions_api_service.dart';
 import '../localization/localization_controller.dart';
+import 'package:flutter/foundation.dart';
 
 /// سيرفس Singleton لإدارة التفاعلات مع Cache
 /// يجلب التفاعلات مرة واحدة ويحفظها محلياً
@@ -34,7 +35,6 @@ class ReactionsService {
         return '${locale.languageCode}_${locale.countryCode ?? locale.languageCode}'.toLowerCase();
       }
     } catch (e) {
-
     }
     return 'en_us';
   }
@@ -47,16 +47,14 @@ class ReactionsService {
   /// تحميل التفاعلات (من الكاش أو من السيرفر)
   Future<List<ReactionModel>> loadReactions({bool forceRefresh = false}) async {
     final currentLang = _getCurrentLanguageCode();
-
+    
     // إذا تغيرت اللغة، نحتاج لإعادة التحميل
     if (_cachedLanguage != null && _cachedLanguage != currentLang) {
-
       forceRefresh = true;
     }
     
     // إذا كانت موجودة في الذاكرة وليس force refresh
     if (_cachedReactions != null && !forceRefresh && _cachedLanguage == currentLang) {
-
       return _cachedReactions!;
     }
 
@@ -70,7 +68,6 @@ class ReactionsService {
         _cachedReactions = cached;
         _cachedLanguage = currentLang;
         _isInitialized = true;
-
         return cached;
       }
     }
@@ -78,10 +75,8 @@ class ReactionsService {
     // جلب من السيرفر
     if (_apiService != null) {
       try {
-
         final reactions = await _apiService!.fetchReactions();
         if (reactions.isNotEmpty) {
-
           await _saveToCache(reactions);
           _cachedReactions = reactions;
           _cachedLanguage = currentLang;
@@ -89,7 +84,6 @@ class ReactionsService {
           return reactions;
         }
       } catch (e) {
-
       }
     }
 
@@ -105,15 +99,12 @@ class ReactionsService {
   /// الحصول على تفاعل معين حسب الاسم
   ReactionModel? getReactionByName(String reactionName) {
     final reactions = getReactions();
-
     try {
       final found = reactions.firstWhere(
         (r) => r.reaction.toLowerCase() == reactionName.toLowerCase(),
       );
-
       return found;
     } catch (e) {
-
       return null;
     }
   }
@@ -131,7 +122,6 @@ class ReactionsService {
         final difference = now.difference(cacheDate).inHours;
         
         if (difference > _cacheValidityHours) {
-
           return null;
         }
       }
@@ -142,11 +132,10 @@ class ReactionsService {
         final reactions = jsonList
             .map((json) => ReactionModel.fromJson(json as Map<String, dynamic>))
             .toList();
-
+        
         return reactions;
       }
     } catch (e) {
-
     }
     return null;
   }
@@ -162,7 +151,6 @@ class ReactionsService {
       if (prefs.containsKey(legacyKey)) {
         await prefs.remove(legacyKey);
         await prefs.remove(legacyTimestampKey);
-
       }
       
       // مسح كل كاشات التفاعلات المتعلقة باللغات
@@ -170,11 +158,9 @@ class ReactionsService {
       for (final key in keys) {
         if (key.startsWith('cached_reactions_') || key.startsWith('reactions_cache_timestamp_')) {
           await prefs.remove(key);
-
         }
       }
     } catch (e) {
-
     }
   }
 
@@ -187,9 +173,8 @@ class ReactionsService {
       
       await prefs.setString(_cacheKey, jsonString);
       await prefs.setInt(_cacheTimestampKey, DateTime.now().millisecondsSinceEpoch);
-
+      
     } catch (e) {
-
     }
   }
 
@@ -200,9 +185,7 @@ class ReactionsService {
       await prefs.remove(_cacheKey);
       await prefs.remove(_cacheTimestampKey);
       _cachedReactions = null;
-
     } catch (e) {
-
     }
   }
 

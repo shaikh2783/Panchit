@@ -1,6 +1,7 @@
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
 import '../models/report_reason.dart';
+import 'package:flutter/foundation.dart';
 
 /// خدمة API للإبلاغ عن المحتوى
 class ReportsApiService {
@@ -26,6 +27,7 @@ class ReportsApiService {
         },
       );
 
+
       if (response['status'] == 'success') {
         return response;
       } else {
@@ -35,7 +37,6 @@ class ReportsApiService {
         );
       }
     } catch (e) {
-
       rethrow;
     }
   }
@@ -45,6 +46,7 @@ class ReportsApiService {
     try {
 
       final response = await _apiClient.get(configCfgP('report_categories'));
+
 
       if (response['status'] == 'success') {
         final categoriesData = response['data'] as List?;
@@ -61,7 +63,6 @@ class ReportsApiService {
         );
       }
     } catch (e) {
-
       rethrow;
     }
   }
@@ -84,6 +85,7 @@ class ReportsApiService {
         },
       );
 
+
       if (response['status'] == 'success') {
         return response;
       } else {
@@ -93,7 +95,6 @@ class ReportsApiService {
         );
       }
     } catch (e) {
-
       rethrow;
     }
   }
@@ -116,6 +117,7 @@ class ReportsApiService {
         },
       );
 
+
       if (response['status'] == 'success') {
         return response;
       } else {
@@ -125,7 +127,6 @@ class ReportsApiService {
         );
       }
     } catch (e) {
-
       rethrow;
     }
   }

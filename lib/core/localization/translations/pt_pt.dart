@@ -2,6 +2,7 @@
 // European Portuguese translations (based on English with PT-PT overrides)
 const Map<String, String> ptPT = {
 
+
   // Getting Started - Portuguese Portugal overrides
   'skip_all': 'Saltar tudo',
   'back': 'Voltar',

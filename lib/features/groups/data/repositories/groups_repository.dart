@@ -3,6 +3,7 @@ import '../models/group.dart';
 import '../models/group_privacy.dart';
 import '../models/groups_response.dart';
 import '../services/groups_api_service.dart';
+import 'package:flutter/foundation.dart';
 
 /// Repository للمجموعات - يدير المنطق التجاري وإدارة الحالة
 class GroupsRepository {
@@ -27,7 +28,6 @@ class GroupsRepository {
       );
       return response.groups;
     } catch (e) {
-
       return [];
     }
   }
@@ -44,7 +44,6 @@ class GroupsRepository {
       );
       return response.groups;
     } catch (e) {
-
       return [];
     }
   }
@@ -65,7 +64,6 @@ class GroupsRepository {
           .toList();
       return filteredGroups;
     } catch (e) {
-
       return [];
     }
   }
@@ -90,7 +88,6 @@ class GroupsRepository {
           .toList();
       return filteredGroups;
     } catch (e) {
-
       return [];
     }
   }

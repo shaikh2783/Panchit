@@ -116,6 +116,26 @@ class CartCheckoutSuccess extends CartState {
   List<Object?> get props => [orderId, message];
 }
 
+  /// Cart payment required state
+  /// 
+  /// حالة تتطلب إتمام الدفع عبر payment gateway
+  class CartPaymentRequired extends CartState {
+    final String ordersCollectionId;
+    final String paymentUrl;
+    final String totalAmount;
+    final String message;
+
+    const CartPaymentRequired({
+      required this.ordersCollectionId,
+      required this.paymentUrl,
+      required this.totalAmount,
+      this.message = 'يرجى إتمام عملية الدفع',
+    });
+
+    @override
+    List<Object?> get props => [ordersCollectionId, paymentUrl, totalAmount, message];
+  }
+
 /// Cart checkout error state
 /// 
 /// حالة فشل إتمام الطلب

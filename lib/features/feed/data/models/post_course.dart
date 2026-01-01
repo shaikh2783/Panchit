@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 class PostCourse {
   PostCourse({
     required this.courseId,
@@ -79,7 +80,6 @@ class PostCourse {
     try {
       return PostCourse.fromJson(json);
     } catch (e) {
-
       return null;
     }
   }

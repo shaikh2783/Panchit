@@ -34,21 +34,22 @@ class _PostDetailPageState extends State<PostDetailPage> {
     try {
       final repository = context.read<PostsRepository>();
       final postData = await repository.fetchPost(widget.postId);
-      
+
       setState(() {
         _post = Post.fromJson(postData);
         _isLoading = false;
       });
     } catch (e) {
       String errorMessage = 'Failed to load post: $e';
-      
+
       // Check if it's a 404 error (Post not found)
-      if (e.toString().contains('Post not found') || 
+      if (e.toString().contains('Post not found') ||
           e.toString().contains('404') ||
-          e.toString().contains('"status":"error"') && e.toString().contains('"message":"Post not found"')) {
+          e.toString().contains('"status":"error"') &&
+              e.toString().contains('"message":"Post not found"')) {
         errorMessage = 'Post not found on this page or has been deleted';
       }
-      
+
       setState(() {
         _error = errorMessage;
         _isLoading = false;
@@ -77,10 +78,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('post_details_title'.tr),
-        elevation: 0,
-      ),
+      appBar: AppBar(title: Text('post_details_title'.tr), elevation: 0),
       body: _buildBody(isDark),
     );
   }
@@ -92,9 +90,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: isDark 
-              ? [Colors.grey[900]!, Colors.grey[850]!]
-              : [Colors.grey[50]!, Colors.grey[100]!],
+            colors: isDark
+                ? [Colors.grey[900]!, Colors.grey[850]!]
+                : [Colors.grey[50]!, Colors.grey[100]!],
           ),
         ),
         child: Center(
@@ -108,7 +106,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
                   color: isDark ? Colors.grey[800] : Colors.white,
                   boxShadow: [
                     BoxShadow(
-                      color: isDark ? Colors.black26 : Colors.grey.withOpacity(0.3),
+                      color: isDark
+                          ? Colors.black26
+                          : Colors.grey.withOpacity(0.3),
                       blurRadius: 20,
                       spreadRadius: 2,
                     ),
@@ -146,17 +146,22 @@ class _PostDetailPageState extends State<PostDetailPage> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: isDark 
-              ? [Colors.grey[900]!, Colors.grey[850]!]
-              : [Colors.grey[50]!, Colors.grey[100]!],
+            colors: isDark
+                ? [Colors.grey[900]!, Colors.grey[850]!]
+                : [Colors.grey[50]!, Colors.grey[100]!],
           ),
         ),
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 40.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 32.0,
+              vertical: 40.0,
+            ),
             child: Card(
               elevation: isDark ? 8 : 4,
-              shadowColor: isDark ? Colors.black54 : Colors.grey.withOpacity(0.3),
+              shadowColor: isDark
+                  ? Colors.black54
+                  : Colors.grey.withOpacity(0.3),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -164,17 +169,17 @@ class _PostDetailPageState extends State<PostDetailPage> {
                 padding: const EdgeInsets.all(32),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  gradient: isDark 
-                    ? LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [Colors.grey[800]!, Colors.grey[850]!],
-                      )
-                    : LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [Colors.white, Colors.grey[50]!],
-                      ),
+                  gradient: isDark
+                      ? LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [Colors.grey[800]!, Colors.grey[850]!],
+                        )
+                      : LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [Colors.white, Colors.grey[50]!],
+                        ),
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -184,9 +189,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         gradient: LinearGradient(
-                          colors: isDark 
-                            ? [Colors.purple[700]!, Colors.purple[800]!]
-                            : [Colors.purple[300]!, Colors.purple[400]!],
+                          colors: isDark
+                              ? [Colors.purple[700]!, Colors.purple[800]!]
+                              : [Colors.purple[300]!, Colors.purple[400]!],
                         ),
                         boxShadow: [
                           BoxShadow(
@@ -224,9 +229,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
                     Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: isDark 
-                            ? [Colors.blue[600]!, Colors.blue[700]!]
-                            : [Colors.blue[500]!, Colors.blue[600]!],
+                          colors: isDark
+                              ? [Colors.blue[600]!, Colors.blue[700]!]
+                              : [Colors.blue[500]!, Colors.blue[600]!],
                         ),
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
@@ -239,7 +244,10 @@ class _PostDetailPageState extends State<PostDetailPage> {
                       ),
                       child: ElevatedButton.icon(
                         onPressed: () => Navigator.of(context).pop(),
-                        icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
+                        icon: const Icon(
+                          Icons.arrow_back_rounded,
+                          color: Colors.white,
+                        ),
                         label: const Text(
                           'Go Back',
                           style: TextStyle(
@@ -251,8 +259,8 @@ class _PostDetailPageState extends State<PostDetailPage> {
                           backgroundColor: Colors.transparent,
                           shadowColor: Colors.transparent,
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 24, 
-                            vertical: 14
+                            horizontal: 24,
+                            vertical: 14,
                           ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -282,16 +290,18 @@ class _PostDetailPageState extends State<PostDetailPage> {
   }
 
   Widget _buildErrorState(bool isDark) {
-    final isPostNotFound = _error!.contains('Post not found on this page or has been deleted');
-    
+    final isPostNotFound = _error!.contains(
+      'Post not found on this page or has been deleted',
+    );
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: isDark 
-            ? [Colors.grey[900]!, Colors.grey[850]!]
-            : [Colors.grey[50]!, Colors.grey[100]!],
+          colors: isDark
+              ? [Colors.grey[900]!, Colors.grey[850]!]
+              : [Colors.grey[50]!, Colors.grey[100]!],
         ),
       ),
       child: Center(
@@ -307,17 +317,17 @@ class _PostDetailPageState extends State<PostDetailPage> {
               padding: const EdgeInsets.all(32),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                gradient: isDark 
-                  ? LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Colors.grey[800]!, Colors.grey[850]!],
-                    )
-                  : LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Colors.white, Colors.grey[50]!],
-                    ),
+                gradient: isDark
+                    ? LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [Colors.grey[800]!, Colors.grey[850]!],
+                      )
+                    : LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [Colors.white, Colors.grey[50]!],
+                      ),
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -328,33 +338,36 @@ class _PostDetailPageState extends State<PostDetailPage> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       gradient: isPostNotFound
-                        ? LinearGradient(
-                            colors: isDark 
-                              ? [Colors.orange[700]!, Colors.orange[800]!]
-                              : [Colors.orange[300]!, Colors.orange[400]!],
-                          )
-                        : LinearGradient(
-                            colors: isDark 
-                              ? [Colors.red[700]!, Colors.red[800]!]
-                              : [Colors.red[300]!, Colors.red[400]!],
-                          ),
+                          ? LinearGradient(
+                              colors: isDark
+                                  ? [Colors.orange[700]!, Colors.orange[800]!]
+                                  : [Colors.orange[300]!, Colors.orange[400]!],
+                            )
+                          : LinearGradient(
+                              colors: isDark
+                                  ? [Colors.red[700]!, Colors.red[800]!]
+                                  : [Colors.red[300]!, Colors.red[400]!],
+                            ),
                       boxShadow: [
                         BoxShadow(
-                          color: (isPostNotFound ? Colors.orange : Colors.red).withOpacity(0.3),
+                          color: (isPostNotFound ? Colors.orange : Colors.red)
+                              .withOpacity(0.3),
                           blurRadius: 20,
                           spreadRadius: 2,
                         ),
                       ],
                     ),
                     child: Icon(
-                      isPostNotFound ? Icons.search_off_rounded : Icons.error_outline_rounded,
+                      isPostNotFound
+                          ? Icons.search_off_rounded
+                          : Icons.error_outline_rounded,
                       size: 48,
                       color: Colors.white,
                     ),
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Main Error Message
                   Text(
                     _error!,
@@ -366,16 +379,22 @@ class _PostDetailPageState extends State<PostDetailPage> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  
+
                   if (isPostNotFound) ...[
                     const SizedBox(height: 16),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 12,
+                      ),
                       decoration: BoxDecoration(
-                        color: (isDark ? Colors.orange[800] : Colors.orange[50])?.withOpacity(0.7),
+                        color: (isDark ? Colors.orange[800] : Colors.orange[50])
+                            ?.withOpacity(0.7),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: isDark ? Colors.orange[600]! : Colors.orange[200]!,
+                          color: isDark
+                              ? Colors.orange[600]!
+                              : Colors.orange[200]!,
                           width: 1,
                         ),
                       ),
@@ -385,7 +404,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
                           Icon(
                             Icons.info_outline_rounded,
                             size: 18,
-                            color: isDark ? Colors.orange[300] : Colors.orange[700],
+                            color: isDark
+                                ? Colors.orange[300]
+                                : Colors.orange[700],
                           ),
                           const SizedBox(width: 8),
                           Flexible(
@@ -393,7 +414,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
                               'This post may have been deleted by its author or administrator',
                               style: TextStyle(
                                 fontSize: 14,
-                                color: isDark ? Colors.orange[200] : Colors.orange[800],
+                                color: isDark
+                                    ? Colors.orange[200]
+                                    : Colors.orange[800],
                                 fontWeight: FontWeight.w500,
                               ),
                               textAlign: TextAlign.center,
@@ -403,9 +426,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
                       ),
                     ),
                   ],
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // Action Buttons
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -414,9 +437,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
                       Container(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            colors: isDark 
-                              ? [Colors.blue[600]!, Colors.blue[700]!]
-                              : [Colors.blue[500]!, Colors.blue[600]!],
+                            colors: isDark
+                                ? [Colors.blue[600]!, Colors.blue[700]!]
+                                : [Colors.blue[500]!, Colors.blue[600]!],
                           ),
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
@@ -429,7 +452,10 @@ class _PostDetailPageState extends State<PostDetailPage> {
                         ),
                         child: ElevatedButton.icon(
                           onPressed: () => Navigator.of(context).pop(),
-                          icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
+                          icon: const Icon(
+                            Icons.arrow_back_rounded,
+                            color: Colors.white,
+                          ),
                           label: const Text(
                             'Go Back',
                             style: TextStyle(
@@ -441,8 +467,8 @@ class _PostDetailPageState extends State<PostDetailPage> {
                             backgroundColor: Colors.transparent,
                             shadowColor: Colors.transparent,
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 24, 
-                              vertical: 14
+                              horizontal: 24,
+                              vertical: 14,
                             ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -450,14 +476,16 @@ class _PostDetailPageState extends State<PostDetailPage> {
                           ),
                         ),
                       ),
-                      
+
                       if (!isPostNotFound) ...[
                         const SizedBox(width: 16),
                         Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: isDark ? Colors.grey[600]! : Colors.grey[300]!,
+                              color: isDark
+                                  ? Colors.grey[600]!
+                                  : Colors.grey[300]!,
                               width: 2,
                             ),
                           ),
@@ -465,12 +493,16 @@ class _PostDetailPageState extends State<PostDetailPage> {
                             onPressed: _loadPost,
                             icon: Icon(
                               Icons.refresh_rounded,
-                              color: isDark ? Colors.grey[300] : Colors.grey[700],
+                              color: isDark
+                                  ? Colors.grey[300]
+                                  : Colors.grey[700],
                             ),
                             label: Text(
                               'Try Again',
                               style: TextStyle(
-                                color: isDark ? Colors.grey[300] : Colors.grey[700],
+                                color: isDark
+                                    ? Colors.grey[300]
+                                    : Colors.grey[700],
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -478,8 +510,8 @@ class _PostDetailPageState extends State<PostDetailPage> {
                               backgroundColor: Colors.transparent,
                               side: BorderSide.none,
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 24, 
-                                vertical: 14
+                                horizontal: 24,
+                                vertical: 14,
                               ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),

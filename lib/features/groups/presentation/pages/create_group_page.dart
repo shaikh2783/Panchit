@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:get/get.dart';
 import 'package:snginepro/core/network/api_client.dart';
 import '../../data/models/group_privacy.dart';
 import '../../data/services/groups_api_service.dart';
@@ -59,16 +60,16 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
 
       if (result != null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('تم إنشاء المجموعة بنجاح'),
+          SnackBar(
+            content: Text('create_group_success'.tr),
             backgroundColor: Colors.green,
           ),
         );
         Navigator.pop(context, true); // العودة مع إشارة للتحديث
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('فشل إنشاء المجموعة، حاول مرة أخرى'),
+          SnackBar(
+            content: Text('create_group_failed'.tr),
             backgroundColor: Colors.red,
           ),
         );
@@ -76,7 +77,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('حدث خطأ: $e'), backgroundColor: Colors.red),
+        SnackBar(content: Text('create_group_error'.trParams({'error': e.toString()})), backgroundColor: Colors.red),
       );
     } finally {
       if (mounted) {
@@ -91,7 +92,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('إنشاء مجموعة'),
+        title: Text('create_group_title'.tr),
         actions: [
           if (_isCreating)
             const Center(
@@ -108,7 +109,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
             TextButton.icon(
               onPressed: _createGroup,
               icon: const Icon(Iconsax.tick_circle),
-              label: const Text('إنشاء'),
+              label: Text('create_group_cta'.tr),
               style: TextButton.styleFrom(foregroundColor: Colors.green),
             ),
         ],
@@ -140,8 +141,8 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
             TextFormField(
               controller: _titleController,
               decoration: InputDecoration(
-                labelText: 'عنوان المجموعة *',
-                hintText: 'مثال: مطوري Flutter في الإمارات',
+                labelText: 'create_group_title_label'.tr,
+                hintText: 'create_group_title_hint'.tr,
                 prefixIcon: const Icon(Iconsax.text),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -150,10 +151,10 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
               textInputAction: TextInputAction.next,
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return 'العنوان مطلوب';
+                  return 'create_group_title_required'.tr;
                 }
                 if (value.trim().length < 3) {
-                  return 'العنوان يجب أن يكون 3 أحرف على الأقل';
+                  return 'create_group_title_min'.tr;
                 }
                 return null;
               },
@@ -164,10 +165,10 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
             TextFormField(
               controller: _usernameController,
               decoration: InputDecoration(
-                labelText: 'اسم المستخدم *',
-                hintText: 'مثال: flutter_devs_uae',
+                labelText: 'create_group_username_label'.tr,
+                hintText: 'create_group_username_hint'.tr,
                 prefixIcon: Icon(Iconsax.add),
-                helperText: 'حروف إنجليزية وأرقام وشرطة سفلية فقط',
+                helperText: 'create_group_username_helper'.tr,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -175,13 +176,13 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
               textInputAction: TextInputAction.next,
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return 'اسم المستخدم مطلوب';
+                  return 'create_group_username_required'.tr;
                 }
                 if (value.trim().length < 3) {
-                  return 'اسم المستخدم يجب أن يكون 3 أحرف على الأقل';
+                  return 'create_group_username_min'.tr;
                 }
                 if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(value.trim())) {
-                  return 'حروف إنجليزية وأرقام وشرطة سفلية فقط';
+                  return 'create_group_username_invalid'.tr;
                 }
                 return null;
               },
@@ -192,8 +193,8 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
             TextFormField(
               controller: _descriptionController,
               decoration: InputDecoration(
-                labelText: 'الوصف (اختياري)',
-                hintText: 'اكتب وصف للمجموعة...',
+                labelText: 'create_group_description_label'.tr,
+                hintText: 'create_group_description_hint'.tr,
                 prefixIcon: const Icon(Iconsax.document_text),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -206,7 +207,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
             const SizedBox(height: 24),
 
             // الخصوصية
-            Text('الخصوصية *', style: Theme.of(context).textTheme.titleMedium),
+            Text('create_group_privacy_label'.tr, style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 12),
             Container(
               decoration: BoxDecoration(
@@ -217,8 +218,8 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                 children: [
                   _PrivacyOption(
                     icon: Iconsax.global,
-                    title: 'عامة',
-                    description: 'يمكن لأي شخص رؤية المجموعة والمنشورات',
+                    title: 'create_group_privacy_public'.tr,
+                    description: 'create_group_privacy_public_desc'.tr,
                     value: GroupPrivacy.public,
                     groupValue: _selectedPrivacy,
                     onChanged: (value) {
@@ -228,9 +229,8 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                   const Divider(height: 1),
                   _PrivacyOption(
                     icon: Iconsax.lock,
-                    title: 'مغلقة',
-                    description:
-                        'يمكن لأي شخص رؤية المجموعة، الأعضاء فقط يرون المنشورات',
+                    title: 'create_group_privacy_closed'.tr,
+                    description: 'create_group_privacy_closed_desc'.tr,
                     value: GroupPrivacy.closed,
                     groupValue: _selectedPrivacy,
                     onChanged: (value) {
@@ -240,9 +240,8 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                   const Divider(height: 1),
                   _PrivacyOption(
                     icon: Iconsax.eye_slash,
-                    title: 'سرية',
-                    description:
-                        'الأعضاء المعتمدون فقط يمكنهم رؤية المجموعة والمنشورات',
+                    title: 'create_group_privacy_secret'.tr,
+                    description: 'create_group_privacy_secret_desc'.tr,
                     value: GroupPrivacy.secret,
                     groupValue: _selectedPrivacy,
                     onChanged: (value) {
@@ -258,18 +257,18 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
             DropdownButtonFormField<int>(
               value: _selectedCategoryId,
               decoration: InputDecoration(
-                labelText: 'الفئة *',
+                labelText: 'create_group_category_label'.tr,
                 prefixIcon: const Icon(Iconsax.category),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              items: const [
-                DropdownMenuItem(value: 1, child: Text('تقنية')),
-                DropdownMenuItem(value: 2, child: Text('رياضة')),
-                DropdownMenuItem(value: 3, child: Text('تعليم')),
-                DropdownMenuItem(value: 4, child: Text('ترفيه')),
-                DropdownMenuItem(value: 5, child: Text('أخرى')),
+              items: [
+                DropdownMenuItem(value: 1, child: Text('create_group_category_tech'.tr)),
+                DropdownMenuItem(value: 2, child: Text('create_group_category_sports'.tr)),
+                DropdownMenuItem(value: 3, child: Text('create_group_category_education'.tr)),
+                DropdownMenuItem(value: 4, child: Text('create_group_category_entertainment'.tr)),
+                DropdownMenuItem(value: 5, child: Text('create_group_category_other'.tr)),
               ],
               onChanged: (value) {
                 setState(() => _selectedCategoryId = value ?? 1);
@@ -293,7 +292,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                       )
                     : const Icon(Iconsax.add_circle),
                 label: Text(
-                  _isCreating ? 'جاري الإنشاء...' : 'إنشاء المجموعة',
+                  _isCreating ? 'create_group_creating'.tr : 'create_group_button'.tr,
                   style: const TextStyle(fontSize: 16),
                 ),
                 style: ElevatedButton.styleFrom(
@@ -322,7 +321,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'ستصبح مشرف المجموعة تلقائياً بعد إنشائها',
+                      'create_group_note'.tr,
                       style: TextStyle(fontSize: 13, color: Colors.blue[700]),
                     ),
                   ),

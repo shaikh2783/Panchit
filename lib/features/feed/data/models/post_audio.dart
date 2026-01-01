@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 class PostAudio {
   PostAudio({
     required this.audioId,
@@ -96,7 +97,6 @@ class PostAudio {
     try {
       return PostAudio.fromJson(value);
     } catch (e) {
-
       return null;
     }
   }

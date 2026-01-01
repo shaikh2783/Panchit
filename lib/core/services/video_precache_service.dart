@@ -54,7 +54,6 @@ class VideoPrecacheService {
     // ✅ Limit concurrent caching operations to prevent memory exhaustion
     if (_currentCachingCount >= _maxConcurrentCaching) {
       if (kDebugMode) {
-
       }
       return;
     }
@@ -72,7 +71,6 @@ class VideoPrecacheService {
       final cacheDays = cacheValidDays ?? AppSettings.videoCacheDuration;
       
       if (kDebugMode) {
-
       }
 
       // بدء حفظ الفيديو
@@ -87,13 +85,11 @@ class VideoPrecacheService {
       _currentCachingCount--;
 
       if (kDebugMode) {
-
       }
     } catch (e) {
       _cachingUrls.remove(url);
       _currentCachingCount--;
       if (kDebugMode) {
-
       }
     }
   }
@@ -122,7 +118,6 @@ class VideoPrecacheService {
     for (var i = 0; i < removeCount && i < sortedEntries.length; i++) {
       _cachedUrls.remove(sortedEntries[i].key);
       if (kDebugMode) {
-
       }
     }
   }
@@ -158,11 +153,9 @@ class VideoPrecacheService {
       await CachedVideoPlayerPlus.clearAllCache();
       clearCache();
       if (kDebugMode) {
-
       }
     } catch (e) {
       if (kDebugMode) {
-
       }
     }
   }

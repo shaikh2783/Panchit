@@ -2,6 +2,7 @@ import 'package:snginepro/core/network/api_client.dart';
 
 import 'package:snginepro/features/feed/data/models/post.dart';
 import 'package:snginepro/main.dart' show configCfgP;
+import 'package:flutter/foundation.dart';
 
 /// خدمة المنشورات المدفوعة (Promoted Posts)
 /// تجلب منشور مدفوع واحد عشوائي في كل مرة
@@ -101,7 +102,6 @@ class PromotedPostsService {
       
       return null;
     } catch (e) {
-
       return null;
     }
   }
@@ -119,7 +119,6 @@ class PromotedPostsService {
       
       return false;
     } catch (e) {
-
       return false;
     }
   }

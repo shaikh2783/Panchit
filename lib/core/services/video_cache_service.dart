@@ -1,5 +1,6 @@
 import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:snginepro/App_Settings.dart';
+import 'package:flutter/foundation.dart';
 
 /// خدمة إدارة كاش الفيديوهات مع دعم pre-caching
 /// تستخدم الإعدادات من AppSettings
@@ -47,7 +48,6 @@ class VideoCacheService {
         _cachedVideos.clear();
       }
     } catch (e) {
-
     }
   }
 
@@ -64,7 +64,6 @@ class VideoCacheService {
       await CachedVideoPlayerPlus.removeFileFromCache(Uri.parse(videoUrl));
       _cachedVideos.remove(videoUrl);
     } catch (e) {
-
     }
   }
 
@@ -73,7 +72,6 @@ class VideoCacheService {
     try {
       await CachedVideoPlayerPlus.removeFileFromCacheByKey(cacheKey);
     } catch (e) {
-
     }
   }
 
@@ -83,7 +81,6 @@ class VideoCacheService {
       await CachedVideoPlayerPlus.clearAllCache();
       _cachedVideos.clear();
     } catch (e) {
-
     }
   }
 

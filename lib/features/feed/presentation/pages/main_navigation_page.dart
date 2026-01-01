@@ -110,7 +110,6 @@ class _MainNavigationPageState extends State<MainNavigationPage>
         });
       }
     } catch (e) {
-
     }
   }
 

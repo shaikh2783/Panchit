@@ -34,21 +34,46 @@ class AppConfig {
 
   /// Resolves a relative media asset path (e.g., photos/..., videos/...) into a full [Uri].
   Uri mediaAsset(String relativePath) {
+    // Normalize common double-prefix issues: domain/content/uploads/domain/content/uploads/...
+    var cleaned = relativePath.trim();
+    final baseWithoutProto =
+        baseUrl.replaceFirst('https://', '').replaceFirst('http://', '');
+
+    // Fix missing colon cases like https//domain → https://domain
+    cleaned = cleaned.replaceAll('https//', 'https://').replaceAll('http//', 'http://');
+
+    // CRITICAL FIX: If we find content/uploads followed by a full URL, keep only the last complete URL
+    final mediaSegment = mediaBasePath.startsWith('/')
+        ? mediaBasePath.substring(1)
+        : mediaBasePath;
+    
+    // Find pattern like: .../content/uploads/https://domain/content/uploads/...
+    // Keep only everything from the LAST occurrence of https:// or http://
+    final lastHttpsIdx = cleaned.lastIndexOf('https://');
+    final lastHttpIdx = cleaned.lastIndexOf('http://');
+    final lastSchemeIdx = lastHttpsIdx > lastHttpIdx ? lastHttpsIdx : lastHttpIdx;
+    
+    if (lastSchemeIdx > 0) {
+      // Check if there's content/uploads before this scheme
+      final beforeScheme = cleaned.substring(0, lastSchemeIdx);
+      if (beforeScheme.contains(mediaSegment)) {
+        // Keep only from the last scheme onwards
+        cleaned = cleaned.substring(lastSchemeIdx);
+      }
+    }
+
     // إذا كان المسار يحتوي على domain كامل، ارجعه كما هو
-    if (relativePath.startsWith('http://') ||
-        relativePath.startsWith('https://')) {
-      return Uri.parse(relativePath);
+    if (cleaned.startsWith('http://') || cleaned.startsWith('https://')) {
+      return Uri.parse(cleaned);
     }
 
     // إذا كان المسار يحتوي على baseUrl بالفعل، لكن بدون protocol
-    if (relativePath.contains(
-      baseUrl.replaceFirst('https://', '').replaceFirst('http://', ''),
-    )) {
+    if (cleaned.contains(baseWithoutProto)) {
       // أعد بناء URL مع protocol
-      if (!relativePath.startsWith('http')) {
-        return Uri.parse('https://$relativePath');
+      if (!cleaned.startsWith('http')) {
+        return Uri.parse('https://${cleaned.startsWith('//') ? cleaned.substring(2) : cleaned}');
       }
-      return Uri.parse(relativePath);
+      return Uri.parse(cleaned);
     }
 
     final normalizedBase = baseUrl.endsWith('/')
@@ -57,9 +82,9 @@ class AppConfig {
     final normalizedMedia = mediaBasePath.startsWith('/')
         ? mediaBasePath.substring(1)
         : mediaBasePath;
-    final normalizedRelative = relativePath.startsWith('/')
-        ? relativePath.substring(1)
-        : relativePath;
+    final normalizedRelative = cleaned.startsWith('/')
+        ? cleaned.substring(1)
+        : cleaned;
     final buffer = StringBuffer(normalizedBase);
     if (normalizedMedia.isNotEmpty) {
       buffer.write('/$normalizedMedia');

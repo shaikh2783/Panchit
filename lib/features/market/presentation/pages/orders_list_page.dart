@@ -11,7 +11,8 @@ class OrdersListPage extends StatefulWidget {
   State<OrdersListPage> createState() => _OrdersListPageState();
 }
 
-class _OrdersListPageState extends State<OrdersListPage> with SingleTickerProviderStateMixin {
+class _OrdersListPageState extends State<OrdersListPage>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   late MarketRepository _repository;
   bool _isLoading = true;
@@ -63,7 +64,7 @@ class _OrdersListPageState extends State<OrdersListPage> with SingleTickerProvid
       // Load both my orders (as buyer) and sales orders (as seller)
       final myOrders = await _repository.getBuyerOrders();
       final salesOrders = await _repository.getSellerOrders();
-      
+
       setState(() {
         _myOrders = myOrders;
         _mySalesOrders = salesOrders;
@@ -80,9 +81,13 @@ class _OrdersListPageState extends State<OrdersListPage> with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Get.isDarkMode ? const Color(0xFF1a1f36) : Colors.grey[50],
+      backgroundColor: Get.isDarkMode
+          ? const Color(0xFF1a1f36)
+          : Colors.grey[50],
       appBar: AppBar(
-        backgroundColor: Get.isDarkMode ? const Color(0xFF1a1f36) : Colors.white,
+        backgroundColor: Get.isDarkMode
+            ? const Color(0xFF1a1f36)
+            : Colors.white,
         elevation: 0,
         leading: IconButton(
           icon: Icon(
@@ -102,7 +107,9 @@ class _OrdersListPageState extends State<OrdersListPage> with SingleTickerProvid
           controller: _tabController,
           indicatorColor: Colors.green,
           labelColor: Get.isDarkMode ? Colors.white : Colors.black,
-          unselectedLabelColor: Get.isDarkMode ? Colors.grey[400] : Colors.grey[600],
+          unselectedLabelColor: Get.isDarkMode
+              ? Colors.grey[400]
+              : Colors.grey[600],
           tabs: const [
             Tab(text: 'مشترياتي'),
             Tab(text: 'مبيعاتي'),
@@ -112,14 +119,14 @@ class _OrdersListPageState extends State<OrdersListPage> with SingleTickerProvid
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _error != null
-              ? _buildErrorWidget()
-              : TabBarView(
-                  controller: _tabController,
-                  children: [
-                    _buildOrdersList(_myOrders, false),
-                    _buildOrdersList(_mySalesOrders, true),
-                  ],
-                ),
+          ? _buildErrorWidget()
+          : TabBarView(
+              controller: _tabController,
+              children: [
+                _buildOrdersList(_myOrders, false),
+                _buildOrdersList(_mySalesOrders, true),
+              ],
+            ),
     );
   }
 
@@ -128,11 +135,7 @@ class _OrdersListPageState extends State<OrdersListPage> with SingleTickerProvid
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.error_outline,
-            size: 64,
-            color: Colors.red,
-          ),
+          Icon(Icons.error_outline, size: 64, color: Colors.red),
           const SizedBox(height: 16),
           Text(
             'فشل في تحميل الطلبات',
@@ -153,9 +156,7 @@ class _OrdersListPageState extends State<OrdersListPage> with SingleTickerProvid
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: _loadOrders,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
-            ),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
             child: const Text(
               'إعادة المحاولة',
               style: TextStyle(color: Colors.white),
@@ -234,7 +235,7 @@ class _OrdersListPageState extends State<OrdersListPage> with SingleTickerProvid
       ),
       child: InkWell(
         onTap: () {
-          Get.to(() => OrderDetailsPage(orderId: order.orderId));
+          Get.to(() => OrderDetailsPage(orderId: order.orderHash));
         },
         borderRadius: BorderRadius.circular(16),
         child: Padding(
@@ -246,19 +247,24 @@ class _OrdersListPageState extends State<OrdersListPage> with SingleTickerProvid
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'طلب #${order.orderId}',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Get.isDarkMode ? Colors.white : Colors.black87,
+                  Expanded(
+                    child: Text(
+                      'طلب #${order.orderHash}',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Get.isDarkMode ? Colors.white : Colors.black87,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
+                  const SizedBox(width: 8),
                   _buildStatusBadge(order.status),
                 ],
               ),
               const SizedBox(height: 12),
-              
+
               // Order date
               Row(
                 children: [
@@ -272,28 +278,34 @@ class _OrdersListPageState extends State<OrdersListPage> with SingleTickerProvid
                     _formatDate(order.createdAt),
                     style: TextStyle(
                       fontSize: 14,
-                      color: Get.isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                      color: Get.isDarkMode
+                          ? Colors.grey[400]
+                          : Colors.grey[600],
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 8),
-              
-              // Buyer/Seller info  
+
+              // Buyer/Seller info
               if (isSalesOrder) ...[
                 Row(
                   children: [
                     Icon(
                       Icons.person,
                       size: 16,
-                      color: Get.isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                      color: Get.isDarkMode
+                          ? Colors.grey[400]
+                          : Colors.grey[600],
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      'المشتري: ${order.buyer.fullName}',
+                      'المشتري: ${order.buyer?.fullName.isNotEmpty ?? false ? order.buyer!.fullName : (order.buyer?.userName ?? 'N/A')}',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Get.isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                        color: Get.isDarkMode
+                            ? Colors.grey[400]
+                            : Colors.grey[600],
                       ),
                     ),
                   ],
@@ -304,22 +316,26 @@ class _OrdersListPageState extends State<OrdersListPage> with SingleTickerProvid
                     Icon(
                       Icons.store,
                       size: 16,
-                      color: Get.isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                      color: Get.isDarkMode
+                          ? Colors.grey[400]
+                          : Colors.grey[600],
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      'البائع: ${order.seller.fullName}',
+                      'البائع: ${order.seller?.fullName.isNotEmpty ?? false ? order.seller!.fullName : (order.seller?.userName ?? 'N/A')}',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Get.isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                        color: Get.isDarkMode
+                            ? Colors.grey[400]
+                            : Colors.grey[600],
                       ),
                     ),
                   ],
                 ),
               ],
-              
+
               const Divider(height: 24),
-              
+
               // Order total
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -328,7 +344,9 @@ class _OrdersListPageState extends State<OrdersListPage> with SingleTickerProvid
                     'المجموع',
                     style: TextStyle(
                       fontSize: 14,
-                      color: Get.isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                      color: Get.isDarkMode
+                          ? Colors.grey[400]
+                          : Colors.grey[600],
                     ),
                   ),
                   Text(
@@ -354,6 +372,11 @@ class _OrdersListPageState extends State<OrdersListPage> with SingleTickerProvid
     String displayText;
 
     switch (status.toLowerCase()) {
+      case 'placed':
+        backgroundColor = Colors.orange.withOpacity(0.2);
+        textColor = Colors.orange;
+        displayText = 'تم الطلب';
+        break;
       case 'pending':
         backgroundColor = Colors.orange.withOpacity(0.2);
         textColor = Colors.orange;
@@ -375,9 +398,15 @@ class _OrdersListPageState extends State<OrdersListPage> with SingleTickerProvid
         displayText = 'تم التوصيل';
         break;
       case 'cancelled':
+      case 'canceled':
         backgroundColor = Colors.red.withOpacity(0.2);
         textColor = Colors.red;
         displayText = 'ملغي';
+        break;
+      case 'refunded':
+        backgroundColor = Colors.teal.withOpacity(0.2);
+        textColor = Colors.teal;
+        displayText = 'مسترد';
         break;
       default:
         backgroundColor = Colors.grey.withOpacity(0.2);

@@ -1,6 +1,7 @@
 import '../../../../core/network/api_client.dart';
 import '../models/bank_settings.dart';
 import '../models/bank_transfer.dart';
+import 'package:flutter/foundation.dart';
 
 /// Bank API Service
 /// خدمة API للتحويلات البنكية وإعدادات البنك
@@ -31,7 +32,6 @@ class BankApiService {
               ? response['data']
               : <String, dynamic>{},
         );
-
         return {
           'success': true,
           'data': settings,
@@ -43,7 +43,6 @@ class BankApiService {
         'message': response['message'] ?? 'Failed to load bank settings',
       };
     } catch (e) {
-
       return {
         'success': false,
         'message': 'Error: $e',
@@ -88,7 +87,6 @@ class BankApiService {
         'message': response['message'] ?? 'Failed to load transfers',
       };
     } catch (e) {
-
       return {
         'success': false,
         'message': 'Error: $e',

@@ -72,6 +72,59 @@ class AppSettings {
   /// احصل عليه من: https://app.onesignal.com/ > Settings > Keys & IDs
   static const String oneSignalAppId = '0dc8d96f-0113-4a2b-ab63-e0cd64d751c7';
 
+  // ==================== إعدادات AdMob (الإعلانات) ====================
+  // احصل على App IDs و Ad Unit IDs من: https://apps.admob.com/
+
+  /// تفعيل إعلانات AdMob
+  static const bool enableAdMob = true;
+
+  /// AdMob App ID لـ Android
+  /// احصل عليه من: https://apps.admob.com/ > Apps > App settings
+  /// مثال: "ca-app-pub-3940256099942544~3347511713"
+  static const String adMobAppIdAndroid =
+      'ca-app-pub-3940256099942544~3347511713';
+
+  /// AdMob App ID لـ iOS
+  /// مثال: "ca-app-pub-3940256099942544~1458002511"
+  static const String adMobAppIdIOS = 'ca-app-pub-3940256099942544~1458002511';
+
+  /// Banner Ad Unit ID لـ Android
+  /// للاختبار: 'ca-app-pub-3940256099942544/6300978111'
+  /// للإنتاج: استبدلها بـ Unit ID الخاص بك
+  static const String adMobBannerAdUnitAndroid =
+      'ca-app-pub-3940256099942544/6300978111';
+
+  /// Banner Ad Unit ID لـ iOS
+  /// للاختبار: 'ca-app-pub-3940256099942544/2934735716'
+  static const String adMobBannerAdUnitIOS =
+      'ca-app-pub-3940256099942544/2934735716';
+
+  /// Native Ad Unit ID لـ Android (إعلانات مدمجة)
+  /// للاختبار: 'ca-app-pub-3940256099942544/2247696110'
+  static const String adMobNativeAdUnitAndroid =
+      'ca-app-pub-3940256099942544/2247696110';
+
+  /// Native Ad Unit ID لـ iOS
+  /// للاختبار: 'ca-app-pub-3940256099942544/3986624511'
+  static const String adMobNativeAdUnitIOS =
+      'ca-app-pub-3940256099942544/3986624511';
+
+  /// إظهار إعلان في PostCard كل X منشور
+  /// مثال: 5 = إظهار إعلان بعد كل 5 منشورات
+  static const int adMobPostCardFrequency = 5;
+
+  /// إظهار إعلان في ProfilePage
+  static const bool enableAdMobInProfile = true;
+
+  /// إظهار إعلان في SearchPage
+  static const bool enableAdMobInSearch = true;
+
+  /// إظهار إعلان في نتائج البحث كل X نتيجة
+  static const int adMobSearchResultFrequency = 8;
+
+  /// إظهار إعلان Banner في Menu Page
+  static const bool enableAdMobInMenu = true;
+
   // ==================== إعدادات Google Sign-In ====================
   // احصل على المعرفات من: https://console.cloud.google.com/
 
@@ -94,6 +147,96 @@ class AppSettings {
   /// Reversed Client ID لـ iOS (من GoogleService-Info.plist)
   /// مثال: "com.googleusercontent.apps.123456789-abc123def456"
   static const String googleReversedClientIdIOS = 'YOUR_REVERSED_CLIENT_ID';
+
+  // ==================== إعدادات الذكاء الاصطناعي (AI) ====================
+
+  /// تفعيل ميزة الذكاء الاصطناعي
+  static const bool enableAI = true;
+
+  /// مفتاح API للذكاء الاصطناعي (OpenAI, Gemini, إلخ)
+  /// احصل عليه من: https://platform.openai.com/api-keys
+  static const String aiApiKey =
+      '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';
+
+  /// نموذج الذكاء الاصطناعي المستخدم
+  /// أمثلة: 'gpt-4', 'gpt-3.5-turbo', 'gemini-pro'
+  static const String aiModel = 'gpt-3.5-turbo';
+
+  /// من يُسمح له باستخدام الذكاء الاصطناعي
+  /// 'all' = الجميع، 'pro' = فقط مستخدمي Pro، 'vip' = فقط VIP
+  static const String aiAccessLevel = 'all';
+
+  /// الحد الأقصى لعدد طلبات AI اليومية عند السماح للجميع (all)
+  static const int aiMaxRequestsPerDayAll = 5;
+
+  /// الحد الأقصى لعدد طلبات AI اليومية للمستخدم العادي
+  static const int aiMaxRequestsPerDayFree = 5;
+
+  /// الحد الأقصى لعدد طلبات AI اليومية لمستخدمي Pro
+  static const int aiMaxRequestsPerDayPro = 100;
+
+  /// الحد الأقصى لعدد الأحرف في الطلب الواحد
+  static const int aiMaxCharactersPerRequest = 2000;
+
+  /// اسم البوت للذكاء الاصطناعي (يُستخدم في المنشن @)
+  /// مثال: '@grock' أو '@ai' أو '@assistant'
+  static const String aiBotUsername = 'ai';
+
+  /// إيميل حساب البوت (للحصول على توكن)
+  static const String aiBotEmail = 'ai@example.com';
+
+  /// كلمة مرور حساب البوت
+  static const String aiBotPassword = 'ai@example.com';
+
+  /// تفعيل الرد التلقائي على التعليقات التي تحتوي منشن للبوت
+  static const bool enableAIAutoReply = true;
+
+  /// الرد على التعليقات الرئيسية فقط أم الردود أيضاً؟
+  static const bool aiReplyToReplies = true;
+
+  /// التحقق من اكتمال إعدادات AI
+  static bool get isAIConfigured {
+    return enableAI && aiApiKey.isNotEmpty && aiApiKey != 'YOUR_AI_API_KEY';
+  }
+
+  /// التحقق من صحة إعدادات AI قبل الاستخدام
+  static String? validateAIConfig() {
+    if (!enableAI) {
+      return 'ميزة الذكاء الاصطناعي معطلة في الإعدادات';
+    }
+    if (!isAIConfigured) {
+      return 'مفتاح API للذكاء الاصطناعي غير مكتمل. يرجى تحديث الإعدادات في App_Settings.dart';
+    }
+    return null;
+  }
+
+  /// التحقق من صلاحية المستخدم لاستخدام AI
+  /// @param userType: 'free', 'pro', 'vip'
+  static bool canUserAccessAI(String userType) {
+    if (!enableAI) return false;
+
+    switch (aiAccessLevel) {
+      case 'all':
+        return true;
+      case 'pro':
+        return userType == 'pro' || userType == 'vip';
+      case 'vip':
+        return userType == 'vip';
+      default:
+        return false;
+    }
+  }
+
+  /// الحصول على الحد الأقصى لطلبات AI بناءً على نوع المستخدم
+  static int getMaxAIRequestsPerDay(String userType) {
+    if (aiAccessLevel == 'all') {
+      return aiMaxRequestsPerDayAll;
+    }
+    if (userType == 'pro' || userType == 'vip') {
+      return aiMaxRequestsPerDayPro;
+    }
+    return aiMaxRequestsPerDayFree;
+  }
 
   // ==================== إعدادات التخزين المحلي ====================
 
@@ -154,6 +297,27 @@ class AppSettings {
 
   /// رمز العملة
   static const String currencySymbol = '\$';
+
+  // ==================== إعدادات تشغيل الفيديو ====================
+
+  /// فتح فيديوهات YouTube في التطبيق (WebView) أم في المتصفح الخارجي
+  /// true = تشغيل داخل التطبيق (WebView)
+  /// false = فتح في متصفح خارجي
+  static const bool playYouTubeInApp = false;
+
+  /// فتح فيديوهات TikTok في التطبيق (WebView) أم في المتصفح الخارجي
+  /// true = تشغيل داخل التطبيق (WebView)
+  /// false = فتح في متصفح خارجي
+  static const bool playTikTokInApp = false;
+
+  /// فتح فيديوهات Vimeo في التطبيق (WebView) أم في المتصفح الخارجي
+  /// true = تشغيل داخل التطبيق (WebView)
+  /// false = فتح في متصفح خارجي
+  static const bool playVimeoInApp = false;
+
+  /// فتح الفيديوهات المضمنة (Embedded) في تطبيق خارجي إذا كان مثبتاً
+  /// ملاحظة: هذا الإعداد حالياً غير مفعّل
+  static const bool useNativeVideoAppsIfAvailable = false;
 
   // ==================== إعدادات البث المباشر ====================
 

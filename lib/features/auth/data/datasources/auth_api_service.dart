@@ -80,12 +80,15 @@ class AuthApiService {
     if (username != null && username.isNotEmpty) body['username'] = username;
     if (idToken != null && idToken.isNotEmpty) {
       body['id_token'] = idToken;
-
     } else {
-
     }
 
     final response = await _client.post('/data/auth/google', body: body);
     return AuthResponse.fromJson(response);
+  }
+
+  /// يجلب ملخص المستخدم الحالي (نقاط، متابعين، متابَعين...)
+  Future<Map<String, dynamic>> fetchCurrentUserSummary() async {
+    return _client.get('/data/me/summary');
   }
 }

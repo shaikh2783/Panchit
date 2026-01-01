@@ -1,34 +1,49 @@
 import 'package:equatable/equatable.dart';
 
 /// Shipping Address Model - عنوان الشحن
+/// 
+/// حسب API الجديد، الحقول المطلوبة:
+/// - name (اسم المستقبل)
+/// - phone (رقم الهاتف)
+/// - location (العنوان الكامل)
+/// 
+/// الحقول الاختيارية:
+/// - country (الدولة)
+/// - city (المدينة)
+/// - zip_code (الرمز البريدي)
 class ShippingAddress extends Equatable {
   final String name;
   final String phone;
-  final String location;
-  final String? address;
+  final String address; // location في API
   final String? city;
-  final String? zip;
+  final String? zipCode; // zip_code في API
   final String? country;
 
   const ShippingAddress({
     required this.name,
     required this.phone,
-    required this.location,
-    this.address,
+    required this.address,
     this.city,
-    this.zip,
+    this.zipCode,
     this.country,
   });
 
   factory ShippingAddress.fromJson(Map<String, dynamic> json) {
     return ShippingAddress(
-      name: json['name']?.toString() ?? '',
-      phone: json['phone']?.toString() ?? '',
-      location: json['location']?.toString() ?? '',
-      address: json['address']?.toString(),
-      city: json['city']?.toString(),
-      zip: json['zip']?.toString(),
-      country: json['country']?.toString(),
+      name: json['address_title']?.toString() ?? 
+           json['name']?.toString() ?? '',
+      phone: json['address_phone']?.toString() ?? 
+            json['phone']?.toString() ?? '',
+      address: json['address_details']?.toString() ?? 
+              json['location']?.toString() ?? 
+              json['address']?.toString() ?? '',
+      city: json['address_city']?.toString() ?? 
+           json['city']?.toString(),
+      zipCode: json['address_zip_code']?.toString() ?? 
+              json['zip_code']?.toString() ?? 
+              json['zip']?.toString(),
+      country: json['address_country']?.toString() ?? 
+              json['country']?.toString(),
     );
   }
 
@@ -36,10 +51,9 @@ class ShippingAddress extends Equatable {
     return {
       'name': name,
       'phone': phone,
-      'location': location,
-      if (address != null) 'address': address,
+      'location': address, // API يتوقع location
       if (city != null) 'city': city,
-      if (zip != null) 'zip': zip,
+      if (zipCode != null) 'zip_code': zipCode, // API يتوقع zip_code
       if (country != null) 'country': country,
     };
   }
@@ -47,23 +61,21 @@ class ShippingAddress extends Equatable {
   ShippingAddress copyWith({
     String? name,
     String? phone,
-    String? location,
     String? address,
     String? city,
-    String? zip,
+    String? zipCode,
     String? country,
   }) {
     return ShippingAddress(
       name: name ?? this.name,
       phone: phone ?? this.phone,
-      location: location ?? this.location,
       address: address ?? this.address,
       city: city ?? this.city,
-      zip: zip ?? this.zip,
+      zipCode: zipCode ?? this.zipCode,
       country: country ?? this.country,
     );
   }
 
   @override
-  List<Object?> get props => [name, phone, location, address, city, zip, country];
+  List<Object?> get props => [name, phone, address, city, zipCode, country];
 }

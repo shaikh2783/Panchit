@@ -1,5 +1,6 @@
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
+import 'package:flutter/foundation.dart';
 
 /// خدمة إدارة محتوى البالغين والـ Blur
 class AdultContentService {
@@ -23,13 +24,13 @@ class AdultContentService {
         },
       );
 
+      
       if (response['status'] != 'success') {
         throw Exception(response['message'] ?? 'Failed to update photo blur');
       }
 
       return response;
     } catch (e) {
-
       rethrow;
     }
   }
@@ -50,13 +51,13 @@ class AdultContentService {
         },
       );
 
+      
       if (response['status'] != 'success') {
         throw Exception(response['message'] ?? 'Failed to apply blur to post photos');
       }
 
       return response;
     } catch (e) {
-
       rethrow;
     }
   }
@@ -77,13 +78,13 @@ class AdultContentService {
         },
       );
 
+      
       if (response['status'] != 'success') {
         throw Exception(response['message'] ?? 'Failed to mark post as adult');
       }
 
       return response;
     } catch (e) {
-
       rethrow;
     }
   }
@@ -107,13 +108,13 @@ class AdultContentService {
         },
       );
 
+      
       if (response['status'] != 'success') {
         throw Exception(response['message'] ?? 'Failed to update adult status');
       }
 
       return response;
     } catch (e) {
-
       rethrow;
     }
   }

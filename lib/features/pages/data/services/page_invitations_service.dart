@@ -1,6 +1,7 @@
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
 import '../models/invitable_friend.dart';
+import 'package:flutter/foundation.dart';
 
 /// خدمة إدارة دعوات الصفحات
 class PageInvitationsService {
@@ -23,6 +24,7 @@ class PageInvitationsService {
         },
       );
 
+
       if (response['status'] == 'success' && response['data'] != null) {
         final List<dynamic> friendsJson = response['data'] is List
             ? response['data']
@@ -36,7 +38,6 @@ class PageInvitationsService {
 
       return [];
     } catch (e) {
-
       rethrow;
     }
   }
@@ -55,6 +56,7 @@ class PageInvitationsService {
         },
       );
 
+
       if (response['status'] == 'success' && response['data'] != null) {
         final List<dynamic> adminsJson = response['data'] is List
             ? response['data']
@@ -68,7 +70,6 @@ class PageInvitationsService {
 
       return [];
     } catch (e) {
-
       rethrow;
     }
   }
@@ -85,14 +86,13 @@ class PageInvitationsService {
         body: {'user_id': userId},
       );
 
-      if (response['status'] == 'success') {
 
+      if (response['status'] == 'success') {
         return true;
       }
 
       return false;
     } catch (e) {
-
       rethrow;
     }
   }
@@ -106,6 +106,7 @@ class PageInvitationsService {
     try {
       final endpoint = configCfgP('page_likers')
           .replaceAll('{id}', pageId.toString());
+      
 
       final response = await _apiClient.get(
         endpoint,
@@ -114,6 +115,7 @@ class PageInvitationsService {
           'limit': limit.toString(),
         },
       );
+
 
       if (response['status'] == 'success' && response['data'] != null) {
         final List<dynamic> likersJson = response['data'] is List
@@ -128,7 +130,6 @@ class PageInvitationsService {
 
       return [];
     } catch (e) {
-
       rethrow;
     }
   }
@@ -148,14 +149,13 @@ class PageInvitationsService {
         body: {'users': userIds.map((id) => id.toString()).toList()},
       );
 
-      if (response['status'] == 'success') {
 
+      if (response['status'] == 'success') {
         return true;
       }
 
       return false;
     } catch (e) {
-
       rethrow;
     }
   }

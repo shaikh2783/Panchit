@@ -1,4 +1,5 @@
 import 'package:snginepro/features/stories/data/models/story.dart';
+import 'package:flutter/foundation.dart';
 
 class StoriesResponse {
   StoriesResponse({
@@ -38,7 +39,6 @@ class StoriesResponse {
             try {
               storiesList.add(Story.fromJson(item));
             } catch (e) {
-
               continue;
             }
           }
@@ -51,7 +51,6 @@ class StoriesResponse {
           try {
             storiesList.add(Story.fromJson(item));
           } catch (e) {
-
             continue;
           }
         }

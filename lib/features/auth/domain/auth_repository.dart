@@ -61,4 +61,8 @@ class AuthRepository {
       deviceType: deviceType,
     );
   }
+
+  Future<Map<String, dynamic>> fetchCurrentUserSummary() {
+    return _apiService.fetchCurrentUserSummary();
+  }
 }

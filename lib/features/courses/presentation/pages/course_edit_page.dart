@@ -117,7 +117,6 @@ class _CourseEditPageState extends State<CourseEditPage> {
         }
       }
     } catch (e) {
-
       if (mounted) {
         Get.snackbar('خطأ', 'فشل رفع الصورة');
       }
@@ -236,7 +235,6 @@ class _CourseEditPageState extends State<CourseEditPage> {
         );
       }
     } catch (e) {
-
       if (mounted) {
         Get.snackbar(
           'خطأ',

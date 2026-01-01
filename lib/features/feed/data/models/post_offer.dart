@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 class PostOffer {
   PostOffer({
     required this.offerId,
@@ -78,7 +79,6 @@ class PostOffer {
     try {
       return PostOffer.fromJson(json);
     } catch (e) {
-
       return null;
     }
   }

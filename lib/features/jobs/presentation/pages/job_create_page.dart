@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
 import '../../../../core/theme/ui_constants.dart';
+import '../../../../core/utils/html_decoder.dart';
 import '../../domain/jobs_repository.dart';
 import '../../data/models/job.dart';
 import '../../data/models/job_currency.dart';
@@ -328,7 +329,7 @@ class _JobCreatePageState extends State<JobCreatePage> {
                       hint: Text('select_category'.tr),
                       underline: const SizedBox.shrink(),
                       items: _categories
-                          .map((c) => DropdownMenuItem<int>(value: c.categoryId, child: Text(c.name)))
+                          .map((c) => DropdownMenuItem<int>(value: c.categoryId, child: Text(HtmlDecoder.decode(c.name))))
                           .toList(),
                       onChanged: (v) => setState(() => _categoryId = v),
                     ),

@@ -22,7 +22,6 @@ class AffiliatesApiService {
         };
       }
     } catch (e) {
-
       return {'success': false, 'message': 'Error: ${e.toString()}'};
     }
   }
@@ -44,7 +43,6 @@ class AffiliatesApiService {
         };
       }
     } catch (e) {
-
       return {'success': false, 'message': 'Error: ${e.toString()}'};
     }
   }
@@ -63,7 +61,6 @@ class AffiliatesApiService {
         };
       }
     } catch (e) {
-
       return {'success': false, 'message': 'Error: ${e.toString()}'};
     }
   }
@@ -82,7 +79,6 @@ class AffiliatesApiService {
         };
       }
     } catch (e) {
-
       return {'success': false, 'message': 'Error: ${e.toString()}'};
     }
   }

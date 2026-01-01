@@ -2,6 +2,7 @@ import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
 import '../models/user_profile_model.dart';
 import '../models/profile_completion_model.dart';
+import 'package:flutter/foundation.dart';
 
 class ProfileApiService {
   final ApiClient _apiClient;
@@ -11,7 +12,7 @@ class ProfileApiService {
   /// Get user profile by username
   Future<UserProfileResponse> getProfileByUsername(String username) async {
     try {
-
+      
       final response = await _apiClient.get(
         configCfgP('user_profile'),
         queryParameters: {'username': username},
@@ -19,23 +20,20 @@ class ProfileApiService {
 
       // Check if response is valid JSON structure
       if (response is! Map<String, dynamic>) {
-
         throw Exception('Invalid response format from server');
       }
 
+      
       if (response['status'] != 'success') {
         final errorMsg = response['message']?.toString() ?? 'Failed to load profile';
-
         throw Exception(errorMsg);
       }
 
       if (response['data'] != null && response['data']['profile'] != null) {
-
       }
 
       return UserProfileResponse.fromJson(response);
     } catch (e) {
-
       rethrow;
     }
   }
@@ -54,7 +52,6 @@ class ProfileApiService {
         throw Exception(response['message'] ?? 'Failed to load profile');
       }
     } catch (e) {
-
       rethrow;
     }
   }
@@ -71,7 +68,6 @@ class ProfileApiService {
         throw Exception(response['message'] ?? 'Failed to load profile');
       }
     } catch (e) {
-
       rethrow;
     }
   }
@@ -79,11 +75,9 @@ class ProfileApiService {
   /// Get profile completion status
   Future<ProfileCompletionResponse> getProfileCompletion() async {
     try {
-
       final response = await _apiClient.get(configCfgP('profile_completion'));
 
       if (response['data'] != null) {
-
       }
 
       if (response['status'] == 'success') {
@@ -92,7 +86,6 @@ class ProfileApiService {
         throw Exception(response['message'] ?? 'Failed to load profile completion');
       }
     } catch (e) {
-
       rethrow;
     }
   }
