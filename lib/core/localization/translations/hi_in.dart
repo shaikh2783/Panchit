@@ -2286,7 +2286,6 @@ const Map<String, String> hiIN = {
   'सदस्य को सफलतापूर्वक हटाया गया',
   'group_members_remove_member_failed':
   'त्रुटि: सदस्य हटाने में विफल',
-
 // Product Conditions & Status
   'product_condition_new': 'नया',
   'product_condition_like_new': 'नए जैसा',

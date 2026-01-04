@@ -2875,6 +2875,4 @@ const Map<String, String> knIN = {
   'buyer': 'ಖರೀದಿದಾರ',
   'n_a': 'ಅನ್ವಯಿಸುವುದಿಲ್ಲ',
   'no_shipping_address': 'ಯಾವುದೇ ಶಿಪ್ಪಿಂಗ್ ವಿಳಾಸ ಲಭ್ಯವಿಲ್ಲ',
-
-
 };

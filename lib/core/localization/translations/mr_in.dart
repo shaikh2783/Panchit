@@ -2966,5 +2966,4 @@ const Map<String, String> mrIN = {
   'buyer': 'खरेदीदार',
   'n_a': 'लागू नाही',
   'no_shipping_address': 'कोणताही शिपिंग पत्ता उपलब्ध नाही',
-
 };
