@@ -11,11 +11,11 @@ class AppSettings {
   /// معرف العميل - وضع الاختبار (Sandbox)
   /// احصل عليه من: https://developer.paypal.com/dashboard/applications/sandbox
   static const String paypalSandboxClientId =
-      'AQZ9cJfUrNDIeaN01OBTx-SsfFGQdHLdsW27phb2lHUx630547ZGhVOBXUQk8JgPvn571rre7cr1NE-m';
+      '';
 
   /// المفتاح السري - وضع الاختبار (Sandbox)
   static const String paypalSandboxSecretKey =
-      'EDoeQOfeM-S86IbmWhVYJN21rGuAzUJ0i10sV_047d47hhxoEsubWoOxJb7Ff0uAlkxFW32vMKmzSx-U';
+      '';
 
   /// معرف العميل - الوضع الحقيقي (Production)
   /// احصل عليه من: https://developer.paypal.com/dashboard/applications/live
@@ -70,7 +70,7 @@ class AppSettings {
 
   /// App ID الخاص بـ OneSignal
   /// احصل عليه من: https://app.onesignal.com/ > Settings > Keys & IDs
-  static const String oneSignalAppId = '0dc8d96f-0113-4a2b-ab63-e0cd64d751c7';
+  static const String oneSignalAppId = '';
 
   // ==================== إعدادات AdMob (الإعلانات) ====================
   // احصل على App IDs و Ad Unit IDs من: https://apps.admob.com/
