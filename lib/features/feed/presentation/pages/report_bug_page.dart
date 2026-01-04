@@ -55,7 +55,7 @@ class _ReportBugPageState extends State<ReportBugPage> {
         final fileSize = await file.length();
         if (fileSize > 50 * 1024 * 1024) {
           if (mounted) {
-            _showErrorSnackBar('Video file is too large. Maximum size is 50MB.');
+            _showErrorSnackBar('video_file_too_large_max_50mb'.tr);
           }
           setState(() {
             _isLoading = false;
@@ -84,7 +84,7 @@ class _ReportBugPageState extends State<ReportBugPage> {
         _isLoading = false;
       });
       if (mounted) {
-        _showErrorSnackBar('Failed to load video: $e');
+        _showErrorSnackBar('${'failed_to_load_video'.tr} +$e');
       }
     }
   }
@@ -114,7 +114,7 @@ class _ReportBugPageState extends State<ReportBugPage> {
               ),
               const SizedBox(height: 20),
               Text(
-                'Select Video Source',
+                'select_video_source'.tr,
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -122,8 +122,8 @@ class _ReportBugPageState extends State<ReportBugPage> {
               const SizedBox(height: 20),
               _VideoSourceOption(
                 icon: Iconsax.video,
-                title: 'Record Video',
-                subtitle: 'Record a new video',
+                title: 'record_video'.tr,
+                subtitle: 'record_a_new_video'.tr,
                 gradient: const [Color(0xFFEF5350), Color(0xFFE53935)],
                 onTap: () {
                   Navigator.pop(context);
@@ -133,8 +133,8 @@ class _ReportBugPageState extends State<ReportBugPage> {
               const SizedBox(height: 12),
               _VideoSourceOption(
                 icon: Iconsax.gallery,
-                title: 'Choose from Gallery',
-                subtitle: 'Select existing video',
+                title: 'choose_from_gallery'.tr,
+                subtitle: 'select_existing_video'.tr,
                 gradient: const [Color(0xFF42A5F5), Color(0xFF1E88E5)],
                 onTap: () {
                   Navigator.pop(context);
@@ -151,12 +151,12 @@ class _ReportBugPageState extends State<ReportBugPage> {
 
   Future<void> _submitReport() async {
     if (_titleController.text.trim().isEmpty) {
-      _showErrorSnackBar('Please enter a title for the issue');
+      _showErrorSnackBar('please_enter_issue_title'.tr);
       return;
     }
 
     if (_videoFile == null) {
-      _showErrorSnackBar('Please attach a video showing the issue');
+      _showErrorSnackBar('please_attach_issue_video'.tr);
       return;
     }
 
@@ -169,7 +169,7 @@ class _ReportBugPageState extends State<ReportBugPage> {
       final auth = context.read<AuthNotifier>();
       
       if (!auth.isAuthenticated || auth.authToken == null) {
-        throw Exception('You must be logged in to submit a bug report');
+        throw Exception('must_be_logged_in_submit_bug_report'.tr);
       }
       
       final userName = auth.currentUser?['user_name'] ?? 
@@ -196,7 +196,7 @@ class _ReportBugPageState extends State<ReportBugPage> {
       );
 
       if (uploadedVideo == null) {
-        throw Exception('Failed to upload video');
+        throw Exception('failed_to_upload_video'.tr);
       }
 
 
@@ -293,8 +293,8 @@ class _ReportBugPageState extends State<ReportBugPage> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  'Report Submitted!',
+                 Text(
+                  'report_submitted'.tr,
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -302,7 +302,7 @@ class _ReportBugPageState extends State<ReportBugPage> {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  'Thank you for helping us improve the app. We\'ll review your report and get back to you soon.',
+                  'thank_you_help_improve_app'.tr,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
@@ -324,8 +324,8 @@ class _ReportBugPageState extends State<ReportBugPage> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: const Text(
-                      'Done',
+                    child: Text(
+                      'done'.tr,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -340,7 +340,7 @@ class _ReportBugPageState extends State<ReportBugPage> {
       }
     } catch (e) {
       if (mounted) {
-        _showErrorSnackBar('Failed to submit report: $e');
+        _showErrorSnackBar('${'failed_to_submit_report'.tr}: $e');
       }
     } finally {
       if (mounted) {
@@ -374,7 +374,7 @@ class _ReportBugPageState extends State<ReportBugPage> {
         elevation: 0,
         backgroundColor: Colors.transparent,
         title: Text(
-          'Report an Issue',
+          'report_issue'.tr,
           style: theme.textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
           ),
@@ -421,7 +421,7 @@ class _ReportBugPageState extends State<ReportBugPage> {
                       const SizedBox(width: 16),
                       Expanded(
                         child: Text(
-                          'Record or upload a video showing the issue to help us understand and fix it faster.',
+                          'record_or_upload_video_help'.tr,
                           style: theme.textTheme.bodyMedium?.copyWith(
                             height: 1.4,
                           ),
@@ -435,7 +435,7 @@ class _ReportBugPageState extends State<ReportBugPage> {
 
                 // Title Field
                 Text(
-                  'Issue Title',
+                  'issue_title'.tr,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -444,7 +444,7 @@ class _ReportBugPageState extends State<ReportBugPage> {
                 TextField(
                   controller: _titleController,
                   decoration: InputDecoration(
-                    hintText: 'Brief description of the issue',
+                    hintText: 'brief_description'.tr,
                     filled: true,
                     fillColor: theme.colorScheme.surface,
                     border: OutlineInputBorder(
@@ -474,7 +474,7 @@ class _ReportBugPageState extends State<ReportBugPage> {
 
                 // Description Field (Optional)
                 Text(
-                  'Additional Details (Optional)',
+                  'additional_details_optional'.tr,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -484,7 +484,7 @@ class _ReportBugPageState extends State<ReportBugPage> {
                   controller: _descriptionController,
                   maxLines: 4,
                   decoration: InputDecoration(
-                    hintText: 'Add more details about the issue...',
+                    hintText: 'add_more_details_placeholder'.tr,
                     filled: true,
                     fillColor: theme.colorScheme.surface,
                     border: OutlineInputBorder(
@@ -514,7 +514,7 @@ class _ReportBugPageState extends State<ReportBugPage> {
 
                 // Video Section
                 Text(
-                  'Video (Required)',
+                  'video_required'.tr,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -562,14 +562,14 @@ class _ReportBugPageState extends State<ReportBugPage> {
                             ),
                             const SizedBox(height: 16),
                             Text(
-                              'Tap to add video',
+                              'tap_to_add_video'.tr,
                               style: theme.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              'Max 2 minutes, 50MB',
+                              'max_2_minutes_50mb'.tr,
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: theme.colorScheme.onSurface.withOpacity(0.6),
                               ),
@@ -709,8 +709,8 @@ class _ReportBugPageState extends State<ReportBugPage> {
                           valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                         ),
                       )
-                    : const Text(
-                        'Submit Report',
+                    : Text(
+                        'submit_report'.tr,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

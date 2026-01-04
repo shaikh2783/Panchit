@@ -202,7 +202,7 @@ class _AddFriendButtonState extends State<AddFriendButton> {
     switch (_currentStatus) {
       case FriendshipStatus.none:
         return ButtonConfig(
-          text: widget.customText ?? 'Add Friend',
+          text: widget.customText ?? 'add_friend_button'.tr,
           textAr: 'إضافة صديق',
           icon: Iconsax.user_add,
           color: AppColors.primary,

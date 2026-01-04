@@ -1267,9 +1267,8 @@ class _DiscoverPageState extends State<DiscoverPage> {
           subtitleKey: 'premium_members_subtitle',
         ),
         const SizedBox(height: 12),
-        Container(
-                 height: Get.height *0.26,
-
+        SizedBox(
+                 height: Get.height *0.32,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -1279,7 +1278,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
               return GestureDetector(
                 onTap: () => _navigateToUserProfile(user.userId, user.username),
                 child: Container(
-                  width: 160,
+                  width: 170,
                   margin: const EdgeInsets.only(right: 16),
                   decoration: BoxDecoration(
                     color: isDarkMode ? const Color(0xFF1A1A1A) : Colors.white,
@@ -1294,9 +1293,8 @@ class _DiscoverPageState extends State<DiscoverPage> {
                   ),
                   child: Column(
                     children: [
-                      // Cover area with gradient
                       Container(
-                        height: 60,
+                        height: 50,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
@@ -1495,8 +1493,8 @@ class _DiscoverPageState extends State<DiscoverPage> {
           subtitleKey: 'premium_pages_subtitle',
         ),
         const SizedBox(height: 12),
-        Container(
-               height: Get.height *0.25,
+        SizedBox(
+               height: Get.height *0.32,
 
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -1884,7 +1882,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
           subtitleKey: 'people_you_may_know_subtitle',
         ),
         const SizedBox(height: 12),
-        Container(
+        SizedBox(
               height: Get.height *0.27,
 
           child: ListView.builder(
@@ -2083,7 +2081,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
           subtitleKey: 'pages_to_discover_subtitle',
         ),
         const SizedBox(height: 12),
-        Container(
+        SizedBox(
         height: Get.height *0.26,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -2260,7 +2258,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
           subtitleKey: 'groups_to_join_subtitle',
         ),
         const SizedBox(height: 12),
-        Container(
+        SizedBox(
         height: Get.height *0.3,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -2465,7 +2463,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
           subtitleKey: 'events_to_attend_subtitle',
         ),
         const SizedBox(height: 12),
-        Container(
+        SizedBox(
           height: Get.height *0.28,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,

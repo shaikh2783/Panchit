@@ -969,7 +969,7 @@ class _ProfilePageState extends State<ProfilePage>
             icon: const Icon(Iconsax.video_play),
             text: 'profile_tab_videos'.tr,
           ),
-          Tab(icon: const Icon(Iconsax.shopping_bag), text: 'Products'),
+          Tab(icon: const Icon(Iconsax.shopping_bag), text: 'page_tab_products'.tr),
           Tab(icon: const Icon(Iconsax.people), text: 'profile_tab_friends'.tr),
           Tab(
             icon: const Icon(Iconsax.more_square),

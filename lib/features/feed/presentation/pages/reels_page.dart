@@ -100,10 +100,10 @@ class _ReelsPageState extends State<ReelsPage> {
         }
 
         if (state is! ReelsLoadedState || state.reels.isEmpty) {
-          return const _DarkScaffold(
+          return  _DarkScaffold(
             child: _ReelsMessage(
               icon: Iconsax.video,
-              message: 'No reels available right now.',
+              message: 'no_reels_available'.tr,
             ),
           );
         }

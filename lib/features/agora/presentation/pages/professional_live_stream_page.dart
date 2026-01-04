@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -87,7 +88,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
       });
 
     } catch (e) {
-      _showErrorSnackBar('فشل في تهيئة محرك البث');
+      _showErrorSnackBar('failed_to_initialize_stream_engine'.tr);
     }
   }
 
@@ -104,7 +105,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
 
   Future<void> _startLiveStream(BuildContext context) async {
     if (_titleController.text.trim().isEmpty) {
-      _showErrorSnackBar('يجب إدخال عنوان البث');
+      _showErrorSnackBar('stream_title_required'.tr);
       return;
     }
 
@@ -144,7 +145,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
       _startStatsPolling();
 
     } catch (e) {
-      _showErrorSnackBar('فشل في الانضمام لقناة البث');
+      _showErrorSnackBar('failed_to_join_stream_channel'.tr);
     }
   }
 
@@ -170,9 +171,9 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
         _currentStreamId = null;
       });
 
-      _showSuccessSnackBar('تم إنهاء البث بنجاح');
+      _showSuccessSnackBar('stream_ended_successfully'.tr);
     } catch (e) {
-      _showErrorSnackBar('فشل في إنهاء البث');
+      _showErrorSnackBar('failed_to_end_stream'.tr);
     }
   }
 
@@ -304,10 +305,10 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
                 _isLiveStreamActive = true;
               });
               
-              _showSuccessSnackBar('تم إنشاء البث بنجاح! (بدون Agora token)');
+              _showSuccessSnackBar('stream_created_successfully_no_agora_token'.tr);
             }
 
-            _showSuccessSnackBar('تم إنشاء البث بنجاح!');
+            _showSuccessSnackBar('stream_created_successfully'.tr);
             
             // بدء تحديثات التعليقات والإحصائيات
             final commentsBloc = context.read<LiveCommentsBloc>();
@@ -336,7 +337,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
         onPressed: () => Navigator.of(context).pop(),
       ),
       title: Text(
-        _isLiveStreamActive ? 'البث المباشر - نشط' : 'البث المباشر الاحترافي',
+        _isLiveStreamActive ? 'stream_created_successfully'.tr : 'live_stream_active_professional'.tr,
         style: const TextStyle(
           color: Colors.white,
           fontSize: 18,
@@ -354,11 +355,11 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
-              children: const [
+              children:  [
                 Icon(Icons.circle, color: Colors.white, size: 8),
                 SizedBox(width: 4),
                 Text(
-                  'LIVE',
+                  'live'.tr,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 12,
@@ -374,14 +375,14 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
 
   Widget _buildBody() {
     if (!_isEngineInitialized) {
-      return const Center(
+      return  Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircularProgressIndicator(color: Colors.white),
             SizedBox(height: 16),
             Text(
-              'جاري تحضير البث...',
+              'preparing_stream'.tr,
               style: TextStyle(color: Colors.white, fontSize: 16),
             ),
           ],
@@ -480,8 +481,8 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text(
-                'إعداد البث المباشر',
+               Text(
+                'setup_live_stream'.tr,
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -490,13 +491,13 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 24),
-              
+
               // Title input
               TextField(
                 controller: _titleController,
                 decoration: InputDecoration(
-                  labelText: 'عنوان البث *',
-                  hintText: 'اكتب عنوان جذاب للبث',
+                  labelText: 'stream_title_label_required'.tr,
+                  hintText: 'stream_title_hint'.tr,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -506,13 +507,13 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
                 textInputAction: TextInputAction.next,
               ),
               const SizedBox(height: 16),
-              
+
               // Description input
               TextField(
                 controller: _descriptionController,
                 decoration: InputDecoration(
-                  labelText: 'وصف البث',
-                  hintText: 'اكتب وصف مختصر للبث (اختياري)',
+                  labelText: 'stream_description'.tr,
+                  hintText: 'stream_description_hint_optional'.tr,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -522,12 +523,12 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
                 maxLength: 300,
               ),
               const SizedBox(height: 24),
-              
+
               // Start stream button
               BlocBuilder<LiveStreamCreationBloc, LiveStreamCreationState>(
                 builder: (context, state) {
                   final isLoading = state is LiveStreamCreationLoading;
-                  
+
                   return ElevatedButton.icon(
                     onPressed: isLoading ? null : () => _startLiveStream(context),
                     icon: isLoading
@@ -541,7 +542,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
                           )
                         : const Icon(Icons.play_arrow),
                     label: Text(
-                      isLoading ? 'جاري الإنشاء...' : 'بدء البث المباشر',
+                      isLoading ? 'creating_live_start'.tr : 'live_chat'.tr,
                       style: const TextStyle(fontSize: 16),
                     ),
                     style: ElevatedButton.styleFrom(
@@ -593,11 +594,11 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
-                children: const [
+                children:  [
                   Icon(Icons.circle, color: Colors.white, size: 8),
                   SizedBox(width: 4),
                   Text(
-                    'LIVE',
+                    'live'.tr,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 12,
@@ -628,7 +629,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
                   ),
                   const SizedBox(width: 6),
                   Text(
-                    '${_formatViewersCount(_currentViewers)} مشاهد',
+                    '${_formatViewersCount(_currentViewers)} watch'.tr,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 14,
@@ -675,8 +676,8 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
                     children: [
                       const Icon(Icons.chat, color: Colors.white, size: 16),
                       const SizedBox(width: 8),
-                      const Text(
-                        'محادثة مباشرة',
+                       Text(
+                        'live_chat'.tr,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 14,
@@ -741,7 +742,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
     
     return Center(
       child: Text(
-        'ابدأ محادثة!',
+        'start_chat_exclamation'.tr,
         style: TextStyle(
           color: Colors.white.withOpacity(0.6),
           fontSize: 14,
@@ -794,7 +795,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        comment.userName.isNotEmpty ? comment.userName : 'مجهول',
+                        comment.userName.isNotEmpty ? comment.userName : 'anonymous_user'.tr,
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.8),
                           fontSize: 10,
@@ -853,7 +854,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
               controller: commentController,
               style: const TextStyle(color: Colors.white, fontSize: 14),
               decoration: InputDecoration(
-                hintText: 'اكتب تعليقك...',
+                hintText: 'write_your_comment'.tr,
                 hintStyle: TextStyle(
                   color: Colors.white.withOpacity(0.6),
                   fontSize: 14,
@@ -938,7 +939,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
       final difference = now.difference(timestamp);
 
       if (difference.inSeconds < 60) {
-        return 'الآن';
+        return 'now'.tr;
       } else if (difference.inMinutes < 60) {
         return '${difference.inMinutes}د';
       } else if (difference.inHours < 24) {
@@ -947,7 +948,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
         return '${difference.inDays}ي';
       }
     } catch (e) {
-      return 'الآن';
+      return 'now'.tr;
     }
   }
 }
