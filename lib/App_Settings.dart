@@ -75,49 +75,15 @@ class AppSettings {
   // ==================== إعدادات AdMob (الإعلانات) ====================
   // احصل على App IDs و Ad Unit IDs من: https://apps.admob.com/
 
-  /// تفعيل إعلانات AdMob
-  static const bool enableAdMob = true;
-
-  /// AdMob App ID لـ Android
-  /// احصل عليه من: https://apps.admob.com/ > Apps > App settings
-  /// مثال: "ca-app-pub-3940256099942544~3347511713"
-  static const String adMobAppIdAndroid =
-      'ca-app-pub-3940256099942544~3347511713';
-
-  /// AdMob App ID لـ iOS
-  /// مثال: "ca-app-pub-3940256099942544~1458002511"
-  static const String adMobAppIdIOS = 'ca-app-pub-3940256099942544~1458002511';
-
-  /// Banner Ad Unit ID لـ Android
-  /// للاختبار: 'ca-app-pub-3940256099942544/6300978111'
-  /// للإنتاج: استبدلها بـ Unit ID الخاص بك
-  static const String adMobBannerAdUnitAndroid =
-      'ca-app-pub-3940256099942544/6300978111';
-
-  /// Banner Ad Unit ID لـ iOS
-  /// للاختبار: 'ca-app-pub-3940256099942544/2934735716'
-  static const String adMobBannerAdUnitIOS =
-      'ca-app-pub-3940256099942544/2934735716';
-
-  /// Native Ad Unit ID لـ Android (إعلانات مدمجة)
-  /// للاختبار: 'ca-app-pub-3940256099942544/2247696110'
-  static const String adMobNativeAdUnitAndroid =
-      'ca-app-pub-3940256099942544/2247696110';
-
-  /// Native Ad Unit ID لـ iOS
-  /// للاختبار: 'ca-app-pub-3940256099942544/3986624511'
-  static const String adMobNativeAdUnitIOS =
-      'ca-app-pub-3940256099942544/3986624511';
-
   /// إظهار إعلان في PostCard كل X منشور
   /// مثال: 5 = إظهار إعلان بعد كل 5 منشورات
   static const int adMobPostCardFrequency = 5;
 
   /// إظهار إعلان في ProfilePage
-  static const bool enableAdMobInProfile = true;
+  static const bool enableAdMobInProfile = false;
 
   /// إظهار إعلان في SearchPage
-  static const bool enableAdMobInSearch = true;
+  static const bool enableAdMobInSearch = false;
 
   /// إظهار إعلان في نتائج البحث كل X نتيجة
   static const int adMobSearchResultFrequency = 8;

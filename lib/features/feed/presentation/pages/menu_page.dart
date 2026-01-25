@@ -4,10 +4,8 @@ import 'package:provider/provider.dart';
 
 import 'package:snginepro/App_Settings.dart';
 import 'package:snginepro/core/config/app_config.dart';
-import 'package:snginepro/core/services/admob_service.dart';
 import 'package:snginepro/core/theme/widgets/GradineCard.dart';
 import 'package:snginepro/core/theme/widgets/theme_toggle_button.dart';
-import 'package:snginepro/core/widgets/admob_widgets.dart';
 import 'package:snginepro/features/auth/application/auth_notifier.dart';
 import 'package:snginepro/core/theme/design_tokens.dart';
 import 'package:snginepro/features/pages/presentation/pages/my_pages_page.dart';
@@ -148,11 +146,6 @@ class _MenuPageState extends State<MenuPage> {
                       const _UserProfileCard(),
                       const SizedBox(height: 16),
                       _GlassySearch(controller: _searchCtrl),
-                      // AdMob Banner Ad in Menu (only for non-Pro users)
-                      if (AdMobService.shouldShowAds(context) && AppSettings.enableAdMobInMenu) ...[
-                        const SizedBox(height: 16),
-                        const BannerAdWidget(),
-                      ],
                     ],
                   ),
                 ),

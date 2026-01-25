@@ -110,7 +110,7 @@ class AppColors {
   // ========== Shadows ==========
   static List<BoxShadow> get lightShadow => [
     BoxShadow(
-      color: Colors.black.withOpacity(0.08),
+      color: Colors.black.withValues(alpha: 0.08),
       blurRadius: 8,
       offset: const Offset(0, 2),
     ),
@@ -118,7 +118,7 @@ class AppColors {
 
   static List<BoxShadow> get darkShadow => [
     BoxShadow(
-      color: Colors.black.withOpacity(0.3),
+      color: Colors.black.withValues(alpha: 0.3),
       blurRadius: 12,
       offset: const Offset(0, 4),
     ),
@@ -126,7 +126,7 @@ class AppColors {
 
   static List<BoxShadow> get cardShadow => [
     BoxShadow(
-      color: Colors.black.withOpacity(0.05),
+      color: Colors.black.withValues(alpha: 0.05),
       blurRadius: 4,
       offset: const Offset(0, 1),
     ),

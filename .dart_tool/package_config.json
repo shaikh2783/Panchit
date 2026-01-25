@@ -512,12 +512,6 @@
       "languageVersion": "3.4"
     },
     {
-      "name": "google_mobile_ads",
-      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/google_mobile_ads-5.3.1",
-      "packageUri": "lib/",
-      "languageVersion": "2.17"
-    },
-    {
       "name": "google_sign_in",
       "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/google_sign_in-6.3.0",
       "packageUri": "lib/",

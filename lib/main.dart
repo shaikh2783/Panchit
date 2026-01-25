@@ -10,7 +10,6 @@ import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/core/services/reactions_api_service.dart';
 import 'package:snginepro/core/services/reactions_service.dart';
 import 'package:snginepro/core/services/notification_navigation_service.dart';
-import 'package:snginepro/core/services/admob_service.dart';
 import 'package:snginepro/features/messenger/presentation/services/global_call_service.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:snginepro/features/settings/data/models/seeting.dart';
@@ -78,9 +77,6 @@ Future<void> main() async {
   // Initialize API Client
   final apiClient = ApiClient(config: appConfig);
   globalApiClient = apiClient; // Store in global variable
-
-  // Initialize AdMob
-  await AdMobService.instance.initialize();
 
   // Initialize OneSignal with app settings from API
   await _initializeOneSignal(apiClient);

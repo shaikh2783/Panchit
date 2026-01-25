@@ -5,7 +5,7 @@
   "packages": [
     {
       "name": "snginepro",
-      "version": "1.0.1+6",
+      "version": "1.0.2+7",
       "dependencies": [
         "agora_rtc_engine",
         "audioplayers",
@@ -32,7 +32,6 @@
         "fwfh_webview",
         "get",
         "google_fonts",
-        "google_mobile_ads",
         "google_sign_in",
         "http",
         "iconsax_flutter",
@@ -235,17 +234,6 @@
         "fetch_client",
         "http",
         "meta"
-      ]
-    },
-    {
-      "name": "google_mobile_ads",
-      "version": "5.3.1",
-      "dependencies": [
-        "flutter",
-        "meta",
-        "webview_flutter",
-        "webview_flutter_android",
-        "webview_flutter_wkwebview"
       ]
     },
     {

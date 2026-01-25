@@ -4,9 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
-import 'package:snginepro/App_Settings.dart';
-import 'package:snginepro/core/services/admob_service.dart';
-import 'package:snginepro/core/widgets/admob_widgets.dart';
 import 'package:snginepro/features/profile/data/services/profile_api_service.dart';
 import 'package:snginepro/features/profile/data/services/user_videos_service.dart';
 import 'package:snginepro/features/profile/application/bloc/profile_posts_bloc.dart';
@@ -25,7 +22,6 @@ import 'package:snginepro/features/photos/presentation/pages/user_albums_page.da
 import 'package:snginepro/features/blocking/data/services/blocking_service.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/providers/system_settings_provider.dart';
-import '../../../messenger/data/models/conversation_model.dart';
 import '../../../messenger/data/services/messenger_api_service.dart';
 import '../../../messenger/presentation/pages/chat_page.dart';
 
@@ -1063,13 +1059,6 @@ class _ProfilePageState extends State<ProfilePage>
                       );
                       if (result == true && mounted) _loadProfile();
                     },
-                  ),
-                // AdMob Native Ad in Profile (only for non-Pro users)
-                if (AdMobService.shouldShowAds(context) &&
-                    AppSettings.enableAdMobInProfile)
-                  const Padding(
-                    padding: EdgeInsets.only(top: 8.0),
-                    child: NativeAdWidget(),
                   ),
                 if (posts.isEmpty && !isLoadingMore)
                   Padding(

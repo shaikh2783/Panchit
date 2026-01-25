@@ -5,10 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:snginepro/App_Settings.dart';
 import 'package:snginepro/core/config/app_config.dart';
-import 'package:snginepro/core/services/admob_service.dart';
-import 'package:snginepro/core/widgets/admob_widgets.dart';
 import 'package:snginepro/features/auth/application/auth_notifier.dart';
 import 'package:snginepro/features/feed/application/bloc/posts_bloc.dart';
 import 'package:snginepro/features/feed/application/bloc/posts_events.dart';
@@ -1138,18 +1135,6 @@ class HomePageState extends State<HomePage> {
                               );
                             },
                           ),
-                        ),
-                      );
-                    }
-                    
-                    // Add ad after every X posts (if enabled and user is not Pro)
-                    if (AdMobService.shouldShowAds(context) && 
-                        (i + 1) % AppSettings.adMobPostCardFrequency == 0 && 
-                        i < posts.length - 1) {
-                      slivers.add(
-                        SliverToBoxAdapter(
-                          key: ValueKey('ad-after-post-$i'),
-                          child: const NativeAdWidget(),
                         ),
                       );
                     }
