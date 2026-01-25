@@ -121,8 +121,7 @@ class AppSettings {
 
   /// مفتاح API للذكاء الاصطناعي (OpenAI, Gemini, إلخ)
   /// احصل عليه من: https://platform.openai.com/api-keys
-  static const String aiApiKey =
-      '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';
+  static const String aiApiKey = '';
 
   /// نموذج الذكاء الاصطناعي المستخدم
   /// أمثلة: 'gpt-4', 'gpt-3.5-turbo', 'gemini-pro'
