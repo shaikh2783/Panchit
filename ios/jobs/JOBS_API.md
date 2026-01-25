@@ -1,6 +1,6 @@
 # 💼 Jobs API Documentation
 
-Complete REST API for job postings, categories, applications, and candidates in Sngine.
+Complete REST API for job postings, categories, applications, and candidates in Panchit.
 
 ---
 

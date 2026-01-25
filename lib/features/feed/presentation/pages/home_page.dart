@@ -976,7 +976,6 @@ class HomePageState extends State<HomePage> {
               ? state.isLoadingMore
               : false;
 
-          // إذا لم يكن هناك منشورات وليس في حالة تحميل
           if (posts.isEmpty && state is PostsLoadedState) {
             return RefreshIndicator(
               onRefresh: _handleRefresh,

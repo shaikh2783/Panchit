@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -15,6 +16,15 @@ class ApiClient {
     : _config = config,
       _httpClient = httpClient ?? http.Client();
 
+  void _log(String msg) {
+    if (!kDebugMode) return;
+    debugPrint(msg);
+  }
+
+  String _truncate(String s, [int max = 1200]) {
+    if (s.length <= max) return s;
+    return '${s.substring(0, max)}...';
+  }
   final AppConfig _config;
   final http.Client _httpClient;
   String? _authToken;
@@ -32,14 +42,17 @@ class ApiClient {
   }) async {
     // Use data if provided, otherwise use body
     final requestBody = data ?? body;
+    final finalHeaders = _buildHeaders(headers, asJson: asJson);
 
     final uri = _buildUri(relativePath);
+    // --- PRINT REQUEST ---
+    _log('➡️ POST $uri');
+    _log('➡️ Headers: $finalHeaders');
     if (requestBody != null) {
-      final encoded = jsonEncode(requestBody);
-      final preview = encoded.length > 300
-          ? '${encoded.substring(0, 300)}...'
-          : encoded;
+      final encoded = asJson ? jsonEncode(requestBody) : requestBody.toString();
+      _log('➡️ Body: ${_truncate(encoded)}');
     } else {
+      _log('➡️ Body: null');
     }
 
     final response = await _httpClient.post(
@@ -121,16 +134,24 @@ class ApiClient {
   }
 
   Future<Map<String, dynamic>> get(
-    String relativePath, {
-    Map<String, String>? queryParameters,
-    Map<String, String>? headers,
-  }) async {
-    final response = await _httpClient.get(
-      _buildUri(relativePath, queryParameters: queryParameters),
-      headers: _buildHeaders(headers, asJson: true),
-    );
+      String relativePath, {
+        Map<String, String>? queryParameters,
+        Map<String, String>? headers,
+      }) async {
+    final uri = _buildUri(relativePath, queryParameters: queryParameters);
+    final finalHeaders = _buildHeaders(headers, asJson: true);
+
+    _log('➡️ GET $uri');
+    _log('➡️ Headers: $finalHeaders');
+
+    final response = await _httpClient.get(uri, headers: finalHeaders);
+
+    _log('⬅️ Status: ${response.statusCode}');
+    _log('⬅️ Response: ${_truncate(response.body)}');
+
     return _handleResponse(response);
   }
+
 
   Future<Map<String, dynamic>> delete(
     String relativePath, {
@@ -228,44 +249,49 @@ class ApiClient {
     return baseUri.replace(queryParameters: mergedQuery);
   }
 
-  Object? _encodeBody(Map<String, dynamic>? body, {required bool asJson}) {
-    if (body == null) {
-      return null;
-    }
+  Object? _encodeBody(dynamic body, {required bool asJson}) {
+    if (body == null) return null;
+
     if (asJson) {
-      return jsonEncode(body);
+      return jsonEncode(body); // works for Map/List/etc.
     }
-    return body.map(
-      (key, value) => MapEntry(key, value == null ? '' : value.toString()),
-    );
+
+    if (body is Map) {
+      return body.map(
+            (key, value) => MapEntry(key.toString(), value == null ? '' : value.toString()),
+      );
+    }
+
+    return body.toString();
   }
+
 
   Map<String, dynamic> _handleResponse(http.Response response) {
     final rawBody = response.body;
     final decodedBody = _safeDecodeBody(rawBody);
     final isSuccess = response.statusCode >= 200 && response.statusCode < 300;
+
     if (isSuccess) {
-      if (decodedBody == null) {
-        return const {};
-      }
-      if (decodedBody is Map<String, dynamic>) {
-        return decodedBody;
-      }
+      if (decodedBody == null) return const {};
+      if (decodedBody is Map<String, dynamic>) return decodedBody;
       return {'data': decodedBody};
     }
 
-    // Debug unexpected errors to ease backend troubleshooting
-    final rawPreview = rawBody.length > 800 ? '${rawBody.substring(0, 800)}...' : rawBody;
+    _log('❌ API ERROR ${response.statusCode}');
+    _log('❌ Raw error body: ${_truncate(rawBody)}');
+    _log('❌ Decoded error: $decodedBody');
 
     final message =
         _extractErrorMessage(decodedBody) ??
-        'Unexpected error from API (${response.statusCode})';
+            'Unexpected error from API (${response.statusCode})';
+
     throw ApiException(
       message,
       statusCode: response.statusCode,
       details: decodedBody,
     );
   }
+
 
   Object? _safeDecodeBody(String body) {
     if (body.isEmpty) {

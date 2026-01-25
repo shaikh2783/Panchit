@@ -1883,7 +1883,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
         ),
         const SizedBox(height: 12),
         SizedBox(
-              height: Get.height *0.27,
+              height: Get.height *0.31,
 
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
