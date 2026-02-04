@@ -3014,4 +3014,9 @@ const Map<String, String> mrIN = {
   "report_submitted": "रिपोर्ट सबमिट झाला!",
   "thank_you_help_improve_app": "अॅप सुधारण्यात मदत केल्याबद्दल धन्यवाद. आम्ही तुमचा रिपोर्ट तपासू आणि लवकरच तुमच्याशी संपर्क करू.",
   "failed_to_submit_report": "रिपोर्ट सबमिट करण्यात अयशस्वी:",
+  "no_products_for_user_currently":"या वापरकर्त्यासाठी सध्या कोणतीही उत्पादने उपलब्ध नाहीत.",
+  "search_conversations": "संभाषणांमध्ये शोधा",
+  "no_conversations": "संभाषणे नाहीत",
+  "messenger": "मेसेंजर"
+
 };

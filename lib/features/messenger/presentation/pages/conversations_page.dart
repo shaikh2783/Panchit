@@ -480,7 +480,6 @@ class _ConversationsPageState extends State<ConversationsPage> {
           child: Container(
             height: 42,
             decoration: BoxDecoration(
-              // تغيير لون الخلفية بناءً على Get.isDarkMode
               color: Get.isDarkMode
                   ? Colors.white.withOpacity(0.08)
                   : Colors.grey[100],

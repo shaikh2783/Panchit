@@ -27,6 +27,7 @@ import 'package:snginepro/features/market/data/models/product.dart';
 import 'package:snginepro/core/utils/html_decoder.dart';
 import 'package:snginepro/features/feed/presentation/pages/post_detail_page.dart';
 import 'package:snginepro/features/market/presentation/pages/add_product_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PageProfilePage extends StatefulWidget {
   // Constructor للاستخدام مع PageModel كامل (الاستخدام الحالي)
@@ -1095,8 +1096,11 @@ class _HeaderWithStats extends StatelessWidget {
                             color: Colors.transparent,
                             borderRadius: BorderRadius.circular(12),
                             child: InkWell(
-                              onTap: () {
-                                // TODO: Launch URL
+                              onTap: () async {
+                                final Uri url = Uri.parse(page.actionUrl);
+                                if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+                                  throw Exception('Could not launch $url');
+                                }
                               },
                               borderRadius: BorderRadius.circular(12),
                               child: Padding(

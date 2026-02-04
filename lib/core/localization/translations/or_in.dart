@@ -2766,5 +2766,10 @@ const Map<String, String> orIN = {
   "failed_to_upload_video": "ଭିଡିଓ ଅପଲୋଡ୍ ହେଲା ନାହିଁ",
   "report_submitted": "ରିପୋର୍ଟ ଦାଖଲ ହେଲା!",
   "thank_you_help_improve_app": "ଆପ୍‌କୁ ଉନ୍ନତ କରିବାରେ ସାହାଯ୍ୟ କରିଥିବାରୁ ଧନ୍ୟବାଦ। ଆମେ ଆପଣଙ୍କର ରିପୋର୍ଟ ଯାଞ୍ଚ କରି ଶୀଘ୍ର ଆପଣଙ୍କ ସହିତ ସମ୍ପର୍କ କରିବୁ।",
-  "failed_to_submit_report": "ରିପୋର୍ଟ ଦାଖଲ ହେଲା ନାହିଁ:"
+  "failed_to_submit_report": "ରିପୋର୍ଟ ଦାଖଲ ହେଲା ନାହିଁ:",
+  "no_products_for_user_currently":"ଏହି ବ୍ୟବହାରକର୍ତ୍ତାଙ୍କ ପାଇଁ ବର୍ତ୍ତମାନ କୌଣସି ପ୍ରୋଡକ୍ଟ୍ ନାହିଁ।",
+  "search_conversations": "କଥୋପକଥନରେ ସନ୍ଧାନ କରନ୍ତୁ",
+  "no_conversations": "କୌଣସି କଥୋପକଥନ ନାହିଁ",
+  "messenger": "ମେସେଞ୍ଜର"
+
 };

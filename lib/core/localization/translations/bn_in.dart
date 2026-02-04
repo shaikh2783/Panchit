@@ -2857,4 +2857,8 @@ const Map<String, String> bnIN = {
   "report_submitted": "রিপোর্ট জমা হয়েছে!",
   "thank_you_help_improve_app": "অ্যাপ উন্নত করতে সাহায্য করার জন্য ধন্যবাদ। আমরা আপনার রিপোর্ট পর্যালোচনা করে শীঘ্রই আপনাকে জানাব।",
   "failed_to_submit_report": "রিপোর্ট জমা দিতে ব্যর্থ হয়েছে:",
+  "no_products_for_user_currently":"এই ব্যবহারকারীর জন্য বর্তমানে কোনো পণ্য নেই।",
+  "search_conversations": "কথোপকথনে অনুসন্ধান",
+  "no_conversations": "কোনো কথোপকথন নেই",
+  "messenger": "মেসেঞ্জার"
 };

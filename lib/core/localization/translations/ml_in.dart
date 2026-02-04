@@ -2982,4 +2982,9 @@ const Map<String, String> mlIN = {
   "report_submitted": "റിപ്പോർട്ട് സമർപ്പിച്ചു!",
   "thank_you_help_improve_app": "ആപ്പ് മെച്ചപ്പെടുത്താൻ സഹായിച്ചതിന് നന്ദി. ഞങ്ങൾ നിങ്ങളുടെ റിപ്പോർട്ട് പരിശോധിച്ച് ഉടൻ തന്നെ നിങ്ങളുമായി ബന്ധപ്പെടും.",
   "failed_to_submit_report": "റിപ്പോർട്ട് സമർപ്പിക്കാൻ കഴിഞ്ഞില്ല:",
+  "no_products_for_user_currently":"ഈ ഉപയോക്താവിന് ഇപ്പോള്‍ ഉല്‍പ്പന്നങ്ങളൊന്നും ലഭ്യമല്ല.",
+  "search_conversations": "സംഭാഷണങ്ങളിൽ തിരയുക",
+  "no_conversations": "സംഭാഷണങ്ങളൊന്നുമില്ല",
+  "messenger": "മെസഞ്ചർ"
+
 };

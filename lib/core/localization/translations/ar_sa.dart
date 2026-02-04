@@ -2770,5 +2770,6 @@ const Map<String, String> arSA = {
   "failed_to_upload_video": "فشل رفع الفيديو",
   "report_submitted": "تم إرسال البلاغ!",
   "thank_you_help_improve_app": "شكرًا لمساعدتنا في تحسين التطبيق. سنراجع بلاغك ونعود إليك قريبًا.",
-  "failed_to_submit_report": "فشل إرسال البلاغ:"
+  "failed_to_submit_report": "فشل إرسال البلاغ:",
+  "no_products_for_user_currently":"لا توجد منتجات لهذا المستخدم حالياً"
 };

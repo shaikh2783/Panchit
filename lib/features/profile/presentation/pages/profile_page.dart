@@ -350,7 +350,7 @@ class _ProfilePageState extends State<ProfilePage>
         Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.transparent, Colors.black.withOpacity(0.8)],
+              colors: [Colors.transparent, Colors.black.withValues(alpha: 0.8)],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
             ),
@@ -443,7 +443,7 @@ class _ProfilePageState extends State<ProfilePage>
                         Text(
                           '@${profile.username}',
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.9),
+                            color: Colors.white.withValues(alpha: 0.9),
                             fontSize: 14,
                           ),
                         ),
@@ -453,14 +453,13 @@ class _ProfilePageState extends State<ProfilePage>
                 ],
               ),
               const SizedBox(height: 24),
-              // عرض الإحصائيات حسب الميزات المفعلة
               Builder(
                 builder: (context) {
                   final systemSettings = context
                       .watch<SystemSettingsProvider>();
                   final List<Widget> statWidgets = [
-                    _buildHeaderStat('profile_stat_posts'.tr, stats.posts),
-                    _buildHeaderStat('profile_stat_photos'.tr, stats.photos),
+                    _buildHeaderStat('profile_stat_posts'.tr, stats.posts,onTap: () => _tabController.animateTo(0)),
+                    _buildHeaderStat('profile_stat_photos'.tr, stats.photos,onTap: () => _tabController.animateTo(2))
                   ];
 
                   if (systemSettings.isFriendsEnabled) {
@@ -468,6 +467,7 @@ class _ProfilePageState extends State<ProfilePage>
                       _buildHeaderStat(
                         'profile_stat_friends'.tr,
                         stats.friends,
+                          onTap: () => _tabController.animateTo(5)
                       ),
                     );
                   }
@@ -477,6 +477,7 @@ class _ProfilePageState extends State<ProfilePage>
                       _buildHeaderStat(
                         'profile_stat_followers'.tr,
                         stats.followers,
+                          onTap: () => _tabController.animateTo(5)
                       ),
                     );
                   }
@@ -494,25 +495,33 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  Widget _buildHeaderStat(String label, int count) {
-    return Column(
-      children: [
-        Text(
-          _formatNumber(count),
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
+  Widget _buildHeaderStat(String label, int count, {VoidCallback? onTap}) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap, // ✅
+      child: Column(
+        children: [
+          Text(
+            _formatNumber(count),
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 12),
-        ),
-      ],
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.8),
+              fontSize: 12,
+            ),
+          ),
+        ],
+      ),
     );
   }
+
 
   String _formatNumber(int number) {
     if (number >= 1000000) return '${(number / 1000000).toStringAsFixed(1)}M';
@@ -606,7 +615,9 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   Widget _buildFriendButton(ProfileRelationship relationship) {
-    // Convert ProfileRelationship to FriendshipStatus for friend system
+    final resolvedUserId =
+        int.tryParse(_profileData?.profile.id ?? '') ?? widget.userId ?? 0;
+
     FriendshipStatus friendshipStatus;
     if (relationship.isFriend) {
       friendshipStatus = FriendshipStatus.friends;
@@ -619,17 +630,15 @@ class _ProfilePageState extends State<ProfilePage>
     }
 
     return AddFriendButton(
-      userId: widget.userId ?? 0,
+      userId: resolvedUserId, // ✅
       initialStatus: friendshipStatus,
       size: AddFriendButtonSize.medium,
       style: AddFriendButtonStyle.filled,
       onStatusChanged: (newStatus) {
-        // Mark that friend status changed
         if (newStatus == FriendshipStatus.pending &&
             friendshipStatus == FriendshipStatus.none) {
           _friendStatusChanged = true;
         }
-        // Reload profile after a delay to get updated relationship from server
         Future.delayed(const Duration(seconds: 2), () {
           if (mounted) _loadProfile();
         });
@@ -683,20 +692,6 @@ class _ProfilePageState extends State<ProfilePage>
     }
   }
 
-  Widget _buildSecondaryButton(
-    IconData icon,
-    String label,
-    VoidCallback onPressed,
-  ) {
-    return FilledButton.tonal(
-      onPressed: onPressed,
-      style: FilledButton.styleFrom(
-        padding: const EdgeInsets.all(12),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      ),
-      child: Icon(icon, size: 20),
-    );
-  }
 
   void _showMoreOptions() {
     showModalBottomSheet(
@@ -942,7 +937,7 @@ class _ProfilePageState extends State<ProfilePage>
         color: Theme.of(context).cardColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -1024,9 +1019,6 @@ class _ProfilePageState extends State<ProfilePage>
             // تحقق من الوصول لنهاية القائمة
             if (scrollInfo.metrics.pixels >=
                 scrollInfo.metrics.maxScrollExtent - 200) {
-              final remaining =
-                  scrollInfo.metrics.maxScrollExtent -
-                  scrollInfo.metrics.pixels;
 
               if (hasMore && !isLoadingMore) {
                 context.read<ProfilePostsBloc>().add(LoadMoreUserPostsEvent());
@@ -1486,7 +1478,7 @@ class _ProfilePageState extends State<ProfilePage>
             Icon(Iconsax.box, size: 56, color: Colors.grey[500]),
             const SizedBox(height: 12),
             Text(
-              'لا توجد منتجات لهذا المستخدم حالياً',
+              'no_products_for_user_currently'.tr,
               style: TextStyle(color: Colors.grey[600], fontSize: 15),
             ),
           ],
@@ -1641,8 +1633,11 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   Widget _buildFriendsTab(ProfileStats stats) {
-    return _FriendsRelationshipsTab(userId: widget.userId, stats: stats);
+    final resolvedUserId =
+        int.tryParse(_profileData?.profile.id ?? '') ?? widget.userId;
+    return _FriendsRelationshipsTab(userId: resolvedUserId, stats: stats);
   }
+
 
   Widget _buildMoreTab(UserProfile profile) {
     final socialLinks = _profileData!.socialLinks;
@@ -1756,7 +1751,7 @@ class _FriendMenuTile extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: cs.primary.withOpacity(0.1),
+                  color: cs.primary.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(item.icon, color: cs.primary),
@@ -3436,11 +3431,6 @@ class _VideosTabContentState extends State<_VideosTabContent> {
     }
   }
 
-  String _formatDuration(int seconds) {
-    final minutes = seconds ~/ 60;
-    final secs = seconds % 60;
-    return '$minutes:${secs.toString().padLeft(2, '0')}';
-  }
 
   @override
   Widget build(BuildContext context) {

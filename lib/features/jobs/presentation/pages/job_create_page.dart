@@ -341,7 +341,7 @@ class _JobCreatePageState extends State<JobCreatePage> {
                 child: TextFormField(
                   controller: _salaryMinCtrl,
                   keyboardType: TextInputType.number,
-                  decoration: InputDecoration(labelText: 'salary_min'.tr, prefixIcon: const Icon(Iconsax.money_recive_copy)),
+                  decoration: InputDecoration(labelText: 'salary_min'.tr, prefixIcon: const Icon( Icons.currency_rupee)),
                 ),
               ),
               SizedBox(width: UI.md),
@@ -378,7 +378,7 @@ class _JobCreatePageState extends State<JobCreatePage> {
                 child: TextFormField(
                   controller: _salaryMaxCtrl,
                   keyboardType: TextInputType.number,
-                  decoration: InputDecoration(labelText: 'salary_max'.tr, prefixIcon: const Icon(Iconsax.money_recive_copy)),
+                  decoration: InputDecoration(labelText: 'salary_max'.tr, prefixIcon: const Icon( Icons.currency_rupee)),
                 ),
               ),
               SizedBox(width: UI.md),

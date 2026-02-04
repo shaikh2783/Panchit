@@ -2751,4 +2751,9 @@ const Map<String, String> guIN = {
   "report_submitted": "રિપોર્ટ સબમિટ થયો!",
   "thank_you_help_improve_app": "એપ સુધારવામાં મદદ કરવા બદલ આભાર. અમે તમારો રિપોર્ટ સમીક્ષા કરીને જલ્દી જ તમને જાણ કરીશું.",
   "failed_to_submit_report": "રિપોર્ટ સબમિટ કરવામાં નિષ્ફળ:",
+  "no_products_for_user_currently":"હાલમાં આ વપરાશકર્તા માટે કોઈ પ્રોડક્ટ ઉપલબ્ધ નથી.",
+  "search_conversations": "વાતચીતમાં શોધો",
+  "no_conversations": "કોઈ વાતચીત નથી",
+  "messenger": "મેસેન્જર"
+
 };

@@ -2756,5 +2756,10 @@ const Map<String, String> taIN = {
   "failed_to_upload_video": "வீடியோ பதிவேற்றம் தோல்வியடைந்தது",
   "report_submitted": "ரிப்போர்ட் சமர்ப்பிக்கப்பட்டது!",
   "thank_you_help_improve_app": "அப்பை மேம்படுத்த உதவியதற்கு நன்றி. உங்கள் ரிப்போர்ட்டை நாங்கள் பரிசீலித்து விரைவில் உங்களை தொடர்பு கொள்வோம்.",
-  "failed_to_submit_report": "ரிப்போர்ட் சமர்ப்பிக்க முடியவில்லை:"
+  "failed_to_submit_report": "ரிப்போர்ட் சமர்ப்பிக்க முடியவில்லை:",
+  "no_products_for_user_currently":"இந்த பயனருக்காக தற்போது எந்த தயாரிப்புகளும் இல்லை.",
+  "search_conversations": "உரையாடல்களில் தேடுங்கள்",
+  "no_conversations": "உரையாடல்கள் இல்லை",
+  "messenger": "மெசஞ்சர்"
+
 };

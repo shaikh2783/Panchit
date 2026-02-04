@@ -182,7 +182,7 @@ class _FundingListPageState extends State<FundingListPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    Iconsax.money_recive_copy,
+                    Icons.currency_rupee,
                     size: 48,
                     color: UI.subtleText(context),
                   ),
@@ -311,7 +311,7 @@ class _FundingListPageState extends State<FundingListPage> {
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            '\$${f.raisedAmount.toStringAsFixed(0)}',
+                            '₹${f.raisedAmount.toStringAsFixed(0)}',
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w700,
@@ -332,7 +332,7 @@ class _FundingListPageState extends State<FundingListPage> {
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            '\$${f.amount.toStringAsFixed(0)}',
+                            '₹${f.amount.toStringAsFixed(0)}',
                             style: const TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w600,

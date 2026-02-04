@@ -35,7 +35,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
     }
 
     // If the URL has a domain but no protocol
-    if (imageUrl.contains('sngine.fluttercrafters.com')) {
+    if (imageUrl.contains('panchit.fluttercrafters.com')) {
       return 'https://$imageUrl';
     }
 
@@ -92,7 +92,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.1),
+                color: Colors.blue.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(Iconsax.discover, color: Colors.blue, size: 18),
@@ -282,7 +282,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.amber.withOpacity(0.3),
+                color: Colors.amber.withValues(alpha: 0.3),
                 blurRadius: 15,
                 offset: const Offset(0, 5),
               ),
@@ -293,7 +293,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Icon(Iconsax.medal_star, color: Colors.white, size: 28),
@@ -317,7 +317,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                         widget.balance.remaining.toString(),
                       ]),
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                       ),
@@ -346,13 +346,13 @@ class _DiscoverPageState extends State<DiscoverPage> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.08),
+                color: Colors.black.withValues(alpha: 0.08),
                 blurRadius: 12,
                 offset: const Offset(0, 2),
               ),
             ],
             border: Border.all(
-              color: Colors.amber.withOpacity(0.3),
+              color: Colors.amber.withValues(alpha: 0.3),
               width: 1.5,
             ),
           ),
@@ -499,10 +499,10 @@ class _DiscoverPageState extends State<DiscoverPage> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.amber.withOpacity(0.1),
+                    color: Colors.amber.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: Colors.amber.withOpacity(0.3),
+                      color: Colors.amber.withValues(alpha: 0.3),
                     ),
                   ),
                   child: Row(
@@ -588,7 +588,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                             color: isDarkMode ? const Color(0xFF2A2A2A) : Colors.grey[100],
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: Colors.amber.withOpacity(0.3),
+                              color: Colors.amber.withValues(alpha: 0.3),
                             ),
                           ),
                           child: DropdownButton<int>(
@@ -663,13 +663,13 @@ class _DiscoverPageState extends State<DiscoverPage> {
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide(
-                                color: Colors.amber.withOpacity(0.3),
+                                color: Colors.amber.withValues(alpha: 0.3),
                               ),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide(
-                                color: Colors.amber.withOpacity(0.3),
+                                color: Colors.amber.withValues(alpha: 0.3),
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
@@ -759,7 +759,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                                 color: isDarkMode ? const Color(0xFF2A2A2A) : Colors.grey[100],
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                  color: Colors.amber.withOpacity(0.3),
+                                  color: Colors.amber.withValues(alpha: 0.3),
                                 ),
                               ),
                               child: ListView.builder(
@@ -826,10 +826,10 @@ class _DiscoverPageState extends State<DiscoverPage> {
                                     checkColor: Colors.white,
                                     tileColor: isDarkMode
                                         ? (isSelected
-                                            ? Colors.amber.withOpacity(0.1)
+                                            ? Colors.amber.withValues(alpha: 0.1)
                                             : Colors.transparent)
                                         : (isSelected
-                                            ? Colors.amber.withOpacity(0.05)
+                                            ? Colors.amber.withValues(alpha: 0.05)
                                             : Colors.transparent),
                                   );
                                 },
@@ -885,7 +885,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                                   : Colors.grey[100],
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: Colors.amber.withOpacity(0.3),
+                                color: Colors.amber.withValues(alpha: 0.3),
                               ),
                             ),
                             child: Row(
@@ -974,13 +974,13 @@ class _DiscoverPageState extends State<DiscoverPage> {
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide(
-                                color: Colors.amber.withOpacity(0.3),
+                                color: Colors.amber.withValues(alpha: 0.3),
                               ),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide(
-                                color: Colors.amber.withOpacity(0.3),
+                                color: Colors.amber.withValues(alpha: 0.3),
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
@@ -1237,7 +1237,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
         Text(
           labelKey.tr,
           style: TextStyle(
-            color: Colors.white.withOpacity(0.8),
+            color: Colors.white.withValues(alpha: 0.8),
             fontSize: 12,
             fontWeight: FontWeight.w500,
           ),
@@ -1285,7 +1285,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.08),
+                        color: Colors.black.withValues(alpha: 0.08),
                         blurRadius: 20,
                         offset: const Offset(0, 4),
                       ),
@@ -1351,7 +1351,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                                           _buildImageUrl(user.picture!),
                                         )
                                       : null,
-                                  backgroundColor: Colors.blue.withOpacity(0.1),
+                                  backgroundColor: Colors.blue.withValues(alpha: 0.1),
                                   child: user.picture == null
                                       ? Text(
                                           user.fullName.isNotEmpty
@@ -1512,7 +1512,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.08),
+                        color: Colors.black.withValues(alpha: 0.08),
                         blurRadius: 20,
                         offset: const Offset(0, 4),
                       ),
@@ -1596,7 +1596,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                                               )
                                             : null,
                                         backgroundColor: Colors.indigo
-                                            .withOpacity(0.1),
+                                            .withValues(alpha: 0.1),
                                         child: page.pagePicture == null
                                             ? Icon(
                                                 Iconsax.building,
@@ -1739,7 +1739,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.08),
+                color: Colors.black.withValues(alpha: 0.08),
                 blurRadius: 20,
                 offset: const Offset(0, 4),
               ),
@@ -1821,7 +1821,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.green.withOpacity(0.1),
+                            color: Colors.green.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Row(
@@ -1902,7 +1902,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.08),
+                        color: Colors.black.withValues(alpha: 0.08),
                         blurRadius: 20,
                         offset: const Offset(0, 4),
                       ),
@@ -1935,7 +1935,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                                             _buildImageUrl(person.picture!),
                                           )
                                         : null,
-                                    backgroundColor: Colors.blue.withOpacity(
+                                    backgroundColor: Colors.blue.withValues(alpha:
                                       0.1,
                                     ),
                                     child: person.picture == null
@@ -2008,7 +2008,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                                   vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Colors.blue.withOpacity(0.1),
+                                  color: Colors.blue.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Text(
@@ -2099,7 +2099,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.08),
+                        color: Colors.black.withValues(alpha: 0.08),
                         blurRadius: 20,
                         offset: const Offset(0, 4),
                       ),
@@ -2122,7 +2122,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                                             _buildImageUrl(page.pagePicture!),
                                           )
                                         : null,
-                                    backgroundColor: Colors.indigo.withOpacity(
+                                    backgroundColor: Colors.indigo.withValues(alpha:
                                       0.1,
                                     ),
                                     child: page.pagePicture == null
@@ -2277,7 +2277,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.08),
+                        color: Colors.black.withValues(alpha: 0.08),
                         blurRadius: 20,
                         offset: const Offset(0, 4),
                       ),
@@ -2294,8 +2294,8 @@ class _DiscoverPageState extends State<DiscoverPage> {
                           ),
                           gradient: LinearGradient(
                             colors: [
-                              Colors.deepPurple.withOpacity(0.8),
-                              Colors.purple.withOpacity(0.6),
+                              Colors.deepPurple.withValues(alpha: 0.8),
+                              Colors.purple.withValues(alpha: 0.6),
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -2325,7 +2325,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                                     _buildImageUrl(group.groupPicture!),
                                   )
                                 : null,
-                            backgroundColor: Colors.purple.withOpacity(0.1),
+                            backgroundColor: Colors.purple.withValues(alpha: 0.1),
                             child: group.groupPicture == null
                                 ? Icon(
                                     Iconsax.people,
@@ -2365,8 +2365,8 @@ class _DiscoverPageState extends State<DiscoverPage> {
                               ),
                               decoration: BoxDecoration(
                                 color: group.groupPrivacy == 1
-                                    ? Colors.green.withOpacity(0.1)
-                                    : Colors.orange.withOpacity(0.1),
+                                    ? Colors.green.withValues(alpha: 0.1)
+                                    : Colors.orange.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
@@ -2484,7 +2484,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.08),
+                        color: Colors.black.withValues(alpha: 0.08),
                         blurRadius: 20,
                         offset: const Offset(0, 4),
                       ),
@@ -2501,8 +2501,8 @@ class _DiscoverPageState extends State<DiscoverPage> {
                           ),
                           gradient: LinearGradient(
                             colors: [
-                              Colors.cyan.withOpacity(0.8),
-                              Colors.blue.withOpacity(0.6),
+                              Colors.cyan.withValues(alpha: 0.8),
+                              Colors.blue.withValues(alpha: 0.6),
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -2530,7 +2530,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                                 vertical: 6,
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.cyan.withOpacity(0.1),
+                                color: Colors.cyan.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Row(

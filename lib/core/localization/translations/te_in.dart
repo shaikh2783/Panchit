@@ -2794,4 +2794,8 @@ const Map<String, String> teIN = {
   "report_submitted": "రిపోర్ట్ సమర్పించబడింది!",
   "thank_you_help_improve_app": "యాప్‌ను మెరుగుపరచడానికి సహాయం చేసినందుకు ధన్యవాదాలు. మేము మీ రిపోర్ట్‌ను సమీక్షించి త్వరలో మీకు తెలియజేస్తాము.",
   "failed_to_submit_report": "రిపోర్ట్ సమర్పించడం విఫలమైంది:",
+  "no_products_for_user_currently":"ఈ వినియోగదారునికి ప్రస్తుతం ఎలాంటి ఉత్పత్తులు లేవు.",
+  "search_conversations": "సంభాషణల్లో వెతకండి",
+  "no_conversations": "సంభాషణలు లేవు",
+  "messenger": "మెసెంజర్"
 };

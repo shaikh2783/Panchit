@@ -2778,5 +2778,9 @@ const Map<String, String> enUS = {
   "failed_to_upload_video": "Failed to upload video",
   "report_submitted": "Report Submitted!",
   "thank_you_help_improve_app": "Thank you for helping us improve the app. We\\'ll review your report and get back to you soon.",
-  "failed_to_submit_report": "Failed to submit report:"
+  "failed_to_submit_report": "Failed to submit report:",
+  "no_products_for_user_currently":"There are no products for this user at the moment.",
+  "search_conversations": "Search in conversations",
+  "no_conversations": "No conversations",
+  "messenger": "Messenger"
 };

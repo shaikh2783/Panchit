@@ -124,11 +124,11 @@ class _MainNavigationPageState extends State<MainNavigationPage>
           setState(() => _showNavBar = shouldShow);
         }
       },
-    ), // ✅ Bloc Migration: Feed page using Bloc pattern
+    ),
     const FriendRequestsPage(), // Provider (to be migrated later)
     const DiscoverPage(), // New discover page
     const ReelsPage(), // Provider (to be migrated later)
-    const NotificationsPage(), // ✅ Bloc Migration: Notifications page using Bloc pattern
+    const NotificationsPage(),
     MenuPage(
       onNavigateToTab: (index) => setState(() => _currentIndex = index),
     ), // Pass callback to MenuPage

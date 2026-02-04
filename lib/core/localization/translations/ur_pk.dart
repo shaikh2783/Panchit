@@ -2756,5 +2756,10 @@ const Map<String, String> urPK = {
   "failed_to_upload_video": "ویڈیو اپلوڈ نہیں ہو سکی",
   "report_submitted": "رپورٹ جمع ہو گئی!",
   "thank_you_help_improve_app": "ایپ بہتر بنانے میں مدد کرنے کا شکریہ۔ ہم آپ کی رپورٹ کا جائزہ لیں گے اور جلد آپ سے رابطہ کریں گے۔",
-  "failed_to_submit_report": "رپورٹ جمع کرانے میں ناکام:"
+  "failed_to_submit_report": "رپورٹ جمع کرانے میں ناکام:",
+  "no_products_for_user_currently":"اس صارف کے لیے اس وقت کوئی پروڈکٹس موجود نہیں ہیں۔",
+  "search_conversations": "گفتگوؤں میں تلاش کریں",
+  "no_conversations": "کوئی گفتگو نہیں",
+  "messenger": "میسنجر"
+
 };

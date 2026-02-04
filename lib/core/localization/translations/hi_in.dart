@@ -2898,5 +2898,10 @@ const Map<String, String> hiIN = {
   "failed_to_upload_video": "वीडियो अपलोड करने में विफल",
   "report_submitted": "रिपोर्ट सबमिट हो गई!",
   "thank_you_help_improve_app": "ऐप को बेहतर बनाने में मदद करने के लिए धन्यवाद। हम आपकी रिपोर्ट की समीक्षा करेंगे और जल्द ही आपसे संपर्क करेंगे।",
-  "failed_to_submit_report": "रिपोर्ट सबमिट करने में विफल:"
+  "failed_to_submit_report": "रिपोर्ट सबमिट करने में विफल:",
+  "no_products_for_user_currently":"इस उपयोगकर्ता के लिए इस समय कोई उत्पाद उपलब्ध नहीं है।",
+  "search_conversations": "वार्तालापों में खोजें",
+  "no_conversations": "कोई वार्तालाप नहीं",
+  "messenger": "मैसेंजर"
+
 };

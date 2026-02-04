@@ -2923,4 +2923,9 @@ const Map<String, String> knIN = {
   "report_submitted": "ವರದಿ ಸಲ್ಲಿಸಲಾಗಿದೆ!",
   "thank_you_help_improve_app": "ಆಪ್ ಅನ್ನು ಸುಧಾರಿಸಲು ಸಹಾಯ ಮಾಡಿದಕ್ಕಾಗಿ ಧನ್ಯವಾದಗಳು. ನಾವು ನಿಮ್ಮ ವರದಿಯನ್ನು ಪರಿಶೀಲಿಸಿ ಶೀಘ್ರದಲ್ಲೇ ನಿಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸುತ್ತೇವೆ.",
   "failed_to_submit_report": "ವರದಿ ಸಲ್ಲಿಸಲು ವಿಫಲವಾಗಿದೆ:",
+  "no_products_for_user_currently":"ಈ ಬಳಕೆದಾರರಿಗೆ ಇದೀಗ ಯಾವುದೇ ಉತ್ಪನ್ನಗಳು ಲಭ್ಯವಿಲ್ಲ.",
+  "search_conversations": "ಸಂಭಾಷಣೆಗಳಲ್ಲಿ ಹುಡುಕಿ",
+  "no_conversations": "ಯಾವುದೇ ಸಂಭಾಷಣೆಗಳಿಲ್ಲ",
+  "messenger": "ಮೆಸೆಂಜರ್"
+
 };

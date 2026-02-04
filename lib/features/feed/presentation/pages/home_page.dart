@@ -95,7 +95,7 @@ class _ReelsPreviewRail extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.red.withOpacity(0.12),
+                      color: Colors.red.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Icon(Iconsax.video, color: Colors.red, size: 18),
@@ -145,7 +145,7 @@ class _ReelsPreviewRail extends StatelessWidget {
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.12),
+                        color: Colors.black.withValues(alpha: 0.12),
                         blurRadius: 10,
                         offset: const Offset(0, 6),
                       ),
@@ -180,8 +180,8 @@ class _ReelsPreviewRail extends StatelessWidget {
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                               colors: [
-                                Colors.black.withOpacity(0.05),
-                                Colors.black.withOpacity(0.55),
+                                Colors.black.withValues(alpha: 0.05),
+                                Colors.black.withValues(alpha: 0.55),
                               ],
                             ),
                           ),
@@ -335,7 +335,7 @@ class _SuggestedFriendsRailState extends State<_SuggestedFriendsRail> {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary.withOpacity(0.12),
+                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
@@ -379,7 +379,7 @@ class _SuggestedFriendsRailState extends State<_SuggestedFriendsRail> {
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.08),
+                      color: Colors.black.withValues(alpha: 0.08),
                       blurRadius: 10,
                       offset: const Offset(0, 6),
                     ),
@@ -408,7 +408,7 @@ class _SuggestedFriendsRailState extends State<_SuggestedFriendsRail> {
                             radius: 34,
                             backgroundImage:
                                 avatarUrl != null ? CachedNetworkImageProvider(avatarUrl) : null,
-                            backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.12),
+                            backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.12),
                             child: avatarUrl == null
                                 ? Text(
                                     person.fullName.isNotEmpty
@@ -455,7 +455,7 @@ class _SuggestedFriendsRailState extends State<_SuggestedFriendsRail> {
                     Text(
                       '@${person.username}',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                           ),
                     ),
                     if (person.mutualFriendsCount > 0) ...[
@@ -463,7 +463,7 @@ class _SuggestedFriendsRailState extends State<_SuggestedFriendsRail> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
@@ -486,7 +486,7 @@ class _SuggestedFriendsRailState extends State<_SuggestedFriendsRail> {
                               ? Theme.of(context).colorScheme.surfaceVariant
                               : Theme.of(context).colorScheme.primary,
                           foregroundColor: isAdded
-                              ? Theme.of(context).colorScheme.onSurface.withOpacity(0.65)
+                              ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.65)
                               : Colors.white,
                           elevation: 0,
                           padding: const EdgeInsets.symmetric(vertical: 10),
@@ -683,7 +683,7 @@ class HomePageState extends State<HomePage> {
                   BoxShadow(
                     color: isDark
                         ? Colors.black26
-                        : Colors.grey.withOpacity(0.2),
+                        : Colors.grey.withValues(alpha: 0.2),
                     blurRadius: 20,
                     spreadRadius: 2,
                   ),
@@ -729,7 +729,7 @@ class HomePageState extends State<HomePage> {
           padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 40.0),
           child: Card(
             elevation: isDark ? 8 : 4,
-            shadowColor: isDark ? Colors.black54 : Colors.grey.withOpacity(0.3),
+            shadowColor: isDark ? Colors.black54 : Colors.grey.withValues(alpha: 0.3),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
@@ -763,7 +763,7 @@ class HomePageState extends State<HomePage> {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.red.withOpacity(0.3),
+                          color: Colors.red.withValues(alpha: 0.3),
                           blurRadius: 20,
                           spreadRadius: 2,
                         ),
@@ -804,7 +804,7 @@ class HomePageState extends State<HomePage> {
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.blue.withOpacity(0.3),
+                          color: Colors.blue.withValues(alpha: 0.3),
                           blurRadius: 8,
                           offset: const Offset(0, 4),
                         ),
@@ -873,7 +873,7 @@ class HomePageState extends State<HomePage> {
                     BoxShadow(
                       color: isDark
                           ? Colors.black26
-                          : Colors.grey.withOpacity(0.2),
+                          : Colors.grey.withValues(alpha: 0.2),
                       blurRadius: 20,
                       spreadRadius: 2,
                     ),
@@ -927,7 +927,7 @@ class HomePageState extends State<HomePage> {
                   elevation: 4,
                   shadowColor: Theme.of(
                     context,
-                  ).colorScheme.primary.withOpacity(0.4),
+                  ).colorScheme.primary.withValues(alpha: 0.4),
                 ),
               ),
             ],
@@ -1160,7 +1160,7 @@ class HomePageState extends State<HomePage> {
                                       BoxShadow(
                                         color: isDark
                                             ? Colors.black26
-                                            : Colors.grey.withOpacity(0.15),
+                                            : Colors.grey.withValues(alpha: 0.15),
                                         blurRadius: 12,
                                         spreadRadius: 1,
                                       ),
@@ -1220,19 +1220,19 @@ class HomePageState extends State<HomePage> {
             end: Alignment.bottomCenter,
             colors: isDark
                 ? [
-                    const Color(0xFF1A1A1A).withOpacity(0.98),
-                    const Color(0xFF0A0A0A).withOpacity(0.95),
+                    const Color(0xFF1A1A1A).withValues(alpha: 0.98),
+                    const Color(0xFF0A0A0A).withValues(alpha: 0.95),
                   ]
                 : [
-                    Colors.white.withOpacity(0.98),
-                    const Color(0xFFF8F9FA).withOpacity(0.95),
+                    Colors.white.withValues(alpha: 0.98),
+                    const Color(0xFFF8F9FA).withValues(alpha: 0.95),
                   ],
           ),
           boxShadow: [
             BoxShadow(
               color: isDark
-                  ? Colors.black.withOpacity(0.3)
-                  : Colors.black.withOpacity(0.05),
+                  ? Colors.black.withValues(alpha: 0.3)
+                  : Colors.black.withValues(alpha: 0.05),
               blurRadius: 12,
               offset: const Offset(0, 2),
             ),
@@ -1304,7 +1304,7 @@ class HomePageState extends State<HomePage> {
                   borderRadius: BorderRadius.circular(24),
                   gradient: isSelected
                       ? LinearGradient(
-                          colors: [cs.primary, cs.primary.withOpacity(0.8)],
+                          colors: [cs.primary, cs.primary.withValues(alpha: 0.8)],
                         )
                       : LinearGradient(
                           colors: isDark
@@ -1314,8 +1314,8 @@ class HomePageState extends State<HomePage> {
                   boxShadow: [
                     BoxShadow(
                       color: isSelected
-                          ? cs.primary.withOpacity(0.3)
-                          : Colors.black.withOpacity(isDark ? 0.3 : 0.06),
+                          ? cs.primary.withValues(alpha: 0.3)
+                          : Colors.black.withValues(alpha: isDark ? 0.3 : 0.06),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
@@ -1386,8 +1386,8 @@ class _AppBarAction extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: isDark
-                ? Colors.black.withOpacity(0.4)
-                : Colors.black.withOpacity(0.08),
+                ? Colors.black.withValues(alpha: 0.4)
+                : Colors.black.withValues(alpha: 0.08),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -1406,8 +1406,8 @@ class _AppBarAction extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(
                 color: isDark
-                    ? Colors.white.withOpacity(0.1)
-                    : Colors.black.withOpacity(0.05),
+                    ? Colors.white.withValues(alpha: 0.1)
+                    : Colors.black.withValues(alpha: 0.05),
                 width: 1,
               ),
             ),
@@ -1451,12 +1451,12 @@ class _StoriesRail extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [cs.surface, cs.surface.withOpacity(0.95)],
+          colors: [cs.surface, cs.surface.withValues(alpha: 0.95)],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
         border: Border(
-          bottom: BorderSide(color: cs.outlineVariant.withOpacity(0.25)),
+          bottom: BorderSide(color: cs.outlineVariant.withValues(alpha: 0.25)),
         ),
       ),
       padding: const EdgeInsets.symmetric(vertical: 12),
@@ -1515,7 +1515,7 @@ class _CreateStoryCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          Colors.black.withOpacity(0.6),
+                          Colors.black.withValues(alpha: 0.6),
                           Colors.transparent,
                         ],
                         begin: Alignment.topCenter,
@@ -1529,7 +1529,7 @@ class _CreateStoryCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          Colors.black.withOpacity(0.6),
+                          Colors.black.withValues(alpha: 0.6),
                           Colors.transparent,
                         ],
                         begin: Alignment.bottomCenter,
@@ -1539,17 +1539,17 @@ class _CreateStoryCard extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  top: 115,
+                  top: 110,
                   left: 0,
                   right: 0,
                   child: Center(
                     child: CircleAvatar(
-                      radius: 20,
+                      radius: 15,
                       backgroundColor: cs.primary,
                       child: const Icon(
                         Icons.add,
                         color: Colors.white,
-                        size: 26,
+                        size: 20,
                       ),
                     ),
                   ),
@@ -1559,12 +1559,14 @@ class _CreateStoryCard extends StatelessWidget {
                   left: 0,
                   right: 0,
                   child: Container(
-                    height: 52,
-                    color: cs.surface.withOpacity(0.92),
+                    height: 35,
+                    color: cs.surface.withValues(alpha: 0.92),
                     alignment: Alignment.bottomCenter,
                     padding: const EdgeInsets.only(bottom: 8),
                     child: Text(
                       'home_create_story'.tr,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
                         fontWeight: FontWeight.w800,
                       ),
@@ -1613,7 +1615,7 @@ class _StoryCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          Colors.black.withOpacity(0.55),
+                          Colors.black.withValues(alpha: 0.55),
                           Colors.transparent,
                         ],
                         begin: Alignment.topCenter,
@@ -1627,7 +1629,7 @@ class _StoryCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          Colors.black.withOpacity(0.55),
+                          Colors.black.withValues(alpha: 0.55),
                           Colors.transparent,
                         ],
                         begin: Alignment.bottomCenter,
@@ -1705,15 +1707,15 @@ class _ComposerCard extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: isDark
-                ? Colors.black.withOpacity(0.3)
-                : Colors.black.withOpacity(0.06),
+                ? Colors.black.withValues(alpha: 0.3)
+                : Colors.black.withValues(alpha: 0.06),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
           BoxShadow(
             color: isDark
-                ? Colors.black.withOpacity(0.1)
-                : Colors.black.withOpacity(0.02),
+                ? Colors.black.withValues(alpha: 0.1)
+                : Colors.black.withValues(alpha: 0.02),
             blurRadius: 6,
             offset: const Offset(0, 1),
           ),
@@ -1725,25 +1727,28 @@ class _ComposerCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: cs.primary.withOpacity(0.2),
-                      width: 2,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: cs.primary.withOpacity(0.1),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
+                GestureDetector(
+                  onTap: onTap,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: cs.primary.withValues(alpha: 0.2),
+                        width: 2,
                       ),
-                    ],
-                  ),
-                  child: CircleAvatar(
-                    radius: 22,
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    child: Icon(Icons.add, color: Colors.white),
+                      boxShadow: [
+                        BoxShadow(
+                          color: cs.primary.withValues(alpha: 0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: CircleAvatar(
+                      radius: 22,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      child: Icon(Icons.add, color: Colors.white),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -1769,16 +1774,16 @@ class _ComposerCard extends StatelessWidget {
                         ),
                         border: Border.all(
                           color: isDark
-                              ? Colors.white.withOpacity(0.1)
-                              : Colors.black.withOpacity(0.08),
+                              ? Colors.white.withValues(alpha: 0.1)
+                              : Colors.black.withValues(alpha: 0.08),
                           width: 1,
                         ),
                         borderRadius: BorderRadius.circular(28),
                         boxShadow: [
                           BoxShadow(
                             color: isDark
-                                ? Colors.black.withOpacity(0.2)
-                                : Colors.black.withOpacity(0.04),
+                                ? Colors.black.withValues(alpha: 0.2)
+                                : Colors.black.withValues(alpha: 0.04),
                             blurRadius: 4,
                             offset: const Offset(0, 2),
                           ),
@@ -1805,7 +1810,7 @@ class _ComposerCard extends StatelessWidget {
                 gradient: LinearGradient(
                   colors: [
                     Colors.transparent,
-                    (isDark ? Colors.white : Colors.black).withOpacity(0.1),
+                    (isDark ? Colors.white : Colors.black).withValues(alpha: 0.1),
                     Colors.transparent,
                   ],
                 ),
@@ -1881,8 +1886,8 @@ class _ComposerAction extends StatelessWidget {
           boxShadow: [
             BoxShadow(
               color: isDark
-                  ? Colors.black.withOpacity(0.2)
-                  : Colors.black.withOpacity(0.04),
+                  ? Colors.black.withValues(alpha: 0.2)
+                  : Colors.black.withValues(alpha: 0.04),
               blurRadius: 6,
               offset: const Offset(0, 2),
             ),
@@ -1902,11 +1907,11 @@ class _ComposerAction extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: color.withOpacity(0.1),
+                      color: color.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: color.withOpacity(0.2),
+                          color: color.withValues(alpha: 0.2),
                           blurRadius: 4,
                           offset: const Offset(0, 2),
                         ),
