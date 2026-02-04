@@ -68,7 +68,7 @@ const Map<String, String> enUS = {
   'username_alphanumeric':
       'Username can only contain letters, numbers, and underscores',
   'account_created_successfully':
-      'Account created successfully! Welcome to Sngine! 🎉',
+      'Account created successfully! Welcome to Panchit! 🎉',
   'registration_failed': 'Registration failed. Please try again.',
   'email_username_required': 'Email or username is required',
   'sign_in_with_google': 'Sign in with Google',

@@ -10,6 +10,7 @@ import 'package:snginepro/features/auth/data/models/gender.dart';
 import 'package:snginepro/features/auth/data/datasources/gender_api_service.dart';
 import 'package:snginepro/features/auth/presentation/pages/login_page.dart';
 import 'package:snginepro/features/auth/presentation/pages/getting_started_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// 🎨 Modern Sign Up Page with Translation Support
 class SignUpPage extends StatefulWidget {
@@ -27,7 +28,7 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  
+  bool _agreeToTerms = false; // Add this near your other controllers
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   String? _selectedGender;
@@ -91,6 +92,15 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
   }
 
   Future<void> _handleSignUp() async {
+    if (!_agreeToTerms) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('please_agree_to_terms'.tr),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
     final form = _formKey.currentState;
     if (form == null || !form.validate()) return;
 
@@ -625,6 +635,8 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
               Expanded(child: _buildBirthdateField(isDark)),
             ],
           ),
+          const SizedBox(height: 20),
+          _buildTermsCheckbox(isDark),
         ],
       ),
     );
@@ -1052,7 +1064,7 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
         ),
         const SizedBox(height: 14),
         Text(
-          '© 2024 Sngine. All rights reserved.',
+          '© 2026 Panchit. All rights reserved.',
           style: TextStyle(
             color: isDark
                 ? Colors.white.withValues(alpha:0.4)
@@ -1063,4 +1075,73 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
       ],
     );
   }
+  Widget _buildTermsCheckbox(bool isDark) {
+    return Row(
+      children: [
+        SizedBox(
+          height: 24,
+          width: 24,
+          child: Checkbox(
+            value: _agreeToTerms,
+            activeColor: const Color(0xFF5B86E5),
+            onChanged: (value) {
+              setState(() {
+                _agreeToTerms = value ?? false;
+              });
+            },
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: RichText(
+            text: TextSpan(
+              style: TextStyle(
+                fontSize: 12,
+                color: isDark ? Colors.white70 : Colors.black87,
+              ),
+              children: [
+                TextSpan(text: 'i_agree_to'.tr),
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.middle,
+                  child: GestureDetector(
+                    onTap: () => _launchURL('https://www.panchit.com/static/terms'), // Update with your terms link
+                    child: Text(
+                      ' ${'terms_and_conditions'.tr}',
+                      style: const TextStyle(
+                        color: Color(0xFF5B86E5),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                TextSpan(text: ' ${'and'.tr} '),
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.middle,
+                  child: GestureDetector(
+                    onTap: () => _launchURL('https://www.panchit.com/static/privacy'),
+                    child: Text(
+                      'privacy_policy'.tr,
+                      style: const TextStyle(
+                        color: Color(0xFF5B86E5),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+  Future<void> _launchURL(String urlString) async {
+    final Uri url = Uri.parse(urlString);
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not launch the link')),
+      );
+    }
+  }
+
 }

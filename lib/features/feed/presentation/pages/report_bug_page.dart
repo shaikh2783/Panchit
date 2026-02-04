@@ -220,7 +220,7 @@ class _ReportBugPageState extends State<ReportBugPage> {
 <body>
   <div class="container">
     <div class="header">
-      <h2>🐛 Bug Report from Sngine Pro App</h2>
+      <h2>🐛 Bug Report from Panchit App</h2>
     </div>
     <div class="content">
       <div class="section">
@@ -247,7 +247,7 @@ class _ReportBugPageState extends State<ReportBugPage> {
       </div>
       
       <div class="footer">
-        <p>This bug report was automatically generated from Sngine Pro mobile app.</p>
+        <p>This bug report was automatically generated from Panchit mobile app.</p>
       </div>
     </div>
   </div>

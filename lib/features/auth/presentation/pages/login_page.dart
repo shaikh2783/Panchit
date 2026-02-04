@@ -357,12 +357,12 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                 const SizedBox(height: 20),
 
                                 // Divider & Google Sign-In Button (only if enabled)
-                                if (AppSettings.enableGoogleSignIn) ...[
-                                  _buildDivider(),
-                                  const SizedBox(height: 20),
-                                  _buildGoogleSignInButton(isLoading),
-                                  const SizedBox(height: 20),
-                                ],
+                                // if (AppSettings.enableGoogleSignIn) ...[
+                                //   _buildDivider(),
+                                //   const SizedBox(height: 20),
+                                //   _buildGoogleSignInButton(isLoading),
+                                //   const SizedBox(height: 20),
+                                // ],
 
                                 // Footer
                                 _buildFooter(),

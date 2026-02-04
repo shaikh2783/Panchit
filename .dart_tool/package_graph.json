@@ -5,7 +5,7 @@
   "packages": [
     {
       "name": "snginepro",
-      "version": "1.0.2+7",
+      "version": "1.0.3+8",
       "dependencies": [
         "agora_rtc_engine",
         "audioplayers",
@@ -48,6 +48,7 @@
         "record",
         "share_plus",
         "shared_preferences",
+        "sign_in_with_apple",
         "timeago",
         "url_launcher",
         "video_player",
@@ -115,6 +116,16 @@
         "stream_channel",
         "test_api",
         "vector_math"
+      ]
+    },
+    {
+      "name": "sign_in_with_apple",
+      "version": "7.0.1",
+      "dependencies": [
+        "flutter",
+        "meta",
+        "sign_in_with_apple_platform_interface",
+        "sign_in_with_apple_web"
       ]
     },
     {
@@ -791,6 +802,24 @@
         "stream_channel",
         "string_scanner",
         "term_glyph"
+      ]
+    },
+    {
+      "name": "sign_in_with_apple_web",
+      "version": "3.0.0",
+      "dependencies": [
+        "flutter",
+        "flutter_web_plugins",
+        "sign_in_with_apple_platform_interface"
+      ]
+    },
+    {
+      "name": "sign_in_with_apple_platform_interface",
+      "version": "2.0.0",
+      "dependencies": [
+        "flutter",
+        "meta",
+        "plugin_platform_interface"
       ]
     },
     {

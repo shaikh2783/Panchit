@@ -68,6 +68,8 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/record-6.1.2" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/url_launcher_android-6.3.24" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/google_sign_in_web-0.12.4+4" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/sign_in_with_apple_web-3.0.0" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/sign_in_with_apple-7.0.1" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
