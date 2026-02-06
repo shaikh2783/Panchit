@@ -1840,11 +1840,13 @@ class _ComposerCard extends StatelessWidget {
                   icon: Icons.photo_library_rounded,
                   color: const Color(0xFF45BD62),
                   label: 'home_photo'.tr,
+                  onTap: onTap
                 ),
                 _ComposerAction(
                   icon: Icons.flag_rounded,
                   color: const Color(0xFF1877F2),
                   label: 'home_event'.tr,
+                  onTap: onTap,
                 ),
               ],
             ),

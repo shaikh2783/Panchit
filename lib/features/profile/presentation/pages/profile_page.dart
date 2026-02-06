@@ -617,7 +617,6 @@ class _ProfilePageState extends State<ProfilePage>
   Widget _buildFriendButton(ProfileRelationship relationship) {
     final resolvedUserId =
         int.tryParse(_profileData?.profile.id ?? '') ?? widget.userId ?? 0;
-
     FriendshipStatus friendshipStatus;
     if (relationship.isFriend) {
       friendshipStatus = FriendshipStatus.friends;
@@ -630,7 +629,7 @@ class _ProfilePageState extends State<ProfilePage>
     }
 
     return AddFriendButton(
-      userId: resolvedUserId, // ✅
+      userId: resolvedUserId,
       initialStatus: friendshipStatus,
       size: AddFriendButtonSize.medium,
       style: AddFriendButtonStyle.filled,
@@ -799,6 +798,7 @@ class _ProfilePageState extends State<ProfilePage>
       final conversation = await messengerService.getOrCreateConversation(
         userId: userId.toString(),
       );
+      print("conversation${conversation}");
 
       Get.back(); // Close loading dialog
 

@@ -273,5 +273,10 @@
 	<false/>
 	<key>NSUserTrackingUsageDescription</key>
     <string>This identifier will be used to deliver personalized ads to you.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>We need your location to show you relevant local content and connect you with nearby users.</string>
+
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>We need your location to provide personalized updates even when the app is in the background.</string>
 </dict>
 </plist>

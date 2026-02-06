@@ -53,7 +53,7 @@ class Product extends Equatable {
     required this.productId,
     required this.name,
     required this.price,
-    this.currency = 'USD',
+    this.currency = 'INR',
     required this.description,
     required this.condition,
     required this.location,
@@ -150,7 +150,7 @@ class Product extends Equatable {
       currency:
           json['product_currency']?.toString() ??
           json['currency']?.toString() ??
-          'USD',
+          'INR',
       description:
           json['text']?.toString() ?? json['description']?.toString() ?? '',
       condition:

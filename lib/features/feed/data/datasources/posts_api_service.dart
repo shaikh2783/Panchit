@@ -327,7 +327,6 @@ class PostsApiService {
             .toList();
       }
     }
-
     if (data is List) {
       return data.map((storyData) => Story.fromJson(storyData)).toList();
     }
