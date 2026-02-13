@@ -91,12 +91,6 @@ class Story {
     addMedia(json['items']);
     addMedia(json['stories']);
     addMedia(json['reels']); // Add support for reels array
-    
-    // ❌ لا نضيف صورة البروفايل كقصة!
-    // صورة البروفايل توجد في حقل 'photo' ويجب تجاهلها
-    // تُستخدم فقط كصورة شخصية في الـ header
-    
-    // فقط إذا لم تكن هناك media items، تحقق من حقول الفيديو
     if (mediaItems.isEmpty) {
       final video = _string(json['video']);
       if (video != null && video.isNotEmpty) {
@@ -115,7 +109,7 @@ class Story {
 
     final timestamp = _parseDate(json['time']) ?? _parseDate(json['date']);
 
-    final isOwner = _bool(json['is_user'] ?? json['is_owner']);
+    final isOwner = json['story_user']==json['my_user_id'];
     final isSeen = _bool(json['is_seen'] ?? json['seen']);
 
     // Extract author ID from various possible fields

@@ -114,9 +114,6 @@ class _ChatPageState extends State<ChatPage> {
         }
 
         setState(() {
-          // إضافة الرسائل القديمة في النهاية (لأن reverse: true)
-          _messages.addAll(List<MessageModel>.from(messages.reversed));
-          _page++; // الصفحة التالية: 0 -> 1 -> 2 -> 3...
           _hasMore = hasMore;
           _isLoadingMore = false;
         });
@@ -209,6 +206,8 @@ class _ChatPageState extends State<ChatPage> {
     if (text.trim().isEmpty) return;
 
     final tempId = DateTime.now().millisecondsSinceEpoch;
+    // _pendingTextByTempId[tempId] = text.trim();
+
     final newMessage = MessageModel(
       messageId: tempId,
       conversationId: int.tryParse(widget.conversationId) ?? 0,
@@ -232,6 +231,7 @@ class _ChatPageState extends State<ChatPage> {
         conversationId: widget.conversationId,
         messageText: text,
         currentUserId: _currentUserId,
+        otherUser: widget.otherUser.userId
       );
 
       // تحقق من البيانات المستلمة
@@ -253,6 +253,8 @@ class _ChatPageState extends State<ChatPage> {
           }
         });
       }
+
+
     } catch (e) {
     }
   }
@@ -307,10 +309,11 @@ class _ChatPageState extends State<ChatPage> {
       Get.closeAllSnackbars();
 
       if (sentMessage != null) {
-        // إجبار isMe: true لأن الصورة مرسلة من المستخدم الحالي
-        final correctedMessage = sentMessage.copyWith(isMe: true);
+        final corrected = sentMessage.copyWith(isMe: true);
+
         setState(() {
-          _messages.insert(0, correctedMessage);
+          _messages.removeWhere((m) => m.messageId == corrected.messageId);
+          _messages.insert(0, corrected);
         });
 
         Get.snackbar(
@@ -451,9 +454,11 @@ class _ChatPageState extends State<ChatPage> {
       Get.closeAllSnackbars();
 
       if (sentMessage != null) {
-        final correctedMessage = sentMessage.copyWith(isMe: true);
+        final corrected = sentMessage.copyWith(isMe: true);
+
         setState(() {
-          _messages.insert(0, correctedMessage);
+          _messages.removeWhere((m) => m.messageId == corrected.messageId);
+          _messages.insert(0, corrected);
         });
 
         Get.snackbar(

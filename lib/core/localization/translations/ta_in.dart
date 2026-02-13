@@ -2760,6 +2760,8 @@ const Map<String, String> taIN = {
   "no_products_for_user_currently":"இந்த பயனருக்காக தற்போது எந்த தயாரிப்புகளும் இல்லை.",
   "search_conversations": "உரையாடல்களில் தேடுங்கள்",
   "no_conversations": "உரையாடல்கள் இல்லை",
-  "messenger": "மெசஞ்சர்"
+  "messenger": "மெசஞ்சர்",
+  "type_message": "ஒரு செய்தி எழுதுங்கள்...",
+
 
 };

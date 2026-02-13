@@ -2902,6 +2902,8 @@ const Map<String, String> hiIN = {
   "no_products_for_user_currently":"इस उपयोगकर्ता के लिए इस समय कोई उत्पाद उपलब्ध नहीं है।",
   "search_conversations": "वार्तालापों में खोजें",
   "no_conversations": "कोई वार्तालाप नहीं",
-  "messenger": "मैसेंजर"
+  "messenger": "मैसेंजर",
+  "type_message": "एक संदेश लिखें...",
+
 
 };

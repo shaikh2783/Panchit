@@ -2860,5 +2860,6 @@ const Map<String, String> bnIN = {
   "no_products_for_user_currently":"এই ব্যবহারকারীর জন্য বর্তমানে কোনো পণ্য নেই।",
   "search_conversations": "কথোপকথনে অনুসন্ধান",
   "no_conversations": "কোনো কথোপকথন নেই",
-  "messenger": "মেসেঞ্জার"
+  "messenger": "মেসেঞ্জার",
+  "type_message": "একটি বার্তা লিখুন...",
 };

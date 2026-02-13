@@ -2782,5 +2782,6 @@ const Map<String, String> enUS = {
   "no_products_for_user_currently":"There are no products for this user at the moment.",
   "search_conversations": "Search in conversations",
   "no_conversations": "No conversations",
-  "messenger": "Messenger"
+  "messenger": "Messenger",
+  "type_message": "Write a message...",
 };

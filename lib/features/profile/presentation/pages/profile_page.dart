@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:snginepro/features/messenger/data/models/conversation_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:snginepro/features/profile/data/services/profile_api_service.dart';
@@ -798,11 +799,10 @@ class _ProfilePageState extends State<ProfilePage>
       final conversation = await messengerService.getOrCreateConversation(
         userId: userId.toString(),
       );
-      print("conversation${conversation}");
 
       Get.back(); // Close loading dialog
 
-      if (conversation == null) {
+      if (conversation == null && _profileData?.relationship.isFriend==false) {
         Get.snackbar(
           'error'.tr,
           'profile_must_be_friend'.tr,
@@ -812,12 +812,12 @@ class _ProfilePageState extends State<ProfilePage>
         );
         return;
       }
-
+      UserPreview otherUser=UserPreview(userId: userId, username: _profileData?.profile.username??"", firstName: _profileData?.profile.firstName??"",lastName: _profileData?.profile.lastName??"",avatar: _profileData?.profile.picture??"",isVerified: _profileData?.profile.isVerified??false,link: _profileData?.profile.socialLinks.website);
       // Navigate to chat page with the real conversation
       Get.to(
         () => ChatPage(
-          conversationId: conversation.conversationId,
-          otherUser: conversation.otherUser,
+          conversationId: conversation?.conversationId??"0",
+          otherUser: conversation?.otherUser??otherUser,
         ),
       );
     } catch (e) {
@@ -3642,4 +3642,5 @@ class _VideoThumbnail extends StatelessWidget {
       ),
     );
   }
+
 }

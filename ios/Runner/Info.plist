@@ -39,14 +39,6 @@
 	<string>ca-app-pub-3940256099942544~1458002511</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSCameraUsageDescription</key>
-	<string>نحتاج الوصول إلى الكاميرا لالتقاط الصور ومقاطع الفيديو والبث المباشر.</string>
-	<key>NSLocalNetworkUsageDescription</key>
-	<string>نحتاج الوصول للشبكة المحلية لتحسين جودة البث المباشر.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>نحتاج الوصول إلى الميكروفون لتسجيل الصوت مع مقاطع الفيديو والبث المباشر.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>نحتاج الوصول إلى معرض الصور الخاص بك لاختيار الصور ومقاطع الفيديو.</string>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>
@@ -271,12 +263,27 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSUserTrackingUsageDescription</key>
+
+    <key>NSCameraUsageDescription</key>
+    <string>We need camera access to capture photos and videos and enable live streaming.</string>
+
+    <key>NSMicrophoneUsageDescription</key>
+    <string>We need microphone access to record audio with videos and live streaming.</string>
+
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>We need access to your photo library so you can select photos and videos.</string>
+
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>We need access to the local network to improve live streaming quality.</string>
+
+    <key>NSUserTrackingUsageDescription</key>
     <string>This identifier will be used to deliver personalized ads to you.</string>
+
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>We need your location to show you relevant local content and connect you with nearby users.</string>
+    <string>We need your location to show relevant local content and connect you with nearby users.</string>
 
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
     <string>We need your location to provide personalized updates even when the app is in the background.</string>
+
 </dict>
 </plist>

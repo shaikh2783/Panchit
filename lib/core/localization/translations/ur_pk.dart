@@ -2760,6 +2760,6 @@ const Map<String, String> urPK = {
   "no_products_for_user_currently":"اس صارف کے لیے اس وقت کوئی پروڈکٹس موجود نہیں ہیں۔",
   "search_conversations": "گفتگوؤں میں تلاش کریں",
   "no_conversations": "کوئی گفتگو نہیں",
-  "messenger": "میسنجر"
-
+  "messenger": "میسنجر",
+  "type_message": "ایک پیغام لکھیں..."
 };

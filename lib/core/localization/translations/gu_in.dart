@@ -2754,6 +2754,8 @@ const Map<String, String> guIN = {
   "no_products_for_user_currently":"હાલમાં આ વપરાશકર્તા માટે કોઈ પ્રોડક્ટ ઉપલબ્ધ નથી.",
   "search_conversations": "વાતચીતમાં શોધો",
   "no_conversations": "કોઈ વાતચીત નથી",
-  "messenger": "મેસેન્જર"
+  "messenger": "મેસેન્જર",
+  "type_message": "સંદેશો લખો...",
+
 
 };

@@ -396,7 +396,7 @@ class _ConversationsPageState extends State<ConversationsPage> {
 
       Get.back(); // close loader
 
-      if (conversation == null) {
+      if (conversation == null && friend.connection!="friend") {
         Get.snackbar(
           'error'.tr,
           'failed_to_start_conversation'.tr,
@@ -406,11 +406,12 @@ class _ConversationsPageState extends State<ConversationsPage> {
         );
         return;
       }
+      UserPreview otherUserObj=UserPreview(userId: friend.userId, username: friend.userName, firstName: friend.name,lastName: friend.name,avatar: friend.userPicture,isVerified: friend.isVerified,link: "");
 
-      final otherUser = conversation.otherUser;
+      final otherUser = conversation?.otherUser??otherUserObj;
       Get.to(() => ChatPage(
-            conversationId: conversation.conversationId,
-            otherUser: otherUser.userId != 0 ? otherUser : _followerToUserPreview(friend),
+            conversationId: conversation?.conversationId??"0",
+            otherUser: otherUser,
           ));
     } catch (e) {
       Get.back();

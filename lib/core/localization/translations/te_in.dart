@@ -2797,5 +2797,7 @@ const Map<String, String> teIN = {
   "no_products_for_user_currently":"ఈ వినియోగదారునికి ప్రస్తుతం ఎలాంటి ఉత్పత్తులు లేవు.",
   "search_conversations": "సంభాషణల్లో వెతకండి",
   "no_conversations": "సంభాషణలు లేవు",
-  "messenger": "మెసెంజర్"
+  "messenger": "మెసెంజర్",
+  "type_message": "ఒక సందేశం రాయండి...",
+
 };

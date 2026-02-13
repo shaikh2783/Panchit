@@ -2985,6 +2985,8 @@ const Map<String, String> mlIN = {
   "no_products_for_user_currently":"ഈ ഉപയോക്താവിന് ഇപ്പോള്‍ ഉല്‍പ്പന്നങ്ങളൊന്നും ലഭ്യമല്ല.",
   "search_conversations": "സംഭാഷണങ്ങളിൽ തിരയുക",
   "no_conversations": "സംഭാഷണങ്ങളൊന്നുമില്ല",
-  "messenger": "മെസഞ്ചർ"
+  "messenger": "മെസഞ്ചർ",
+  "type_message": "ഒരു സന്ദേശം എഴുതൂ...",
+
 
 };

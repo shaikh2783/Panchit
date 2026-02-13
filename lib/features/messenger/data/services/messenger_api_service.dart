@@ -170,16 +170,21 @@ class MessengerApiService {
   /// إرسال رسالة نصية
   /// POST /chat/message
   Future<MessageModel?> sendMessage({
-    required String conversationId,
+    required String conversationId,     // "0" means new conversation in your app
     required String messageText,
     required String currentUserId,
+    required int otherUser,
   }) async {
     try {
-      // استخدام Map عادي بدلاً من FormData للرسائل النصية
-      final requestData = {
-        'conversation_id': conversationId,
-        'message': messageText,
+      final bool isNewConversation = conversationId == "0";
+
+      final int? convoIdAsInt = int.tryParse(conversationId);
+
+      final Map<String, dynamic> requestData = {
+        "conversation_id": isNewConversation ? null : convoIdAsInt,
+        "message": messageText,
         'type': 'text',
+        "recipients": isNewConversation ? <int>[otherUser] : null,
       };
 
       final response = await _apiClient.post(
@@ -197,6 +202,7 @@ class MessengerApiService {
           currentUserId: currentUserId,
         );
       }
+
       return null;
     } catch (e) {
       return null;

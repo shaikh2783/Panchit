@@ -2770,6 +2770,8 @@ const Map<String, String> orIN = {
   "no_products_for_user_currently":"ଏହି ବ୍ୟବହାରକର୍ତ୍ତାଙ୍କ ପାଇଁ ବର୍ତ୍ତମାନ କୌଣସି ପ୍ରୋଡକ୍ଟ୍ ନାହିଁ।",
   "search_conversations": "କଥୋପକଥନରେ ସନ୍ଧାନ କରନ୍ତୁ",
   "no_conversations": "କୌଣସି କଥୋପକଥନ ନାହିଁ",
-  "messenger": "ମେସେଞ୍ଜର"
+  "messenger": "ମେସେଞ୍ଜର",
+  "type_message": "ଏକ ସନ୍ଦେଶ ଲେଖନ୍ତୁ...",
+
 
 };

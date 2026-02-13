@@ -3017,6 +3017,8 @@ const Map<String, String> mrIN = {
   "no_products_for_user_currently":"या वापरकर्त्यासाठी सध्या कोणतीही उत्पादने उपलब्ध नाहीत.",
   "search_conversations": "संभाषणांमध्ये शोधा",
   "no_conversations": "संभाषणे नाहीत",
-  "messenger": "मेसेंजर"
+  "messenger": "मेसेंजर",
+  "type_message": "एक संदेश लिहा...",
+
 
 };

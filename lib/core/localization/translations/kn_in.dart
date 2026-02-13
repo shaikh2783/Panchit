@@ -2926,6 +2926,8 @@ const Map<String, String> knIN = {
   "no_products_for_user_currently":"ಈ ಬಳಕೆದಾರರಿಗೆ ಇದೀಗ ಯಾವುದೇ ಉತ್ಪನ್ನಗಳು ಲಭ್ಯವಿಲ್ಲ.",
   "search_conversations": "ಸಂಭಾಷಣೆಗಳಲ್ಲಿ ಹುಡುಕಿ",
   "no_conversations": "ಯಾವುದೇ ಸಂಭಾಷಣೆಗಳಿಲ್ಲ",
-  "messenger": "ಮೆಸೆಂಜರ್"
+  "messenger": "ಮೆಸೆಂಜರ್",
+  "type_message": "ಒಂದು ಸಂದೇಶವನ್ನು ಬರೆಯಿರಿ...",
+
 
 };
