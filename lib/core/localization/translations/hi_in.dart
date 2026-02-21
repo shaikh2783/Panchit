@@ -2904,6 +2904,22 @@ const Map<String, String> hiIN = {
   "no_conversations": "कोई वार्तालाप नहीं",
   "messenger": "मैसेंजर",
   "type_message": "एक संदेश लिखें...",
-
+  "fetch_story_failed":"कहानियाँ प्राप्त करने में विफल",
+  "create_story_failed":"कहानी बनाने में विफल",
+  "create_story_error":"कहानी बनाने में त्रुटि",
+  "delete_story_failed":"कहानी हटाने में विफल",
+  "delete_story_error":"कहानी हटाने में त्रुटि",
+  "video_story_created_success":"✅ वीडियो स्टोरी सफलतापूर्वक बनाई गई",
+  "photo_story_created_success":"✅ फोटो स्टोरी सफलतापूर्वक बनाई गई",
+  "create_story_error_prefix":"स्टोरी बनाने में त्रुटि:",
+  "video_upload_error_prefix":"वीडियो अपलोड करने में त्रुटि:",
+  "publishing":"प्रकाशित किया जा रहा है...",
+  "add_to_your_story":"अपनी स्टोरी में जोड़ें",
+  "share_moments":"दोस्तों के साथ अपने पल साझा करें",
+  "share_photo_option":"गैलरी से फोटो साझा करें या नई फोटो लें",
+  "share_video_option":"गैलरी से वीडियो साझा करें या नया रिकॉर्ड करें",
+  "video_ready":"वीडियो साझा करने के लिए तैयार",
+  "photo_ready":"फोटो साझा करने के लिए तैयार",
+  "choose_another":"दूसरा चुनें"
 
 };

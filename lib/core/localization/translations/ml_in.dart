@@ -2987,6 +2987,22 @@ const Map<String, String> mlIN = {
   "no_conversations": "സംഭാഷണങ്ങളൊന്നുമില്ല",
   "messenger": "മെസഞ്ചർ",
   "type_message": "ഒരു സന്ദേശം എഴുതൂ...",
-
+  "fetch_story_failed":"കഥകൾ ലഭ്യമാക്കുന്നതിൽ പരാജയം",
+  "create_story_failed":"കഥ സൃഷ്ടിക്കാൻ പരാജയം",
+  "create_story_error":"കഥ സൃഷ്ടിക്കുന്നതിൽ പിശക്",
+  "delete_story_failed":"കഥ ഇല്ലാതാക്കുന്നതിൽ പരാജയം",
+  "delete_story_error":"കഥ ഇല്ലാതാക്കുന്നതിൽ പിശക്",
+  "video_story_created_success":"✅ വീഡിയോ സ്റ്റോറി വിജയകരമായി സൃഷ്ടിച്ചു",
+  "photo_story_created_success":"✅ ഫോട്ടോ സ്റ്റോറി വിജയകരമായി സൃഷ്ടിച്ചു",
+  "create_story_error_prefix":"സ്റ്റോറി സൃഷ്ടിക്കുന്നതിൽ പിശക്:",
+  "video_upload_error_prefix":"വീഡിയോ അപ്‌ലോഡ് ചെയ്യുന്നതിൽ പിശക്:",
+  "publishing":"പ്രസിദ്ധീകരിക്കുന്നു...",
+  "add_to_your_story":"നിങ്ങളുടെ സ്റ്റോറിയിലേക്ക് ചേർക്കുക",
+  "share_moments":"സുഹൃത്തുക്കളുമായി നിങ്ങളുടെ നിമിഷങ്ങൾ പങ്കിടുക",
+  "share_photo_option":"ഗാലറിയിൽ നിന്ന് ഫോട്ടോ പങ്കിടുക അല്ലെങ്കിൽ പുതിയത് എടുക്കുക",
+  "share_video_option":"ഗാലറിയിൽ നിന്ന് വീഡിയോ പങ്കിടുക അല്ലെങ്കിൽ പുതിയത് റെക്കോർഡ് ചെയ്യുക",
+  "video_ready":"വീഡിയോ പങ്കിടാൻ തയ്യാറാണ്",
+  "photo_ready":"ഫോട്ടോ പങ്കിടാൻ തയ്യാറാണ്",
+  "choose_another":"മറ്റൊന്ന് തിരഞ്ഞെടുക്കുക"
 
 };

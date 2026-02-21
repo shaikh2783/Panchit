@@ -2772,6 +2772,22 @@ const Map<String, String> orIN = {
   "no_conversations": "କୌଣସି କଥୋପକଥନ ନାହିଁ",
   "messenger": "ମେସେଞ୍ଜର",
   "type_message": "ଏକ ସନ୍ଦେଶ ଲେଖନ୍ତୁ...",
-
+  "fetch_story_failed":"କାହାଣୀ ଆଣିବାରେ ବିଫଳ",
+  "create_story_failed":"କାହାଣୀ ସୃଷ୍ଟି କରିବାରେ ବିଫଳ",
+  "create_story_error":"କାହାଣୀ ସୃଷ୍ଟି କରିବାରେ ତ୍ରୁଟି",
+  "delete_story_failed":"କାହାଣୀ ହଟାଇବାରେ ବିଫଳ",
+  "delete_story_error":"କାହାଣୀ ହଟାଇବାରେ ତ୍ରୁଟି",
+  "video_story_created_success":"✅ ଭିଡିଓ ଷ୍ଟୋରି ସଫଳତାର ସହ ସୃଷ୍ଟି ହୋଇଛି",
+  "photo_story_created_success":"✅ ଫଟୋ ଷ୍ଟୋରି ସଫଳତାର ସହ ସୃଷ୍ଟି ହୋଇଛି",
+  "create_story_error_prefix":"ଷ୍ଟୋରି ସୃଷ୍ଟି କରିବାରେ ତ୍ରୁଟି:",
+  "video_upload_error_prefix":"ଭିଡିଓ ଅପଲୋଡ କରିବାରେ ତ୍ରୁଟି:",
+  "publishing":"ପ୍ରକାଶ କରାଯାଉଛି...",
+  "add_to_your_story":"ଆପଣଙ୍କ ଷ୍ଟୋରିରେ ଯୋଡନ୍ତୁ",
+  "share_moments":"ମିତ୍ରମାନଙ୍କ ସହ ଆପଣଙ୍କ ମୁହୂର୍ତ୍ତ ସେୟାର କରନ୍ତୁ",
+  "share_photo_option":"ଗ୍ୟାଲେରୀରୁ ଫଟୋ ସେୟାର କରନ୍ତୁ କିମ୍ବା ନୂତନ ନିଅନ୍ତୁ",
+  "share_video_option":"ଗ୍ୟାଲେରୀରୁ ଭିଡିଓ ସେୟାର କରନ୍ତୁ କିମ୍ବା ନୂତନ ରେକର୍ଡ କରନ୍ତୁ",
+  "video_ready":"ଭିଡିଓ ସେୟାର ପାଇଁ ପ୍ରସ୍ତୁତ",
+  "photo_ready":"ଫଟୋ ସେୟାର ପାଇଁ ପ୍ରସ୍ତୁତ",
+  "choose_another":"ଅନ୍ୟଟି ବାଛନ୍ତୁ"
 
 };

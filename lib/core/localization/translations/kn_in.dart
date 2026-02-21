@@ -2928,6 +2928,22 @@ const Map<String, String> knIN = {
   "no_conversations": "ಯಾವುದೇ ಸಂಭಾಷಣೆಗಳಿಲ್ಲ",
   "messenger": "ಮೆಸೆಂಜರ್",
   "type_message": "ಒಂದು ಸಂದೇಶವನ್ನು ಬರೆಯಿರಿ...",
-
+  "fetch_story_failed":"ಕಥೆಗಳನ್ನು ಪಡೆಯಲು ವಿಫಲವಾಗಿದೆ",
+  "create_story_failed":"ಕಥೆ ರಚಿಸಲು ವಿಫಲವಾಗಿದೆ",
+  "create_story_error":"ಕಥೆ ರಚಿಸುವಲ್ಲಿ ದೋಷ",
+  "delete_story_failed":"ಕಥೆಯನ್ನು ಅಳಿಸಲು ವಿಫಲವಾಗಿದೆ",
+  "delete_story_error":"ಕಥೆಯನ್ನು ಅಳಿಸುವಲ್ಲಿ ದೋಷ",
+  "video_story_created_success":"✅ ವೀಡಿಯೊ ಸ್ಟೋರಿ ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ",
+  "photo_story_created_success":"✅ ಫೋಟೋ ಸ್ಟೋರಿ ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ",
+  "create_story_error_prefix":"ಸ್ಟೋರಿ ರಚಿಸುವಲ್ಲಿ ದೋಷ:",
+  "video_upload_error_prefix":"ವೀಡಿಯೊ ಅಪ್‌ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ:",
+  "publishing":"ಪ್ರಕಟಿಸಲಾಗುತ್ತಿದೆ...",
+  "add_to_your_story":"ನಿಮ್ಮ ಸ್ಟೋರಿಗೆ ಸೇರಿಸಿ",
+  "share_moments":"ನಿಮ್ಮ ಕ್ಷಣಗಳನ್ನು ಸ್ನೇಹಿತರೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಿ",
+  "share_photo_option":"ಗ್ಯಾಲರಿಯಿಂದ ಫೋಟೋ ಹಂಚಿಕೊಳ್ಳಿ ಅಥವಾ ಹೊಸದನ್ನು ತೆಗೆದುಕೊಳ್ಳಿ",
+  "share_video_option":"ಗ್ಯಾಲರಿಯಿಂದ ವೀಡಿಯೊ ಹಂಚಿಕೊಳ್ಳಿ ಅಥವಾ ಹೊಸದನ್ನು ದಾಖಲಿಸಿ",
+  "video_ready":"ವೀಡಿಯೊ ಹಂಚಿಕೊಳ್ಳಲು ಸಿದ್ಧವಾಗಿದೆ",
+  "photo_ready":"ಫೋಟೋ ಹಂಚಿಕೊಳ್ಳಲು ಸಿದ್ಧವಾಗಿದೆ",
+  "choose_another":"ಮತ್ತೊಂದು ಆಯ್ಕೆಮಾಡಿ"
 
 };

@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/core/network/api_exception.dart';
 import 'package:snginepro/main.dart' show configCfgP;
@@ -28,7 +29,7 @@ class StoriesApiService {
     
     if (!storiesResponse.isSuccess) {
       throw ApiException(
-        storiesResponse.message ?? 'فشل في جلب القصص',
+        storiesResponse.message ?? 'fetch_story_failed'.tr,
         details: response,
       );
     }
@@ -64,7 +65,7 @@ class StoriesApiService {
         
         if (!isSuccess) {
           throw ApiException(
-            response['message'] ?? 'فشل في إنشاء القصة',
+            response['message'] ?? 'create_story_failed'.tr,
             details: response,
           );
         }
@@ -87,7 +88,7 @@ class StoriesApiService {
         
         if (!isSuccess) {
           throw ApiException(
-            response['message'] ?? 'فشل في إنشاء القصة',
+            response['message'] ?? 'create_story_failed'.tr,
             details: response,
           );
         }
@@ -108,7 +109,7 @@ class StoriesApiService {
       
       if (!isSuccess) {
         throw ApiException(
-          response['message'] ?? 'فشل في إنشاء القصة',
+          response['message'] ?? 'create_story_failed'.tr,
           details: response,
         );
       }
@@ -116,7 +117,7 @@ class StoriesApiService {
       return response;
     } catch (e) {
       if (e is ApiException) rethrow;
-      throw ApiException('خطأ في إنشاء القصة: $e');
+      throw ApiException('${'create_story_error'.tr}:$e');
     }
   }
 
@@ -149,7 +150,7 @@ class StoriesApiService {
       
       if (!isSuccess) {
         throw ApiException(
-          response['message'] ?? 'فشل في حذف القصة',
+          response['message'] ?? 'delete_story_failed'.tr,
           details: response,
         );
       }
@@ -157,7 +158,7 @@ class StoriesApiService {
       return response;
     } catch (e) {
       if (e is ApiException) rethrow;
-      throw ApiException('خطأ في حذف القصة: $e');
+      throw ApiException('${'delete_story_error'.tr}:$e');
     }
   }
 }

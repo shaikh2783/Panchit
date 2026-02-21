@@ -2762,6 +2762,22 @@ const Map<String, String> taIN = {
   "no_conversations": "உரையாடல்கள் இல்லை",
   "messenger": "மெசஞ்சர்",
   "type_message": "ஒரு செய்தி எழுதுங்கள்...",
-
+  "fetch_story_failed":"கதைகளை பெற முடியவில்லை",
+  "create_story_failed":"கதை உருவாக்க முடியவில்லை",
+  "create_story_error":"கதை உருவாக்க பிழை ஏற்பட்டது",
+  "delete_story_failed":"கதை நீக்க முடியவில்லை",
+  "delete_story_error":"கதை நீக்க பிழை ஏற்பட்டது",
+  "video_story_created_success":"✅ வீடியோ ஸ்டோரி வெற்றிகரமாக உருவாக்கப்பட்டது",
+  "photo_story_created_success":"✅ புகைப்பட ஸ்டோரி வெற்றிகரமாக உருவாக்கப்பட்டது",
+  "create_story_error_prefix":"ஸ்டோரி உருவாக்க பிழை:",
+  "video_upload_error_prefix":"வீடியோ பதிவேற்ற பிழை:",
+  "publishing":"வெளியிடப்படுகிறது...",
+  "add_to_your_story":"உங்கள் ஸ்டோரியில் சேர்க்கவும்",
+  "share_moments":"உங்கள் தருணங்களை நண்பர்களுடன் பகிருங்கள்",
+  "share_photo_option":"கேலரியில் இருந்து புகைப்படம் பகிரவும் அல்லது புதியதை எடுக்கவும்",
+  "share_video_option":"கேலரியில் இருந்து வீடியோ பகிரவும் அல்லது புதியதை பதிவு செய்யவும்",
+  "video_ready":"வீடியோ பகிர தயாராக உள்ளது",
+  "photo_ready":"புகைப்படம் பகிர தயாராக உள்ளது",
+  "choose_another":"மற்றொன்றைத் தேர்வு செய்யவும்"
 
 };

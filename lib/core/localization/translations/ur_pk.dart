@@ -2761,5 +2761,22 @@ const Map<String, String> urPK = {
   "search_conversations": "گفتگوؤں میں تلاش کریں",
   "no_conversations": "کوئی گفتگو نہیں",
   "messenger": "میسنجر",
-  "type_message": "ایک پیغام لکھیں..."
+  "type_message": "ایک پیغام لکھیں...",
+  "fetch_story_failed":"کہانیاں حاصل کرنے میں ناکام",
+  "create_story_failed":"کہانی بنانے میں ناکام",
+  "create_story_error":"کہانی بنانے میں خرابی",
+  "delete_story_failed":"کہانی حذف کرنے میں ناکام",
+  "delete_story_error":"کہانی حذف کرنے میں خرابی",
+  "video_story_created_success":"✅ ویڈیو اسٹوری کامیابی سے بنائی گئی",
+  "photo_story_created_success":"✅ تصویر اسٹوری کامیابی سے بنائی گئی",
+  "create_story_error_prefix":"اسٹوری بنانے میں خرابی:",
+  "video_upload_error_prefix":"ویڈیو اپلوڈ کرنے میں خرابی:",
+  "publishing":"شائع کیا جا رہا ہے...",
+  "add_to_your_story":"اپنی اسٹوری میں شامل کریں",
+  "share_moments":"اپنے لمحات دوستوں کے ساتھ شیئر کریں",
+  "share_photo_option":"گیلری سے تصویر شیئر کریں یا نئی لیں",
+  "share_video_option":"گیلری سے ویڈیو شیئر کریں یا نئی ریکارڈ کریں",
+  "video_ready":"ویڈیو شیئر کرنے کے لیے تیار ہے",
+  "photo_ready":"تصویر شیئر کرنے کے لیے تیار ہے",
+  "choose_another":"دوسرا منتخب کریں"
 };

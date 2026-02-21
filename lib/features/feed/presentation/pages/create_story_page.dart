@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:video_player/video_player.dart';
@@ -62,7 +63,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('خطأ في تحميل الفيديو: $e'),
+            content: Text('${'create_story_error_prefix'.tr}: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -88,7 +89,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(_isVideo ? '✅ تم إنشاء قصة الفيديو بنجاح' : '✅ تم إنشاء قصة الصورة بنجاح'),
+            content: Text(_isVideo ? 'video_story_created_success'.tr : 'photo_story_created_success'.tr),
             backgroundColor: Colors.green,
           ),
         );
@@ -98,7 +99,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
       if(mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('❌ خطأ في إنشاء القصة: $e'),
+            content: Text('${'video_upload_error_prefix'.tr}: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -160,7 +161,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'Publishing...',
+                      'publishing'.tr,
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.9),
                         fontSize: 16,
@@ -233,7 +234,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            'Share',
+                            'share_button'.tr,
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 16,
@@ -285,7 +286,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
               
               // العنوان
               Text(
-                'Add to Your Story',
+                'add_to_your_story'.tr,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 28,
@@ -295,7 +296,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
               ),
               const SizedBox(height: 12),
               Text(
-                'Share your moments with friends',
+                'share_moments'.tr,
                 style: TextStyle(
                   color: Colors.white.withOpacity(0.6),
                   fontSize: 16,
@@ -308,8 +309,8 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
               _buildMediaCard(
                 context: context,
                 icon: Iconsax.gallery,
-                title: 'Photo',
-                subtitle: 'Share a photo from gallery or take a new one',
+                title: 'home_photo'.tr,
+                subtitle: 'share_photo_option'.tr,
                 gradient: const LinearGradient(
                   colors: [Color(0xFF667eea), Color(0xFF764ba2)],
                 ),
@@ -323,8 +324,8 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
               _buildMediaCard(
                 context: context,
                 icon: Iconsax.video_play,
-                title: 'Video',
-                subtitle: 'Share a video from gallery or record a new one',
+                title: 'video'.tr,
+                subtitle: 'share_video_option'.tr,
                 gradient: const LinearGradient(
                   colors: [Color(0xFFf093fb), Color(0xFFf5576c)],
                 ),
@@ -403,7 +404,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
                 Expanded(
                   child: _buildActionButton(
                     icon: Iconsax.gallery,
-                    label: 'Gallery',
+                    label: 'gallery'.tr,
                     onTap: onGalleryTap,
                     isPrimary: true,
                   ),
@@ -412,7 +413,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
                 Expanded(
                   child: _buildActionButton(
                     icon: Iconsax.camera,
-                    label: 'Camera',
+                    label: 'camera'.tr,
                     onTap: onCameraTap,
                     isPrimary: false,
                   ),
@@ -472,7 +473,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
         Positioned.fill(
           child: _buildMediaPreview(),
         ),
-        
+
         // طبقة تعتيم خفيفة
         Positioned.fill(
           child: Container(
@@ -489,7 +490,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
             ),
           ),
         ),
-        
+
         // أدوات التحكم السفلية
         Positioned(
           bottom: 0,
@@ -517,7 +518,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          _isVideo ? 'Video ready to share' : 'Photo ready to share',
+                          _isVideo ? 'video_ready'.tr : 'photo_ready'.tr,
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 14,
@@ -540,7 +541,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
                       });
                     },
                     icon: const Icon(Iconsax.refresh, size: 20),
-                    label: const Text('Choose Another'),
+                    label:  Text('choose_another'.tr),
                     style: TextButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Colors.white.withOpacity(0.15),

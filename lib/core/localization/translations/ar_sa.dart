@@ -2771,5 +2771,22 @@ const Map<String, String> arSA = {
   "report_submitted": "تم إرسال البلاغ!",
   "thank_you_help_improve_app": "شكرًا لمساعدتنا في تحسين التطبيق. سنراجع بلاغك ونعود إليك قريبًا.",
   "failed_to_submit_report": "فشل إرسال البلاغ:",
-  "no_products_for_user_currently":"لا توجد منتجات لهذا المستخدم حالياً"
+  "no_products_for_user_currently":"لا توجد منتجات لهذا المستخدم حالياً",
+  "fetch_story_failed":"فشل في جلب القصص",
+  "create_story_failed":"فشل في إنشاء القصة",
+  "create_story_error":"خطأ في إنشاء القصة",
+  "delete_story_failed":"فشل في حذف القصة",
+  "delete_story_error":"خطأ في حذف القصة",
+  "video_story_created_success":"✅ تم إنشاء قصة الفيديو بنجاح",
+  "photo_story_created_success":"✅ تم إنشاء قصة الصورة بنجاح",
+  "create_story_error_prefix":"خطأ في إنشاء القصة:",
+  "video_upload_error_prefix":"خطأ في تحميل الفيديو:",
+  "publishing":"جارٍ النشر...",
+  "add_to_your_story":"أضف إلى قصتك",
+  "share_moments":"شارك لحظاتك مع الأصدقاء",
+  "share_photo_option":"شارك صورة من المعرض أو التقط صورة جديدة",
+  "share_video_option":"شارك فيديو من المعرض أو سجّل فيديو جديد",
+  "video_ready":"الفيديو جاهز للمشاركة",
+  "photo_ready":"الصورة جاهزة للمشاركة",
+  "choose_another":"اختر خيارًا آخر"
 };

@@ -2799,5 +2799,21 @@ const Map<String, String> teIN = {
   "no_conversations": "సంభాషణలు లేవు",
   "messenger": "మెసెంజర్",
   "type_message": "ఒక సందేశం రాయండి...",
-
+  "fetch_story_failed":"కథలను పొందడంలో విఫలమైంది",
+  "create_story_failed":"కథ సృష్టించడంలో విఫలమైంది",
+  "create_story_error":"కథ సృష్టించడంలో లోపం",
+  "delete_story_failed":"కథను తొలగించడంలో విఫలమైంది",
+  "delete_story_error":"కథను తొలగించడంలో లోపం",
+  "video_story_created_success":"✅ వీడియో స్టోరీ విజయవంతంగా సృష్టించబడింది",
+  "photo_story_created_success":"✅ ఫోటో స్టోరీ విజయవంతంగా సృష్టించబడింది",
+  "create_story_error_prefix":"స్టోరీ సృష్టించడంలో లోపం:",
+  "video_upload_error_prefix":"వీడియో అప్‌లోడ్ లోపం:",
+  "publishing":"ప్రచురించబడుతోంది...",
+  "add_to_your_story":"మీ స్టోరీకి జోడించండి",
+  "share_moments":"మీ క్షణాలను స్నేహితులతో పంచుకోండి",
+  "share_photo_option":"గ్యాలరీ నుండి ఫోటో పంచుకోండి లేదా కొత్తది తీయండి",
+  "share_video_option":"గ్యాలరీ నుండి వీడియో పంచుకోండి లేదా కొత్తది రికార్డ్ చేయండి",
+  "video_ready":"వీడియో పంచుకోవడానికి సిద్ధంగా ఉంది",
+  "photo_ready":"ఫోటో పంచుకోవడానికి సిద్ధంగా ఉంది",
+  "choose_another":"ఇంకొకటి ఎంచుకోండి"
 };

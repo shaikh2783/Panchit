@@ -2756,6 +2756,22 @@ const Map<String, String> guIN = {
   "no_conversations": "કોઈ વાતચીત નથી",
   "messenger": "મેસેન્જર",
   "type_message": "સંદેશો લખો...",
-
+  "fetch_story_failed":"વાર્તાઓ મેળવવામાં નિષ્ફળતા",
+  "create_story_failed":"વાર્તા બનાવવામાં નિષ્ફળતા",
+  "create_story_error":"વાર્તા બનાવવામાં ભૂલ",
+  "delete_story_failed":"વાર્તા કાઢવામાં નિષ્ફળતા",
+  "delete_story_error":"વાર્તા કાઢવામાં ભૂલ",
+  "video_story_created_success":"✅ વિડિયો સ્ટોરી સફળતાપૂર્વક બનાવાઈ",
+  "photo_story_created_success":"✅ ફોટો સ્ટોરી સફળતાપૂર્વક બનાવાઈ",
+  "create_story_error_prefix":"સ્ટોરી બનાવવામાં ભૂલ:",
+  "video_upload_error_prefix":"વિડિયો અપલોડ કરવામાં ભૂલ:",
+  "publishing":"પ્રકાશિત થઈ રહ્યું છે...",
+  "add_to_your_story":"તમારી સ્ટોરીમાં ઉમેરો",
+  "share_moments":"મિત્રો સાથે તમારી ક્ષણો શેર કરો",
+  "share_photo_option":"ગેલેરીમાંથી ફોટો શેર કરો અથવા નવો લો",
+  "share_video_option":"ગેલેરીમાંથી વિડિયો શેર કરો અથવા નવો રેકોર્ડ કરો",
+  "video_ready":"વિડિયો શેર કરવા માટે તૈયાર",
+  "photo_ready":"ફોટો શેર કરવા માટે તૈયાર",
+  "choose_another":"બીજું પસંદ કરો"
 
 };

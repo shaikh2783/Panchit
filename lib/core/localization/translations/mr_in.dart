@@ -3019,6 +3019,22 @@ const Map<String, String> mrIN = {
   "no_conversations": "संभाषणे नाहीत",
   "messenger": "मेसेंजर",
   "type_message": "एक संदेश लिहा...",
-
+  "fetch_story_failed":"कथा मिळवण्यात अयशस्वी",
+  "create_story_failed":"कथा तयार करण्यात अयशस्वी",
+  "create_story_error":"कथा तयार करताना त्रुटी",
+  "delete_story_failed":"कथा हटवण्यात अयशस्वी",
+  "delete_story_error":"कथा हटवताना त्रुटी",
+  "video_story_created_success":"✅ व्हिडिओ स्टोरी यशस्वीरित्या तयार केली",
+  "photo_story_created_success":"✅ फोटो स्टोरी यशस्वीरित्या तयार केली",
+  "create_story_error_prefix":"स्टोरी तयार करताना त्रुटी:",
+  "video_upload_error_prefix":"व्हिडिओ अपलोड करताना त्रुटी:",
+  "publishing":"प्रकाशित करत आहे...",
+  "add_to_your_story":"तुमच्या स्टोरीमध्ये जोडा",
+  "share_moments":"मित्रांसोबत तुमचे क्षण शेअर करा",
+  "share_photo_option":"गॅलरीमधून फोटो शेअर करा किंवा नवीन घ्या",
+  "share_video_option":"गॅलरीमधून व्हिडिओ शेअर करा किंवा नवीन रेकॉर्ड करा",
+  "video_ready":"व्हिडिओ शेअर करण्यासाठी तयार",
+  "photo_ready":"फोटो शेअर करण्यासाठी तयार",
+  "choose_another":"दुसरे निवडा"
 
 };
