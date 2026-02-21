@@ -1243,15 +1243,7 @@ class HomePageState extends State<HomePage> {
         children: [
           Image.asset('assets/app_icon.png',width: 40,height: 40),
           const SizedBox(width: 12),
-          Text(
-            'Panchit',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              color: cs.primary,
-              fontSize: 26,
-              fontWeight: FontWeight.w900,
-              letterSpacing: -0.8,
-            ),
-          ),
+          Image.asset('assets/ic_logo_txt.png',width: 120,height: 40)
         ],
       ),
       actions: [
