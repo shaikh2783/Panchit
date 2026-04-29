@@ -21,6 +21,8 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
   CachedVideoPlayerPlus? _videoController;
   bool _isLoading = false;
   bool _isVideo = false;
+  bool _isCommentEnabled = true;
+  bool _isReactionEnabled = true;
 
   /// اختيار صورة من المعرض أو الكاميرا
   Future<void> _pickImage(ImageSource source) async {
@@ -83,6 +85,8 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
         CreateStoryEvent(
           imagePath: _isVideo ? null : path,
           videoPath: _isVideo ? path : null,
+          isCommentEnable: _isCommentEnabled,
+          isReactionEnable: _isReactionEnabled,
         ),
       );
       
@@ -150,7 +154,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
           // مؤشر التحميل
           if (_isLoading)
             Container(
-              color: Colors.black.withOpacity(0.8),
+              color: Colors.black.withValues(alpha: 0.8),
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -163,7 +167,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
                     Text(
                       'publishing'.tr,
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
@@ -235,7 +239,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
                           const SizedBox(width: 8),
                           Text(
                             'share_button'.tr,
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -501,11 +505,76 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.6),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Iconsax.message, color: Colors.white, size: 20),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                'comments'.tr,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            Switch(
+                              value: _isCommentEnabled,
+                              activeColor: Colors.white,
+                              activeTrackColor: Colors.green,
+                              onChanged: (value) {
+                                setState(() {
+                                  _isCommentEnabled = value;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            const Icon(Iconsax.emoji_happy, color: Colors.white, size: 20),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                'reactions'.tr,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            Switch(
+                              value: _isReactionEnabled,
+                              activeColor: Colors.white,
+                              activeTrackColor: Colors.green,
+                              onChanged: (value) {
+                                setState(() {
+                                  _isReactionEnabled = value;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
                   // معلومات الملف
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.6),
+                      color: Colors.black.withValues(alpha: 0.6),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
@@ -544,7 +613,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
                     label:  Text('choose_another'.tr),
                     style: TextButton.styleFrom(
                       foregroundColor: Colors.white,
-                      backgroundColor: Colors.white.withOpacity(0.15),
+                      backgroundColor: Colors.white.withValues(alpha: 0.15),
                       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25),

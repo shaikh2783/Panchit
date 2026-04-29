@@ -2,6 +2,7 @@
 // European Portuguese translations (based on English with PT-PT overrides)
 const Map<String, String> ptPT = {
 
+  'sign_in_with_apple': 'Iniciar sessão com a Apple',
 
   // Getting Started - Portuguese Portugal overrides
   'skip_all': 'Saltar tudo',

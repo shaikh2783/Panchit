@@ -53,6 +53,7 @@ const Map<String, String> guIN = {
   "registration_failed": "રજીસ્ટ્રેશન નિષ્ફળ થયું. કૃપા કરીને ફરી પ્રયાસ કરો.",
   "email_username_required": "ઇમેલ અથવા યુઝરનેમ જરૂરી છે",
   "sign_in_with_google": "Google સાથે સાઇન ઇન કરો",
+  "sign_in_with_apple": "Apple સાથે સાઇન ઇન કરો",
 
   "getting_started": "શરુઆત",
   "complete_profile": "શરુ કરવા માટે તમારું પ્રોફાઇલ પૂર્ણ કરો",
@@ -2772,6 +2773,7 @@ const Map<String, String> guIN = {
   "share_video_option":"ગેલેરીમાંથી વિડિયો શેર કરો અથવા નવો રેકોર્ડ કરો",
   "video_ready":"વિડિયો શેર કરવા માટે તૈયાર",
   "photo_ready":"ફોટો શેર કરવા માટે તૈયાર",
-  "choose_another":"બીજું પસંદ કરો"
+  "choose_another":"બીજું પસંદ કરો",
+
 
 };

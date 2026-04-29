@@ -1,11 +1,13 @@
 import 'dart:ui';
 import 'dart:math' as math;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:snginepro/App_Settings.dart';
 import 'package:snginepro/features/auth/application/auth_notifier.dart';
 import 'package:snginepro/features/auth/data/models/auth_response.dart';
@@ -177,6 +179,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       
       
       final authNotifier = context.read<AuthNotifier>();
+      print('idToken: ${googleUser.email}');
+      print('serverAuthCode: $serverAuthCode');
       final AuthResponse? response = await authNotifier.signInWithGoogle(
         googleId: googleUser.id,
         email: googleUser.email,
@@ -239,6 +243,81 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     }
   }
 
+  Future<void> _handleAppleSignIn() async {
+    try {
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      final userId = credential.userIdentifier;
+      if (userId == null) {
+        return;
+      }
+
+      final authNotifier = context.read<AuthNotifier>();
+      final AuthResponse? response = await authNotifier.signInWithApple(
+        appleId: userId,
+        email: credential.email,
+        firstName: credential.givenName,
+        lastName: credential.familyName,
+        identityToken: credential.identityToken,
+        deviceType: _deviceType,
+      );
+
+      if (!mounted) return;
+      final messenger = ScaffoldMessenger.of(context);
+      messenger.clearSnackBars();
+
+      if (response != null) {
+        final displayName = response.userDisplayName;
+        final message = displayName != null
+            ? 'Welcome back, $displayName! 🎉'
+            : (response.message ?? 'Successfully logged in.');
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(message),
+            backgroundColor: const Color(0xFF10B981),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            margin: const EdgeInsets.all(16),
+          ),
+        );
+      } else {
+        final error =
+            authNotifier.errorMessage ?? 'Login failed. Please try again.';
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(error),
+            backgroundColor: const Color(0xFFEF4444),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            margin: const EdgeInsets.all(16),
+          ),
+        );
+      }
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Apple Sign-In failed: $error'),
+          backgroundColor: const Color(0xFFEF4444),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          margin: const EdgeInsets.all(16),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final authState = context.watch<AuthNotifier>();
@@ -246,6 +325,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     final errorMessage = authState.errorMessage;
     final size = MediaQuery.of(context).size;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isIOS = defaultTargetPlatform == TargetPlatform.iOS;
 
     return Scaffold(
       body: Stack(
@@ -356,13 +436,16 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                 _buildLoginButton(isLoading),
                                 const SizedBox(height: 20),
 
-                                // Divider & Google Sign-In Button (only if enabled)
-                                // if (AppSettings.enableGoogleSignIn) ...[
-                                //   _buildDivider(),
-                                //   const SizedBox(height: 20),
-                                //   _buildGoogleSignInButton(isLoading),
-                                //   const SizedBox(height: 20),
-                                // ],
+                                if (AppSettings.enableGoogleSignIn) ...[
+                                  _buildDivider(),
+                                  const SizedBox(height: 20),
+                                  if (isIOS) ...[
+                                    _buildAppleSignInButton(isLoading),
+                                    const SizedBox(height: 12),
+                                  ],
+                                  _buildGoogleSignInButton(isLoading),
+                                  const SizedBox(height: 20),
+                                ],
 
                                 // Footer
                                 _buildFooter(),
@@ -808,6 +891,64 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     'sign_in_with_google'.tr,
                     style: TextStyle(
                       color: isDark ? Colors.white : const Color(0xFF1F2937),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAppleSignInButton(bool isLoading) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final backgroundColor = isDark ? Colors.white : Colors.black;
+    final foregroundColor = isDark ? Colors.black : Colors.white;
+
+    return Container(
+      height: 56,
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isDark ? const Color(0xFF2D3748) : const Color(0xFFE2E8F0),
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            spreadRadius: 0,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: isLoading ? null : _handleAppleSignIn,
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.apple,
+                  color: foregroundColor,
+                  size: 24,
+                ),
+                const SizedBox(width: 12),
+                Flexible(
+                  child: Text(
+                    'sign_in_with_apple'.tr,
+                    style: TextStyle(
+                      color: foregroundColor,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),

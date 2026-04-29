@@ -633,9 +633,9 @@
     },
     {
       "name": "js",
-      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/js-0.7.2",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/js-0.6.7",
       "packageUri": "lib/",
-      "languageVersion": "3.7"
+      "languageVersion": "2.19"
     },
     {
       "name": "json_annotation",
@@ -1000,6 +1000,24 @@
     {
       "name": "shared_preferences_windows",
       "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/shared_preferences_windows-2.4.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "sign_in_with_apple",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/sign_in_with_apple-7.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "sign_in_with_apple_platform_interface",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/sign_in_with_apple_platform_interface-2.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "sign_in_with_apple_web",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/sign_in_with_apple_web-3.0.0",
       "packageUri": "lib/",
       "languageVersion": "3.3"
     },

@@ -53,6 +53,7 @@ const Map<String, String> orIN = {
   "registration_failed": "ପଞ୍ଜିକରଣ ବିଫଳ ହେଲା। ଦୟାକରି ପୁନରାୟ ପ୍ରୟାସ କରନ୍ତୁ",
   "email_username_required": "ଇମେଲ୍ କିମ୍ବା ବ୍ୟବହାରକାରୀ ନାମ ଆବଶ୍ୟକ",
   "sign_in_with_google": "Google ସହିତ ସାଇନ୍ ଇନ୍ କରନ୍ତୁ",
+  "sign_in_with_apple": "Apple ସହିତ ସାଇନ୍ ଇନ୍ କରନ୍ତୁ",
   "getting_started": "ଆରମ୍ଭ କରୁଛି",
   "complete_profile": "ଆରମ୍ଭ କରିବା ପାଇଁ ଆପଣଙ୍କର ପ୍ରୋଫାଇଲ୍ ପୂରଣ କରନ୍ତୁ",
   "where_do_you_live": "ଆପଣ କେଉଁଠି ବସୁଛନ୍ତି?",

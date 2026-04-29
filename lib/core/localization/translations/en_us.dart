@@ -72,6 +72,7 @@ const Map<String, String> enUS = {
   'registration_failed': 'Registration failed. Please try again.',
   'email_username_required': 'Email or username is required',
   'sign_in_with_google': 'Sign in with Google',
+  'sign_in_with_apple': 'Sign in with Apple',
 
   // Getting Started
   'getting_started': 'Getting Started',
@@ -158,6 +159,7 @@ const Map<String, String> enUS = {
   'like': 'Like',
   'comment': 'Comment',
   'comments': 'Comments',
+  'reactions': 'Reactions',
   'comments_disabled': 'Comments are disabled for this post',
   'show_more': 'Show more',
   'show_less': 'Show less',
@@ -2800,5 +2802,5 @@ const Map<String, String> enUS = {
   "share_video_option":"Share a video from gallery or record a new one",
   "video_ready":"Video ready to share",
   "photo_ready":"Photo ready to share",
-  "choose_another":"Choose Another"
+  "choose_another":"Choose Another",
 };

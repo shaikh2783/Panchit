@@ -51,6 +51,7 @@ const Map<String, String> teIN = {
     "registration_failed": "பதிவு தோல்வியுற்றது. தயவுசெய்து மீண்டும் முயற்சிக்கவும்.",
     "email_username_required": "மின்னஞ்சல் அல்லது பயனர்பெயர் தேவை",
     "sign_in_with_google": "Google மூலம் உள்நுழையவும்",
+    "sign_in_with_apple": "Apple மூலம் உள்நுழையவும்",
     "getting_started": "தொடங்குகிறோம்",
     "complete_profile": "தொடங்க உங்கள் சுயவிவரத்தை முடிக்கவும்",
     "where_do_you_live": "நீங்கள் எங்கு வசிக்கிறீர்கள்?",

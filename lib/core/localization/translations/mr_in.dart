@@ -51,6 +51,7 @@ const Map<String, String> mrIN = {
     "registration_failed": "नोंदणी अयशस्वी. कृपया पुन्हा प्रयत्न करा.",
     "email_username_required": "ईमेल किंवा वापरकर्तानाव आवश्यक आहे",
     "sign_in_with_google": "Google सोबत साइन इन करा",
+    "sign_in_with_apple": "Apple सोबत साइन इन करा",
     "getting_started": "सुरूवात करत आहे",
     "complete_profile": "सुरू करण्यासाठी आपले प्रोफाइल पूर्ण करा",
     "where_do_you_live": "आपण कुठे राहता?",

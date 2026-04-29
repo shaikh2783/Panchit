@@ -51,6 +51,7 @@ const Map<String, String> urPK = {
     "registration_failed": "رجسٹریشن ناکام۔ دوبارہ کوشش کریں۔",
     "email_username_required": "ای میل یا صارف نام ضروری ہے",
     "sign_in_with_google": "گوگل کے ساتھ سائن ان کریں",
+    "sign_in_with_apple": "ایپل کے ساتھ سائن ان کریں",
     "getting_started": "شروع ہو رہا ہے",
     "complete_profile": "شروع کرنے کے لیے اپنی پروفائل مکمل کریں",
     "where_do_you_live": "آپ کہاں رہتے ہیں؟",

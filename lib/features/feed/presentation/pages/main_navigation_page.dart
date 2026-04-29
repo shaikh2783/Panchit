@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
-import 'package:get/instance_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 // Bloc Pages
@@ -41,7 +39,8 @@ class _MainNavigationPageState extends State<MainNavigationPage>
   int _friendRequestsCount = 0;
   late AnimationController _badgeAnimationController;
   bool _showNavBar = true;
-
+  static const double _navBarHeight = 75;
+  static const double _navBarBottomMargin = 8;
   // Global Keys للوصول إلى ScrollControllers
   late final GlobalKey<HomePageState> _homePageKey;
 
@@ -109,8 +108,8 @@ class _MainNavigationPageState extends State<MainNavigationPage>
           }
         });
       }
-    } catch (e) {
-    }
+      // ignore: empty_catches
+    } catch (e) {}
   }
 
   // 🔄 Migration: Using Bloc pages for specific features while keeping Provider for others
@@ -118,30 +117,43 @@ class _MainNavigationPageState extends State<MainNavigationPage>
     HomePage(
       key: _homePageKey,
       onScrollDirectionChanged: (isScrollingDown) {
-        if (_currentIndex != 0) return; // only react on Home tab
+        if (_currentIndex != 0) return;
         final shouldShow = !isScrollingDown;
         if (shouldShow != _showNavBar) {
           setState(() => _showNavBar = shouldShow);
         }
       },
     ),
-    const FriendRequestsPage(), // Provider (to be migrated later)
-    const DiscoverPage(), // New discover page
-    const ReelsPage(), // Provider (to be migrated later)
+    const FriendRequestsPage(),
+    const DiscoverPage(),
+    const ReelsPage(),
     const NotificationsPage(),
-    MenuPage(
-      onNavigateToTab: (index) => setState(() => _currentIndex = index),
-    ), // Pass callback to MenuPage
+    MenuPage(onNavigateToTab: (index) => setState(() => _currentIndex = index)),
   ];
 
-  // --- 💡 2. تحديث الأيقونات لاستخدام Iconsax ---
   final List<_NavItem> _items = const [
-    _NavItem(icon: Iconsax.home, activeIcon: Iconsax.home),
-    _NavItem(icon: Iconsax.people, activeIcon: Iconsax.profile_2user),
-    _NavItem(icon: Iconsax.search_normal, activeIcon: Iconsax.search_favorite),
-    _NavItem(icon: Iconsax.video_play, activeIcon: Iconsax.video),
-    _NavItem(icon: Iconsax.notification, activeIcon: Iconsax.notification_1),
-    _NavItem(icon: Iconsax.menu, activeIcon: Iconsax.menu_1),
+    _NavItem(icon: Iconsax.message, activeIcon: Iconsax.message, label: 'Home'),
+    _NavItem(
+      icon: Iconsax.profile_2user,
+      activeIcon: Iconsax.profile_2user,
+      label: 'Friends',
+    ),
+    _NavItem(
+      icon: Iconsax.search_normal_1,
+      activeIcon: Iconsax.search_normal_1,
+      label: 'Discover',
+    ),
+    _NavItem(
+      icon: Iconsax.video_play,
+      activeIcon: Iconsax.video_play,
+      label: 'Reels',
+    ),
+    _NavItem(
+      icon: Icons.notifications_none,
+      activeIcon: Icons.notifications,
+      label: 'Notifications',
+    ),
+    _NavItem(icon: Icons.menu, activeIcon: Icons.menu, label: 'Menu'),
   ];
   // --- نهاية التحديث ---
 
@@ -185,7 +197,8 @@ class _MainNavigationPageState extends State<MainNavigationPage>
             padding: EdgeInsets.only(
               bottom: _currentIndex == 3 || !_showNavBar
                   ? 0
-                  : LayoutTokens.navBarHeight +
+                  : _navBarHeight +
+                        _navBarBottomMargin +
                         MediaQuery.of(context).padding.bottom,
             ),
             child: IndexedStack(
@@ -203,26 +216,25 @@ class _MainNavigationPageState extends State<MainNavigationPage>
             currentIndex: _currentIndex,
             items: _items,
             friendRequestsCount: _friendRequestsCount,
+            navBarHeight: _navBarHeight,
+            bottomMargin: _navBarBottomMargin,
             onItemSelected: (index) {
               if (index == _currentIndex) {
-                // Add haptic feedback for same tab tap
                 HapticFeedback.selectionClick();
 
-                // إذا كان Home والمستخدم ضغط عليه مرة أخرى، scroll to top
                 if (index == 0) {
                   _homePageKey.currentState?.scrollToTop();
-                  // Show navbar when tapping home again
                   if (!_showNavBar) setState(() => _showNavBar = true);
                 }
                 return;
               }
 
               HapticFeedback.lightImpact();
-              setState(() => _currentIndex = index);
-              // Ensure navbar visible when switching tabs
-              if (!_showNavBar) _showNavBar = true;
+              setState(() {
+                _currentIndex = index;
+                if (!_showNavBar) _showNavBar = true;
+              });
 
-              // إعادة تحديث العدادات عند التبديل إلى صفحة الأصدقاء
               if (index == 1) {
                 _loadFriendRequestsCount();
               }
@@ -234,12 +246,13 @@ class _MainNavigationPageState extends State<MainNavigationPage>
   }
 }
 
-// ... (_BottomNavBar و _NavItem كما هي) ...
 class _BottomNavBar extends StatelessWidget {
   const _BottomNavBar({
     required this.currentIndex,
     required this.items,
     required this.onItemSelected,
+    required this.navBarHeight,
+    required this.bottomMargin,
     this.friendRequestsCount = 0,
   });
 
@@ -247,84 +260,43 @@ class _BottomNavBar extends StatelessWidget {
   final List<_NavItem> items;
   final ValueChanged<int> onItemSelected;
   final int friendRequestsCount;
+  final double navBarHeight;
+  final double bottomMargin;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-
-    return ClipRRect(
-      borderRadius: const BorderRadius.only(
-        topLeft: Radius.circular(24),
-        topRight: Radius.circular(24),
-      ),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(12, 0, 12, bottomMargin),
         child: Container(
-          height:
-              LayoutTokens.navBarHeight +
-              MediaQuery.of(context).padding.bottom +
-              8,
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).padding.bottom,
-            top: 8,
-          ),
+          height: navBarHeight,
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: isDark
-                  ? [
-                      const Color(0xFF1A1A1A).withOpacity(0.95),
-                      const Color(0xFF0A0A0A).withOpacity(0.98),
-                    ]
-                  : [
-                      Colors.white.withOpacity(0.95),
-                      const Color(0xFFF8F9FA).withOpacity(0.98),
-                    ],
-            ),
-            border: Border(
-              top: BorderSide(
-                color: isDark
-                    ? Colors.white.withOpacity(0.1)
-                    : Colors.black.withOpacity(0.08),
-                width: 1,
-              ),
-            ),
+            color: const Color(0xFF1E1F23),
+            borderRadius: BorderRadius.circular(36),
             boxShadow: [
               BoxShadow(
-                color: isDark
-                    ? Colors.black.withOpacity(0.4)
-                    : Colors.black.withOpacity(0.08),
-                blurRadius: 20,
-                spreadRadius: 0,
-                offset: const Offset(0, -4),
-              ),
-              BoxShadow(
-                color: isDark
-                    ? Colors.black.withOpacity(0.2)
-                    : Colors.black.withOpacity(0.04),
-                blurRadius: 40,
-                spreadRadius: 0,
-                offset: const Offset(0, -8),
+                color: Colors.black.withOpacity(0.25),
+                blurRadius: 18,
+                offset: const Offset(0, 8),
               ),
             ],
           ),
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: List.generate(items.length, (index) {
-                final item = items[index];
-                final isActive = index == currentIndex;
-                return _NavButton(
+          child: Row(
+            children: List.generate(items.length, (index) {
+              final item = items[index];
+              final isActive = index == currentIndex;
+
+              return Expanded(
+                child: _NavButton(
                   item: item,
                   isActive: isActive,
                   badgeCount: index == 1 ? friendRequestsCount : 0,
                   onTap: () => onItemSelected(index),
-                );
-              }),
-            ),
+                ),
+              );
+            }),
           ),
         ),
       ),
@@ -332,7 +304,6 @@ class _BottomNavBar extends StatelessWidget {
   }
 }
 
-// --- 💡 3. إعادة تصميم الزر بالكامل (احترافي) ---
 class _NavButton extends StatelessWidget {
   const _NavButton({
     required this.item,
@@ -348,139 +319,85 @@ class _NavButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-
-    return Expanded(
-      child: GestureDetector(
-        onTap: () {
-          HapticFeedback.lightImpact();
-          onTap();
-        },
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOutCubic,
-          margin: const EdgeInsets.symmetric(horizontal: 4),
-          child: Stack(
-            clipBehavior: Clip.none,
-            alignment: Alignment.center,
-            children: [
-              // Background container
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-                decoration: BoxDecoration(
-                  gradient: isActive
-                      ? LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            theme.colorScheme.primary.withOpacity(0.15),
-                            theme.colorScheme.primary.withOpacity(0.08),
-                          ],
-                        )
-                      : null,
-                  borderRadius: BorderRadius.circular(20),
-                  border: isActive
-                      ? Border.all(
-                          color: theme.colorScheme.primary.withOpacity(0.3),
-                          width: 1.5,
-                        )
-                      : null,
-                  boxShadow: isActive
-                      ? [
-                          BoxShadow(
-                            color: theme.colorScheme.primary.withOpacity(0.2),
-                            blurRadius: 12,
-                            spreadRadius: 0,
-                            offset: const Offset(0, 4),
-                          ),
-                        ]
-                      : null,
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        HapticFeedback.lightImpact();
+        onTap();
+      },
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 220),
+            curve: Curves.easeInOut,
+            height: double.infinity,
+            margin: const EdgeInsets.symmetric(horizontal: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(28),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  isActive ? item.activeIcon : item.icon,
+                  color: isActive ? const Color(0xFF2F80ED) : Colors.white,
+                  size: 22,
                 ),
-                child: Center(
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOutCubic,
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: isActive
-                          ? theme.colorScheme.primary.withOpacity(0.1)
-                          : Colors.transparent,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      isActive ? item.activeIcon : item.icon,
-                      color: isActive
-                          ? theme.colorScheme.primary
-                          : isDark
-                          ? Colors.grey[400]
-                          : Colors.grey[600],
-                      size: 24,
-                    ),
+                const SizedBox(height: 4),
+                Text(
+                  item.label,
+                  maxLines: 1,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: isActive ? const Color(0xFF2F80ED) : Colors.white,
+                    fontSize: 11,
+                    fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          if (badgeCount > 0)
+            Positioned(
+              top: 2,
+              right: 16,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF56A8FF),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: const Color(0xFF1E1F23), width: 2),
+                ),
+                child: Text(
+                  badgeCount > 999 ? '999+' : '$badgeCount',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                    height: 1.1,
                   ),
                 ),
               ),
-              // Enhanced Badge Design
-              if (badgeCount > 0)
-                Positioned(
-                  right: 16,
-                  top: 8,
-                  child: ScaleTransition(
-                    scale: CurvedAnimation(
-                      parent:
-                          ModalRoute.of(context)?.animation ??
-                          const AlwaysStoppedAnimation(1.0),
-                      curve: Curves.elasticOut,
-                    ),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 3,
-                      ),
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFFFF4757), Color(0xFFFF3742)],
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: isDark
-                              ? const Color(0xFF1A1A1A)
-                              : Colors.white,
-                          width: 2,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xFFFF4757).withOpacity(0.4),
-                            blurRadius: 8,
-                            spreadRadius: 0,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: Text(
-                        badgeCount > 99 ? '99+' : '$badgeCount',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                          height: 1,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ),
+            ),
+        ],
       ),
     );
   }
 }
-// --- نهاية التحديث ---
 
 class _NavItem {
-  const _NavItem({required this.icon, required this.activeIcon});
+  const _NavItem({
+    required this.icon,
+    required this.activeIcon,
+    required this.label,
+  });
 
   final IconData icon;
   final IconData activeIcon;
+  final String label;
 }

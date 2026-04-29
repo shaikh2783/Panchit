@@ -404,7 +404,7 @@ class _MonetizationPaymentsPageState extends State<MonetizationPaymentsPage> {
                       DateFormat(
                         'dd MMM yyyy',
                         'en',
-                      ).format(DateTime.parse(payment.time)),
+                      ).format(DateTime.parse(payment.time).toLocal()),
                     ),
                   ),
                 ],

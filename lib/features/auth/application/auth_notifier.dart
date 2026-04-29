@@ -162,6 +162,48 @@ class AuthNotifier extends ChangeNotifier {
     return null;
   }
 
+  Future<AuthResponse?> signInWithApple({
+    required String appleId,
+    String? email,
+    String? firstName,
+    String? lastName,
+    String? identityToken,
+    String deviceType = 'A',
+    String? deviceOsVersion,
+    String? deviceName,
+  }) async {
+    _setLoading(true);
+    _errorMessage = null;
+    try {
+      final response = await _repository.signInWithApple(
+        appleId: appleId,
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        identityToken: identityToken,
+        deviceType: deviceType,
+        deviceOsVersion: deviceOsVersion,
+        deviceName: deviceName,
+      );
+      _lastResponse = response;
+      final token = response.authToken;
+      if (token != null && token.isNotEmpty) {
+        final session = AuthSession.fromResponse(response);
+        await _persistSession(session);
+        _registerOneSignalInBackground();
+      } else {}
+      return response;
+    } on ApiException catch (error) {
+      if (error.details != null) {}
+      _errorMessage = error.message;
+    } catch (error) {
+      _errorMessage = 'حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى.';
+    } finally {
+      _setLoading(false);
+    }
+    return null;
+  }
+
   Future<void> restoreSession() async {
     try {
       final storedSession = await _storage.readSession();

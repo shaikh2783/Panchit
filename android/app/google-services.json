@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "173988203212",
-    "project_id": "sngine-60156",
-    "storage_bucket": "sngine-60156.firebasestorage.app"
+    "project_number": "655828953502",
+    "project_id": "panchit-8d39c",
+    "storage_bucket": "panchit-8d39c.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:173988203212:android:666979048296f1b2e15069",
+        "mobilesdk_app_id": "1:655828953502:android:8a1f9357e6965c44444e8f",
         "android_client_info": {
           "package_name": "com.panchit.www"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyA_tA58Pb0SL7E8JSqr8qfrt_z7O1O1zxY"
+          "current_key": "AIzaSyDbuN1ZGLt-SpXw5SPjYhKlUGq_OBhVCtI"
         }
       ],
       "services": {

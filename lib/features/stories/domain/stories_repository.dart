@@ -16,11 +16,15 @@ class StoriesRepository {
     String? imagePath,
     String? videoPath,
     String? text,
+    bool isCommentEnable = true,
+    bool isReactionEnable = true,
   }) {
     return _apiService.createStory(
       imagePath: imagePath,
       videoPath: videoPath,
       text: text,
+      isCommentEnable: isCommentEnable,
+      isReactionEnable: isReactionEnable,
     );
   }
 

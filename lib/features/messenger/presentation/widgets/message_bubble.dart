@@ -8,11 +8,13 @@ import '../../data/models/message_model.dart';
 class MessageBubble extends StatefulWidget {
   final MessageModel message;
   final bool showTimestamp;
+  final VoidCallback? onDelete;
 
   const MessageBubble({
     Key? key,
     required this.message,
     this.showTimestamp = false,
+    this.onDelete,
   }) : super(key: key);
 
   @override
@@ -82,15 +84,46 @@ class _MessageBubbleState extends State<MessageBubble> {
           : CrossAxisAlignment.start,
       children: [
         if (widget.showTimestamp) _buildTimestamp(context),
-        Padding(
-          padding: EdgeInsets.only(
-            left: widget.message.isMe ? 64 : 0,
-            right: widget.message.isMe ? 0 : 64,
-            bottom: 4,
+        GestureDetector(
+          onLongPress: _handleLongPress,
+          child: Padding(
+            padding: EdgeInsets.only(
+              left: widget.message.isMe ? 64 : 0,
+              right: widget.message.isMe ? 0 : 64,
+              bottom: 4,
+            ),
+            child: _buildMessageContent(context),
           ),
-          child: _buildMessageContent(context),
         ),
       ],
+    );
+  }
+
+  void _handleLongPress() {
+    if (widget.onDelete == null) return;
+
+    showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('delete'.tr),
+        content: Text('are_you_sure'.tr),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text('cancel'.tr),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx, true);
+              widget.onDelete?.call();
+            },
+            child: Text(
+              'delete'.tr,
+              style: const TextStyle(color: Colors.red),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -106,7 +139,7 @@ class _MessageBubbleState extends State<MessageBubble> {
           ),
           child: Text(
             timeago.format(
-              widget.message.sentAt,
+              widget.message.sentAt.toLocal(),
               locale: (Get.locale?.languageCode ?? 'en').startsWith('ar')
                   ? 'ar'
                   : 'en',
@@ -515,8 +548,14 @@ class _MessageBubbleState extends State<MessageBubble> {
   }
 
   String _formatTime(DateTime dateTime) {
-    return '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+  final minutes = dateTime.minute.toString().padLeft(2, '0');
+  var hour = dateTime.hour % 12;
+  if (hour == 0) {
+    hour = 12;
   }
+  final period = dateTime.hour >= 12 ? 'PM' : 'AM';
+  return '$hour:$minutes $period';
+}
 
   String _formatDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');

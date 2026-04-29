@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cached_video_player_plus/cached_video_player_plus.dart';
+import 'package:get/get.dart';
 import 'package:snginepro/core/utils/html_decoder.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -888,7 +889,7 @@ class _AdaptiveVideoPlayerState extends State<AdaptiveVideoPlayer>
       badgeTexts.add(HtmlDecoder.decode(widget.video.categoryName));
     }
     if (widget.video.viewCount > 0) {
-      badgeTexts.add('${_formatViewsCompact(widget.video.viewCount)} مشاهدة');
+      badgeTexts.add('${_formatViewsCompact(widget.video.viewCount)} ${'watch'.tr}');
     }
     if (badgeTexts.isEmpty) return const SizedBox.shrink();
 

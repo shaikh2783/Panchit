@@ -53,6 +53,7 @@ const Map<String, String> hiIN = {
   'registration_failed': 'पंजीकरण असफल रहा। कृपया पुनः प्रयास करें।',
   'email_username_required': 'ईमेल या यूज़रनेम आवश्यक है',
   'sign_in_with_google': 'Google के साथ साइन इन करें',
+  'sign_in_with_apple': 'Apple के साथ साइन इन करें',
 
   // Getting Started
   'getting_started': 'शुरुआत करें',
@@ -115,6 +116,7 @@ const Map<String, String> hiIN = {
   'like': 'पसंद',
   'comment': 'टिप्पणी',
   'comments': 'टिप्पणियाँ',
+  'reactions': 'प्रतिक्रियाएँ',
   'comments_disabled': 'इस पोस्ट के लिए टिप्पणियाँ बंद हैं',
   'show_more': 'और दिखाएँ',
   'show_less': 'कम दिखाएँ',

@@ -16,16 +16,21 @@ class CreateStoryEvent extends StoriesEvent {
   final String? videoPath;
   final String? text;
   final Duration? duration;
+  final bool isCommentEnable;
+  final bool isReactionEnable;
 
   CreateStoryEvent({
     this.imagePath,
     this.videoPath,
     this.text,
     this.duration,
+    this.isCommentEnable = true,
+    this.isReactionEnable = true,
   });
 
   @override
-  List<Object?> get props => [imagePath, videoPath, text, duration];
+  List<Object?> get props =>
+      [imagePath, videoPath, text, duration, isCommentEnable, isReactionEnable];
 }
 
 class ViewStoryEvent extends StoriesEvent {
@@ -218,6 +223,8 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
           authorAvatarUrl: story.authorAvatarUrl,
           items: items,
           isOwner: story.isOwner,
+          isCommentEnabled: story.isCommentEnabled,
+          isReactionEnabled: story.isReactionEnabled,
         ));
       }
 
@@ -262,11 +269,12 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
     ));
 
     try {
-      // ✅ استخدام API الحقيقي لإنشاء القصة
       await _repository.createStory(
         imagePath: event.imagePath,
         videoPath: event.videoPath,
         text: event.text,
+        isCommentEnable: event.isCommentEnable,
+        isReactionEnable: event.isReactionEnable,
       );
 
       // إعادة تحميل القصص بعد الإنشاء

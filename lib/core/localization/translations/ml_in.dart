@@ -51,6 +51,7 @@ const Map<String, String> mlIN = {
   "registration_failed": "രജിസ്‌ട്രേഷൻ പരാജയപ്പെട്ടു. വീണ്ടും ശ്രമിക്കുക.",
   "email_username_required": "ഇമെയിൽ അല്ലെങ്കിൽ ഉപയോക്തൃനാമം ആവശ്യമാണ്",
   "sign_in_with_google": "Google മുഖേന സൈൻ ഇൻ ചെയ്യുക",
+  "sign_in_with_apple": "Apple മുഖേന സൈൻ ഇൻ ചെയ്യുക",
   "getting_started": "ആരംഭിക്കുന്നു",
   "complete_profile": "ആരംഭിക്കാൻ നിങ്ങളുടെ പ്രൊഫൈൽ പൂർണ്ണമാക്കുക",
   "where_do_you_live": "നിങ്ങൾ എവിടെ താമസിക്കുന്നു?",

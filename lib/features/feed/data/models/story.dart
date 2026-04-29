@@ -6,6 +6,8 @@ class Story {
     this.authorAvatarUrl,
     this.items = const [],
     this.isOwner = false,
+    this.isCommentEnabled = true,
+    this.isReactionEnabled = true,
   });
 
   final String id;
@@ -14,6 +16,8 @@ class Story {
   final String? authorAvatarUrl;
   final List<StoryItem> items;
   final bool isOwner;
+  final bool isCommentEnabled;
+  final bool isReactionEnabled;
 
   factory Story.fromJson(Map<String, dynamic> json) {
     return Story(
@@ -25,7 +29,10 @@ class Story {
               ?.map((item) => StoryItem.fromJson(item))
               .toList() ??
           const [],
-      isOwner: json['is_user'] == true || json['is_user'] == 1 || json['is_user'] == '1',
+      isOwner:
+          json['is_user'] == true || json['is_user'] == 1 || json['is_user'] == '1',
+      isCommentEnabled: _bool(json['is_comment_enable']),
+      isReactionEnabled: _bool(json['is_reaction_enable']),
     );
   }
 
@@ -37,6 +44,23 @@ class Story {
       return value;
     }
     return value.toString();
+  }
+
+  static bool _bool(Object? value) {
+    if (value == null) {
+      return true;
+    }
+    if (value is bool) {
+      return value;
+    }
+    if (value is num) {
+      return value != 0;
+    }
+    final normalized = value.toString().toLowerCase();
+    if (normalized == 'false' || normalized == '0') {
+      return false;
+    }
+    return true;
   }
 }
 

@@ -90,11 +90,67 @@ class MessageModel {
       avatar: avatarUrl,
       image: imageUrl,
       voiceNote: voiceUrl,
-      sentAt: DateTime.tryParse(json['time'] ?? json['sent_at'] ?? '') ?? DateTime.now(),
+      sentAt: _parseSentAt(json['time'] ?? json['sent_at']),
       isSeen: json['seen'] == '1' || json['is_seen'] == true,
       isMe: userId == currentId,
     );
   }
+static DateTime _parseSentAt(dynamic value) {
+  if (value == null) return DateTime.now();
+
+  if (value is DateTime) {
+    return value.toLocal();
+  }
+
+  if (value is int) {
+    if (value > 1000000000000) {
+      return DateTime.fromMillisecondsSinceEpoch(value, isUtc: true).toLocal();
+    }
+    return DateTime.fromMillisecondsSinceEpoch(value * 1000, isUtc: true).toLocal();
+  }
+
+  if (value is String) {
+    final trimmed = value.trim();
+    if (trimmed.isEmpty) return DateTime.now();
+
+    final numeric = int.tryParse(trimmed);
+    if (numeric != null) {
+      if (numeric > 1000000000000) {
+        return DateTime.fromMillisecondsSinceEpoch(numeric, isUtc: true).toLocal();
+      }
+      return DateTime.fromMillisecondsSinceEpoch(numeric * 1000, isUtc: true).toLocal();
+    }
+
+    try {
+      final parsed = DateTime.parse(trimmed);
+      final hasTimezone =
+          trimmed.endsWith('Z') ||
+          RegExp(r'([+-]\d{2}:\d{2})$').hasMatch(trimmed);
+
+      if (hasTimezone) {
+        return parsed.toLocal();
+      }
+
+      final utc = DateTime.utc(
+        parsed.year,
+        parsed.month,
+        parsed.day,
+        parsed.hour,
+        parsed.minute,
+        parsed.second,
+        parsed.millisecond,
+        parsed.microsecond,
+      );
+
+      return utc.toLocal();
+    } catch (_) {
+      return DateTime.now();
+    }
+  }
+
+  return DateTime.now();
+}
+  
 
   Map<String, dynamic> toJson() {
     return {

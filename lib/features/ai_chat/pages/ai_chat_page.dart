@@ -1098,8 +1098,8 @@ class _ChatMessageBubble extends StatelessWidget {
                   ),
                 ],
                 const SizedBox(height: 8),
-                Text(
-                  timeFormat.format(message.timestamp),
+                            Text(
+                              timeFormat.format(message.timestamp.toLocal()),
                   style: TextStyle(
                     color: AppColors.success.withOpacity(0.7),
                     fontSize: 11,
@@ -1279,7 +1279,7 @@ class _ChatMessageBubble extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            timeFormat.format(message.timestamp),
+                            timeFormat.format(message.timestamp.toLocal()),
                             style: TextStyle(
                               color: isUser
                                   ? Colors.white.withOpacity(0.8)

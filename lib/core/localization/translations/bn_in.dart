@@ -51,6 +51,7 @@ const Map<String, String> bnIN = {
     "registration_failed": "রেজিস্ট্রেশন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।",
     "email_username_required": "ইমেল বা ইউজারনেম প্রয়োজন",
     "sign_in_with_google": "গুগল দিয়ে সাইন ইন করুন",
+    "sign_in_with_apple": "অ্যাপল দিয়ে সাইন ইন করুন",
 
     // Getting Started
     "getting_started": "শুরু করা হচ্ছে",
@@ -2878,5 +2879,5 @@ const Map<String, String> bnIN = {
   "share_video_option":"গ্যালারি থেকে ভিডিও শেয়ার করুন বা নতুন ভিডিও রেকর্ড করুন",
   "video_ready":"ভিডিও শেয়ারের জন্য প্রস্তুত",
   "photo_ready":"ছবি শেয়ারের জন্য প্রস্তুত",
-  "choose_another":"আরেকটি নির্বাচন করুন"
+  "choose_another":"আরেকটি নির্বাচন করুন",
 };

@@ -51,6 +51,7 @@ const Map<String, String> knIN = {
     "registration_failed": "ನೋಂದಣಿ ವಿಫಲವಾಗಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
     "email_username_required": "ಇಮೇಲ್ ಅಥವಾ ಬಳಕೆದಾರ ಹೆಸರು ಅಗತ್ಯವಿದೆ",
     "sign_in_with_google": "Google ಮೂಲಕ ಸೈನ್ ಇನ್ ಮಾಡಿ",
+    "sign_in_with_apple": "Apple ಮೂಲಕ ಸೈನ್ ಇನ್ ಮಾಡಿ",
     "getting_started": "ಪ್ರಾರಂಭಿಸುತ್ತಿದೆ",
     "complete_profile": "ಪ್ರಾರಂಭಿಸಲು ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಸಂಪೂರ್ಣ ಮಾಡಿ",
     "where_do_you_live": "ನೀವು ಎಲ್ಲಿದ್ದೀರಾ?",

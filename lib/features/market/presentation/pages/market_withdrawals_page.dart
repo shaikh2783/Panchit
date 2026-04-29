@@ -619,7 +619,7 @@ class _MarketWithdrawalsPageState extends State<MarketWithdrawalsPage>
           const SizedBox(height: 8),
           Text(
             DateFormat('MMM dd, yyyy hh:mm a').format(
-              DateTime.parse(payment.time),
+              DateTime.parse(payment.time).toLocal(),
             ),
             style: TextStyle(
               fontSize: 10,

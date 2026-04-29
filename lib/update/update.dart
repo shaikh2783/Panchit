@@ -34,17 +34,29 @@ class UpdateInfo {
   });
 
   factory UpdateInfo.fromJson(Map<String, dynamic> json) {
+    final changelog = json['changelog'] as Map<String, dynamic>? ?? {};
+    final changelogArRaw = changelog['ar'];
+    final changelogEnRaw = changelog['en'];
+
+    final hasUpdateAvailableFlag = json.containsKey('update_available');
+    final updateAvailable =
+        hasUpdateAvailableFlag ? (json['update_available'] ?? false) : true;
+
     return UpdateInfo(
-      appName: json['app_name'] ?? '',
+      appName: json['app_name'] ?? 'Panchit',
       latestVersion: json['latest_version'] ?? '',
       buildNumber: json['build_number'] ?? 0,
       forceUpdate: json['force_update'] ?? false,
-      updateAvailable: json['update_available'] ?? false,
+      updateAvailable: updateAvailable,
       updateUrl: json['update_url'] ?? '',
       messageAr: json['message_ar'] ?? '',
       messageEn: json['message_en'] ?? '',
-      changelogAr: List<String>.from(json['changelog']['ar'] ?? []),
-      changelogEn: List<String>.from(json['changelog']['en'] ?? []),
+      changelogAr: changelogArRaw is List
+          ? List<String>.from(changelogArRaw)
+          : const [],
+      changelogEn: changelogEnRaw is List
+          ? List<String>.from(changelogEnRaw)
+          : const [],
       releaseDate: json['release_date'] ?? '',
     );
   }
@@ -53,7 +65,7 @@ class UpdateInfo {
 // Service لفحص التحديث
 class UpdateService {
   static const String updateUrl =
-      'https://sngine.fluttercrafters.com/update.json';
+      'https://www.panchit.com/apis/php/data/app/version';
 
   static Future<UpdateInfo?> checkForUpdate() async {
     try {
@@ -117,11 +129,11 @@ class UpdateDialog extends StatelessWidget {
             end: Alignment.bottomRight,
             colors: isDark
                 ? [
-                    Theme.of(context).primaryColor.withOpacity(0.2),
+                    Theme.of(context).primaryColor.withValues(alpha: 0.2),
                     const Color(0xFF1E1E1E),
                   ]
                 : [
-                    Theme.of(context).primaryColor.withOpacity(0.1),
+                    Theme.of(context).primaryColor.withValues(alpha: 0.1),
                     Colors.white,
                   ],
           ),
@@ -137,7 +149,7 @@ class UpdateDialog extends StatelessWidget {
                 gradient: LinearGradient(
                   colors: [
                     Theme.of(context).primaryColor,
-                    Theme.of(context).primaryColor.withOpacity(0.7),
+                    Theme.of(context).primaryColor.withValues(alpha: 0.7),
                   ],
                 ),
                 borderRadius: const BorderRadius.only(
@@ -154,7 +166,7 @@ class UpdateDialog extends StatelessWidget {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(isDark ? 0.3 : 0.1),
+                          color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.1),
                           blurRadius: 10,
                           spreadRadius: 2,
                         ),
@@ -182,7 +194,7 @@ class UpdateDialog extends StatelessWidget {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
@@ -209,13 +221,13 @@ class UpdateDialog extends StatelessWidget {
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: isDark
-                          ? Theme.of(context).primaryColor.withOpacity(0.15)
-                          : Colors.blue.withOpacity(0.1),
+                          ? Theme.of(context).primaryColor.withValues(alpha: 0.15)
+                          : Colors.blue.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: isDark
-                            ? Theme.of(context).primaryColor.withOpacity(0.3)
-                            : Colors.blue.withOpacity(0.3),
+                            ? Theme.of(context).primaryColor.withValues(alpha: 0.3)
+                            : Colors.blue.withValues(alpha: 0.3),
                       ),
                     ),
                     child: Row(

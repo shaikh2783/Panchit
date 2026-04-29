@@ -17,6 +17,7 @@ import '../widgets/reactions_menu.dart';
 import '../../../../core/services/reactions_service.dart';
 import '../../../../services/ai_comment_service.dart';
 import '../../../../App_Settings.dart';
+import '../../../profile/presentation/pages/profile_page.dart';
 
 class CommentsBottomSheet extends StatefulWidget {
   const CommentsBottomSheet({
@@ -219,8 +220,8 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
       final userType = isVipUser
           ? 'vip'
           : isProUser
-              ? 'pro'
-              : 'free';
+          ? 'pro'
+          : 'free';
 
       // الحصول على الرد من AI (مع سياق المنشور إن وُجد)
       final aiResponse = await AICommentService.generateAutoReply(
@@ -541,7 +542,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.onSurface.withOpacity(0.3),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -561,7 +562,9 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                       Text(
                         '(${commentsNotifier.commentsCount})',
                         style: theme.textTheme.titleMedium?.copyWith(
-                          color: theme.colorScheme.onSurface.withOpacity(0.6),
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.6,
+                          ),
                         ),
                       ),
                       const Spacer(),
@@ -619,24 +622,26 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                               Icon(
                                 Icons.comment_outlined,
                                 size: 64,
-                                color: theme.colorScheme.onSurface.withOpacity(
-                                  0.3,
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.3,
                                 ),
                               ),
                               const SizedBox(height: 16),
                               Text(
                                 'no_comments_yet'.tr,
                                 style: theme.textTheme.bodyLarge?.copyWith(
-                                  color: theme.colorScheme.onSurface
-                                      .withOpacity(0.6),
+                                  color: theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.6,
+                                  ),
                                 ),
                               ),
                               const SizedBox(height: 8),
                               Text(
                                 'be_first_to_comment'.tr,
                                 style: theme.textTheme.bodySmall?.copyWith(
-                                  color: theme.colorScheme.onSurface
-                                      .withOpacity(0.5),
+                                  color: theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.5,
+                                  ),
                                 ),
                               ),
                             ],
@@ -663,7 +668,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                 commentsNotifier.comments.length +
                                 (commentsNotifier.isLoadingMore ? 1 : 0),
                             separatorBuilder: (_, __) =>
-                                const SizedBox(height: 4),
+                                const SizedBox(height: 1),
                             itemBuilder: (context, index) {
                               if (index == commentsNotifier.comments.length) {
                                 return const Center(
@@ -751,7 +756,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                       Padding(
                                         padding: const EdgeInsets.only(
                                           right: 56,
-                                          left: 8,
+                                          left: 8, // Adjust for thread line
                                         ),
                                         child: Column(
                                           children: [
@@ -852,7 +857,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                           margin: const EdgeInsets.only(bottom: 8),
                           decoration: BoxDecoration(
                             color: theme.colorScheme.primaryContainer
-                                .withOpacity(0.25),
+                                .withValues(alpha: 0.25),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Row(
@@ -891,7 +896,9 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: theme.colorScheme.outline.withOpacity(0.5),
+                              color: theme.colorScheme.outline.withValues(
+                                alpha: 0.5,
+                              ),
                             ),
                           ),
                           child: Stack(
@@ -929,11 +936,11 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                           margin: const EdgeInsets.only(bottom: 8),
                           decoration: BoxDecoration(
                             color: theme.colorScheme.primaryContainer
-                                .withOpacity(0.25),
+                                .withValues(alpha: 0.25),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: theme.colorScheme.primary.withOpacity(
-                                0.35,
+                              color: theme.colorScheme.primary.withValues(
+                                alpha: 0.35,
                               ),
                             ),
                           ),
@@ -962,7 +969,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                       style: theme.textTheme.bodySmall
                                           ?.copyWith(
                                             color: theme.colorScheme.onSurface
-                                                .withOpacity(0.6),
+                                                .withValues(alpha: 0.6),
                                           ),
                                     ),
                                   ],
@@ -987,10 +994,10 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                           padding: const EdgeInsets.all(12),
                           margin: const EdgeInsets.only(bottom: 8),
                           decoration: BoxDecoration(
-                            color: Colors.red.withOpacity(0.08),
+                            color: Colors.red.withValues(alpha: 0.08),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: Colors.red.withOpacity(0.3),
+                              color: Colors.red.withValues(alpha: 0.3),
                             ),
                           ),
                           child: Row(
@@ -1024,8 +1031,8 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                               Icons.image_outlined,
                               color: _selectedImage != null
                                   ? theme.colorScheme.primary
-                                  : theme.colorScheme.onSurface.withOpacity(
-                                      0.65,
+                                  : theme.colorScheme.onSurface.withValues(
+                                      alpha: 0.65,
                                     ),
                             ),
                           ),
@@ -1044,11 +1051,11 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                             child: Container(
                               decoration: BoxDecoration(
                                 color: theme.colorScheme.surfaceContainerHighest
-                                    .withOpacity(0.5),
+                                    .withValues(alpha: 0.5),
                                 borderRadius: BorderRadius.circular(24),
                                 border: Border.all(
-                                  color: theme.colorScheme.outline.withOpacity(
-                                    0.3,
+                                  color: theme.colorScheme.outline.withValues(
+                                    alpha: 0.3,
                                   ),
                                 ),
                               ),
@@ -1068,7 +1075,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                   hintStyle: theme.textTheme.bodyMedium
                                       ?.copyWith(
                                         color: theme.colorScheme.onSurface
-                                            .withOpacity(0.5),
+                                            .withValues(alpha: 0.5),
                                       ),
                                   border: InputBorder.none,
                                 ),
@@ -1241,312 +1248,407 @@ class _CommentTileState extends State<_CommentTile> {
     final comment = widget.comment;
     final isReply = widget.isReply;
     final cs = theme.colorScheme;
-    return Padding(
-      padding: EdgeInsetsDirectional.only(
-        start: isReply ? 56 : 8,
-        end: 8,
-        top: 6,
-        bottom: 2,
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // صورة البروفايل
-          CircleAvatar(
-            radius: 18,
-            backgroundImage: comment.authorPicture.isNotEmpty
-                ? CachedNetworkImageProvider(comment.authorPicture)
-                : null,
-            child: comment.authorPicture.isEmpty
-                ? Text(
-                    _initials(comment.authorName),
-                    style: const TextStyle(fontSize: 12),
-                  )
-                : null,
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isNarrow = constraints.maxWidth < 360;
+        final avatarRadius = isNarrow ? 18.0 : 20.0;
+        final bubbleRadius = isReply ? 14.0 : 16.0;
+
+        return Padding(
+          padding: EdgeInsetsDirectional.only(
+            start: isReply ? (isNarrow ? 24 : 32) : (isNarrow ? 10 : 12),
+            end: isNarrow ? 10 : 12,
+            top: isReply ? 2 : 4,
+            bottom: 4,
           ),
-          const SizedBox(width: 8),
-          // فقاعة التعليق
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // حقل التعديل أو فقاعة التعليق
-                if (_isEditing)
-                  Container(
-                    decoration: BoxDecoration(
-                      color: theme.brightness == Brightness.dark
-                          ? cs.surfaceContainerHighest.withOpacity(0.35)
-                          : cs.surfaceContainerHighest,
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      children: [
-                        TextField(
-                          controller: _editController,
-                          maxLines: null,
-                          decoration: InputDecoration(
-                            hintText: 'write_comment'.tr,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            contentPadding: const EdgeInsets.all(12),
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              border: isReply
+                  ? BorderDirectional(
+                      start: BorderSide(
+                        color: cs.outline.withValues(alpha: 0.25),
+                        width: 1.5,
+                      ),
+                    )
+                  : null,
+            ),
+            child: Padding(
+              padding: EdgeInsetsDirectional.only(start: isReply ? 12 : 0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      final id = int.tryParse(comment.authorId);
+                      if (id != null) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProfilePage(userId: id),
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  _isEditing = false;
-                                  _editController.text = comment.textPlain;
-                                });
-                              },
-                              child: Text('cancel'.tr),
-                            ),
-                            const SizedBox(width: 8),
-                            ElevatedButton(
-                              onPressed: _handleEdit,
-                              child: Text('save'.tr),
-                            ),
-                          ],
-                        ),
-                      ],
+                        );
+                      }
+                    },
+                    borderRadius: BorderRadius.circular(avatarRadius),
+                    child: CircleAvatar(
+                      radius: avatarRadius,
+                      backgroundImage: comment.authorPicture.isNotEmpty
+                          ? CachedNetworkImageProvider(comment.authorPicture)
+                          : null,
+                      child: comment.authorPicture.isEmpty
+                          ? Text(
+                              _initials(comment.authorName),
+                              style: const TextStyle(fontSize: 12),
+                            )
+                          : null,
                     ),
-                  )
-                else
-                  Container(
-                    decoration: BoxDecoration(
-                      color: theme.brightness == Brightness.dark
-                          ? cs.surfaceContainerHighest.withOpacity(0.35)
-                          : cs.surfaceContainerHighest,
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
-                    ),
+                  ),
+                  SizedBox(width: isNarrow ? 8 : 10),
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // الاسم + الوقت + قائمة الخيارات
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                comment.authorName,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                        if (_isEditing)
+                          Container(
+                            decoration: BoxDecoration(
+                              color: theme.brightness == Brightness.dark
+                                  ? cs.surfaceContainerHighest.withValues(
+                                      alpha: 0.35,
+                                    )
+                                  : cs.surfaceContainerHighest,
+                              borderRadius: BorderRadius.circular(bubbleRadius),
                             ),
-                            const SizedBox(width: 8),
-                            Text(
-                              comment.time,
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: cs.onSurface.withOpacity(0.6),
-                              ),
-                            ),
-                            // زر القائمة للتعديل والحذف
-                            if (comment.canEdit || comment.canDelete)
-                              PopupMenuButton<String>(
-                                padding: EdgeInsets.zero,
-                                icon: Icon(
-                                  Icons.more_horiz,
-                                  size: 18,
-                                  color: cs.onSurface.withOpacity(0.6),
-                                ),
-                                onSelected: (value) {
-                                  if (value == 'edit') {
-                                    setState(() => _isEditing = true);
-                                  } else if (value == 'delete') {
-                                    _handleDelete();
-                                  }
-                                },
-                                itemBuilder: (context) => [
-                                  if (comment.canEdit)
-                                    PopupMenuItem(
-                                      value: 'edit',
-                                      child: Row(
-                                        children: [
-                                          const Icon(Icons.edit, size: 20),
-                                          const SizedBox(width: 8),
-                                          Text('edit_comment'.tr),
-                                        ],
-                                      ),
-                                    ),
-                                  if (comment.canDelete)
-                                    PopupMenuItem(
-                                      value: 'delete',
-                                      child: Row(
-                                        children: [
-                                          const Icon(
-                                            Icons.delete,
-                                            size: 20,
-                                            color: Colors.red,
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Text(
-                                            'delete_comment'.tr,
-                                            style: const TextStyle(
-                                              color: Colors.red,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                ],
-                              ),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-
-                        // النص
-                        if (comment.text.isNotEmpty)
-                          HtmlTextWidget(htmlContent: comment.text,),
-
-                        // صورة مرفقة
-                        if (comment.image != null && comment.image!.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Image.network(
-                                comment.image!,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-
-                        // مرفق صوتي بسيط (أيقونة/نص)
-                        if (comment.voiceNote != null &&
-                            comment.voiceNote!.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8),
-                            child: Row(
+                            padding: const EdgeInsets.all(12),
+                            child: Column(
                               children: [
-                                const Icon(Icons.mic, size: 18),
-                                const SizedBox(width: 6),
-                                Expanded(
-                                  child: Text(
-                                    'Voice message',
-                                    style: theme.textTheme.bodySmall,
+                                TextField(
+                                  controller: _editController,
+                                  maxLines: null,
+                                  decoration: InputDecoration(
+                                    hintText: 'write_comment'.tr,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    contentPadding: const EdgeInsets.all(12),
                                   ),
                                 ),
-                                // يمكن لاحقًا إضافة مشغل صوتي فعلي
+                                const SizedBox(height: 8),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _isEditing = false;
+                                          _editController.text =
+                                              comment.textPlain;
+                                        });
+                                      },
+                                      child: Text('cancel'.tr),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    ElevatedButton(
+                                      onPressed: _handleEdit,
+                                      child: Text('save'.tr),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          )
+                        else
+                          Container(
+                            decoration: BoxDecoration(
+                              color: theme.brightness == Brightness.dark
+                                  ? cs.surfaceContainerHighest.withValues(
+                                      alpha: 0.35,
+                                    )
+                                  : cs.surfaceContainerHighest,
+                              borderRadius: BorderRadius.circular(bubbleRadius),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        comment.authorName,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: theme.textTheme.bodyMedium
+                                            ?.copyWith(
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ),
+                                    if (comment.canEdit || comment.canDelete)
+                                      PopupMenuButton<String>(
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(),
+                                        splashRadius: 18,
+                                        icon: Icon(
+                                          Icons.more_horiz,
+                                          size: 18,
+                                          color: cs.onSurface.withValues(
+                                            alpha: 0.6,
+                                          ),
+                                        ),
+                                        onSelected: (value) {
+                                          if (value == 'edit') {
+                                            setState(() => _isEditing = true);
+                                          } else if (value == 'delete') {
+                                            _handleDelete();
+                                          }
+                                        },
+                                        itemBuilder: (context) => [
+                                          if (comment.canEdit)
+                                            PopupMenuItem(
+                                              value: 'edit',
+                                              child: Row(
+                                                children: [
+                                                  const Icon(
+                                                    Icons.edit,
+                                                    size: 20,
+                                                  ),
+                                                  const SizedBox(width: 8),
+                                                  Text('edit_comment'.tr),
+                                                ],
+                                              ),
+                                            ),
+                                          if (comment.canDelete)
+                                            PopupMenuItem(
+                                              value: 'delete',
+                                              child: Row(
+                                                children: [
+                                                  const Icon(
+                                                    Icons.delete,
+                                                    size: 20,
+                                                    color: Colors.red,
+                                                  ),
+                                                  const SizedBox(width: 8),
+                                                  Text(
+                                                    'delete_comment'.tr,
+                                                    style: const TextStyle(
+                                                      color: Colors.red,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                        ],
+                                      ),
+                                  ],
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  widget.formatRelative(
+                                    DateTime.parse(comment.time),
+                                  ),
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: cs.onSurface.withValues(
+                                      alpha: 0.6,
+                                    ),
+                                    fontSize: 11,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                if (comment.text.isNotEmpty)
+                                  HtmlTextWidget(htmlContent: comment.text),
+                                if (comment.image != null &&
+                                    comment.image!.isNotEmpty)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: CachedNetworkImage(
+                                        imageUrl: comment.image!,
+                                        fit: BoxFit.cover,
+                                        placeholder: (context, url) =>
+                                            Container(
+                                          height: 150,
+                                          color: cs.surfaceContainerLowest,
+                                          child: const Center(
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                            ),
+                                          ),
+                                        ),
+                                        errorWidget: (context, url, error) =>
+                                            Container(
+                                          height: 150,
+                                          color: cs.errorContainer,
+                                          child: Icon(
+                                            Icons.broken_image,
+                                            color: cs.onError,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                if (comment.voiceNote != null &&
+                                    comment.voiceNote!.isNotEmpty)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.mic,
+                                          size: 18,
+                                          color: cs.onSurface.withValues(
+                                            alpha: 0.7,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 6),
+                                        Expanded(
+                                          child: Text(
+                                            'voice_message'.tr,
+                                            style: theme.textTheme.bodySmall,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                               ],
                             ),
                           ),
-                      ],
-                    ),
-                  ),
-
-                // شريط “إعجاب · ردّ” + عدّاد التفاعلات
-                Padding(
-                  padding: const EdgeInsetsDirectional.only(
-                    start: 6,
-                    top: 6,
-                    bottom: 2,
-                  ),
-                  child: Row(
-                    children: [
-                      InkWell(
-                        onTap: widget.onLike,
-                        onLongPress: () => _showReactionsMenu(
-                          context,
-                          onReact: (reaction) {
-                            Navigator.pop(context);
-                            // إرسال التفاعل المحدد
-                            if (isReply && widget.parentCommentId != null) {
-                              // للردود
-                              context.read<RepliesNotifier>().reactToReply(
-                                parentCommentId: widget.parentCommentId!,
-                                replyId: comment.commentId,
-                                reaction: reaction,
-                              );
-                            } else {
-                              // للتعليقات الرئيسية
-                              context.read<CommentsNotifier>().reactToComment(
-                                commentId: comment.commentId,
-                                reaction: reaction,
-                              );
-                            }
-                          },
-                        ),
-                        borderRadius: BorderRadius.circular(6),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 6,
-                            vertical: 2,
+                        Padding(
+                          padding: const EdgeInsetsDirectional.only(
+                            start: 4,
+                            top: 2,
+                            bottom: 0,
                           ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
+                          child: Wrap(
+                            spacing: 12,
+                            runSpacing: 4,
+                            crossAxisAlignment: WrapCrossAlignment.center,
                             children: [
-                              if (widget.isLiked && comment.iReaction != null)
-                                _getReactionIcon(comment.iReaction!)
-                              else
-                                const SizedBox.shrink(),
-                              if (widget.isLiked && comment.iReaction != null)
-                                const SizedBox(width: 4),
-                              Text(
-                                widget.isLiked && comment.iReaction != null
-                                    ? _getReactionText(comment.iReaction!)
-                                    : 'Like',
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  fontWeight: widget.isLiked
-                                      ? FontWeight.w700
-                                      : FontWeight.w500,
-                                  color: widget.isLiked
-                                      ? _getReactionColor(comment.iReaction)
-                                      : cs.onSurface,
+                              InkWell(
+                                onTap: widget.onLike,
+                                onLongPress: () => _showReactionsMenu(
+                                  context,
+                                  onReact: (reaction) {
+                                    Navigator.pop(context);
+                                    if (isReply &&
+                                        widget.parentCommentId != null) {
+                                      context
+                                          .read<RepliesNotifier>()
+                                          .reactToReply(
+                                            parentCommentId:
+                                                widget.parentCommentId!,
+                                            replyId: comment.commentId,
+                                            reaction: reaction,
+                                          );
+                                    } else {
+                                      context
+                                          .read<CommentsNotifier>()
+                                          .reactToComment(
+                                            commentId: comment.commentId,
+                                            reaction: reaction,
+                                          );
+                                    }
+                                  },
+                                ),
+                                borderRadius: BorderRadius.circular(6),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 6,
+                                    vertical: 2,
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      if (widget.isLiked &&
+                                          comment.iReaction != null)
+                                        _getReactionIcon(comment.iReaction!)
+                                      else
+                                        Icon(
+                                          Icons.thumb_up_alt_outlined,
+                                          size: 16,
+                                          color: widget.isLiked
+                                              ? _getReactionColor(
+                                                  comment.iReaction,
+                                                )
+                                              : cs.onSurface.withValues(
+                                                  alpha: 0.6,
+                                                ),
+                                        ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        widget.isLiked &&
+                                                comment.iReaction != null
+                                            ? _getReactionText(
+                                                comment.iReaction!,
+                                              )
+                                            : 'Like',
+                                        style: theme.textTheme.bodySmall
+                                            ?.copyWith(
+                                              fontWeight: widget.isLiked
+                                                  ? FontWeight.w700
+                                                  : FontWeight.w500,
+                                              color: widget.isLiked
+                                                  ? _getReactionColor(
+                                                      comment.iReaction,
+                                                    )
+                                                  : cs.onSurface.withValues(
+                                                      alpha: 0.6,
+                                                    ),
+                                            ),
+                                      ),
+                                      if (widget.reactionsTotalCount > 0) ...[
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          widget.reactionsTotalCount.toString(),
+                                          style: theme.textTheme.bodySmall
+                                              ?.copyWith(
+                                                color: cs.onSurface.withValues(
+                                                  alpha: 0.7,
+                                                ),
+                                              ),
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              InkWell(
+                                onTap: widget.onReply,
+                                borderRadius: BorderRadius.circular(6),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 6,
+                                    vertical: 2,
+                                  ),
+                                  child: Text(
+                                    'reply'.tr,
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                      color: cs.onSurface.withValues(
+                                        alpha: 0.6,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      InkWell(
-                        onTap: widget.onReply,
-                        borderRadius: BorderRadius.circular(6),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 6,
-                            vertical: 2,
-                          ),
-                          child: Text(
-                            'reply'.tr,
-                            style: theme.textTheme.bodySmall,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      if (widget.reactionsTotalCount > 0)
-                        Row(
-                          children: [
-                            const Icon(Icons.thumb_up_alt_rounded, size: 14),
-                            const SizedBox(width: 4),
-                            Text(
-                              widget.reactionsTotalCount.toString(),
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: cs.onSurface.withOpacity(0.7),
-                              ),
-                            ),
-                          ],
-                        ),
-                    ],
+                        if (widget.repliesSection != null)
+                          widget.repliesSection!,
+                      ],
+                    ),
                   ),
-                ),
-
-                if (widget.repliesSection != null) widget.repliesSection!,
-              ],
+                ],
+              ),
             ),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 

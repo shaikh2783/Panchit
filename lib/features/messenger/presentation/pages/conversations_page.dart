@@ -735,7 +735,7 @@ class _ModernConversationTile extends StatelessWidget {
 
     return Text(
       timeago.format(
-        conversation.lastMessageTime!,
+        conversation.lastMessageTime!.toLocal(),
         locale: Get.locale?.languageCode ?? 'ar',
       ),
       style: TextStyle(

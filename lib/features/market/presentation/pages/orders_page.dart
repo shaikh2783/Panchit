@@ -385,7 +385,7 @@ class _OrderCard extends StatelessWidget {
           isDark,
           icon: Icons.calendar_today_outlined,
           label: 'order_placed'.tr,
-          value: dateFormat.format(order.createdAt),
+          value: dateFormat.format(order.createdAt.toLocal()),
         ),
         const SizedBox(height: 12),
         _buildDetailRow(

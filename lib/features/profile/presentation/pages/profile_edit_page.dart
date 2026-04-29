@@ -78,8 +78,14 @@ class AppGradients {
 
 /// ---------- Screen ----------
 class ProfileEditPage extends StatefulWidget {
-  const ProfileEditPage({super.key, required this.profile});
+  const ProfileEditPage({
+    super.key,
+    required this.profile,
+    this.initialTabIndex = 0,
+  });
+
   final UserProfile profile;
+  final int initialTabIndex;
 
   @override
   State<ProfileEditPage> createState() => _ProfileEditPageState();
@@ -139,7 +145,9 @@ class _ProfileEditPageState extends State<ProfileEditPage>
   @override
   void initState() {
     super.initState();
-    _tab = TabController(length: 6, vsync: this);
+    final initialIndex =
+        widget.initialTabIndex.clamp(0, 5); // 6 tabs: 0..5, photos = 5
+    _tab = TabController(length: 6, vsync: this, initialIndex: initialIndex);
     _updateService = ProfileUpdateService(context.read<ApiClient>());
     _countriesService = CountriesService(context.read<ApiClient>());
 

@@ -319,6 +319,54 @@ class MessengerApiService {
     }
   }
 
+  /// حذف رسالة واحدة من محادثة
+  /// يحاول عدة مسارات محتملة في Sngine backend
+  Future<bool> deleteMessage({
+    required String conversationId,
+    required int messageId,
+  }) async {
+    Future<bool> _post(String path) async {
+      final response = await _apiClient.post(
+        path,
+        data: {
+          'conversation_id': conversationId,
+          'message_id': messageId,
+        },
+      );
+
+      if (response is Map<String, dynamic>) {
+        final data = response;
+        final ok = data['status'] == 'success' ||
+            data['callback'] == 1 ||
+            data['callback'] == true ||
+            (data.isEmpty == false && data['error'] == null);
+        return ok;
+      } else if (response is String) {
+        return response.toString().contains('success');
+      } else {
+        return false;
+      }
+    }
+
+    try {
+      // محاولات لمسارات شائعة في Sngine
+      const paths = <String>[
+        '/chat/reactions/delete', // نفس مسار حذف المحادثة لكن مع message_id
+        '/chat/message/delete',
+        '/chat/reactions/message/delete',
+      ];
+
+      for (final path in paths) {
+        final ok = await _post(path);
+        if (ok) return true;
+      }
+
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
   /// حذف محادثة
   /// POST /chat/reactions/delete
   Future<bool> deleteConversation({required String conversationId}) async {

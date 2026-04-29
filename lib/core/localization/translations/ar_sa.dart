@@ -72,6 +72,7 @@ const Map<String, String> arSA = {
   'registration_failed': 'فشل التسجيل. يرجى المحاولة مرة أخرى.',
   'email_username_required': 'البريد الإلكتروني أو اسم المستخدم مطلوب',
   'sign_in_with_google': 'تسجيل الدخول بواسطة Google',
+  'sign_in_with_apple': 'تسجيل الدخول مع أبل',
 
   // Getting Started
   'getting_started': 'البدء',
@@ -158,6 +159,7 @@ const Map<String, String> arSA = {
   'like': 'إعجاب',
   'comment': 'تعليق',
   'comments': 'التعليقات',
+  'reactions': 'ردود الفعل',
   'comments_disabled': 'التعليقات معطلة لهذا المنشور',
   'show_more': 'عرض المزيد',
   'show_less': 'عرض أقل',

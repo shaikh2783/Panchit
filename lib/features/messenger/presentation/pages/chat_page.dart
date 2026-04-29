@@ -651,6 +651,7 @@ class _ChatPageState extends State<ChatPage> {
                         return MessageBubble(
                           message: message,
                           showTimestamp: _shouldShowTimestamp(index),
+                          onDelete: () => _deleteMessage(message),
                         );
                       },
                     ),
@@ -661,6 +662,29 @@ class _ChatPageState extends State<ChatPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _deleteMessage(MessageModel message) async {
+    final ok = await _apiService.deleteMessage(
+      conversationId: widget.conversationId,
+      messageId: message.messageId,
+    );
+
+    if (ok) {
+      setState(() {
+        _messages.removeWhere(
+          (m) => m.messageId == message.messageId,
+        );
+      });
+    } else {
+      Get.snackbar(
+        'error'.tr,
+        'failed_to_delete_conversation'.tr,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
   }
 
   PreferredSizeWidget _buildAppBar(

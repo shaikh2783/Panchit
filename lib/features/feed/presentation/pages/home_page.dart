@@ -1279,50 +1279,38 @@ class HomePageState extends State<HomePage> {
     ];
     
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-   
-      child: Row(
-        children: filterOptions.map((option) {
-          final value = option['value'] as String;
-          final label = option['label'] as String;
-          final isSelected = _selectedType == value;
-          
-          return Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: Container(
-                
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(24),
-                  gradient: isSelected
-                      ? LinearGradient(
-                          colors: [cs.primary, cs.primary.withValues(alpha: 0.8)],
-                        )
-                      : LinearGradient(
-                          colors: isDark
-                              ? [const Color(0xFF1A1A1A), const Color(0xFF141414)]
-                              : [Colors.white, const Color(0xFFF5F5F5)],
-                        ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: isSelected
-                          ? cs.primary.withValues(alpha: 0.3)
-                          : Colors.black.withValues(alpha: isDark ? 0.3 : 0.06),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+      child: Container(
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          color: isDark ? const Color(0xFF151518) : const Color(0xFFE7ECF3),
+          borderRadius: BorderRadius.circular(32),
+        ),
+        child: Row(
+          children: filterOptions.map((option) {
+            final value = option['value'] as String;
+            final label = option['label'] as String;
+            final isSelected = _selectedType == value;
+            
+            return Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 5),
                 child: InkWell(
                   onTap: () => _applyFilter(value),
-                  borderRadius: BorderRadius.circular(24),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 12,
+                  borderRadius: BorderRadius.circular(28),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeInOut,
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? cs.primary
+                          : (isDark ? const Color(0xFF1E1F23) : Colors.transparent),
+                      borderRadius: BorderRadius.circular(28),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         if (isSelected) ...[
                           Icon(
@@ -1335,8 +1323,12 @@ class HomePageState extends State<HomePage> {
                         Flexible(
                           child: Text(
                             label,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                              color: isSelected ? Colors.white : (isDark ? Colors.white : Colors.black),
+                              color: isSelected
+                                  ? Colors.white
+                                  : (isDark ? Colors.white.withOpacity(0.9) : cs.onSurface),
                               fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
                               fontSize: 14,
                             ),
@@ -1348,9 +1340,9 @@ class HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-            ),
-          );
-        }).toList(),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
@@ -1934,4 +1926,3 @@ class _ComposerAction extends StatelessWidget {
     );
   }
 }
-

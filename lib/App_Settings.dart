@@ -100,12 +100,12 @@ class AppSettings {
   /// Google Client ID لـ iOS
   /// احصل عليه من: Google Cloud Console > APIs & Services > Credentials
   /// مثال: "123456789-abc123def456.apps.googleusercontent.com"
-  static const String googleClientIdIOS = 'YOUR_IOS_CLIENT_ID';
+  static const String googleClientIdIOS = '655828953502-f2sds4bbkom2cbslkctolp3dh6r3uaco.apps.googleusercontent.com';
 
   /// Google Client ID لـ Android
   /// مثال: "123456789-xyz789abc123.apps.googleusercontent.com"
   static const String googleClientIdAndroid =
-      '310376752754-aat3tcudo5enqedpecjvou8s6c7b80n1.apps.googleusercontent.com';
+      '655828953502-fn6iog5rv9hpkoucp540othl178h5cja.apps.googleusercontent.com';
 
   /// Google Client ID لـ Web (اختياري)
   static const String googleClientIdWeb = 'YOUR_WEB_CLIENT_ID';
@@ -121,7 +121,7 @@ class AppSettings {
 
   /// مفتاح API للذكاء الاصطناعي (OpenAI, Gemini, إلخ)
   /// احصل عليه من: https://platform.openai.com/api-keys
-  static const String aiApiKey = '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';
+  static const String aiApiKey = 'YOUR_OPENAI_API_KEY';
 
   /// نموذج الذكاء الاصطناعي المستخدم
   /// أمثلة: 'gpt-4', 'gpt-3.5-turbo', 'gemini-pro'

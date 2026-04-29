@@ -867,7 +867,8 @@ class _NotificationCard extends StatelessWidget {
     try {
       // استخدام لغة التطبيق الحالية
       final currentLocale = Get.locale?.languageCode ?? 'en';
-      return timeago.format(DateTime.parse(t), locale: currentLocale);
+      final dt = DateTime.parse(t).toLocal();
+      return timeago.format(dt, locale: currentLocale);
     } catch (_) {
       return t;
     }

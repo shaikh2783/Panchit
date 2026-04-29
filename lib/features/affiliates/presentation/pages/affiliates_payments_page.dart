@@ -418,7 +418,7 @@ class _AffiliatesPaymentsPageState extends State<AffiliatesPaymentsPage> {
                       DateFormat(
                         'dd MMM yyyy',
                         'en',
-                      ).format(DateTime.parse(payment.time)),
+                      ).format(DateTime.parse(payment.time).toLocal()),
                     ),
                   ),
                 ],

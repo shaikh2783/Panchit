@@ -9,6 +9,8 @@ class Story {
     this.isOwner = false,
     this.timestamp,
     this.isSeen = false,
+    this.isCommentEnabled = true,
+    this.isReactionEnabled = true,
   }) : media = media ?? const <StoryMedia>[];
 
   final String id;
@@ -20,6 +22,8 @@ class Story {
   final bool isOwner;
   final DateTime? timestamp;
   final bool isSeen;
+  final bool isCommentEnabled;
+  final bool isReactionEnabled;
 
   bool get hasMedia => media.isNotEmpty;
 
@@ -43,6 +47,8 @@ class Story {
     bool? isOwner,
     DateTime? timestamp,
     bool? isSeen,
+    bool? isCommentEnabled,
+    bool? isReactionEnabled,
   }) {
     return Story(
       id: id ?? this.id,
@@ -54,6 +60,8 @@ class Story {
       isOwner: isOwner ?? this.isOwner,
       timestamp: timestamp ?? this.timestamp,
       isSeen: isSeen ?? this.isSeen,
+      isCommentEnabled: isCommentEnabled ?? this.isCommentEnabled,
+      isReactionEnabled: isReactionEnabled ?? this.isReactionEnabled,
     );
   }
 
@@ -111,6 +119,8 @@ class Story {
 
     final isOwner = json['story_user']==json['my_user_id'];
     final isSeen = _bool(json['is_seen'] ?? json['seen']);
+    final isCommentEnabled = _bool(json['is_comment_enable']);
+    final isReactionEnabled = _bool(json['is_reaction_enable']);
 
     // Extract author ID from various possible fields
     final authorId = _string(json['user_id']) ??
@@ -128,6 +138,8 @@ class Story {
       isOwner: isOwner,
       timestamp: timestamp,
       isSeen: isSeen,
+      isCommentEnabled: isCommentEnabled,
+      isReactionEnabled: isReactionEnabled,
     );
   }
 
@@ -167,6 +179,7 @@ class Story {
       _string(json['user_picture']),
       _string(json['picture']),
       _string(json['image']),
+      _string(json['photo']),
       if (publisher != null) _string(publisher['user_picture']),
       if (publisher != null) _string(publisher['picture']),
       if (publisher != null) _string(publisher['user_avatar']),
@@ -307,4 +320,3 @@ class StoryMedia {
     );
   }
 }
-

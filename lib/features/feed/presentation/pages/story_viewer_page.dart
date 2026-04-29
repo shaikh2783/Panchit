@@ -555,12 +555,14 @@ class _StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                             child: CircleAvatar(
                               radius: 18,
                               backgroundColor: Colors.grey[800],
-                              backgroundImage: widget.story.authorAvatarUrl != null
+                              backgroundImage: (widget.story.authorAvatarUrl != null &&
+                                      widget.story.authorAvatarUrl!.isNotEmpty)
                                   ? CachedNetworkImageProvider(
                                       mediaAsset(widget.story.authorAvatarUrl!).toString(),
                                     )
                                   : null,
-                              child: widget.story.authorAvatarUrl == null
+                              child: (widget.story.authorAvatarUrl == null ||
+                                      widget.story.authorAvatarUrl!.isEmpty)
                                   ? const Icon(Icons.person, color: Colors.white, size: 20)
                                   : null,
                             ),

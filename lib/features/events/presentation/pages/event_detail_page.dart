@@ -818,7 +818,8 @@ class _EventDetailPageState extends State<EventDetailPage> {
   }
 
   String _formatDateTime(DateTime dateTime) {
-    return DateFormat('EEEE, MMM dd, yyyy • hh:mm a').format(dateTime);
+    return DateFormat('EEEE, MMM dd, yyyy • hh:mm a')
+        .format(dateTime.toLocal());
   }
 
   void _handleJoinEvent(String action) {

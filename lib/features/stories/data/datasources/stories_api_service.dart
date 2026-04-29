@@ -41,6 +41,8 @@ class StoriesApiService {
     String? imagePath,
     String? videoPath,
     String? text,
+    bool isCommentEnable = true,
+    bool isReactionEnable = true,
   }) async {
     try {
       final fields = <String, String>{};
@@ -48,6 +50,9 @@ class StoriesApiService {
       if (text != null && text.isNotEmpty) {
         fields['text'] = text;
       }
+
+      fields['is_comment_enable'] = isCommentEnable ? 'true' : 'false';
+      fields['is_reaction_enable'] = isReactionEnable ? 'true' : 'false';
 
       // استخدام multipartPost لرفع ملف واحد
       if (imagePath != null) {

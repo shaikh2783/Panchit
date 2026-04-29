@@ -114,7 +114,7 @@ Future<void> main() async {
     if (context != null) {
       checkAndShowUpdate(
         context,
-        isArabic: false, // غير إلى false للإنجليزية
+        isArabic: false,
         showOnlyIfAvailable: false,
       );
     }

@@ -367,38 +367,77 @@ class _ProfilePageState extends State<ProfilePage>
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 3),
-                    ),
-                    child: Stack(
-                      children: [
-                        CircleAvatar(
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 3),
+                        ),
+                        child: CircleAvatar(
                           radius: 50,
                           backgroundImage: CachedNetworkImageProvider(
                             profile.picture,
                           ),
                         ),
-                        if (profile.isOnline == true)
-                          Positioned(
-                            right: 0,
-                            bottom: 0,
+                      ),
+                      if (profile.isOnline == true)
+                        Positioned(
+                          top: -1,
+                          right: 0,
+                          child: Container(
+                            width: 20,
+                            height: 20,
+                            decoration: BoxDecoration(
+                              color: Colors.green,
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: Colors.white,
+                                width: 2,
+                              ),
+                            ),
+                          ),
+                        ),
+                      if (relationship.isSelf)
+                        Positioned(
+                          bottom: -2,
+                          right: -2,
+                          child: GestureDetector(
+                            onTap: () async {
+                              final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => ProfileEditPage(
+                                    profile: profile,
+                                    initialTabIndex: 5, // photos tab
+                                  ),
+                                ),
+                              );
+                              if (result == true && mounted) {
+                                _loadProfile();
+                              }
+                            },
                             child: Container(
-                              width: 20,
-                              height: 20,
+                              width: 28,
+                              height: 28,
                               decoration: BoxDecoration(
-                                color: Colors.green,
+                                color: Colors.blueAccent,
                                 shape: BoxShape.circle,
                                 border: Border.all(
                                   color: Colors.white,
                                   width: 2,
                                 ),
                               ),
+                              child: const Icon(
+                                Iconsax.edit,
+                                size: 16,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
-                      ],
-                    ),
+                        ),
+                    ],
                   ),
                   const SizedBox(width: 16),
                   Expanded(
