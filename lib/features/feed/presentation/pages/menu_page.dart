@@ -570,7 +570,7 @@ if(false)
             const SizedBox(height: 12),
 
             // ================== ADVERTISING SECTION ==================
-            Container(
+            /*Container(
               margin: const EdgeInsets.only(bottom: 8),
               child: GestureDetector(
                 onTap: () => _toggleSection('advertising'),
@@ -636,7 +636,7 @@ if(false)
                   ],
                 ),
               ),
-            ),
+            ),*/
 
             // Advertising Section Content
             if (_isAdvertisingExpanded) ...[

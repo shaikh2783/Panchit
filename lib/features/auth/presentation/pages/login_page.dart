@@ -1,5 +1,5 @@
-import 'dart:ui';
 import 'dart:math' as math;
+import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,7 +27,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   final _identityController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
-  static const String _deviceType = 'A';
+
+  String get _deviceType =>
+      defaultTargetPlatform == TargetPlatform.iOS ? 'I' : 'A';
 
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: ['email', 'profile', 'openid'],
@@ -178,6 +180,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       final serverAuthCode = googleUser.serverAuthCode; // قد يكون موجود بدلاً من idToken
       
       
+      if (!mounted) return;
       final authNotifier = context.read<AuthNotifier>();
       print('idToken: ${googleUser.email}');
       print('serverAuthCode: $serverAuthCode');
@@ -226,7 +229,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           ),
         );
       }
-    } catch (error, stackTrace) {
+    } catch (error) {
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -254,17 +257,50 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
 
       final userId = credential.userIdentifier;
       if (userId == null) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Apple Sign-In did not return a valid user.'),
+            backgroundColor: const Color(0xFFEF4444),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            margin: const EdgeInsets.all(16),
+          ),
+        );
         return;
       }
 
+      final identityToken = credential.identityToken;
+      if (identityToken == null || identityToken.isEmpty) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text(
+              'Apple Sign-In did not return an identity token.',
+            ),
+            backgroundColor: const Color(0xFFEF4444),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            margin: const EdgeInsets.all(16),
+          ),
+        );
+        return;
+      }
+
+      if (!mounted) return;
       final authNotifier = context.read<AuthNotifier>();
       final AuthResponse? response = await authNotifier.signInWithApple(
         appleId: userId,
         email: credential.email,
         firstName: credential.givenName,
         lastName: credential.familyName,
-        identityToken: credential.identityToken,
-        deviceType: _deviceType,
+        identityToken: identityToken,
+        deviceType: 'I',
+        deviceName: 'iPhone',
       );
 
       if (!mounted) return;
@@ -436,14 +472,17 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                 _buildLoginButton(isLoading),
                                 const SizedBox(height: 20),
 
-                                if (AppSettings.enableGoogleSignIn) ...[
+                                if (AppSettings.enableGoogleSignIn &&
+                                    defaultTargetPlatform ==
+                                        TargetPlatform.android) ...[
                                   _buildDivider(),
                                   const SizedBox(height: 20),
-                                  if (isIOS) ...[
-                                    _buildAppleSignInButton(isLoading),
-                                    const SizedBox(height: 12),
-                                  ],
                                   _buildGoogleSignInButton(isLoading),
+                                  const SizedBox(height: 20),
+                                ] else if (isIOS) ...[
+                                  _buildDivider(),
+                                  const SizedBox(height: 20),
+                                  _buildAppleSignInButton(isLoading),
                                   const SizedBox(height: 20),
                                 ],
 

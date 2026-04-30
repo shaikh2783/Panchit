@@ -36,6 +36,12 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
+  // App-session cache of deleted message IDs, keyed by conversationId.
+  static final Map<String, Set<int>> _deletedMsgCache = {};
+
+  Set<int> get _deletedIds =>
+      _deletedMsgCache.putIfAbsent(widget.conversationId, () => {});
+
   final _scrollController = ScrollController();
   final _messageController = TextEditingController();
   final _imagePicker = ImagePicker();
@@ -152,12 +158,16 @@ class _ChatPageState extends State<ChatPage> {
       final messages = result['messages'] as List<dynamic>? ?? [];
 
       if (messages.isNotEmpty && messages.first is MessageModel) {
-        final newMessages = List<MessageModel>.from(messages.reversed);
+        final newMessages = List<MessageModel>.from(messages.reversed)
+            .where((m) => !_deletedIds.contains(m.messageId))
+            .toList();
 
-        setState(() {
-          // إضافة الرسائل الجديدة في البداية (لأن reverse: true)
-          _messages.insertAll(0, newMessages);
-        });
+        if (newMessages.isNotEmpty) {
+          setState(() {
+            // إضافة الرسائل الجديدة في البداية (لأن reverse: true)
+            _messages.insertAll(0, newMessages);
+          });
+        }
       }
     } catch (e) {
     }
@@ -181,9 +191,10 @@ class _ChatPageState extends State<ChatPage> {
 
         if (messages.isNotEmpty) {
           if (messages.first is MessageModel) {
-            final msg = messages.first as MessageModel;
             // عكس الترتيب: الرسائل الأحدث أولاً (لتظهر في الأسفل مع reverse: true)
-            _messages = List<MessageModel>.from(messages.reversed);
+            _messages = List<MessageModel>.from(messages.reversed)
+                .where((m) => !_deletedIds.contains(m.messageId))
+                .toList();
             _page = 1; // الصفحة التالية ستكون 1
             _hasMore = hasMore;
           } else {
@@ -666,11 +677,11 @@ class _ChatPageState extends State<ChatPage> {
 
   Future<void> _deleteMessage(MessageModel message) async {
     final ok = await _apiService.deleteMessage(
-      conversationId: widget.conversationId,
       messageId: message.messageId,
     );
 
     if (ok) {
+      _deletedIds.add(message.messageId);
       setState(() {
         _messages.removeWhere(
           (m) => m.messageId == message.messageId,
