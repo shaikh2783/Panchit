@@ -14,7 +14,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 /// 🎨 Modern Sign Up Page with Translation Support
 class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+  const SignUpPage({super.key, this.addAccountMode = false});
+
+  final bool addAccountMode;
 
   @override
   State<SignUpPage> createState() => _SignUpPageState();
@@ -142,7 +144,10 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const GettingStartedPage()),
+        MaterialPageRoute(
+          builder: (context) =>
+              GettingStartedPage(addAccountMode: widget.addAccountMode),
+        ),
       );
     } else {
       final error = authNotifier.errorMessage ?? 'registration_failed'.tr;
@@ -467,7 +472,7 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
         ),
         const SizedBox(height: 6),
         Text(
-          'start_journey'.tr,
+          widget.addAccountMode ? 'Create another account with a new token' : 'start_journey'.tr,
           style: TextStyle(
             fontSize: 14,
             color: isDark
@@ -1038,7 +1043,10 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const LoginPage()),
+              MaterialPageRoute(
+                builder: (context) =>
+                    LoginPage(addAccountMode: widget.addAccountMode),
+              ),
             );
           },
           style: TextButton.styleFrom(

@@ -36,6 +36,7 @@ import 'package:snginepro/features/people/presentation/pages/people_page.dart';
 import 'package:snginepro/features/feed/presentation/pages/watch_posts_page.dart';
 import 'package:snginepro/features/movies/presentation/pages/movies_list_page.dart';
 import 'package:snginepro/features/ai_chat/pages/ai_chat_page.dart';
+import 'package:snginepro/features/auth/presentation/pages/login_page.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({super.key, this.onNavigateToTab});
@@ -144,6 +145,8 @@ class _MenuPageState extends State<MenuPage> {
                   child: Column(
                     children: [
                       const _UserProfileCard(),
+                      const SizedBox(height: 12),
+                      const _AccountsCard(),
                       const SizedBox(height: 16),
                       _GlassySearch(controller: _searchCtrl),
                     ],
@@ -1507,30 +1510,46 @@ class _LogoutButton extends StatelessWidget {
 
   void _showLogoutDialog(BuildContext context) {
     HapticFeedback.heavyImpact();
+    final authNotifier = context.read<AuthNotifier>();
+    final hasOtherAccounts = authNotifier.savedAccounts.length > 1;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text('menu_sign_out'.tr),
-        content: Text('menu_sign_out_confirm'.tr),
+        content: Text(
+          hasOtherAccounts
+              ? 'This signs out only the current account on this device.'
+              : 'menu_sign_out_confirm'.tr,
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text('menu_sign_out_cancel'.tr),
           ),
+          if (hasOtherAccounts)
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                _performLogout(context, signOutAll: true);
+              },
+              child: const Text('Sign out all'),
+            ),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
               _performLogout(context);
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: Text('menu_sign_out'.tr),
+            child: Text(
+              hasOtherAccounts ? 'Sign out current' : 'menu_sign_out'.tr,
+            ),
           ),
         ],
       ),
     );
   }
 
-  void _performLogout(BuildContext context) async {
+  void _performLogout(BuildContext context, {bool signOutAll = false}) async {
     try {
       final navigator = Navigator.of(context);
       final messenger = ScaffoldMessenger.of(context);
@@ -1542,7 +1561,11 @@ class _LogoutButton extends StatelessWidget {
       );
 
       final authNotifier = context.read<AuthNotifier>();
-      await authNotifier.signOut();
+      if (signOutAll) {
+        await authNotifier.signOutAllAccounts();
+      } else {
+        await authNotifier.signOutCurrentAccount();
+      }
 
       // Close the loading dialog first
       navigator.pop();
@@ -1566,6 +1589,237 @@ class _LogoutButton extends StatelessWidget {
         );
       }
     }
+  }
+}
+
+class _AccountsCard extends StatelessWidget {
+  const _AccountsCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final auth = context.watch<AuthNotifier>();
+    final active = auth.activeAccount;
+    final accountCountLabel = auth.savedAccounts.length == 1
+        ? '1 saved account'
+        : '${auth.savedAccounts.length} saved accounts';
+
+    return GradientCard(
+      margin: const EdgeInsets.symmetric(vertical: 4),
+      borderRadius: Radii.xLarge,
+      padding: const EdgeInsets.all(16),
+      gradientColors: const [Color(0xFF4568DC), Color(0xFFB06AB3)],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Iconsax.profile_2user, color: Colors.white),
+              const SizedBox(width: 10),
+              const Expanded(
+                child: Text(
+                  'Accounts',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+              Text(
+                accountCountLabel,
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.9),
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          if (active != null)
+            Row(
+              children: [
+                _AccountAvatar(imageUrl: active.avatarUrl),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        active.displayName ?? active.username ?? 'Current account',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      Text(
+                        active.username != null
+                            ? '@${active.username}'
+                            : (active.email ?? 'Signed in'),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.85),
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          const SizedBox(height: 14),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: () => _showAccountsSheet(context),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    side: BorderSide(color: Colors.white.withOpacity(0.35)),
+                  ),
+                  icon: const Icon(Iconsax.repeat_circle, size: 18),
+                  label: const Text('Switch'),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: FilledButton.icon(
+                  onPressed: () => _addAccount(context),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: const Color(0xFF5B4B8A),
+                  ),
+                  icon: const Icon(Iconsax.add_circle, size: 18),
+                  label: const Text('Add Account'),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _addAccount(BuildContext context) async {
+    final result = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const LoginPage(addAccountMode: true),
+      ),
+    );
+
+    if (result == true && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Account added successfully')),
+      );
+    }
+  }
+
+  void _showAccountsSheet(BuildContext context) {
+    final auth = context.read<AuthNotifier>();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (sheetContext) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Switch Account',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                ),
+                const SizedBox(height: 12),
+                Flexible(
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    itemCount: auth.savedAccounts.length,
+                    separatorBuilder: (_, __) => const Divider(height: 1),
+                    itemBuilder: (context, index) {
+                      final account = auth.savedAccounts[index];
+                      final isActive = account.accountId == auth.activeAccountId;
+                      return ListTile(
+                        leading: _AccountAvatar(imageUrl: account.avatarUrl),
+                        title: Text(
+                          account.displayName ?? account.username ?? 'Account',
+                        ),
+                        subtitle: Text(
+                          account.username != null
+                              ? '@${account.username}'
+                              : (account.email ?? account.userId ?? 'Saved account'),
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (isActive)
+                              const Padding(
+                                padding: EdgeInsets.only(right: 8),
+                                child: Icon(Iconsax.tick_circle, color: Colors.green),
+                              ),
+                            IconButton(
+                              tooltip: 'Remove account',
+                              onPressed: () async {
+                                Navigator.pop(sheetContext);
+                                await auth.removeAccount(account.accountId);
+                              },
+                              icon: const Icon(Iconsax.trash, color: Colors.redAccent),
+                            ),
+                          ],
+                        ),
+                        onTap: isActive
+                            ? () => Navigator.pop(sheetContext)
+                            : () async {
+                                Navigator.pop(sheetContext);
+                                await auth.switchAccount(account.accountId);
+                              },
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.icon(
+                    onPressed: () {
+                      Navigator.pop(sheetContext);
+                      _addAccount(context);
+                    },
+                    icon: const Icon(Iconsax.add_circle),
+                    label: const Text('Add Another Account'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _AccountAvatar extends StatelessWidget {
+  const _AccountAvatar({this.imageUrl});
+
+  final String? imageUrl;
+
+  @override
+  Widget build(BuildContext context) {
+    if (imageUrl != null && imageUrl!.isNotEmpty) {
+      return CircleAvatar(
+        radius: 20,
+        backgroundImage: CachedNetworkImageProvider(imageUrl!),
+      );
+    }
+
+    return const CircleAvatar(
+      radius: 20,
+      child: Icon(Iconsax.user, size: 18),
+    );
   }
 }
 

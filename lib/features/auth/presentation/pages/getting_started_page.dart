@@ -12,7 +12,9 @@ import 'package:snginepro/features/profile/data/services/profile_update_service.
 
 /// 🚀 Getting Started Page - Complete User Profile Setup (Enhanced)
 class GettingStartedPage extends StatefulWidget {
-  const GettingStartedPage({super.key});
+  const GettingStartedPage({super.key, this.addAccountMode = false});
+
+  final bool addAccountMode;
 
   @override
   State<GettingStartedPage> createState() => _GettingStartedPageState();
@@ -292,7 +294,11 @@ class _GettingStartedPageState extends State<GettingStartedPage> with TickerProv
       );
       
       // Navigate to main app
-      Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+      if (widget.addAccountMode) {
+        Navigator.of(context).pop(true);
+      } else {
+        Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+      }
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -312,11 +318,19 @@ class _GettingStartedPageState extends State<GettingStartedPage> with TickerProv
       await authNotifier.finishGettingStarted();
       
       if (!mounted) return;
-      Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+      if (widget.addAccountMode) {
+        Navigator.of(context).pop(true);
+      } else {
+        Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+      }
     } catch (e) {
       // If finish fails, just navigate anyway
       if (!mounted) return;
-      Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+      if (widget.addAccountMode) {
+        Navigator.of(context).pop(true);
+      } else {
+        Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+      }
     }
   }
 

@@ -16,7 +16,9 @@ import 'package:snginepro/features/auth/presentation/pages/forgot_password_page.
 
 /// 🎨 Ultra Modern Login Page - Complete Redesign
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({super.key, this.addAccountMode = false});
+
+  final bool addAccountMode;
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -96,6 +98,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           margin: const EdgeInsets.all(16),
         ),
       );
+      if (widget.addAccountMode) {
+        Navigator.of(context).pop(true);
+      }
     } else {
       final error =
           authNotifier.errorMessage ?? 'login_failed'.tr;
@@ -214,6 +219,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             margin: const EdgeInsets.all(16),
           ),
         );
+        if (widget.addAccountMode) {
+          Navigator.of(context).pop(true);
+        }
       } else {
         final error =
             authNotifier.errorMessage ?? 'Login failed. Please try again.';
@@ -323,6 +331,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             margin: const EdgeInsets.all(16),
           ),
         );
+        if (widget.addAccountMode) {
+          Navigator.of(context).pop(true);
+        }
       } else {
         final error =
             authNotifier.errorMessage ?? 'Login failed. Please try again.';
@@ -598,7 +609,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         ),
         const SizedBox(height: 8),
         Text(
-          'sign_in_continue'.tr,
+          widget.addAccountMode ? 'Add another account' : 'sign_in_continue'.tr,
           style: TextStyle(
             fontSize: 15,
             color: isDark
@@ -1062,7 +1073,10 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const SignUpPage()),
+              MaterialPageRoute(
+                builder: (context) =>
+                    SignUpPage(addAccountMode: widget.addAccountMode),
+              ),
             );
           },
           style: TextButton.styleFrom(
@@ -1082,7 +1096,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             ),
           ),
           child: Text(
-            'create_account'.tr,
+            widget.addAccountMode ? 'Create another account' : 'create_account'.tr,
             style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
           ),
         ),
