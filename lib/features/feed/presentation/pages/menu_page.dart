@@ -37,6 +37,7 @@ import 'package:snginepro/features/feed/presentation/pages/watch_posts_page.dart
 import 'package:snginepro/features/movies/presentation/pages/movies_list_page.dart';
 import 'package:snginepro/features/ai_chat/pages/ai_chat_page.dart';
 import 'package:snginepro/features/auth/presentation/pages/login_page.dart';
+import 'package:snginepro/features/competitions/presentation/pages/competitions_hub_page.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({super.key, this.onNavigateToTab});
@@ -1085,6 +1086,23 @@ if(false)
                               );
                             },
                           ),
+                        _FeedItem(
+                          icon: Iconsax.cup,
+                          label: 'competitions',
+                          gradient: const [
+                            Color(0xFF7C3AED),
+                            Color(0xFF0EA5E9),
+                          ],
+                          onTap: () {
+                            _hapticTap();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const CompetitionsHubPage(),
+                              ),
+                            );
+                          },
+                        ),
 
                         if (AppSettings.enableCourses)
                           _FeedItem(

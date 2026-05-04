@@ -36,6 +36,7 @@ import '../../../friends/data/models/friendship_model.dart';
 import '../../../friends/data/services/friends_api_service.dart';
 import '../widgets/profile_completion_card.dart';
 import 'profile_edit_page.dart';
+import 'package:snginepro/features/competitions/presentation/widgets/competition_widgets.dart';
 
 class ProfilePage extends StatefulWidget {
   final String? username;
@@ -336,6 +337,10 @@ class _ProfilePageState extends State<ProfilePage>
     ProfileRelationship relationship,
     ProfileStats stats,
   ) {
+    final achievementTags = profile.achievementTags.isNotEmpty
+        ? profile.achievementTags
+        : (_profileData?.achievementTags ?? const <String>[]);
+
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -487,6 +492,17 @@ class _ProfilePageState extends State<ProfilePage>
                             fontSize: 14,
                           ),
                         ),
+                        if (achievementTags.isNotEmpty) ...[
+                          const SizedBox(height: 10),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: achievementTags
+                                .take(3)
+                                .map((tag) => ProfileAchievementTag(label: tag))
+                                .toList(growable: false),
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -1159,6 +1175,9 @@ class _ProfilePageState extends State<ProfilePage>
 
   // About
   Widget _buildAboutTab(UserProfile profile) {
+    final achievementTags = profile.achievementTags.isNotEmpty
+        ? profile.achievementTags
+        : (_profileData?.achievementTags ?? const <String>[]);
     final hasWork =
         (profile.work.title?.isNotEmpty ?? false) ||
         (profile.work.place?.isNotEmpty ?? false) ||
@@ -1176,6 +1195,22 @@ class _ProfilePageState extends State<ProfilePage>
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
+        if (achievementTags.isNotEmpty) ...[
+          _InfoCard(
+            title: 'Achievements',
+            icon: Iconsax.cup,
+            children: [
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: achievementTags
+                    .map((tag) => ProfileAchievementTag(label: tag))
+                    .toList(growable: false),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+        ],
         if ((profile.about ?? '').isNotEmpty) ...[
           _InfoCard(
             title: 'profile_about_title'.tr,
