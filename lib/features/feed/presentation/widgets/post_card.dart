@@ -24,7 +24,6 @@ import 'package:snginepro/features/feed/data/models/post_funding.dart';
 import 'package:snginepro/features/feed/data/models/post_offer.dart';
 import 'package:snginepro/features/feed/data/models/post_colored_pattern.dart';
 import 'package:snginepro/features/feed/data/models/post_live.dart';
-import 'package:snginepro/features/feed/data/models/post_media.dart';
 import 'package:snginepro/features/feed/data/services/adult_content_service.dart'; // 🆕 خدمة محتوى البالغين
 import 'package:snginepro/features/feed/presentation/widgets/course_card.dart';
 import 'package:video_player/video_player.dart';
@@ -35,7 +34,6 @@ import 'package:snginepro/features/offers/presentation/pages/offer_detail_page.d
 import 'package:snginepro/features/funding/presentation/pages/funding_detail_page.dart';
 import 'package:snginepro/features/funding/presentation/pages/funding_donate_page.dart';
 import 'package:snginepro/features/wallet/presentation/pages/wallet_packages_page.dart';
-import 'package:video_player/video_player.dart';
 import '../../../agora/presentation/pages/live_stream_viewer_page.dart';
 import 'package:snginepro/features/feed/presentation/widgets/adaptive_video_player.dart';
 import 'package:snginepro/features/feed/presentation/widgets/post_audio_widget.dart';
@@ -61,6 +59,8 @@ import 'package:snginepro/features/wallet/data/services/wallet_api_service.dart'
 import 'package:snginepro/features/wallet/domain/wallet_repository.dart';
 import 'package:snginepro/features/wallet/presentation/pages/wallet_page.dart';
 import 'package:snginepro/features/blog/presentation/pages/blog_post_page.dart';
+import 'package:snginepro/features/competitions/presentation/pages/competition_detail_page.dart';
+import 'package:snginepro/features/competitions/presentation/widgets/competition_widgets.dart';
 import 'package:snginepro/features/feed/presentation/widgets/share_post_dialog.dart';
 import 'package:snginepro/features/feed/presentation/widgets/post_reviews_bottom_sheet.dart';
 import 'package:snginepro/features/messenger/presentation/pages/chat_page.dart';
@@ -259,6 +259,43 @@ class _PostCardState extends State<PostCard>
     _adsTrackingService = AdsTrackingService(apiClient);
 
     await _adsTrackingService.trackAdClick(_currentPost.campaignId!);
+  }
+
+  bool get _isCompetitionPost =>
+      _currentPost.isCompetitionEntry || _currentPost.competitionId != null;
+
+  bool get _isCompetitionWinner =>
+      _currentPost.isWinner ||
+      ((_currentPost.winnerRank ?? _currentPost.competitionRank) != null &&
+          (_currentPost.winnerRank ?? _currentPost.competitionRank)! <= 3);
+
+  int? get _winnerRank =>
+      _currentPost.winnerRank ?? _currentPost.competitionRank;
+
+  bool get _showActiveCompetitionBadge {
+    if (!_isCompetitionPost || _isCompetitionWinner) {
+      return false;
+    }
+
+    final status = (_currentPost.competitionStatus ?? '').toLowerCase();
+    if (status.isEmpty) {
+      return true;
+    }
+
+    return !status.contains('completed') &&
+        !status.contains('cancelled') &&
+        !status.contains('winner');
+  }
+
+  void _openCompetitionDetails() {
+    final competitionId = _currentPost.competitionId;
+    if (competitionId == null) return;
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => CompetitionDetailPage(competitionId: competitionId),
+      ),
+    );
   }
 
   // Unlock a paid post via wallet
@@ -1910,13 +1947,55 @@ class _PostCardState extends State<PostCard>
       return const SizedBox.shrink();
     }
 
-    return ElevatedCard(
-      key: ValueKey('post_card_${_currentPost.id}'),
+    final competitionBorderColor = _showActiveCompetitionBadge
+        ? const Color(0xFF7C3AED).withValues(alpha: 0.35)
+        : _isCompetitionWinner
+        ? const Color(0xFFF59E0B).withValues(alpha: 0.35)
+        : null;
+
+    return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      padding: EdgeInsets.zero,
-      child: Column(
+      decoration: competitionBorderColor == null
+          ? null
+          : BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: competitionBorderColor, width: 1.2),
+              boxShadow: [
+                BoxShadow(
+                  color: competitionBorderColor.withValues(alpha: 0.18),
+                  blurRadius: 18,
+                  spreadRadius: 1,
+                ),
+              ],
+            ),
+      child: ElevatedCard(
+        key: ValueKey('post_card_${_currentPost.id}'),
+        margin: EdgeInsets.zero,
+        padding: EdgeInsets.zero,
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          if (_showActiveCompetitionBadge || _isCompetitionWinner)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+              child: Row(
+                children: [
+                  if (_showActiveCompetitionBadge)
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: CompetitionEntryBadge(
+                          label:
+                              '${_currentPost.competitionName ?? 'Competition'} Entry - Tap to Vote!',
+                          onTap: _openCompetitionDetails,
+                        ),
+                      ),
+                    ),
+                  if (_isCompetitionWinner && _winnerRank != null)
+                    WinnerRankBadge(rank: _winnerRank!, compact: true),
+                ],
+              ),
+            ),
           Padding(
             padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
             child: Row(
@@ -3252,6 +3331,7 @@ class _PostCardState extends State<PostCard>
             ),
           ],
         ],
+        ),
       ),
     );
   }
@@ -6446,125 +6526,6 @@ class _MeritWidget extends StatelessWidget {
             ),
           ],
         ],
-      ),
-    );
-  }
-}
-
-/// Widget لعرض الوسائط (YouTube, Vimeo, إلخ)
-class _MediaWidget extends StatelessWidget {
-  const _MediaWidget({required this.media});
-
-  final PostMedia media;
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(12),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () async {
-            if (media.hasUrl) {
-              final url = Uri.parse(media.sourceUrl!);
-              if (await canLaunchUrl(url)) {
-                await launchUrl(url, mode: LaunchMode.externalApplication);
-              }
-            }
-          },
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              // صورة مصغرة
-              CachedNetworkImage(
-                imageUrl: media.sourceThumbnail!,
-                fit: BoxFit.cover,
-                height: 250,
-                width: double.infinity,
-                placeholder: (context, url) => Container(
-                  height: 250,
-                  color: Colors.grey[300],
-                  child: const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
-                errorWidget: (context, url, error) => Container(
-                  height: 250,
-                  color: Colors.grey[300],
-                  child: Icon(
-                    Iconsax.gallery_slash,
-                    color: Colors.grey[500],
-                  ),
-                ),
-              ),
-              // أيقونة التشغيل
-              Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.7),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Iconsax.play,
-                  color: Colors.white,
-                  size: 28,
-                ),
-              ),
-              // شارة المزود (YouTube, Vimeo, etc.)
-              if (media.sourceProvider != null)
-                Positioned(
-                  top: 12,
-                  right: 12,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.8),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      media.sourceProvider!,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              // العنوان في الأسفل
-              if (media.sourceTitle != null)
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.transparent,
-                          Colors.black.withOpacity(0.8),
-                        ],
-                      ),
-                    ),
-                    child: Text(
-                      media.sourceTitle!,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ),
       ),
     );
   }

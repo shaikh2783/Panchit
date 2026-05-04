@@ -8,7 +8,6 @@ import 'post_live.dart';
 import 'post_audio.dart';
 import 'post_media.dart';
 import 'package:snginepro/features/merits/data/models/merit_models.dart';
-import 'package:flutter/foundation.dart';
 
 class Post {
   Post({
@@ -108,6 +107,14 @@ class Post {
     this.forSubscriptions = false,
     this.postPrice,
     this.paidText,
+    this.isCompetitionEntry = false,
+    this.competitionId,
+    this.competitionName,
+    this.competitionStatus,
+    this.competitionRank,
+    this.competitionCategory,
+    this.isWinner = false,
+    this.winnerRank,
     // 🎖️ MERIT FIELD
     this.merit,
     // ⏱️ VIDEO DURATION (seconds)
@@ -241,6 +248,14 @@ class Post {
   final bool forSubscriptions; // هل الدفع عبر الاشتراكات فقط
   final double? postPrice; // سعر المنشور (إن وجد)
   final String? paidText; // نص المعاينة للمنشور المدفوع
+  final bool isCompetitionEntry;
+  final int? competitionId;
+  final String? competitionName;
+  final String? competitionStatus;
+  final int? competitionRank;
+  final String? competitionCategory;
+  final bool isWinner;
+  final int? winnerRank;
 
   // 🎖️ MERIT FIELD
   final Merit? merit; // معلومات الجدارة إذا كان المنشور عن جدارة
@@ -528,6 +543,28 @@ class Post {
           ? _double(productObj['price'])
           : _double(json['post_price']),
         paidText: _string(json['paid_text']),
+        isCompetitionEntry:
+            _bool(json['is_competition_entry']) ||
+            _bool(json['competition_entry']) ||
+            _int(json['competition_id']) > 0,
+        competitionId:
+            _int(json['competition_id']) != 0 ? _int(json['competition_id']) : null,
+        competitionName:
+            _string(json['competition_name']) ?? _string(json['contest_name']),
+        competitionStatus:
+            _string(json['competition_status']) ?? _string(json['contest_status']),
+        competitionRank: _int(
+                  json['competition_rank'] ?? json['entry_rank'],
+                ) !=
+                0
+            ? _int(json['competition_rank'] ?? json['entry_rank'])
+            : null,
+        competitionCategory:
+            _string(json['competition_category']) ??
+            _string(json['contest_category']),
+        isWinner: _bool(json['is_winner']) || _int(json['winner_rank']) > 0,
+        winnerRank:
+            _int(json['winner_rank']) != 0 ? _int(json['winner_rank']) : null,
         // 🎖️ MERIT SUPPORT
         merit: json['merit'] != null
             ? Merit.fromJson(json['merit'] as Map<String, dynamic>)
@@ -547,7 +584,7 @@ class Post {
               )
             : null,
       );
-    } catch (e, stackTrace) {
+    } catch (e) {
       rethrow; // Re-throw to let the caller handle it
     }
   }
@@ -654,6 +691,14 @@ class Post {
     bool? forSubscriptions,
     double? postPrice,
     String? paidText,
+    bool? isCompetitionEntry,
+    int? competitionId,
+    String? competitionName,
+    String? competitionStatus,
+    int? competitionRank,
+    String? competitionCategory,
+    bool? isWinner,
+    int? winnerRank,
     // 🎖️ MERIT PARAMETER
     Merit? merit,
     // ⏱️ VIDEO DURATION
@@ -767,6 +812,14 @@ class Post {
       forSubscriptions: forSubscriptions ?? this.forSubscriptions,
       postPrice: postPrice ?? this.postPrice,
       paidText: paidText ?? this.paidText,
+      isCompetitionEntry: isCompetitionEntry ?? this.isCompetitionEntry,
+      competitionId: competitionId ?? this.competitionId,
+      competitionName: competitionName ?? this.competitionName,
+      competitionStatus: competitionStatus ?? this.competitionStatus,
+      competitionRank: competitionRank ?? this.competitionRank,
+      competitionCategory: competitionCategory ?? this.competitionCategory,
+      isWinner: isWinner ?? this.isWinner,
+      winnerRank: winnerRank ?? this.winnerRank,
       // 🎖️ MERIT FIELD
       merit: merit ?? this.merit,
       // ⏱️ VIDEO DURATION
@@ -1037,6 +1090,14 @@ class Post {
       forSubscriptions: forSubscriptions,
       postPrice: postPrice,
       paidText: paidText,
+      isCompetitionEntry: isCompetitionEntry,
+      competitionId: competitionId,
+      competitionName: competitionName,
+      competitionStatus: competitionStatus,
+      competitionRank: competitionRank,
+      competitionCategory: competitionCategory,
+      isWinner: isWinner,
+      winnerRank: winnerRank,
       // 🎖️ MERIT FIELD - الحفاظ على بيانات الجدارة
       merit: merit,
       // ⏱️ VIDEO DURATION

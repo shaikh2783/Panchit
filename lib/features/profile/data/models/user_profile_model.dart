@@ -145,6 +145,7 @@ class UserProfile {
   final LocationInfo location;
   final EducationInfo education;
   final SocialLinks socialLinks;
+  final List<String> achievementTags;
 
   UserProfile({
     required this.id,
@@ -168,6 +169,7 @@ class UserProfile {
     required this.location,
     required this.education,
     required this.socialLinks,
+    this.achievementTags = const <String>[],
   });
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
@@ -208,6 +210,16 @@ class UserProfile {
       location: LocationInfo.fromJson(profile['location'] ?? {}),
       education: EducationInfo.fromJson(profile['education'] ?? {}),
       socialLinks: SocialLinks.fromJson(profile['social_links'] ?? {}),
+      achievementTags: _parseTags(
+        profile['winner_tags'] ??
+            profile['profile_tags'] ??
+            profile['achievement_tags'] ??
+            profile['category_tags'] ??
+            json['winner_tags'] ??
+            json['profile_tags'] ??
+            json['achievement_tags'] ??
+            json['category_tags'],
+      ),
     );
   }
 }
@@ -309,6 +321,7 @@ class UserProfileResponse {
   final Map<String, dynamic> privacy;
   final List<Address> addresses;
   final Map<String, String?> socialLinks;
+  final List<String> achievementTags;
 
   UserProfileResponse({
     required this.profile,
@@ -317,6 +330,7 @@ class UserProfileResponse {
     required this.privacy,
     required this.addresses,
     required this.socialLinks,
+    this.achievementTags = const <String>[],
   });
 
   factory UserProfileResponse.fromJson(Map<String, dynamic> json) {
@@ -331,6 +345,41 @@ class UserProfileResponse {
               .toList() ??
           [],
       socialLinks: Map<String, String?>.from(data['social_links'] ?? {}),
+      achievementTags: _parseTags(
+        data['winner_tags'] ??
+            data['profile_tags'] ??
+            data['achievement_tags'] ??
+            data['category_tags'],
+      ),
     );
   }
+}
+
+List<String> _parseTags(Object? value) {
+  if (value is List) {
+    return value
+        .map((item) {
+          if (item is Map<String, dynamic>) {
+            return item['title']?.toString() ??
+                item['name']?.toString() ??
+                item['label']?.toString() ??
+                item['tag']?.toString() ??
+                '';
+          }
+          return item?.toString() ?? '';
+        })
+        .map((item) => item.trim())
+        .where((item) => item.isNotEmpty)
+        .toList(growable: false);
+  }
+
+  if (value is String && value.trim().isNotEmpty) {
+    return value
+        .split(',')
+        .map((item) => item.trim())
+        .where((item) => item.isNotEmpty)
+        .toList(growable: false);
+  }
+
+  return const <String>[];
 }
