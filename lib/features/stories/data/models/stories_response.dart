@@ -1,4 +1,5 @@
 import 'package:snginepro/features/stories/data/models/story.dart';
+import 'package:flutter/foundation.dart';
 
 class StoriesResponse {
   StoriesResponse({
@@ -14,16 +15,22 @@ class StoriesResponse {
   bool get isSuccess => status == 200;
 
   factory StoriesResponse.fromJson(Map<String, dynamic> json) {
-    // Handle status - can be String ("success") or int (200)
     int status = 0;
-    final statusValue = json['code'] ?? json['status'];
-    if (statusValue is int) {
-      status = statusValue;
-    } else if (statusValue is String) {
-      // If status is "success", treat as 200
-      status = statusValue == 'success' ? 200 : 0;
+    final rawStatus = json['code'] ?? json['status'] ?? json['api_status'];
+    if (rawStatus is int) {
+      status = rawStatus;
+    } else if (rawStatus is String) {
+      final normalized = rawStatus.toLowerCase();
+      if (normalized == 'success' || normalized == 'ok') {
+        status = 200;
+      } else {
+        final parsed = int.tryParse(rawStatus);
+        if (parsed != null) {
+          status = parsed;
+        }
+      }
     }
-    
+
     final message = json['message'] as String?;
 
     final storiesList = <Story>[];
@@ -54,6 +61,10 @@ class StoriesResponse {
           }
         }
       }
+    }
+
+    if (status == 0 && (storiesList.isNotEmpty || json['data'] != null)) {
+      status = 200;
     }
 
     return StoriesResponse(

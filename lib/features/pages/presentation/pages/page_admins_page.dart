@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:get/get.dart';
 import '../../../../core/network/api_client.dart';
 import '../../data/models/invitable_friend.dart';
 import '../../data/services/page_invitations_service.dart';
@@ -83,7 +84,7 @@ class _PageAdminsPageState extends State<PageAdminsPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('فشل تحميل المعجبين'),
+            content: Text('page_admins_failed_load'.tr),
             backgroundColor: Colors.red,
           ),
         );
@@ -154,7 +155,9 @@ class _PageAdminsPageState extends State<PageAdminsPage> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('تم إزالة ${friend.fullName} من المديرين'),
+              content: Text(
+                'page_admins_removed_admin'.trParams({'name': friend.fullName}),
+              ),
               backgroundColor: Colors.orange,
               duration: Duration(seconds: 2),
             ),
@@ -170,7 +173,9 @@ class _PageAdminsPageState extends State<PageAdminsPage> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('تم إضافة ${friend.fullName} كمدير'),
+              content: Text(
+                'page_admins_added_admin'.trParams({'name': friend.fullName}),
+              ),
               backgroundColor: Colors.green,
               duration: Duration(seconds: 2),
             ),
@@ -188,7 +193,7 @@ class _PageAdminsPageState extends State<PageAdminsPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('حدث خطأ أثناء العملية'),
+            content: Text('page_admins_error_operation'.tr),
             backgroundColor: Colors.red,
           ),
         );
@@ -208,7 +213,7 @@ class _PageAdminsPageState extends State<PageAdminsPage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'مديري الصفحة',
+              'page_admins_title'.tr,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             Text(
@@ -239,12 +244,12 @@ class _PageAdminsPageState extends State<PageAdminsPage> {
             ),
             SizedBox(height: 16),
             Text(
-              'لا يوجد معجبين',
+              'page_admins_no_likers'.tr,
               style: TextStyle(fontSize: 18, color: Colors.grey),
             ),
             SizedBox(height: 8),
             Text(
-              'يمكنك ترقية المعجبين بالصفحة إلى مديرين',
+              'page_admins_promote_hint'.tr,
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 14, color: Colors.grey[600]),
             ),
@@ -320,7 +325,7 @@ class _PageAdminsPageState extends State<PageAdminsPage> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      'مدير',
+                      'page_admins_badge_admin'.tr,
                       style: TextStyle(
                         color: Colors.blue[900],
                         fontSize: 12,
@@ -341,12 +346,12 @@ class _PageAdminsPageState extends State<PageAdminsPage> {
                 ? IconButton(
                     icon: Icon(Icons.remove_circle, color: Colors.red),
                     onPressed: () => _toggleAdmin(friend, true),
-                    tooltip: 'إزالة من المديرين',
+                    tooltip: 'page_admins_remove_tooltip'.tr,
                   )
                 : IconButton(
                     icon: Icon(Icons.add_circle, color: Colors.green),
                     onPressed: () => _toggleAdmin(friend, false),
-                    tooltip: 'إضافة كمدير',
+                    tooltip: 'page_admins_add_tooltip'.tr,
                   ),
           ),
         );

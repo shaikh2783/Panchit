@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 
 import 'package:snginepro/core/theme/app_colors.dart';
+import 'package:snginepro/core/utils/html_decoder.dart';
 import 'package:snginepro/features/pages/domain/pages_repository.dart';
 import 'package:snginepro/features/pages/data/models/page.dart';
 import 'package:snginepro/features/pages/data/models/page_category.dart';
@@ -402,7 +403,7 @@ class _PageSettingsPageState extends State<PageSettingsPage>
                 items: _categories.map((cat) {
                   return DropdownMenuItem<int>(
                     value: cat.categoryId,
-                    child: Text(cat.categoryName),
+                    child: Text(HtmlDecoder.decode(cat.categoryName)),
                   );
                 }).toList(),
                 onChanged: _categories.isEmpty ? null : (value) => setState(() => _selectedCategory = value),

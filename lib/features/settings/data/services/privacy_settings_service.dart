@@ -1,6 +1,7 @@
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
 import '../models/privacy_settings_model.dart';
+import 'package:flutter/foundation.dart';
 
 /// خدمة إدارة إعدادات الخصوصية والإشعارات
 class PrivacySettingsService {

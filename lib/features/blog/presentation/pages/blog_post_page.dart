@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:snginepro/core/utils/html_decoder.dart';
 import '../../../../core/theme/ui_constants.dart';
 import '../../../../core/widgets/html_text_widget.dart';
 import '../../../../core/widgets/skeletons.dart';
@@ -326,7 +327,7 @@ class _BlogPostPageState extends State<BlogPostPage> {
                         size: 14, color: Colors.white),
                     SizedBox(width: UI.xs),
                     Text(
-                      p.categoryName,
+                      HtmlDecoder.decode(p.categoryName),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 12,

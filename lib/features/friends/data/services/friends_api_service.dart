@@ -22,6 +22,7 @@ class FriendsApiService {
         body: {'user_id': userId},
       );
       
+      
       if (response['status'] == 'success') {
         return FriendActionResult.success(
           response['message'] ?? 'Friend request sent successfully',

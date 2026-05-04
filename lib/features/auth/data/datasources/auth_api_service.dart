@@ -86,4 +86,43 @@ class AuthApiService {
     final response = await _client.post('/data/auth/google', body: body);
     return AuthResponse.fromJson(response);
   }
+
+  Future<AuthResponse> signInWithApple({
+    required String appleId,
+    String? email,
+    String? firstName,
+    String? lastName,
+    String? identityToken,
+    String deviceType = 'A',
+    String? deviceOsVersion,
+    String? deviceName,
+  }) async {
+    final body = <String, dynamic>{
+      'apple_id': appleId,
+      'device_type': deviceType,
+    };
+
+    if (email != null && email.isNotEmpty) body['email'] = email;
+    if (firstName != null && firstName.isNotEmpty) {
+      body['first_name'] = firstName;
+    }
+    if (lastName != null && lastName.isNotEmpty) body['last_name'] = lastName;
+    if (identityToken != null && identityToken.isNotEmpty) {
+      body['identity_token'] = identityToken;
+    }
+    if (deviceOsVersion != null && deviceOsVersion.isNotEmpty) {
+      body['device_os_version'] = deviceOsVersion;
+    }
+    if (deviceName != null && deviceName.isNotEmpty) {
+      body['device_name'] = deviceName;
+    }
+
+    final response = await _client.post('/data/auth/apple', body: body);
+    return AuthResponse.fromJson(response);
+  }
+
+  /// يجلب ملخص المستخدم الحالي (نقاط، متابعين، متابَعين...)
+  Future<Map<String, dynamic>> fetchCurrentUserSummary() async {
+    return _client.get('/data/me/summary');
+  }
 }

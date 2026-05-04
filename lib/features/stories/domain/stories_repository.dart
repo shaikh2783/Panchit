@@ -16,11 +16,20 @@ class StoriesRepository {
     String? imagePath,
     String? videoPath,
     String? text,
+    bool isCommentEnable = true,
+    bool isReactionEnable = true,
   }) {
     return _apiService.createStory(
       imagePath: imagePath,
       videoPath: videoPath,
       text: text,
+      isCommentEnable: isCommentEnable,
+      isReactionEnable: isReactionEnable,
     );
+  }
+
+  /// Delete a specific story by mediaId, or all stories if mediaId is null
+  Future<Map<String, dynamic>> deleteStory({String? mediaId}) {
+    return _apiService.deleteStory(mediaId: mediaId);
   }
 }

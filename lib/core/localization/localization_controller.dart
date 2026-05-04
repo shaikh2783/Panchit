@@ -1,6 +1,9 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../features/settings/data/services/language_api_service.dart';
+import '../../main.dart' show globalApiClient;
+import '../services/reactions_service.dart';
 
 class LocalizationController extends GetxController {
   static LocalizationController get instance => Get.find();
@@ -180,16 +183,16 @@ class LocalizationController extends GetxController {
       locale: Locale('pt', 'PT'),
       flag: '🇵🇹',
       nameKey: 'portuguese',
-      nativeName: 'Português',
-      subtitle: 'Português - Portugal',
+      nativeName: 'Portuguese',
+      subtitle: 'Portuguese - Portugal',
     ),
     LanguageOption(
       code: 'pt_BR',
       locale: Locale('pt', 'BR'),
       flag: '🇧🇷',
       nameKey: 'portuguese_br',
-      nativeName: 'Português (Brasil)',
-      subtitle: 'Português - Brazil',
+      nativeName: 'Portuguese (Brazil)',
+      subtitle: 'Portuguese - Brazil',
     ),
     LanguageOption(
       code: 'de_DE',
@@ -197,7 +200,7 @@ class LocalizationController extends GetxController {
       flag: '🇩🇪',
       nameKey: 'german',
       nativeName: 'Deutsch',
-      subtitle: 'Deutsch - Germany',
+      subtitle: 'Deutsch - Deutschland',
     ),
     LanguageOption(
       code: 'tr_TR',
@@ -205,7 +208,7 @@ class LocalizationController extends GetxController {
       flag: '🇹🇷',
       nameKey: 'turkish',
       nativeName: 'Türkçe',
-      subtitle: 'Türkçe - Turkey',
+      subtitle: 'Türkçe - Türkiye',
     ),
     LanguageOption(
       code: 'nl_NL',
@@ -213,7 +216,7 @@ class LocalizationController extends GetxController {
       flag: '🇳🇱',
       nameKey: 'dutch',
       nativeName: 'Nederlands',
-      subtitle: 'Nederlands - Netherlands',
+      subtitle: 'Nederlands - Nederland',
     ),
     LanguageOption(
       code: 'it_IT',
@@ -221,7 +224,7 @@ class LocalizationController extends GetxController {
       flag: '🇮🇹',
       nameKey: 'italian',
       nativeName: 'Italiano',
-      subtitle: 'Italiano - Italy',
+      subtitle: 'Italiano - Italia',
     ),
     LanguageOption(
       code: 'ru_RU',
@@ -229,7 +232,7 @@ class LocalizationController extends GetxController {
       flag: '🇷🇺',
       nameKey: 'russian',
       nativeName: 'Русский',
-      subtitle: 'Русский - Russia',
+      subtitle: 'Русский - Россия',
     ),
     LanguageOption(
       code: 'ro_RO',
@@ -237,7 +240,7 @@ class LocalizationController extends GetxController {
       flag: '🇷🇴',
       nameKey: 'romanian',
       nativeName: 'Română',
-      subtitle: 'Română - Romania',
+      subtitle: 'Română - România',
     ),
     LanguageOption(
       code: 'el_GR',
@@ -245,7 +248,7 @@ class LocalizationController extends GetxController {
       flag: '🇬🇷',
       nameKey: 'greek',
       nativeName: 'Ελληνικά',
-      subtitle: 'Ελληνικά - Greece',
+      subtitle: 'Ελληνικά - Ελλάδα',
     ),
   ];
 
@@ -270,6 +273,35 @@ class LocalizationController extends GetxController {
     Get.updateLocale(locale);
 
     _saveLocaleToPrefs(normalizedCode);
+    
+    // 🔄 إعادة تحميل التفاعلات بالغة الجديدة (x-lang header سيُرسل تلقائياً)
+    _refreshReactionsForNewLanguage();
+    
+    // 🌐 Update language on server (optional - for email notifications, push notifications, etc.)
+    // Uncomment if you need server-side language sync:
+    // _updateLanguageOnServer(normalizedCode);
+  }
+  
+  /// إعادة تحميل التفاعلات عند تغيير اللغة
+  Future<void> _refreshReactionsForNewLanguage() async {
+    try {
+      await ReactionsService.instance.loadReactions(forceRefresh: true);
+    } catch (e) {
+    }
+  }
+  
+  /// تحديث اللغة على السيرفر
+  Future<void> _updateLanguageOnServer(String languageCode) async {
+    try {
+      final apiService = LanguageApiService(globalApiClient);
+      final result = await apiService.updateLanguage(languageCode: languageCode);
+      
+      if (result['success'] == true) {
+      } else {
+      }
+    } catch (e) {
+      // Don't throw - local change is already applied
+    }
   }
 
   void toggleLanguage() {

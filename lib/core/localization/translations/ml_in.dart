@@ -51,6 +51,7 @@ const Map<String, String> mlIN = {
   "registration_failed": "രജിസ്‌ട്രേഷൻ പരാജയപ്പെട്ടു. വീണ്ടും ശ്രമിക്കുക.",
   "email_username_required": "ഇമെയിൽ അല്ലെങ്കിൽ ഉപയോക്തൃനാമം ആവശ്യമാണ്",
   "sign_in_with_google": "Google മുഖേന സൈൻ ഇൻ ചെയ്യുക",
+  "sign_in_with_apple": "Apple മുഖേന സൈൻ ഇൻ ചെയ്യുക",
   "getting_started": "ആരംഭിക്കുന്നു",
   "complete_profile": "ആരംഭിക്കാൻ നിങ്ങളുടെ പ്രൊഫൈൽ പൂർണ്ണമാക്കുക",
   "where_do_you_live": "നിങ്ങൾ എവിടെ താമസിക്കുന്നു?",
@@ -221,5 +222,2788 @@ const Map<String, String> mlIN = {
     "required": "ആവശ്യമായ ഫീൽഡ്",
     "publish": "പ്രസിദ്ധീകരിക്കുക",
     "try_different_search": "വ്യത്യസ്തമായ തിരയലോ ഫിൽട്ടറോ ശ്രമിക്കുക",
-    "filter": "ഫിൽട്ടർ"
+    "filter": "ഫിൽട്ടർ",
+  // Post Actions
+  'post_saved_successfully': 'പോസ്റ്റ് വിജയകരമായി സേവ് ചെയ്തു',
+  'post_removed_from_saved': 'സേവ് ചെയ്ത പോസ്റ്റുകളിൽ നിന്ന് നീക്കം ചെയ്തു',
+  'post_pinned_to_profile': 'പോസ്റ്റ് പ്രൊഫൈലിൽ പിൻ ചെയ്തു',
+  'post_unpinned_from_profile': 'പോസ്റ്റ് പ്രൊഫൈലിൽ നിന്ന് അൺപിൻ ചെയ്തു',
+  'post_hidden_from_timeline': 'പോസ്റ്റ് ടൈംലൈനിൽ നിന്ന് മറച്ചു',
+  'post_unhidden_on_timeline': 'പോസ്റ്റ് ടൈംലൈനിൽ വീണ്ടും കാണിച്ചു',
+  'post_deleted_successfully': 'പോസ്റ്റ് വിജയകരമായി ഡിലീറ്റ് ചെയ്തു',
+  'post_updated_successfully': 'പോസ്റ്റ് വിജയകരമായി അപ്‌ഡേറ്റ് ചെയ്തു',
+  'comments_enabled': 'കമന്റുകൾ സജീവമാക്കി',
+  'action_completed_successfully': 'പ്രവർത്തി വിജയകരമായി പൂർത്തിയായി',
+  'comments_disabled_message': 'ഈ പോസ്റ്റിന് കമന്റുകൾ ഓഫ് ചെയ്തിരിക്കുന്നു',
+
+// Settings
+  'arabic': 'അറബിക്',
+  'english': 'ഇംഗ്ലീഷ്',
+  'french': 'ഫ്രഞ്ച്',
+  'spanish': 'സ്പാനിഷ്',
+  'portuguese': 'പോർച്ചുഗീസ്',
+  'portuguese_br': 'പോർച്ചുഗീസ് (ബ്രസീൽ)',
+  'german': 'ജർമ്മൻ',
+  'turkish': 'ടർക്കിഷ്',
+  'dutch': 'ഡച്ച്',
+  'italian': 'ഇറ്റാലിയൻ',
+  'russian': 'റഷ്യൻ',
+  'romanian': 'റൊമേനിയൻ',
+  'greek': 'ഗ്രീക്ക്',
+  'privacy': 'സ്വകാര്യത',
+
+// Language Settings
+  'choose_language': 'നിങ്ങളുടെ ഇഷ്ടഭാഷ തിരഞ്ഞെടുക്കുക',
+  'language_changed': 'ഭാഷ വിജയകരമായി മാറ്റി',
+  'switch_to_arabic': 'അറബിക്കിലേക്ക് മാറ്റുക',
+  'switch_to_english': 'ഇംഗ്ലീഷിലേക്ക് മാറ്റുക',
+
+// Demo & Examples
+  'translation_demo': 'പരിഭാഷ ഡെമോ',
+  'current_language': 'നിലവിലെ ഭാഷ',
+
+// Actions & Buttons
+  'apply': 'പ്രയോഗിക്കുക',
+  'confirm': 'സ്ഥിരീകരിക്കുക',
+  'close': 'അടയ്ക്കുക',
+  'continue': 'തുടരുക',
+  'back': 'പിന്നോട്ട്',
+  'next': 'അടുത്തത്',
+  'finish': 'പൂർത്തിയാക്കുക',
+
+// Status Messages
+  'loading_please_wait': 'ലോഡ് ചെയ്യുന്നു, ദയവായി കാത്തിരിക്കുക...',
+  'operation_successful': 'പ്രവർത്തി വിജയകരമായി പൂർത്തിയായി',
+  'operation_failed': 'പ്രവർത്തി പരാജയപ്പെട്ടു',
+  'try_again': 'വീണ്ടും ശ്രമിക്കുക',
+  'no_internet_connection': 'ഇന്റർനെറ്റ് കണക്ഷൻ ഇല്ല',
+  'server_error': 'സെർവർ പിശക് സംഭവിച്ചു',
+
+// Post Related
+  'post_options': 'പോസ്റ്റ് ഓപ്ഷനുകൾ',
+  'post_menu': 'പോസ്റ്റ് മെനു',
+  'hide_post': 'പോസ്റ്റ് മറയ്ക്കുക',
+  'unhide_post': 'പോസ്റ്റ് കാണിക്കുക',
+  'save_post': 'പോസ്റ്റ് സേവ് ചെയ്യുക',
+  'unsave_post': 'സേവ് ചെയ്തതിൽ നിന്ന് നീക്കം ചെയ്യുക',
+  'pin_post': 'പ്രൊഫൈലിൽ പിൻ ചെയ്യുക',
+  'unpin_post': 'പ്രൊഫൈലിൽ നിന്ന് അൺപിൻ ചെയ്യുക',
+  'copy_link': 'ലിങ്ക് പകർത്തുക',
+  'report_post': 'പോസ്റ്റ് റിപ്പോർട്ട് ചെയ്യുക',
+
+// Time & Dates
+  'just_now': 'ഇപ്പോൾ തന്നെ',
+  'minutes_ago': 'മിനിറ്റുകൾ മുമ്പ്',
+  'hours_ago': 'മണിക്കൂറുകൾ മുമ്പ്',
+  'days_ago': 'ദിവസങ്ങൾ മുമ്പ്',
+  'weeks_ago': 'ആഴ്ചകൾ മുമ്പ്',
+  'months_ago': 'മാസങ്ങൾ മുമ്പ്',
+  'years_ago': 'വർഷങ്ങൾ മുമ്പ്',
+
+// Discover Page
+  'discover': 'കണ്ടെത്തുക',
+  'login_required': 'ലോഗിൻ ആവശ്യമാണ്',
+  'failed_to_load_content': 'ഉള്ളടക്കം ലോഡ് ചെയ്യുന്നതിൽ പരാജയം',
+  'login_personalized_content':
+  'വ്യക്തിഗത ഉള്ളടക്കം കാണാൻ ദയവായി ലോഗിൻ ചെയ്യുക',
+  'merits_remaining_message': 'നിങ്ങളുടെ কাছে %s മെറിറ്റുകൾ ശേഷിക്കുന്നു',
+  'merits_total': 'ആകെ',
+  'merits_spent': 'ചെലവാക്കിയത്',
+  'view_profile_button': 'പ്രൊഫൈൽ കാണുക',
+  'premium_members_subtitle': 'പ്രീമിയം അംഗങ്ങൾ',
+  'premium_pages_subtitle': 'പ്രീമിയം പേജുകൾ',
+  'trending_section_subtitle': 'ഇപ്പോൾ ട്രെൻഡിങ്ങായിരിക്കുന്നത്',
+  'people_you_may_know_subtitle':
+  'നിങ്ങൾക്ക് പരിചയമുള്ളവരായിരിക്കാം',
+  'pages_to_discover_subtitle': 'കണ്ടെത്താനുള്ള പേജുകൾ',
+  'groups_to_join_subtitle': 'ചേരാനുള്ള ഗ്രൂപ്പുകൾ',
+  'events_to_attend_subtitle': 'പങ്കെടുക്കാനുള്ള ഇവന്റുകൾ',
+  'page_likes_label': '%s ലൈക്കുകൾ',
+  'visit_page_button': 'പേജ് സന്ദർശിക്കുക',
+  'trending_label': 'ട്രെൻഡിങ്',
+  'hashtag_posts_label': '%s പോസ്റ്റുകൾ',
+  'mutual_friends_label': '%s കോമൺ',
+  'add_friend_button': 'സുഹൃത്ത് ചേർക്കുക',
+  'like_page_button': 'പേജ് ലൈക്ക് ചെയ്യുക',
+  'privacy_public': 'പൊതു',
+  'privacy_private': 'സ്വകാര്യ',
+  'group_members_label': '%s അംഗങ്ങൾ',
+  'join_group_button': 'ഗ്രൂപ്പിൽ ചേരുക',
+  'request_to_join_button': 'ചേരാൻ അഭ്യർത്ഥിക്കുക',
+  'event_going_label': '%s പോകുന്നു',
+  'interested_button': 'ആസക്തി ഉണ്ട്',
+  'trending_badge_label': 'ട്രെൻഡിങ്',
+  'merits_section_title': 'മെറിറ്റ് ബാലൻസ്',
+  'pro_users_section_title': 'പ്രത്യേക ഉപയോക്താക്കൾ',
+  'pro_pages_section_title': 'പ്രത്യേക പേജുകൾ',
+  'trending_section_title': 'ട്രെൻഡിങ്',
+  'suggested_friends_section_title': 'ശുപാർശ ചെയ്ത സുഹൃത്തുകൾ',
+  'suggested_pages_section_title': 'ശുപാർശ ചെയ്ത പേജുകൾ',
+  'suggested_groups_section_title': 'ശുപാർശ ചെയ്ത ഗ്രൂപ്പുകൾ',
+  'suggested_events_section_title': 'ശുപാർശ ചെയ്ത ഇവന്റുകൾ',
+// Feelings - Actions
+  'feeling_action': 'എനിക്ക് തോന്നുന്നു',
+  'listening_to_action': 'ഞാൻ കേൾക്കുന്നു',
+  'watching_action': 'ഞാൻ കാണുന്നു',
+  'playing_action': 'ഞാൻ കളിക്കുന്നു',
+  'eating_action': 'ഞാൻ കഴിക്കുന്നു',
+  'drinking_action': 'ഞാൻ കുടിക്കുന്നു',
+  'traveling_to_action': 'ഞാൻ പോകുന്നു',
+  'reading_action': 'ഞാൻ വായിക്കുന്നു',
+  'attending_action': 'ഞാൻ പങ്കെടുക്കുന്നു',
+  'celebrating_action': 'ഞാൻ ആഘോഷിക്കുന്നു',
+  'looking_for_action': 'ഞാൻ അന്വേഷിക്കുന്നു',
+
+// Placeholders
+  'feeling_placeholder': 'നിങ്ങൾക്ക് എങ്ങനെ തോന്നുന്നു?',
+  'listening_to_placeholder': 'നിങ്ങൾ എന്താണ് കേൾക്കുന്നത്?',
+  'watching_placeholder': 'നിങ്ങൾ എന്താണ് കാണുന്നത്?',
+  'playing_placeholder': 'നിങ്ങൾ എന്താണ് കളിക്കുന്നത്?',
+  'eating_placeholder': 'നിങ്ങൾ എന്താണ് കഴിക്കുന്നത്?',
+  'drinking_placeholder': 'നിങ്ങൾ എന്താണ് കുടിക്കുന്നത്?',
+  'traveling_to_placeholder': 'നിങ്ങൾ എവിടേക്ക് പോകുന്നു?',
+  'reading_placeholder': 'നിങ്ങൾ എന്താണ് വായിക്കുന്നത്?',
+  'attending_placeholder': 'നിങ്ങൾ എന്തിൽ പങ്കെടുക്കുന്നു?',
+  'celebrating_placeholder': 'നിങ്ങൾ എന്താണ് ആഘോഷിക്കുന്നത്?',
+  'looking_for_placeholder': 'നിങ്ങൾ എന്താണ് അന്വേഷിക്കുന്നത്?',
+
+// Emotions
+  'emotion_happy': 'സന്തോഷം',
+  'emotion_loved': 'സ്നേഹിതനായി തോന്നുന്നു',
+  'emotion_satisfied': 'തൃപ്തി',
+  'emotion_strong': 'ശക്തൻ',
+  'emotion_sad': 'ദുഃഖം',
+  'emotion_crazy': 'ഭ്രാന്ത്',
+  'emotion_tired': 'തളർന്നു',
+  'emotion_sleepy': 'ഉറക്കം വരുന്നു',
+  'emotion_confused': 'കുഴപ്പം',
+  'emotion_worried': 'ചിന്ത',
+  'emotion_angry': 'കോപം',
+  'emotion_annoyed': 'ചൊടിപ്പ്',
+  'emotion_shocked': 'ആശ്ചര്യം',
+  'emotion_down': 'മനസ്സ് തളർന്നു',
+  'emotion_confounded': 'അമ്പരന്നു',
+// Feelings - Interface
+  'feelings_activity_title': 'ഭാവങ്ങളും പ്രവർത്തനങ്ങളും',
+  'choose_feeling_or_activity': 'ഭാവമോ പ്രവർത്തനമോ തിരഞ്ഞെടുക്കുക',
+  'select_a_feeling': 'ഒരു ഭാവം തിരഞ്ഞെടുക്കുക',
+  'apply_button': 'പ്രയോഗിക്കുക',
+  'clear_button': 'ക്ലിയർ',
+
+// Create Post Page
+  'create_post_title': 'പോസ്റ്റ് സൃഷ്ടിക്കുക',
+  'create_post_button': 'പോസ്റ്റ് ചെയ്യുക',
+  'post_as_user': '@name ആയി പോസ്റ്റ് ചെയ്യുക',
+  'post_to_page': '@name-ൽ പോസ്റ്റ് ചെയ്യുക',
+  'failed_to_create_post': 'പോസ്റ്റ് സൃഷ്ടിക്കാൻ പരാജയപ്പെട്ടു: @error',
+  'what_do_you_want_to_share': 'നിങ്ങൾ എന്താണ് പങ്കിടാൻ ആഗ്രഹിക്കുന്നത്?',
+  'add_to_your_post': 'നിങ്ങളുടെ പോസ്റ്റിലേക്ക് ചേർക്കുക',
+  'photos_button': 'ഫോട്ടോകൾ',
+  'colored_button': 'നിറമുള്ളത്',
+  'feeling_button': 'ഭാവം',
+  'location_button': 'സ്ഥലം',
+  'tag_button': 'ടാഗ്',
+  'photos_count': 'ഫോട്ടോകൾ (@count)',
+  'add_more_photos': 'കൂടുതൽ ഫോട്ടോകൾ ചേർക്കുക',
+  'video_selected': 'വീഡിയോ തിരഞ്ഞെടുത്തു',
+  'video_button': 'വീഡിയോ',
+  'audio_selected': 'ഓഡിയോ തിരഞ്ഞെടുത്തു',
+  'audio_button': 'ഓഡിയോ',
+  'poll_options': 'പോൾ ഓപ്ഷനുകൾ',
+  'add_option': 'ഓപ്ഷൻ ചേർക്കുക',
+  'option_number': 'ഓപ്ഷൻ @count',
+  'post_successfully_created': 'പോസ്റ്റ് വിജയകരമായി സൃഷ്ടിച്ചു',
+  'post_published_video_processing':
+  'പോസ്റ്റ് പ്രസിദ്ധീകരിച്ചു! വീഡിയോ പ്രോസസ്സിംഗ് നടക്കുന്നു, ഉടൻ കാണാം',
+  'please_write_text_or_add_content':
+  'ദയവായി ടെക്സ്റ്റ് എഴുതുക അല്ലെങ്കിൽ ഉള്ളടക്കം ചേർക്കുക (ഫോട്ടോ/വീഡിയോ/ഓഡിയോ)',
+  'colored_posts_not_enabled': 'നിറമുള്ള പോസ്റ്റുകൾ സജീവമല്ല',
+  'colored_posts_not_enabled_description':
+  'ഈ ഫീച്ചർ സജീവമാക്കാൻ അഡ്മിനുമായി ബന്ധപ്പെടുക',
+  'no_patterns_available': 'പാറ്റേണുകൾ ലഭ്യമല്ല',
+  'no_patterns_description': 'സെറ്റിംഗ്സിൽ നിറമുള്ള പാറ്റേണുകൾ കണ്ടെത്തിയില്ല',
+  'choose_background': 'പശ്ചാത്തലം തിരഞ്ഞെടുക്കുക',
+  'tap_to_write': 'എഴുതാൻ ടാപ്പ് ചെയ്യുക...',
+  'click_here_to_start_writing': 'എഴുതാൻ ഇവിടെ ക്ലിക്ക് ചെയ്യുക',
+  'feelings_not_enabled': 'ഭാവങ്ങൾ സജീവമല്ല',
+  'close_dialog': 'അടയ്ക്കുക',
+  'privacy_settings': 'സ്വകാര്യത ക്രമീകരണങ്ങൾ',
+  'public_privacy': 'പൊതു',
+  'friends_privacy': 'സുഹൃത്തുകൾ',
+  'private_privacy': 'സ്വകാര്യ',
+  'everyone_can_see': 'എല്ലാവർക്കും കാണാം',
+  'friends_only': 'സുഹൃത്തുകൾക്ക് മാത്രം',
+  'only_you': 'നിങ്ങൾക്ക് മാത്രം',
+
+// Post Type Labels
+  'post_type_text': 'ടെക്സ്റ്റ്',
+  'post_type_photos': 'ഫോട്ടോകൾ',
+  'post_type_album': 'ആൽബം',
+  'post_type_video': 'വീഡിയോ',
+  'post_type_reel': 'റീൽ',
+  'post_type_audio': 'ഓഡിയോ',
+  'post_type_file': 'ഫയൽ',
+  'post_type_poll': 'പോൾ',
+  'post_type_feeling': 'ഭാവം',
+  'post_type_colored': 'നിറമുള്ളത്',
+  'post_type_offer': 'ഓഫർ',
+  'post_type_job': 'ജോലി',
+// Events
+  'events': 'ഇവന്റുകൾ',
+  'my_events': 'എന്റെ ഇവന്റുകൾ',
+  'suggested_events': 'ശുപാർശ ചെയ്ത ഇവന്റുകൾ',
+  'going_events': 'പോകുന്ന ഇവന്റുകൾ',
+  'interested_events': 'ആസക്തിയുള്ളത്',
+  'invited_events': 'ആമന്ത്രിതം',
+  'past_events': 'കഴിഞ്ഞ ഇവന്റുകൾ',
+  'create_event': 'ഇവന്റ് സൃഷ്ടിക്കുക',
+  'edit_event': 'ഇവന്റ് തിരുത്തുക',
+  'delete_event': 'ഇവന്റ് ഇല്ലാതാക്കുക',
+  'event_details': 'ഇവന്റ് വിശദാംശങ്ങൾ',
+  'event_title': 'ഇവന്റ് ശീർഷകം',
+  'event_location': 'സ്ഥലം',
+  'event_description': 'വിവരണം',
+  'event_category': 'വിഭാഗം',
+  'start_date': 'ആരംഭ തീയതി',
+  'end_date': 'അവസാന തീയതി',
+  'going': 'പോകുന്നു',
+  'interested': 'ആസക്തിയുണ്ട്',
+  'not_going': 'പോകുന്നില്ല',
+  'members': 'അംഗങ്ങൾ',
+  'invited': 'ആമന്ത്രിതർ',
+  'invite_friends': 'സുഹൃത്തുകളെ ക്ഷണിക്കുക',
+  'event_posts': 'ഇവന്റ് പോസ്റ്റുകൾ',
+  'join_event': 'ഇവന്റിൽ ചേരുക',
+  'leave_event': 'ഇവന്റ് വിട്ടു പോവുക',
+  'event_created_successfully': 'ഇവന്റ് വിജയകരമായി സൃഷ്ടിച്ചു',
+  'event_updated_successfully': 'ഇവന്റ് വിജയകരമായി പുതുക്കി',
+  'event_deleted_successfully': 'ഇവന്റ് വിജയകരമായി ഇല്ലാതാക്കി',
+  'joined_event_successfully': 'ഇവന്റിൽ വിജയകരമായി ചേർന്നു',
+  'left_event_successfully': 'ഇവന്റ് വിജയകരമായി വിട്ടു',
+  'no_events_found': 'ഇവന്റുകൾ ഒന്നും കണ്ടെത്തിയില്ല',
+  'search_events': 'ഇവന്റുകൾ തിരയുക',
+  'event_name_required': 'ഇവന്റ് പേര് ആവശ്യമാണ്',
+  'event_location_required': 'സ്ഥലം ആവശ്യമാണ്',
+  'event_start_date_required': 'ആരംഭ തീയതി ആവശ്യമാണ്',
+  'event_end_date_required': 'അവസാന തീയതി ആവശ്യമാണ്',
+  'loading_events': 'ഇവന്റുകൾ ലോഡ് ചെയ്യുന്നു...',
+  'no_members_yet': 'ഇതുവരെ അംഗങ്ങളില്ല',
+  'no_posts_yet': 'ഇതുവരെ പോസ്റ്റുകളില്ല',
+  'view_all_members': 'എല്ലാ അംഗങ്ങളെയും കാണുക',
+  'organizer': 'സംഘാടകൻ',
+  'event_privacy': 'ഇവന്റ് സ്വകാര്യത',
+  'try_different_category':
+  'മറ്റൊരു വിഭാഗം പരീക്ഷിക്കൂ അല്ലെങ്കിൽ പുതിയ ഇവന്റുകൾ കാത്തിരിക്കുക',
+  'no_going_events': 'നിങ്ങൾ പോകുന്ന ഇവന്റുകൾ ഒന്നുമില്ല',
+  'join_events_to_see_them_here':
+  'ഇവന്റിൽ ചേരുമ്പോൾ അവ ഇവിടെ കാണാം',
+  'no_interested_events': 'നിങ്ങൾ ആസക്തി കാണിച്ച ഇവന്റുകൾ ഇല്ല',
+  'mark_events_interested':
+  'ഇവന്റിൽ ആസക്തി കാണിച്ചാൽ അവ ഇവിടെ കാണാം',
+  'no_invitations': 'ആമന്ത്രണങ്ങളൊന്നുമില്ല',
+  'wait_for_friends_invitations':
+  'സുഹൃത്തുകൾ ക്ഷണിക്കുമ്പോൾ അവ ഇവിടെ കാണാം',
+  'no_my_events': 'നിങ്ങൾ ഇതുവരെ ഒരു ഇവന്റും സൃഷ്ടിച്ചിട്ടില്ല',
+  'create_first_event': 'ആദ്യ ഇവന്റ് സൃഷ്ടിക്കാൻ + ബട്ടൺ അമർത്തുക',
+  'searching_for': 'തിരയുന്നു: {query}',
+  'search_results_for': '{query} നുള്ള തിരച്ചിൽ ഫലങ്ങൾ',
+  'event_picture_updated': 'ഇവന്റ് ചിത്രം വിജയകരമായി പുതുക്കി',
+  'event_cover_updated': 'ഇവന്റ് കവർ വിജയകരമായി പുതുക്കി',
+  'failed_to_upload_image': 'ചിത്രം അപ്‌ലോഡ് ചെയ്യാൻ കഴിഞ്ഞില്ല',
+  'update_event_picture': 'ഇവന്റ് ചിത്രം പുതുക്കുക',
+  'events_members': 'അംഗങ്ങൾ',
+  'all': 'എല്ലാം',
+  'loading_members': 'അംഗങ്ങൾ ലോഡ് ചെയ്യുന്നു...',
+  'no_going_members': 'പോകുന്ന അംഗങ്ങളില്ല',
+  'no_interested_members': 'ആസക്തിയുള്ള അംഗങ്ങളില്ല',
+  'remove_member': 'അംഗത്തെ നീക്കം ചെയ്യുക',
+  'remove_member_confirmation':
+  '{name} നെ ഇവന്റിൽ നിന്ന് നീക്കം ചെയ്യണോ?',
+  'retry': 'വീണ്ടും ശ്രമിക്കുക',
+  'feature_coming_soon': 'ഫീച്ചർ ഉടൻ വരുന്നു',
+// Market
+  'market_title': 'മാർക്കറ്റ്',
+  'market_products': 'ഉൽപ്പന്നങ്ങൾ',
+  'market_add_product': 'ഉൽപ്പന്നം ചേർക്കുക',
+  'market_no_products': 'ഇതുവരെ ഉൽപ്പന്നങ്ങളൊന്നുമില്ല',
+  'market_search_products': 'ഉൽപ്പന്നങ്ങൾ തിരയുക',
+  'market_invalid_fields': 'ദയവായി ഫീൽഡുകൾ പരിശോധിക്കുക',
+  'market_product_created': 'ഉൽപ്പന്നം സൃഷ്ടിച്ചു',
+  'market_product_name': 'ഉൽപ്പന്നത്തിന്റെ പേര്',
+  'market_price': 'വില',
+  'market_quantity': 'അളവ്',
+  'market_category_id': 'വിഭാഗ ഐഡി',
+  'market_location': 'സ്ഥലം',
+  'market_description': 'വിവരണം',
+  'market_status': 'സ്ഥിതി',
+  'market_for_adult': 'വയസ്കർക്കായി (18+)',
+  'market_product_url': 'ഉൽപ്പന്ന URL',
+  'market_product_file': 'ഉൽപ്പന്ന ഫയൽ',
+  'market_photos': 'ഫോട്ടോകൾ',
+  'market_submit_product': 'ഉൽപ്പന്നം സമർപ്പിക്കുക',
+  'market_category': 'വിഭാഗം',
+  'market_digital_hint':
+  'നിങ്ങൾ ഡിജിറ്റൽ ഉൽപ്പന്നം വിൽക്കുകയാണെങ്കിൽ ഈ ഓപ്ഷൻ പ്രവർത്തനക്ഷമമാക്കുക',
+  'market_download_url': 'ഡൗൺലോഡ് URL',
+  'market_upload_file': 'നിങ്ങളുടെ ഫയൽ അപ്‌ലോഡ് ചെയ്യുക',
+  'market_file_none': 'ഫയൽ തിരഞ്ഞെടുക്കപ്പെട്ടിട്ടില്ല',
+  'market_file_types': 'അനുവദിച്ച ഫയൽ തരം: txt, zip, json, docx, pdf',
+  'market_search_hint': 'ഉൽപ്പന്നങ്ങൾ തിരയുക...',
+  'market_category_all': 'എല്ലാം',
+  'market_empty': 'ഉൽപ്പന്നങ്ങളൊന്നും കണ്ടെത്തിയില്ല',
+  'market_error_loading_categories': 'വിഭാഗങ്ങൾ ലോഡ് ചെയ്യാനായില്ല',
+  'market_error_loading_products': 'ഉൽപ്പന്നങ്ങൾ ലോഡ് ചെയ്യാനായില്ല',
+  'market_add_to_cart': 'കാർട്ടിലേക്ക് ചേർക്കുക',
+  'market_out_of_stock': 'സ്റ്റോക്ക് ഇല്ല',
+  'market_in_stock': 'സ്റ്റോക്ക് ലഭ്യമാണ്',
+  'market_cart': 'കാർട്ട്',
+  'market_cart_empty': 'ഷോപ്പിംഗ് കാർട്ട് ശൂന്യമാണ്',
+  'market_empty_cart_subtitle': 'നിങ്ങളുടെ കാർട്ടിലേക്ക് ഉൽപ്പന്നങ്ങൾ ചേർക്കുക',
+  'market_checkout': 'ചെക്ക്ഔട്ട്',
+  'market_total': 'മൊത്തം',
+  'market_clear_cart': 'കാർട്ട് ഒഴിവാക്കുക',
+  'market_clear_cart_confirm':
+  'കാർട്ടിലെ എല്ലാ ഇനങ്ങളും നീക്കം ചെയ്യണോ?',
+  'market_remove_item': 'കാർട്ടിൽ നിന്ന് നീക്കം ചെയ്യുക',
+  'market_digital': 'ഡിജിറ്റൽ',
+  'market_browse_products': 'ഉൽപ്പന്നങ്ങൾ കാണുക',
+  'market_order_summary': 'ഓർഡർ സംഗ്രഹം',
+  'market_items': 'ഇനങ്ങൾ',
+  'market_confirm_order': 'ഓർഡർ സ്ഥിരീകരിക്കുക',
+  'market_order_placed_success': 'ഓർഡർ വിജയകരമായി നൽകി',
+  'market_shipping_info': 'ഷിപ്പിംഗ് വിവരങ്ങൾ',
+  'market_payment_method': 'പേയ്‌മെന്റ് മാർഗം',
+  'market_payment_cod': 'ഡെലിവറിയിൽ പണം',
+  'market_payment_credit_card': 'ക്രെഡിറ്റ് കാർഡ്',
+  'market_payment_paypal': 'പേയ്പാൽ',
+  'market_order_details': 'ഓർഡർ വിശദാംശങ്ങൾ',
+  'market_order_hash': 'ഓർഡർ',
+  'market_seller': 'വിൽപ്പനക്കാരൻ',
+  'market_buyer': 'വാങ്ങുന്നവർ',
+  'market_created_at': 'സൃഷ്ടിച്ചത്',
+  'market_shipping_address': 'ഷിപ്പിംഗ് വിലാസം',
+  'market_status_pending': 'കാത്തിരിക്കുന്നു',
+  'market_status_processing': 'പ്രോസസിംഗ്',
+  'market_status_shipped': 'അയച്ചു',
+  'market_status_delivered': 'ഡെലിവർ ചെയ്തു',
+  'market_status_cancelled': 'റദ്ദാക്കി',
+
+// Checkout form
+  'full_name': 'പൂർണ്ണ പേര്',
+  'phone_number': 'ഫോൺ നമ്പർ',
+  'address': 'വിലാസം',
+  'city': 'നഗരം',
+  'zip_code': 'പിൻ കോഡ്',
+  'country': 'രാജ്യം',
+// Jobs
+  'jobs': 'ജോലികൾ',
+  'my_jobs': 'എന്റെ ജോലികൾ',
+  'job_details': 'ജോലി വിശദാംശങ്ങൾ',
+  'create_job': 'ജോലി സൃഷ്ടിക്കുക',
+  'edit_job': 'ജോലി തിരുത്തുക',
+  'delete_job': 'ജോലി ഇല്ലാതാക്കുക',
+  'delete_job_confirm': 'ഈ ജോലി ഇല്ലാതാക്കണമെന്നുറപ്പാണോ?',
+  'salary': 'ശമ്പളം',
+  'salary_min': 'കുറഞ്ഞ ശമ്പളം',
+  'salary_max': 'കൂടിയ ശമ്പളം',
+  'currency_id': 'കറൻസി ഐഡി',
+  'select_currency': 'കറൻസി തിരഞ്ഞെടുക്കുക',
+  'job_title': 'ജോലി ശീർഷകം',
+  'select_category': 'വിഭാഗം തിരഞ്ഞെടുക്കുക',
+  'candidates': 'അഭ്യർത്ഥകർ',
+  'apply_now': 'ഇപ്പോൾ അപേക്ഷിക്കുക',
+  'job_applied_successfully': 'നിങ്ങളുടെ അപേക്ഷ വിജയകരമായി സമർപ്പിച്ചു',
+  'name': 'പേര്',
+  'phone': 'ഫോൺ',
+  'job_created_successfully': 'ജോലി വിജയകരമായി സൃഷ്ടിച്ചു',
+  'job_updated_successfully': 'ജോലി വിജയകരമായി പുതുക്കി',
+  'job_deleted_successfully': 'ജോലി വിജയകരമായി ഇല്ലാതാക്കി',
+  'filters': 'ഫിൽട്ടറുകൾ',
+  'no_filters': 'ഫിൽട്ടറുകൾ ഒന്നുമില്ല',
+  'pay_per': 'പേയ്മെന്റ് കാലയളവ്',
+  'search_location': 'നഗരം, സംസ്ഥാനം അല്ലെങ്കിൽ രാജ്യം തിരയുക',
+  'salary_range': 'ശമ്പള പരിധി',
+  'clear': 'വൃത്തിയാക്കുക',
+  'where_did_you_work': 'നിങ്ങൾ എവിടെയാണ് ജോലി ചെയ്തിരുന്നത്?',
+  'position_job': 'പദവി',
+  'from': 'മുതൽ',
+  'to': 'വരെ',
+  'work_experience': 'ജോലി പരിചയം',
+  'call': 'കോൾ',
+
+// Funding
+  'funding': 'ധനസഹായം',
+  'funding_details': 'ധനസഹായ വിശദാംശങ്ങൾ',
+  'create_funding': 'ധനസഹായം സൃഷ്ടിക്കുക',
+  'edit_funding': 'ധനസഹായം തിരുത്തുക',
+  'delete_funding': 'ധനസഹായം ഇല്ലാതാക്കുക',
+  'delete_funding_confirm': 'ഈ ധനസഹായ അഭ്യർത്ഥന ഇല്ലാതാക്കണമെന്നുറപ്പാണോ?',
+  'funding_title': 'ധനസഹായ ശീർഷകം',
+  'goal_amount': 'ലക്ഷ്യ തുക',
+  'raised': 'സമാഹരിച്ച തുക',
+  'goal': 'ലക്ഷ്യം',
+  'donors': 'ദാതാക്കൾ',
+  'completed': 'പൂർത്തിയായി',
+  'remaining': 'ശേഷിക്കുന്നത്',
+  'donate': 'സംഭാവന നൽകുക',
+  'donate_now': 'ഇപ്പോൾ സംഭാവന നൽകുക',
+  'donation_amount': 'സംഭാവന തുക',
+  'amount': 'തുക',
+  'amount_must_be_positive': 'തുക ശൂന്യത്തേക്കാൾ കൂടുതലായിരിക്കണം',
+  'quick_amounts': 'വേഗത്തിലുള്ള തുകകൾ',
+  'processing': 'പ്രോസസിംഗ്',
+  'donation_successful': 'നിങ്ങളുടെ സംഭാവനയ്ക്ക് നന്ദി!',
+  'view_donors': 'ദാതാക്കളെ കാണുക',
+  'no_donors_yet': 'ഇതുവരെ ദാതാക്കൾ ഇല്ല',
+  'no_funding_found': 'ധനസഹായ അഭ്യർത്ഥനകളൊന്നും കണ്ടെത്തിയില്ല',
+  'funding_created_successfully': 'ധനസഹായ അഭ്യർത്ഥന വിജയകരമായി സൃഷ്ടിച്ചു',
+  'funding_updated_successfully': 'ധനസഹായ അഭ്യർത്ഥന വിജയകരമായി പുതുക്കി',
+  'funding_deleted': 'ധനസഹായ അഭ്യർത്ഥന ഇല്ലാതാക്കി',
+  'cover_image_required': 'കവർ ചിത്രം ആവശ്യമാണ്',
+  'min_3_chars': 'കുറഞ്ഞത് 3 അക്ഷരങ്ങൾ ആവശ്യമാണ്',
+  'min_16_chars': 'കുറഞ്ഞത് 16 അക്ഷരങ്ങൾ ആവശ്യമാണ്',
+// Offers
+  'offers': 'ഓഫറുകൾ',
+  'my_offers': 'എന്റെ ഓഫറുകൾ',
+  'offer_details': 'ഓഫർ വിശദാംശങ്ങൾ',
+  'no_offers_found': 'ഓഫറുകൾ ഒന്നും കണ്ടെത്തിയില്ല',
+  'create_offer': 'ഓഫർ സൃഷ്ടിക്കുക',
+  'edit_offer': 'ഓഫർ തിരുത്തുക',
+  'delete_offer': 'ഓഫർ നീക്കം ചെയ്യുക',
+  'delete_offer_confirm': 'ഈ ഓഫർ നീക്കം ചെയ്യണമെന്ന് നിങ്ങൾക്ക് ഉറപ്പാണോ?',
+  'offer_title': 'ഓഫർ ശീർഷകം',
+  'discount_type': 'ഇളവ് തരം',
+  'discount_percent': 'ഇളവ് ശതമാനം',
+  'discount_amount': 'ഇളവ് തുക',
+  'offer_created_successfully': 'ഓഫർ വിജയകരമായി സൃഷ്ടിച്ചു',
+  'offer_updated_successfully': 'ഓഫർ വിജയകരമായി അപ്‌ഡേറ്റ് ചെയ്തു',
+  'offer_deleted_successfully': 'ഓഫർ വിജയകരമായി നീക്കം ചെയ്തു',
+  'photos': 'ഫോട്ടോകൾ',
+  'add_photos': 'ഫോട്ടോകൾ ചേർക്കുക',
+  'add_more': 'കൂടുതൽ ചേർക്കുക',
+  'upload_photos': 'ഫോട്ടോകൾ അപ്‌ലോഡ് ചെയ്യുക',
+
+// Ads / Campaigns
+  'my_campaigns': 'എന്റെ ക്യാമ്പെയ്‌നുകൾ',
+  'ads_campaigns_title': 'പരസ്യ ക്യാമ്പെയ്‌നുകൾ',
+  'campaign_details': 'ക്യാമ്പെയ്ൻ വിശദാംശങ്ങൾ',
+  'create_campaign': 'ക്യാമ്പെയ്ൻ സൃഷ്ടിക്കുക',
+  'edit_campaign': 'ക്യാമ്പെയ്ൻ തിരുത്തുക',
+  'update_campaign': 'ക്യാമ്പെയ്ൻ അപ്‌ഡേറ്റ് ചെയ്യുക',
+  'delete_campaign': 'ക്യാമ്പെയ്ൻ നീക്കം ചെയ്യുക',
+  'delete_campaign_confirm': 'ഈ ക്യാമ്പെയ്ൻ നീക്കം ചെയ്യണമെന്ന് നിങ്ങൾക്ക് ഉറപ്പാണോ?',
+  'campaign_title': 'ക്യാമ്പെയ്ൻ ശീർഷകം',
+  'campaign_title_hint': 'ക്യാമ്പെയ്ൻ ശീർഷകം നൽകുക',
+  'ads_campaign_created': 'ക്യാമ്പെയ്ൻ വിജയകരമായി സൃഷ്ടിച്ചു',
+  'ads_campaign_updated': 'ക്യാമ്പെയ്ൻ വിജയകരമായി അപ്‌ഡേറ്റ് ചെയ്തു',
+  'campaign_created_successfully': 'ക്യാമ്പെയ്ൻ വിജയകരമായി സൃഷ്ടിച്ചു',
+  'campaign_updated_successfully': 'ക്യാമ്പെയ്ൻ വിജയകരമായി അപ്‌ഡേറ്റ് ചെയ്തു',
+  'campaign_deleted_successfully': 'ക്യാമ്പെയ്ൻ വിജയകരമായി നീക്കം ചെയ്തു',
+  'no_campaigns_found': 'ക്യാമ്പെയ്‌നുകൾ ഒന്നും കണ്ടെത്തിയില്ല',
+
+// Boost System
+  'boost_post': 'പോസ്റ്റ് ബൂസ്റ്റ് ചെയ്യുക',
+  'boost_page': 'പേജ് ബൂസ്റ്റ് ചെയ്യുക',
+  'boosted': 'ബൂസ്റ്റ് ചെയ്തു',
+  'unboost': 'ബൂസ്റ്റ് നീക്കം ചെയ്യുക',
+  'boost_statistics': 'ബൂസ്റ്റ് സ്ഥിതിവിവരക്കണക്കുകൾ',
+  'boost_info_subtitle': 'നിങ്ങളുടെ ബൂസ്റ്റ് ചെയ്ത ഉള്ളടക്കം ട്രാക്ക് ചെയ്യുക',
+  'boosted_posts': 'ബൂസ്റ്റ് ചെയ്ത പോസ്റ്റുകൾ',
+  'boosted_pages': 'ബൂസ്റ്റ് ചെയ്ത പേജുകൾ',
+  'boost_remaining': 'ശേഷിക്കുന്നു',
+  'boost_limit': 'പരിധി',
+  'boost_limit_reached': 'പരിധി എത്തി',
+  'boost_limit_reached_message': 'നിങ്ങൾ ബൂസ്റ്റ് പരിധിയിലെത്തി',
+  'boost_success': 'വിജയകരമായി ബൂസ്റ്റ് ചെയ്തു',
+  'unboost_success': 'വിജയകരമായി ബൂസ്റ്റ് നീക്കം ചെയ്തു',
+  'boost_permission_denied': 'ബൂസ്റ്റ് ചെയ്യാൻ അനുമതി ഇല്ല',
+  'boost_already_boosted': 'ഇതിനകം ബൂസ്റ്റ് ചെയ്തിട്ടുണ്ട്',
+  'boost_not_boosted': 'ബൂസ്റ്റ് ചെയ്തിട്ടില്ല',
+  'my_boosted_posts': 'എന്റെ ബൂസ്റ്റ് പോസ്റ്റുകൾ',
+  'my_boosted_pages': 'എന്റെ ബൂസ്റ്റ് പേജുകൾ',
+  'no_boosted_posts': 'ബൂസ്റ്റ് ചെയ്ത പോസ്റ്റുകൾ ഇല്ല',
+  'no_boosted_pages': 'ബൂസ്റ്റ് ചെയ്ത പേജുകൾ ഇല്ല',
+// Feed & Menu Page
+  'news_feed': 'ന്യൂസ് ഫീഡ്',
+  'recent_updates': 'പുതിയ അപ്‌ഡേറ്റുകൾ',
+  'popular_posts': 'ജനപ്രിയ പോസ്റ്റുകൾ',
+  'discover_posts': 'പുതിയ പോസ്റ്റുകൾ കണ്ടെത്തുക',
+  'mine': 'എന്റെ',
+
+  'my_courses': 'എന്റെ കോഴ്‌സുകൾ',
+  'saved': 'സംരക്ഷിച്ചത്',
+  'scheduled': 'ഷെഡ്യൂൾ ചെയ്തത്',
+  'memories': 'ഓർമ്മകൾ',
+  'advertising': 'പരസ്യങ്ങൾ',
+  'wallet': 'വാലറ്റ്',
+  'premium_packages': 'പ്രീമിയം പാക്കേജുകൾ',
+  'people': 'ആൾക്കാർ',
+
+  'courses': 'കോഴ്‌സുകൾ',
+  'forums': 'ഫോറങ്ങൾ',
+  'movies': 'സിനിമകൾ',
+  'games': 'ഗെയിമുകൾ',
+  'developers': 'ഡെവലപ്പർമാർ',
+  'merits': 'മെറിറ്റുകൾ',
+  'watch': 'കാണുക',
+  'reels': 'റീലുകൾ',
+
+// Home Page
+  'loading_posts': 'പോസ്റ്റുകൾ ലോഡ് ചെയ്യുന്നു...',
+  'connection_error': 'കണക്ഷൻ പിശക്',
+  'no_posts': 'ഇപ്പോൾ പോസ്റ്റുകളൊന്നുമില്ല',
+  'be_first_to_post': 'ആദ്യമായി നിങ്ങൾ തന്നെ ഒരു പോസ്റ്റ് ഇടൂ!',
+  'loading_more': 'കൂടുതൽ ലോഡ് ചെയ്യുന്നു...',
+  'no_more_posts': 'കൂടുതൽ പോസ്റ്റുകൾ ലഭ്യമല്ല',
+  'whats_on_your_mind': 'നിങ്ങളുടെ മനസ്സിൽ എന്താണ്?',
+  'add_story': 'സ്റ്റോറി ചേർക്കുക',
+  'friends_page': 'സുഹൃത്തുകളുടെ പേജ്',
+  'coming_soon_feature': 'ഉടൻ ലഭ്യമാകും',
+
+  'logout_confirm': 'നിങ്ങൾക്ക് ഉറപ്പായും ലോഗ്‌ഔട്ട് ചെയ്യണോ?',
+  'search_placeholder': 'തിരയുക...',
+  'view_all': 'എല്ലാം കാണുക',
+
+// Settings Page
+  'customize_experience': 'നിങ്ങളുടെ അനുഭവം ഇഷ്ടാനുസരണം ക്രമീകരിക്കുക',
+  'customize_experience_subtitle':
+  'സ്വകാര്യത, അറിയിപ്പുകൾ, അക്കൗണ്ട് എന്നിവ നിയന്ത്രിക്കുക',
+  'privacy_security': 'സ്വകാര്യതയും സുരക്ഷയും',
+  'privacy_settings_subtitle':
+  'നിങ്ങളുടെ വിവരങ്ങൾ ആരെല്ലാം കാണാം എന്ന് നിയന്ത്രിക്കുക',
+  'change_password': 'പാസ്‌വേഡ് മാറ്റുക',
+  'change_password_subtitle':
+  'നിങ്ങളുടെ അക്കൗണ്ട് സുരക്ഷ പുതുക്കുക',
+  'two_factor_auth': 'രണ്ട് ഘട്ട ഓതന്റിക്കേഷൻ',
+  'two_factor_auth_subtitle':
+  'കൂടുതൽ സുരക്ഷ ചേർക്കുക',
+  'manage_sessions': 'സെഷനുകൾ നിയന്ത്രിക്കുക',
+  'manage_sessions_subtitle':
+  'സജീവ സെഷനുകൾ നിയന്ത്രിക്കുക',
+  'blocked_users': 'ബ്ലോക്ക് ചെയ്ത ഉപയോക്താക്കൾ',
+  'blocked_users_subtitle':
+  'ബ്ലോക്ക് ചെയ്ത ഉപയോക്താക്കളെ നിയന്ത്രിക്കുക',
+  'account': 'അക്കൗണ്ട്',
+  'my_information': 'എന്റെ വിവരങ്ങൾ',
+  'my_information_subtitle':
+  'നിങ്ങളുടെ വ്യക്തിഗത വിവരങ്ങൾ പുതുക്കുക',
+  'my_addresses': 'എന്റെ വിലാസങ്ങൾ',
+  'my_addresses_subtitle':
+  'സംരക്ഷിച്ച വിലാസങ്ങൾ നിയന്ത്രിക്കുക',
+  'verification': 'പരിശോധന',
+  'verification_subtitle':
+  'നിങ്ങളുടെ അക്കൗണ്ട് തിരിച്ചറിയൽ സ്ഥിരീകരിക്കുക',
+  'switch_to_light_mode': 'ലൈറ്റ് മോഡിലേക്ക് മാറുക',
+  'switch_to_dark_mode': 'ഡാർക്ക് മോഡിലേക്ക് മാറുക',
+  'appearance_preferences': 'രൂപവും മുൻഗണനകളും',
+  'display_settings': 'ഡിസ്‌പ്ലേയും ആപ്പിന്റെ രൂപവും',
+  'language_region': 'ഭാഷയും പ്രദേശവും',
+  'cache_settings': 'കാഷെ സെറ്റിംഗുകൾ',
+  'cache_settings_subtitle':
+  'കാഷെയും സ്റ്റോറേജും വൃത്തിയാക്കുക',
+  'monetization_settings': 'വരുമാനം',
+  'monetization_settings_subtitle':
+  'വരുമാനവും പേയ്‌മെന്റ് ക്രമീകരണങ്ങളും',
+  'market_settings': 'മാർക്കറ്റ്',
+  'market_settings_subtitle':
+  'മാർക്കറ്റ്‌പ്ലേസ് സെറ്റിംഗുകൾ',
+  'bank_settings': 'ബാങ്ക്',
+  'bank_settings_subtitle':
+  'ബാങ്ക് അക്കൗണ്ടും പേയ്‌മെന്റുകളും',
+  'funding_settings': 'ഫണ്ടിംഗ്',
+  'funding_settings_subtitle':
+  'ഫണ്ടിംഗ് മുൻഗണനകൾ',
+  'about_app': 'ആപ്പിനെക്കുറിച്ചും സഹായവും',
+  'developer_info': 'ഡെവലപ്പർ വിവരം',
+  'developer_info_subtitle':
+  'ആപ്പ് പതിപ്പും ഡെവലപ്പർ വിവരങ്ങളും',
+  'report_bug': 'ബഗ് റിപ്പോർട്ട് ചെയ്യുക',
+  'report_bug_subtitle':
+  'പ്രശ്നങ്ങൾ റിപ്പോർട്ട് ചെയ്ത് ഞങ്ങളെ മെച്ചപ്പെടുത്താൻ സഹായിക്കുക',
+  'danger_zone': 'അപകട മേഖല',
+  'delete_account': 'അക്കൗണ്ട് ഇല്ലാതാക്കുക',
+  'delete_account_subtitle':
+  'നിങ്ങളുടെ അക്കൗണ്ട് സ്ഥിരമായി ഇല്ലാതാക്കുക',
+// Additional Settings
+  'notification_settings': 'അറിയിപ്പ് ക്രമീകരണങ്ങൾ',
+  'notification_settings_subtitle': 'അലർട്ടുകളും അറിയിപ്പുകളും നിയന്ത്രിക്കുക',
+  'membership_monetization': 'അംഗത്വവും വരുമാനവും',
+  'membership': 'അംഗത്വം',
+  'membership_subtitle': 'നിങ്ങളുടെ അംഗത്വ പ്ലാൻ നിയന്ത്രിക്കുക',
+  'monetization': 'വരുമാനം',
+  'monetization_subtitle': 'വരുമാനവും പേയ്‌മെന്റ് ക്രമീകരണങ്ങളും',
+  'monetization_options': 'വരുമാന ഓപ്ഷനുകൾ ക്രമീകരിക്കുക',
+  'payments': 'പേയ്‌മെന്റുകൾ',
+  'payments_subtitle': 'പേയ്‌മെന്റ് മാർഗങ്ങളും ചരിത്രവും',
+  'earnings': 'വരുമാനം',
+  'earnings_subtitle': 'നിങ്ങളുടെ വരുമാനം കാണുക',
+  'affiliates': 'അഫിലിയേറ്റുകൾ',
+  'affiliates_subtitle': 'റഫറലുകളും വരുമാനവും ട്രാക്ക് ചെയ്യുക',
+  'my_affiliates': 'എന്റെ അഫിലിയേറ്റുകൾ',
+  'my_affiliates_subtitle': 'നിങ്ങളുടെ റഫറലുകൾ ട്രാക്ക് ചെയ്യുക',
+  'affiliate_payments': 'അഫിലിയേറ്റ് പേയ്‌മെന്റുകൾ',
+  'affiliate_payments_subtitle': 'അഫിലിയേറ്റ് പേയ്‌മെന്റുകൾ നിയന്ത്രിക്കുക',
+  'points_section': 'പോയിന്റുകൾ',
+  'points_subtitle': 'പോയിന്റുകളും റിവാർഡുകളും നിയന്ത്രിക്കുക',
+  'my_points': 'എന്റെ പോയിന്റുകൾ',
+  'my_points_subtitle': 'നിങ്ങളുടെ പോയിന്റ് ബാലൻസ് കാണുക',
+  'points_payments': 'പോയിന്റ് പേയ്‌മെന്റുകൾ',
+  'points_payments_subtitle': 'പോയിന്റുകൾ റീഡീം ചെയ്യുക',
+  'financial': 'സാമ്പത്തികം',
+  'bank_transfers': 'ബാങ്ക് ട്രാൻസ്ഫറുകൾ',
+  'bank_transfers_subtitle': 'ബാങ്ക് ട്രാൻസ്ഫർ ചരിത്രം',
+  'marketplace_funding': 'മാർക്കറ്റ്പ്ലേസ് & ഫണ്ടിംഗ്',
+  'marketplace': 'മാർക്കറ്റ്പ്ലേസ്',
+  'marketplace_subtitle': 'വിൽപ്പനക്കാരുടെ ബാലൻസ് നിയന്ത്രിക്കുക',
+  'funding_subtitle': 'ഫണ്ടിംഗ് ക്യാമ്പെയിനുകൾ നിയന്ത്രിക്കുക',
+  'storage_cache': 'സ്റ്റോറേജ് & ക്യാഷ്',
+  'cache_management': 'ക്യാഷ് നിയന്ത്രണം',
+  'cache_management_subtitle': 'വീഡിയോ ക്യാഷും സ്റ്റോറേജും നിയന്ത്രിക്കുക',
+
+// Cache Settings Page
+  'cache_settings_title': 'ക്യാഷ് ക്രമീകരണങ്ങൾ',
+  'cache_manage_title': 'ക്യാഷ് നിയന്ത്രിക്കുക',
+  'cache_manage_subtitle': 'വീഡിയോ ക്യാഷും സ്റ്റോറേജും നിയന്ത്രിക്കുക',
+  'cache_information_section': 'ക്യാഷ് വിവരങ്ങൾ',
+  'cached_videos_label': 'ക്യാഷ് ചെയ്ത വീഡിയോകൾ',
+  'cache_duration_label': 'ക്യാഷ് ദൈർഘ്യം',
+  'max_cache_size_label': 'പരമാവധി ക്യാഷ് വലിപ്പം',
+  'cache_duration_value': '@days ദിവസം',
+  'cache_size_value': '@size MB',
+  'pre_cache_settings_section': 'പ്രീ-ക്യാഷ് ക്രമീകരണങ്ങൾ',
+  'enable_auto_pre_cache': 'ഓട്ടോ പ്രീ-ക്യാഷ് പ്രവർത്തനക്ഷമമാക്കുക',
+  'enable_auto_pre_cache_subtitle': 'വരാനിരിക്കുന്ന വീഡിയോകൾ സ്വയം സേവ് ചെയ്യുക',
+  'pre_cache_enabled_message': '✅ പ്രീ-ക്യാഷ് പ്രവർത്തനക്ഷമമാണ്',
+  'pre_cache_disabled_message': '❌ പ്രീ-ക്യാഷ് പ്രവർത്തനരഹിതമാണ്',
+  'pre_cache_count_title': 'പ്രീ-ക്യാഷ് എണ്ണം',
+  'pre_cache_count_subtitle': 'മുന്നോട്ട് ക്യാഷ് ചെയ്യുന്ന വീഡിയോകളുടെ എണ്ണം',
+  'pre_cache_set_message': 'പ്രീ-ക്യാഷ് @count വീഡിയോകൾക്ക് സജ്ജീകരിച്ചു',
+  'pre_cache_option_single': '@count വീഡിയോ',
+  'pre_cache_option_multiple': '@count വീഡിയോകൾ',
+  'wifi_only_pre_cache_title': 'WiFi മാത്രം പ്രീ-ക്യാഷ്',
+  'wifi_only_pre_cache_subtitle': 'മൊബൈൽ ഡാറ്റ സംരക്ഷിക്കുക',
+  'wifi_only_pre_cache_snackbar': '📡 WiFi-യിൽ മാത്രം പ്രീ-ക്യാഷ്',
+  'wifi_all_networks_snackbar': '📡 എല്ലാ നെറ്റ്‌വർക്കുകളിലും പ്രീ-ക്യാഷ്',
+  'cache_management_section': 'ക്യാഷ് നിയന്ത്രണം',
+  'clear_all_cache': 'എല്ലാ ക്യാഷും ക്ലിയർ ചെയ്യുക',
+  'delete_all_cached_videos': 'എല്ലാ ക്യാഷ് ചെയ്ത വീഡിയോകളും ഇല്ലാതാക്കുക',
+  'clear_cache_title': 'ക്യാഷ് ക്ലിയർ ചെയ്യുക',
+  'clear_cache_confirmation':
+  'എല്ലാ ക്യാഷ് ചെയ്ത വീഡിയോകളും ഇല്ലാതാക്കണോ?',
+  'cache_cleared_success_message': '✅ ക്യാഷ് വിജയകരമായി ക്ലിയർ ചെയ്തു',
+  'cache_pro_tips_title': 'പ്രോ ടിപ്പുകൾ',
+  'cache_pro_tips_body':
+  '• പ്രീ-ക്യാഷ് വേഗത്തിലുള്ള പ്ലേബാക്കിനായി വീഡിയോകൾ സേവ് ചെയ്യുന്നു\n'
+      '• @days ദിവസത്തിന് ശേഷം വീഡിയോകൾ സ്വയം ഇല്ലാതാകും\n'
+      '• WiFi മോഡ് മൊബൈൽ ഡാറ്റ സംരക്ഷിക്കുന്നു\n'
+      '• ക്യാഷ് എപ്പോൾ വേണമെങ്കിലും കൈമാറി ക്ലിയർ ചെയ്യാം',
+
+// Menu Page
+  'menu_view_profile': 'പ്രൊഫൈൽ കാണുക',
+  'menu_points': 'പോയിന്റുകൾ',
+  'menu_followers': 'ഫോളോവേഴ്സ്',
+  'menu_following': 'ഫോളോയിംഗ്',
+  'menu_search_placeholder': 'തിരയുക…',
+  'menu_sign_out': 'സൈൻ ഔട്ട്',
+  'menu_sign_out_confirm': 'നിങ്ങൾക്ക് സൈൻ ഔട്ട് ചെയ്യണമെന്ന് ഉറപ്പാണോ?',
+  'menu_sign_out_cancel': 'റദ്ദാക്കുക',
+  'menu_sign_out_success': 'വിജയകരമായി സൈൻ ഔട്ട് ചെയ്തു',
+
+// Profile Page
+  'profile_retry': 'വീണ്ടും ശ്രമിക്കുക',
+  'profile_not_found': 'പ്രൊഫൈൽ കണ്ടെത്തിയില്ല',
+  'profile_error_loading_friends': 'സുഹൃത്തുക്കൾ ലോഡ് ചെയ്യുന്നതിൽ പിശക്',
+  'profile_error_loading_followers': 'ഫോളോവേഴ്സ് ലോഡ് ചെയ്യുന്നതിൽ പിശക്',
+  'profile_error_loading_followings': 'ഫോളോയിംഗ് ലോഡ് ചെയ്യുന്നതിൽ പിശക്',
+  'profile_error_loading_subscriptions': 'സബ്സ്ക്രിപ്ഷനുകൾ ലോഡ് ചെയ്യുന്നതിൽ പിശക്',
+  'profile_no_friends': 'ഇതുവരെ സുഹൃത്തുക്കൾ ഇല്ല',
+  'profile_no_followers': 'ഇതുവരെ ഫോളോവേഴ്സ് ഇല്ല',
+  'profile_not_following': 'ഇതുവരെ ആരെയും ഫോളോ ചെയ്യുന്നില്ല',
+  'profile_no_subscriptions': 'ഇതുവരെ സബ്സ്ക്രിപ്ഷനുകൾ ഇല്ല',
+  'profile_mutual_friends': '@count പരസ്പര സുഹൃത്തുകൾ',
+  'profile_videos_coming_soon': 'വീഡിയോകൾ ഉടൻ വരുന്നു...',
+  'profile_no_social_links': 'സോഷ്യൽ ലിങ്കുകൾ ഇല്ല',
+  'profile_tab_posts': 'പോസ്റ്റുകൾ',
+  'profile_tab_about': 'വിവരം',
+  'profile_tab_photos': 'ഫോട്ടോകൾ',
+  'profile_tab_videos': 'വീഡിയോകൾ',
+  'profile_tab_friends': 'സുഹൃത്തുകൾ',
+  'profile_tab_more': 'കൂടുതൽ',
+  'profile_about_title': 'പരിചയം',
+  'profile_work_title': 'ജോലി',
+  'profile_location_title': 'സ്ഥലം',
+  'profile_education_title': 'വിദ്യാഭ്യാസം',
+  'profile_details_title': 'വിവരങ്ങൾ',
+  'profile_position': 'സ്ഥാനമാനം',
+  'profile_company': 'കമ്പനി',
+  'profile_website': 'വെബ്സൈറ്റ്',
+  'profile_current_city': 'നിലവിലെ നഗരം',
+  'profile_hometown': 'സ്വദേശം',
+  'profile_school': 'സ്കൂൾ',
+  'profile_major': 'വിഷയം',
+  'profile_class_year': 'ക്ലാസ് വർഷം',
+  'profile_country': 'രാജ്യം',
+  'profile_gender': 'ലിംഗം',
+  'profile_gender_male': 'പുരുഷൻ',
+  'profile_gender_female': 'സ്ത്രീ',
+  'profile_birthday': 'ജന്മദിനം',
+  'profile_social_links': 'സോഷ്യൽ ലിങ്കുകൾ',
+  'profile_photos': 'ഫോട്ടോകൾ',
+  'profile_albums': 'ആൽബങ്ങൾ',
+  'profile_albums_menu': 'ആൽബങ്ങൾ',
+  'profile_showing_photos': '@count ഫോട്ടോകൾ കാണിക്കുന്നു',
+  'profile_total_photos': '@total ൽ നിന്ന്',
+  'profile_no_photos': 'ഫോട്ടോകൾ ഇല്ല',
+  'profile_no_photos_album': 'ഈ ആൽബത്തിൽ ഫോട്ടോകൾ ഇല്ല',
+  'profile_load_more': 'കൂടുതൽ ലോഡ് ചെയ്യുക',
+  'profile_no_albums': 'ആൽബങ്ങൾ ഇല്ല',
+  'profile_friends_menu': 'സുഹൃത്തുകൾ',
+  'profile_followers_menu': 'ഫോളോവേഴ്സ്',
+  'profile_followings_menu': 'ഫോളോയിംഗ്',
+  'profile_subscriptions_menu': 'സബ്സ്ക്രിപ്ഷനുകൾ',
+  'profile_subscription_type_profile': 'പ്രൊഫൈൽ',
+  'profile_subscription_type_page': 'പേജ്',
+  'profile_subscription_type_group': 'ഗ്രൂപ്പ്',
+  'profile_viewing': 'കാണുന്നു',
+  'profile_error_loading_photos': 'ഫോട്ടോകൾ ലോഡ് ചെയ്യുന്നതിൽ പിശക്',
+  'profile_error_loading_albums': 'ആൽബങ്ങൾ ലോഡ് ചെയ്യുന്നതിൽ പിശക്',
+  'profile_blurred': 'മങ്ങിയ',
+  'profile_block_user': 'ഉപയോക്താവിനെ ബ്ലോക്ക് ചെയ്യുക',
+  'profile_unblock_user': 'ഉപയോക്താവിനെ അൺബ്ലോക്ക് ചെയ്യുക',
+  'profile_block_warning':
+  'ഈ ഉപയോക്താവിന് നിങ്ങളുടെ പ്രൊഫൈൽ കാണാൻ കഴിയില്ല',
+  'profile_cannot_block_self': 'സ്വയം ബ്ലോക്ക് ചെയ്യാൻ കഴിയില്ല',
+  'profile_unblocked_success': 'ഉപയോക്താവിനെ അൺബ്ലോക്ക് ചെയ്തു',
+  'profile_blocked_success': 'ഉപയോക്താവിനെ ബ്ലോക്ക് ചെയ്തു',
+  'profile_unblock_failed': 'അൺബ്ലോക്ക് ചെയ്യാൻ പരാജയപ്പെട്ടു',
+  'profile_block_failed': 'ബ്ലോക്ക് ചെയ്യാൻ പരാജയപ്പെട്ടു',
+  'profile_report': 'റിപ്പോർട്ട് ചെയ്യുക',
+  'profile_share': 'പ്രൊഫൈൽ പങ്കിടുക',
+  'profile_subscriptions': 'സബ്സ്ക്രിപ്ഷനുകൾ',
+  'application': 'ആപ്ലിക്കേഷൻ',
+  'theme_subtitle': 'ലൈറ്റ് / ഡാർക്ക് മോഡ്',
+  'language_subtitle': 'ഇംഗ്ലീഷ് / അറബിക്',
+// Reviews
+  'post_reviews_title': 'റിവ്യൂകൾ (@count)',
+  'add_review_title': 'നിങ്ങളുടെ റിവ്യൂ ചേർക്കുക',
+  'add_review_placeholder':
+  'ഈ പോസ്റ്റിനെക്കുറിച്ചുള്ള നിങ്ങളുടെ അഭിപ്രായങ്ങൾ പങ്കിടുക (ഐച്ഛികം)',
+  'submit_review': 'റിവ്യൂ സമർപ്പിക്കുക',
+  'review_added_success': 'റിവ്യൂ വിജയകരമായി ചേർത്തു',
+  'review_deleted_success': 'റിവ്യൂ നീക്കം ചെയ്തു',
+  'review_delete_failed': 'റിവ്യൂ നീക്കം ചെയ്യാൻ പരാജയപ്പെട്ടു',
+  'review_rating_required': 'ദയവായി 1 മുതൽ 5 വരെ റേറ്റിംഗ് തിരഞ്ഞെടുക്കുക',
+  'reviews_stats_title': 'റേറ്റിംഗ് വിശദാംശങ്ങൾ',
+  'average_rating': 'ശരാശരി റേറ്റിംഗ്',
+  'total_reviews': 'ആകെ റിവ്യൂകൾ: @count',
+  'no_reviews': 'ഇപ്പോൾ റിവ്യൂകളില്ല',
+  'add_reply': 'മറുപടി ചേർക്കുക',
+  'edit_reply': 'മറുപടി തിരുത്തുക',
+  'add_reply_placeholder': 'മറുപടി എഴുതുക...',
+  'submit_reply': 'മറുപടി സമർപ്പിക്കുക',
+  'review_reply_success': 'മറുപടി ചേർത്തു',
+  'review_reply_failed': 'മറുപടി ചേർക്കാൻ പരാജയപ്പെട്ടു',
+  'review_owner_cannot_rate': 'നിങ്ങളുടെ സ്വന്തം പോസ്റ്റിന് റേറ്റിംഗ് നൽകാൻ കഴിയില്ല',
+  'load_more_reviews': 'കൂടുതൽ റിവ്യൂകൾ ലോഡ് ചെയ്യുക',
+
+// Support
+  'support': 'സഹായം',
+  'report_issue': 'പ്രശ്നം റിപ്പോർട്ട് ചെയ്യുക',
+  'report_issue_subtitle': 'പ്രശ്നത്തിന്റെ വീഡിയോ അയയ്ക്കുക',
+  'help_center': 'സഹായ കേന്ദ്രം',
+  'help_center_subtitle': 'FAQsയും സഹായവും',
+  'terms_policies': 'നിബന്ധനകളും നയങ്ങളും',
+  'terms_policies_subtitle': 'സേവന നിബന്ധനകളും സ്വകാര്യതാ നയവും',
+  'delete_account_title': 'അക്കൗണ്ട് ഇല്ലാതാക്കുക',
+  'delete_account_confirm': 'നിങ്ങളുടെ അക്കൗണ്ട് ഇല്ലാതാക്കണമെന്ന് ഉറപ്പാണോ?',
+  'delete_account_warning':
+  'ഈ പ്രവർത്തി പിൻവലിക്കാൻ കഴിയില്ല. നിങ്ങളുടെ എല്ലാ ഡാറ്റയും സ്ഥിരമായി ഇല്ലാതാക്കപ്പെടും.',
+
+// Privacy Settings Page
+  'privacy_settings_title': 'സ്വകാര്യതാ ക്രമീകരണങ്ങൾ',
+  'privacy_tab': 'സ്വകാര്യത',
+  'notifications_tab': 'അറിയിപ്പുകൾ',
+  'settings_updated': 'ക്രമീകരണങ്ങൾ വിജയകരമായി അപ്‌ഡേറ്റ് ചെയ്തു',
+  'server_error_backend': 'സെർവർ പിശക്: ബാക്ക്‌എൻഡ് പരിഹാരം ആവശ്യമാണ്',
+  'backend_bug_message': 'ബാക്ക്‌എൻഡ് ബഗ്: getParsedBody() മെത്തഡ് ലഭ്യമല്ല',
+  'details': 'വിശദാംശങ്ങൾ',
+  'backend_bug_title': '⚠️ ബാക്ക്‌എൻഡ് ബഗ്',
+  'issue': 'പ്രശ്നം',
+  'fix': 'പരിഹാരം',
+
+// Privacy Sections
+  'profile_information': 'പ്രൊഫൈൽ വിവരങ്ങൾ',
+  'basic_info': 'അടിസ്ഥാന വിവരങ്ങൾ',
+  'work_info': 'ജോലി വിവരങ്ങൾ',
+  'education_info': 'വിദ്യാഭ്യാസം',
+  'other_info': 'മറ്റ് വിവരങ്ങൾ',
+  'personal_details': 'വ്യക്തിഗത വിശദാംശങ്ങൾ',
+  'relationship_status': 'ബന്ധ നില',
+  'content': 'ഉള്ളടക്കം',
+  'friends': 'സുഹൃത്തുകൾ',
+  'subscriptions': 'സബ്സ്ക്രിപ്ഷനുകൾ',
+  'interactions': 'ഇന്ററാക്ഷനുകൾ',
+  'post_on_wall': 'എന്റെ വാളിൽ പോസ്റ്റ് ചെയ്യുക',
+  'chat': 'ചാറ്റ്',
+  'poke': 'പോക്ക്',
+  'gifts': 'സമ്മാനങ്ങൾ',
+  'general_settings': 'പൊതുവായ ക്രമീകരണങ്ങൾ',
+  'enable_chat': 'ചാറ്റ് സജ്ജമാക്കുക',
+  'enable_newsletter': 'ന്യൂസ്‌ലെറ്റർ സജ്ജമാക്കുക',
+  'enable_tips': 'ടിപ്പുകൾ സജ്ജമാക്കുക',
+  'hide_friend_suggestions': 'സുഹൃത്ത് നിർദേശങ്ങൾ മറയ്ക്കുക',
+
+// Privacy Options
+  'public': 'പൊതു',
+  'only_me': 'എനിക്ക് മാത്രം',
+
+// Notifications Section
+  'email_notifications': 'ഇമെയിൽ അറിയിപ്പുകൾ',
+  'post_likes': 'പോസ്റ്റ് ലൈക്കുകൾ',
+  'post_comments': 'പോസ്റ്റ് കമന്റുകൾ',
+  'post_shares': 'പോസ്റ്റ് ഷെയറുകൾ',
+  'wall_posts': 'വാൾ പോസ്റ്റുകൾ',
+  'mentions': 'മെൻഷനുകൾ',
+  'profile_visits': 'പ്രൊഫൈൽ സന്ദർശനങ്ങൾ',
+  'friend_requests': 'സുഹൃത്ത് അഭ്യർത്ഥനകൾ',
+  'sounds': 'ശബ്ദങ്ങൾ',
+  'notifications_sound': 'അറിയിപ്പ് ശബ്ദം',
+  'chat_sound': 'ചാറ്റ് ശബ്ദം',
+
+// Blocked Users Page
+  'blocked_users_title': 'ബ്ലോക്ക് ചെയ്ത ഉപയോക്താക്കൾ',
+  'no_blocked_users': 'ബ്ലോക്ക് ചെയ്ത ഉപയോക്താക്കളില്ല',
+  'unblock': 'അൺബ്ലോക്ക് ചെയ്യുക',
+  'error_loading_blocked_users': 'ബ്ലോക്ക് ചെയ്ത ഉപയോക്താക്കളെ ലോഡ് ചെയ്യുന്നതിൽ പിശക്',
+  'user_unblocked_successfully': 'ഉപയോക്താവിനെ വിജയകരമായി അൺബ്ലോക്ക് ചെയ്തു',
+  'failed_to_unblock_user': 'ഉപയോക്താവിനെ അൺബ്ലോക്ക് ചെയ്യാൻ പരാജയപ്പെട്ടു',
+
+// Change Password Page
+  'change_password_title': 'പാസ്‌വേഡ് മാറ്റുക',
+  'secure_your_account': 'നിങ്ങളുടെ അക്കൗണ്ട് സുരക്ഷിതമാക്കുക',
+  'secure_account_description':
+  'അക്കൗണ്ടിന്റെ സുരക്ഷയ്ക്കായി ശക്തമായ പാസ്‌വേഡ് സൃഷ്ടിക്കുക',
+  'security_tip': 'സുരക്ഷാ നിർദ്ദേശം',
+  'never_share_password': 'നിങ്ങളുടെ പാസ്‌വേഡ് ആരോടും പങ്കിടരുത്',
+  'current_password': 'നിലവിലെ പാസ്‌വേഡ്',
+  'enter_current_password': 'നിലവിലെ പാസ്‌വേഡ് നൽകുക',
+  'please_enter_current_password': 'ദയവായി നിലവിലെ പാസ്‌വേഡ് നൽകുക',
+  'new_password': 'പുതിയ പാസ്‌വേഡ്',
+  'enter_new_password': 'പുതിയ പാസ്‌വേഡ് നൽകുക',
+  'please_enter_new_password': 'ദയവായി പുതിയ പാസ്‌വേഡ് നൽകുക',
+  'password_min_6_chars': 'പാസ്‌വേഡ് കുറഞ്ഞത് 6 അക്ഷരങ്ങളെങ്കിലും ഉണ്ടായിരിക്കണം',
+  'new_password_different': 'പുതിയ പാസ്‌വേഡ് പഴയതിൽ നിന്ന് വ്യത്യസ്തമായിരിക്കണം',
+  'confirm_new_password': 'പുതിയ പാസ്‌വേഡ് സ്ഥിരീകരിക്കുക',
+  'reenter_new_password': 'പുതിയ പാസ്‌വേഡ് വീണ്ടും നൽകുക',
+  'please_confirm_new_password': 'ദയവായി പുതിയ പാസ്‌വേഡ് സ്ഥിരീകരിക്കുക',
+  'passwords_do_not_match': 'പാസ്‌വേഡുകൾ ഒത്തുപോകുന്നില്ല',
+  'password_strength': 'പാസ്‌വേഡ് ശക്തി',
+  'weak': 'ദുര്ബലമായത്',
+  'medium': 'മധ്യമം',
+  'strong': 'ശക്തമായത്',
+  'update_password': 'പാസ്‌വേഡ് അപ്‌ഡേറ്റ് ചെയ്യുക',
+  'password_requirements': 'പാസ്‌വേഡ് ആവശ്യകതകൾ',
+  'at_least_6_chars': 'കുറഞ്ഞത് 6 അക്ഷരങ്ങൾ',
+  'mix_upper_lower': 'വലിയയും ചെറിയയും അക്ഷരങ്ങളുടെ മിശ്രണം',
+  'include_numbers_symbols': 'സംഖ്യകളും ചിഹ്നങ്ങളും ഉൾപ്പെടുത്തുക',
+  'avoid_common_passwords': 'സാധാരണ പാസ്‌വേഡുകൾ ഒഴിവാക്കുക',
+  'failed_change_password':
+  'പാസ്‌വേഡ് മാറ്റാൻ പരാജയപ്പെട്ടു. ദയവായി വീണ്ടും ശ്രമിക്കുക.',
+
+// Manage Sessions Page
+  'manage_sessions_title': 'സെഷനുകൾ നിയന്ത്രിക്കുക',
+  'sign_out_all_devices': 'എല്ലാ ഉപകരണങ്ങളിൽ നിന്നും സൈൻ ഔട്ട് ചെയ്യുക',
+  'active_sessions': 'സജീവ സെഷനുകൾ',
+  'device': 'ഉപകരണം',
+  'devices': 'ഉപകരണങ്ങൾ',
+  'no_active_sessions': 'സജീവ സെഷനുകളില്ല',
+  'failed_load_sessions': 'സെഷനുകൾ ലോഡ് ചെയ്യാൻ പരാജയപ്പെട്ടു',
+  'sign_out_device': 'ഉപകരണത്തിൽ നിന്ന് സൈൻ ഔട്ട് ചെയ്യുക',
+  'sign_out_device_confirm': 'സൈൻ ഔട്ട് ചെയ്യണമെന്ന് ഉറപ്പാണോ',
+  'sign_out_all_title': 'എല്ലാ ഉപകരണങ്ങളിൽ നിന്നും സൈൻ ഔട്ട് ചെയ്യുക',
+  'sign_out_all_confirm':
+  'മറ്റുള്ള എല്ലാ ഉപകരണങ്ങളിൽ നിന്നും സൈൻ ഔട്ട് ചെയ്യണമെന്ന് ഉറപ്പാണോ?',
+  'active_sessions_text': 'സജീവ സെഷനുകൾ',
+  'sign_out': 'സൈൻ ഔട്ട്',
+  'sign_out_all': 'എല്ലായിടത്തുനിന്നും സൈൻ ഔട്ട്',
+  'sessions_signed_out': 'സെഷനുകൾ വിജയകരമായി സൈൻ ഔട്ട് ചെയ്തു',
+  'current': 'നിലവിലെ',
+
+  'signed_in_on_other': 'നിങ്ങൾ സൈൻ ഇൻ ചെയ്തിരിക്കുന്നു',
+  'other': 'മറ്റുള്ളവ',
+  'signed_in_only_this': 'നിങ്ങൾ ഈ ഉപകരണത്തിൽ മാത്രമാണ് സൈൻ ഇൻ ചെയ്തിരിക്കുന്നത്',
+
+// Addresses Page
+  'error_loading_addresses': 'വിലാസങ്ങൾ ലോഡ് ചെയ്യുന്നതിൽ പിശക്',
+  'delete_address_title': 'വിലാസം ഇല്ലാതാക്കുക',
+  'delete_address_confirm': 'ഈ വിലാസം ഇല്ലാതാക്കണമെന്ന് ഉറപ്പാണോ',
+  'add_address': 'വിലാസം ചേർക്കുക',
+  'no_addresses_yet': 'ഇതുവരെ വിലാസങ്ങളില്ല',
+  'add_first_address': 'ആരംഭിക്കാൻ ആദ്യ വിലാസം ചേർക്കുക',
+  'add_your_first_address': 'നിങ്ങളുടെ ആദ്യ വിലാസം ചേർക്കുക',
+  'zip': 'പിൻകോഡ്',
+
+  'add_new_address': 'പുതിയ വിലാസം ചേർക്കുക',
+  'edit_address': 'വിലാസം തിരുത്തുക',
+  'title': 'ശീർഷകം',
+  'title_required': 'ശീർഷകം ആവശ്യമാണ്',
+  'country_required': 'രാജ്യം ആവശ്യമാണ്',
+  'city_required': 'നഗരം ആവശ്യമാണ്',
+  'zip_code_required': 'പിൻകോഡ് ആവശ്യമാണ്',
+  'phone_number_required': 'ഫോൺ നമ്പർ ആവശ്യമാണ്',
+  'address_details': 'വിലാസ വിശദാംശങ്ങൾ',
+  'address_details_required': 'വിലാസ വിശദാംശങ്ങൾ ആവശ്യമാണ്',
+
+// Verification Page
+  'verification_center': 'സ്ഥിരീകരണ കേന്ദ്രം',
+  'identity_verification_request': 'ഐഡന്റിറ്റി സ്ഥിരീകരണ അഭ്യർത്ഥന',
+  'get_blue_checkmark':
+  'നിങ്ങളുടെ അക്കൗണ്ടിന്റെ വിശ്വാസ്യത വർധിപ്പിക്കാൻ ബ്ലൂ ടിക് നേടുക',
+  'account_is_verified': 'നിങ്ങളുടെ അക്കൗണ്ട് സ്ഥിരീകരിച്ചിരിക്കുന്നു',
+  'enjoy_verified_features':
+  'ഇപ്പോൾ എല്ലാ സ്ഥിരീകരിച്ച അക്കൗണ്ട് സവിശേഷതകളും ഉപയോഗിക്കാം',
+  'request_under_review': 'അഭ്യർത്ഥന പരിശോധനയിൽ ആണ്',
+  'team_reviewing_info':
+  'ഞങ്ങളുടെ ടീം നിങ്ങളുടെ വിവരങ്ങൾ പരിശോധിച്ചുകൊണ്ടിരിക്കുന്നു. ഉടൻ മറുപടി ലഭിക്കും',
+  'what_to_verify': 'നിങ്ങൾ എന്താണ് സ്ഥിരീകരിക്കാൻ ആഗ്രഹിക്കുന്നത്?',
+  'request_message': 'അഭ്യർത്ഥന സന്ദേശം',
+  'why_verified': 'ഈ അക്കൗണ്ട് സ്ഥിരീകരിക്കേണ്ടതെന്തുകൊണ്ട്?',
+  'page_id': 'പേജ് ഐഡി',
+  'enter_page_id': 'പേജ് ഐഡി നൽകുക',
+  'business_website': 'ബിസിനസ് വെബ്സൈറ്റ്',
+  'website_placeholder': 'https://example.com',
+  'identity_documents': 'ഐഡന്റിറ്റി രേഖകൾ',
+  'personal_photo': 'വ്യക്തിഗത ഫോട്ടോ',
+  'passport': 'പാസ്‌പോർട്ട്',
+  'personal_account': 'വ്യക്തിഗത അക്കൗണ്ട്',
+  'public_page': 'പൊതു പേജ്',
+  'field_required': 'ഈ ഫീൽഡ് ആവശ്യമാണ്',
+  'send_verification_request': 'സ്ഥിരീകരണ അഭ്യർത്ഥന അയയ്ക്കുക',
+  'request_under_review_message':
+  'നിങ്ങളുടെ അഭ്യർത്ഥന പരിശോധനയിലാണ്. ഉടൻ നിങ്ങളെ അറിയിക്കും',
+  'attach_photo_passport':
+  'ദയവായി വ്യക്തിഗത ഫോട്ടോയും പാസ്‌പോർട്ടും ചേർക്കുക',
+  'request_sent_successfully': 'അഭ്യർത്ഥന വിജയകരമായി അയച്ചു',
+
+// Monetization Settings Page
+  'subscribers': 'സബ്സ്ക്രൈബർമാർ',
+  'plans': 'പ്ലാനുകൾ',
+  'enable_monetization': 'മോണിറ്റൈസേഷൻ സജ്ജമാക്കുക',
+  'monetization_active': 'നിങ്ങളുടെ ഉള്ളടക്ക മോണിറ്റൈസേഷൻ സജീവമാണ്',
+  'enable_to_earn': 'വരുമാനം ആരംഭിക്കാൻ സജ്ജമാക്കുക',
+  'verification_required_monetization':
+  'മോണിറ്റൈസേഷൻ സജ്ജമാക്കാൻ അക്കൗണ്ട് സ്ഥിരീകരണം ആവശ്യമാണ്',
+  'chat_price': 'ചാറ്റ് വില',
+  'call_price': 'കാൾ വില',
+  'save_settings': 'ക്രമീകരണങ്ങൾ സംരക്ഷിക്കുക',
+  'subscription_plans': 'സബ്സ്ക്രിപ്ഷൻ പ്ലാനുകൾ',
+  'no_subscription_plans': 'ഇപ്പോൾ സബ്സ്ക്രിപ്ഷൻ പ്ലാനുകളില്ല',
+  'monetization_not_available': 'മോണിറ്റൈസേഷൻ ലഭ്യമല്ല',
+  'no_permission_monetize': 'ഉള്ളടക്കം മോണിറ്റൈസ് ചെയ്യാൻ നിങ്ങൾക്ക് അനുവാദമില്ല',
+  'failed_load_settings': 'ക്രമീകരണങ്ങൾ ലോഡ് ചെയ്യാൻ പരാജയപ്പെട്ടു',
+  'enter_valid_prices': 'ദയവായി സാധുവായ വില നൽകുക',
+  'minimum_price_is': 'കുറഞ്ഞ വില',
+  'per': 'പ്രതി',
+// Monetization Payments Page
+  'your_balance': 'നിങ്ങളുടെ ബാലൻസ്',
+  'withdrawal_request': 'പിൻവലിക്കൽ അഭ്യർത്ഥന',
+  'amount_usd': 'തുക (USD)',
+  'minimum_withdrawal_amount': 'കുറഞ്ഞ പിൻവലിക്കൽ തുക ₹50 ആണ്',
+  'payment_method': 'പേയ്മെന്റ് രീതി',
+  'transfer_to': 'ട്രാൻസ്ഫർ ചെയ്യുക',
+  'transfer_to_hint': 'നിങ്ങളുടെ പേയ്മെന്റ് വിശദാംശങ്ങൾ നൽകുക (ഇമെയിൽ, അക്കൗണ്ട് തുടങ്ങിയവ)',
+  'request_withdrawal': 'പിൻവലിക്കൽ അഭ്യർത്ഥിക്കുക',
+  'withdrawal_history': 'പിൻവലിക്കൽ ചരിത്രം',
+  'no_transactions_yet': 'ഇതുവരെ ഇടപാടുകളൊന്നും നടന്നിട്ടില്ലെന്ന് തോന്നുന്നു',
+  'please_enter_amount': 'ദയവായി തുക നൽകുക',
+  'minimum_withdrawal_50': 'കുറഞ്ഞ പിൻവലിക്കൽ തുക ₹50 ആണ്',
+  'please_enter_transfer': 'ദയവായി ട്രാൻസ്ഫർ വിശദാംശങ്ങൾ നൽകുക',
+  'withdrawal_request_submitted': 'പിൻവലിക്കൽ അഭ്യർത്ഥന സമർപ്പിച്ചു',
+  'paid': 'പേയ്മെന്റ് ചെയ്തു',
+  'pending': 'കാത്തിരിക്കുന്നു',
+  'declined': 'നിരസിച്ചു',
+  'method': 'രീതി',
+  'date': 'തീയതി',
+
+// Monetization Earnings Page
+  'my_earnings': 'എന്റെ വരുമാനം',
+  'total_earnings': 'ആകെ വരുമാനം',
+  'subscription': 'സബ്സ്ക്രിപ്ഷൻ',
+  'no_earnings_yet': 'ഇതുവരെ വരുമാനമൊന്നുമില്ല',
+  'earnings_will_appear_here': 'സബ്സ്ക്രിപ്ഷനിലൂടെ ലഭിക്കുന്ന വരുമാനം ഇവിടെ കാണിക്കും',
+  'subscription_label': 'സബ്സ്ക്രിപ്ഷൻ',
+  'commission': 'കമ്മീഷൻ',
+
+// Affiliates Page
+  'affiliates_system': 'അഫിലിയേറ്റ് സിസ്റ്റം',
+  'earn_per_referral':
+  'ഓരോ റഫറലിനും ₹0.15 (ലെവൽ 1), ₹0.10 (ലെവൽ 2), ₹0.05 (ലെവൽ 3) വരെ നേടാം.',
+  'paid_when_register':
+  'പുതിയ ഉപയോക്താവ് രജിസ്റ്റർ ചെയ്ത് പാക്കേജ് വാങ്ങുകയോ മോണിറ്റൈസ് ചെയ്യുകയോ ചെയ്താൽ പണമടയ്ക്കും',
+  'withdraw_or_transfer':
+  'നിങ്ങൾക്ക് പണം പിൻവലിക്കാനോ വാലറ്റിലേക്ക് ട്രാൻസ്ഫർ ചെയ്യാനോ കഴിയും',
+  'your_affiliate_link': 'നിങ്ങളുടെ അഫിലിയേറ്റ് ലിങ്ക്',
+  'referral_link_copied': 'റഫറൽ ലിങ്ക് കോപ്പി ചെയ്തു',
+  'referral_link_share': 'റഫറൽ ലിങ്ക് ഷെയർ ചെയ്യാൻ തയ്യാറാണ്',
+  'affiliates_money_balance': 'അഫിലിയേറ്റ് ബാലൻസ്',
+  'total_balance': 'ആകെ ബാലൻസ്',
+  'referrals': 'റഫറലുകൾ',
+  'your_referrals': 'നിങ്ങളുടെ റഫറലുകൾ',
+  'failed_load_data': 'ഡാറ്റ ലോഡ് ചെയ്യാൻ പരാജയപ്പെട്ടു',
+  'no_affiliates': 'അഫിലിയേറ്റുകളില്ല',
+  'start_sharing_link': 'നിങ്ങളുടെ റഫറൽ ലിങ്ക് ഷെയർ ചെയ്യാൻ തുടങ്ങുക',
+  'joined': 'ചേർന്നു',
+  'currency': 'നാണയം',
+
+// Points Page
+  'points_rewards': 'പോയിന്റുകളും റിവാർഡുകളും',
+  'pts': 'പോയിന്റുകൾ',
+  'total_points': 'ആകെ പോയിന്റുകൾ',
+  'equivalent_to': 'തുല്യം',
+  'today': 'ഇന്ന്',
+  'how_to_earn': 'എങ്ങനെ നേടാം',
+  'post_view': 'പോസ്റ്റ് കാഴ്ച',
+  'post_comment': 'പോസ്റ്റ് കമന്റ്',
+  'post_reaction': 'പോസ്റ്റ് റിയാക്ഷൻ',
+  'reaction': 'റിയാക്ഷൻ',
+  'follower': 'ഫോളോവർ',
+  'your_stats': 'നിങ്ങളുടെ സ്ഥിതിവിവരക്കണക്കുകൾ',
+  'can_withdraw': 'പിൻവലിക്കാൻ കഴിയും',
+  'yes': 'അതെ',
+  'min_amount': 'കുറഞ്ഞ തുക',
+  'recent_transactions': 'സമീപകാല ഇടപാടുകൾ',
+  'no_transactions_yet_points': 'ഇതുവരെ ഇടപാടുകളില്ല',
+  'start_earning_points': 'എൻഗേജ്മെന്റിലൂടെ പോയിന്റുകൾ സമ്പാദിക്കാൻ തുടങ്ങുക',
+
+// Points Payments
+  'minimum_withdrawal': 'കുറഞ്ഞ പിൻവലിക്കൽ',
+  'enter_payment_details': 'നിങ്ങളുടെ പേയ്മെന്റ് വിശദാംശങ്ങൾ നൽകുക (ഇമെയിൽ, അക്കൗണ്ട് തുടങ്ങിയവ)',
+  'minimum_withdrawal_amount_50': 'കുറഞ്ഞ പിൻവലിക്കൽ തുക ₹50 ആണ്',
+  'please_enter_transfer_details': 'ദയവായി ട്രാൻസ്ഫർ വിശദാംശങ്ങൾ നൽകുക',
+  'request_submitted': 'അഭ്യർത്ഥന സമർപ്പിച്ചു',
+  'failed_to_submit_request': 'അഭ്യർത്ഥന സമർപ്പിക്കാൻ പരാജയപ്പെട്ടു',
+  'no_withdrawals_yet': 'ഇതുവരെ പിൻവലിക്കൽ നടന്നിട്ടില്ല',
+
+  'unknown': 'അജ്ഞാതം',
+  'minimum_withdrawal_request_info': 'കുറഞ്ഞ പിൻവലിക്കൽ അഭ്യർത്ഥന തുക ₹50 ആണ്',
+  'id': 'ഐഡി',
+
+// Bank Settings
+  'refresh': 'റിഫ്രെഷ്',
+  'bank_information': 'ബാങ്ക് വിവരങ്ങൾ',
+  'bank_name': 'ബാങ്കിന്റെ പേര്',
+  'account_name': 'അക്കൗണ്ട് പേര്',
+  'account_number': 'അക്കൗണ്ട് നമ്പർ',
+  'routing_number': 'റൂട്ടിംഗ് നമ്പർ',
+  'transfer_instructions': 'ട്രാൻസ്ഫർ നിർദ്ദേശങ്ങൾ',
+  'copy_account': 'അക്കൗണ്ട് കോപ്പി ചെയ്യുക',
+  'account_number_copied': 'അക്കൗണ്ട് നമ്പർ കോപ്പി ചെയ്തു',
+  'copy_routing': 'റൂട്ടിംഗ് കോപ്പി ചെയ്യുക',
+  'routing_copied': 'റൂട്ടിംഗ് കോപ്പി ചെയ്തു',
+  'transfer_history': 'ട്രാൻസ്ഫർ ചരിത്രം',
+  'view_all_transfers': 'എല്ലാ ട്രാൻസ്ഫറുകളും കാണുക',
+  'failed_to_load': 'ലോഡ് ചെയ്യാൻ പരാജയപ്പെട്ടു',
+  'check_connection_try_again': 'ദയവായി കണക്ഷൻ പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കുക',
+  'bank_transfers_disabled': 'ബാങ്ക് ട്രാൻസ്ഫർ അപ്രാപ്തമാക്കിയിരിക്കുന്നു',
+  'bank_transfers_not_available': 'ഇപ്പോൾ ബാങ്ക് ട്രാൻസ്ഫർ ലഭ്യമല്ല',
+  'copied_to_clipboard': 'ക്ലിപ്പ്ബോർഡിലേക്ക് കോപ്പി ചെയ്തു',
+
+// Market Settings
+  'market_balance': 'മാർക്കറ്റ് ബാലൻസ്',
+  'ready_to_withdraw': 'പിൻവലിക്കാൻ തയ്യാറാണ്',
+  'need_more': '@amount കൂടി ആവശ്യമാണ്',
+  'can_transfer_to_wallet': '💡 വാലറ്റിലേക്ക് ട്രാൻസ്ഫർ ചെയ്യാൻ കഴിയും',
+  'withdraw': 'പിൻവലിക്കുക',
+  'transfer': 'ട്രാൻസ്ഫർ',
+  'payment_methods': 'പേയ്മെന്റ് രീതികൾ',
+  'custom': 'കസ്റ്റം',
+  'statistics': 'സ്ഥിതിവിവരക്കണക്കുകൾ',
+  'total_earned': 'ആകെ സമ്പാദിച്ചത്',
+  'total_paid': 'ആകെ നൽകിയ തുക',
+  'current_balance': 'നിലവിലെ ബാലൻസ്',
+  'market_not_enabled': 'മാർക്കറ്റ് സജ്ജമാക്കിയിട്ടില്ല',
+  'no_market_permission':
+  'നിങ്ങളുടെ അക്കൗണ്ടിന് മാർക്കറ്റ് ഉപയോഗിക്കാൻ അനുമതി ഇല്ല.',
+  'transfer_to_wallet': 'വാലറ്റിലേക്ക് ട്രാൻസ്ഫർ ചെയ്യുക',
+  'available': 'ലഭ്യമാണ്',
+  'enter_amount': 'തുക നൽകുക',
+  'invalid_amount': 'അസാധുവായ തുക',
+  'transfer_successful': 'ട്രാൻസ്ഫർ വിജയകരം',
+  'transfer_failed': 'ട്രാൻസ്ഫർ പരാജയപ്പെട്ടു',
+  'paypal': 'പേപാൽ',
+  'skrill': 'സ്ക്രിൽ',
+  'bank_transfer': 'ബാങ്ക് ട്രാൻസ്ഫർ',
+  'stripe': 'സ്ട്രൈപ്പ്',
+
+// Funding Settings
+  'funding_settings_title': 'ഫണ്ടിംഗ് ക്രമീകരണങ്ങൾ',
+  'funding_balance': 'ഫണ്ടിംഗ് ബാലൻസ്',
+  'transfer_wallet_enabled': '💡 വാലറ്റിലേക്ക് ട്രാൻസ്ഫർ സജ്ജമാണ്',
+  'funding_disabled': 'ഫണ്ടിംഗ് അപ്രാപ്തമാക്കിയിരിക്കുന്നു',
+  'funding_not_enabled_message': 'നിങ്ങളുടെ അക്കൗണ്ടിന് ഫണ്ടിംഗ് സജ്ജമാക്കിയിട്ടില്ല',
+  'failed_load_funding': 'ഫണ്ടിംഗ് ക്രമീകരണങ്ങൾ ലോഡ് ചെയ്യാൻ പരാജയപ്പെട്ടു',
+  'moneypoolscash': 'MoneyPoolsCash',
+
+  'bank': 'ബാങ്ക്',
+
+// Notifications
+  'notifications_title': 'അറിയിപ്പുകൾ',
+  'notifications_mark_all_read': 'എല്ലാം വായിച്ചതായി അടയാളപ്പെടുത്തുക',
+  'notifications_mark_read': 'വായിച്ചതായി അടയാളപ്പെടുത്തുക',
+  'notifications_delete': 'നീക്കം ചെയ്യുക',
+  'notifications_connection_error': 'കണക്ഷൻ പിശക്',
+  'notifications_try_again': 'വീണ്ടും ശ്രമിക്കുക',
+  'notifications_empty_title': 'അറിയിപ്പുകളൊന്നുമില്ല',
+  'notifications_empty_subtitle': 'അപ്‌ഡേറ്റുകളും അലർട്ടുകളും ഇവിടെ കാണിക്കും',
+  'notifications_empty_hint': 'പുതിയ പ്രവർത്തനങ്ങൾക്കായി ബന്ധത്തിൽ തുടരുക!',
+  'notifications_success': 'വിജയം',
+  'notifications_marked_success': 'എല്ലാ അറിയിപ്പുകളും വായിച്ചതായി അടയാളപ്പെടുത്തി',
+  'notifications_error': 'പിശക്',
+  'notifications_mark_error': 'അറിയിപ്പുകൾ വായിച്ചതായി അടയാളപ്പെടുത്താൻ പരാജയപ്പെട്ടു',
+
+// Friend Requests
+  'friend_requests_title': 'സുഹൃത്ത് അഭ്യർത്ഥനകൾ',
+  'friend_requests_received': 'ലഭിച്ചത്',
+  'friend_requests_sent': 'അയച്ചത്',
+  'friend_requests_empty_received_title': 'സുഹൃത്ത് അഭ്യർത്ഥനകളില്ല',
+  'friend_requests_empty_received_subtitle':
+  'ആർക്കെങ്കിലും നിങ്ങളോട് സുഹൃത്ത് അഭ്യർത്ഥന അയച്ചാൽ അത് ഇവിടെ കാണിക്കും.',
+  'friend_requests_empty_sent_title': 'അയച്ച അഭ്യർത്ഥനകളില്ല',
+  'friend_requests_empty_sent_subtitle':
+  'നിങ്ങൾ അയച്ച സുഹൃത്ത് അഭ്യർത്ഥനകൾ ഇവിടെ കാണിക്കും.',
+  'friend_requests_accept': 'സ്വീകരിക്കുക',
+  'friend_requests_decline': 'നിരസിക്കുക',
+  'friend_requests_cancel': 'റദ്ദാക്കുക',
+  'friend_requests_sent_time': '@time ന് അയച്ചത്',
+  'friend_requests_accept_success': '@name എന്നവരുടെ സുഹൃത്ത് അഭ്യർത്ഥന സ്വീകരിച്ചു',
+  'friend_requests_accept_error': 'അഭ്യർത്ഥന സ്വീകരിക്കാൻ പരാജയപ്പെട്ടു: @message',
+  'friend_requests_decline_success': '@name എന്നവരുടെ സുഹൃത്ത് അഭ്യർത്ഥന നിരസിച്ചു',
+  'friend_requests_decline_error': 'അഭ്യർത്ഥന നിരസിക്കാൻ പരാജയപ്പെട്ടു: @message',
+  'friend_requests_cancel_success': '@name ന് അയച്ച അഭ്യർത്ഥന റദ്ദാക്കി',
+  'friend_requests_cancel_error': 'അഭ്യർത്ഥന റദ്ദാക്കാൻ പരാജയപ്പെട്ടു: @message',
+  'friend_requests_accept_error_general':
+  'അഭ്യർത്ഥന സ്വീകരിക്കുന്നതിൽ പിശക്: @error',
+  'friend_requests_decline_error_general':
+  'അഭ്യർത്ഥന നിരസിക്കുന്നതിൽ പിശക്: @error',
+  'friend_requests_cancel_error_general':
+  'അഭ്യർത്ഥന റദ്ദാക്കുന്നതിൽ പിശക്: @error',
+
+// Home
+  'home_create_story': 'സ്റ്റോറി സൃഷ്ടിക്കുക',
+  'home_composer_placeholder': '@name, നിങ്ങളുടെ മനസ്സിലുള്ളത് എന്താണ്?',
+  'home_live': 'ലൈവ്',
+  'home_photo': 'ഫോട്ടോ',
+  'home_event': 'ഇവന്റ്',
+  'home_loading_more': 'കൂടുതൽ പോസ്റ്റുകൾ ലോഡ് ചെയ്യുന്നു...',
+// Post Menu
+  'post_menu_options': 'പോസ്റ്റ് ഓപ്ഷനുകൾ',
+  'post_menu_save': 'പോസ്റ്റ് സേവ് ചെയ്യുക',
+  'post_menu_save_subtitle': 'സേവ് ചെയ്ത ഇനങ്ങളിലേക്ക് ചേർക്കുക',
+  'post_menu_unsave': 'സേവ് നീക്കം ചെയ്യുക',
+  'post_menu_unsave_subtitle': 'സേവ് ചെയ്ത ഇനങ്ങളിൽ നിന്ന് നീക്കം ചെയ്യുക',
+  'post_menu_copy_link': 'ലിങ്ക് കോപ്പി ചെയ്യുക',
+  'post_menu_copy_link_subtitle': 'ഈ പോസ്റ്റിന്റെ ലിങ്ക് കോപ്പി ചെയ്യുക',
+  'post_menu_hide': 'പോസ്റ്റ് മറയ്ക്കുക',
+  'post_menu_hide_subtitle': 'ഇതുപോലുള്ള കുറവ് പോസ്റ്റുകൾ കാണുക',
+  'post_menu_show': 'പോസ്റ്റ് കാണിക്കുക',
+  'post_menu_show_subtitle': 'ഈ പോസ്റ്റ് വീണ്ടും കാണിക്കുക',
+  'post_menu_report': 'പോസ്റ്റ് റിപ്പോർട്ട് ചെയ്യുക',
+  'post_menu_report_subtitle': 'ഈ പോസ്റ്റിനെ കുറിച്ച് എനിക്ക് ആശങ്കയുണ്ട്',
+  'post_menu_report_success':
+  'റിപ്പോർട്ട് ചെയ്തതിന് നന്ദി. ഞങ്ങൾ ഉടൻ പരിശോധിക്കും.',
+  'post_menu_report_error': 'റിപ്പോർട്ട് സമർപ്പിക്കാൻ പരാജയപ്പെട്ടു',
+  'post_menu_report_already': 'നിങ്ങൾ ഇതിനകം ഈ പോസ്റ്റ് റിപ്പോർട്ട് ചെയ്തിട്ടുണ്ട്',
+  'post_menu_report_network_error':
+  'നെറ്റ്‌വർക്ക് പിശക്. ദയവായി കണക്ഷൻ പരിശോധിക്കുക',
+  'post_menu_report_server_error':
+  'സെർവർ പിശക്. പിന്നീട് വീണ്ടും ശ്രമിക്കുക',
+  'post_menu_pin': 'പ്രൊഫൈലിൽ പിൻ ചെയ്യുക',
+  'post_menu_pin_subtitle': 'നിങ്ങളുടെ പ്രൊഫൈലിന്റെ മുകളിൽ പിൻ ചെയ്യുക',
+  'post_menu_unpin': 'പ്രൊഫൈലിൽ നിന്ന് അൺപിൻ ചെയ്യുക',
+  'post_menu_unpin_subtitle': 'പ്രൊഫൈലിന്റെ മുകളിൽ നിന്ന് നീക്കം ചെയ്യുക',
+  'post_menu_enable_comments': 'കമന്റുകൾ പ്രവർത്തനക്ഷമമാക്കുക',
+  'post_menu_enable_comments_subtitle': 'ആളുകൾക്ക് കമന്റ് ചെയ്യാൻ അനുവദിക്കുക',
+  'post_menu_disable_comments': 'കമന്റുകൾ പ്രവർത്തനരഹിതമാക്കുക',
+  'post_menu_disable_comments_subtitle': 'ആളുകളെ കമന്റ് ചെയ്യുന്നത് തടയുക',
+  'post_menu_edit': 'പോസ്റ്റ് തിരുത്തുക',
+  'post_menu_edit_subtitle': 'നിങ്ങളുടെ പോസ്റ്റ് ഉള്ളടക്കം മാറ്റുക',
+  'post_menu_unmark_adult': 'വയസ്ക ഉള്ളടക്കം നീക്കം ചെയ്യുക',
+  'post_menu_unmark_adult_subtitle': '18+ ലേബലും ബ്ലറും നീക്കം ചെയ്യുക',
+  'post_menu_mark_adult': 'വയസ്ക ഉള്ളടക്കമായി അടയാളപ്പെടുത്തുക',
+  'post_menu_mark_adult_subtitle': '18+ ആയി അടയാളപ്പെടുത്തി ഫോട്ടോ ബ്ലർ ചെയ്യുക',
+  'post_menu_delete': 'പോസ്റ്റ് നീക്കം ചെയ്യുക',
+  'post_menu_delete_subtitle': 'ഈ പോസ്റ്റ് സ്ഥിരമായി നീക്കം ചെയ്യുക',
+  'post_menu_delete_title': 'പോസ്റ്റ് നീക്കം ചെയ്യുക',
+  'post_menu_delete_confirm':
+  'ഈ പോസ്റ്റ് നീക്കം ചെയ്യണമെന്ന് ഉറപ്പാണോ? ഈ നടപടി തിരിച്ചെടുക്കാൻ കഴിയില്ല.',
+  'post_menu_cancel': 'റദ്ദാക്കുക',
+  'post_menu_delete_button': 'നീക്കം ചെയ്യുക',
+
+// Events & Live
+  'groups_no_longer_available': 'ഗ്രൂപ്പുകൾ ഇനി ലഭ്യമല്ല.',
+  'event_action_created': 'ഒരു ഇവന്റ് സൃഷ്ടിച്ചു',
+  'event_action_updated_cover': 'ഇവന്റ് കവർ ഫോട്ടോ അപ്ഡേറ്റ് ചെയ്തു',
+  'event_action_posted_in': '@event ൽ പോസ്റ്റ് ചെയ്തു',
+  'live_action_is_live': 'ഇപ്പോൾ ലൈവിലാണ്',
+  'live_action_was_live': 'ലൈവിലായിരുന്നു',
+
+// Time
+  'time_today': 'ഇന്ന്',
+  'time_tomorrow': 'നാളെ',
+  'time_period_am': 'AM',
+  'time_period_pm': 'PM',
+
+// Offers
+  'offer_discount_buy_get': '@buy വാങ്ങൂ, @get ലഭിക്കൂ',
+  'offer_discount_spend_get':
+  '@spend ചെലവഴിക്കൂ, @amount ഡിസ്കൗണ്ട് ലഭിക്കൂ',
+  'offer_special': 'പ്രത്യേക ഓഫർ',
+
+// Misc
+  'recording_coming_soon':
+  'റെക്കോർഡിംഗ് പ്ലേബാക്ക് ഫീച്ചർ ഉടൻ വരുന്നു!',
+  'vote_singular': 'വോട്ട്',
+  'vote_plural': 'വോട്ടുകൾ',
+  'link_open_failed': 'ലിങ്ക് തുറക്കാൻ പരാജയപ്പെട്ടു: @error',
+
+  'live_status_live': 'LIVE',
+  'live_status_ended': 'അവസാനിച്ചു',
+  'post_promoted': 'പ്രമോട്ടുചെയ്തത്',
+  'post_reviews': '@count അവലോകനങ്ങൾ',
+  'post_views': '@count കാഴ്ചകൾ',
+  'post_shares2': '@count ഷെയറുകൾ',
+  'action_review': 'അവലോകനം',
+  'action_tip': 'ടിപ്പ്',
+  'action_share': 'ഷെയർ',
+  'share_feature_coming': 'ഷെയർ ഫീച്ചർ ഉടൻ വരുന്നു!',
+
+// Courses
+  'my_courses_enrolled': 'എൻറോൾ ചെയ്തവ',
+  'my_courses_created': 'സൃഷ്ടിച്ചതുകൾ',
+  'my_courses_create': 'കോഴ്‌സ് സൃഷ്ടിക്കുക',
+  'my_courses_no_enrolled': 'ഇതുവരെ എൻറോൾ ചെയ്ത കോഴ്സുകളില്ല',
+  'my_courses_no_created': 'ഇതുവരെ സൃഷ്ടിച്ച കോഴ്സുകളില്ല',
+  'my_courses_load_enrolled_error':
+  'എൻറോൾ ചെയ്ത കോഴ്സുകൾ ലോഡ് ചെയ്യാൻ പരാജയപ്പെട്ടു',
+  'my_courses_load_created_error':
+  'സൃഷ്ടിച്ച കോഴ്സുകൾ ലോഡ് ചെയ്യാൻ പരാജയപ്പെട്ടു',
+  'my_courses_retry': 'വീണ്ടും ശ്രമിക്കുക',
+
+  'transactions': 'ഇടപാടുകൾ',
+
+// Friend Request Dialog
+  'friend_request_title': 'സുഹൃത്ത് അഭ്യർത്ഥന',
+  'accept_or_decline':
+  'ഈ സുഹൃത്ത് അഭ്യർത്ഥന സ്വീകരിക്കണമോ നിരസിക്കണമോ?',
+  'decline_button': 'നിരസിക്കുക',
+  'accept_button': 'സ്വീകരിക്കുക',
+  'remove_friend_title': 'സുഹൃത്തെ നീക്കം ചെയ്യുക',
+  'are_you_sure_remove':
+  'ഈ സുഹൃത്തെ നീക്കം ചെയ്യണമെന്ന് ഉറപ്പാണോ?',
+  'remove_button': 'നീക്കം ചെയ്യുക',
+
+// Subscription Dialog
+  'subscription_required': '🔒 സബ്സ്ക്രിപ്ഷൻ ആവശ്യമാണ്',
+  'need_subscription_to_boost':
+  'പോസ്റ്റ് ബൂസ്റ്റ് ചെയ്യാൻ സബ്സ്ക്രിപ്ഷൻ ആവശ്യമാണ്.\nപാക്കേജ് പേജിലേക്ക് പോകണോ?',
+  'cancel_action': 'റദ്ദാക്കുക',
+  'show_packages_button': 'പാക്കേജുകൾ കാണുക',
+
+// General UI
+  'enter_email_or_username':
+  'നിങ്ങളുടെ ഇമെയിൽ അല്ലെങ്കിൽ ഉപയോക്തൃനാമം നൽകുക',
+  'enter_password_text': 'നിങ്ങളുടെ പാസ്‌വേഡ് നൽകുക',
+  'details_button': 'വിശദാംശങ്ങൾ',
+  'watch_live_button': 'ലൈവ് കാണുക',
+  'unable_to_load_history': 'ചരിത്രം ലോഡ് ചെയ്യാൻ കഴിഞ്ഞില്ല',
+  'no_payments_yet': 'ഇതുവരെ പേയ്മെന്റുകളില്ല',
+  'withdraw_funds_title': 'പണം പിൻവലിക്കുക',
+  'submit_request_button': 'അഭ്യർത്ഥന സമർപ്പിക്കുക',
+
+// Page Settings
+  'page_settings': 'പേജ് ക്രമീകരണങ്ങൾ',
+  'enable_page_tips_title': 'പേജ് ടിപ്പുകൾ സജ്ജമാക്കുക',
+  'allow_users_send_tips_desc':
+  'ഉപയോക്താക്കളെ ഈ പേജിലേക്ക് ടിപ്പ് അയക്കാൻ അനുവദിക്കുക',
+  'enable_monetization_page_title':
+  'മോണിറ്റൈസേഷൻ സജ്ജമാക്കുക',
+  'allow_page_earn_money_desc':
+  'ഈ പേജിന് ഉള്ളടക്കത്തിൽ നിന്ന് വരുമാനം നേടാൻ അനുവദിക്കുക',
+  'delete_permanently_button': 'സ്ഥിരമായി നീക്കം ചെയ്യുക',
+
+// Verification & Creation
+  'request_verification_title': 'വെരിഫിക്കേഷൻ അഭ്യർത്ഥന',
+  'take_photo_button': 'ഫോട്ടോ എടുക്കുക',
+  'choose_from_gallery_button': 'ഗാലറിയിൽ നിന്ന് തിരഞ്ഞെടുക്കുക',
+  'view_button': 'കാണുക',
+  'update_page_pictures_title': 'പേജ് ചിത്രങ്ങൾ അപ്ഡേറ്റ് ചെയ്യുക',
+  'choose_photo_button': 'ഫോട്ടോ തിരഞ്ഞെടുക്കുക',
+  'upload_button': 'അപ്‌ലോഡ് ചെയ്യുക',
+  'create_page_title': 'പേജ് സൃഷ്ടിക്കുക',
+  'select_category_placeholder': 'വിഭാഗം തിരഞ്ഞെടുക്കുക',
+  'select_country_placeholder': 'രാജ്യം തിരഞ്ഞെടുക്കുക',
+  'select_language_placeholder': 'ഭാഷ തിരഞ്ഞെടുക്കുക',
+
+// Photos & Albums
+  'photos_page_title': 'ഫോട്ടോകൾ',
+  'load_more_button': 'കൂടുതൽ ലോഡ് ചെയ്യുക',
+  'albums_page_title': 'ആൽബങ്ങൾ',
+  'no_people_found': 'ആരെയും കണ്ടെത്താനായില്ല',
+  'people_page_title': 'ആളുകൾ',
+
+// Courses & Details
+  'edit_course_button': 'തിരുത്തുക',
+  'course_enrollment_title': 'കോഴ്‌സ് എൻറോൾമെന്റ്',
+  'course_enrollment_cancel': 'റദ്ദാക്കുക',
+  'course_enrollment_confirm': 'എൻറോൾ ചെയ്യുക',
+  'course_details_button': 'വിശദാംശങ്ങൾ',
+
+// Audio Controls
+  'restart_from_beginning': 'ആദ്യത്തിൽ നിന്ന് വീണ്ടും പ്ലേ ചെയ്യുക',
+  'download_button': 'ഡൗൺലോഡ്',
+  'share_button_action': 'ഷെയർ ചെയ്യുക',
+  'audio_info_button': 'ഓഡിയോ വിവരങ്ങൾ',
+  'audio_information_title': 'ഓഡിയോ വിവരങ്ങൾ',
+  'close_button': 'അടയ്ക്കുക',
+
+// Reactions & Status
+  'all_reactions': 'എല്ലാം',
+  'retry_button': 'വീണ്ടും ശ്രമിക്കുക',
+  'following_status': 'ഫോളോ ചെയ്യുന്നു',
+  'follow_status': 'ഫോളോ ചെയ്യുക',
+
+// Wallet & Payment
+  'recharge_wallet_title': 'വാലറ്റ് റീചാർജ് ചെയ്യുക',
+  'filter_by_country_title': 'രാജ്യം അനുസരിച്ച് ഫിൽറ്റർ ചെയ്യുക',
+  'watch_page_title': 'കാണുക',
+  'wallet_page_title': 'വാലറ്റ്',
+  'post_details_title': 'പോസ്റ്റ് വിശദാംശങ്ങൾ',
+
+// Market Withdrawals & Movies
+  'market_withdrawals_title': 'മാർക്കറ്റ് പിൻവലിക്കൽ',
+  'movie_detail_title': 'സിനിമ',
+  'invalid_youtube_url': 'അസാധുവായ YouTube URL',
+  'all_genres_title': 'എല്ലാ വിഭാഗങ്ങളും',
+  'movies_title': 'സിനിമകൾ',
+  'search_movies_title': 'സിനിമ തിരയുക',
+  'search_button': 'തിരയുക',
+  'paid_badge': 'പേയ്ഡ്',
+  'interested_button_event': 'ആസക്തിയുണ്ട്',
+  'going_button_event': 'പോകുന്നു',
+  'remaining_label': 'ശേഷിക്കുന്നു',
+
+// Job & Event UI
+  'per_hour_option': 'മണിക്കൂറിന്',
+  'per_day_option': 'ദിവസത്തിന്',
+  'per_week_option': 'ആഴ്ചയ്ക്ക്',
+  'per_month_option': 'മാസത്തിന്',
+  'full_time_option': 'പൂർണ്ണകാല',
+  'part_time_option': 'ഭാഗികകാല',
+  'contract_option': 'കരാർ',
+  'temporary_option': 'താൽക്കാലിക',
+  'internship_option': 'ഇന്റേൺഷിപ്പ്',
+  'online_event': 'ഓൺലൈൻ ഇവന്റ്',
+  'this_event_held_online': 'ഈ ഇവന്റ് ഓൺലൈനായി നടത്തപ്പെടും',
+
+// Page Links
+  'facebook_link': 'Facebook',
+  'twitter_link': 'Twitter',
+  'youtube_link': 'YouTube',
+  'instagram_link': 'Instagram',
+  'linkedin_link': 'LinkedIn',
+  'vk_link': 'VK',
+// Page Actions
+  'invite_friends_label': 'സുഹൃത്തുകളെ ക്ഷണിക്കുക',
+  'manage_admins_label': 'അഡ്മിനുകളെ നിയന്ത്രിക്കുക',
+
+// Event Dialog
+  'delete_event_confirm_message':
+  'ഈ ഇവന്റ് നീക്കം ചെയ്യണമെന്ന് ഉറപ്പാണോ?',
+
+// Misc
+  'see_details_button': 'വിശദാംശങ്ങൾ കാണുക',
+  'confirmed_button': 'സ്ഥിരീകരിക്കുക',
+  'recommended_badge': 'ശുപാർശ ചെയ്തത്',
+  'your_current_plan': 'നിങ്ങളുടെ നിലവിലെ പ്ലാൻ',
+  'popular_choice_badge': 'ജനപ്രിയ തിരഞ്ഞെടുപ്പ്',
+  'price_label': 'വില',
+  'billing_cycle_label': 'ബില്ലിംഗ് ചക്രം',
+  'purchased_on_label': 'വാങ്ങിയ തീയതി',
+  'expiry_label': 'കാലഹരണപ്പെടുന്നു',
+  'lifetime_access': 'ജീവകാല ആക്സസ്',
+  'market_candidates_title': 'അഭ്യർത്ഥകർ',
+  'course_candidates_title': 'അഭ്യർത്ഥകർ',
+  'event_members_label': 'അംഗങ്ങൾ',
+
+// Invite Event
+  'invite_to_event': '@eventTitle ഇവന്റിലേക്ക് സുഹൃത്തുകളെ ക്ഷണിക്കുക',
+  'invite_button': 'ക്ഷണിക്കുക',
+
+// Reports
+  'please_select_reason': 'റിപ്പോർട്ട് ചെയ്യാനുള്ള കാരണം തിരഞ്ഞെടുക്കുക',
+  'report_submitted_success':
+  'റിപ്പോർട്ട് വിജയകരമായി സമർപ്പിച്ചു. ഞങ്ങളുടെ കമ്മ്യൂണിറ്റിയെ സുരക്ഷിതമായി നിലനിർത്താൻ സഹായിച്ചതിന് നന്ദി.',
+  'report_submit_error': 'റിപ്പോർട്ട് സമർപ്പിക്കാൻ പരാജയപ്പെട്ടു: @error',
+  'report_title_dialog': '@contentType റിപ്പോർട്ട് ചെയ്യുക',
+
+// Error Messages
+  'error_loading': 'പിശക്: @message',
+  'connection_error_text': 'കണക്ഷൻ പിശക്',
+
+// Page Profile
+  'page_update_pictures_title': 'ചിത്രങ്ങൾ അപ്ഡേറ്റ് ചെയ്യുക',
+  'live_stream': 'ലൈവ് സ്ട്രീം',
+  'likes_label': 'ലൈക്കുകൾ',
+  'posts_label': 'പോസ്റ്റുകൾ',
+  'page_liked_button': 'ലൈക്ക് ചെയ്തു',
+  'page_like_button': 'ലൈക്ക് ചെയ്യുക',
+  'page_like_failed': 'പേജ് @action ചെയ്യാൻ പരാജയപ്പെട്ടു',
+  'page_no_posts_title': 'ഇപ്പോൾ പോസ്റ്റുകളൊന്നുമില്ല',
+  'page_no_posts_subtitle':
+  'ഈ പേജിൽ പ്രസിദ്ധീകരിക്കുന്ന പോസ്റ്റുകൾ ഇവിടെ കാണിക്കും.',
+  'page_no_photos_title': 'ഫോട്ടോകൾ ഇല്ല',
+  'page_no_photos_subtitle':
+  'ഈ പേജിൽ പോസ്റ്റ് ചെയ്ത ഫോട്ടോകൾ ഇവിടെ കാണിക്കും.',
+  'page_no_videos_title': 'വീഡിയോകൾ ഇല്ല',
+  'page_no_videos_subtitle':
+  'ഈ പേജിൽ പോസ്റ്റ് ചെയ്ത വീഡിയോകൾ ഇവിടെ കാണിക്കും.',
+  'page_no_reviews_title': 'ഇപ്പോൾ റിവ്യൂകളില്ല',
+  'page_no_reviews_subtitle':
+  'ഉപയോക്താക്കൾ റിവ്യൂ നൽകുമ്പോൾ അവ ഇവിടെ കാണിക്കും.',
+  'page_no_events_title': 'ഇവന്റുകളില്ല',
+  'page_no_events_subtitle':
+  'ഈ പേജ് സൃഷ്ടിക്കുന്ന ഇവന്റുകൾ ഇവിടെ കാണിക്കും.',
+  'page_tab_timeline': 'ടൈംലൈൻ',
+  'page_tab_about': 'വിവരം',
+  'page_tab_photos': 'ചിത്രങ്ങൾ',
+  'page_tab_videos': 'വീഡിയോകൾ',
+  'page_tab_reviews': 'റിവ്യൂകൾ',
+  'page_tab_events': 'ഇവന്റുകൾ',
+  'about_section_title': 'വിവരം',
+  'contact_information_title': 'ബന്ധപ്പെടാനുള്ള വിവരം',
+
+  'page_no_info_title': 'വിവരം ലഭ്യമല്ല',
+  'page_no_info_subtitle':
+  'ലഭ്യമാകുമ്പോൾ പേജിന്റെ വിവരം ഇവിടെ കാണിക്കും.',
+
+// Group Profile
+  'cancel_group_request_title': 'അഭ്യർത്ഥന റദ്ദാക്കുക',
+  'cancel_group_request_message':
+  'ഈ ഗ്രൂപ്പിലേക്കുള്ള നിങ്ങളുടെ അംഗത്വ അഭ്യർത്ഥന റദ്ദാക്കണോ?',
+  'group_request_cancelled_success':
+  'അംഗത്വ അഭ്യർത്ഥന വിജയകരമായി റദ്ദാക്കി',
+  'group_request_cancel_failed':
+  'അഭ്യർത്ഥന റദ്ദാക്കാൻ പരാജയപ്പെട്ടു, വീണ്ടും ശ്രമിക്കുക',
+  'error_occurred_with_message': 'ഒരു പിശക് സംഭവിച്ചു: @error',
+  'group_not_available': 'ഗ്രൂപ്പ് ലഭ്യമല്ല',
+  'group_secret_no_access':
+  'ഇത് ഒരു രഹസ്യ ഗ്രൂപ്പാണ്, നിങ്ങൾക്ക് പ്രവേശനം ഇല്ല',
+  'group_may_be_deleted':
+  'ഗ്രൂപ്പ് നീക്കം ചെയ്തിരിക്കാം അല്ലെങ്കിൽ ക്രമീകരണങ്ങൾ മാറ്റിയിരിക്കാം',
+  'group_no_access_permission':
+  'ഗ്രൂപ്പ് നീക്കം ചെയ്തിരിക്കാം അല്ലെങ്കിൽ പ്രവേശനാനുമതി ഇല്ല',
+  'back_button': 'തിരികെ',
+  'group_secret': 'രഹസ്യ ഗ്രൂപ്പ്',
+  'group_closed': 'അടച്ച ഗ്രൂപ്പ്',
+  'group_member_to_see_secret':
+  'ഈ രഹസ്യ ഗ്രൂപ്പിലെ ഉള്ളടക്കം കാണാൻ അംഗമായിരിക്കണം',
+  'group_member_to_see_posts':
+  'ഈ ഗ്രൂപ്പിലെ പോസ്റ്റുകൾ കാണാൻ അംഗമായിരിക്കണം',
+  'group_request_join': 'ചേരാൻ അഭ്യർത്ഥിക്കുക',
+  'group_join': 'ഗ്രൂപ്പിൽ ചേരുക',
+  'group_privacy': 'സ്വകാര്യത',
+  'group_privacy_secret': 'രഹസ്യം',
+  'group_privacy_closed': 'അടച്ചത്',
+  'group_description': 'വിവരണം',
+  'group_members': 'അംഗങ്ങൾ',
+  'group_request_pending': 'നിങ്ങളുടെ അഭ്യർത്ഥന പരിശോധനയിലാണ്',
+  'group_request_sent_secret':
+  'നിങ്ങളുടെ അഭ്യർത്ഥന രഹസ്യ ഗ്രൂപ്പ് അഡ്മിനിലേക്ക് അയച്ചിട്ടുണ്ട്.\nഅംഗീകരിച്ചാൽ അറിയിക്കും.',
+  'group_request_sent':
+  'നിങ്ങളുടെ അഭ്യർത്ഥന ഗ്രൂപ്പ് അഡ്മിനിലേക്ക് അയച്ചിട്ടുണ്ട്.\nഅംഗീകരിച്ചാൽ അറിയിക്കും.',
+  'group_cancel_request': 'അഭ്യർത്ഥന റദ്ദാക്കുക',
+  'group_settings': 'ഗ്രൂപ്പ് ക്രമീകരണങ്ങൾ',
+  'group_posts_label': 'പോസ്റ്റുകൾ',
+  'group_invite_button': 'ക്ഷണിക്കുക',
+  'group_members_button': 'അംഗങ്ങൾ',
+  'group_requests_button': 'അഭ്യർത്ഥനകൾ',
+  'group_tab_posts': 'പോസ്റ്റുകൾ',
+  'group_tab_about': 'വിവരം',
+  'group_tab_members': 'അംഗങ്ങൾ',
+  'group_tab_photos': 'ചിത്രങ്ങൾ',
+  'group_tab_videos': 'വീഡിയോകൾ',
+  'group_tab_events': 'ഇവന്റുകൾ',
+  'group_description_section': 'വിവരണം',
+  'group_information_section': 'ഗ്രൂപ്പ് വിവരം',
+  'group_member_unit': 'അംഗം',
+  'group_category': 'വിഭാഗം',
+  'group_creation_date': 'സൃഷ്ടിച്ച തീയതി',
+  'group_admin_section': 'ഗ്രൂപ്പ് അഡ്മിൻ',
+  'group_no_posts': 'പോസ്റ്റുകളില്ല',
+  'group_no_photos': 'ചിത്രങ്ങളില്ല',
+  'group_no_videos': 'വീഡിയോകളില്ല',
+  'group_no_events': 'ഇവന്റുകളില്ല',
+  'group_pending_review': 'പരിശോധനയിൽ',
+  'group_leave': 'ഗ്രൂപ്പ് വിടുക',
+
+// Group Card
+  'group_leave_button': 'വിടുക',
+  'group_pending_status': 'ലമ്പിതം',
+  'group_join_button': 'ചേരുക',
+
+// Groups Page
+  'groups_page_title': 'ഗ്രൂപ്പുകൾ',
+  'groups_search_tooltip': 'ഗ്രൂപ്പുകൾ തിരയുക',
+  'groups_create_tooltip': 'ഗ്രൂപ്പ് സൃഷ്ടിക്കുക',
+  'groups_tab_joined': 'ചേർന്നത്',
+  'groups_tab_managed': 'എന്റെ ഗ്രൂപ്പുകൾ',
+  'groups_tab_suggested': 'ശുപാർശ ചെയ്തവ',
+  'groups_join_request_sent': 'ചേരാനുള്ള അഭ്യർത്ഥന അയച്ചു',
+  'groups_join_success': 'ഗ്രൂപ്പിൽ വിജയകരമായി ചേർന്നു',
+  'groups_join_failed': 'ഗ്രൂപ്പിൽ ചേരാൻ പരാജയപ്പെട്ടു',
+  'groups_leave_confirm_title': 'വിടൽ സ്ഥിരീകരണം',
+  'groups_leave_confirm_message':
+  '"@title" ഗ്രൂപ്പ് വിടണമെന്ന് ഉറപ്പാണോ?',
+  'groups_leave_success': 'ഗ്രൂപ്പ് വിജയകരമായി വിട്ടു',
+  'groups_leave_failed': 'ഗ്രൂപ്പ് വിടാൻ പരാജയപ്പെട്ടു',
+  'groups_load_failed': 'ഗ്രൂപ്പുകൾ ലോഡ് ചെയ്യാൻ പരാജയപ്പെട്ടു',
+  'groups_empty_joined': 'ഇതുവരെ ഒരു ഗ്രൂപ്പിലും ചേർന്നിട്ടില്ല',
+  'groups_empty_managed': 'നിയന്ത്രിക്കുന്ന ഗ്രൂപ്പുകളില്ല',
+  'groups_empty_suggested': 'ശുപാർശ ചെയ്ത ഗ്രൂപ്പുകളില്ല',
+
+// Edit Group Page
+  'edit_group_title': 'ഗ്രൂപ്പ് തിരുത്തുക',
+  'edit_group_tab_settings': 'ക്രമീകരണങ്ങൾ',
+  'edit_group_tab_info': 'വിവരം',
+  'edit_group_tab_pictures': 'ചിത്രങ്ങൾ',
+  'edit_group_tab_danger': 'അപകട മേഖല',
+  'edit_group_title_label': 'ഗ്രൂപ്പ് ശീർഷകം *',
+  'edit_group_title_hint': 'ഉദാഹരണം: UAEയിലെ Flutter ഡെവലപ്പർമാർ',
+  'edit_group_username_label': 'ഉപയോക്തൃനാമം *',
+  'edit_group_username_hint': 'ഉദാഹരണം: flutter_devs_uae',
+  'edit_group_username_helper':
+  'ഇംഗ്ലീഷ് അക്ഷരങ്ങൾ, അക്കങ്ങൾ, അണ്ടർസ്കോർ മാത്രം',
+  'edit_group_category_label': 'വിഭാഗം *',
+  'edit_group_loading': 'ലോഡ് ചെയ്യുന്നു...',
+  'edit_group_country_label': 'രാജ്യം',
+  'edit_group_country_placeholder': '-- രാജ്യം തിരഞ്ഞെടുക്കുക --',
+  'edit_group_language_label': 'ഭാഷ',
+  'edit_group_language_placeholder': '-- ഭാഷ തിരഞ്ഞെടുക്കുക --',
+  'edit_group_privacy_label': 'സ്വകാര്യത',
+  'edit_group_privacy_public': 'പൊതു',
+  'edit_group_privacy_public_desc':
+  'ആർക്കും ഗ്രൂപ്പും പോസ്റ്റുകളും കാണാം',
+  'edit_group_privacy_closed': 'അടച്ചത്',
+  'edit_group_privacy_closed_desc':
+  'അംഗങ്ങൾക്കേ പോസ്റ്റുകൾ കാണാൻ കഴിയൂ',
+  'edit_group_privacy_secret': 'രഹസ്യം',
+  'edit_group_privacy_secret_desc':
+  'അംഗീകരിച്ച അംഗങ്ങൾ മാത്രം',
+  'edit_group_description_label': 'വിവരണം',
+  'edit_group_description_hint':
+  'ഗ്രൂപ്പിനുള്ള വിവരണം എഴുതുക...',
+  'edit_group_website_label': 'വെബ്സൈറ്റ്',
+  'edit_group_location_label': 'സ്ഥലം',
+  'edit_group_location_hint': 'ദുബൈ, UAE',
+  'edit_group_pick_image': 'ചിത്രം തിരഞ്ഞെടുക്കുക',
+  'edit_group_upload': 'അപ്‌ലോഡ് ചെയ്യുക',
+  'edit_group_uploading': 'അപ്‌ലോഡ് ചെയ്യുന്നു...',
+  'edit_group_danger_zone_title': 'അപകട മേഖല',
+  'edit_group_danger_zone_desc':
+  'ഈ വിഭാഗത്തിലെ പ്രവർത്തനങ്ങൾ അപകടകരമാണ്, തിരിച്ചെടുക്കാനാകില്ല',
+  'edit_group_info_section': 'ഗ്രൂപ്പ് വിവരം',
+  'edit_group_members': 'അംഗങ്ങൾ',
+  'edit_group_creation_date': 'സൃഷ്ടിച്ച തീയതി',
+  'edit_group_privacy': 'സ്വകാര്യത',
+  'edit_group_delete_title': 'ഗ്രൂപ്പ് നീക്കം ചെയ്യുക',
+  'edit_group_delete_message':
+  '"@title" ഗ്രൂപ്പ് നീക്കം ചെയ്യണമെന്ന് ഉറപ്പാണോ?\n\nനീക്കം ചെയ്യപ്പെടും:\n• എല്ലാ പോസ്റ്റുകളും\n• എല്ലാ അംഗങ്ങളും\n• എല്ലാ ഡാറ്റയും\n\nഈ നടപടി തിരിച്ചെടുക്കാൻ കഴിയില്ല!',
+  'edit_group_delete_permanently': 'സ്ഥിരമായി നീക്കം ചെയ്യുക',
+  'edit_group_delete_button': 'ഗ്രൂപ്പ് സ്ഥിരമായി നീക്കം ചെയ്യുക',
+  'edit_group_deleting': 'നീക്കം ചെയ്യുന്നു...',
+  'edit_group_save_success':
+  'മാറ്റങ്ങൾ വിജയകരമായി സേവ് ചെയ്തു',
+  'edit_group_save_failed':
+  'മാറ്റങ്ങൾ സേവ് ചെയ്യാൻ പരാജയപ്പെട്ടു',
+  'edit_group_delete_success':
+  'ഗ്രൂപ്പ് വിജയകരമായി നീക്കം ചെയ്തു',
+  'edit_group_delete_failed':
+  'ഗ്രൂപ്പ് നീക്കം ചെയ്യാൻ പരാജയപ്പെട്ടു',
+  'edit_group_picture_upload_success':
+  'ഗ്രൂപ്പ് ചിത്രം വിജയകരമായി അപ്‌ലോഡ് ചെയ്തു',
+  'edit_group_picture_upload_failed':
+  'ചിത്രം അപ്‌ലോഡ് ചെയ്യാൻ പരാജയപ്പെട്ടു: @error',
+  'edit_group_cover_upload_success':
+  'കവർ ചിത്രം വിജയകരമായി അപ്‌ലോഡ് ചെയ്തു',
+  'edit_group_cover_upload_failed':
+  'കവർ അപ്‌ലോഡ് ചെയ്യാൻ പരാജയപ്പെട്ടു: @error',
+  'edit_group_image_pick_error':
+  'ചിത്രം തിരഞ്ഞെടുക്കുമ്പോൾ പിശക്: @error',
+  'edit_group_picture_section_title': 'ഗ്രൂപ്പ് ചിത്രം',
+  'edit_group_picture_section_subtitle':
+  'ഗ്രൂപ്പ് പ്രൊഫൈൽ ചിത്രം അപ്‌ലോഡ് ചെയ്യുക',
+  'edit_group_cover_section_title': 'കവർ ചിത്രം',
+  'edit_group_cover_section_subtitle':
+  'ഗ്രൂപ്പ് കവർ ചിത്രം അപ്‌ലോഡ് ചെയ്യുക',
+// My Pages Page
+  'my_pages_title': 'പേജുകൾ',
+  'my_pages_tab_my_pages': 'എന്റെ പേജുകൾ',
+  'my_pages_tab_liked': 'ലൈക്ക് ചെയ്തവ',
+  'my_pages_tab_suggested': 'ശുപാർശ ചെയ്തവ',
+  'my_pages_search_tooltip': 'തിരയുക',
+  'my_pages_error_title': 'എന്തോ തെറ്റായി',
+  'my_pages_admin_badge': 'അഡ്മിൻ',
+  'my_pages_featured_badge': 'പ്രധാനപ്പെട്ടത്',
+  'my_pages_likes_label': '@count ലൈക്ക്',
+  'my_pages_like_button': 'ലൈക്ക്',
+  'my_pages_liked_button': 'ലൈക്ക് ചെയ്തു',
+  'my_pages_boost_button': 'ബൂസ്റ്റ്',
+  'my_pages_boosted_button': 'ബൂസ്റ്റ് ചെയ്തത്',
+  'my_pages_empty_my_pages_title': 'പേജുകളൊന്നുമില്ല',
+  'my_pages_empty_my_pages_subtitle':
+  'ഇവിടെ കാണിക്കാൻ ഒരു പേജ് സൃഷ്ടിക്കുകയോ നിയന്ത്രിക്കുകയോ ചെയ്യുക.',
+  'my_pages_empty_liked_title': 'ലൈക്ക് ചെയ്ത പേജുകളില്ല',
+  'my_pages_empty_liked_subtitle':
+  'ഒരു പേജ് ലൈക്ക് ചെയ്താൽ അത് ഇവിടെ കാണിക്കും.',
+  'my_pages_empty_suggested_title': 'ശുപാർശകളില്ല',
+  'my_pages_empty_suggested_subtitle':
+  'ലഭ്യമാകുമ്പോൾ ശുപാർശ ചെയ്യുന്ന പേജുകൾ ഇവിടെ കാണിക്കും.',
+
+// Movies List Page
+  'movies_select_genre': 'വിഭാഗം തിരഞ്ഞെടുക്കുക',
+  'movies_unknown_genre': 'അജ്ഞാതം',
+  'movies_search_hint': 'ശീർഷകം അല്ലെങ്കിൽ കീവേഡ് നൽകുക',
+  'movies_apply_filter': 'പ്രയോഗിക്കുക',
+  'movies_empty': 'ചിത്രങ്ങളൊന്നും കണ്ടെത്തിയില്ല',
+
+// Movie Detail Page
+  'movie_not_found': 'ചിത്രം കണ്ടെത്തിയില്ല',
+  'movie_overview': 'സംഗ്രഹം',
+  'movie_cast': 'കലാകാരൻമാർ',
+  'movie_genres': 'വിഭാഗങ്ങൾ',
+  'movie_purchase_success': 'വാങ്ങൽ പൂർത്തിയായി. തുറക്കുക: @url',
+  'movie_open_link': 'തുറക്കുക: @url',
+  'movie_views_label': '@count പ്രാവശ്യം കണ്ടു',
+  'movie_available_for_days': '@days ദിവസത്തേക്ക് ലഭ്യം',
+  'movie_source_youtube': 'യൂട്യൂബ്',
+  'movie_watch_now': 'ഇപ്പോൾ കാണുക',
+  'movie_purchase': 'വാങ്ങുക',
+  'movie_purchasing': 'വാങ്ങുന്നു...',
+  'movie_watch': 'കാണുക',
+
+// Course Create Page
+  'course_create_title': 'കോഴ്സ് സൃഷ്ടിക്കുക',
+  'course_create_success': 'കോഴ്സ് വിജയകരമായി സൃഷ്ടിച്ചു',
+  'course_create_failed': 'കോഴ്സ് സൃഷ്ടിക്കാൻ പരാജയപ്പെട്ടു',
+  'course_title_label': 'കോഴ്സ് ശീർഷകം *',
+  'course_title_hint': 'ഉദാഹരണം: Flutter ആപ്പ് ഡെവലപ്മെന്റ് കോഴ്സ്',
+  'course_description_label': 'കോഴ്സ് വിവരണം *',
+  'course_description_hint':
+  'കോഴ്സിനുള്ള വിശദമായ വിവരണം എഴുതുക...',
+  'course_location_label': 'സ്ഥലം *',
+  'course_location_hint': 'ഉദാഹരണം: റിയാദ് - സൗദി അറേബ്യ അല്ലെങ്കിൽ ഓൺലൈൻ',
+  'course_start_date': 'ആരംഭ തീയതി',
+  'course_end_date': 'അവസാന തീയതി',
+  'course_select_date': 'തീയതി തിരഞ്ഞെടുക്കുക',
+  'course_free_toggle': 'സൗജന്യ കോഴ്സ്',
+  'course_fees_label': 'കോഴ്സ് ഫീസ് *',
+  'course_fees_hint': 'ഉദാഹരണം: 500',
+  'course_fees_required': 'ദയവായി കോഴ്സ് ഫീസ് നൽകുക',
+  'course_currency_sar': 'SAR',
+  'course_available_title': 'രജിസ്ട്രേഷനിന് തുറന്നിരിക്കുന്നു',
+  'course_available_open': 'ഉപയോക്താക്കൾക്ക് രജിസ്റ്റർ ചെയ്യാം',
+  'course_available_closed': 'ഇപ്പോൾ അടച്ചിരിക്കുന്നു',
+  'course_create_button': 'കോഴ്സ് സൃഷ്ടിക്കുക',
+  'course_cover_label': 'കവർ ചിത്രം',
+  'course_cover_tap': 'കവർ ചിത്രം തിരഞ്ഞെടുക്കാൻ ടാപ്പ് ചെയ്യുക',
+  'course_cover_upload_fail': 'ചിത്രം അപ്‌ലോഡ് ചെയ്യാൻ പരാജയപ്പെട്ടു',
+
+// Share Post Dialog
+  'share_post_title': 'പോസ്റ്റ് പങ്കിടുക',
+  'share_to_label': 'പങ്കിടുക',
+  'share_to_timeline': 'ടൈംലൈൻ',
+  'share_to_page': 'പേജ്',
+  'share_to_group': 'ഗ്രൂപ്പ്',
+  'share_to_event': 'ഇവന്റ്',
+  'share_select_page': 'പേജ് തിരഞ്ഞെടുക്കുക',
+  'share_select_group': 'ഗ്രൂപ്പ് തിരഞ്ഞെടുക്കുക',
+  'share_select_event': 'ഇവന്റ് തിരഞ്ഞെടുക്കുക',
+  'share_no_pages': 'ലഭ്യമായ പേജുകളില്ല',
+  'share_no_groups': 'ലഭ്യമായ ഗ്രൂപ്പുകളില്ല',
+  'share_no_events': 'ലഭ്യമായ ഇവന്റുകളില്ല',
+  'share_message_label': 'അധിക സന്ദേശം (ഐച്ഛികം)',
+  'share_message_hint': 'നിങ്ങളുടെ സന്ദേശം ഇവിടെ എഴുതുക...',
+  'share_button': 'പങ്കിടുക',
+  'cancel_button': 'റദ്ദാക്കുക',
+  'share_success': 'വിജയകരമായി പങ്കിട്ടു',
+  'share_error': 'പങ്കിടൽ പരാജയപ്പെട്ടു',
+  'error_title': 'പിശക്',
+  'success_title': 'വിജയം',
+  'reel_deleted_success': 'റീൽ വിജയകരമായി നീക്കം ചെയ്തു',
+  'confirm_delete': 'നീക്കം ചെയ്യൽ സ്ഥിരീകരിക്കുക',
+  'delete_post_message': 'ഈ പോസ്റ്റ് നീക്കം ചെയ്യണമെന്ന് ഉറപ്പാണോ?',
+  'delete_button': 'നീക്കം ചെയ്യുക',
+  'error_deleting_post': 'പോസ്റ്റ് നീക്കം ചെയ്യാൻ പരാജയപ്പെട്ടു',
+  'report_feature_coming': 'റിപ്പോർട്ട് സൗകര്യം ഉടൻ വരുന്നു',
+
+// Password Reset
+  'we_will_send_verification_code':
+  'നിങ്ങളുടെ പാസ്‌വേഡ് റീസെറ്റ് ചെയ്യാൻ നിങ്ങളുടെ ഇമെയിലിലേക്ക് ഒരു സ്ഥിരീകരണ കോഡ് അയയ്ക്കും',
+  'email_or_username': 'ഇമെയിൽ അല്ലെങ്കിൽ ഉപയോക്തൃനാമം',
+  'send_code': 'കോഡ് അയയ്ക്കുക',
+  'enter_verification_code': 'സ്ഥിരീകരണ കോഡ് നൽകുക',
+  'we_sent_code_to_your_email':
+  'നിങ്ങളുടെ ഇമെയിൽ വിലാസത്തിലേക്ക് 6 അക്ക കോഡ് അയച്ചിട്ടുണ്ട്',
+  'enter_all_digits': 'ദയവായി എല്ലാ 6 അക്കങ്ങളും നൽകുക',
+  'resend_code_in': 'കോഡ് വീണ്ടും അയയ്ക്കുക',
+  'seconds': 'സെക്കന്റ്',
+  'resend_code': 'കോഡ് വീണ്ടും അയയ്ക്കുക',
+  'verify_code': 'കോഡ് സ്ഥിരീകരിക്കുക',
+  'create_new_password': 'പുതിയ പാസ്‌വേഡ് സൃഷ്ടിക്കുക',
+  'enter_strong_password':
+  'കുറഞ്ഞത് 8 അക്ഷരങ്ങളുള്ള ശക്തമായ പാസ്‌വേഡ് നൽകുക',
+  'password_too_short':
+  'പാസ്‌വേഡ് കുറഞ്ഞത് 8 അക്ഷരങ്ങൾ ഉണ്ടായിരിക്കണം',
+  'reset_password': 'പാസ്‌വേഡ് റീസെറ്റ് ചെയ്യുക',
+  'skip_all': 'എല്ലാം ഒഴിവാക്കുക',
+  'step': 'ഘട്ടം',
+  'of': 'ൽ',
+  'profile_setup_complete': 'പ്രൊഫൈൽ സജ്ജീകരണം പൂർത്തിയായി!',
+  'please_select_country': 'ദയവായി നിങ്ങളുടെ രാജ്യം തിരഞ്ഞെടുക്കുക',
+  'select_your_country': 'നിങ്ങളുടെ രാജ്യം തിരഞ്ഞെടുക്കുക',
+  'job_title_hint': 'ഉദാഹരണം: സോഫ്റ്റ്വെയർ എഞ്ചിനീയർ',
+  'field_of_study': 'പഠന മേഖല',
+  'field_of_study_hint': 'ഉദാഹരണം: കമ്പ്യൂട്ടർ സയൻസ്',
+  'add_profile_photo': 'പ്രൊഫൈൽ ചിത്രം ചേർക്കുക',
+  'profile_photo_description':
+  'നിങ്ങളെ തിരിച്ചറിയാൻ ആളുകൾക്ക് സഹായിക്കുന്നതിനായി ചിത്രം ചേർക്കുക',
+  'tap_to_change_photo': 'ചിത്രം മാറ്റാൻ ടാപ്പ് ചെയ്യുക',
+  'choose_photo_source': 'ചിത്രത്തിന്റെ ഉറവിടം തിരഞ്ഞെടുക്കുക',
+  'camera': 'ക്യാമറ',
+  'gallery': 'ഗാലറി',
+  'photo_uploaded_successfully': 'ചിത്രം വിജയകരമായി അപ്‌ലോഡ് ചെയ്തു!',
+  'error_uploading_photo': 'ചിത്രം അപ്‌ലോഡ് ചെയ്യുമ്പോൾ പിശക്',
+  'error_picking_image': 'ചിത്രം തിരഞ്ഞെടുക്കുമ്പോൾ പിശക്',
+  'tell_us_about_yourself': 'നിങ്ങളെക്കുറിച്ച് പറയൂ',
+  'bio_description': 'ഒരു ചെറു പരിചയം എഴുതുക',
+  'bio': 'പരിചയം',
+  'write_something_about_yourself': 'നിങ്ങളെക്കുറിച്ച് കുറിച്ച് എഴുതൂ...',
+
+  'delete_story': 'സ്റ്റോറി നീക്കം ചെയ്യുക',
+  'delete_story_confirmation':
+  'ഈ സ്റ്റോറി നീക്കം ചെയ്യണമെന്ന് ഉറപ്പാണോ? ഈ നടപടി തിരിച്ചെടുക്കാൻ കഴിയില്ല.',
+  'story_deleted_successfully': 'സ്റ്റോറി വിജയകരമായി നീക്കം ചെയ്തു',
+
+// Time
+  'second_ago': 'ഒരു സെക്കന്റ് മുൻപ്',
+  'seconds_ago': 'സെക്കന്റുകൾ മുൻപ്',
+  'minute_ago': 'ഒരു മിനിറ്റ് മുൻപ്',
+  'hour_ago': 'ഒരു മണിക്കൂർ മുൻപ്',
+  'day_ago': 'ഒരു ദിവസം മുൻപ്',
+  'week_ago': 'ഒരു ആഴ്ച മുൻപ്',
+  'month_ago': 'ഒരു മാസം മുൻപ്',
+  'year_ago': 'ഒരു വർഷം മുൻപ്',
+
+// Buttons / Common Actions
+  'send_now': 'ഇപ്പോൾ അയയ്ക്കുക',
+  'send_message': 'സന്ദേശം അയയ്ക്കുക',
+  'more_options': 'കൂടുതൽ ഓപ്ഷനുകൾ',
+  'anonymous_user': 'അജ്ഞാത ഉപയോക്താവ്',
+
+// Status
+  'status_updated': 'സ്ഥിതി വിജയകരമായി അപ്‌ഡേറ്റ് ചെയ്തു',
+  'sold': 'വിൽപ്പനയായി',
+
+// Chat / Call
+  'video_call': 'വീഡിയോ കോൾ',
+  'audio_call': 'ഓഡിയോ കോൾ',
+  'mute': 'മ്യൂട്ട്',
+  'unmute': 'അൺമ്യൂട്ട്',
+  'speaker': 'സ്പീക്കർ',
+  'end_call': 'കോൾ അവസാനിപ്പിക്കുക',
+  'calling': 'കോൾ ചെയ്യുന്നു',
+  'answer': 'ഉത്തരം നൽകുക',
+  'decline': 'നിരസിക്കുക',
+// AI
+  'ai_assistant': 'എഐ സഹായി',
+  'ai_typing': 'ടൈപ്പ് ചെയ്യുന്നു...',
+  'ai_error': 'പിശക്',
+  'ai_success': 'വിജയം',
+  'ai_clear_chat': 'ചാറ്റ് ശുദ്ധീകരിക്കുക',
+  'ai_coming_soon': 'ഉടൻ വരുന്നു...',
+
+// Theme
+  'switched_to_light_mode': 'ലൈറ്റ് മോഡിലേക്ക് മാറി',
+  'switched_to_dark_mode': 'ഡാർക്ക് മോഡിലേക്ക് മാറി',
+
+// Cart / Orders
+  'shopping_cart': 'ഷോപ്പിംഗ് കാർട്ട്',
+  'checkout': 'ചെക്കൗട്ട്',
+  'orders': 'ഓർഡറുകൾ',
+  'order_details': 'ഓർഡർ വിശദാംശങ്ങൾ',
+  'order_status_pending': 'കാത്തിരിക്കുന്നു',
+  'order_status_delivered': 'ഡെലിവർ ചെയ്തു',
+  'description_plain_text': 'വിവരണം (HTML പിന്തുണയുണ്ട്)',
+  'enter_description': 'വിവരണം ഇവിടെ നൽകുക',
+  'preview': 'മുൻകാഴ്ച',
+  'chat_seller_privacy_restricted':
+  'വിൽപ്പനക്കാരൻ ചാറ്റ് സ്വകാര്യത ക്രമീകരണങ്ങൾ നിയന്ത്രിച്ചിട്ടുണ്ട്',
+  'cannot_chat_with_yourself': 'നിങ്ങൾക്ക് സ്വയം സന്ദേശം അയയ്ക്കാൻ കഴിയില്ല',
+  'no_posts_found': 'ഒരു പോസ്റ്റും കണ്ടെത്തിയില്ല',
+
+  'send_merits_title': 'മെറിറ്റ് പോയിന്റുകൾ അയയ്ക്കുക',
+  'send_merits_subtitle': 'മറ്റുള്ളവരോടുള്ള നിങ്ങളുടെ അഭിനന്ദനം പങ്കിടുക',
+  'send_merits_info':
+  'മറ്റുള്ളവരുടെ വിലപ്പെട്ട സംഭാവനകളെ ആദരിക്കാൻ മെറിറ്റ് പോയിന്റുകൾ അയയ്ക്കുക',
+  'merits_available': '%s പോയിന്റുകൾ ലഭ്യമാണ്',
+  'send_merits_coming_soon': 'ഉടൻ വരുന്നു – മെറിറ്റ് അയയ്ക്കൽ പേജ്',
+  'failed_to_pick_file': 'ഫയൽ തിരഞ്ഞെടുക്കാൻ പരാജയപ്പെട്ടു',
+  'no_created_events': 'നിങ്ങൾ ഇതുവരെ ഒരു ഇവന്റും സൃഷ്ടിച്ചിട്ടില്ല',
+  'create_your_first_event':
+  'നിങ്ങളുടെ ആദ്യ ഇവന്റ് സൃഷ്ടിക്കാൻ + ബട്ടൺ ടാപ്പ് ചെയ്യുക!',
+  'search_products': 'ഉൽപ്പന്നങ്ങൾ തിരയുക...',
+  'edit_product': 'ഉൽപ്പന്നം തിരുത്തുക',
+  'mark_as_sold': 'വിൽപ്പനയായി അടയാളപ്പെടുത്തുക',
+  'mark_as_unsold': 'ലഭ്യമാണെന്ന് അടയാളപ്പെടുത്തുക',
+  'are_you_sure_mark_product_sold':
+  'ഈ ഉൽപ്പന്നം വിൽപ്പനയായി അടയാളപ്പെടുത്തണമെന്ന് ഉറപ്പാണോ?',
+  'product_marked_sold': 'ഉൽപ്പന്നം വിജയകരമായി വിൽപ്പനയായി അടയാളപ്പെടുത്തി',
+  'product_marked_unsold':
+  'ഉൽപ്പന്നം വിജയകരമായി ലഭ്യമാണെന്ന് അടയാളപ്പെടുത്തി',
+  'error_marking_product_sold':
+  'ഉൽപ്പന്നം വിൽപ്പനയായി അടയാളപ്പെടുത്തുന്നതിൽ പിശക്',
+  'error_marking_product_unsold':
+  'ഉൽപ്പന്നം ലഭ്യമാക്കുന്നതിൽ പിശക്',
+  'market_status_refunded': 'റീഫണ്ട് ചെയ്തു',
+  'change_status': 'സ്ഥിതി മാറ്റുക',
+  'upload_image_or_video': 'ദയവായി ഒരു ചിത്രം അല്ലെങ്കിൽ വീഡിയോ അപ്‌ലോഡ് ചെയ്യുക',
+  'select_media_below': 'താഴെ മീഡിയ തരം തിരഞ്ഞെടുക്കുക',
+  'video': 'വീഡിയോ',
+  'image': 'ചിത്രം',
+
+// Ads Sorting
+  'ads_sort_newest': 'ഏറ്റവും പുതിയത്',
+  'ads_sort_top_spend': 'ഏറ്റവും കൂടുതൽ ചെലവഴിച്ചത്',
+  'ads_sort_ending_soon': 'ഉടൻ അവസാനിക്കുന്നത്',
+
+// Filter Chips
+  'filter_newsfeed': 'ഹോം',
+  'filter_popular': 'ജനപ്രിയം',
+  'filter_discover': 'കണ്ടെത്തുക',
+  'post_type': 'പോസ്റ്റ് തരം',
+  'my_funding': 'എന്റെ ഫണ്ടിംഗ്',
+
+  'profile_no_videos': 'വീഡിയോകളില്ല',
+  'profile_videos_load_error': 'വീഡിയോകൾ ലോഡ് ചെയ്യുന്നതിൽ പിശക്',
+
+// Notifications
+  'notification_started_following': 'നിങ്ങളെ ഫോളോ ചെയ്യാൻ തുടങ്ങി',
+  'notification_friend_request_sent': 'നിങ്ങൾക്ക് സുഹൃത്ത് അഭ്യർത്ഥന അയച്ചു',
+  'notification_friend_request_accepted': 'നിങ്ങളുടെ സുഹൃത്ത് അഭ്യർത്ഥന അംഗീകരിച്ചു',
+  'notification_commented_post': 'നിങ്ങളുടെ പോസ്റ്റിൽ അഭിപ്രായം രേഖപ്പെടുത്തി',
+  'notification_reacted_like_to_post': 'നിങ്ങളുടെ പോസ്റ്റിന് ലൈക്ക് നൽകി',
+  'notification_reacted_love_to_post': 'നിങ്ങളുടെ പോസ്റ്റിന് ലവ് പ്രതികരണം നൽകി',
+  'notification_reacted_haha_to_post': 'നിങ്ങളുടെ പോസ്റ്റിന് ഹാഹാ പ്രതികരണം നൽകി',
+  'notification_reacted_wow_to_post': 'നിങ്ങളുടെ പോസ്റ്റിന് വാവ് പ്രതികരണം നൽകി',
+  'notification_reacted_sad_to_post': 'നിങ്ങളുടെ പോസ്റ്റിന് സാഡ് പ്രതികരണം നൽകി',
+  'notification_reacted_angry_to_post': 'നിങ്ങളുടെ പോസ്റ്റിന് കോപം പ്രകടിപ്പിച്ചു',
+  'notification_shared_your_post': 'നിങ്ങളുടെ പോസ്റ്റ് പങ്കിട്ടു',
+  'notification_group_join_request':
+  'നിങ്ങളുടെ ഗ്രൂപ്പിൽ ചേരാൻ അഭ്യർത്ഥിച്ചു',
+  'notification_group_join_approved':
+  'നിങ്ങളുടെ ഗ്രൂപ്പിൽ ചേരാനുള്ള അഭ്യർത്ഥന അംഗീകരിച്ചു',
+  'notification_mentioned_you_post': 'ഒരു പോസ്റ്റിൽ നിങ്ങളെ പരാമർശിച്ചു',
+  'notification_mentioned_you_comment':
+  'ഒരു കമന്റിൽ നിങ്ങളെ പരാമർശിച്ചു',
+  'notification_posted_on_wall': 'നിങ്ങളുടെ വാളിൽ പോസ്റ്റ് ചെയ്തു',
+  'notification_replied_comment': 'നിങ്ങളുടെ കമന്റിന് മറുപടി നൽകി',
+  'notification_page_invitation':
+  'ഒരു പേജ് ലൈക്ക് ചെയ്യാൻ നിങ്ങളെ ക്ഷണിച്ചു',
+  'notification_group_invitation':
+  'ഒരു ഗ്രൂപ്പിൽ ചേരാൻ നിങ്ങളെ ക്ഷണിച്ചു',
+  'notification_event_invitation':
+  'ഒരു ഇവന്റിലേക്ക് നിങ്ങളെ ക്ഷണിച്ചു',
+  'notification_tagged_photo':
+  'ഒരു ചിത്രത്തിൽ നിങ്ങളെ ടാഗ് ചെയ്തു',
+  'notification_birthday': 'ഇന്ന് പിറന്നാൾ ആഘോഷിക്കുന്നു',
+
+  'your_addresses': 'നിങ്ങളുടെ വിലാസങ്ങൾ',
+  'edit_group_danger_zone': 'അപകട മേഖല',
+  'edit_group_danger_warning':
+  'ഈ വിഭാഗത്തിലെ പ്രവർത്തനങ്ങൾ അപകടകരമാണ്, തിരിച്ചെടുക്കാൻ കഴിയില്ല',
+
+// Group Pending Requests Page
+  'pending_requests_title': 'ചേരാനുള്ള അഭ്യർത്ഥനകൾ',
+  'pending_requests_refresh': 'റിഫ്രെഷ്',
+  'pending_requests_load_failed':
+  'അഭ്യർത്ഥനകൾ ലോഡ് ചെയ്യാൻ പരാജയപ്പെട്ടു',
+  'pending_requests_accepted':
+  '@name ഗ്രൂപ്പിൽ അംഗീകരിച്ചു',
+  'pending_requests_accept_failed':
+  'അഭ്യർത്ഥന അംഗീകരിക്കാൻ പരാജയപ്പെട്ടു, വീണ്ടും ശ്രമിക്കുക',
+  'pending_requests_decline_title':
+  'അഭ്യർത്ഥന നിരസിക്കുക',
+  'pending_requests_decline_message':
+  '@name ന്റെ ഗ്രൂപ്പിൽ ചേരാനുള്ള അഭ്യർത്ഥന നിരസിക്കണമോ?',
+  'pending_requests_declined':
+  '@name ന്റെ അഭ്യർത്ഥന നിരസിച്ചു',
+  'pending_requests_decline_failed':
+  'അഭ്യർത്ഥന നിരസിക്കാൻ പരാജയപ്പെട്ടു, വീണ്ടും ശ്രമിക്കുക',
+  'pending_requests_retry': 'വീണ്ടും ശ്രമിക്കുക',
+  'pending_requests_empty': 'ലമ്പിച്ച അഭ്യർത്ഥനകളില്ല',
+  'pending_requests_empty_subtitle':
+  'എല്ലാ അഭ്യർത്ഥനകളും പ്രോസസ് ചെയ്തു',
+  'pending_requests_date': 'അഭ്യർത്ഥന തീയതി',
+  'pending_requests_accept': 'അംഗീകരിക്കുക',
+  'pending_requests_decline': 'നിരസിക്കുക',
+
+// Group Privacy Types
+  'group_privacy_public': 'പൊതു',
+  'group_privacy_public_desc':
+  'ഉടൻ ചേരാം, എല്ലാവർക്കും കാണാം',
+  'group_privacy_closed_desc':
+  'ചേരാൻ അഭ്യർത്ഥന ആവശ്യമാണ്, തിരച്ചിലിൽ കാണാം',
+  'group_privacy_secret_desc':
+  'ചേരാൻ അഭ്യർത്ഥന ആവശ്യമാണ്, തിരച്ചിലിൽ കാണില്ല',
+
+// Groups Search Page
+  'groups_search_title': 'ഗ്രൂപ്പുകൾ തിരയുക',
+  'groups_search_clear_filters': 'ഫിൽട്ടറുകൾ നീക്കം ചെയ്യുക',
+  'groups_search_hint': 'ഗ്രൂപ്പുകൾ തിരയുക...',
+  'groups_search_filters': 'ഫിൽട്ടറുകൾ',
+  'groups_search_category_label': 'വിഭാഗം: @id',
+  'groups_search_empty_title': 'ഗ്രൂപ്പുകൾ തിരയുക',
+  'groups_search_empty_subtitle':
+  'തിരയലോ ഫിൽട്ടറുകളോ ഉപയോഗിച്ച് ഗ്രൂപ്പുകൾ കണ്ടെത്തുക',
+  'groups_search_no_results': 'ഫലങ്ങളില്ല',
+  'groups_search_no_results_subtitle':
+  'വ്യത്യസ്ത കീവേഡ് പരീക്ഷിക്കുക അല്ലെങ്കിൽ ഫിൽട്ടറുകൾ മാറ്റുക',
+  'groups_search_filter_title': 'ഫിൽട്ടർ',
+  'groups_search_clear_all': 'എല്ലാം നീക്കം ചെയ്യുക',
+  'groups_search_category': 'വിഭാഗം',
+  'groups_search_category_hint': 'വിഭാഗ ID (ഉദാ: 1)',
+  'groups_search_privacy': 'സ്വകാര്യത',
+  'groups_search_apply_filters': 'ഫിൽട്ടറുകൾ പ്രയോഗിക്കുക',
+
+// Group Invite Friends Page
+  'invite_friends_title': 'സുഹൃത്തുക്കളെ ക്ഷണിക്കുക',
+  'invite_friends_select_all': 'എല്ലാം തിരഞ്ഞെടുക്കുക',
+  'invite_friends_deselect_all': 'എല്ലാം ഒഴിവാക്കുക',
+  'invite_friends_search_hint': 'സുഹൃത്തുക്കളെ തിരയുക...',
+  'invite_friends_selected_count':
+  '@count സുഹൃത്തുക്കൾ തിരഞ്ഞെടുക്കപ്പെട്ടു',
+  'invite_friends_error_title': 'ഒരു പിശക് സംഭവിച്ചു',
+  'invite_friends_retry': 'വീണ്ടും ശ്രമിക്കുക',
+  'invite_friends_no_results': 'ഫലങ്ങളില്ല',
+  'invite_friends_no_friends':
+  'ക്ഷണിക്കാൻ സുഹൃത്തുക്കളില്ല',
+  'invite_friends_try_different_search':
+  'വ്യത്യസ്ത കീവേഡ് പരീക്ഷിക്കുക',
+  'invite_friends_all_members':
+  'നിങ്ങളുടെ എല്ലാ സുഹൃത്തുക്കളും ഇതിനകം അംഗങ്ങളാണ്',
+  'invite_friends_invited_label': 'ക്ഷണിച്ചു',
+  'invite_friends_sending': 'അയയ്ക്കുന്നു...',
+  'invite_friends_send_button':
+  'ക്ഷണം അയയ്ക്കുക (@count)',
+  'invite_friends_select_friends':
+  'ദയവായി ക്ഷണിക്കാൻ സുഹൃത്തുക്കളെ തിരഞ്ഞെടുക്കുക',
+  'invite_friends_success':
+  '@count ക്ഷണങ്ങൾ വിജയകരമായി അയച്ചു',
+  'invite_friends_partial_success':
+  '@success അയച്ചു, @failed പരാജയപ്പെട്ടു',
+  'invite_friends_all_failed':
+  'എല്ലാ ക്ഷണങ്ങളും പരാജയപ്പെട്ടു',
+  'invite_friends_send_error':
+  'ക്ഷണം അയയ്ക്കാൻ പരാജയപ്പെട്ടു: @error',
+// Profile Page Stats & Buttons
+  'profile_stat_posts': 'പോസ്റ്റുകൾ',
+  'profile_stat_photos': 'ചിത്രങ്ങൾ',
+  'profile_stat_friends': 'സുഹൃത്തുകൾ',
+  'profile_stat_followers': 'ഫോളോവേഴ്സ്',
+  'profile_following': 'ഫോളോ ചെയ്യുന്നു',
+  'profile_follow': 'ഫോളോ ചെയ്യുക',
+  'profile_no_posts': 'ഇതുവരെ പോസ്റ്റുകളില്ല',
+  'profile_allow_interaction':
+  'ഈ ഉപയോക്താവിന് നിങ്ങളുമായി ഇടപഴകാൻ അനുവദിക്കുക',
+  'profile_prevent_interaction':
+  'ഈ ഉപയോക്താവിനെ നിങ്ങളുമായി ഇടപഴകുന്നത് തടയുക',
+  'profile_user_blocked_success':
+  'ഉപയോക്താവിനെ വിജയകരമായി ബ്ലോക്ക് ചെയ്തു',
+  'profile_user_unblocked_success':
+  'ഉപയോക്താവിനെ വിജയകരമായി അൺബ്ലോക്ക് ചെയ്തു',
+  'profile_invalid_user_id': 'അസാധുവായ ഉപയോക്തൃ ID',
+  'profile_failed_open_chat': 'ചാറ്റ് തുറക്കാൻ പരാജയപ്പെട്ടു',
+  'profile_must_be_friend': 'ആദ്യം സുഹൃത്ത് ആയിരിക്കണം',
+
+// Group Members Page
+  'group_members_title': 'ഗ്രൂപ്പ് അംഗങ്ങൾ',
+  'group_members_tab_all': 'എല്ലാം',
+  'group_members_tab_admins': 'അഡ്മിനുകൾ',
+  'group_members_tab_members': 'അംഗങ്ങൾ',
+  'group_members_error_loading':
+  'അംഗങ്ങളെ ലോഡ് ചെയ്യുന്നതിൽ പിശക്: @error',
+  'group_members_no_members': 'അംഗങ്ങളില്ല',
+  'group_members_user_default': 'ഉപയോക്താവ്',
+  'group_members_admin_badge': 'അഡ്മിൻ',
+  'group_members_make_admin': 'അഡ്മിൻ ആക്കുക',
+  'group_members_remove_admin': 'അഡ്മിൻ അനുമതികൾ നീക്കം ചെയ്യുക',
+  'group_members_remove_member': 'അംഗത്തെ നീക്കം ചെയ്യുക',
+  'group_members_make_admin_title': 'അഡ്മിൻ ആക്കുക',
+  'group_members_make_admin_confirm':
+  '@name നെ ഈ ഗ്രൂപ്പിന്റെ അഡ്മിൻ ആക്കണമെന്നു നിങ്ങൾക്ക് ഉറപ്പാണോ?',
+  'group_members_cancel': 'റദ്ദാക്കുക',
+  'group_members_confirm': 'സ്ഥിരീകരിക്കുക',
+  'group_members_make_admin_success':
+  'അംഗത്തെ വിജയകരമായി അഡ്മിൻ ആക്കി',
+  'group_members_feature_development':
+  'ഈ സൗകര്യം വികസനത്തിലാണ്',
+  'group_members_make_admin_failed':
+  'അഡ്മിൻ ആക്കുന്നതിൽ പരാജയപ്പെട്ടു',
+  'group_members_remove_admin_title':
+  'അഡ്മിൻ അനുമതികൾ നീക്കം ചെയ്യുക',
+  'group_members_remove_admin_confirm':
+  '@name യുടെ അഡ്മിൻ അനുമതികൾ നീക്കം ചെയ്ത് സാധാരണ അംഗമാക്കണമെന്നു നിങ്ങൾക്ക് ഉറപ്പാണോ?',
+  'group_members_remove_permissions':
+  'അനുമതികൾ നീക്കം ചെയ്യുക',
+  'group_members_remove_admin_success':
+  'അഡ്മിൻ അനുമതികൾ വിജയകരമായി നീക്കം ചെയ്തു',
+  'group_members_remove_admin_failed':
+  'അഡ്മിൻ അനുമതികൾ നീക്കം ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു',
+  'group_members_remove_member_title':
+  'അംഗത്തെ നീക്കം ചെയ്യുക',
+  'group_members_remove_member_confirm':
+  '@name നെ ഗ്രൂപ്പിൽ നിന്ന് നീക്കം ചെയ്യണമെന്നു നിങ്ങൾക്ക് ഉറപ്പാണോ?',
+  'group_members_remove': 'നീക്കം ചെയ്യുക',
+  'group_members_remove_member_success':
+  'അംഗത്തെ വിജയകരമായി നീക്കം ചെയ്തു',
+  'group_members_remove_member_failed':
+  'പിശക്: അംഗത്തെ നീക്കം ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു',
+
+// Product Conditions & Status
+  'product_condition_new': 'പുതിയത്',
+  'product_condition_like_new': 'പുതിയത് പോലെ',
+  'product_condition_excellent': 'മികച്ചത്',
+  'product_condition_good': 'നല്ലത്',
+  'product_condition_fair': 'ശരാശരി',
+  'product_condition_poor': 'മോശം',
+  'product_status_available': 'ലഭ്യമാണ്',
+  'product_status_sold': 'വിൽപ്പനയായി',
+  'product_status_unavailable': 'ലഭ്യമല്ല',
+  'product_type_digital': 'ഡിജിറ്റൽ ഉൽപ്പന്നം',
+  'product_type_physical': 'ഭൗതിക ഉൽപ്പന്നം',
+  'cashfree': 'കാഷ്‌ഫ്രീ',
+  'razorpay': 'റേസർപേ',
+  'no_payment_methods_available':
+  'പേയ്മെന്റ് മാർഗങ്ങൾ ഒന്നും ലഭ്യമല്ല',
+  'notifications_deleted':
+  'അറിയിപ്പ് നീക്കം ചെയ്തു',
+
+// Wallet
+  'wallet_balance': 'വാലറ്റ് ബാലൻസ്',
+  'wallet_balance_available':
+  'ലഭ്യമായ വാലറ്റ് ബാലൻസ്',
+  'wallet_balance_current':
+  'നിലവിലെ വാലറ്റ് ബാലൻസ്',
+  'wallet_order_total': 'മൊത്തം ഓർഡർ തുക',
+  'wallet_insufficient_for_checkout':
+  'വാലറ്റ് ബാലൻസ് മതിയല്ല, ചെക്കൗട്ടിന് മുമ്പ് റീചാർജ് ചെയ്യുക',
+  'market_cart_not_ready':
+  'കാർട്ട് ഇപ്പോൾ തയ്യാറല്ല, വീണ്ടും ശ്രമിക്കുക',
+  'market_create_product': 'ഉൽപ്പന്നം സൃഷ്ടിക്കുക',
+  'page_no_products_title': 'ഉൽപ്പന്നങ്ങളില്ല',
+  'page_no_products_subtitle':
+  'ഈ പേജ് പോസ്റ്റ് ചെയ്ത ഉൽപ്പന്നങ്ങൾ ഇവിടെ കാണിക്കും.',
+  'page_tab_products': 'ഉൽപ്പന്നങ്ങൾ',
+  'group_tab_products': 'ഉൽപ്പന്നങ്ങൾ',
+  'group_no_products': 'ഉൽപ്പന്നങ്ങളില്ല',
+
+// Sharing
+  'share_external': 'ബാഹ്യമായി പങ്കിടുക',
+  'share_external_subtitle':
+  'മറ്റ് ആപ്പുകൾ ഉപയോഗിച്ച് പങ്കിടുക',
+  'share_on_social_media':
+  'സോഷ്യൽ മീഡിയയിൽ പങ്കിടുക',
+  'share_post_subject':
+  'ഈ പോസ്റ്റ് കാണൂ',
+  'share_external_success':
+  'വിജയകരമായി പങ്കിട്ടു',
+  'share_external_error':
+  'പങ്കിടുന്നതിൽ പരാജയപ്പെട്ടു',
+
+// Create Reel Page
+  'create_reel': 'റീൽ സൃഷ്ടിക്കുക',
+  'publish_reel': 'പ്രസിദ്ധീകരിക്കുക',
+  'video_uploaded_success':
+  '✅ വീഡിയോ വിജയകരമായി അപ്‌ലോഡ് ചെയ്തു',
+  'video_upload_failed':
+  '❌ വീഡിയോ അപ്‌ലോഡ് പരാജയപ്പെട്ടു',
+  'select_video_first':
+  '⚠️ ആദ്യം ഒരു വീഡിയോ തിരഞ്ഞെടുക്കുക',
+  'reel_published_success':
+  '🎉 റീൽ വിജയകരമായി പ്രസിദ്ധീകരിച്ചു!',
+  'reel_publish_failed':
+  '❌ റീൽ പ്രസിദ്ധീകരിക്കാൻ പരാജയപ്പെട്ടു',
+  'failed_to_create_reel':
+  'റീൽ സൃഷ്ടിക്കാൻ പരാജയപ്പെട്ടു',
+  'select_video_for_reel':
+  'റീലിനായി വീഡിയോ തിരഞ്ഞെടുക്കുക',
+  'select_video': 'വീഡിയോ തിരഞ്ഞെടുക്കുക',
+  'uploading_video': 'വീഡിയോ അപ്‌ലോഡ് ചെയ്യുന്നു...',
+  'add_reel_description':
+  'റീൽ വിവരണം ചേർക്കുക...',
+
+// Edit Profile Page
+  'edit_profile': 'പ്രൊഫൈൽ തിരുത്തുക',
+  'tab_basic': 'അടിസ്ഥാന വിവരം',
+  'tab_work': 'ജോലി',
+  'tab_location': 'സ്ഥലം',
+  'tab_education': 'വിദ്യാഭ്യാസം',
+  'tab_social': 'സോഷ്യൽ',
+  'tab_photos': 'ചിത്രങ്ങൾ',
+
+// Basic Info
+  'first_name_label': 'ആദ്യ പേര്',
+  'last_name_label': 'അവസാന പേര്',
+  'birthdate_label': 'ജനന തീയതി',
+  'website_label': 'വെബ്സൈറ്റ്',
+  'save_button': 'സേവ് ചെയ്യുക',
+
+// Work Info
+  'job_title_label': 'പദവി',
+  'enter_job_title': 'പദവി നൽകുക',
+  'company_label': 'കമ്പനി',
+  'company_website_label': 'കമ്പനി വെബ്സൈറ്റ്',
+
+// Location
+  'current_city_label': 'നിലവിലെ നഗരം',
+  'hometown_label': 'ജന്മനാട്',
+
+// Education
+  'major_label': 'പ്രധാന വിഷയം',
+  'educational_institution_label': 'വിദ്യാഭ്യാസ സ്ഥാപനം',
+  'graduation_year_label': 'ബിരുദ വർഷം',
+
+// Photos
+  'profile_picture': 'പ്രൊഫൈൽ ചിത്രം',
+  'cover_photo': 'കവർ ചിത്രം',
+  'tap_to_add_cover': 'കവർ ചിത്രം ചേർക്കാൻ ടാപ്പ് ചെയ്യുക',
+  'choose_image': 'ചിത്രം തിരഞ്ഞെടുക്കുക',
+
+// Password Dialog
+  'confirm_password_label': 'പാസ്‌വേഡ് സ്ഥിരീകരിക്കുക',
+  'change': 'മാറ്റുക',
+  'new_password_too_short': 'പുതിയ പാസ്‌വേഡ് വളരെ ചെറുതാണ്',
+
+// Country Picker
+  'country_label': 'രാജ്യം',
+  'loading_text': 'ലോഡ് ചെയ്യുന്നു…',
+  'select_country': 'രാജ്യം തിരഞ്ഞെടുക്കുക',
+  'search_country': 'രാജ്യം തിരയുക…',
+
+// Error Messages
+  'error_loading_countries': 'രാജ്യങ്ങൾ ലോഡ് ചെയ്യുന്നതിൽ പിശക്',
+  'error_uploading_image': 'ചിത്രം അപ്‌ലോഡ് ചെയ്യുന്നതിൽ പിശക്',
+  'error_uploading_cover': 'കവർ ചിത്രം അപ്‌ലോഡ് ചെയ്യുന്നതിൽ പിശക്',
+
+// Messenger Messages
+  'empty_message': 'ശൂന്യമായ സന്ദേശം',
+  'send': 'അയയ്ക്കുക',
+  'say_hello': 'സംഭാഷണം ആരംഭിക്കാൻ നമസ്കാരം പറയുക',
+  'delete_conversation': 'സംഭാഷണം നീക്കം ചെയ്യുക',
+  'conversation_deleted': 'സംഭാഷണം നീക്കം ചെയ്തു',
+  'failed_to_delete_conversation': 'സംഭാഷണം നീക്കം ചെയ്യാൻ പരാജയപ്പെട്ടു',
+  'failed_to_open_chat': 'ചാറ്റ് തുറക്കാൻ പരാജയപ്പെട്ടു',
+  'chat_privacy_friends_only':
+  'വിൽപ്പനക്കാരനുമായി ബന്ധപ്പെടാൻ കഴിയില്ല – സുഹൃത്തുകൾക്ക് മാത്രം',
+  'chat_privacy_following_only':
+  'വിൽപ്പനക്കാരനുമായി ബന്ധപ്പെടാൻ കഴിയില്ല – ആദ്യം ഫോളോ ചെയ്യണം',
+  'chat_privacy_settings_prevent':
+  'ഇപ്പോൾ വിൽപ്പനക്കാരനുമായി ബന്ധപ്പെടാൻ കഴിയില്ല',
+  'cannot_chat_with_user': 'ഈ ഉപയോക്താവുമായി ചാറ്റ് ചെയ്യാൻ കഴിയില്ല',
+  'user_blocked_you': 'ഈ ഉപയോക്താവ് നിങ്ങളെ ബ്ലോക്ക് ചെയ്തിരിക്കുന്നു',
+  'failed_to_play_audio': 'ഓഡിയോ പ്ലേ ചെയ്യാൻ പരാജയപ്പെട്ടു',
+  'failed_to_load_image': 'ചിത്രം ലോഡ് ചെയ്യാൻ പരാജയപ്പെട്ടു',
+  'no_image_url': 'ചിത്രത്തിന്റെ URL ലഭ്യമല്ല',
+  'required_permissions_not_granted':
+  'ആവശ്യമായ അനുമതികൾ നൽകിയിട്ടില്ല',
+  'app_id_empty': 'App ID ശൂന്യമാണ്',
+  'channel_name_empty': 'ചാനൽ പേര് ശൂന്യമാണ്',
+  'token_empty': 'ടോക്കൺ ശൂന്യമാണ്',
+  'uid_zero': 'UID ശൂന്യമാണ്',
+  'agora_engine_null':
+  'ആരംഭിച്ചതിന് ശേഷം Agora എഞ്ചിൻ ശൂന്യമാണ്',
+  'call_user_busy': 'ഉപയോക്താവ് തിരക്കിലാണ്',
+  'waiting_for_participant':
+  'പങ്കാളിയെ കാത്തിരിക്കുന്നു...',
+  'turn_on_camera': 'ക്യാമറ ഓൺ ചെയ്യുക',
+  'turn_off_camera': 'ക്യാമറ ഓഫ് ചെയ്യുക',
+  'switch_camera': 'ക്യാമറ മാറ്റുക',
+  'starting_video_call':
+  'വീഡിയോ കോളാരംഭിക്കുന്നു...',
+  'starting_audio_call':
+  'ഓഡിയോ കോളാരംഭിക്കുന്നു...',
+  'cannot_start_call': 'കാൾ ആരംഭിക്കാൻ കഴിയില്ല',
+  'call_start_failed': 'കാൾ ആരംഭിക്കാൻ പരാജയപ്പെട്ടു',
+  'user_busy_now': 'ഉപയോക്താവ് ഇപ്പോൾ തിരക്കിലാണ്',
+  'must_be_friends_to_call':
+  'കാൾ ചെയ്യാൻ ആദ്യം സുഹൃത്തായിരിക്കണം',
+  'user_not_found': 'ഉപയോക്താവിനെ കണ്ടെത്താനായില്ല',
+  'allow_microphone_only':
+  'ദയവായി മൈക്രോഫോണിന് അനുമതി നൽകുക',
+  'allow_microphone_camera':
+  'ദയവായി മൈക്രോഫോണിനും ക്യാമറയ്ക്കും അനുമതി നൽകുക',
+  'user_offline': 'ഉപയോക്താവ് ഓഫ്‌ലൈൻ ആണ്',
+  'tap_to_stop': 'നിർ‍ത്താൻ ടാപ്പ് ചെയ്യുക',
+  'permission_required': 'അനുമതി ആവശ്യമാണ്',
+  'microphone_permission_required':
+  'മൈക്രോഫോൺ അനുമതി ആവശ്യമാണ്',
+  'failed_to_start_recording':
+  'റെക്കോർഡിംഗ് ആരംഭിക്കാൻ പരാജയപ്പെട്ടു',
+  'recording_failed': 'റെക്കോർഡിംഗ് പരാജയപ്പെട്ടു',
+  'failed_to_upload_voice':
+  'വോയ്സ് അപ്‌ലോഡ് ചെയ്യാൻ പരാജയപ്പെട്ടു',
+  'failed_to_send_voice':
+  'വോയ്സ് അയയ്ക്കാൻ പരാജയപ്പെട്ടു',
+  'voice_sent_successfully':
+  'വോയ്സ് വിജയകരമായി അയച്ചു',
+  'your_story': 'നിങ്ങളുടെ സ്റ്റോറി',
+  'online': 'ഓൺലൈൻ',
+  'call_cancelled': 'കാൾ റദ്ദാക്കി',
+  'failed_to_answer_call_with_error':
+  'കാൾ സ്വീകരിക്കാൻ പരാജയപ്പെട്ടു: @error',
+  'failed_to_decline_call_with_error':
+  'കാൾ നിരസിക്കാൻ പരാജയപ്പെട്ടു: @error',
+  'incoming_video_call': 'വരുന്ന വീഡിയോ കാൾ',
+  'incoming_audio_call': 'വരുന്ന ഓഡിയോ കാൾ',
+  'video_call_in_progress':
+  'വീഡിയോ കാൾ പുരോഗമിക്കുന്നു...',
+  'audio_call_in_progress':
+  'ഓഡിയോ കാൾ പുരോഗമിക്കുന്നു...',
+  'call_ended': 'കാൾ അവസാനിച്ചു',
+  'user_busy': 'ഉപയോക്താവ് തിരക്കിലാണ്',
+  'outgoing_video_call': 'പോകുന്ന വീഡിയോ കാൾ',
+  'outgoing_audio_call': 'പോകുന്ന ഓഡിയോ കാൾ',
+  'start_chat': 'ചാറ്റ് ആരംഭിക്കുക',
+  'failed_to_load_friends': 'സുഹൃത്ത് പട്ടിക ലോഡ് ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു',
+  'no_friends_found': 'ചാറ്റ് ആരംഭിക്കാൻ സുഹൃത്തുകൾ ഇല്ല',
+  'failed_to_start_conversation': 'സംഭാഷണം ആരംഭിക്കാൻ പരാജയപ്പെട്ടു',
+  'shared_media': 'പങ്കിട്ട മീഡിയ',
+  'shared_media_conversation': 'സംഭാഷണ മീഡിയ',
+  'conversation_info': 'സംഭാഷണ വിവരം',
+  'shared_images': 'പങ്കിട്ട ചിത്രങ്ങൾ',
+  'shared_voice_notes': 'പങ്കിട്ട വോയ്സ് നോട്ടുകൾ',
+  'blocked': 'ബ്ലോക്ക് ചെയ്തു',
+  'are_you_sure_block_user':
+  'ഈ ഉപയോക്താവിനെ ബ്ലോക്ക് ചെയ്യണമെന്നു നിങ്ങൾക്ക് ഉറപ്പാണോ?',
+  'are_you_sure_unblock_user':
+  'ഈ ഉപയോക്താവിനെ അൺബ്ലോക്ക് ചെയ്യണമെന്നു നിങ്ങൾക്ക് ഉറപ്പാണോ?',
+  'user_blocked_successfully':
+  'ഉപയോക്താവിനെ വിജയകരമായി ബ്ലോക്ക് ചെയ്തു',
+  'failed_to_block_user':
+  'ഉപയോക്താവിനെ ബ്ലോക്ക് ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു',
+  'no_media_found': 'ഇപ്പോൾ മീഡിയയൊന്നുമില്ല',
+  'last_seen': 'അവസാനം കണ്ടത്: @time',
+  'tap_to_play': 'പ്ലേ ചെയ്യാൻ ടാപ്പ് ചെയ്യുക',
+
+// Comments Section
+  'error_loading_comments': 'അഭിപ്രായങ്ങൾ ലോഡ് ചെയ്യുന്നതിൽ പിശക്',
+  'no_comments_yet': 'ഇതുവരെ അഭിപ്രായങ്ങളില്ല',
+  'be_first_to_comment': 'ആദ്യ അഭിപ്രായം രേഖപ്പെടുത്തൂ',
+  'hide_replies': 'മറുപടികൾ മറയ്ക്കുക',
+  'show_replies': '@count @label കാണിക്കുക',
+  'reply_singular': 'മറുപടി',
+  'replies_plural': 'മറുപടികൾ',
+  'replying_to': '@name ന് മറുപടി നൽകുന്നു',
+  'write_reply': 'നിങ്ങളുടെ മറുപടി എഴുതുക...',
+  'write_comment': 'ഒരു അഭിപ്രായം എഴുതുക...',
+  'uploading_image': 'ചിത്രം അപ്‌ലോഡ് ചെയ്യുന്നു...',
+  'failed_upload_image': 'ചിത്രം അപ്‌ലോഡ് ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു',
+  'uploading_voice': 'വോയ്സ് റെക്കോർഡിംഗ് അപ്‌ലോഡ് ചെയ്യുന്നു...',
+  'failed_upload_voice': 'റെക്കോർഡിംഗ് അപ്‌ലോഡ് ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു',
+  'voice_recording': 'വോയ്സ് റെക്കോർഡിംഗ്',
+  'ready_to_send': 'അയയ്ക്കാൻ തയ്യാറാണ്',
+  'recording': 'റെക്കോർഡ് ചെയ്യുന്നു...',
+  'edit_comment': 'തിരുത്തുക',
+  'delete_comment': 'നീക്കം ചെയ്യുക',
+  'delete_comment_title': 'അഭിപ്രായം നീക്കം ചെയ്യുക',
+  'delete_comment_message':
+  'ഈ അഭിപ്രായം നീക്കം ചെയ്യണമെന്നു നിങ്ങൾക്ക് ഉറപ്പാണോ?',
+  'comment_deleted': 'അഭിപ്രായം വിജയകരമായി നീക്കം ചെയ്തു',
+  'comment_updated': 'അഭിപ്രായം വിജയകരമായി അപ്ഡേറ്റ് ചെയ്തു',
+  'failed_delete_comment': 'അഭിപ്രായം നീക്കം ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു',
+  'failed_update_comment': 'അഭിപ്രായം അപ്ഡേറ്റ് ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു',
+  'reply': 'മറുപടി',
+  'show_more_replies': 'കൂടുതൽ മറുപടികൾ കാണിക്കുക',
+
+// Auth - Login/Signup
+  'welcome_back_user': 'തിരികെ സ്വാഗതം, @name! 🎉',
+  'login_success': 'ലോഗിൻ വിജയകരമായി പൂർത്തിയായി.',
+  'login_failed': 'ലോഗിൻ പരാജയപ്പെട്ടു. വീണ്ടും ശ്രമിക്കുക.',
+  'or': 'അല്ലെങ്കിൽ',
+  'google_sign_in_disabled':
+  'Google സൈൻ-ഇൻ ഇപ്പോൾ അപ്രാപ്തമാണ്',
+  'google_sign_in_failed': 'Google സൈൻ-ഇൻ പരാജയപ്പെട്ടു',
+
+// Onboarding
+  'onboarding_connect_title': 'സുഹൃത്തുകളുമായി ബന്ധപ്പെടുക',
+  'onboarding_connect_desc':
+  'നിങ്ങളുടെ താൽപ്പര്യങ്ങളും ആസ്വാദ്യങ്ങളും പങ്കിടുന്ന ആളുകളുമായി അർത്ഥവത്തായ ബന്ധങ്ങൾ സൃഷ്ടിക്കുക.',
+  'onboarding_share_title': 'നിങ്ങളുടെ കഥ പങ്കിടുക',
+  'onboarding_share_desc':
+  'പോസ്റ്റുകൾ, ചിത്രങ്ങൾ, വീഡിയോകൾ, സ്റ്റോറിയുകൾ എന്നിവ വഴി നിങ്ങളുടെ സമൂഹവുമായി സ്വയം പ്രകടിപ്പിക്കുക.',
+  'onboarding_discover_title': 'പുതിയ ഉള്ളടക്കം കണ്ടെത്തുക',
+  'onboarding_discover_desc':
+  'ട്രെൻഡിംഗ് വിഷയങ്ങൾ കണ്ടെത്തൂ, ഗ്രൂപ്പുകളിൽ ചേരൂ, നിങ്ങള്ക്കായി തയ്യാറാക്കിയ ഉള്ളടക്കം കണ്ടെത്തൂ.',
+  'onboarding_secure_title': 'സുരക്ഷിതവും സംരക്ഷിതവും',
+  'onboarding_secure_desc':
+  'നിങ്ങളുടെ സ്വകാര്യത ഞങ്ങൾക്ക് പ്രധാനമാണ്. ഉയർന്ന സുരക്ഷാ നടപടികളിലൂടെ നിങ്ങളുടെ ഡാറ്റ സംരക്ഷിക്കുന്നു.',
+  'onboarding_next': 'അടുത്തത്',
+  'onboarding_get_started': 'തുടങ്ങുക',
+
+// Relationship Status
+  'relationship_single': 'അവിവാഹിതൻ/അവിവാഹിത',
+  'relationship_in_relationship': 'ബന്ധത്തിലുണ്ട്',
+  'relationship_married': 'വിവാഹിതൻ/വിവാഹിത',
+  'relationship_complicated': 'സങ്കീർണ്ണമാണ്',
+  'relationship_separated': 'വേർപിരിഞ്ഞത്',
+  'relationship_divorced': 'വിവാഹമോചിതൻ/വിവാഹമോചിത',
+  'relationship_widowed': 'വിധവ/വിധവൻ',
+
+// Gender Options
+  'gender_male': 'പുരുഷൻ',
+  'gender_female': 'സ്ത്രീ',
+  'gender_other': 'മറ്റുള്ളവർ',
+  'gender_all': 'എല്ലാം',
+  'relationship_all': 'എല്ലാം',
+
+// Profile Labels
+  'select_birth_date': 'ജനന തീയതി തിരഞ്ഞെടുക്കുക',
+  'about_you': 'നിങ്ങളെക്കുറിച്ച്',
+
+// AI Chat
+  'ai_connected': 'കണക്റ്റ് ചെയ്തു',
+  'ai_warning': 'മുന്നറിയിപ്പ്',
+  'ai_disabled': 'സെറ്റിംഗ്സിൽ AI ഫീച്ചർ അപ്രാപ്തമാണ്',
+  'ai_key_missing': 'App_Settings.dart ൽ AI കീ അപ്ഡേറ്റ് ചെയ്യുക',
+  'ai_okay': 'ശരി',
+  'ai_regenerate': 'മറുപടി വീണ്ടും സൃഷ്ടിക്കുക',
+  'ai_settings': 'സെറ്റിംഗ്സ്',
+  'ai_clear_confirm_title': 'ചാറ്റ് ക്ലിയർ ചെയ്യുക',
+  'ai_clear_confirm_message':
+  'എല്ലാ സന്ദേശങ്ങളും നീക്കം ചെയ്യണമെന്നു നിങ്ങൾക്ക് ഉറപ്പാണോ?',
+  'ai_cancel': 'റദ്ദാക്കുക',
+  'ai_clear': 'ക്ലിയർ ചെയ്യുക',
+  'ai_settings_title': 'ചാറ്റ് സെറ്റിംഗ്സ്',
+  'ai_more_settings_soon': 'കൂടുതൽ സെറ്റിംഗ്സ് ഉടൻ വരും',
+  'ai_hello_message': 'ഹലോ! ഞാൻ നിങ്ങളുടെ AI സഹായി ആണ്',
+  'ai_help_message':
+  'എന്നോട് എന്തും ചോദിക്കാം, നിങ്ങളെ സഹായിക്കാൻ സന്തോഷമുണ്ട്',
+  'ai_suggestion_what_is_ai': 'കൃത്രിമ ബുദ്ധിമत्ता എന്താണ്?',
+  'ai_suggestion_write_story': 'ഒരു ചെറുകഥ എഴുതിത്തരൂ',
+  'ai_suggestion_programming_tips': 'പ്രോഗ്രാമിംഗ് ടിപ്പുകൾ',
+  'ai_input_hint': 'നിങ്ങളുടെ സന്ദേശം ഇവിടെ എഴുതുക...',
+  'ai_publish_as_post': 'പോസ്റ്റായി പ്രസിദ്ധീകരിക്കുക',
+  'ai_publish_confirm':
+  'ഈ ഉള്ളടക്കം നിങ്ങളുടെ അക്കൗണ്ടിൽ പ്രസിദ്ധീകരിക്കണമെന്നു നിങ്ങൾക്ക് ഉറപ്പാണോ?',
+  'ai_publish': 'പ്രസിദ്ധീകരിക്കുക',
+  'ai_publishing': 'പ്രസിദ്ധീകരിക്കുന്നു...',
+  'ai_publish_success':
+  'ഉള്ളടക്കം വിജയകരമായി പ്രസിദ്ധീകരിച്ചു! 🎉',
+  'ai_publish_failed': 'ഉള്ളടക്കം പ്രസിദ്ധീകരിക്കാൻ പരാജയപ്പെട്ടു',
+  'ai_post_published_message':
+  '✅ പോസ്റ്റ് വിജയകരമായി പ്രസിദ്ധീകരിച്ചു!',
+  'ai_view_post': 'പോസ്റ്റ് കാണുക',
+  'ai_go_to_post': 'പോസ്റ്റിലേക്ക് പോകുക',
+
+// Chat Page
+  'are_you_sure': 'നിങ്ങൾക്ക് ഉറപ്പാണോ?',
+  'suitable_for_daytime_use': 'പകൽ ഉപയോഗത്തിന് അനുയോജ്യം',
+  'suitable_for_nighttime_use': 'രാത്രി ഉപയോഗത്തിന് അനുയോജ്യം',
+
+// URL Launcher
+  'cannot_open_url': 'URL തുറക്കാൻ കഴിയില്ല',
+
+// Group Profile Page
+  'group_secret_error': 'ഇത് ഒരു രഹസ്യ ഗ്രൂപ്പാണ്',
+  'group_not_found_error': 'ഗ്രൂപ്പ് കണ്ടെത്തിയില്ല',
+  'login_required_error': 'ആദ്യം ലോഗിൻ ചെയ്യണം',
+  'group_load_error': 'ഗ്രൂപ്പ് ലോഡ് ചെയ്യുന്നതിൽ പിശക്',
+  'group_left_success': 'ഗ്രൂപ്പ് വിജയകരമായി വിട്ടു',
+  'group_join_request_sent': 'ചേരാനുള്ള അഭ്യർത്ഥന അയച്ചു',
+// AI Bot
+  'ai_bot_hello': 'നമസ്കാരം! നിങ്ങളെ എങ്ങനെ സഹായിക്കാം? 😊',
+  'ai_bot_service_unavailable':
+  'ക്ഷമിക്കണം, AI സേവനം ഇപ്പോൾ ലഭ്യമല്ല.',
+  'ai_bot_question_too_long':
+  'ക്ഷമിക്കണം, ചോദ്യം വളരെ ദൈർഘ്യമുള്ളതാണ്. പരമാവധി @max അക്ഷരങ്ങൾ.',
+  'ai_bot_cannot_understand':
+  'ക്ഷമിക്കണം, ഞാൻ ചോദ്യം മനസ്സിലായില്ല. ദയവായി വീണ്ടും എഴുതുക.',
+  'ai_bot_api_key_error':
+  'API കീ പിശക്. ദയവായി സെറ്റിംഗ്സ് പരിശോധിക്കുക.',
+  'ai_bot_rate_limit':
+  'ക്ഷമിക്കണം, പരിധി കവിഞ്ഞിരിക്കുന്നു. പിന്നീട് വീണ്ടും ശ്രമിക്കുക.',
+  'ai_bot_service_error':
+  'ക്ഷമിക്കണം, സേവനത്തിൽ പിശക് സംഭവിച്ചു. വീണ്ടും ശ്രമിക്കുക.',
+  'ai_bot_no_internet':
+  'ക്ഷമിക്കണം, ഇന്റർനെറ്റ് കണക്ഷൻ ലഭ്യമല്ല.',
+  'ai_bot_unexpected_error':
+  'ക്ഷമിക്കണം, പ്രതീക്ഷിക്കാത്ത പിശക് സംഭവിച്ചു. വീണ്ടും ശ്രമിക്കുക.',
+  'ai_bot_daily_limit':
+  'ക്ഷമിക്കണം, ഇന്ന് അനുവദിച്ച AI പരിധി നിങ്ങൾ പൂർത്തിയാക്കി.',
+  'ai_bot_replied':
+  '✨ @username മറുപടി നൽകി!',
+  'ai_bot_reply_failed':
+  '⚠️ ബോട്ട് മറുപടി സൃഷ്ടിക്കാൻ പരാജയപ്പെട്ടു',
+  'ai_bot_info_title':
+  'നമസ്കാരം! ഞാൻ @username ആണ് 🤖',
+  'ai_bot_info_can_help':
+  'ഞാൻ നിങ്ങളെ സഹായിക്കാം:',
+  'ai_bot_info_verify_news':
+  '• വാർത്തകൾ പരിശോധിക്കുക',
+  'ai_bot_info_answer_questions':
+  '• ചോദ്യങ്ങൾക്ക് മറുപടി നൽകുക',
+  'ai_bot_info_provide_info':
+  '• ഉപകാരപ്രദമായ വിവരങ്ങൾ നൽകുക',
+  'ai_bot_info_usage':
+  'ഉപയോഗം: കമന്റിൽ @ എന്റെ പേര് എഴുതി ചോദ്യം ടൈപ്പ് ചെയ്യുക',
+  'ai_bot_info_example':
+  'ഉദാഹരണം: @username ഈ വാർത്ത ശരിയാണോ?',
+  'ai_bot_tip_title':
+  'ടിപ്പ്:',
+  'ai_bot_tip_body':
+  '• മികച്ച മറുപടികൾക്കായി വ്യക്തമായ ചോദ്യങ്ങൾ ചോദിക്കുക\n• ബോട്ടിലൂടെ വാർത്തകൾ പരിശോധിക്കാം\n• ബോട്ട് AI അടിസ്ഥാനമാക്കിയതാണ്, തുടർച്ചയായി പഠിക്കുന്നു',
+  'ai_bot_understood':
+  'മനസ്സിലായി',
+  'ai_bot_try_now':
+  'ഇപ്പോൾ പരീക്ഷിക്കുക',
+
+// Page Admins
+  'page_admins_title': 'പേജ് അഡ്മിനുകൾ',
+  'page_admins_failed_load':
+  'ലൈക്ക് ചെയ്തവരെ ലോഡ് ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു',
+  'page_admins_removed_admin':
+  '@name നെ അഡ്മിനുകളിൽ നിന്ന് നീക്കം ചെയ്തു',
+  'page_admins_added_admin':
+  '@name നെ അഡ്മിനാക്കി',
+  'page_admins_error_operation':
+  'പ്രവർത്തനത്തിനിടെ പിശക് സംഭവിച്ചു',
+  'page_admins_no_likers':
+  'ലൈക്ക് ചെയ്തവരൊന്നും കണ്ടെത്തിയില്ല',
+  'page_admins_promote_hint':
+  'പേജ് ലൈക്കർമാരെ അഡ്മിനുകളാക്കാം',
+  'page_admins_badge_admin':
+  'അഡ്മിൻ',
+  'page_admins_remove_tooltip':
+  'അഡ്മിനിൽ നിന്ന് നീക്കം ചെയ്യുക',
+  'page_admins_add_tooltip':
+  'അഡ്മിനാക്കുക',
+
+// Invite Friends to Page
+  'page_invite_title':
+  'സുഹൃത്തുകളെ ക്ഷണിക്കുക',
+  'page_invite_failed_load':
+  'സുഹൃത്തുകളെ ലോഡ് ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു',
+  'page_invite_success':
+  '@name നെ ക്ഷണിച്ചു',
+  'page_invite_failed':
+  '@name നെ ക്ഷണിക്കാൻ പരാജയപ്പെട്ടു',
+  'page_invite_error':
+  'ക്ഷണം അയയ്ക്കുമ്പോൾ പിശക് സംഭവിച്ചു',
+  'page_invite_empty_title':
+  'ക്ഷണിക്കാൻ സുഹൃത്തുകളില്ല',
+  'page_invite_empty_body':
+  'നിങ്ങളുടെ എല്ലാ സുഹൃത്തുക്കളും ഇതിനകം അംഗങ്ങളായിട്ടുണ്ട് അല്ലെങ്കിൽ ക്ഷണിക്കപ്പെട്ടിട്ടുണ്ട്',
+  'page_invite_invited':
+  'ക്ഷണിച്ചു',
+  'page_invite_cta':
+  'ക്ഷണിക്കുക',
+
+// Create Group
+  'create_group_title':
+  'ഗ്രൂപ്പ് സൃഷ്ടിക്കുക',
+  'create_group_cta':
+  'സൃഷ്ടിക്കുക',
+  'create_group_title_label':
+  'ഗ്രൂപ്പ് ശീർഷകം *',
+  'create_group_title_hint':
+  'ഉദാഹരണം: UAE Flutter Developers',
+  'create_group_title_required':
+  'ശീർഷകം ആവശ്യമാണ്',
+  'create_group_title_min':
+  'ശീർഷകം കുറഞ്ഞത് 3 അക്ഷരങ്ങളെങ്കിലും വേണം',
+  'create_group_username_label':
+  'യൂസർനെയിം *',
+  'create_group_username_hint':
+  'ഉദാഹരണം: flutter_devs_uae',
+  'create_group_username_helper':
+  'ഇംഗ്ലീഷ് അക്ഷരങ്ങൾ, അക്കങ്ങൾ, അണ്ടർസ്കോർ മാത്രം',
+  'create_group_username_required':
+  'യൂസർനെയിം ആവശ്യമാണ്',
+  'create_group_username_min':
+  'യൂസർനെയിം കുറഞ്ഞത് 3 അക്ഷരങ്ങളെങ്കിലും വേണം',
+  'create_group_username_invalid':
+  'ഇംഗ്ലീഷ് അക്ഷരങ്ങൾ, അക്കങ്ങൾ, അണ്ടർസ്കോർ മാത്രം',
+  'create_group_description_label':
+  'വിവരണം (ഐച്ഛികം)',
+  'create_group_description_hint':
+  'ഗ്രൂപ്പിനുള്ള വിവരണം എഴുതുക...',
+  'create_group_privacy_label':
+  'സ്വകാര്യത *',
+  'create_group_privacy_public':
+  'പൊതു',
+  'create_group_privacy_public_desc':
+  'ആർക്കും ഗ്രൂപ്പും പോസ്റ്റുകളും കാണാം',
+  'create_group_privacy_closed':
+  'അടച്ചത്',
+  'create_group_privacy_closed_desc':
+  'ഗ്രൂപ്പ് എല്ലാവർക്കും കാണാം, പോസ്റ്റുകൾ അംഗങ്ങൾക്ക് മാത്രം',
+  'create_group_privacy_secret':
+  'രഹസ്യം',
+  'create_group_privacy_secret_desc':
+  'അംഗീകരിച്ച അംഗങ്ങൾക്കേ ഗ്രൂപ്പും പോസ്റ്റുകളും കാണാൻ കഴിയൂ',
+  'create_group_category_label':
+  'വിഭാഗം *',
+  'create_group_category_tech':
+  'സാങ്കേതികവിദ്യ',
+  'create_group_category_sports':
+  'കായികം',
+  'create_group_category_education':
+  'വിദ്യാഭ്യാസം',
+  'create_group_category_entertainment':
+  'വിനോദം',
+  'create_group_category_other':
+  'മറ്റുള്ളവ',
+  'create_group_button':
+  'ഗ്രൂപ്പ് സൃഷ്ടിക്കുക',
+  'create_group_creating':
+  'സൃഷ്ടിക്കുന്നു...',
+  'create_group_note':
+  'ഗ്രൂപ്പ് സൃഷ്ടിച്ചതിന് ശേഷം നിങ്ങൾ സ്വയമേവ മോഡറേറ്ററാകും',
+  'create_group_success':
+  'ഗ്രൂപ്പ് വിജയകരമായി സൃഷ്ടിച്ചു',
+  'create_group_failed':
+  'ഗ്രൂപ്പ് സൃഷ്ടിക്കാൻ പരാജയപ്പെട്ടു, വീണ്ടും ശ്രമിക്കുക',
+  'create_group_error':
+  'പിശക് സംഭവിച്ചു: @error',
+
+// Course Card
+  'course_free':
+  'സൗജന്യം',
+  'course_candidates':
+  'അപേക്ഷകർ (@count)',
+  'course_enroll_button':
+  'എൻറോൾ ചെയ്യുക',
+  'course_closed':
+  'അടച്ചിരിക്കുന്നു',
+
+  'course_enrollment_name':
+  'പൂർണ്ണ നാമം *',
+  'course_enrollment_location':
+  'സ്ഥലം *',
+  'course_enrollment_location_hint':
+  'ഉദാഹരണം: റിയാദ്, സൗദി അറേബ്യ',
+  'course_enrollment_phone':
+  'ഫോൺ നമ്പർ *',
+  'course_enrollment_phone_hint':
+  'ഉദാഹരണം: +966501234567',
+  'course_enrollment_email':
+  'ഇമെയിൽ *',
+  'course_field_required':
+  'ആവശ്യമാണ്',
+
+  'course_success':
+  'വിജയം',
+  'course_error':
+  'പിശക്',
+  'course_login_required':
+  'ദയവായി ആദ്യം ലോഗിൻ ചെയ്യുക',
+  'course_candidates_count':
+  '@count അപേക്ഷകർ',
+  'course_status_closed':
+  'അടച്ചത്',
+  'course_status_ended':
+  'അവസാനിച്ചു',
+  'course_status_ongoing':
+  'നടന്നുകൊണ്ടിരിക്കുന്നു',
+  'course_status_started':
+  'ആരംഭിച്ചു',
+  'course_status_upcoming':
+  'വരാനിരിക്കുന്നത്',
+  'course_date_undefined':
+  'നിർവചിച്ചിട്ടില്ല',
+  'course_date_starts':
+  '@date ന് ആരംഭിക്കുന്നു',
+  'course_date_ends':
+  '@date ന് അവസാനിക്കുന്നു',
+  'course_month_january': 'ജനുവരി',
+  'course_month_february': 'ഫെബ്രുവരി',
+  'course_month_march': 'മാർച്ച്',
+  'course_month_april': 'ഏപ്രിൽ',
+  'course_month_may': 'മേയ്',
+  'course_month_june': 'ജൂൺ',
+  'course_month_july': 'ജൂലൈ',
+  'course_month_august': 'ഓഗസ്റ്റ്',
+  'course_month_september': 'സെപ്റ്റംബർ',
+  'course_month_october': 'ഒക്ടോബർ',
+  'course_month_november': 'നവംബർ',
+  'course_month_december': 'ഡിസംബർ',
+// Discover Page - Merits Send Dialog
+  'merit_category_select': 'മെറിറ്റ് വിഭാഗം തിരഞ്ഞെടുക്കുക',
+  'merit_category_hint': 'പട്ടികയിൽ നിന്ന് തിരഞ്ഞെടുക്കുക',
+  'merit_recipients_select': 'സ്വീകർത്താക്കളെ തിരഞ്ഞെടുക്കുക',
+  'merit_search_friend': 'സുഹൃത്തിനെ തിരയുക',
+  'merit_selected_friends': '@count സുഹൃത്തുകൾ തിരഞ്ഞെടുക്കപ്പെട്ടു',
+  'merit_message_label': 'സന്ദേശം (ഐച്ഛികം)',
+  'merit_message_hint': 'മെറിറ്റിനൊപ്പം ഒരു സന്ദേശം ചേർക്കുക',
+  'merit_error_no_category': 'നിങ്ങൾ ഒരു വിഭാഗം തിരഞ്ഞെടുക്കണം',
+  'merit_error_no_friends': 'കുറഞ്ഞത് ഒരു സുഹൃത്തെങ്കിലും തിരഞ്ഞെടുക്കണം',
+  'merit_categories_load_error': 'വിഭാഗങ്ങൾ ലോഡ് ചെയ്യുന്നതിൽ പിശക്',
+  'merit_no_categories': 'വിഭാഗങ്ങളൊന്നും ലഭ്യമല്ല',
+  'merit_friends_load_error': 'സുഹൃത്തുകളെ ലോഡ് ചെയ്യുന്നതിൽ പിശക്',
+  'merit_no_friends_available': 'സുഹൃത്തുകളൊന്നും ലഭ്യമല്ല',
+  'merit_friends_loading': 'സുഹൃത്തുകൾ ലോഡ് ചെയ്യുന്നു...',
+  'merit_image_label': 'ചിത്രം (ഐച്ഛികം)',
+  'merit_image_hint': 'ചിത്രം തിരഞ്ഞെടുക്കാൻ ടാപ്പ് ചെയ്യുക',
+  'merit_image_selected': 'ചിത്രം തിരഞ്ഞെടുക്കപ്പെട്ടു',
+  'merit_badge': 'മെറിറ്റ് ബാഡ്ജ്',
+
+// Product
+  'product_name': 'ഉൽപ്പന്നത്തിന്റെ പേര്',
+  'enter_product_name': 'ഉൽപ്പന്നത്തിന്റെ പേര് നൽകുക',
+  'price': 'വില',
+  'enter_price': 'വില നൽകുക',
+  'quantity': 'അളവ്',
+  'enter_quantity': 'അളവ് നൽകുക',
+  'product_status': 'ഉൽപ്പന്ന നില',
+  'status_new': 'പുതിയത്',
+  'status_used': 'ഉപയോഗിച്ചത്',
+  'status_old': 'പഴയത്',
+  'enter_location': 'സ്ഥലം നൽകുക',
+  'enter_product_description': 'ഉൽപ്പന്ന വിവരണം നൽകുക',
+  'save_changes': 'മാറ്റങ്ങൾ സംരക്ഷിക്കുക',
+  'product_updated_successfully':
+  'ഉൽപ്പന്നം വിജയകരമായി അപ്ഡേറ്റ് ചെയ്തു',
+  'error_updating_product':
+  'ഉൽപ്പന്നം അപ്ഡേറ്റ് ചെയ്യുന്നതിൽ പിശക്',
+  'invalid_product_data': 'അസാധുവായ ഉൽപ്പന്ന ഡാറ്റ',
+  'product_name_required': 'ഉൽപ്പന്നത്തിന്റെ പേര് ആവശ്യമാണ്',
+  'valid_price_required':
+  'വില ആവശ്യമാണ്, 0-ൽ കൂടുതലായിരിക്കണം',
+  'valid_quantity_required':
+  'അളവ് ആവശ്യമാണ്, 0 അല്ലെങ്കിൽ അതിൽ കൂടുതലായിരിക്കണം',
+
+// Cart Page
+  'product': 'ഉൽപ്പന്നം',
+  'clear_cart': 'കാർട്ട് ശൂന്യമാക്കുക',
+  'are_you_sure_clear_cart':
+  'എല്ലാ ഉൽപ്പന്നങ്ങളും നീക്കം ചെയ്യണമെന്ന് നിങ്ങൾക്ക് ഉറപ്പാണോ?',
+
+  'loading_cart': 'കാർട്ട് ലോഡ് ചെയ്യുന്നു...',
+
+  'your_cart_is_empty': 'നിങ്ങളുടെ കാർട്ട് ശൂന്യമാണ്',
+  'no_products_added':
+  'ഇതുവരെ നിങ്ങളുടെ കാർട്ടിൽ ഉൽപ്പന്നങ്ങളൊന്നും ചേർത്തിട്ടില്ല.\nഇപ്പോൾ ഉൽപ്പന്നങ്ങൾ ചേർക്കാൻ തുടങ്ങൂ',
+  'explore_products': 'ഉൽപ്പന്നങ്ങൾ കാണുക',
+  'order_summary': 'ഓർഡർ സംഗ്രഹം',
+  'number_of_products': 'ഉൽപ്പന്നങ്ങളുടെ എണ്ണം',
+  'total': 'ആകെ',
+  'seller': 'വിൽപ്പനക്കാരൻ',
+  'free': 'സൗജന്യം',
+
+// Orders Page
+  'my_orders': 'എന്റെ ഓർഡറുകൾ',
+  'my_sales': 'എന്റെ വിൽപ്പനകൾ',
+  'order_number': 'ഓർഡർ #',
+  'order_placed': 'ഓർഡർ നൽകി',
+  'status': 'നില',
+  'tracking_details': 'ട്രാക്കിംഗ് വിവരങ്ങൾ',
+  'tracking_link': 'ട്രാക്കിംഗ് ലിങ്ക്',
+  'tracking_number': 'ട്രാക്കിംഗ് നമ്പർ',
+  'shipping_address': 'ഷിപ്പിംഗ് വിലാസം',
+  'items': 'ഇനങ്ങൾ',
+  'no_orders_found': 'ഓർഡറുകളൊന്നും കണ്ടെത്തിയില്ല',
+  'no_orders_message':
+  'നിങ്ങൾ ഇതുവരെ ഒരു ഓർഡറും നൽകിയിട്ടില്ല.\nഇപ്പോൾ ഷോപ്പിംഗ് ആരംഭിക്കൂ!',
+  'view_details': 'വിശദാംശങ്ങൾ കാണുക',
+  'order_status_placed': 'നൽകി',
+  'order_status_shipped': 'ഷിപ്പ് ചെയ്തു',
+  'order_status_cancelled': 'റദ്ദാക്കി',
+  'order_status_refunded': 'റീഫണ്ട് ചെയ്തു',
+  'loading_orders': 'ഓർഡറുകൾ ലോഡ് ചെയ്യുന്നു...',
+  'error_loading_orders': 'ഓർഡറുകൾ ലോഡ് ചെയ്യുന്നതിൽ പിശക്',
+  'contact_seller': 'വിൽപ്പനക്കാരനുമായി ബന്ധപ്പെടുക',
+  'buyer': 'വാങ്ങുന്നവർ',
+  'n_a': 'ബാധകമല്ല',
+  'no_shipping_address': 'ഷിപ്പിംഗ് വിലാസം ലഭ്യമല്ല',
+  "failed_to_initialize_stream_engine": "സ്ട്രീമിംഗ് എഞ്ചിൻ ആരംഭിക്കാൻ പരാജയപ്പെട്ടു",
+  "stream_title_required": "സ്ട്രീം തലക്കെട്ട് നൽകണം",
+  "failed_to_join_stream_channel": "സ്ട്രീമിംഗ് ചാനലിൽ ചേരാൻ പരാജയപ്പെട്ടു",
+  "stream_ended_successfully": "സ്ട്രീം വിജയകരമായി അവസാനിപ്പിച്ചു",
+  "failed_to_end_stream": "സ്ട്രീം അവസാനിപ്പിക്കാൻ പരാജയപ്പെട്ടു",
+  "stream_created_successfully_no_agora_token": "സ്ട്രീം വിജയകരമായി സൃഷ്ടിച്ചു! (Agora ടോക്കൺ ഇല്ലാതെ)",
+  "stream_created_successfully": "സ്ട്രീം വിജയകരമായി സൃഷ്ടിച്ചു!",
+  "live_stream_active_professional": "പ്രൊഫഷണൽ ലൈവ് സ്ട്രീം",
+  "live": "LIVE",
+  "preparing_stream": "സ്ട്രീം തയ്യാറാക്കുന്നു...",
+  "setup_live_stream": "ലൈവ് സ്ട്രീം സജ്ജീകരിക്കുക",
+  "stream_title_label_required": "സ്ട്രീം തലക്കെട്ട് *",
+  "stream_title_hint": "സ്ട്രീമിന് ആകർഷകമായ തലക്കെട്ട് എഴുതുക",
+  "stream_description": "സ്ട്രീം വിവരണം",
+  "stream_description_hint_optional": "സ്ട്രീമിനായി ഒരു ചുരുക്ക വിവരണം എഴുതുക (ഐച്ഛികം)",
+  "creating_live_start": "ലൈവ് സ്ട്രീം ആരംഭിക്കുക",
+  "live_chat": "ലൈവ് ചാറ്റ്",
+  "now": "ഇപ്പോൾ",
+  "start_chat_exclamation": "ചാറ്റ് ആരംഭിക്കൂ!",
+  "write_your_comment": "നിങ്ങളുടെ അഭിപ്രായം എഴുതൂ...",
+  "live_stream_data_incomplete": "റെസ്പോൺസിൽ ലൈവ് സ്ട്രീം ഡാറ്റ അപൂർണ്ണമാണ്",
+  "must_login_first": "ആദ്യം ലോഗിൻ ചെയ്യണം",
+  "connection_error_check_internet": "കണക്ഷൻ പിശക്, ഇന്റർനെറ്റ് പരിശോധിക്കുക",
+  "no_permission_create_live_stream": "ലൈവ് സ്ട്രീം സൃഷ്ടിക്കാൻ നിങ്ങൾക്ക് അനുമതി ഇല്ല",
+  "no_reels_available": "ഇപ്പോൾ റീലുകൾ ഒന്നും ലഭ്യമല്ല.",
+  "record_or_upload_video_help": "പ്രശ്നം മനസ്സിലാക്കാനും വേഗത്തിൽ പരിഹരിക്കാനും സഹായിക്കാൻ പ്രശ്നം കാണിക്കുന്ന ഒരു വീഡിയോ റെക്കോർഡ് ചെയ്യുകയോ അപ്‌ലോഡ് ചെയ്യുകയോ ചെയ്യുക.",
+  "issue_title": "പ്രശ്നത്തിന്റെ ശീർഷകം",
+  "brief_description": "പ്രശ്നത്തിന്റെ ചുരുക്ക വിവരണം",
+  "additional_details_optional": "കൂടുതൽ വിവരങ്ങൾ (ഐച്ഛികം)",
+  "add_more_details_placeholder": "പ്രശ്നത്തെക്കുറിച്ച് കൂടുതൽ വിവരങ്ങൾ ചേർക്കുക...",
+  "video_required": "വീഡിയോ (അനിവാര്യമാണ്)",
+  "tap_to_add_video": "വീഡിയോ ചേർക്കാൻ ടാപ്പ് ചെയ്യുക",
+  "max_2_minutes_50mb": "പരമാവധി 2 മിനിറ്റ്, 50MB",
+  "submit_report": "റിപ്പോർട്ട് സമർപ്പിക്കുക",
+  "video_file_too_large_max_50mb": "വീഡിയോ ഫയൽ വളരെ വലുതാണ്. പരമാവധി വലുപ്പം 50MB ആണ്.",
+  "failed_to_load_video": "വീഡിയോ ലോഡ് ചെയ്യാൻ കഴിഞ്ഞില്ല:",
+  "select_video_source": "വീഡിയോ ഉറവിടം തിരഞ്ഞെടുക്കുക",
+  "record_video": "വീഡിയോ റെക്കോർഡ് ചെയ്യുക",
+  "record_a_new_video": "പുതിയ വീഡിയോ റെക്കോർഡ് ചെയ്യുക",
+  "choose_from_gallery": "ഗാലറിയിൽ നിന്ന് തിരഞ്ഞെടുക്കുക",
+  "select_existing_video": "നിലവിലുള്ള വീഡിയോ തിരഞ്ഞെടുക്കുക",
+  "please_enter_issue_title": "ദയവായി പ്രശ്നത്തിന് ഒരു ശീർഷകം നൽകുക",
+  "please_attach_issue_video": "ദയവായി പ്രശ്നം കാണിക്കുന്ന ഒരു വീഡിയോ ചേർക്കുക",
+  "must_be_logged_in_submit_bug_report": "ബഗ് റിപ്പോർട്ട് സമർപ്പിക്കാൻ നിങ്ങൾ ലോഗിൻ ചെയ്തിരിക്കണം",
+  "failed_to_upload_video": "വീഡിയോ അപ്‌ലോഡ് ചെയ്യാൻ കഴിഞ്ഞില്ല",
+  "report_submitted": "റിപ്പോർട്ട് സമർപ്പിച്ചു!",
+  "thank_you_help_improve_app": "ആപ്പ് മെച്ചപ്പെടുത്താൻ സഹായിച്ചതിന് നന്ദി. ഞങ്ങൾ നിങ്ങളുടെ റിപ്പോർട്ട് പരിശോധിച്ച് ഉടൻ തന്നെ നിങ്ങളുമായി ബന്ധപ്പെടും.",
+  "failed_to_submit_report": "റിപ്പോർട്ട് സമർപ്പിക്കാൻ കഴിഞ്ഞില്ല:",
+  "no_products_for_user_currently":"ഈ ഉപയോക്താവിന് ഇപ്പോള്‍ ഉല്‍പ്പന്നങ്ങളൊന്നും ലഭ്യമല്ല.",
+  "search_conversations": "സംഭാഷണങ്ങളിൽ തിരയുക",
+  "no_conversations": "സംഭാഷണങ്ങളൊന്നുമില്ല",
+  "messenger": "മെസഞ്ചർ",
+  "type_message": "ഒരു സന്ദേശം എഴുതൂ...",
+  "fetch_story_failed":"കഥകൾ ലഭ്യമാക്കുന്നതിൽ പരാജയം",
+  "create_story_failed":"കഥ സൃഷ്ടിക്കാൻ പരാജയം",
+  "create_story_error":"കഥ സൃഷ്ടിക്കുന്നതിൽ പിശക്",
+  "delete_story_failed":"കഥ ഇല്ലാതാക്കുന്നതിൽ പരാജയം",
+  "delete_story_error":"കഥ ഇല്ലാതാക്കുന്നതിൽ പിശക്",
+  "video_story_created_success":"✅ വീഡിയോ സ്റ്റോറി വിജയകരമായി സൃഷ്ടിച്ചു",
+  "photo_story_created_success":"✅ ഫോട്ടോ സ്റ്റോറി വിജയകരമായി സൃഷ്ടിച്ചു",
+  "create_story_error_prefix":"സ്റ്റോറി സൃഷ്ടിക്കുന്നതിൽ പിശക്:",
+  "video_upload_error_prefix":"വീഡിയോ അപ്‌ലോഡ് ചെയ്യുന്നതിൽ പിശക്:",
+  "publishing":"പ്രസിദ്ധീകരിക്കുന്നു...",
+  "add_to_your_story":"നിങ്ങളുടെ സ്റ്റോറിയിലേക്ക് ചേർക്കുക",
+  "share_moments":"സുഹൃത്തുക്കളുമായി നിങ്ങളുടെ നിമിഷങ്ങൾ പങ്കിടുക",
+  "share_photo_option":"ഗാലറിയിൽ നിന്ന് ഫോട്ടോ പങ്കിടുക അല്ലെങ്കിൽ പുതിയത് എടുക്കുക",
+  "share_video_option":"ഗാലറിയിൽ നിന്ന് വീഡിയോ പങ്കിടുക അല്ലെങ്കിൽ പുതിയത് റെക്കോർഡ് ചെയ്യുക",
+  "video_ready":"വീഡിയോ പങ്കിടാൻ തയ്യാറാണ്",
+  "photo_ready":"ഫോട്ടോ പങ്കിടാൻ തയ്യാറാണ്",
+  "choose_another":"മറ്റൊന്ന് തിരഞ്ഞെടുക്കുക"
+
 };

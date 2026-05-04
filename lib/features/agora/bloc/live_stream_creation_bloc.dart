@@ -1,6 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:get/get.dart';
 import '../data/api_service/live_stream_api_service.dart';
+import 'package:flutter/foundation.dart';
 
 // Events
 abstract class LiveStreamCreationEvent extends Equatable {
@@ -144,7 +146,7 @@ class LiveStreamCreationBloc extends Bloc<LiveStreamCreationEvent, LiveStreamCre
       final directAgoraUid = createResponse['agora_uid'];
 
       if (liveId == null || postId == null || channelName == null) {
-        throw Exception('بيانات البث المباشر غير مكتملة في الاستجابة');
+        throw Exception('live_stream_data_incomplete'.tr);
       }
 
       // إذا كان agora_token موجود مباشرة، استخدمه
@@ -205,17 +207,17 @@ class LiveStreamCreationBloc extends Bloc<LiveStreamCreationEvent, LiveStreamCre
 
     } catch (e) {
       
-      String errorMessage = 'فشل في إنشاء البث المباشر';
+      String errorMessage = 'must_login_first'.tr;
       String? errorType;
 
       if (e.toString().contains('unauthorized') || e.toString().contains('401')) {
-        errorMessage = 'يجب تسجيل الدخول أولاً';
+        errorMessage = 'connection_error_check_internet'.tr;
         errorType = 'auth_required';
       } else if (e.toString().contains('network') || e.toString().contains('connection')) {
-        errorMessage = 'خطأ في الاتصال، تحقق من الإنترنت';
+        errorMessage = 'connection_error_check_internet';
         errorType = 'network_error';
       } else if (e.toString().contains('permission')) {
-        errorMessage = 'ليس لديك صلاحية إنشاء البث المباشر';
+        errorMessage = 'no_permission_create_live_stream'.tr;
         errorType = 'permission_denied';
       } else {
         errorMessage = e.toString().replaceAll('Exception:', '').trim();

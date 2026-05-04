@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart';
 
 /// Service for handling app configuration including feelings and activities
 class AppConfigService {
@@ -19,7 +20,6 @@ class AppConfigService {
         },
       );
       
-
       
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body);

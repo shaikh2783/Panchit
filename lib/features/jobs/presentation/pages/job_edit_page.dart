@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
 import '../../../../core/theme/ui_constants.dart';
+import '../../../../core/utils/html_decoder.dart';
 import '../../domain/jobs_repository.dart';
 import '../../data/models/job.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -252,7 +253,7 @@ class _JobEditPageState extends State<JobEditPage> {
                       hint: Text('select_category'.tr),
                       underline: const SizedBox.shrink(),
                       items: _categories
-                          .map((c) => DropdownMenuItem<int>(value: c.categoryId, child: Text(c.name)))
+                          .map((c) => DropdownMenuItem<int>(value: c.categoryId, child: Text(HtmlDecoder.decode(c.name))))
                           .toList(),
                       onChanged: (v) => setState(() => _categoryId = v),
                     ),
@@ -264,7 +265,7 @@ class _JobEditPageState extends State<JobEditPage> {
                 child: TextFormField(
                   controller: _salaryMinCtrl,
                   keyboardType: TextInputType.number,
-                  decoration: InputDecoration(labelText: 'salary_min'.tr, prefixIcon: const Icon(Iconsax.money_recive_copy)),
+                  decoration: InputDecoration(labelText: 'salary_min'.tr, prefixIcon: const Icon( Icons.currency_rupee)),
                 ),
               ),
               SizedBox(width: UI.md),
@@ -283,7 +284,7 @@ class _JobEditPageState extends State<JobEditPage> {
                 child: TextFormField(
                   controller: _salaryMaxCtrl,
                   keyboardType: TextInputType.number,
-                  decoration: InputDecoration(labelText: 'salary_max'.tr, prefixIcon: const Icon(Iconsax.money_recive_copy)),
+                  decoration: InputDecoration(labelText: 'salary_max'.tr, prefixIcon: const Icon( Icons.currency_rupee)),
                 ),
               ),
               SizedBox(width: UI.md),

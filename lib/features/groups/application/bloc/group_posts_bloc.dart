@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snginepro/features/feed/data/models/post.dart';
 import '../../data/repositories/groups_repository.dart';
+import 'package:flutter/foundation.dart';
 
 // Events
 abstract class GroupPostsEvent {}

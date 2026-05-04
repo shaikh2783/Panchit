@@ -1,10 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-<!-- Permissions for comments features -->
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
-
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Permissions for comments features -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -31,7 +26,9 @@
     <application
         android:label="Panchit"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true"
+        android:hardwareAccelerated="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -75,6 +72,11 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+            
+        <!-- AdMob App ID -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3940256099942544~3347511713"/>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and
@@ -86,13 +88,13 @@
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
-
+        
         <!-- Email intent -->
         <intent>
             <action android:name="android.intent.action.SENDTO" />
             <data android:scheme="mailto" />
         </intent>
-
+        
         <!-- HTTP/HTTPS intents for web links, WhatsApp, Telegram -->
         <intent>
             <action android:name="android.intent.action.VIEW" />
@@ -102,7 +104,7 @@
             <action android:name="android.intent.action.VIEW" />
             <data android:scheme="https" />
         </intent>
-
+        
         <!-- Telephone intent (optional, for future use) -->
         <intent>
             <action android:name="android.intent.action.DIAL" />

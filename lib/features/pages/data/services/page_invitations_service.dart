@@ -1,6 +1,7 @@
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
 import '../models/invitable_friend.dart';
+import 'package:flutter/foundation.dart';
 
 /// خدمة إدارة دعوات الصفحات
 class PageInvitationsService {

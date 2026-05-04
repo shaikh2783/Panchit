@@ -1,6 +1,7 @@
 import 'package:snginepro/core/network/api_client.dart';
 import '../models/user_photo.dart';
 import '../models/user_album.dart';
+import 'package:flutter/foundation.dart';
 
 class UserPhotosService {
   final ApiClient _apiClient;

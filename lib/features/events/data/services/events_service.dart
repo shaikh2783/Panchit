@@ -3,6 +3,7 @@ import '../../../../main.dart' show configCfgP;
 import '../models/event.dart';
 import '../models/event_member.dart';
 import '../models/event_category.dart';
+import 'package:flutter/foundation.dart';
 
 /// خدمة إدارة الفعاليات
 class EventsService {

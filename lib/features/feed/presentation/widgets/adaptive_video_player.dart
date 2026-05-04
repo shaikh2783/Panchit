@@ -4,6 +4,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cached_video_player_plus/cached_video_player_plus.dart';
+import 'package:get/get.dart';
+import 'package:snginepro/core/utils/html_decoder.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -93,6 +95,10 @@ class _AdaptiveVideoPlayerState extends State<AdaptiveVideoPlayer>
     _setupController();
   }
 
+  bool _isControllerReady(CachedVideoPlayerPlus? player) {
+    return player?.controller.value.isInitialized == true;
+  }
+
   /// Pre-cache جميع خيارات الجودة المتاحة
   void _precacheQualityOptions() {
     try {
@@ -160,14 +166,20 @@ class _AdaptiveVideoPlayerState extends State<AdaptiveVideoPlayer>
     for (final player in sorted) {
       final shouldPlay = identical(player, top) && topVisible > 0.05;
       if (shouldPlay) {
-        player._controller?.controller.play();
+        final ready = _isControllerReady(player._controller);
+        if (ready) {
+          player._controller?.controller.play();
+        }
         if (player.mounted) {
           player._hideControlsTimer?.cancel();
           player._hideControlsTimer = null;
           player.setState(() {});
         }
       } else {
-        player._controller?.controller.pause();
+        final ready = _isControllerReady(player._controller);
+        if (ready) {
+          player._controller?.controller.pause();
+        }
         if (player.mounted) {
           player._hideControlsTimer?.cancel();
           player._hideControlsTimer = null;
@@ -520,6 +532,10 @@ class _AdaptiveVideoPlayerState extends State<AdaptiveVideoPlayer>
   Widget build(BuildContext context) {
     final cachedPlayer = _controller;
 
+    final aspectRatio = _isControllerReady(cachedPlayer)
+        ? cachedPlayer!.controller.value.aspectRatio
+        : 16 / 9;
+
     final playerContent = VisibilityDetector(
       key: ValueKey('adaptive_video_${widget.video.originalSource}'),
       onVisibilityChanged: _onVisibilityChanged,
@@ -531,7 +547,11 @@ class _AdaptiveVideoPlayerState extends State<AdaptiveVideoPlayer>
                 ? FutureBuilder<void>(
                     future: _initialization,
                     builder: (context, snapshot) {
-                      if (snapshot.connectionState != ConnectionState.done) {
+                      final ready =
+                          snapshot.connectionState == ConnectionState.done &&
+                              _isControllerReady(cachedPlayer);
+
+                      if (!ready) {
                         return _buildPlaceholder();
                       }
                       return GestureDetector(
@@ -582,7 +602,7 @@ class _AdaptiveVideoPlayerState extends State<AdaptiveVideoPlayer>
         widget.isFullscreen ? 0 : widget.borderRadius,
       ),
       child: AspectRatio(
-        aspectRatio: cachedPlayer?.controller.value.aspectRatio ?? 16 / 9,
+        aspectRatio: aspectRatio,
         child: playerContent,
       ),
     );
@@ -590,12 +610,20 @@ class _AdaptiveVideoPlayerState extends State<AdaptiveVideoPlayer>
 
   Widget _buildPlaceholder() {
     final uri = _resolveMediaUri(widget.video.thumbnail);
-    if (uri != null && uri.toString().isNotEmpty) {
+    final thumbnail = uri?.toString() ?? '';
+    final looksLikeImage =
+        thumbnail.endsWith('.jpg') ||
+        thumbnail.endsWith('.jpeg') ||
+        thumbnail.endsWith('.png') ||
+        thumbnail.endsWith('.webp') ||
+        thumbnail.endsWith('.gif');
+
+    if (uri != null && thumbnail.isNotEmpty && looksLikeImage) {
       return Stack(
         fit: StackFit.expand,
         children: [
           Image.network(
-            uri.toString(),
+            thumbnail,
             fit: BoxFit.cover,
             errorBuilder: (_, __, ___) => Container(color: Colors.black12),
           ),
@@ -858,10 +886,10 @@ class _AdaptiveVideoPlayerState extends State<AdaptiveVideoPlayer>
 
     final badgeTexts = <String>[];
     if (widget.video.categoryName.isNotEmpty) {
-      badgeTexts.add(widget.video.categoryName);
+      badgeTexts.add(HtmlDecoder.decode(widget.video.categoryName));
     }
     if (widget.video.viewCount > 0) {
-      badgeTexts.add('${_formatViewsCompact(widget.video.viewCount)} مشاهدة');
+      badgeTexts.add('${_formatViewsCompact(widget.video.viewCount)} ${'watch'.tr}');
     }
     if (badgeTexts.isEmpty) return const SizedBox.shrink();
 

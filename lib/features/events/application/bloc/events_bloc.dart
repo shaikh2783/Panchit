@@ -4,6 +4,7 @@ import '../../data/models/event_member.dart';
 import '../../data/services/events_service.dart';
 import 'events_events.dart';
 import 'events_states.dart';
+import 'package:flutter/foundation.dart';
 
 /// Events Bloc
 class EventsBloc extends Bloc<EventsEvent, EventsState> {

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 class PostOffer {
   PostOffer({
     required this.offerId,

@@ -34,10 +34,10 @@ class FrostedGlassCard extends StatelessWidget {
     final theme = Theme.of(context);
     final List<Color> effectiveGradientColors = gradientColors ??
         [
-          theme.colorScheme.primary.withOpacity(0.1),
-          theme.colorScheme.secondary.withOpacity(0.1),
+          theme.colorScheme.primary.withValues(alpha: 0.1),
+          theme.colorScheme.secondary.withValues(alpha: 0.1),
         ];
-    final Color effectiveBorderColor = borderColor ?? Colors.white.withOpacity(0.3);
+    final Color effectiveBorderColor = borderColor ?? Colors.white.withValues(alpha: 0.3);
 
     final cardContent = ClipRRect(
       borderRadius: BorderRadius.circular(borderRadius),

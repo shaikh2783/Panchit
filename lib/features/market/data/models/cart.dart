@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'cart_item.dart';
+import 'package:flutter/foundation.dart';
 
 /// Shopping Cart Model - سلة التسوق
 /// 
@@ -10,8 +11,6 @@ import 'cart_item.dart';
 /// ```dart
 /// final cart = Cart.fromJson(response['data']['cart']);
 /// if (cart.isNotEmpty) {
-///   print('عدد المنتجات: ${cart.itemsCount}');
-///   print('المجموع: ${cart.total}');
 /// }
 /// ```
 /// 

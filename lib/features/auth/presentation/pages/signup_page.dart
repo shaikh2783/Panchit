@@ -10,10 +10,13 @@ import 'package:snginepro/features/auth/data/models/gender.dart';
 import 'package:snginepro/features/auth/data/datasources/gender_api_service.dart';
 import 'package:snginepro/features/auth/presentation/pages/login_page.dart';
 import 'package:snginepro/features/auth/presentation/pages/getting_started_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// 🎨 Modern Sign Up Page with Translation Support
 class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+  const SignUpPage({super.key, this.addAccountMode = false});
+
+  final bool addAccountMode;
 
   @override
   State<SignUpPage> createState() => _SignUpPageState();
@@ -27,7 +30,7 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  
+  bool _agreeToTerms = false; // Add this near your other controllers
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   String? _selectedGender;
@@ -47,16 +50,16 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
       vsync: this,
       duration: const Duration(seconds: 20),
     )..repeat();
-    
+
     _formController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
     );
-    
+
     _formController.forward();
     _fetchGenders();
   }
-  
+
   Future<void> _fetchGenders() async {
     try {
       final apiClient = context.read<ApiClient>();
@@ -91,12 +94,21 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
   }
 
   Future<void> _handleSignUp() async {
+    if (!_agreeToTerms) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('please_agree_to_terms'.tr),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
     final form = _formKey.currentState;
     if (form == null || !form.validate()) return;
 
     FocusScope.of(context).unfocus();
     final authNotifier = context.read<AuthNotifier>();
-    
+
     final AuthResponse? response = await authNotifier.signUp(
       firstName: _firstNameController.text.trim(),
       lastName: _lastNameController.text.trim(),
@@ -111,27 +123,30 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
     if (!mounted) return;
     final messenger = ScaffoldMessenger.of(context);
     messenger.clearSnackBars();
-    
+
     if (response != null) {
       messenger.showSnackBar(
         SnackBar(
           content: Text('account_created_successfully'.tr),
           backgroundColor: const Color(0xFF10B981),
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           margin: const EdgeInsets.all(16),
           duration: const Duration(seconds: 2),
         ),
       );
-      
+
       // Navigate to Getting Started page
       await Future.delayed(const Duration(seconds: 2));
       if (!mounted) return;
-      
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => const GettingStartedPage(),
+          builder: (context) =>
+              GettingStartedPage(addAccountMode: widget.addAccountMode),
         ),
       );
     } else {
@@ -141,7 +156,9 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
           content: Text(error),
           backgroundColor: const Color(0xFFEF4444),
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           margin: const EdgeInsets.all(16),
         ),
       );
@@ -216,7 +233,9 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
-              primary: isDark ? const Color(0xFF5B86E5) : const Color(0xFF5B86E5),
+              primary: isDark
+                  ? const Color(0xFF5B86E5)
+                  : const Color(0xFF5B86E5),
               onPrimary: Colors.white,
               surface: isDark ? const Color(0xFF1A202C) : Colors.white,
               onSurface: isDark ? Colors.white : const Color(0xFF1A202C),
@@ -251,14 +270,8 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: isDark
-                    ? [
-                        const Color(0xFF1A1A2E),
-                        const Color(0xFF16213E),
-                      ]
-                    : [
-                        const Color(0xFF5B86E5),
-                        const Color(0xFF36D1DC),
-                      ],
+                    ? [const Color(0xFF1A1A2E), const Color(0xFF16213E)]
+                    : [const Color(0xFF5B86E5), const Color(0xFF36D1DC)],
               ),
             ),
           ),
@@ -268,11 +281,12 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
             return AnimatedBuilder(
               animation: _backgroundController,
               builder: (context, child) {
-                final offset = (_backgroundController.value + index * 0.125) % 1;
+                final offset =
+                    (_backgroundController.value + index * 0.125) % 1;
                 final x = size.width * ((index * 0.125) % 1);
                 final y = size.height * offset;
                 final scale = 0.5 + math.sin(offset * math.pi * 2) * 0.3;
-                
+
                 return Positioned(
                   left: x,
                   top: y,
@@ -288,7 +302,7 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.white.withOpacity(0.2),
+                              color: Colors.white.withValues(alpha: 0.2),
                               blurRadius: 4,
                               spreadRadius: 1,
                             ),
@@ -306,17 +320,23 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 40,
+                ),
                 child: FadeTransition(
                   opacity: _formController,
                   child: SlideTransition(
-                    position: Tween<Offset>(
-                      begin: const Offset(0, 0.1),
-                      end: Offset.zero,
-                    ).animate(CurvedAnimation(
-                      parent: _formController,
-                      curve: Curves.easeOutCubic,
-                    )),
+                    position:
+                        Tween<Offset>(
+                          begin: const Offset(0, 0.1),
+                          end: Offset.zero,
+                        ).animate(
+                          CurvedAnimation(
+                            parent: _formController,
+                            curve: Curves.easeOutCubic,
+                          ),
+                        ),
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 440),
                       child: Column(
@@ -383,32 +403,8 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
           scale: value,
           child: Column(
             children: [
-              Container(
-                width: 90,
-                height: 90,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFFFFFFFF), Color(0xFFE0E7FF)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(28),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      blurRadius: 25,
-                      spreadRadius: 3,
-                      offset: const Offset(0, 8),
-                    ),
-                  ],
-                ),
-                child: const Icon(
-                  Icons.person_add_rounded,
-                  size: 45,
-                  color: Color(0xFF667EEA),
-                ),
-              ),
-              const SizedBox(height: 16),
+              Image.asset('assets/app_icon.png', height: 100, width: 100),
+              const SizedBox(height: 20),
               const Text(
                 'Panchit',
                 style: TextStyle(
@@ -436,19 +432,19 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
   Widget _buildSolidCard({required bool isDark, required Widget child}) {
     return Container(
       decoration: BoxDecoration(
-        color: isDark 
-            ? const Color(0xFF0F1419).withOpacity(0.95)
+        color: isDark
+            ? const Color(0xFF0F1419).withValues(alpha: 0.95)
             : Colors.white,
         borderRadius: BorderRadius.circular(32),
         border: Border.all(
           color: isDark
-              ? const Color(0xFF2D3748).withOpacity(0.5)
-              : Colors.white.withOpacity(0.3),
+              ? const Color(0xFF2D3748).withValues(alpha:0.5)
+              : Colors.white.withValues(alpha:0.3),
           width: 1.5,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.3 : 0.15),
+            color: Colors.black.withValues(alpha:isDark ? 0.3 : 0.15),
             blurRadius: 30,
             spreadRadius: 5,
             offset: const Offset(0, 10),
@@ -476,11 +472,11 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
         ),
         const SizedBox(height: 6),
         Text(
-          'start_journey'.tr,
+          widget.addAccountMode ? 'Create another account with a new token' : 'start_journey'.tr,
           style: TextStyle(
             fontSize: 14,
-            color: isDark 
-                ? Colors.white.withOpacity(0.7)
+            color: isDark
+                ? Colors.white.withValues(alpha:0.7)
                 : const Color(0xFF4A5568),
             fontWeight: FontWeight.w400,
           ),
@@ -494,10 +490,10 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFFEF4444).withOpacity(0.2),
+        color: const Color(0xFFEF4444).withValues(alpha:0.2),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: const Color(0xFFEF4444).withOpacity(0.4),
+          color: const Color(0xFFEF4444).withValues(alpha:0.4),
           width: 1,
         ),
       ),
@@ -601,10 +597,11 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
                     ? Icons.visibility_off_outlined
                     : Icons.visibility_outlined,
                 color: isDark
-                    ? Colors.white.withOpacity(0.7)
-                    : const Color(0xFF5B86E5).withOpacity(0.8),
+                    ? Colors.white.withValues(alpha:0.7)
+                    : const Color(0xFF5B86E5).withValues(alpha:0.8),
               ),
-              onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+              onPressed: () =>
+                  setState(() => _obscurePassword = !_obscurePassword),
             ),
           ),
           const SizedBox(height: 14),
@@ -625,10 +622,12 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
                     ? Icons.visibility_off_outlined
                     : Icons.visibility_outlined,
                 color: isDark
-                    ? Colors.white.withOpacity(0.7)
-                    : const Color(0xFF5B86E5).withOpacity(0.8),
+                    ? Colors.white.withValues(alpha:0.7)
+                    : const Color(0xFF5B86E5).withValues(alpha:0.8),
               ),
-              onPressed: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
+              onPressed: () => setState(
+                () => _obscureConfirmPassword = !_obscureConfirmPassword,
+              ),
             ),
           ),
           const SizedBox(height: 14),
@@ -636,15 +635,13 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
           // Gender & Birthdate Row (Optional)
           Row(
             children: [
-              Expanded(
-                child: _buildGenderDropdown(isDark),
-              ),
+              Expanded(child: _buildGenderDropdown(isDark)),
               const SizedBox(width: 12),
-              Expanded(
-                child: _buildBirthdateField(isDark),
-              ),
+              Expanded(child: _buildBirthdateField(isDark)),
             ],
           ),
+          const SizedBox(height: 20),
+          _buildTermsCheckbox(isDark),
         ],
       ),
     );
@@ -680,75 +677,64 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
         prefixIcon: Icon(
           icon,
           size: 20,
-          color: isDark 
-              ? Colors.white.withOpacity(0.7)
-              : const Color(0xFF5B86E5).withOpacity(0.8),
+          color: isDark
+              ? Colors.white.withValues(alpha:0.7)
+              : const Color(0xFF5B86E5).withValues(alpha:0.8),
         ),
         suffixIcon: suffixIcon,
         labelStyle: TextStyle(
-          color: isDark 
-              ? Colors.white.withOpacity(0.7)
+          color: isDark
+              ? Colors.white.withValues(alpha:0.7)
               : const Color(0xFF4A5568),
           fontSize: 13,
           fontWeight: FontWeight.w500,
         ),
         hintStyle: TextStyle(
           color: isDark
-              ? Colors.white.withOpacity(0.3)
+              ? Colors.white.withValues(alpha: 0.3)
               : const Color(0xFF718096),
           fontSize: 13,
         ),
         filled: true,
-        fillColor: isDark
-            ? const Color(0xFF1A202C)
-            : const Color(0xFFF7FAFC),
+        fillColor: isDark ? const Color(0xFF1A202C) : const Color(0xFFF7FAFC),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide(
-            color: isDark
-                ? const Color(0xFF2D3748)
-                : const Color(0xFFE2E8F0),
+            color: isDark ? const Color(0xFF2D3748) : const Color(0xFFE2E8F0),
             width: 1.5,
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide(
-            color: isDark
-                ? const Color(0xFF2D3748)
-                : const Color(0xFFE2E8F0),
+            color: isDark ? const Color(0xFF2D3748) : const Color(0xFFE2E8F0),
             width: 1.5,
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide(
-            color: isDark
-                ? const Color(0xFF5B86E5)
-                : const Color(0xFF5B86E5),
+            color: isDark ? const Color(0xFF5B86E5) : const Color(0xFF5B86E5),
             width: 2,
           ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(
-            color: Color(0xFFEF4444),
-            width: 1.5,
-          ),
+          borderSide: const BorderSide(color: Color(0xFFEF4444), width: 1.5),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(
-            color: Color(0xFFEF4444),
-            width: 2,
-          ),
+          borderSide: const BorderSide(color: Color(0xFFEF4444), width: 2),
         ),
         errorStyle: TextStyle(
           color: isDark ? const Color(0xFFFFCDD2) : const Color(0xFFEF4444),
           fontSize: 11,
           fontWeight: FontWeight.w500,
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
       ),
     );
   }
@@ -771,29 +757,36 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
             Icon(
               Icons.wc_rounded,
               size: 20,
-              color: isDark 
-                  ? Colors.white.withOpacity(0.7)
-                  : const Color(0xFF5B86E5).withOpacity(0.8),
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.7)
+                  : const Color(0xFF5B86E5).withValues(alpha:0.8),
             ),
             const SizedBox(width: 12),
-            Text(
-              '${'gender'.tr} (${'optional'.tr})',
-              style: TextStyle(
-                color: isDark 
-                    ? Colors.white.withOpacity(0.7)
-                    : const Color(0xFF4A5568),
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
+            Expanded(
+              child: Text(
+                '${'gender'.tr} (${'optional'.tr})',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: isDark
+                      ? Colors.white.withValues(alpha:0.7)
+                      : const Color(0xFF4A5568),
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
-            const Spacer(),
+
+            const SizedBox(width: 12),
             SizedBox(
               width: 16,
               height: 16,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
                 valueColor: AlwaysStoppedAnimation(
-                  isDark ? Colors.white.withOpacity(0.7) : const Color(0xFF5B86E5),
+                  isDark
+                      ? Colors.white.withValues(alpha:0.7)
+                      : const Color(0xFF5B86E5),
                 ),
               ),
             ),
@@ -801,7 +794,7 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
         ),
       );
     }
-    
+
     return DropdownButtonFormField<String>(
       value: _selectedGender,
       decoration: InputDecoration(
@@ -809,47 +802,41 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
         prefixIcon: Icon(
           Icons.wc_rounded,
           size: 20,
-          color: isDark 
-              ? Colors.white.withOpacity(0.7)
-              : const Color(0xFF5B86E5).withOpacity(0.8),
+          color: isDark
+              ? Colors.white.withValues(alpha:0.7)
+              : const Color(0xFF5B86E5).withValues(alpha:0.8),
         ),
         labelStyle: TextStyle(
-          color: isDark 
-              ? Colors.white.withOpacity(0.7)
+          color: isDark
+              ? Colors.white.withValues(alpha:0.7)
               : const Color(0xFF4A5568),
           fontSize: 13,
           fontWeight: FontWeight.w500,
         ),
         filled: true,
-        fillColor: isDark
-            ? const Color(0xFF1A202C)
-            : const Color(0xFFF7FAFC),
+        fillColor: isDark ? const Color(0xFF1A202C) : const Color(0xFFF7FAFC),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide(
-            color: isDark
-                ? const Color(0xFF2D3748)
-                : const Color(0xFFE2E8F0),
+            color: isDark ? const Color(0xFF2D3748) : const Color(0xFFE2E8F0),
             width: 1.5,
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide(
-            color: isDark
-                ? const Color(0xFF2D3748)
-                : const Color(0xFFE2E8F0),
+            color: isDark ? const Color(0xFF2D3748) : const Color(0xFFE2E8F0),
             width: 1.5,
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(
-            color: Color(0xFF5B86E5),
-            width: 2,
-          ),
+          borderSide: const BorderSide(color: Color(0xFF5B86E5), width: 2),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
       ),
       dropdownColor: isDark ? const Color(0xFF1A202C) : Colors.white,
       style: TextStyle(
@@ -857,19 +844,21 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
         fontSize: 15,
         fontWeight: FontWeight.w500,
       ),
-      items: _genders.isEmpty 
-          ? null 
+      items: _genders.isEmpty
+          ? null
           : _genders.map((gender) {
               return DropdownMenuItem<String>(
-                value: gender.id,  // Store gender_id
-                child: Text(gender.name),  // Display gender_name
+                value: gender.id, // Store gender_id
+                child: Text(gender.name), // Display gender_name
               );
             }).toList(),
-      onChanged: _genders.isEmpty ? null : (value) {
-        setState(() {
-          _selectedGender = value;  // Stores gender_id
-        });
-      },
+      onChanged: _genders.isEmpty
+          ? null
+          : (value) {
+              setState(() {
+                _selectedGender = value; // Stores gender_id
+              });
+            },
     );
   }
 
@@ -883,47 +872,41 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
           prefixIcon: Icon(
             Icons.cake_outlined,
             size: 20,
-            color: isDark 
-                ? Colors.white.withOpacity(0.7)
-                : const Color(0xFF5B86E5).withOpacity(0.8),
+            color: isDark
+                ? Colors.white.withValues(alpha:0.7)
+                : const Color(0xFF5B86E5).withValues(alpha:0.8),
           ),
           labelStyle: TextStyle(
-            color: isDark 
-                ? Colors.white.withOpacity(0.7)
+            color: isDark
+                ? Colors.white.withValues(alpha:0.7)
                 : const Color(0xFF4A5568),
             fontSize: 13,
             fontWeight: FontWeight.w500,
           ),
           filled: true,
-          fillColor: isDark
-              ? const Color(0xFF1A202C)
-              : const Color(0xFFF7FAFC),
+          fillColor: isDark ? const Color(0xFF1A202C) : const Color(0xFFF7FAFC),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
             borderSide: BorderSide(
-              color: isDark
-                  ? const Color(0xFF2D3748)
-                  : const Color(0xFFE2E8F0),
+              color: isDark ? const Color(0xFF2D3748) : const Color(0xFFE2E8F0),
               width: 1.5,
             ),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
             borderSide: BorderSide(
-              color: isDark
-                  ? const Color(0xFF2D3748)
-                  : const Color(0xFFE2E8F0),
+              color: isDark ? const Color(0xFF2D3748) : const Color(0xFFE2E8F0),
               width: 1.5,
             ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
-            borderSide: const BorderSide(
-              color: Color(0xFF5B86E5),
-              width: 2,
-            ),
+            borderSide: const BorderSide(color: Color(0xFF5B86E5), width: 2),
           ),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 16,
+          ),
         ),
         child: Text(
           _selectedBirthdate == null
@@ -932,8 +915,8 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
           style: TextStyle(
             color: _selectedBirthdate == null
                 ? (isDark
-                    ? Colors.white.withOpacity(0.3)
-                    : const Color(0xFF718096))
+                      ? Colors.white.withValues(alpha:0.3)
+                      : const Color(0xFF718096))
                 : (isDark ? Colors.white : const Color(0xFF1A202C)),
             fontSize: 15,
             fontWeight: FontWeight.w500,
@@ -956,7 +939,7 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF5B86E5).withOpacity(0.4),
+            color: const Color(0xFF5B86E5).withValues(alpha:0.4),
             blurRadius: 18,
             spreadRadius: 0,
             offset: const Offset(0, 6),
@@ -1011,7 +994,7 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
         Expanded(
           child: Divider(
             color: isDark
-                ? Colors.white.withOpacity(0.1)
+                ? Colors.white.withValues(alpha:0.1)
                 : const Color(0xFFE2E8F0),
             thickness: 1,
           ),
@@ -1019,10 +1002,10 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 14),
           child: Text(
-            'OR',
+            'or'.tr,
             style: TextStyle(
               color: isDark
-                  ? Colors.white.withOpacity(0.5)
+                  ? Colors.white.withValues(alpha:0.5)
                   : const Color(0xFF718096),
               fontSize: 11,
               fontWeight: FontWeight.w600,
@@ -1033,7 +1016,7 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
         Expanded(
           child: Divider(
             color: isDark
-                ? Colors.white.withOpacity(0.1)
+                ? Colors.white.withValues(alpha:0.1)
                 : const Color(0xFFE2E8F0),
             thickness: 1,
           ),
@@ -1050,7 +1033,7 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
           'already_have_account'.tr,
           style: TextStyle(
             color: isDark
-                ? Colors.white.withOpacity(0.7)
+                ? Colors.white.withValues(alpha:0.7)
                 : const Color(0xFF4A5568),
             fontSize: 13,
           ),
@@ -1060,7 +1043,10 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const LoginPage()),
+              MaterialPageRoute(
+                builder: (context) =>
+                    LoginPage(addAccountMode: widget.addAccountMode),
+              ),
             );
           },
           style: TextButton.styleFrom(
@@ -1081,18 +1067,15 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
           ),
           child: Text(
             'sign_in'.tr,
-            style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-            ),
+            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
           ),
         ),
         const SizedBox(height: 14),
         Text(
-          '© 2024 Panchit. All rights reserved.',
+          '© 2026 Panchit. All rights reserved.',
           style: TextStyle(
             color: isDark
-                ? Colors.white.withOpacity(0.4)
+                ? Colors.white.withValues(alpha:0.4)
                 : const Color(0xFF718096),
             fontSize: 11,
           ),
@@ -1100,4 +1083,73 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
       ],
     );
   }
+  Widget _buildTermsCheckbox(bool isDark) {
+    return Row(
+      children: [
+        SizedBox(
+          height: 24,
+          width: 24,
+          child: Checkbox(
+            value: _agreeToTerms,
+            activeColor: const Color(0xFF5B86E5),
+            onChanged: (value) {
+              setState(() {
+                _agreeToTerms = value ?? false;
+              });
+            },
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: RichText(
+            text: TextSpan(
+              style: TextStyle(
+                fontSize: 12,
+                color: isDark ? Colors.white70 : Colors.black87,
+              ),
+              children: [
+                TextSpan(text: 'i_agree_to'.tr),
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.middle,
+                  child: GestureDetector(
+                    onTap: () => _launchURL('https://www.panchit.com/static/terms'), // Update with your terms link
+                    child: Text(
+                      ' ${'terms_and_conditions'.tr}',
+                      style: const TextStyle(
+                        color: Color(0xFF5B86E5),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                TextSpan(text: ' ${'and'.tr} '),
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.middle,
+                  child: GestureDetector(
+                    onTap: () => _launchURL('https://www.panchit.com/static/privacy'),
+                    child: Text(
+                      'privacy_policy'.tr,
+                      style: const TextStyle(
+                        color: Color(0xFF5B86E5),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+  Future<void> _launchURL(String urlString) async {
+    final Uri url = Uri.parse(urlString);
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not launch the link')),
+      );
+    }
+  }
+
 }

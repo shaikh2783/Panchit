@@ -8,6 +8,7 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:snginepro/core/theme/app_colors.dart';
 import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/features/friends/data/models/friend.dart';
+import 'package:snginepro/features/profile/presentation/pages/profile_page.dart';
 import 'package:snginepro/features/friends/data/services/friends_api_service.dart';
 
 /// Clean, self‑contained FriendRequestsPage (single file)
@@ -36,8 +37,8 @@ class _FriendRequestsPageState extends State<FriendRequestsPage>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
 
-    // Register Arabic timeago locale to silence "Locale [ar] has not been added" logs
-    timeago.setLocaleMessages('en', timeago.ArMessages());
+    // Register Arabic timeago locale
+    timeago.setLocaleMessages('ar', timeago.ArMessages());
   }
 
   @override
@@ -600,12 +601,38 @@ class _ReceivedRequestCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                _Avatar(
-                  avatar: request.senderAvatar,
-                  verified: request.isVerified,
+                GestureDetector(
+                  onTap: () {
+                    if (request.senderId > 0) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProfilePage(userId: request.senderId),
+                        ),
+                      );
+                    }
+                  },
+                  child: _Avatar(
+                    avatar: request.senderAvatar,
+                    verified: request.isVerified,
+                  ),
                 ),
                 const SizedBox(width: 12),
-                Expanded(child: _UserInfo(request: request)),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      if (request.senderId > 0) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProfilePage(userId: request.senderId),
+                          ),
+                        );
+                      }
+                    },
+                    child: _UserInfo(request: request),
+                  ),
+                ),
               ],
             ),
 
@@ -719,24 +746,47 @@ class _SentRequestCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            _Avatar(
-              avatar: request.senderAvatar,
-              verified: request.isVerified,
-              radius: 25,
+            GestureDetector(
+              onTap: () {
+                if (request.senderId > 0) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProfilePage(userId: request.senderId),
+                    ),
+                  );
+                }
+              },
+              child: _Avatar(
+                avatar: request.senderAvatar,
+                verified: request.isVerified,
+                radius: 25,
+              ),
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    request.senderName,
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
+              child: GestureDetector(
+                onTap: () {
+                  if (request.senderId > 0) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProfilePage(userId: request.senderId),
+                      ),
+                    );
+                  }
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      request.senderName,
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
                   Text(
                     '@${request.senderUsername}',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -771,6 +821,7 @@ class _SentRequestCard extends StatelessWidget {
                 ],
               ),
             ),
+          ),
             TextButton.icon(
               onPressed: onCancel,
               icon: const Icon(Iconsax.close_circle, size: 16),

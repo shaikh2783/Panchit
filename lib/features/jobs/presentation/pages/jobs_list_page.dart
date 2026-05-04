@@ -4,6 +4,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/theme/ui_constants.dart';
+import '../../../../core/utils/html_decoder.dart';
 import '../../../../core/widgets/skeletons.dart';
 import '../../data/models/job.dart';
 import '../../domain/jobs_repository.dart';
@@ -389,7 +390,7 @@ class _JobsListPageState extends State<JobsListPage> {
     final chips = <Widget>[];
     if (_categoryId != null) {
       final match = _categories.where((c) => c.categoryId == _categoryId).toList();
-      final name = match.isNotEmpty ? match.first.name : 'category'.tr;
+      final name = match.isNotEmpty ? HtmlDecoder.decode(match.first.name) : 'category'.tr;
       chips.add(_chip('$name', () => setState(() => _categoryId = null)));
     }
     if ((_type ?? '').isNotEmpty) chips.add(_chip(_type!, () => setState(() => _type = null)));
@@ -454,7 +455,7 @@ class _JobsListPageState extends State<JobsListPage> {
                 isExpanded: true,
                 items: [
                   DropdownMenuItem(value: null, child: Text('all'.tr)),
-                  ..._categories.map((c) => DropdownMenuItem(value: c.categoryId, child: Text(c.name))),
+                  ..._categories.map((c) => DropdownMenuItem(value: c.categoryId, child: Text(HtmlDecoder.decode(c.name)))),
                 ],
                 onChanged: (v) => setState(() => _categoryId = v),
               ),

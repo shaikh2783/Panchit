@@ -1,6 +1,7 @@
 import '../../../../core/network/api_client.dart';
 import '../models/bank_settings.dart';
 import '../models/bank_transfer.dart';
+import 'package:flutter/foundation.dart';
 
 /// Bank API Service
 /// خدمة API للتحويلات البنكية وإعدادات البنك

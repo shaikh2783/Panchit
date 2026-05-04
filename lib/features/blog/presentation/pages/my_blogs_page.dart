@@ -137,10 +137,10 @@ class _MyBlogsPageState extends State<MyBlogsPage> {
         title: Text('my_blogs'.tr),
         elevation: 0,
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton(
         onPressed: () => Get.to(() => const BlogCreatePage())?.then((_) => _load()),
-        icon: const Icon(Iconsax.add_copy, size: 20),
-        label: Text('create_blog'.tr),
+        tooltip: 'create_blog'.tr,
+        child: const Icon(Iconsax.add_copy, size: 24),
       ),
       body: Column(
         children: [

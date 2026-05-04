@@ -1,5 +1,6 @@
 import '../data/models/models.dart';
 import '../data/services/market_api_service.dart';
+import 'package:flutter/foundation.dart';
 
 /// Market Repository
 /// 
@@ -109,8 +110,6 @@ class MarketRepository {
   /// Example:
   /// ```dart
   /// final product = await repository.getProductDetails('351');
-  /// print('${product.name} - ${product.formattedPrice}');
-  /// print('البائع: ${product.seller.fullName}');
   /// ```
   Future<Product> getProductDetails(String productId) async {
     try {
@@ -157,6 +156,8 @@ class MarketRepository {
     String description = '',
     List<Map<String, dynamic>> photos = const [],
     bool forAdult = false,
+    String? handle,
+    int? handleId,
   }) async {
     try {
       return await _apiService.createProduct(
@@ -172,6 +173,8 @@ class MarketRepository {
         description: description,
         photos: photos,
         forAdult: forAdult,
+        handle: handle,
+        handleId: handleId,
       );
     } catch (e) {
       throw _handleError('Failed to create product', e);
@@ -193,9 +196,7 @@ class MarketRepository {
   /// ```dart
   /// try {
   ///   final cart = await repository.getCart();
-  ///   print('Items: ${cart.itemsCount}, Total: ${cart.total}');
   /// } catch (e) {
-  ///   print('Error: $e');
   /// }
   /// ```
   Future<Cart> getCart() async {
@@ -214,22 +215,25 @@ class MarketRepository {
   /// - [productId]: Product ID to add
   /// - [quantity]: Number of items (default: 1)
   /// 
+  /// Returns:
+  /// - [Cart]: السلة بعد الإضافة
+  /// 
   /// Throws:
   /// - Exception if product not found or invalid
   /// 
   /// Example:
   /// ```dart
-  /// await repository.addToCart(
+  /// final cart = await repository.addToCart(
   ///   productId: '456',
   ///   quantity: 3,
   /// );
   /// ```
-  Future<void> addToCart({
+  Future<Cart> addToCart({
     required String productId,
     int quantity = 1,
   }) async {
     try {
-      await _apiService.addToCart(
+      return await _apiService.addToCart(
         productId: productId,
         quantity: quantity,
       );
@@ -246,9 +250,12 @@ class MarketRepository {
   /// - [cartId]: Cart item ID
   /// - [quantity]: New quantity (must be > 0)
   /// 
+  /// Returns:
+  /// - [Cart]: السلة بعد التحديث
+  /// 
   /// Throws:
   /// - Exception if cart item not found or invalid quantity
-  Future<void> updateCartItem({
+  Future<Cart> updateCartItem({
     required String cartId,
     required int quantity,
   }) async {
@@ -257,7 +264,7 @@ class MarketRepository {
     }
 
     try {
-      await _apiService.updateCartItem(
+      return await _apiService.updateCartItem(
         cartId: cartId,
         quantity: quantity,
       );
@@ -273,11 +280,14 @@ class MarketRepository {
   /// Parameters:
   /// - [cartId]: Cart item ID to remove
   /// 
+  /// Returns:
+  /// - [Cart]: السلة بعد الحذف
+  /// 
   /// Throws:
   /// - Exception if cart item not found
-  Future<void> removeFromCart(String cartId) async {
+  Future<Cart> removeFromCart(String cartId) async {
     try {
-      await _apiService.removeFromCart(cartId);
+      return await _apiService.removeFromCart(cartId);
     } catch (e) {
       throw _handleError('Failed to remove from cart', e);
     }
@@ -287,11 +297,14 @@ class MarketRepository {
   /// 
   /// Removes all items from the shopping cart.
   /// 
+  /// Returns:
+  /// - [Cart]: سلة فارغة
+  /// 
   /// Throws:
   /// - Exception if operation fails
-  Future<void> clearCart() async {
+  Future<Cart> clearCart() async {
     try {
-      await _apiService.clearCart();
+      return await _apiService.clearCart();
     } catch (e) {
       throw _handleError('Failed to clear cart', e);
     }
@@ -308,9 +321,9 @@ class MarketRepository {
   /// separate orders will be created for each seller.
   /// 
   /// Parameters:
-  /// - [address]: Shipping address (required)
-  /// - [notes]: Delivery notes (optional)
-  /// - [paymentMethod]: Payment method (optional, future use)
+  /// - [address]: عنوان الشحن الجديد (اختياري)
+  /// - [shippingAddressId]: معرف عنوان موجود (اختياري)
+  /// يجب توفير واحد على الأقل
   /// 
   /// Returns:
   /// - [CheckoutResult]: Contains created orders info
@@ -320,28 +333,32 @@ class MarketRepository {
   /// 
   /// Example:
   /// ```dart
+  /// // باستخدام عنوان جديد
   /// final address = ShippingAddress(
   ///   name: 'أحمد محمد',
   ///   phone: '+966501234567',
-  ///   location: 'الرياض، شارع الملك فهد',
+  ///   address: 'الرياض، شارع الملك فهد',
   /// );
   /// 
   /// final result = await repository.checkout(
   ///   address: address,
-  ///   notes: 'التوصيل بين 9 ص - 5 م',
   /// );
   /// 
-  /// print('تم إنشاء ${result.totalOrders} طلب');
+  /// // أو باستخدام عنوان موجود
+  /// final result = await repository.checkout(
+  ///   shippingAddressId: 5,
+  /// );
+  /// 
   /// ```
   Future<CheckoutResult> checkout({
-    required ShippingAddress address,
-    String? notes,
+    ShippingAddress? address,
+    int? shippingAddressId,
     String? paymentMethod,
   }) async {
     try {
       return await _apiService.checkout(
         address: address,
-        notes: notes,
+        shippingAddressId: shippingAddressId,
         paymentMethod: paymentMethod,
       );
     } catch (e) {
@@ -423,6 +440,52 @@ class MarketRepository {
     }
   }
 
+  /// Update order status (seller-only)
+  ///
+  /// Parameters:
+  /// - [orderHash]: Unique order identifier
+  /// - [status]: New status ('processing' | 'shipped' | 'delivered' | 'cancelled')
+  ///
+  /// Returns:
+  /// - [Order]: Updated order details
+  Future<Order> updateOrderStatus({
+    required String orderHash,
+    required String status,
+  }) async {
+    try {
+      return await _apiService.updateOrderStatus(
+        orderHash: orderHash,
+        status: status,
+      );
+    } catch (e) {
+      throw _handleError('Failed to update order status', e);
+    }
+  }
+
+  /// Get orders count (buyer/seller)
+  Future<int> getOrdersCount({OrderType type = OrderType.buyer}) async {
+    try {
+      final t = type == OrderType.seller ? 'seller' : 'buyer';
+      return await _apiService.getOrdersCount(type: t);
+    } catch (e) {
+      throw _handleError('Failed to fetch orders count', e);
+    }
+  }
+
+  // ========================================
+  // WebView Session Token
+  // ========================================
+
+  /// إنشاء توكن جلسة مؤقت لفتح بوابة الدفع في WebView بدون تسجيل دخول
+  Future<String?> createWebViewSessionToken() async {
+    try {
+      final token = await _apiService.createWebViewSessionToken();
+      return token.isNotEmpty ? token : null;
+    } catch (e) {
+      return null; // نتابع بالـ paymentUrl الأصلي إذا فشل التوكن
+    }
+  }
+
   // ========================================
   // Categories Methods
   // ========================================
@@ -438,7 +501,6 @@ class MarketRepository {
   /// ```dart
   /// final categories = await repository.getCategories();
   /// for (var cat in categories) {
-  ///   print('${cat.categoryId}: ${cat.categoryName}');
   /// }
   /// ```
   Future<List<ProductCategory>> getCategories() async {

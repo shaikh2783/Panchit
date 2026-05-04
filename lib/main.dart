@@ -10,11 +10,17 @@ import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/core/services/reactions_api_service.dart';
 import 'package:snginepro/core/services/reactions_service.dart';
 import 'package:snginepro/core/services/notification_navigation_service.dart';
+import 'package:snginepro/features/messenger/presentation/services/global_call_service.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:snginepro/features/settings/data/models/seeting.dart';
 import 'package:snginepro/license_fluttercrafters.dart';
 
 import 'core/config/app_config.dart' show appConfig;
+
+// ============ UPDATE SYSTEM - START ============
+// يمكنك حذف هذا القسم بالكامل إذا لم تعد بحاجة لنظام التحديث
+import 'package:snginepro/update/update.dart';
+// ============ UPDATE SYSTEM - END ============
 
 // Global API Client instance
 late final ApiClient globalApiClient;
@@ -94,11 +100,33 @@ Future<void> main() async {
   // Register ApiClient for dependency injection
   Get.put(apiClient);
 
+  // Initialize NotificationNavigationService with navigatorKey
+  NotificationNavigationService.navigatorKey = App.navigatorKey;
+
+  // Initialize Global Call Service (for incoming calls from anywhere)
+  await Get.putAsync(() => GlobalCallService().init(apiClient));
+
+  // ============ UPDATE SYSTEM - START ============
+  // فحص التحديث تلقائياً عند بدء التطبيق
+  // لحذف نظام التحديث: احذف هذا القسم بالكامل
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    final context = App.navigatorKey.currentContext;
+    if (context != null) {
+      checkAndShowUpdate(
+        context,
+        isArabic: false,
+        showOnlyIfAvailable: false,
+      );
+    }
+  });
+  // ============ UPDATE SYSTEM - END ============
+
   runApp(App(sharedPreferences: sharedPreferences));
 }
 
 /// Initialize OneSignal SDK
 Future<void> _initializeOneSignal(ApiClient apiClient) async {
+
   try {
     if (_oneSignalInitialized) {
       // Ensure handlers are set once
@@ -107,6 +135,7 @@ Future<void> _initializeOneSignal(ApiClient apiClient) async {
     }
     // استخدام OneSignal App ID من AppSettings
     final oneSignalAppId = AppSettings.oneSignalAppId;
+
 
     // Remove this method to debug issues
     OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
@@ -157,6 +186,8 @@ void _setupNotificationHandlers() {
     // معالجة التنقل من البيانات الإضافية + رابط التشغيل (launchURL)
     final additional = event.notification.additionalData;
     final launchUrl = event.notification.launchUrl;
+
+
     final data = <String, dynamic>{
       if (additional != null) ...additional,
       if (launchUrl != null && launchUrl.isNotEmpty) 'url': launchUrl,
@@ -171,9 +202,8 @@ void _setupNotificationHandlers() {
 
   // Handle notification received in foreground
   OneSignal.Notifications.addForegroundWillDisplayListener((event) {
-    // Prevent default display to avoid duplicates, then display exactly once
-    event.preventDefault();
-    event.notification.display();
+    // Display notification normally (don't prevent default display)
+    // If you want to prevent notification display in foreground, uncomment: event.preventDefault();
   });
 }
 

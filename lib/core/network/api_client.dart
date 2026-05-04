@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:crypto/crypto.dart';
+import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:snginepro/core/config/app_config.dart';
+import 'package:snginepro/core/localization/localization_controller.dart';
 import 'package:snginepro/core/network/api_exception.dart';
 
 class ApiClient {
@@ -14,6 +16,15 @@ class ApiClient {
     : _config = config,
       _httpClient = httpClient ?? http.Client();
 
+  void _log(String msg) {
+    if (!kDebugMode) return;
+    debugPrint(msg);
+  }
+
+  String _truncate(String s, [int max = 1200]) {
+    if (s.length <= max) return s;
+    return '${s.substring(0, max)}...';
+  }
   final AppConfig _config;
   final http.Client _httpClient;
   String? _authToken;
@@ -31,14 +42,17 @@ class ApiClient {
   }) async {
     // Use data if provided, otherwise use body
     final requestBody = data ?? body;
+    final finalHeaders = _buildHeaders(headers, asJson: asJson);
 
     final uri = _buildUri(relativePath);
+    // --- PRINT REQUEST ---
+    _log('➡️ POST $uri');
+    _log('➡️ Headers: $finalHeaders');
     if (requestBody != null) {
-      final encoded = jsonEncode(requestBody);
-      final preview = encoded.length > 300
-          ? '${encoded.substring(0, 300)}...'
-          : encoded;
+      final encoded = asJson ? jsonEncode(requestBody) : requestBody.toString();
+      _log('➡️ Body: ${_truncate(encoded)}');
     } else {
+      _log('➡️ Body: null');
     }
 
     final response = await _httpClient.post(
@@ -120,12 +134,34 @@ class ApiClient {
   }
 
   Future<Map<String, dynamic>> get(
+      String relativePath, {
+        Map<String, String>? queryParameters,
+        Map<String, String>? headers,
+      }) async {
+    final uri = _buildUri(relativePath, queryParameters: queryParameters);
+    final finalHeaders = _buildHeaders(headers, asJson: true);
+
+    _log('➡️ GET $uri');
+    _log('➡️ Headers: $finalHeaders');
+
+    final response = await _httpClient.get(uri, headers: finalHeaders);
+
+    _log('⬅️ Status: ${response.statusCode}');
+    _log('⬅️ Response: ${_truncate(response.body)}');
+
+    return _handleResponse(response);
+  }
+
+
+  Future<Map<String, dynamic>> delete(
     String relativePath, {
     Map<String, String>? queryParameters,
     Map<String, String>? headers,
   }) async {
-    final response = await _httpClient.get(
-      _buildUri(relativePath, queryParameters: queryParameters),
+    final uri = _buildUri(relativePath, queryParameters: queryParameters);
+
+    final response = await _httpClient.delete(
+      uri,
       headers: _buildHeaders(headers, asJson: true),
     );
     return _handleResponse(response);
@@ -149,12 +185,17 @@ class ApiClient {
         .toString();
     final hmac = Hmac(sha256, utf8.encode(_config.apiSecret));
     final signature = hmac.convert(utf8.encode(timestamp)).toString();
+    
+    // 🌐 Get current language code for API requests
+    final langCode = _getCurrentLanguageCode();
+    
     return {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'x-api-key': _config.apiKey,
       'x-timestamp': timestamp,
       'x-signature': signature,
+      'x-lang': langCode, // 🌐 Language header for server-side translation
       // No x-auth-token for public endpoints
       if (extra != null) ...extra,
     };
@@ -168,6 +209,9 @@ class ApiClient {
         .toString();
     final hmac = Hmac(sha256, utf8.encode(_config.apiSecret));
     final signature = hmac.convert(utf8.encode(timestamp)).toString();
+    
+    // 🌐 Get current language code for API requests
+    final langCode = _getCurrentLanguageCode();
 
     return {
       if (asJson) 'Content-Type': 'application/json',
@@ -175,10 +219,25 @@ class ApiClient {
       'x-api-key': _config.apiKey,
       'x-timestamp': timestamp,
       'x-signature': signature,
+      'x-lang': langCode, // 🌐 Language header for server-side translation
       if (_authToken != null && _authToken!.isNotEmpty)
         'x-auth-token': _authToken!,
       if (extra != null) ...extra,
     };
+  }
+  
+  /// 🌐 Get current language code in API format (e.g., "ar_sa", "en_us")
+  String _getCurrentLanguageCode() {
+    try {
+      if (Get.isRegistered<LocalizationController>()) {
+        final controller = Get.find<LocalizationController>();
+        final locale = controller.currentLocale;
+        // API format: ar_sa, en_us, fr_fr (language_country)
+        return '${locale.languageCode}_${locale.countryCode ?? locale.languageCode}'.toLowerCase();
+      }
+    } catch (e) {
+    }
+    return 'en_us'; // Default fallback
   }
 
   Uri _buildUri(String relativePath, {Map<String, String>? queryParameters}) {
@@ -190,42 +249,49 @@ class ApiClient {
     return baseUri.replace(queryParameters: mergedQuery);
   }
 
-  Object? _encodeBody(Map<String, dynamic>? body, {required bool asJson}) {
-    if (body == null) {
-      return null;
-    }
+  Object? _encodeBody(dynamic body, {required bool asJson}) {
+    if (body == null) return null;
+
     if (asJson) {
-      return jsonEncode(body);
+      return jsonEncode(body); // works for Map/List/etc.
     }
-    return body.map(
-      (key, value) => MapEntry(key, value == null ? '' : value.toString()),
-    );
+
+    if (body is Map) {
+      return body.map(
+            (key, value) => MapEntry(key.toString(), value == null ? '' : value.toString()),
+      );
+    }
+
+    return body.toString();
   }
 
+
   Map<String, dynamic> _handleResponse(http.Response response) {
-
-
-    final decodedBody = _safeDecodeBody(response.body);
+    final rawBody = response.body;
+    final decodedBody = _safeDecodeBody(rawBody);
     final isSuccess = response.statusCode >= 200 && response.statusCode < 300;
+
     if (isSuccess) {
-      if (decodedBody == null) {
-        return const {};
-      }
-      if (decodedBody is Map<String, dynamic>) {
-        return decodedBody;
-      }
+      if (decodedBody == null) return const {};
+      if (decodedBody is Map<String, dynamic>) return decodedBody;
       return {'data': decodedBody};
     }
 
+    _log('❌ API ERROR ${response.statusCode}');
+    _log('❌ Raw error body: ${_truncate(rawBody)}');
+    _log('❌ Decoded error: $decodedBody');
+
     final message =
         _extractErrorMessage(decodedBody) ??
-        'Unexpected error from API (${response.statusCode})';
+            'Unexpected error from API (${response.statusCode})';
+
     throw ApiException(
       message,
       statusCode: response.statusCode,
       details: decodedBody,
     );
   }
+
 
   Object? _safeDecodeBody(String body) {
     if (body.isEmpty) {

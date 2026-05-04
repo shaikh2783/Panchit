@@ -51,6 +51,7 @@ const Map<String, String> bnIN = {
     "registration_failed": "রেজিস্ট্রেশন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।",
     "email_username_required": "ইমেল বা ইউজারনেম প্রয়োজন",
     "sign_in_with_google": "গুগল দিয়ে সাইন ইন করুন",
+    "sign_in_with_apple": "অ্যাপল দিয়ে সাইন ইন করুন",
 
     // Getting Started
     "getting_started": "শুরু করা হচ্ছে",
@@ -1869,8 +1870,1014 @@ const Map<String, String> bnIN = {
     "delete_post_message": "আপনি কি এই পোস্ট মুছতে নিশ্চিত?",
     "delete_button": "মুছুন",
     "error_deleting_post": "পোস্ট মুছতে ব্যর্থ হয়েছে",
-    "report_feature_coming": "রিপোর্ট ফিচার শীঘ্রই আসছে"
+    "report_feature_coming": "রিপোর্ট ফিচার শীঘ্রই আসছে",
+  'we_will_send_verification_code':
+  'আপনার পাসওয়ার্ড রিসেট করার জন্য আমরা আপনার ইমেইলে একটি যাচাইকরণ কোড পাঠাব',
+  'email_or_username': 'ইমেইল বা ব্যবহারকারীর নাম',
+  'send_code': 'কোড পাঠান',
+  'enter_verification_code': 'যাচাইকরণ কোড লিখুন',
+  'we_sent_code_to_your_email':
+  'আমরা আপনার ইমেইল ঠিকানায় ৬ সংখ্যার একটি কোড পাঠিয়েছি',
+  'enter_all_digits': 'অনুগ্রহ করে সব ৬টি সংখ্যা লিখুন',
+  'resend_code_in': 'আবার কোড পাঠান',
+  'seconds': 'সেকেন্ড',
+  'resend_code': 'কোড আবার পাঠান',
+  'verify_code': 'কোড যাচাই করুন',
+  'create_new_password': 'নতুন পাসওয়ার্ড তৈরি করুন',
+  'enter_strong_password':
+  'অনুগ্রহ করে কমপক্ষে ৮ অক্ষরের একটি শক্তিশালী পাসওয়ার্ড লিখুন',
+  'password_too_short': 'পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে',
+  'reset_password': 'পাসওয়ার্ড রিসেট করুন',
+  'skip_all': 'সব এড়িয়ে যান',
+  'step': 'ধাপ',
+  'of': 'এর',
+  'profile_setup_complete': 'প্রোফাইল সেটআপ সম্পন্ন হয়েছে!',
+  'please_select_country': 'অনুগ্রহ করে আপনার দেশ নির্বাচন করুন',
+  'select_your_country': 'আপনার দেশ নির্বাচন করুন',
+  'job_title_hint': 'যেমন: সফটওয়্যার ইঞ্জিনিয়ার',
+  'field_of_study': 'অধ্যয়নের ক্ষেত্র',
+  'field_of_study_hint': 'যেমন: কম্পিউটার সায়েন্স',
+  'add_profile_photo': 'প্রোফাইল ছবি যোগ করুন',
+  'profile_photo_description':
+  'মানুষ যেন আপনাকে চিনতে পারে সেজন্য একটি ছবি যোগ করুন',
+  'tap_to_change_photo': 'ছবি পরিবর্তন করতে ট্যাপ করুন',
+  'choose_photo_source': 'ছবির উৎস নির্বাচন করুন',
+  'camera': 'ক্যামেরা',
+  'gallery': 'গ্যালারি',
+  'photo_uploaded_successfully': 'ছবি সফলভাবে আপলোড হয়েছে!',
+  'error_uploading_photo': 'ছবি আপলোড করতে সমস্যা হয়েছে',
+  'error_picking_image': 'ছবি নির্বাচন করতে সমস্যা হয়েছে',
+  'tell_us_about_yourself': 'আপনার সম্পর্কে আমাদের জানান',
+  'bio_description': 'আপনার সম্পর্কে সংক্ষিপ্ত বিবরণ লিখুন',
+  'bio': 'পরিচিতি',
+  'write_something_about_yourself': 'আপনার সম্পর্কে কিছু লিখুন...',
 
 
+  'delete_story': 'স্টোরি মুছে ফেলুন',
+  'delete_story_confirmation':
+  'আপনি কি নিশ্চিত যে এই স্টোরিটি মুছে ফেলতে চান? এই কাজটি আর ফেরানো যাবে না।',
+  'story_deleted_successfully': 'স্টোরি সফলভাবে মুছে ফেলা হয়েছে',
 
+
+// Time
+  'second_ago': '১ সেকেন্ড আগে',
+  'seconds_ago': 'সেকেন্ড আগে',
+  'minute_ago': '১ মিনিট আগে',
+  'hour_ago': '১ ঘণ্টা আগে',
+  'day_ago': '১ দিন আগে',
+  'week_ago': '১ সপ্তাহ আগে',
+  'month_ago': '১ মাস আগে',
+  'year_ago': '১ বছর আগে',
+
+// Buttons / Actions
+  'send_now': 'এখনই পাঠান',
+  'send_message': 'বার্তা পাঠান',
+  'more_options': 'আরও অপশন',
+  'anonymous_user': 'নামবিহীন ব্যবহারকারী',
+
+// Status
+  'status_updated': 'অবস্থা সফলভাবে আপডেট হয়েছে',
+  'sold': 'বিক্রি হয়েছে',
+
+// Chat / Call
+  'video_call': 'ভিডিও কল',
+  'audio_call': 'অডিও কল',
+  'mute': 'মিউট',
+  'unmute': 'আনমিউট',
+  'speaker': 'স্পিকার',
+  'end_call': 'কল শেষ করুন',
+  'calling': 'কল করা হচ্ছে',
+  'answer': 'উত্তর দিন',
+  'decline': 'প্রত্যাখ্যান করুন',
+
+// AI
+  'ai_assistant': 'এআই সহকারী',
+  'ai_typing': 'টাইপ করা হচ্ছে...',
+  'ai_error': 'ত্রুটি',
+  'ai_success': 'সফলতা',
+  'ai_clear_chat': 'চ্যাট পরিষ্কার করুন',
+  'ai_coming_soon': 'শীঘ্রই আসছে...',
+
+// Theme
+  'switched_to_light_mode': 'লাইট মোডে পরিবর্তন করা হয়েছে',
+  'switched_to_dark_mode': 'ডার্ক মোডে পরিবর্তন করা হয়েছে',
+
+// Cart / Orders
+  'shopping_cart': 'শপিং কার্ট',
+  'checkout': 'চেকআউট',
+  'orders': 'অর্ডার',
+  'order_details': 'অর্ডারের বিবরণ',
+  'order_status_pending': 'মুলতুবি',
+  'order_status_delivered': 'ডেলিভার হয়েছে',
+
+  'description_plain_text': 'বর্ণনা (HTML সমর্থিত)',
+  'enter_description': 'এখানে বর্ণনা লিখুন',
+  'preview': 'প্রিভিউ',
+  'chat_seller_privacy_restricted':
+  'বিক্রেতা চ্যাট গোপনীয়তা সেটিংস সীমাবদ্ধ করেছেন',
+  'cannot_chat_with_yourself': 'আপনি নিজেকে বার্তা পাঠাতে পারবেন না',
+  'no_posts_found': 'কোনো লেখা পাওয়া যায়নি',
+
+  'send_merits_title': 'মেরিট পয়েন্ট পাঠান',
+  'send_merits_subtitle': 'অন্যদের প্রতি আপনার কৃতজ্ঞতা শেয়ার করুন',
+  'send_merits_info':
+  'অন্যদের মূল্যবান অবদানের জন্য প্রশংসা জানাতে মেরিট পয়েন্ট পাঠান',
+  'merits_available': '%s পয়েন্ট উপলব্ধ',
+  'send_merits_coming_soon': 'শীঘ্রই আসছে – মেরিট পাঠানোর পেজ',
+  'failed_to_pick_file': 'ফাইল নির্বাচন করতে ব্যর্থ',
+  'no_created_events': 'আপনি এখনও কোনো ইভেন্ট তৈরি করেননি',
+  'create_your_first_event':
+  'আপনার প্রথম ইভেন্ট তৈরি করতে + বোতামে ট্যাপ করুন!',
+  'search_products': 'পণ্য অনুসন্ধান করুন...',
+  'edit_product': 'পণ্য সম্পাদনা করুন',
+  'mark_as_sold': 'বিক্রি হয়েছে হিসেবে চিহ্নিত করুন',
+  'mark_as_unsold': 'উপলব্ধ হিসেবে চিহ্নিত করুন',
+  'are_you_sure_mark_product_sold':
+  'আপনি কি নিশ্চিত যে এই পণ্যটি বিক্রি হয়েছে হিসেবে চিহ্নিত করতে চান?',
+  'product_marked_sold': 'পণ্য সফলভাবে বিক্রি হয়েছে হিসেবে চিহ্নিত হয়েছে',
+  'product_marked_unsold':
+  'পণ্য সফলভাবে উপলব্ধ হিসেবে চিহ্নিত হয়েছে',
+  'error_marking_product_sold':
+  'পণ্য বিক্রি হয়েছে হিসেবে চিহ্নিত করতে ত্রুটি',
+  'error_marking_product_unsold':
+  'পণ্য উপলব্ধ হিসেবে চিহ্নিত করতে ত্রুটি',
+  'market_status_refunded': 'রিফান্ড করা হয়েছে',
+  'change_status': 'স্ট্যাটাস পরিবর্তন করুন',
+  'upload_image_or_video': 'অনুগ্রহ করে একটি ছবি বা ভিডিও আপলোড করুন',
+  'select_media_below': 'নিচে মিডিয়ার ধরন নির্বাচন করুন',
+  'video': 'ভিডিও',
+  'image': 'ছবি',
+// Filter & Profile
+  'profile_no_videos': 'কোনো ভিডিও নেই',
+  'profile_videos_load_error': 'ভিডিও লোড করতে ত্রুটি',
+
+// Notifications
+  'notification_started_following': 'আপনাকে অনুসরণ করা শুরু করেছে',
+  'notification_friend_request_sent': 'আপনাকে বন্ধুত্বের অনুরোধ পাঠিয়েছে',
+  'notification_friend_request_accepted': 'আপনার বন্ধুত্বের অনুরোধ গ্রহণ করেছে',
+  'notification_commented_post': 'আপনার পোস্টে মন্তব্য করেছে',
+  'notification_reacted_like_to_post': 'আপনার পোস্টে লাইক দিয়েছে',
+  'notification_reacted_love_to_post': 'আপনার পোস্টে লাভ রিঅ্যাক্ট দিয়েছে',
+  'notification_reacted_haha_to_post': 'আপনার পোস্টে হাহা রিঅ্যাক্ট দিয়েছে',
+  'notification_reacted_wow_to_post': 'আপনার পোস্টে ওয়াও রিঅ্যাক্ট দিয়েছে',
+  'notification_reacted_sad_to_post': 'আপনার পোস্টে দুঃখ রিঅ্যাক্ট দিয়েছে',
+  'notification_reacted_angry_to_post': 'আপনার পোস্টে রাগ রিঅ্যাক্ট দিয়েছে',
+  'notification_shared_your_post': 'আপনার পোস্ট শেয়ার করেছে',
+  'notification_group_join_request':
+  'আপনার গ্রুপে যোগ দেওয়ার অনুরোধ করেছে',
+  'notification_group_join_approved':
+  'আপনার গ্রুপে যোগ দেওয়ার অনুরোধ অনুমোদন করেছে',
+  'notification_mentioned_you_post': 'একটি পোস্টে আপনাকে উল্লেখ করেছে',
+  'notification_mentioned_you_comment':
+  'একটি মন্তব্যে আপনাকে উল্লেখ করেছে',
+  'notification_posted_on_wall': 'আপনার ওয়ালে পোস্ট করেছে',
+  'notification_replied_comment': 'আপনার মন্তব্যের উত্তর দিয়েছে',
+  'notification_page_invitation': 'আপনাকে একটি পেজ লাইক করতে আমন্ত্রণ জানিয়েছে',
+  'notification_group_invitation': 'আপনাকে একটি গ্রুপে যোগ দিতে আমন্ত্রণ জানিয়েছে',
+  'notification_event_invitation': 'আপনাকে একটি ইভেন্টে আমন্ত্রণ জানিয়েছে',
+  'notification_tagged_photo': 'একটি ছবিতে আপনাকে ট্যাগ করেছে',
+  'notification_birthday': 'আজ তাদের জন্মদিন',
+
+// Group Pending Requests
+  'pending_requests_title': 'যোগদানের অনুরোধ',
+  'pending_requests_refresh': 'রিফ্রেশ',
+  'pending_requests_load_failed': 'অনুরোধ লোড করতে ব্যর্থ',
+  'pending_requests_accepted': '@name গ্রুপে গ্রহণ করা হয়েছে',
+  'pending_requests_accept_failed':
+  'অনুরোধ গ্রহণ করতে ব্যর্থ',
+  'pending_requests_decline_title': 'অনুরোধ প্রত্যাখ্যান',
+  'pending_requests_decline_message':
+  'আপনি কি @name এর গ্রুপে যোগদানের অনুরোধ প্রত্যাখ্যান করতে চান?',
+  'pending_requests_declined': '@name এর অনুরোধ প্রত্যাখ্যান করা হয়েছে',
+  'pending_requests_decline_failed':
+  'অনুরোধ প্রত্যাখ্যান করতে ব্যর্থ',
+  'pending_requests_retry': 'আবার চেষ্টা করুন',
+  'pending_requests_empty': 'কোনো অপেক্ষমান অনুরোধ নেই',
+  'pending_requests_empty_subtitle':
+  'সব অনুরোধ প্রক্রিয়া করা হয়েছে',
+  'pending_requests_date': 'অনুরোধের তারিখ',
+  'pending_requests_accept': 'গ্রহণ করুন',
+  'pending_requests_decline': 'প্রত্যাখ্যান করুন',
+
+// Group Privacy
+  'group_privacy_public': 'পাবলিক',
+  'group_privacy_public_desc': 'তাৎক্ষণিক যোগদান, সবার জন্য দৃশ্যমান',
+  'group_privacy_closed_desc':
+  'যোগদানের অনুরোধ প্রয়োজন, অনুসন্ধানে দৃশ্যমান',
+  'group_privacy_secret_desc':
+  'যোগদানের অনুরোধ প্রয়োজন, অনুসন্ধান থেকে লুকানো',
+
+// Search
+  'groups_search_title': 'গ্রুপ অনুসন্ধান',
+  'groups_search_clear_filters': 'ফিল্টার পরিষ্কার করুন',
+  'groups_search_hint': 'গ্রুপ খুঁজুন...',
+  'groups_search_filters': 'ফিল্টার',
+  'groups_search_category_label': 'বিভাগ: @id',
+  'groups_search_empty_title': 'গ্রুপ অনুসন্ধান করুন',
+  'groups_search_empty_subtitle':
+  'অনুসন্ধান বা ফিল্টার ব্যবহার করুন',
+  'groups_search_no_results': 'কোনো ফলাফল নেই',
+  'groups_search_no_results_subtitle':
+  'ভিন্ন কীওয়ার্ড চেষ্টা করুন বা ফিল্টার পরিবর্তন করুন',
+
+// Profile Stats
+  'profile_stat_posts': 'পোস্ট',
+  'profile_stat_photos': 'ছবি',
+  'profile_stat_friends': 'বন্ধু',
+  'profile_stat_followers': 'ফলোয়ার',
+  'profile_following': 'ফলো করা',
+  'profile_follow': 'ফলো',
+  'profile_no_posts': 'এখনও কোনো পোস্ট নেই',
+
+// Profile Interaction
+  'profile_allow_interaction': 'এই ব্যবহারকারীকে আপনার সাথে যোগাযোগের অনুমতি দিন',
+  'profile_prevent_interaction': 'এই ব্যবহারকারীকে আপনার সাথে যোগাযোগ থেকে বিরত রাখুন',
+  'profile_user_blocked_success': 'ব্যবহারকারী সফলভাবে ব্লক করা হয়েছে',
+  'profile_user_unblocked_success': 'ব্যবহারকারী সফলভাবে আনব্লক করা হয়েছে',
+  'profile_invalid_user_id': 'অবৈধ ব্যবহারকারী ID',
+  'profile_failed_open_chat': 'চ্যাট খুলতে ব্যর্থ',
+  'profile_must_be_friend': 'প্রথমে বন্ধু হতে হবে',
+
+// Group Members
+  'group_members_title': 'গ্রুপ সদস্য',
+  'group_members_tab_all': 'সব',
+  'group_members_tab_admins': 'অ্যাডমিন',
+  'group_members_tab_members': 'সদস্য',
+  'group_members_error_loading': 'সদস্য লোড করতে ত্রুটি: @error',
+  'group_members_no_members': 'কোনো সদস্য নেই',
+  'group_members_user_default': 'ব্যবহারকারী',
+  'group_members_admin_badge': 'অ্যাডমিন',
+  'group_members_make_admin': 'অ্যাডমিন করুন',
+  'group_members_remove_admin': 'অ্যাডমিন অনুমতি সরান',
+  'group_members_remove_member': 'সদস্য সরান',
+  'group_members_make_admin_title': 'অ্যাডমিন করুন',
+  'group_members_make_admin_confirm':
+  'আপনি কি নিশ্চিত যে @name কে এই গ্রুপের অ্যাডমিন করতে চান?',
+  'group_members_cancel': 'বাতিল',
+  'group_members_confirm': 'নিশ্চিত করুন',
+  'group_members_make_admin_success':
+  'সদস্য সফলভাবে অ্যাডমিন হয়েছে',
+  'group_members_feature_development': 'ফিচার উন্নয়নের অধীনে',
+  'group_members_make_admin_failed': 'অ্যাডমিন করতে ব্যর্থ',
+  'group_members_remove_admin_title': 'অ্যাডমিন অনুমতি সরান',
+  'group_members_remove_admin_confirm':
+  'আপনি কি @name এর অ্যাডমিন অনুমতি সরিয়ে তাকে সাধারণ সদস্য করতে চান?',
+  'group_members_remove_permissions': 'অনুমতি সরান',
+  'group_members_remove_admin_success':
+  'অ্যাডমিন অনুমতি সরানো হয়েছে',
+  'group_members_remove_admin_failed':
+  'অ্যাডমিন অনুমতি সরাতে ব্যর্থ',
+  'group_members_remove_member_title': 'সদস্য সরান',
+  'group_members_remove_member_confirm':
+  'আপনি কি @name কে গ্রুপ থেকে সরাতে চান?',
+  'group_members_remove': 'সরান',
+  'group_members_remove_member_success':
+  'সদস্য সফলভাবে সরানো হয়েছে',
+  'group_members_remove_member_failed':
+  'সদস্য সরাতে ব্যর্থ',
+
+// Product Conditions
+  'product_condition_new': 'নতুন',
+  'product_condition_like_new': 'প্রায় নতুন',
+  'product_condition_excellent': 'চমৎকার',
+  'product_condition_good': 'ভালো',
+  'product_condition_fair': 'মাঝারি',
+  'product_condition_poor': 'খারাপ',
+
+// Wallet
+  'wallet_balance': 'ওয়ালেট ব্যালেন্স',
+  'wallet_balance_available': 'উপলব্ধ ওয়ালেট ব্যালেন্স',
+  'wallet_balance_current': 'বর্তমান ওয়ালেট ব্যালেন্স',
+  'wallet_order_total': 'অর্ডারের মোট',
+  'wallet_insufficient_for_checkout':
+  'ওয়ালেট ব্যালেন্স অপর্যাপ্ত, চেকআউটের আগে রিচার্জ করুন',
+
+// Calls & Permissions
+  'turn_on_camera': 'ক্যামেরা চালু করুন',
+  'turn_off_camera': 'ক্যামেরা বন্ধ করুন',
+  'switch_camera': 'ক্যামেরা পরিবর্তন করুন',
+  'starting_video_call': 'ভিডিও কল শুরু হচ্ছে...',
+  'starting_audio_call': 'কল শুরু হচ্ছে...',
+  'cannot_start_call': 'কল শুরু করা যায়নি',
+  'call_start_failed': 'কল শুরু করতে ব্যর্থ',
+  'user_busy_now': 'ব্যবহারকারী বর্তমানে ব্যস্ত',
+  'must_be_friends_to_call':
+  'কল শুরু করতে হলে বন্ধু হতে হবে',
+  'user_not_found': 'ব্যবহারকারী পাওয়া যায়নি',
+  'allow_microphone_only':
+  'অনুগ্রহ করে মাইক্রোফোন অনুমতি দিন',
+  'allow_microphone_camera':
+  'অনুগ্রহ করে মাইক্রোফোন ও ক্যামেরা অনুমতি দিন',
+  'user_offline': 'ব্যবহারকারী অফলাইন',
+  'permission_required': 'অনুমতি প্রয়োজন',
+  'microphone_permission_required':
+  'মাইক্রোফোন অনুমতি প্রয়োজন',
+
+// AI
+  'ai_connected': 'সংযুক্ত',
+  'ai_warning': 'সতর্কতা',
+  'ai_disabled': 'সেটিংসে AI ফিচার বন্ধ রয়েছে',
+  'ai_key_missing':
+  'অনুগ্রহ করে App_Settings.dart এ AI কী আপডেট করুন',
+  'ai_okay': 'ঠিক আছে',
+  'ai_regenerate': 'পুনরায় উত্তর তৈরি করুন',
+
+// Misc
+  'cannot_open_url': 'URL খোলা যায়নি',
+  'group_secret_error': 'এটি একটি সিক্রেট গ্রুপ',
+  'group_not_found_error': 'গ্রুপ পাওয়া যায়নি',
+  'login_required_error': 'প্রথমে লগইন করুন',
+  'group_load_error': 'গ্রুপ লোড করতে ত্রুটি',
+  'group_left_success': 'গ্রুপ সফলভাবে ত্যাগ করা হয়েছে',
+  'group_join_request_sent': 'গ্রুপে যোগদানের অনুরোধ পাঠানো হয়েছে',
+// Ads Sorting
+  'ads_sort_newest': 'নতুন',
+  'ads_sort_top_spend': 'সর্বাধিক খরচ',
+  'ads_sort_ending_soon': 'শীঘ্রই শেষ হবে',
+
+// Filter Chips
+  'filter_newsfeed': 'হোম',
+  'filter_popular': 'জনপ্রিয়',
+  'filter_discover': 'অনুসন্ধান',
+  'post_type': 'পোস্টের ধরন',
+  'my_funding': 'আমার ফান্ডিং',
+
+  'your_addresses': 'আপনার ঠিকানা',
+  'edit_group_danger_zone': 'ঝুঁকিপূর্ণ এলাকা',
+  'edit_group_danger_warning':
+  'এই অংশে করা কাজগুলি ঝুঁকিপূর্ণ এবং ফেরানো যাবে না',
+  'groups_search_filter_title': 'ফিল্টার',
+  'groups_search_clear_all': 'সব পরিষ্কার করুন',
+  'groups_search_category': 'বিভাগ',
+  'groups_search_category_hint': 'বিভাগ ID (যেমন: 1)',
+  'groups_search_privacy': 'গোপনীয়তা',
+  'groups_search_apply_filters': 'ফিল্টার প্রয়োগ করুন',
+
+// Group Invite Friends Page
+  'invite_friends_title': 'বন্ধুদের আমন্ত্রণ জানান',
+  'invite_friends_select_all': 'সব নির্বাচন করুন',
+  'invite_friends_deselect_all': 'সব নির্বাচন বাতিল করুন',
+  'invite_friends_search_hint': 'বন্ধু খুঁজুন...',
+  'invite_friends_selected_count':
+  '@count জন বন্ধু নির্বাচিত',
+  'invite_friends_error_title': 'একটি ত্রুটি ঘটেছে',
+  'invite_friends_retry': 'আবার চেষ্টা করুন',
+  'invite_friends_no_results': 'কোনো ফলাফল নেই',
+  'invite_friends_no_friends':
+  'আমন্ত্রণ জানানোর মতো কোনো বন্ধু নেই',
+  'invite_friends_try_different_search':
+  'ভিন্ন কীওয়ার্ড চেষ্টা করুন',
+  'invite_friends_all_members':
+  'আপনার সব বন্ধুই ইতিমধ্যে সদস্য',
+  'invite_friends_invited_label': 'আমন্ত্রিত',
+  'invite_friends_sending': 'পাঠানো হচ্ছে...',
+  'invite_friends_send_button':
+  'আমন্ত্রণ পাঠান (@count)',
+  'invite_friends_select_friends':
+  'আমন্ত্রণ জানানোর জন্য বন্ধু নির্বাচন করুন',
+  'invite_friends_success':
+  '@countটি আমন্ত্রণ সফলভাবে পাঠানো হয়েছে',
+  'invite_friends_partial_success':
+  '@success পাঠানো হয়েছে, @failed ব্যর্থ',
+  'invite_friends_all_failed': 'সব আমন্ত্রণ ব্যর্থ হয়েছে',
+  'invite_friends_send_error':
+  'আমন্ত্রণ পাঠাতে ব্যর্থ: @error',
+
+
+  'product_status_available': 'উপলব্ধ',
+  'product_status_sold': 'বিক্রি হয়েছে',
+  'product_status_unavailable': 'অনুপলব্ধ',
+  'product_type_digital': 'ডিজিটাল পণ্য',
+  'product_type_physical': 'ভৌত পণ্য',
+  'cashfree': 'ক্যাশফ্রি',
+  'razorpay': 'রেজরপে',
+  'no_payment_methods_available':
+  'কোনো পেমেন্ট পদ্ধতি উপলব্ধ নেই',
+  'notifications_deleted':
+  'নোটিফিকেশন মুছে ফেলা হয়েছে',
+  'market_cart_not_ready':
+  'কার্ট এখনও প্রস্তুত নয়, অনুগ্রহ করে আবার চেষ্টা করুন',
+  'market_create_product':
+  'পণ্য তৈরি করুন',
+  'page_no_products_title':
+  'কোনো পণ্য নেই',
+  'page_no_products_subtitle':
+  'এই পেজে পোস্ট করা পণ্যগুলো এখানে দেখানো হবে।',
+  'page_tab_products': 'পণ্য',
+  'group_tab_products': 'পণ্য',
+  'group_no_products': 'কোনো পণ্য নেই',
+  'share_external': 'বাহ্যিকভাবে শেয়ার করুন',
+  'share_external_subtitle':
+  'অন্যান্য অ্যাপের মাধ্যমে শেয়ার করুন',
+  'share_on_social_media':
+  'সোশ্যাল মিডিয়ায় শেয়ার করুন',
+  'share_post_subject':
+  'এই পোস্টটি দেখুন',
+  'share_external_success':
+  'সফলভাবে শেয়ার হয়েছে',
+  'share_external_error':
+  'শেয়ার করতে ব্যর্থ',
+
+// Create Reel Page
+  'create_reel': 'রিল তৈরি করুন',
+  'publish_reel': 'প্রকাশ করুন',
+  'video_uploaded_success':
+  '✅ ভিডিও সফলভাবে আপলোড হয়েছে',
+  'video_upload_failed':
+  '❌ ভিডিও আপলোড ব্যর্থ',
+  'select_video_first':
+  '⚠️ অনুগ্রহ করে আগে একটি ভিডিও নির্বাচন করুন',
+  'reel_published_success':
+  '🎉 রিল সফলভাবে প্রকাশিত হয়েছে!',
+  'reel_publish_failed':
+  '❌ রিল প্রকাশ করতে ব্যর্থ',
+  'failed_to_create_reel':
+  'রিল তৈরি করতে ব্যর্থ',
+  'select_video_for_reel':
+  'রিলের জন্য ভিডিও নির্বাচন করুন',
+  'select_video': 'ভিডিও নির্বাচন করুন',
+  'uploading_video':
+  'ভিডিও আপলোড হচ্ছে...',
+  'add_reel_description':
+  'রিলের বিবরণ যোগ করুন...',
+// Comments Section
+  'error_loading_comments': 'মন্তব্য লোড করতে ত্রুটি',
+  'no_comments_yet': 'এখনও কোনো মন্তব্য নেই',
+  'be_first_to_comment': 'প্রথম মন্তব্য করুন',
+  'hide_replies': 'উত্তর লুকান',
+  'show_replies': '@count @label দেখান',
+  'reply_singular': 'উত্তর',
+  'replies_plural': 'উত্তরসমূহ',
+  'replying_to': '@name কে উত্তর দিচ্ছেন',
+  'write_reply': 'আপনার উত্তর লিখুন...',
+  'write_comment': 'একটি মন্তব্য লিখুন...',
+  'uploading_image': 'ছবি আপলোড হচ্ছে...',
+  'failed_upload_image': 'ছবি আপলোড ব্যর্থ',
+  'uploading_voice': 'ভয়েস রেকর্ডিং আপলোড হচ্ছে...',
+  'failed_upload_voice': 'রেকর্ডিং আপলোড ব্যর্থ',
+  'voice_recording': 'ভয়েস রেকর্ডিং',
+  'ready_to_send': 'পাঠানোর জন্য প্রস্তুত',
+  'recording': 'রেকর্ড হচ্ছে...',
+  'edit_comment': 'সম্পাদনা করুন',
+  'delete_comment': 'মুছে ফেলুন',
+  'delete_comment_title': 'মন্তব্য মুছে ফেলুন',
+  'delete_comment_message':
+  'আপনি কি নিশ্চিত যে এই মন্তব্যটি মুছে ফেলতে চান?',
+  'comment_deleted': 'মন্তব্য সফলভাবে মুছে ফেলা হয়েছে',
+  'comment_updated': 'মন্তব্য সফলভাবে আপডেট হয়েছে',
+  'failed_delete_comment': 'মন্তব্য মুছতে ব্যর্থ',
+  'failed_update_comment': 'মন্তব্য আপডেট করতে ব্যর্থ',
+  'reply': 'উত্তর',
+  'show_more_replies': 'আরও উত্তর দেখান',
+
+// Auth - Login/Signup
+  'welcome_back_user': 'ফিরে আসায় স্বাগতম, @name! 🎉',
+  'login_success': 'সফলভাবে লগইন হয়েছে।',
+  'login_failed': 'লগইন ব্যর্থ। আবার চেষ্টা করুন।',
+  'or': 'অথবা',
+  'google_sign_in_disabled':
+  'Google সাইন-ইন বর্তমানে বন্ধ রয়েছে',
+  'google_sign_in_failed': 'Google সাইন-ইন ব্যর্থ',
+
+// Onboarding
+  'onboarding_connect_title': 'বন্ধুদের সাথে যুক্ত হন',
+  'onboarding_connect_desc':
+  'আপনার আগ্রহ ও ভালোবাসা ভাগ করে নেওয়া মানুষের সাথে অর্থবহ সম্পর্ক গড়ে তুলুন।',
+  'onboarding_share_title': 'আপনার গল্প শেয়ার করুন',
+  'onboarding_share_desc':
+  'পোস্ট, ছবি, ভিডিও ও গল্পের মাধ্যমে আপনার কমিউনিটির সাথে নিজেকে প্রকাশ করুন।',
+  'onboarding_discover_title': 'নতুন কনটেন্ট আবিষ্কার করুন',
+  'onboarding_discover_desc':
+  'ট্রেন্ডিং বিষয় আবিষ্কার করুন, গ্রুপে যোগ দিন এবং আপনার জন্য উপযোগী কনটেন্ট খুঁজুন।',
+  'onboarding_secure_title': 'নিরাপদ ও সুরক্ষিত',
+  'onboarding_secure_desc':
+  'আপনার গোপনীয়তা গুরুত্বপূর্ণ। আমরা উন্নত নিরাপত্তা ব্যবস্থার মাধ্যমে আপনার ডেটা সুরক্ষিত রাখি।',
+  'onboarding_next': 'পরবর্তী',
+  'onboarding_get_started': 'শুরু করুন',
+
+// Relationship Status
+  'relationship_single': 'অবিবাহিত',
+  'relationship_in_relationship': 'সম্পর্কে',
+  'relationship_married': 'বিবাহিত',
+  'relationship_complicated': 'জটিল',
+  'relationship_separated': 'আলাদা',
+  'relationship_divorced': 'তালাকপ্রাপ্ত',
+  'relationship_widowed': 'বিধবা / বিপত্নীক',
+
+// Gender Options
+  'gender_male': 'পুরুষ',
+  'gender_female': 'মহিলা',
+  'gender_other': 'অন্যান্য',
+  'gender_all': 'সব',
+  'relationship_all': 'সব',
+
+// Profile Labels
+  'select_birth_date': 'জন্ম তারিখ নির্বাচন করুন',
+  'about_you': 'আপনার সম্পর্কে',
+// Edit Profile Page
+  'edit_profile': 'প্রোফাইল সম্পাদনা করুন',
+  'tab_basic': 'মৌলিক',
+  'tab_work': 'কাজ',
+  'tab_location': 'অবস্থান',
+  'tab_education': 'শিক্ষা',
+  'tab_social': 'সোশ্যাল',
+  'tab_photos': 'ছবি',
+
+// Basic Info
+  'first_name_label': 'নামের প্রথম অংশ',
+  'last_name_label': 'নামের শেষ অংশ',
+  'birthdate_label': 'জন্ম তারিখ',
+  'website_label': 'ওয়েবসাইট',
+  'save_button': 'সংরক্ষণ করুন',
+
+// Work Info
+  'job_title_label': 'পদবি',
+  'enter_job_title': 'পদবি লিখুন',
+  'company_label': 'কোম্পানি',
+  'company_website_label': 'কোম্পানির ওয়েবসাইট',
+
+// Location
+  'current_city_label': 'বর্তমান শহর',
+  'hometown_label': 'নিজ শহর',
+
+// Education
+  'major_label': 'প্রধান বিষয়',
+  'educational_institution_label': 'শিক্ষা প্রতিষ্ঠান',
+  'graduation_year_label': 'স্নাতক বছর',
+
+// Photos
+  'profile_picture': 'প্রোফাইল ছবি',
+  'cover_photo': 'কভার ছবি',
+  'tap_to_add_cover': 'কভার ছবি যোগ করতে ট্যাপ করুন',
+  'choose_image': 'ছবি নির্বাচন করুন',
+
+// Password Dialog
+  'confirm_password_label': 'পাসওয়ার্ড নিশ্চিত করুন',
+  'change': 'পরিবর্তন করুন',
+  'new_password_too_short': 'নতুন পাসওয়ার্ড খুব ছোট',
+
+// Country Picker
+  'country_label': 'দেশ',
+  'loading_text': 'লোড হচ্ছে…',
+  'select_country': 'দেশ নির্বাচন করুন',
+  'search_country': 'দেশ অনুসন্ধান করুন…',
+
+// Error Messages
+  'error_loading_countries':
+  'দেশ লোড করতে ত্রুটি',
+  'error_uploading_image':
+  'ছবি আপলোড করতে ত্রুটি',
+  'error_uploading_cover':
+  'কভার ছবি আপলোড করতে ত্রুটি',
+
+// Messenger Messages
+  'empty_message': 'খালি বার্তা',
+  'send': 'পাঠান',
+  'say_hello':
+  'কথোপকথন শুরু করতে হ্যালো বলুন',
+  'delete_conversation':
+  'কথোপকথন মুছে ফেলুন',
+  'conversation_deleted':
+  'কথোপকথন মুছে ফেলা হয়েছে',
+  'failed_to_delete_conversation':
+  'কথোপকথন মুছতে ব্যর্থ',
+  'failed_to_open_chat':
+  'চ্যাট খুলতে ব্যর্থ',
+  'chat_privacy_friends_only':
+  'বিক্রেতার সাথে যোগাযোগ করা যাবে না – শুধুমাত্র বন্ধুদের অনুমতি',
+  'chat_privacy_following_only':
+  'বিক্রেতার সাথে যোগাযোগ করা যাবে না – আগে ফলো করতে হবে',
+  'chat_privacy_settings_prevent':
+  'এই মুহূর্তে বিক্রেতার সাথে যোগাযোগ করা যাবে না',
+  'cannot_chat_with_user':
+  'এই ব্যবহারকারীর সাথে চ্যাট করা যাবে না',
+  'user_blocked_you':
+  'এই ব্যবহারকারী আপনাকে ব্লক করেছে',
+  'failed_to_play_audio':
+  'অডিও চালাতে ব্যর্থ',
+  'failed_to_load_image':
+  'ছবি লোড করতে ব্যর্থ',
+  'no_image_url':
+  'ছবির URL নেই',
+  'required_permissions_not_granted':
+  'প্রয়োজনীয় অনুমতি দেওয়া হয়নি',
+  'app_id_empty':
+  'App ID খালি',
+  'channel_name_empty':
+  'চ্যানেলের নাম খালি',
+  'token_empty':
+  'টোকেন খালি',
+  'uid_zero':
+  'UID শূন্য',
+  'agora_engine_null':
+  'শুরুর পরে Agora ইঞ্জিন শূন্য',
+  'call_user_busy':
+  'ব্যবহারকারী ব্যস্ত',
+  'waiting_for_participant':
+  'অংশগ্রহণকারীর জন্য অপেক্ষা করা হচ্ছে...',
+  'tap_to_stop':
+  'থামাতে ট্যাপ করুন',
+  'failed_to_start_recording':
+  'রেকর্ডিং শুরু করতে ব্যর্থ',
+  'recording_failed':
+  'রেকর্ডিং ব্যর্থ',
+  'failed_to_upload_voice':
+  'ভয়েস নোট আপলোড করতে ব্যর্থ',
+  'failed_to_send_voice':
+  'ভয়েস নোট পাঠাতে ব্যর্থ',
+  'voice_sent_successfully':
+  'ভয়েস নোট সফলভাবে পাঠানো হয়েছে',
+  'your_story':
+  'আপনার গল্প',
+  'online':
+  'অনলাইন',
+  'call_cancelled':
+  'কল বাতিল করা হয়েছে',
+  'failed_to_answer_call_with_error':
+  'কলের উত্তর দিতে ব্যর্থ: @error',
+  'failed_to_decline_call_with_error':
+  'কল প্রত্যাখ্যান করতে ব্যর্থ: @error',
+  'incoming_video_call':
+  'আসা ভিডিও কল',
+  'incoming_audio_call':
+  'আসা অডিও কল',
+  'video_call_in_progress':
+  'ভিডিও কল চলছে...',
+  'audio_call_in_progress':
+  'অডিও কল চলছে...',
+
+  'call_ended':
+  'কল শেষ হয়েছে',
+  'user_busy':
+  'ব্যবহারকারী ব্যস্ত',
+  'outgoing_video_call':
+  'যাওয়া ভিডিও কল',
+  'outgoing_audio_call':
+  'যাওয়া অডিও কল',
+  'start_chat':
+  'চ্যাট শুরু করুন',
+  'failed_to_load_friends':
+  'বন্ধু তালিকা লোড করতে ব্যর্থ',
+  'no_friends_found':
+  'চ্যাট শুরু করার মতো কোনো বন্ধু নেই',
+  'failed_to_start_conversation':
+  'কথোপকথন শুরু করতে ব্যর্থ',
+  'shared_media':
+  'শেয়ার করা মিডিয়া',
+  'shared_media_conversation':
+  'কথোপকথনের মিডিয়া',
+  'conversation_info':
+  'কথোপকথনের তথ্য',
+  'shared_images':
+  'শেয়ার করা ছবি',
+  'shared_voice_notes':
+  'শেয়ার করা ভয়েস নোট',
+  'blocked':
+  'ব্লক করা হয়েছে',
+  'are_you_sure_block_user':
+  'আপনি কি নিশ্চিত এই ব্যবহারকারীকে ব্লক করতে চান?',
+  'are_you_sure_unblock_user':
+  'আপনি কি নিশ্চিত এই ব্যবহারকারীকে আনব্লক করতে চান?',
+  'user_blocked_successfully':
+  'ব্যবহারকারী সফলভাবে ব্লক করা হয়েছে',
+  'failed_to_block_user':
+  'ব্যবহারকারীকে ব্লক করতে ব্যর্থ',
+  'no_media_found':
+  'এখনও কোনো মিডিয়া নেই',
+  'last_seen':
+  'সর্বশেষ দেখা: @time',
+  'tap_to_play':
+  'চালাতে ট্যাপ করুন',
+  'ai_settings': 'সেটিংস',
+  'ai_clear_confirm_title': 'চ্যাট পরিষ্কার করুন',
+  'ai_clear_confirm_message':
+  'আপনি কি নিশ্চিত সব বার্তা মুছে ফেলতে চান?',
+  'ai_cancel': 'বাতিল',
+  'ai_clear': 'পরিষ্কার',
+  'ai_settings_title': 'চ্যাট সেটিংস',
+  'ai_more_settings_soon': 'আরও সেটিংস শীঘ্রই যোগ হবে',
+  'ai_hello_message': 'হ্যালো! আমি আপনার AI সহকারী',
+  'ai_help_message':
+  'যেকোনো প্রশ্ন করুন, আমি সাহায্য করতে প্রস্তুত',
+  'ai_suggestion_what_is_ai': 'কৃত্রিম বুদ্ধিমত্তা কী?',
+  'ai_suggestion_write_story': 'আমাকে একটি ছোট গল্প লিখে দাও',
+  'ai_suggestion_programming_tips': 'প্রোগ্রামিং টিপস',
+  'ai_input_hint': 'এখানে আপনার বার্তা লিখুন...',
+  'ai_publish_as_post': 'পোস্ট হিসেবে প্রকাশ করুন',
+  'ai_publish_confirm':
+  'আপনি কি এই কনটেন্টটি আপনার অ্যাকাউন্টে প্রকাশ করতে চান?',
+  'ai_publish': 'প্রকাশ করুন',
+  'ai_publishing': 'প্রকাশ করা হচ্ছে...',
+  'ai_publish_success': 'কনটেন্ট সফলভাবে প্রকাশ হয়েছে! 🎉',
+  'ai_publish_failed': 'কনটেন্ট প্রকাশ করতে ব্যর্থ',
+  'ai_post_published_message': '✅ পোস্ট সফলভাবে প্রকাশ হয়েছে!',
+  'ai_view_post': 'পোস্ট দেখুন',
+  'ai_go_to_post': 'পোস্টে যান',
+
+  'are_you_sure': 'আপনি কি নিশ্চিত?',
+  'suitable_for_daytime_use': 'দিনের ব্যবহারের জন্য উপযুক্ত',
+  'suitable_for_nighttime_use': 'রাতের ব্যবহারের জন্য উপযুক্ত',
+
+  'ai_bot_hello': 'হ্যালো! আমি আপনাকে কীভাবে সাহায্য করতে পারি? 😊',
+  'ai_bot_service_unavailable':
+  'দুঃখিত, AI সেবা বর্তমানে উপলব্ধ নয়।',
+  'ai_bot_question_too_long':
+  'দুঃখিত, প্রশ্নটি খুব বড়। সর্বোচ্চ @max অক্ষর।',
+  'ai_bot_cannot_understand':
+  'দুঃখিত, প্রশ্নটি বুঝতে পারিনি। আবার লিখুন।',
+  'ai_bot_api_key_error':
+  'API কী ত্রুটি। দয়া করে সেটিংস পরীক্ষা করুন।',
+  'ai_bot_rate_limit':
+  'দুঃখিত, সীমা অতিক্রম হয়েছে। পরে চেষ্টা করুন।',
+  'ai_bot_service_error':
+  'দুঃখিত, সেবা ত্রুটি হয়েছে। আবার চেষ্টা করুন।',
+  'ai_bot_no_internet':
+  'দুঃখিত, ইন্টারনেট সংযোগ নেই।',
+  'ai_bot_unexpected_error':
+  'দুঃখিত, অপ্রত্যাশিত ত্রুটি হয়েছে। আবার চেষ্টা করুন।',
+  'ai_bot_daily_limit':
+  'দুঃখিত, আজকের AI সীমা শেষ হয়েছে।',
+  'ai_bot_replied': '✨ @username উত্তর দিয়েছেন!',
+  'ai_bot_reply_failed': '⚠️ বট উত্তর তৈরি করতে ব্যর্থ',
+  'ai_bot_info_title': 'হ্যালো! আমি @username 🤖',
+  'ai_bot_info_can_help': 'আমি আপনাকে সাহায্য করতে পারি:',
+  'ai_bot_info_verify_news': '• সংবাদ যাচাই করা',
+  'ai_bot_info_answer_questions': '• প্রশ্নের উত্তর দেওয়া',
+  'ai_bot_info_provide_info': '• দরকারি তথ্য প্রদান',
+  'ai_bot_info_usage':
+  'ব্যবহার: মন্তব্যে @ আমার নাম লিখে প্রশ্ন করুন',
+  'ai_bot_info_example':
+  'উদাহরণ: @username এই খবর কি সত্য?',
+  'ai_bot_tip_title': 'টিপ:',
+  'ai_bot_tip_body':
+  '• স্পষ্ট প্রশ্ন করুন\n• বট দিয়ে খবর যাচাই করুন\n• বট AI চালিত ও শেখে',
+  'ai_bot_understood': 'বুঝেছি',
+  'ai_bot_try_now': 'এখনই চেষ্টা করুন',
+// Page Admins
+  'page_admins_title': 'পেজ অ্যাডমিন',
+  'page_admins_failed_load': 'লাইককারীদের লোড করতে ব্যর্থ',
+  'page_admins_removed_admin': '@name কে অ্যাডমিন থেকে সরানো হয়েছে',
+  'page_admins_added_admin': '@name কে অ্যাডমিন করা হয়েছে',
+  'page_admins_error_operation': 'অপারেশনের সময় ত্রুটি হয়েছে',
+  'page_admins_no_likers': 'কোনো লাইককারী পাওয়া যায়নি',
+  'page_admins_promote_hint':
+  'আপনি পেজ লাইককারীদের অ্যাডমিন করতে পারেন',
+  'page_admins_badge_admin': 'অ্যাডমিন',
+  'page_admins_remove_tooltip': 'অ্যাডমিন থেকে সরান',
+  'page_admins_add_tooltip': 'অ্যাডমিন করুন',
+
+// Invite Friends to Page
+  'page_invite_title': 'বন্ধুদের আমন্ত্রণ জানান',
+  'page_invite_failed_load': 'বন্ধুদের লোড করতে ব্যর্থ',
+  'page_invite_success': '@name কে আমন্ত্রণ জানানো হয়েছে',
+  'page_invite_failed': '@name কে আমন্ত্রণ জানাতে ব্যর্থ',
+  'page_invite_error':
+  'আমন্ত্রণ পাঠানোর সময় ত্রুটি হয়েছে',
+  'page_invite_empty_title': 'আমন্ত্রণ জানানোর জন্য কোনো বন্ধু নেই',
+  'page_invite_empty_body':
+  'আপনার সব বন্ধু ইতিমধ্যেই সদস্য বা আমন্ত্রিত',
+  'page_invite_invited': 'আমন্ত্রিত',
+  'page_invite_cta': 'আমন্ত্রণ জানান',
+
+// Create Group
+  'create_group_title': 'গ্রুপ তৈরি করুন',
+  'create_group_cta': 'তৈরি করুন',
+  'create_group_title_label': 'গ্রুপ শিরোনাম *',
+  'create_group_title_hint':
+  'উদাহরণ: UAE-এর Flutter ডেভেলপাররা',
+  'create_group_title_required': 'শিরোনাম আবশ্যক',
+  'create_group_title_min':
+  'শিরোনাম কমপক্ষে ৩ অক্ষরের হতে হবে',
+  'create_group_username_label': 'ইউজারনেম *',
+  'create_group_username_hint': 'উদাহরণ: flutter_devs_uae',
+  'create_group_username_helper':
+  'শুধুমাত্র ইংরেজি অক্ষর, সংখ্যা ও আন্ডারস্কোর',
+  'create_group_username_required': 'ইউজারনেম আবশ্যক',
+  'create_group_username_min':
+  'ইউজারনেম কমপক্ষে ৩ অক্ষরের হতে হবে',
+  'create_group_username_invalid':
+  'শুধুমাত্র ইংরেজি অক্ষর, সংখ্যা ও আন্ডারস্কোর',
+  'create_group_description_label': 'বর্ণনা (ঐচ্ছিক)',
+  'create_group_description_hint':
+  'গ্রুপের জন্য একটি বর্ণনা লিখুন...',
+  'create_group_privacy_label': 'গোপনীয়তা *',
+  'create_group_privacy_public': 'পাবলিক',
+  'create_group_privacy_public_desc':
+  'যে কেউ গ্রুপ ও পোস্ট দেখতে পারে',
+  'create_group_privacy_closed': 'ক্লোজড',
+  'create_group_privacy_closed_desc':
+  'গ্রুপ সবাই দেখতে পারে, পোস্ট শুধু সদস্যরা',
+  'create_group_privacy_secret': 'গোপন',
+  'create_group_privacy_secret_desc':
+  'শুধুমাত্র অনুমোদিত সদস্যরা গ্রুপ ও পোস্ট দেখতে পারে',
+  'create_group_category_label': 'বিভাগ *',
+  'create_group_category_tech': 'প্রযুক্তি',
+  'create_group_category_sports': 'খেলাধুলা',
+  'create_group_category_education': 'শিক্ষা',
+  'create_group_category_entertainment': 'বিনোদন',
+  'create_group_category_other': 'অন্যান্য',
+  'create_group_button': 'গ্রুপ তৈরি করুন',
+  'create_group_creating': 'তৈরি করা হচ্ছে...',
+  'create_group_note':
+  'গ্রুপ তৈরি হলে আপনি স্বয়ংক্রিয়ভাবে মডারেটর হবেন',
+  'create_group_success': 'গ্রুপ সফলভাবে তৈরি হয়েছে',
+  'create_group_failed':
+  'গ্রুপ তৈরি করতে ব্যর্থ, আবার চেষ্টা করুন',
+  'create_group_error': 'ত্রুটি হয়েছে: @error',
+// Course Card
+  'course_free': 'বিনামূল্যে',
+  'course_candidates': 'প্রার্থী (@count)',
+  'course_enroll_button': 'নিবন্ধন করুন',
+  'course_closed': 'বন্ধ',
+
+  'course_enrollment_name': 'পূর্ণ নাম *',
+  'course_enrollment_location': 'অবস্থান *',
+  'course_enrollment_location_hint': 'উদাহরণ: রিয়াদ, সৌদি আরব',
+  'course_enrollment_phone': 'ফোন নম্বর *',
+  'course_enrollment_phone_hint': 'উদাহরণ: +966501234567',
+  'course_enrollment_email': 'ইমেইল *',
+  'course_field_required': 'আবশ্যক',
+
+  'course_success': 'সফল',
+  'course_error': 'ত্রুটি',
+  'course_login_required': 'অনুগ্রহ করে আগে লগইন করুন',
+  'course_candidates_count': '@count আবেদনকারী',
+  'course_status_closed': 'বন্ধ',
+  'course_status_ended': 'সমাপ্ত',
+  'course_status_ongoing': 'চলমান',
+  'course_status_started': 'শুরু হয়েছে',
+  'course_status_upcoming': 'আসন্ন',
+  'course_date_undefined': 'অনির্ধারিত',
+  'course_date_starts': '@date থেকে শুরু',
+  'course_date_ends': '@date এ শেষ',
+  'course_month_january': 'জানুয়ারি',
+  'course_month_february': 'ফেব্রুয়ারি',
+  'course_month_march': 'মার্চ',
+  'course_month_april': 'এপ্রিল',
+  'course_month_may': 'মে',
+  'course_month_june': 'জুন',
+  'course_month_july': 'জুলাই',
+  'course_month_august': 'আগস্ট',
+  'course_month_september': 'সেপ্টেম্বর',
+  'course_month_october': 'অক্টোবর',
+  'course_month_november': 'নভেম্বর',
+  'course_month_december': 'ডিসেম্বর',
+
+// Discover Page - Merits Send Dialog
+  'merit_category_select': 'মেরিট ক্যাটাগরি নির্বাচন করুন',
+  'merit_category_hint': 'তালিকা থেকে নির্বাচন করুন',
+  'merit_recipients_select': 'প্রাপক নির্বাচন করুন',
+  'merit_search_friend': 'বন্ধু খুঁজুন',
+  'merit_selected_friends': '@count জন বন্ধু নির্বাচিত',
+  'merit_message_label': 'বার্তা (ঐচ্ছিক)',
+  'merit_message_hint': 'মেরিটের সাথে একটি বার্তা যোগ করুন',
+  'merit_error_no_category': 'আপনাকে একটি ক্যাটাগরি নির্বাচন করতে হবে',
+  'merit_error_no_friends':
+  'অন্তত একজন বন্ধু নির্বাচন করা আবশ্যক',
+  'merit_categories_load_error': 'ক্যাটাগরি লোড করতে ত্রুটি',
+  'merit_no_categories': 'কোনো ক্যাটাগরি উপলব্ধ নেই',
+  'merit_friends_load_error': 'বন্ধু লোড করতে ত্রুটি',
+  'merit_no_friends_available': 'কোনো বন্ধু উপলব্ধ নেই',
+  'merit_friends_loading': 'বন্ধু লোড হচ্ছে...',
+  'merit_image_label': 'ছবি (ঐচ্ছিক)',
+  'merit_image_hint': 'ছবি নির্বাচন করতে ট্যাপ করুন',
+  'merit_image_selected': 'ছবি নির্বাচিত',
+  'merit_badge': 'মেরিট ব্যাজ',
+
+// Product
+  'product_name': 'পণ্যের নাম',
+  'enter_product_name': 'পণ্যের নাম লিখুন',
+  'price': 'মূল্য',
+  'enter_price': 'মূল্য লিখুন',
+  'quantity': 'পরিমাণ',
+  'enter_quantity': 'পরিমাণ লিখুন',
+  'product_status': 'পণ্যের অবস্থা',
+  'status_new': 'নতুন',
+  'status_used': 'ব্যবহৃত',
+  'status_old': 'পুরনো',
+  'enter_location': 'অবস্থান লিখুন',
+  'enter_product_description': 'পণ্যের বিবরণ লিখুন',
+  'save_changes': 'পরিবর্তন সংরক্ষণ করুন',
+  'product_updated_successfully':
+  'পণ্য সফলভাবে আপডেট হয়েছে',
+  'error_updating_product': 'পণ্য আপডেট করতে ত্রুটি',
+  'invalid_product_data': 'অবৈধ পণ্যের তথ্য',
+  'product_name_required': 'পণ্যের নাম আবশ্যক',
+  'valid_price_required':
+  'মূল্য আবশ্যক এবং 0-এর বেশি হতে হবে',
+  'valid_quantity_required':
+  'পরিমাণ আবশ্যক এবং 0 বা তার বেশি হতে হবে',
+// Cart Page
+  'product': 'ઉત્પાદન',
+  'clear_cart': 'કાર્ટ સાફ કરો',
+  'are_you_sure_clear_cart':
+  'શું તમે ખરેખર બધા ઉત્પાદનો દૂર કરવા માંગો છો?',
+
+  'loading_cart': 'કાર્ટ લોડ થઈ રહી છે...',
+
+  'your_cart_is_empty': 'તમારી કાર્ટ ખાલી છે',
+  'no_products_added':
+  'હજુ સુધી તમારી કાર્ટમાં કોઈ ઉત્પાદન ઉમેરાયું નથી.\nહમણાં ઉત્પાદન ઉમેરવાનું શરૂ કરો',
+  'explore_products': 'ઉત્પાદનો જુઓ',
+  'order_summary': 'ઓર્ડર સારાંશ',
+  'number_of_products': 'ઉત્પાદનોની સંખ્યા',
+  'total': 'કુલ',
+  'seller': 'વિક્રેતા',
+  'free': 'મફત',
+
+// Orders Page
+  'my_orders': 'મારા ઓર્ડર્સ',
+  'my_sales': 'મારી વેચાણ',
+  'order_number': 'ઓર્ડર #',
+  'order_placed': 'ઓર્ડર મૂકાયો',
+  'status': 'સ્થિતિ',
+  'tracking_details': 'ટ્રેકિંગ વિગતો',
+  'tracking_link': 'ટ્રેકિંગ લિંક',
+  'tracking_number': 'ટ્રેકિંગ નંબર',
+  'shipping_address': 'ડિલિવરી સરનામું',
+  'items': 'આઇટમ્સ',
+  'no_orders_found': 'કોઈ ઓર્ડર મળ્યા નથી',
+  'no_orders_message':
+  'તમે હજી સુધી કોઈ ઓર્ડર મૂક્યો નથી.\nહમણાં ખરીદી શરૂ કરો!',
+  'view_details': 'વિગતો જુઓ',
+  'order_status_placed': 'મૂકાયો',
+  'order_status_shipped': 'મોકલાયો',
+  'order_status_cancelled': 'રદ કરાયો',
+  'order_status_refunded': 'રિફંડ કરાયો',
+  'loading_orders': 'ઓર્ડર્સ લોડ થઈ રહ્યા છે...',
+  'error_loading_orders': 'ઓર્ડર્સ લોડ કરવામાં ભૂલ',
+  'contact_seller': 'વિક્રેતાનો સંપર્ક કરો',
+  'buyer': 'ખરીદદાર',
+  'n_a': 'લાગુ નથી',
+  'no_shipping_address': 'ડિલિવરી સરનામું ઉપલબ્ધ નથી',
+  "failed_to_initialize_stream_engine": "স্ট্রিমিং ইঞ্জিন ইনিশিয়ালাইজ করতে ব্যর্থ",
+  "stream_title_required": "স্ট্রিম শিরোনাম অবশ্যই দিতে হবে",
+  "failed_to_join_stream_channel": "স্ট্রিমিং চ্যানেলে যোগ দিতে ব্যর্থ",
+  "stream_ended_successfully": "স্ট্রিম সফলভাবে শেষ হয়েছে",
+  "failed_to_end_stream": "স্ট্রিম শেষ করতে ব্যর্থ",
+  "stream_created_successfully_no_agora_token": "স্ট্রিম সফলভাবে তৈরি হয়েছে! (Agora টোকেন ছাড়া)",
+  "stream_created_successfully": "স্ট্রিম সফলভাবে তৈরি হয়েছে!",
+  "live_stream_active_professional": "পেশাদার লাইভ স্ট্রিম",
+  "live": "LIVE",
+  "preparing_stream": "স্ট্রিম প্রস্তুত করা হচ্ছে...",
+  "setup_live_stream": "লাইভ স্ট্রিম সেটআপ",
+  "stream_title_label_required": "স্ট্রিম শিরোনাম *",
+  "stream_title_hint": "স্ট্রিমের জন্য আকর্ষণীয় শিরোনাম লিখুন",
+  "stream_description": "স্ট্রিম বিবরণ",
+  "stream_description_hint_optional": "স্ট্রিমের জন্য সংক্ষিপ্ত বিবরণ লিখুন (ঐচ্ছিক)",
+  "creating_live_start": "লাইভ স্ট্রিম শুরু করুন",
+  "live_chat": "লাইভ চ্যাট",
+  "now": "এখন",
+  "start_chat_exclamation": "চ্যাট শুরু করুন!",
+  "write_your_comment": "আপনার মন্তব্য লিখুন...",
+  "live_stream_data_incomplete": "রেসপন্সে লাইভ স্ট্রিমের ডেটা অসম্পূর্ণ",
+  "must_login_first": "প্রথমে লগইন করতে হবে",
+  "connection_error_check_internet": "সংযোগ ত্রুটি, ইন্টারনেট চেক করুন",
+  "no_permission_create_live_stream": "লাইভ স্ট্রিম তৈরি করার অনুমতি আপনার নেই",
+  "no_reels_available": "এখন কোনো রিলস উপলব্ধ নেই।",
+  "record_or_upload_video_help": "সমস্যাটি বুঝতে ও দ্রুত ঠিক করতে সাহায্য করতে সমস্যাটি দেখানো একটি ভিডিও রেকর্ড বা আপলোড করুন।",
+  "issue_title": "সমস্যার শিরোনাম",
+  "brief_description": "সমস্যার সংক্ষিপ্ত বিবরণ",
+  "additional_details_optional": "অতিরিক্ত তথ্য (ঐচ্ছিক)",
+  "add_more_details_placeholder": "সমস্যা সম্পর্কে আরও বিস্তারিত লিখুন...",
+  "video_required": "ভিডিও (আবশ্যক)",
+  "tap_to_add_video": "ভিডিও যোগ করতে ট্যাপ করুন",
+  "max_2_minutes_50mb": "সর্বোচ্চ ২ মিনিট, ৫০ এমবি",
+  "submit_report": "রিপোর্ট জমা দিন",
+  "video_file_too_large_max_50mb": "ভিডিও ফাইলটি খুব বড়। সর্বোচ্চ সাইজ ৫০ এমবি।",
+  "failed_to_load_video": "ভিডিও লোড করতে ব্যর্থ:",
+  "select_video_source": "ভিডিও সোর্স নির্বাচন করুন",
+  "record_video": "ভিডিও রেকর্ড করুন",
+  "record_a_new_video": "নতুন ভিডিও রেকর্ড করুন",
+  "choose_from_gallery": "গ্যালারি থেকে বাছুন",
+  "select_existing_video": "বিদ্যমান ভিডিও নির্বাচন করুন",
+  "please_enter_issue_title": "সমস্যার জন্য একটি শিরোনাম লিখুন",
+  "please_attach_issue_video": "সমস্যাটি দেখানো একটি ভিডিও সংযুক্ত করুন",
+  "must_be_logged_in_submit_bug_report": "বাগ রিপোর্ট জমা দিতে লগইন করা আবশ্যক",
+  "failed_to_upload_video": "ভিডিও আপলোড ব্যর্থ হয়েছে",
+  "report_submitted": "রিপোর্ট জমা হয়েছে!",
+  "thank_you_help_improve_app": "অ্যাপ উন্নত করতে সাহায্য করার জন্য ধন্যবাদ। আমরা আপনার রিপোর্ট পর্যালোচনা করে শীঘ্রই আপনাকে জানাব।",
+  "failed_to_submit_report": "রিপোর্ট জমা দিতে ব্যর্থ হয়েছে:",
+  "no_products_for_user_currently":"এই ব্যবহারকারীর জন্য বর্তমানে কোনো পণ্য নেই।",
+  "search_conversations": "কথোপকথনে অনুসন্ধান",
+  "no_conversations": "কোনো কথোপকথন নেই",
+  "messenger": "মেসেঞ্জার",
+  "type_message": "একটি বার্তা লিখুন...",
+  "fetch_story_failed":"গল্প আনতে ব্যর্থ হয়েছে",
+  "create_story_failed":"গল্প তৈরি করতে ব্যর্থ হয়েছে",
+  "create_story_error":"গল্প তৈরি করতে ত্রুটি হয়েছে",
+  "delete_story_failed":"গল্প মুছতে ব্যর্থ হয়েছে",
+  "delete_story_error":"গল্প মুছতে ত্রুটি হয়েছে",
+  "video_story_created_success":"✅ ভিডিও স্টোরি সফলভাবে তৈরি হয়েছে",
+  "photo_story_created_success":"✅ ছবি স্টোরি সফলভাবে তৈরি হয়েছে",
+  "create_story_error_prefix":"স্টোরি তৈরি করতে ত্রুটি:",
+  "video_upload_error_prefix":"ভিডিও আপলোড করতে ত্রুটি:",
+  "publishing":"প্রকাশ করা হচ্ছে...",
+  "add_to_your_story":"আপনার স্টোরিতে যোগ করুন",
+  "share_moments":"বন্ধুদের সাথে আপনার মুহূর্ত শেয়ার করুন",
+  "share_photo_option":"গ্যালারি থেকে ছবি শেয়ার করুন বা নতুন ছবি তুলুন",
+  "share_video_option":"গ্যালারি থেকে ভিডিও শেয়ার করুন বা নতুন ভিডিও রেকর্ড করুন",
+  "video_ready":"ভিডিও শেয়ারের জন্য প্রস্তুত",
+  "photo_ready":"ছবি শেয়ারের জন্য প্রস্তুত",
+  "choose_another":"আরেকটি নির্বাচন করুন",
 };

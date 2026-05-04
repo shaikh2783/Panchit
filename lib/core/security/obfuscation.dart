@@ -3,6 +3,7 @@
 
 import 'dart:convert';
 import 'package:crypto/crypto.dart' as crypto;
+import 'package:flutter/foundation.dart';
 
 class Obfuscation {
   /// قائمة المفاتيح والقيم المشفرة (مخبأة)

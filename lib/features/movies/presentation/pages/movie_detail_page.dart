@@ -8,7 +8,7 @@ import '../../data/models/movie.dart';
 import 'package:snginepro/core/config/app_config.dart';
 import 'package:snginepro/features/feed/data/models/post.dart' show PostVideo;
 import 'package:snginepro/features/feed/presentation/widgets/adaptive_video_player.dart';
-import 'package:youtube_player_iframe/youtube_player_iframe.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class MovieDetailPage extends StatefulWidget {
   final int movieId;
@@ -40,7 +40,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('error_occurred_with_message'.trParams({'error': e.toString()})),
+          content: Text(
+            'error_occurred_with_message'.trParams({'error': e.toString()}),
+          ),
           backgroundColor: Colors.red,
         ),
       );
@@ -67,7 +69,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('error_occurred_with_message'.trParams({'error': e.toString()})),
+          content: Text(
+            'error_occurred_with_message'.trParams({'error': e.toString()}),
+          ),
           backgroundColor: Colors.red,
         ),
       );
@@ -86,85 +90,87 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
         ],
       ),
       body: _loading
-            ? const Center(child: CircularProgressIndicator())
-            : _movie == null
-              ? Center(child: Text('movie_not_found'.tr))
-              : CustomScrollView(
-                  slivers: [
-                    SliverToBoxAdapter(child: _MovieHeader(movie: _movie!)),
-                    if ((_movie!.source != null && _movie!.source!.isNotEmpty) &&
-                        (_movie!.canWatch == true || _movie!.isPaid == 0))
-                      SliverPadding(
-                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-                        sliver: SliverToBoxAdapter(
-                          child: _WatchCard(movie: _movie!),
-                        ),
-                      ),
-                    SliverPadding(
-                      padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-                      sliver: SliverToBoxAdapter(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _InfoChips(movie: _movie!),
-                            const SizedBox(height: 12),
-                            if (_movie!.description != null &&
-                                _movie!.description!.isNotEmpty)
-                              _SectionCard(
-                                title: 'movie_overview'.tr,
-                                child: Text(
-                                  _movie!.description!,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith(height: 1.4),
-                                ),
-                              ),
-                            if (_movie!.stars != null &&
-                                _movie!.stars!.isNotEmpty) ...[
-                              const SizedBox(height: 12),
-                              _SectionCard(
-                                title: 'movie_cast'.tr,
-                                child: Text(
-                                  _movie!.stars!,
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                ),
-                              ),
-                            ],
-                            if (_movie!.genresList.isNotEmpty) ...[
-                              const SizedBox(height: 12),
-                              _SectionCard(
-                                title: 'movie_genres'.tr,
-                                child: Wrap(
-                                  spacing: 8,
-                                  runSpacing: 8,
-                                  children: _movie!.genresList
-                                      .map((g) => Chip(label: Text(g.genreName)))
-                                      .toList(),
-                                ),
-                              ),
-                            ],
-                            const SizedBox(height: 16),
-                            _ActionButtons(
-                              isPaid: _movie!.isPaid == 1,
-                              canWatch: _movie!.canWatch == true,
-                              purchasing: _purchasing,
-                              onPurchase: _purchase,
-                              onWatch: () {
-                                final url = _movie!.movieUrl ?? '/movie/${_movie!.movieId}';
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('movie_open_link'.trParams({'url': url})),
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
+          ? const Center(child: CircularProgressIndicator())
+          : _movie == null
+          ? Center(child: Text('movie_not_found'.tr))
+          : CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(child: _MovieHeader(movie: _movie!)),
+                if ((_movie!.source != null && _movie!.source!.isNotEmpty) &&
+                    (_movie!.canWatch == true || _movie!.isPaid == 0))
+                  SliverPadding(
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                    sliver: SliverToBoxAdapter(
+                      child: _WatchCard(movie: _movie!),
                     ),
-                  ],
+                  ),
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+                  sliver: SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _InfoChips(movie: _movie!),
+                        const SizedBox(height: 12),
+                        if (_movie!.description != null &&
+                            _movie!.description!.isNotEmpty)
+                          _SectionCard(
+                            title: 'movie_overview'.tr,
+                            child: Text(
+                              _movie!.description!,
+                              style: Theme.of(
+                                context,
+                              ).textTheme.bodyMedium?.copyWith(height: 1.4),
+                            ),
+                          ),
+                        if (_movie!.stars != null &&
+                            _movie!.stars!.isNotEmpty) ...[
+                          const SizedBox(height: 12),
+                          _SectionCard(
+                            title: 'movie_cast'.tr,
+                            child: Text(
+                              _movie!.stars!,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ),
+                        ],
+                        if (_movie!.genresList.isNotEmpty) ...[
+                          const SizedBox(height: 12),
+                          _SectionCard(
+                            title: 'movie_genres'.tr,
+                            child: Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: _movie!.genresList
+                                  .map((g) => Chip(label: Text(g.genreName)))
+                                  .toList(),
+                            ),
+                          ),
+                        ],
+                        const SizedBox(height: 16),
+                        _ActionButtons(
+                          isPaid: _movie!.isPaid == 1,
+                          canWatch: _movie!.canWatch == true,
+                          purchasing: _purchasing,
+                          onPurchase: _purchase,
+                          onWatch: () {
+                            final url =
+                                _movie!.movieUrl ?? '/movie/${_movie!.movieId}';
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'movie_open_link'.trParams({'url': url}),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
+              ],
+            ),
     );
   }
 }
@@ -245,7 +251,9 @@ class _MovieHeader extends StatelessWidget {
                             ),
                             child: Text(
                               'paid_badge'.tr,
-                              style: const TextStyle(fontWeight: FontWeight.w700),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
                           ),
                       ],
@@ -277,16 +285,20 @@ class _MoviePlayer extends StatelessWidget {
       if (videoId == null) {
         return Text('invalid_youtube_url'.tr);
       }
-      final controller = YoutubePlayerController.fromVideoId(
-        videoId: videoId,
-        autoPlay: true,
-        params: const YoutubePlayerParams(showFullscreenButton: true),
+      final controller = YoutubePlayerController(
+        initialVideoId: videoId,
+        flags: const YoutubePlayerFlags(
+          autoPlay: true,
+          mute: false,
+          showLiveFullscreenButton: true,
+        ),
       );
       return ClipRRect(
         borderRadius: BorderRadius.circular(12),
-        child: AspectRatio(
-          aspectRatio: 16 / 9,
-          child: YoutubePlayer(controller: controller),
+        child: YoutubePlayer(
+          controller: controller,
+          showVideoProgressIndicator: true,
+          progressIndicatorColor: Colors.red,
         ),
       );
     } else {
@@ -341,22 +353,43 @@ class _InfoChips extends StatelessWidget {
     final theme = Theme.of(context);
     final chips = <Widget>[
       if (movie.isPaid == 1)
-        _pill(theme, label: 'paid_badge'.tr, icon: Iconsax.card, color: Colors.amber),
-      _pill(theme, label: 'movie_views_label'.trParams({'count': movie.views.toString()}), icon: Iconsax.eye),
+        _pill(
+          theme,
+          label: 'paid_badge'.tr,
+          icon: Iconsax.card,
+          color: Colors.amber,
+        ),
+      _pill(
+        theme,
+        label: 'movie_views_label'.trParams({'count': movie.views.toString()}),
+        icon: Iconsax.eye,
+      ),
       if (movie.availableFor > 0)
-        _pill(theme, label: 'movie_available_for_days'.trParams({'days': movie.availableFor.toString()}), icon: Iconsax.timer),
+        _pill(
+          theme,
+          label: 'movie_available_for_days'.trParams({
+            'days': movie.availableFor.toString(),
+          }),
+          icon: Iconsax.timer,
+        ),
       if ((movie.sourceType ?? '').toLowerCase() == 'youtube')
-        _pill(theme, label: 'movie_source_youtube'.tr, icon: Iconsax.video_play, color: Colors.redAccent),
+        _pill(
+          theme,
+          label: 'movie_source_youtube'.tr,
+          icon: Iconsax.video_play,
+          color: Colors.redAccent,
+        ),
     ];
 
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: chips,
-    );
+    return Wrap(spacing: 8, runSpacing: 8, children: chips);
   }
 
-  Widget _pill(ThemeData theme, {required String label, required IconData icon, Color? color}) {
+  Widget _pill(
+    ThemeData theme, {
+    required String label,
+    required IconData icon,
+    Color? color,
+  }) {
     final bg = (color ?? theme.colorScheme.primary).withOpacity(0.12);
     final fg = color ?? theme.colorScheme.primary;
     return Container(
@@ -371,7 +404,13 @@ class _InfoChips extends StatelessWidget {
         children: [
           Icon(icon, size: 14, color: fg),
           const SizedBox(width: 6),
-          Text(label, style: theme.textTheme.labelMedium?.copyWith(color: fg, fontWeight: FontWeight.w700)),
+          Text(
+            label,
+            style: theme.textTheme.labelMedium?.copyWith(
+              color: fg,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
         ],
       ),
     );
@@ -404,7 +443,12 @@ class _SectionCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800)),
+          Text(
+            title,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w800,
+            ),
+          ),
           const SizedBox(height: 10),
           child,
         ],
@@ -436,17 +480,21 @@ class _ActionButtons extends StatelessWidget {
         Expanded(
           child: ElevatedButton.icon(
             icon: Icon(showPurchase ? Iconsax.card : Iconsax.play),
-            label: Text(showPurchase
-              ? (purchasing ? 'movie_purchasing'.tr : 'movie_purchase'.tr)
-              : 'movie_watch'.tr),
+            label: Text(
+              showPurchase
+                  ? (purchasing ? 'movie_purchasing'.tr : 'movie_purchase'.tr)
+                  : 'movie_watch'.tr,
+            ),
             onPressed: purchasing
                 ? null
                 : showPurchase
-                    ? onPurchase
-                    : onWatch,
+                ? onPurchase
+                : onWatch,
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 14),
-              textStyle: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+              textStyle: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
         ),
@@ -462,8 +510,8 @@ class _WatchCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Container
-        ( // modern card shell
+    return Container(
+      // modern card shell
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
@@ -493,7 +541,10 @@ class _WatchCard extends StatelessWidget {
                 ),
                 const Spacer(),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.primary.withOpacity(0.12),
                     borderRadius: BorderRadius.circular(10),
@@ -502,7 +553,12 @@ class _WatchCard extends StatelessWidget {
                     children: [
                       const Icon(Iconsax.eye, size: 14),
                       const SizedBox(width: 4),
-                      Text('${movie.views}', style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w700)),
+                      Text(
+                        '${movie.views}',
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
                     ],
                   ),
                 ),

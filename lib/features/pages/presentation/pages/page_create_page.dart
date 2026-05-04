@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 
 import 'package:snginepro/core/theme/app_colors.dart';
+import 'package:snginepro/core/utils/html_decoder.dart';
 import 'package:snginepro/features/pages/domain/pages_repository.dart';
 import 'package:snginepro/features/pages/data/models/page_category.dart';
 import 'package:snginepro/core/data/models/country.dart';
@@ -325,7 +326,7 @@ class _PageCreatePageState extends State<PageCreatePage> {
                     items: _categories.map((category) {
                       return DropdownMenuItem<int>(
                         value: category.categoryId,
-                        child: Text(category.categoryName),
+                        child: Text(HtmlDecoder.decode(category.categoryName)),
                       );
                     }).toList(),
                     onChanged: _categories.isEmpty ? null : (value) {

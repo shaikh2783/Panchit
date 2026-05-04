@@ -54,7 +54,7 @@ class _MonetizationEarningsPageState extends State<MonetizationEarningsPage> {
 
   String _formatDate(String dateStr) {
     try {
-      final date = DateTime.parse(dateStr);
+      final date = DateTime.parse(dateStr).toLocal();
       return DateFormat('MMM dd, yyyy').format(date);
     } catch (e) {
       return dateStr;

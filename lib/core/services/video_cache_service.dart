@@ -1,5 +1,6 @@
 import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:snginepro/App_Settings.dart';
+import 'package:flutter/foundation.dart';
 
 /// خدمة إدارة كاش الفيديوهات مع دعم pre-caching
 /// تستخدم الإعدادات من AppSettings

@@ -21,6 +21,11 @@ import 'group_pending_requests_page.dart';
 import 'edit_group_page.dart';
 import 'group_members_page.dart';
 import 'group_invite_friends_page.dart';
+import 'package:snginepro/features/groups/data/services/group_products_service.dart';
+import 'package:snginepro/features/market/data/models/product.dart';
+import 'package:snginepro/features/market/presentation/pages/add_product_page.dart';
+import 'package:snginepro/core/utils/html_decoder.dart';
+import 'package:snginepro/features/feed/presentation/pages/post_detail_page.dart';
 
 /// صفحة بروفايل المجموعة - بنفس تصميم صفحة الـ Page
 /// تستقبل فقط groupId وتجلب جميع البيانات داخليًا
@@ -48,15 +53,29 @@ class _GroupProfilePageState extends State<GroupProfilePage>
   // Repository
   late GroupsRepository _repository;
 
+  // Products tab state
+  late GroupProductsService _groupProductsService;
+  List<Product> _groupProducts = [];
+  bool _isLoadingProducts = false;
+  bool _isLoadingMoreProducts = false;
+  bool _hasMoreProducts = true;
+  String? _productsError;
+  int _productsOffset = 0;
+  final int _productsLimit = 20;
+  String _productsSearchQuery = '';
+  final TextEditingController _productsSearchController =
+      TextEditingController();
+
   @override
   void initState() {
     super.initState();
 
-    _tabController = TabController(length: 6, vsync: this);
+    _tabController = TabController(length: 7, vsync: this);
 
     // تهيئة Repository
     final apiClient = context.read<ApiClient>();
     _repository = GroupsRepository(GroupsApiService(apiClient));
+    _groupProductsService = GroupProductsService(apiClient);
 
     // جلب بيانات المجموعة
     _loadGroupInfo();
@@ -87,6 +106,7 @@ class _GroupProfilePageState extends State<GroupProfilePage>
         // جلب المنشورات بعد تحميل بيانات المجموعة
         if (groupDetails != null) {
           _loadInitialPosts();
+          _loadGroupProducts(refresh: true);
         } else {
         }
       }
@@ -96,13 +116,13 @@ class _GroupProfilePageState extends State<GroupProfilePage>
           _isLoadingGroupInfo = false;
           // استخراج رسالة الخطأ من ApiException
           if (e.toString().contains('403')) {
-            _errorMessage = 'هذه مجموعة سرية';
+            _errorMessage = 'group_secret_error'.tr;
           } else if (e.toString().contains('404')) {
-            _errorMessage = 'المجموعة غير موجودة';
+            _errorMessage = 'group_not_found_error'.tr;
           } else if (e.toString().contains('401')) {
-            _errorMessage = 'يجب تسجيل الدخول أولاً';
+            _errorMessage = 'login_required_error'.tr;
           } else {
-            _errorMessage = 'حدث خطأ في تحميل المجموعة';
+            _errorMessage = 'group_load_error'.tr;
           }
         });
       }
@@ -164,7 +184,12 @@ class _GroupProfilePageState extends State<GroupProfilePage>
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('error_occurred_with_message'.trParams({'error': e.toString()})), backgroundColor: Colors.red),
+        SnackBar(
+          content: Text(
+            'error_occurred_with_message'.trParams({'error': e.toString()}),
+          ),
+          backgroundColor: Colors.red,
+        ),
       );
     } finally {
       if (mounted) {
@@ -180,6 +205,58 @@ class _GroupProfilePageState extends State<GroupProfilePage>
     );
   }
 
+  Future<void> _loadGroupProducts({bool refresh = false}) async {
+    if (_currentGroup == null) return;
+
+    final groupId = _currentGroup!.groupId;
+
+
+    if (refresh) {
+      setState(() {
+        _isLoadingProducts = true;
+        _isLoadingMoreProducts = false;
+        _hasMoreProducts = true;
+        _productsOffset = 0;
+        _groupProducts = [];
+        _productsError = null;
+      });
+    } else {
+      if (_isLoadingProducts || !_hasMoreProducts) {
+        return;
+      }
+      setState(() => _isLoadingMoreProducts = true);
+    }
+
+    try {
+      final result = await _groupProductsService.getGroupProducts(
+        groupId: groupId,
+        search: _productsSearchQuery.isNotEmpty ? _productsSearchQuery : null,
+        offset: _productsOffset,
+        limit: _productsLimit,
+      );
+
+
+      if (!mounted) return;
+
+      setState(() {
+        _groupProducts.addAll(result.products);
+        _productsOffset += _productsLimit;
+        _hasMoreProducts = result.hasMore;
+        _isLoadingProducts = false;
+        _isLoadingMoreProducts = false;
+        _productsError = null;
+      });
+
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _productsError = e.toString();
+        _isLoadingProducts = false;
+        _isLoadingMoreProducts = false;
+      });
+    }
+  }
+
   void _openCreatePost() {
     if (_currentGroup == null) return;
 
@@ -190,6 +267,7 @@ class _GroupProfilePageState extends State<GroupProfilePage>
               handle: 'group',
               handleId: _currentGroup!.groupId,
               handleName: _currentGroup!.groupTitle,
+              showPrivacySelector: false,
             ),
           ),
         )
@@ -211,6 +289,269 @@ class _GroupProfilePageState extends State<GroupProfilePage>
     );
   }
 
+  Widget _buildProductsTab() {
+    return Column(
+      children: [
+        if (_currentGroup?.membership?.isAdmin ?? false)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
+            child: SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed: () async {
+                  if (_currentGroup == null) return;
+
+                  final result = await Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => AddProductPage(
+                        handle: 'group',
+                        handleId: _currentGroup!.groupId,
+                        handleName: _currentGroup!.groupTitle,
+                      ),
+                    ),
+                  );
+
+                  // AddProductPage returns the created Product on success
+                  if (result != null) {
+                    _loadGroupProducts(refresh: true);
+                  }
+                },
+                icon: const Icon(Iconsax.add),
+                label: Text('market_create_product'.tr),
+              ),
+            ),
+          ),
+        // Search Bar
+        Padding(
+          padding: const EdgeInsets.all(12),
+          child: TextField(
+            controller: _productsSearchController,
+            decoration: InputDecoration(
+              hintText: 'search_products'.tr,
+              prefixIcon: const Icon(Iconsax.search_normal),
+              suffixIcon: _productsSearchQuery.isNotEmpty
+                  ? IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () {
+                        _productsSearchController.clear();
+                        setState(() {
+                          _productsSearchQuery = '';
+                        });
+                        _loadGroupProducts(refresh: true);
+                      },
+                    )
+                  : null,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
+            ),
+            onSubmitted: (value) {
+              setState(() {
+                _productsSearchQuery = value.trim();
+              });
+              _loadGroupProducts(refresh: true);
+            },
+          ),
+        ),
+        // Products List
+        Expanded(child: _buildProductsList()),
+      ],
+    );
+  }
+
+  Widget _buildProductsList() {
+    if (_isLoadingProducts && _groupProducts.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_productsError != null && _groupProducts.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Iconsax.warning_2, size: 48, color: Colors.grey[600]),
+            const SizedBox(height: 12),
+            Text(
+              _productsError!,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.grey[700]),
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton.icon(
+              onPressed: () => _loadGroupProducts(refresh: true),
+              icon: const Icon(Icons.refresh),
+              label: Text('retry'.tr),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (_groupProducts.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Iconsax.box, size: 64, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Text(
+              'group_no_products'.tr,
+              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return RefreshIndicator(
+      onRefresh: () => _loadGroupProducts(refresh: true),
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (scroll) {
+          if (scroll.metrics.pixels >= scroll.metrics.maxScrollExtent - 180 &&
+              !_isLoadingMoreProducts &&
+              _hasMoreProducts) {
+            _loadGroupProducts();
+          }
+          return false;
+        },
+        child: ListView.builder(
+          padding: const EdgeInsets.all(12),
+          itemCount: _groupProducts.length + (_isLoadingMoreProducts ? 1 : 0),
+          itemBuilder: (context, index) {
+            if (index >= _groupProducts.length) {
+              return const Padding(
+                padding: EdgeInsets.all(16),
+                child: Center(child: CircularProgressIndicator()),
+              );
+            }
+
+            final product = _groupProducts[index];
+            final thumb = product.photos.isNotEmpty
+                ? product.photos.first
+                : null;
+
+            return Card(
+              margin: const EdgeInsets.only(bottom: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(12),
+                onTap: () {
+                  if (product.productId.isNotEmpty) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => PostDetailPage(
+                          postId: int.tryParse(product.productId) ?? 0,
+                        ),
+                      ),
+                    );
+                  }
+                },
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 96,
+                      height: 96,
+                      margin: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.grey[200],
+                        image: thumb != null
+                            ? DecorationImage(
+                                image: CachedNetworkImageProvider(thumb),
+                                fit: BoxFit.cover,
+                              )
+                            : null,
+                      ),
+                      child: thumb == null
+                          ? Icon(Iconsax.box, color: Colors.grey[500])
+                          : null,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 12, 12, 12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              product.name,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              '${product.price} ${product.currency}',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Row(
+                              children: [
+                                Icon(
+                                  Iconsax.category,
+                                  size: 16,
+                                  color: Colors.grey[600],
+                                ),
+                                const SizedBox(width: 6),
+                                Expanded(
+                                  child: Text(
+                                    HtmlDecoder.decode(product.categoryName),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(color: Colors.grey[700]),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 6),
+                            Row(
+                              children: [
+                                Icon(
+                                  Iconsax.map,
+                                  size: 16,
+                                  color: Colors.grey[600],
+                                ),
+                                const SizedBox(width: 6),
+                                Expanded(
+                                  child: Text(
+                                    product.location.isNotEmpty
+                                        ? product.location
+                                        : 'N/A',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(color: Colors.grey[700]),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
   Future<void> _toggleJoinGroup() async {
     if (_currentGroup == null) return;
 
@@ -224,23 +565,27 @@ class _GroupProfilePageState extends State<GroupProfilePage>
         if (success && mounted) {
           ScaffoldMessenger.of(
             context,
-          ).showSnackBar(const SnackBar(content: Text('تم مغادرة المجموعة')));
+          ).showSnackBar(SnackBar(content: Text('group_left_success'.tr)));
           await _loadGroupInfo();
         }
       } else {
         final success = await _repository.joinGroup(groupId);
         if (success && mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('تم إرسال طلب الانضمام')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('group_join_request_sent'.tr)));
           await _loadGroupInfo();
         }
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('حدث خطأ: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'error_occurred_with_message'.trParams({'error': e.toString()}),
+            ),
+          ),
+        );
       }
     }
   }
@@ -411,7 +756,9 @@ class _GroupProfilePageState extends State<GroupProfilePage>
                                 MaterialPageRoute(
                                   builder: (context) => GroupMembersPage(
                                     group: _currentGroup!,
-                                    isAdmin: _currentGroup!.membership?.isAdmin ?? false,
+                                    isAdmin:
+                                        _currentGroup!.membership?.isAdmin ??
+                                        false,
                                   ),
                                 ),
                               );
@@ -430,7 +777,9 @@ class _GroupProfilePageState extends State<GroupProfilePage>
                           _InfoRow(
                             icon: isSecret ? Iconsax.lock_1 : Iconsax.lock,
                             label: 'group_privacy'.tr,
-                            value: isSecret ? 'group_privacy_secret'.tr : 'group_privacy_closed'.tr,
+                            value: isSecret
+                                ? 'group_privacy_secret'.tr
+                                : 'group_privacy_closed'.tr,
                           ),
                           if (_currentGroup!.groupDescription != null) ...[
                             const Divider(height: 24),
@@ -563,7 +912,9 @@ class _GroupProfilePageState extends State<GroupProfilePage>
                           _InfoRow(
                             icon: isSecret ? Iconsax.lock_1 : Iconsax.lock,
                             label: 'group_privacy'.tr,
-                            value: isSecret ? 'group_privacy_secret'.tr : 'group_privacy_closed'.tr,
+                            value: isSecret
+                                ? 'group_privacy_secret'.tr
+                                : 'group_privacy_closed'.tr,
                           ),
                         ],
                       ),
@@ -699,9 +1050,8 @@ class _GroupProfilePageState extends State<GroupProfilePage>
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => GroupInviteFriendsPage(
-                          group: _currentGroup!,
-                        ),
+                        builder: (context) =>
+                            GroupInviteFriendsPage(group: _currentGroup!),
                       ),
                     );
                   },
@@ -792,6 +1142,7 @@ class _GroupProfilePageState extends State<GroupProfilePage>
                 mediaAsset: mediaAsset,
                 onRefresh: _onRefresh,
               ),
+              _buildProductsTab(),
               _EventsTab(),
             ],
           ),
@@ -1154,10 +1505,17 @@ class _TabsHeaderDelegate extends SliverPersistentHeaderDelegate {
         labelPadding: const EdgeInsets.symmetric(horizontal: 16),
         tabs: [
           Tab(icon: const Icon(Iconsax.activity), text: 'group_tab_posts'.tr),
-          Tab(icon: const Icon(Iconsax.info_circle), text: 'group_tab_about'.tr),
+          Tab(
+            icon: const Icon(Iconsax.info_circle),
+            text: 'group_tab_about'.tr,
+          ),
           Tab(icon: const Icon(Iconsax.people), text: 'group_tab_members'.tr),
           Tab(icon: const Icon(Iconsax.image), text: 'group_tab_photos'.tr),
           Tab(icon: const Icon(Iconsax.video), text: 'group_tab_videos'.tr),
+          Tab(
+            icon: const Icon(Iconsax.shopping_bag),
+            text: 'group_tab_products'.tr,
+          ),
           Tab(icon: const Icon(Iconsax.calendar), text: 'group_tab_events'.tr),
         ],
       ),
@@ -1257,10 +1615,7 @@ class _TimelineTab extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: onRetry,
-              child: Text('retry_button'.tr),
-            ),
+            ElevatedButton(onPressed: onRetry, child: Text('retry_button'.tr)),
           ],
         ),
       );
@@ -1329,7 +1684,10 @@ class _AboutTab extends StatelessWidget {
       children: [
         // Description
         if (group.groupDescription != null) ...[
-          _SectionTitle(title: 'group_description_section'.tr, icon: Iconsax.document_text),
+          _SectionTitle(
+            title: 'group_description_section'.tr,
+            icon: Iconsax.document_text,
+          ),
           const SizedBox(height: 8),
           _InfoCard(
             isDark: isDark,
@@ -1346,7 +1704,10 @@ class _AboutTab extends StatelessWidget {
         ],
 
         // Group Info
-        _SectionTitle(title: 'group_information_section'.tr, icon: Iconsax.info_circle),
+        _SectionTitle(
+          title: 'group_information_section'.tr,
+          icon: Iconsax.info_circle,
+        ),
         const SizedBox(height: 8),
         _InfoCard(
           isDark: isDark,

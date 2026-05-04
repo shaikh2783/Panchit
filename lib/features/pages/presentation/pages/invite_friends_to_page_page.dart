@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:get/get.dart';
 import '../../../../core/network/api_client.dart';
 import '../../data/models/invitable_friend.dart';
 import '../../data/services/page_invitations_service.dart';
@@ -80,7 +81,7 @@ class _InviteFriendsToPagePageState extends State<InviteFriendsToPagePage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('فشل تحميل الأصدقاء'),
+            content: Text('page_invite_failed_load'.tr),
             backgroundColor: Colors.red,
           ),
         );
@@ -133,7 +134,8 @@ class _InviteFriendsToPagePageState extends State<InviteFriendsToPagePage> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('تمت دعوة ${friend.fullName}'),
+              content:
+                  Text('page_invite_success'.trParams({'name': friend.fullName})),
               backgroundColor: Colors.green,
               duration: Duration(seconds: 2),
             ),
@@ -145,7 +147,8 @@ class _InviteFriendsToPagePageState extends State<InviteFriendsToPagePage> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('فشلت دعوة ${friend.fullName}'),
+              content:
+                  Text('page_invite_failed'.trParams({'name': friend.fullName})),
               backgroundColor: Colors.red,
             ),
           );
@@ -157,7 +160,7 @@ class _InviteFriendsToPagePageState extends State<InviteFriendsToPagePage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('حدث خطأ أثناء الدعوة'),
+            content: Text('page_invite_error'.tr),
             backgroundColor: Colors.red,
           ),
         );
@@ -174,7 +177,7 @@ class _InviteFriendsToPagePageState extends State<InviteFriendsToPagePage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'دعوة أصدقاء',
+              'page_invite_title'.tr,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             Text(
@@ -201,12 +204,12 @@ class _InviteFriendsToPagePageState extends State<InviteFriendsToPagePage> {
             Icon(Icons.people_outline, size: 64, color: Colors.grey),
             SizedBox(height: 16),
             Text(
-              'لا يوجد أصدقاء للدعوة',
+              'page_invite_empty_title'.tr,
               style: TextStyle(fontSize: 18, color: Colors.grey),
             ),
             SizedBox(height: 8),
             Text(
-              'جميع أصدقائك إما أعضاء في الصفحة\nأو تمت دعوتهم بالفعل',
+              'page_invite_empty_body'.tr,
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 14, color: Colors.grey[600]),
             ),
@@ -284,7 +287,7 @@ class _InviteFriendsToPagePageState extends State<InviteFriendsToPagePage> {
                         Icon(Icons.check, color: Colors.green, size: 18),
                         SizedBox(width: 4),
                         Text(
-                          'تمت الدعوة',
+                          'page_invite_invited'.tr,
                           style: TextStyle(
                             color: Colors.green,
                             fontWeight: FontWeight.bold,
@@ -312,7 +315,7 @@ class _InviteFriendsToPagePageState extends State<InviteFriendsToPagePage> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    child: Text('دعوة'),
+                    child: Text('page_invite_cta'.tr),
                   ),
           ),
         );

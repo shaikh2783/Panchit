@@ -9,6 +9,7 @@ import 'package:snginepro/features/pages/data/models/page.dart';
 import 'package:snginepro/features/events/data/services/events_service.dart';
 import 'package:snginepro/features/events/data/models/event.dart';
 import '../../../../core/network/api_client.dart';
+import '../../../../core/utils/html_decoder.dart';
 import '../../../../main.dart' show configCfgP;
 import '../../../../core/theme/ui_constants.dart';
 import '../../domain/blog_repository.dart';
@@ -211,7 +212,7 @@ class _BlogCreatePageState extends State<BlogCreatePage> {
             _label('blog_category'.tr),
             DropdownButtonFormField<int>(
               decoration: _inputDecoration(icon: Iconsax.category_copy),
-              items: _categories.map((c)=>DropdownMenuItem(value:c.categoryId, child: Text(c.categoryName))).toList(),
+              items: _categories.map((c)=>DropdownMenuItem(value:c.categoryId, child: Text(HtmlDecoder.decode(c.categoryName)))).toList(),
               value: _selectedCategoryId,
               onChanged: (v)=>setState(()=>_selectedCategoryId=v),
             ),

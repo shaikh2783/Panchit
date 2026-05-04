@@ -1336,6 +1336,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
     
     // مغادرة البث المباشر عند الخروج (بدون انتظار)
     if (_hasJoinedLive && (widget.postId != null || widget.liveId != null)) {
+      _leaveLiveStream().catchError((e) => null);
     }
     
     // تنظيف الموارد
@@ -1344,6 +1345,7 @@ class _LiveStreamViewerPageState extends State<LiveStreamViewerPage>
     _interfaceAnimationController.dispose();
     
     // تنظيف Agora والنظام
+    _agoraService.leaveChannel().catchError((e) => null);
     _showSystemUI();
     
     super.dispose();

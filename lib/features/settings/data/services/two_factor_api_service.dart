@@ -1,6 +1,7 @@
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
 import '../models/two_factor_status.dart';
+import 'package:flutter/foundation.dart';
 
 class TwoFactorApiService {
   final ApiClient _apiClient;

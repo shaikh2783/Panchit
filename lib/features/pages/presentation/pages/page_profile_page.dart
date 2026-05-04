@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import 'package:snginepro/core/config/app_config.dart';
+import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/core/theme/app_colors.dart';
 import 'package:snginepro/features/feed/data/models/post.dart';
 import 'package:snginepro/features/feed/application/bloc/posts_bloc.dart';
@@ -21,6 +22,12 @@ import 'package:snginepro/features/pages/presentation/pages/page_admins_page.dar
 import 'package:snginepro/features/pages/presentation/pages/page_verification_request_page.dart';
 import 'package:snginepro/features/pages/presentation/pages/page_update_pictures_page.dart';
 import 'package:snginepro/features/agora/presentation/pages/professional_live_stream_wrapper.dart';
+import 'package:snginepro/features/pages/data/services/page_products_service.dart';
+import 'package:snginepro/features/market/data/models/product.dart';
+import 'package:snginepro/core/utils/html_decoder.dart';
+import 'package:snginepro/features/feed/presentation/pages/post_detail_page.dart';
+import 'package:snginepro/features/market/presentation/pages/add_product_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PageProfilePage extends StatefulWidget {
   // Constructor للاستخدام مع PageModel كامل (الاستخدام الحالي)
@@ -48,6 +55,19 @@ class _PageProfilePageState extends State<PageProfilePage>
   late TabController _tabController;
   static const int _idxTimeline = 0;
 
+  // Products tab state
+  late PageProductsService _pageProductsService;
+  List<Product> _pageProducts = [];
+  bool _isLoadingProducts = false;
+  bool _isLoadingMoreProducts = false;
+  bool _hasMoreProducts = true;
+  String? _productsError;
+  int _productsOffset = 0;
+  final int _productsLimit = 20;
+  String _productsSearchQuery = '';
+  final TextEditingController _productsSearchController =
+      TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -58,7 +78,7 @@ class _PageProfilePageState extends State<PageProfilePage>
     }
     // وإلا، سيكون null وسنجلب البيانات من pageId
 
-    _tabController = TabController(length: 6, vsync: this);
+    _tabController = TabController(length: 7, vsync: this);
 
     _loadPageInfo();
     if (_currentPage != null) {
@@ -78,6 +98,16 @@ class _PageProfilePageState extends State<PageProfilePage>
     setState(() => _isLoadingPageInfo = true);
     try {
       final repo = context.read<PagesRepository>();
+      final apiClient = context.read<ApiClient>();
+      _pageProductsService = PageProductsService(apiClient);
+
+      // Reset products state
+      _pageProducts = [];
+      _productsOffset = 0;
+      _hasMoreProducts = true;
+      _productsError = null;
+      _isLoadingProducts = false;
+      _isLoadingMoreProducts = false;
 
       // تحديد pageId بناءً على المصدر
       int pageId;
@@ -95,8 +125,9 @@ class _PageProfilePageState extends State<PageProfilePage>
         _isLoadingPageInfo = false;
       });
 
-      // جلب المنشورات بعد تحميل بيانات الصفحة
+      // جلب المنشورات والمنتجات بعد تحميل بيانات الصفحة
       _loadInitialPosts();
+      await _loadPageProducts(refresh: true);
     } catch (e) {
       setState(() => _isLoadingPageInfo = false);
     }
@@ -113,8 +144,62 @@ class _PageProfilePageState extends State<PageProfilePage>
   Future<void> _onRefresh() async {
     await Future.wait([
       _loadPageInfo(),
-      // _loadInitialPosts() سيتم استدعاؤها تلقائياً من _loadPageInfo()
+      // _loadInitialPosts() and _loadPageProducts() will be called from _loadPageInfo()
     ]);
+  }
+
+  Future<void> _loadPageProducts({bool refresh = false}) async {
+    if (_currentPage == null) return;
+
+    final pageId = _currentPage!.id;
+
+
+    if (refresh) {
+      setState(() {
+        _isLoadingProducts = true;
+        _isLoadingMoreProducts = false;
+        _hasMoreProducts = true;
+        _productsOffset = 0;
+        _pageProducts = [];
+        _productsError = null;
+      });
+    } else {
+      if (_isLoadingProducts || !_hasMoreProducts) {
+        return;
+      }
+      setState(() => _isLoadingMoreProducts = true);
+    }
+
+    try {
+      // Using page-specific API endpoint: /data/pages/products
+      final result = await _pageProductsService.getPageProducts(
+        pageId: pageId,
+        username: _currentPage!.name,
+        search: _productsSearchQuery.isNotEmpty ? _productsSearchQuery : null,
+        offset: _productsOffset,
+        limit: _productsLimit,
+      );
+
+
+      if (!mounted) return;
+
+      setState(() {
+        _pageProducts.addAll(result.products);
+        _productsOffset += _productsLimit;
+        _hasMoreProducts = result.hasMore;
+        _isLoadingProducts = false;
+        _isLoadingMoreProducts = false;
+        _productsError = null;
+      });
+
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _productsError = e.toString();
+        _isLoadingProducts = false;
+        _isLoadingMoreProducts = false;
+      });
+    }
   }
 
   void _openCreatePost() {
@@ -127,6 +212,8 @@ class _PageProfilePageState extends State<PageProfilePage>
               handle: 'page',
               handleId: _currentPage!.id,
               handleName: _currentPage!.title,
+              handleAvatar: _currentPage!.picture,
+              showPrivacySelector: false,
             ),
           ),
         )
@@ -395,7 +482,8 @@ class _PageProfilePageState extends State<PageProfilePage>
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => InviteFriendsToPagePage(page: _currentPage!),
+                        builder: (context) =>
+                            InviteFriendsToPagePage(page: _currentPage!),
                       ),
                     );
                   },
@@ -403,7 +491,8 @@ class _PageProfilePageState extends State<PageProfilePage>
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => PageAdminsPage(page: _currentPage!),
+                        builder: (context) =>
+                            PageAdminsPage(page: _currentPage!),
                       ),
                     );
                   },
@@ -411,7 +500,8 @@ class _PageProfilePageState extends State<PageProfilePage>
                     final result = await Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => PageVerificationRequestPage(page: _currentPage!),
+                        builder: (context) =>
+                            PageVerificationRequestPage(page: _currentPage!),
                       ),
                     );
                     // Reload page info if verification was submitted
@@ -505,6 +595,7 @@ class _PageProfilePageState extends State<PageProfilePage>
                   }
                 },
               ), // Simplified for now
+              _buildProductsTab(),
               const _ReviewsTab(), // TODO: wire real reviews API when ready
               const _EventsTab(), // TODO: wire real events API when ready
             ],
@@ -524,6 +615,257 @@ class _PageProfilePageState extends State<PageProfilePage>
           nodeId: _currentPage!.id,
         ),
         settings: const RouteSettings(name: '/professional-live-stream'),
+      ),
+    );
+  }
+
+  Widget _buildProductsTab() {
+    return Column(
+      children: [
+        if (_currentPage?.iAdmin == true)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
+            child: SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed: () async {
+                  final result = await Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => AddProductPage(
+                        handle: 'page',
+                        handleId: _currentPage!.id,
+                        handleName: _currentPage!.title,
+                      ),
+                    ),
+                  );
+                  if (result == true) {
+                    _loadPageProducts(refresh: true);
+                  }
+                },
+                icon: const Icon(Iconsax.add),
+                label: Text('market_create_product'.tr),
+              ),
+            ),
+          ),
+        // Search Bar
+        Padding(
+          padding: const EdgeInsets.all(12),
+          child: TextField(
+            controller: _productsSearchController,
+            decoration: InputDecoration(
+              hintText: 'search_products'.tr,
+              prefixIcon: const Icon(Iconsax.search_normal),
+              suffixIcon: _productsSearchQuery.isNotEmpty
+                  ? IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () {
+                        _productsSearchController.clear();
+                        setState(() {
+                          _productsSearchQuery = '';
+                        });
+                        _loadPageProducts(refresh: true);
+                      },
+                    )
+                  : null,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
+            ),
+            onSubmitted: (value) {
+              setState(() {
+                _productsSearchQuery = value.trim();
+              });
+              _loadPageProducts(refresh: true);
+            },
+          ),
+        ),
+        // Products List
+        Expanded(child: _buildProductsList()),
+      ],
+    );
+  }
+
+  Widget _buildProductsList() {
+    if (_isLoadingProducts && _pageProducts.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_productsError != null && _pageProducts.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Iconsax.warning_2, size: 48, color: Colors.grey[600]),
+            const SizedBox(height: 12),
+            Text(
+              _productsError!,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.grey[700]),
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton.icon(
+              onPressed: () => _loadPageProducts(refresh: true),
+              icon: const Icon(Icons.refresh),
+              label: Text('retry'.tr),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (_pageProducts.isEmpty) {
+      return const _EmptyState(
+        icon: Iconsax.box,
+        title: 'page_no_products_title',
+        subtitle: 'page_no_products_subtitle',
+      );
+    }
+
+    return RefreshIndicator(
+      onRefresh: () => _loadPageProducts(refresh: true),
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (scroll) {
+          if (scroll.metrics.pixels >= scroll.metrics.maxScrollExtent - 180 &&
+              !_isLoadingMoreProducts &&
+              _hasMoreProducts) {
+            _loadPageProducts();
+          }
+          return false;
+        },
+        child: ListView.builder(
+          padding: const EdgeInsets.all(12),
+          itemCount: _pageProducts.length + (_isLoadingMoreProducts ? 1 : 0),
+          itemBuilder: (context, index) {
+            if (index >= _pageProducts.length) {
+              return const Padding(
+                padding: EdgeInsets.all(16),
+                child: Center(child: CircularProgressIndicator()),
+              );
+            }
+
+            final product = _pageProducts[index];
+            final thumb = product.photos.isNotEmpty
+                ? product.photos.first
+                : null;
+
+            return Card(
+              margin: const EdgeInsets.only(bottom: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(12),
+                onTap: () {
+                  if (product.productId.isNotEmpty) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => PostDetailPage(
+                          postId: int.tryParse(product.productId) ?? 0,
+                        ),
+                      ),
+                    );
+                  }
+                },
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 96,
+                      height: 96,
+                      margin: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.grey[200],
+                        image: thumb != null
+                            ? DecorationImage(
+                                image: CachedNetworkImageProvider(thumb),
+                                fit: BoxFit.cover,
+                              )
+                            : null,
+                      ),
+                      child: thumb == null
+                          ? Icon(Iconsax.box, color: Colors.grey[500])
+                          : null,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 12, 12, 12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              product.name,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              '${product.price} ${product.currency}',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Row(
+                              children: [
+                                Icon(
+                                  Iconsax.category,
+                                  size: 16,
+                                  color: Colors.grey[600],
+                                ),
+                                const SizedBox(width: 6),
+                                Expanded(
+                                  child: Text(
+                                    HtmlDecoder.decode(product.categoryName),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(color: Colors.grey[700]),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 6),
+                            Row(
+                              children: [
+                                Icon(
+                                  Iconsax.map,
+                                  size: 16,
+                                  color: Colors.grey[600],
+                                ),
+                                const SizedBox(width: 6),
+                                Expanded(
+                                  child: Text(
+                                    product.location.isNotEmpty
+                                        ? product.location
+                                        : 'N/A',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(color: Colors.grey[700]),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -724,9 +1066,10 @@ class _HeaderWithStats extends StatelessWidget {
                   const Spacer(),
                 ],
               ),
-              
+
               // Buttons Row (if any)
-              if ((page.actionText.isNotEmpty && page.actionUrl.isNotEmpty) || !page.iAdmin) ...[
+              if ((page.actionText.isNotEmpty && page.actionUrl.isNotEmpty) ||
+                  !page.iAdmin) ...[
                 const SizedBox(height: 12),
                 Row(
                   children: [
@@ -735,7 +1078,9 @@ class _HeaderWithStats extends StatelessWidget {
                       Expanded(
                         child: Container(
                           decoration: BoxDecoration(
-                            gradient: _getActionButtonGradient(page.actionColor),
+                            gradient: _getActionButtonGradient(
+                              page.actionColor,
+                            ),
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
@@ -751,8 +1096,11 @@ class _HeaderWithStats extends StatelessWidget {
                             color: Colors.transparent,
                             borderRadius: BorderRadius.circular(12),
                             child: InkWell(
-                              onTap: () {
-                                // TODO: Launch URL
+                              onTap: () async {
+                                final Uri url = Uri.parse(page.actionUrl);
+                                if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+                                  throw Exception('Could not launch $url');
+                                }
                               },
                               borderRadius: BorderRadius.circular(12),
                               child: Padding(
@@ -788,18 +1136,26 @@ class _HeaderWithStats extends StatelessWidget {
                           ),
                         ),
                       ),
-                    
+
                     // Spacing between buttons
-                    if ((page.actionText.isNotEmpty && page.actionUrl.isNotEmpty) && !page.iAdmin)
+                    if ((page.actionText.isNotEmpty &&
+                            page.actionUrl.isNotEmpty) &&
+                        !page.iAdmin)
                       const SizedBox(width: 12),
-                    
+
                     // Like Button (only for non-admins)
                     if (!page.iAdmin)
                       Expanded(
                         child: FilledButton.icon(
                           onPressed: onLikePressed,
-                          icon: Icon(page.iLike ? Iconsax.heart_add : Iconsax.heart),
-                          label: Text(page.iLike ? 'page_liked_button'.tr : 'page_like_button'.tr),
+                          icon: Icon(
+                            page.iLike ? Iconsax.heart_add : Iconsax.heart,
+                          ),
+                          label: Text(
+                            page.iLike
+                                ? 'page_liked_button'.tr
+                                : 'page_like_button'.tr,
+                          ),
                         ),
                       ),
                   ],
@@ -862,6 +1218,10 @@ class _TabsHeaderDelegate extends SliverPersistentHeaderDelegate {
           Tab(icon: const Icon(Iconsax.info_circle), text: 'page_tab_about'.tr),
           Tab(icon: const Icon(Iconsax.image), text: 'page_tab_photos'.tr),
           Tab(icon: const Icon(Iconsax.video), text: 'page_tab_videos'.tr),
+          Tab(
+            icon: const Icon(Iconsax.shopping_bag),
+            text: 'page_tab_products'.tr,
+          ),
           Tab(icon: const Icon(Iconsax.star), text: 'page_tab_reviews'.tr),
           Tab(icon: const Icon(Iconsax.calendar), text: 'page_tab_events'.tr),
         ],

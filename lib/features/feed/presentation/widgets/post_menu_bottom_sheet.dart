@@ -7,6 +7,13 @@ import 'package:snginepro/features/reports/presentation/pages/report_content_pag
 import '../../../feed/data/models/post.dart';
 import '../../../feed/data/services/post_management_api_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/services.dart';
+import 'package:snginepro/core/config/app_config.dart';
+import 'package:snginepro/core/network/api_client.dart';
+import 'package:snginepro/features/market/data/services/product_management_service.dart';
+import 'package:snginepro/features/market/presentation/pages/edit_product_page.dart';
+import 'package:snginepro/features/feed/application/bloc/posts_bloc.dart';
+import 'package:snginepro/features/feed/application/bloc/posts_events.dart';
 
 /// Professional post menu options
 class PostMenuBottomSheet extends StatelessWidget {
@@ -181,7 +188,70 @@ class PostMenuBottomSheet extends StatelessWidget {
                     subtitle: 'post_menu_copy_link_subtitle'.tr,
                     onTap: () {
                       Navigator.pop(context);
-                      // TODO: Copy link functionality
+                      final url = _buildPostUrl(post);
+                      if (url.isNotEmpty) {
+                        Clipboard.setData(ClipboardData(text: url));
+                        final isDark =
+                            Theme.of(context).brightness == Brightness.dark;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.15),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(
+                                    Icons.link_rounded,
+                                    color: Colors.white,
+                                    size: 16,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    'copied_to_clipboard'.tr,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            backgroundColor: isDark
+                                ? const Color(0xFF1F6FEB)
+                                : Theme.of(context).primaryColor,
+                            behavior: SnackBarBehavior.floating,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            margin: const EdgeInsets.all(16),
+                            duration: const Duration(seconds: 2),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'copied_to_clipboard'.tr,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            behavior: SnackBarBehavior.floating,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            margin: const EdgeInsets.all(16),
+                            duration: const Duration(seconds: 2),
+                          ),
+                        );
+                      }
                     },
                   ),
 
@@ -204,6 +274,83 @@ class PostMenuBottomSheet extends StatelessWidget {
                       );
                     },
                   ),
+
+                  // Product Management Options (owner only, products only)
+                  if (_canManageProduct(context, post)) ...[
+                    // Edit Product
+                    _buildMenuItem(
+                      context: context,
+                      icon: Iconsax.edit,
+                      title: 'edit_product'.tr,
+                      subtitle: 'edit_product'.tr,
+                      onTap: () async {
+                        Navigator.pop(context);
+                        final updatedPost = await Navigator.push<Post?>(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditProductPage(
+                              product: post,
+                            ),
+                          ),
+                        );
+                        if (updatedPost != null && context.mounted) {
+                          // Update global posts state
+                          context.read<PostsBloc>().add(UpdatePostEvent(updatedPost));
+                          // Optional success feedback
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('product_updated_successfully'.tr),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+                        }
+                      },
+                    ),
+
+                    // Mark as Sold / Mark as Unsold
+                    _buildMenuItem(
+                      context: context,
+                      icon: post.available
+                          ? Iconsax.close_circle
+                          : Iconsax.refresh,
+                      title: post.available
+                          ? 'mark_as_sold'.tr
+                          : 'mark_as_unsold'.tr,
+                      subtitle: post.available
+                          ? 'mark_as_sold'.tr
+                          : 'mark_as_unsold'.tr,
+                      onTap: () async {
+                        Navigator.pop(context);
+                        if (post.available) {
+                          // Mark as Sold
+                          final confirmed = await showDialog<bool>(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: Text('are_you_sure_mark_product_sold'.tr),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, false),
+                                  child: Text('cancel'.tr),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () => Navigator.pop(context, true),
+                                  child: Text('mark_as_sold'.tr),
+                                ),
+                              ],
+                            ),
+                          );
+
+                          if (confirmed == true && context.mounted) {
+                            await _handleMarkProductSold(context, post);
+                          }
+                        } else {
+                          // Mark as Unsold
+                          await _handleMarkProductUnsold(context, post);
+                        }
+                      },
+                    ),
+                  ],
 
                   // Report (if not owner)
                   if (!_isOwner(context, post))
@@ -717,5 +864,124 @@ class PostMenuBottomSheet extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  /// Build a public URL to the post that can be shared/copied.
+  String _buildPostUrl(Post post) {
+    try {
+      var base = appConfig.baseUrl.trim();
+      if (base.isEmpty) return '';
+      if (base.endsWith('/')) base = base.substring(0, base.length - 1);
+
+      // Standard Sngine-style post permalink
+      return '$base/posts/${post.id}';
+    } catch (_) {
+      return '';
+    }
+  }
+
+  /// Check if current user can manage product (owner only)
+  static bool _canManageProduct(BuildContext context, Post post) {
+    // Must be a product post
+    if (!post.isProductPost) return false;
+
+    try {
+      final authNotifier = context.read<AuthNotifier>();
+      final currentUserId = authNotifier.currentUser?['user_id'];
+      final postAuthorId = post.authorId;
+
+      if (currentUserId == null || postAuthorId == null) {
+        return false;
+      }
+
+      // Compare IDs (handle both int and string)
+      return currentUserId.toString() == postAuthorId.toString();
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// Handle marking product as sold
+  static Future<void> _handleMarkProductSold(
+    BuildContext context,
+    Post post,
+  ) async {
+    try {
+      final apiClient = context.read<ApiClient>();
+      final productService = ProductManagementService(apiClient);
+
+      await productService.markProductSold(post.id);
+
+      if (context.mounted) {
+        // Update global posts state to reflect sold status
+        final updated = post.copyWith(available: false);
+        
+        // Update the BLoC
+        context.read<PostsBloc>().add(UpdatePostEvent(updated));
+
+        // Close menu and show success
+        Navigator.pop(context);
+        
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(
+          SnackBar(
+            content: Text('product_marked_sold'.tr),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('error_marking_product_sold'.tr),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  /// Handle marking product as unsold
+  static Future<void> _handleMarkProductUnsold(
+    BuildContext context,
+    Post post,
+  ) async {
+    try {
+      final apiClient = context.read<ApiClient>();
+      final productService = ProductManagementService(apiClient);
+
+      await productService.markProductUnsold(post.id);
+
+      if (context.mounted) {
+        // Update global posts state to reflect available status
+        final updated = post.copyWith(available: true);
+        
+        // Update the BLoC
+        context.read<PostsBloc>().add(UpdatePostEvent(updated));
+
+        // Close menu and show success
+        Navigator.pop(context);
+        
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(
+          SnackBar(
+            content: Text('product_marked_unsold'.tr),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('error_marking_product_unsold'.tr),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 }

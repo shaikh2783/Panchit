@@ -3,6 +3,7 @@ import 'package:http_parser/http_parser.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
 import '../models/profile_update_models.dart';
+import 'package:flutter/foundation.dart';
 
 /// خدمة تعديل الملف الشخصي - تحتوي على جميع endpoints التعديل
 class ProfileUpdateService {

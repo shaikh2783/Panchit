@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import '../../../../core/theme/ui_constants.dart';
+import '../../../../core/utils/html_decoder.dart';
 import '../../../../core/widgets/skeletons.dart';
 import '../../data/models/models.dart';
 import '../../domain/blog_repository.dart';
@@ -196,7 +197,7 @@ class _BlogListPageState extends State<BlogListPage> {
                   final c = _categories[index - 1];
                   return _buildCategoryChip(
                     context,
-                    label: c.categoryName,
+                    label: HtmlDecoder.decode(c.categoryName),
                     icon: _getCategoryIcon(c.categoryName),
                     isSelected: _selectedCategory == c.categoryId,
                     onTap: () {

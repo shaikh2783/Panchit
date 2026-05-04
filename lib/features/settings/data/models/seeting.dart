@@ -4,6 +4,7 @@ import 'package:crypto/crypto.dart' as crypto;
 import 'package:encrypt/encrypt.dart';
 import 'package:snginepro/features/offers/data/services/offers_api_service.dart';
 import 'package:snginepro/main.dart' show cfgP;
+import 'package:flutter/foundation.dart' hide Key;
 
 /// مفاتيح مشتركة مع المولّد (حافظ عليها سرية)
 const String _kSiteEncryptKey = 'ef2ff48ada3d53fe';

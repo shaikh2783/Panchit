@@ -28,7 +28,10 @@ import 'package:snginepro/features/profile/presentation/pages/profile_page.dart'
 typedef MediaPathResolver = Uri Function(String);
 
 class ReelsPage extends StatefulWidget {
-  const ReelsPage({super.key});
+  const ReelsPage({super.key, this.initialIndex = 0});
+
+  /// يبدأ من الريل المطلوب عند الفتح
+  final int initialIndex;
   @override
   State<ReelsPage> createState() => _ReelsPageState();
 }
@@ -40,7 +43,7 @@ class _ReelsPageState extends State<ReelsPage> {
   @override
   void initState() {
     super.initState();
-    _pageController = PageController();
+    _pageController = PageController(initialPage: widget.initialIndex);
     _pageController.addListener(_onPageScroll);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ReelsBloc>().add(LoadReelsEvent());
@@ -97,10 +100,10 @@ class _ReelsPageState extends State<ReelsPage> {
         }
 
         if (state is! ReelsLoadedState || state.reels.isEmpty) {
-          return const _DarkScaffold(
+          return  _DarkScaffold(
             child: _ReelsMessage(
               icon: Iconsax.video,
-              message: 'No reels available right now.',
+              message: 'no_reels_available'.tr,
             ),
           );
         }
@@ -334,6 +337,7 @@ class _ReelView extends StatefulWidget {
 class _ReelViewState extends State<_ReelView>
     with SingleTickerProviderStateMixin {
   bool _uiVisible = true;
+  final GlobalKey<_ActionsRailState> _actionsKey = GlobalKey<_ActionsRailState>();
   late final AnimationController _discCtrl;
 
   @override
@@ -360,15 +364,8 @@ class _ReelViewState extends State<_ReelView>
     return GestureDetector(
       onTap: _toggleUI,
       onDoubleTap: () {
-        // TODO: send like
-        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('❤️ Liked'),
-            duration: Duration(milliseconds: 600),
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        // Use the same reaction flow as the actions rail
+        _actionsKey.currentState?.triggerReactionToggle();
       },
       child: Stack(
         fit: StackFit.expand,
@@ -431,6 +428,7 @@ class _ReelViewState extends State<_ReelView>
                   18 + MediaQuery.of(context).padding.bottom,
                 ),
                 child: _ActionsRail(
+                  key: _actionsKey,
                   post: p,
                   discController: _discCtrl,
                   mediaResolver: mediaResolver,
@@ -929,10 +927,11 @@ class _CaptionAndOwnerState extends State<_CaptionAndOwner> {
 
 class _ActionsRail extends StatefulWidget {
   const _ActionsRail({
+    Key? key,
     required this.post,
     required this.discController,
     required this.mediaResolver,
-  });
+  }) : super(key: key);
 
   final Post post;
   final AnimationController discController;
@@ -957,6 +956,15 @@ class _ActionsRailState extends State<_ActionsRail> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _reelsService = ReelsManagementApiService(context.read<ApiClient>());
+  }
+
+  @override
+  void didUpdateWidget(covariant _ActionsRail oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.post != widget.post) {
+      // Keep local state in sync when parent provides an updated post
+      _currentPost = widget.post;
+    }
   }
 
   void _showReactionsPicker() {
@@ -1078,10 +1086,14 @@ class _ActionsRailState extends State<_ActionsRail> {
     }
   }
 
+  // Exposed for parent (e.g., double-tap on the video) to trigger the same flow
+  Future<void> triggerReactionToggle() => _handleReaction();
+
   void _showComments() {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      useSafeArea: false,
       backgroundColor: Colors.transparent,
       builder: (context) => CommentsBottomSheet(
         postId: _currentPost.id,

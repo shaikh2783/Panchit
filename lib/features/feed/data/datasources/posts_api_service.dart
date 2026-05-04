@@ -7,6 +7,7 @@ import 'package:snginepro/features/feed/data/models/story.dart';
 import 'package:snginepro/features/feed/data/models/upload_file_data.dart';
 import 'package:http_parser/http_parser.dart' as http_parser;
 import 'package:snginepro/main.dart';
+import 'package:flutter/foundation.dart';
 
 // Internal representation of an upload attempt permutation
 class _UploadAttempt {
@@ -27,13 +28,19 @@ class PostsApiService {
 
   final ApiClient _client;
 
-  Future<PostsResponse> fetchNewsfeed({int limit = 10, int offset = 0}) async {
+  Future<PostsResponse> fetchNewsfeed({
+    int limit = 10,
+    int offset = 0,
+    String type = 'newsfeed',
+    String includeAds = '1',
+  }) async {
     final response = await _client.get(
       configCfgP('newsfeed'),
       queryParameters: {
         'limit': '$limit',
         'offset': '$offset',
-        'include_ads': '1',
+        'type': type,
+        'include_ads': includeAds,
       },
     );
 
@@ -66,8 +73,7 @@ class PostsApiService {
         final oldest = postsResponse.posts.last;
         final newest = postsResponse.posts.first;
       }
-    } else {
-    }
+    } else {}
 
     return postsResponse;
   }
@@ -78,7 +84,6 @@ class PostsApiService {
     int limit = 20,
     int offset = 0,
   }) async {
-
     // Use the dedicated endpoint with user_id parameter
     final response = await _client.get(
       configCfgP('user_posts'),
@@ -90,8 +95,7 @@ class PostsApiService {
       },
     );
 
-    if (response['data'] != null && response['data']['posts'] != null) {
-    }
+    if (response['data'] != null && response['data']['posts'] != null) {}
 
     final postsResponse = PostsResponse.fromJson(response);
     if (!postsResponse.isSuccess) {
@@ -102,8 +106,7 @@ class PostsApiService {
     }
 
     if (postsResponse.posts.isNotEmpty) {
-    } else {
-    }
+    } else {}
 
     return postsResponse;
   }
@@ -114,7 +117,6 @@ class PostsApiService {
     int limit = 20,
     int offset = 0,
   }) async {
-
     final response = await _client.get(
       '/data/groups/posts',
       queryParameters: {
@@ -124,8 +126,7 @@ class PostsApiService {
       },
     );
 
-    if (response['data'] != null && response['data']['posts'] != null) {
-    }
+    if (response['data'] != null && response['data']['posts'] != null) {}
 
     final postsResponse = PostsResponse.fromJson(
       response,
@@ -139,8 +140,7 @@ class PostsApiService {
     }
 
     if (postsResponse.posts.isNotEmpty) {
-    } else {
-    }
+    } else {}
 
     return postsResponse;
   }
@@ -150,14 +150,10 @@ class PostsApiService {
     int limit = 20,
     int offset = 0,
   }) async {
-
     // Use relative path; AppConfig will prefix with apiBasePath
     final response = await _client.get(
       '/data/posts/saved',
-      queryParameters: {
-        'limit': limit.toString(),
-        'offset': offset.toString(),
-      },
+      queryParameters: {'limit': limit.toString(), 'offset': offset.toString()},
     );
 
     // The saved posts endpoint should return the same structure as newsfeed/user posts
@@ -174,24 +170,16 @@ class PostsApiService {
     }
 
     if (postsResponse.posts.isNotEmpty) {
-    } else {
-    }
+    } else {}
 
     return postsResponse;
   }
 
   /// Fetch user's memories posts
-  Future<PostsResponse> fetchMemories({
-    int limit = 20,
-    int offset = 0,
-  }) async {
-
+  Future<PostsResponse> fetchMemories({int limit = 20, int offset = 0}) async {
     final response = await _client.get(
       '/data/posts/memories',
-      queryParameters: {
-        'limit': limit.toString(),
-        'offset': offset.toString(),
-      },
+      queryParameters: {'limit': limit.toString(), 'offset': offset.toString()},
     );
 
     final postsResponse = PostsResponse.fromJson(
@@ -207,8 +195,7 @@ class PostsApiService {
     }
 
     if (postsResponse.posts.isNotEmpty) {
-    } else {
-    }
+    } else {}
 
     return postsResponse;
   }
@@ -218,13 +205,9 @@ class PostsApiService {
     int limit = 20,
     int offset = 0,
   }) async {
-
     final response = await _client.get(
       '/data/posts/scheduled',
-      queryParameters: {
-        'limit': limit.toString(),
-        'offset': offset.toString(),
-      },
+      queryParameters: {'limit': limit.toString(), 'offset': offset.toString()},
     );
 
     final postsResponse = PostsResponse.fromJson(
@@ -240,8 +223,7 @@ class PostsApiService {
     }
 
     if (postsResponse.posts.isNotEmpty) {
-    } else {
-    }
+    } else {}
 
     return postsResponse;
   }
@@ -252,7 +234,6 @@ class PostsApiService {
     int offset = 0,
     String? country,
   }) async {
-
     final response = await _client.get(
       '/data/watch',
       queryParameters: {
@@ -275,15 +256,13 @@ class PostsApiService {
     }
 
     if (postsResponse.posts.isNotEmpty) {
-    } else {
-    }
+    } else {}
 
     return postsResponse;
   }
 
   /// Fetch a single post by ID
   Future<Map<String, dynamic>> fetchPost(int postId) async {
-
     final response = await _client.get(
       configCfgP('posts_get'),
       queryParameters: {'post_id': '$postId'},
@@ -302,6 +281,28 @@ class PostsApiService {
     }
 
     return data as Map<String, dynamic>;
+  }
+
+  /// Purchase/unlock a paid post
+  Future<Map<String, dynamic>> purchasePaidPost(int postId) async {
+    final response = await _client.post(
+      '/data/wallet/paid-post',
+      body: {'post_id': postId},
+    );
+
+    if (response['status'] != 'success') {
+      throw ApiException(
+        response['message'] ?? 'Failed to purchase paid post',
+        details: response,
+      );
+    }
+
+    final data = response['data'];
+    if (data is Map<String, dynamic>) {
+      return data;
+    }
+
+    return const {};
   }
 
   Future<void> reactToPost(int postId, String reaction) async {
@@ -326,7 +327,6 @@ class PostsApiService {
             .toList();
       }
     }
-
     if (data is List) {
       return data.map((storyData) => Story.fromJson(storyData)).toList();
     }
@@ -368,7 +368,6 @@ class PostsApiService {
       for (final attempt in attempts) {
         attemptNum++;
         try {
-
           // Build minimal body as per new server docs
           final body = <String, String>{'type': attempt.typeValue};
 
@@ -399,8 +398,8 @@ class PostsApiService {
               meta: data['meta'], // Additional metadata
             );
           } else {
-
-            if (response.containsKey('errors'));
+            // Log diagnostic info for failed attempt
+            if (response.containsKey('errors')) {}
           }
         } catch (e) {
           if (e is ApiException) {
@@ -412,7 +411,6 @@ class PostsApiService {
           }
         }
       }
-
 
       // If we reach here, all attempts failed
       if (lastError != null) throw lastError;
@@ -591,8 +589,7 @@ class PostsApiService {
         if (createResponse.isSuccess) {
           return createResponse;
         }
-      } catch (e) {
-      }
+      } catch (e) {}
 
       // Try endpoint 2: publisher (sometimes used for group posts)
       try {
@@ -605,8 +602,7 @@ class PostsApiService {
         if (createResponse.isSuccess) {
           return createResponse;
         }
-      } catch (e) {
-      }
+      } catch (e) {}
     }
 
     // Fall back to main endpoint

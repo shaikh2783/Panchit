@@ -12,6 +12,7 @@ import 'package:snginepro/core/models/country.dart';
 import 'package:snginepro/core/models/language.dart';
 import 'package:snginepro/core/services/general_data_service.dart';
 import 'package:snginepro/core/network/api_client.dart';
+import '../../../../core/utils/html_decoder.dart';
 import 'package:intl/intl.dart';
 
 class CreateEventPage extends StatefulWidget {
@@ -274,7 +275,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     items: _categories.map((category) {
                       return DropdownMenuItem(
                         value: category,
-                        child: Text(category.categoryName),
+                        child: Text(HtmlDecoder.decode(category.categoryName)),
                       );
                     }).toList(),
                     onChanged: (value) {

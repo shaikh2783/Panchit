@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart';
 
 /// سكريبت اختبار تتابع البث المباشر - نفس curl commands
 class LiveStreamTestScript {

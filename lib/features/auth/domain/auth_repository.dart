@@ -61,4 +61,30 @@ class AuthRepository {
       deviceType: deviceType,
     );
   }
+
+  Future<AuthResponse> signInWithApple({
+    required String appleId,
+    String? email,
+    String? firstName,
+    String? lastName,
+    String? identityToken,
+    String deviceType = 'A',
+    String? deviceOsVersion,
+    String? deviceName,
+  }) {
+    return _apiService.signInWithApple(
+      appleId: appleId,
+      email: email,
+      firstName: firstName,
+      lastName: lastName,
+      identityToken: identityToken,
+      deviceType: deviceType,
+      deviceOsVersion: deviceOsVersion,
+      deviceName: deviceName,
+    );
+  }
+
+  Future<Map<String, dynamic>> fetchCurrentUserSummary() {
+    return _apiService.fetchCurrentUserSummary();
+  }
 }

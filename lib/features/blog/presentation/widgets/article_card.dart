@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:snginepro/core/utils/html_decoder.dart';
 import '../../../../core/theme/ui_constants.dart';
 import '../../data/models/blog_post.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -113,7 +114,7 @@ class ArticleCard extends StatelessWidget {
                         Icon(Iconsax.category_2_copy, size: 12, color: Colors.white),
                         const SizedBox(width: 4),
                         Text(
-                          post.categoryName,
+                          HtmlDecoder.decode(post.categoryName),
                           style: const TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.w600,

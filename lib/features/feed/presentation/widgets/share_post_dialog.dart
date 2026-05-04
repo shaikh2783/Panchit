@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../domain/share_repository.dart';
 import '../../data/models/post.dart';
+import '../../../../main.dart' show cfgP;
 
 /// Dialog لاختيار نوع المشاركة
 class SharePostDialog extends StatefulWidget {
@@ -167,6 +171,187 @@ class _SharePostDialogState extends State<SharePostDialog> {
     }
   }
 
+  /// مشاركة الرابط على التطبيقات الخارجية
+  Future<void> _shareExternal() async {
+    try {
+      // بناء رابط المنشور
+      final postUrl = '${cfgP.first['w1']}/posts/${widget.post.id}';
+      
+      // نص المشاركة
+      String shareText = widget.post.text.isNotEmpty 
+          ? '${widget.post.text}\n\n$postUrl' 
+          : postUrl;
+      
+      // استخدام share_plus للمشاركة
+      await Share.share(
+        shareText,
+        subject: 'share_post_subject'.tr,
+      );
+      
+      if (mounted) {
+        Navigator.of(context).pop();
+        Get.snackbar(
+          'success_title'.tr,
+          'share_external_success'.tr,
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        Get.snackbar(
+          'error_title'.tr,
+          'share_external_error'.tr,
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    }
+  }
+
+  /// مشاركة على WhatsApp
+  Future<void> _shareOnWhatsApp() async {
+    try {
+      final postUrl = '${cfgP.first['w1']}/posts/${widget.post.id}';
+      final shareText = widget.post.text.isNotEmpty 
+          ? '${widget.post.text}\n\n$postUrl' 
+          : postUrl;
+      
+      final whatsappUrl = Uri.parse('whatsapp://send?text=${Uri.encodeComponent(shareText)}');
+      
+      if (await canLaunchUrl(whatsappUrl)) {
+        await launchUrl(whatsappUrl);
+        if (mounted) Navigator.of(context).pop();
+      } else {
+        throw Exception('WhatsApp not installed');
+      }
+    } catch (e) {
+      if (mounted) {
+        Get.snackbar(
+          'error_title'.tr,
+          'WhatsApp not installed',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    }
+  }
+
+  /// مشاركة على Telegram
+  Future<void> _shareOnTelegram() async {
+    try {
+      final postUrl = '${cfgP.first['w1']}/posts/${widget.post.id}';
+      final shareText = widget.post.text.isNotEmpty 
+          ? widget.post.text
+          : 'Check this out!';
+      
+      final telegramUrl = Uri.parse('https://t.me/share/url?url=${Uri.encodeComponent(postUrl)}&text=${Uri.encodeComponent(shareText)}');
+      
+      if (await canLaunchUrl(telegramUrl)) {
+        await launchUrl(telegramUrl, mode: LaunchMode.externalApplication);
+        if (mounted) Navigator.of(context).pop();
+      } else {
+        throw Exception('Telegram not installed');
+      }
+    } catch (e) {
+      if (mounted) {
+        Get.snackbar(
+          'error_title'.tr,
+          'Telegram not installed',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    }
+  }
+
+  /// مشاركة على Facebook
+  Future<void> _shareOnFacebook() async {
+    try {
+      final postUrl = '${cfgP.first['w1']}/posts/${widget.post.id}';
+      final fbUrl = Uri.parse('https://www.facebook.com/sharer/sharer.php?u=${Uri.encodeComponent(postUrl)}');
+      
+      if (await canLaunchUrl(fbUrl)) {
+        await launchUrl(fbUrl, mode: LaunchMode.externalApplication);
+        if (mounted) Navigator.of(context).pop();
+      } else {
+        throw Exception('Cannot open Facebook');
+      }
+    } catch (e) {
+      if (mounted) {
+        Get.snackbar(
+          'error_title'.tr,
+          'Cannot share to Facebook',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    }
+  }
+
+  /// مشاركة على Twitter/X
+  Future<void> _shareOnTwitter() async {
+    try {
+      final postUrl = '${cfgP.first['w1']}/posts/${widget.post.id}';
+      String shareText = widget.post.text.isNotEmpty 
+          ? widget.post.text 
+          : 'Check this out!';
+      
+      final twitterUrl = Uri.parse('https://twitter.com/intent/tweet?text=${Uri.encodeComponent(shareText)}&url=${Uri.encodeComponent(postUrl)}');
+      
+      if (await canLaunchUrl(twitterUrl)) {
+        await launchUrl(twitterUrl, mode: LaunchMode.externalApplication);
+        if (mounted) Navigator.of(context).pop();
+      } else {
+        throw Exception('Cannot open Twitter');
+      }
+    } catch (e) {
+      if (mounted) {
+        Get.snackbar(
+          'error_title'.tr,
+          'Cannot share to Twitter',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    }
+  }
+
+  /// مشاركة عبر SMS
+  Future<void> _shareViaSMS() async {
+    try {
+      final postUrl = '${cfgP.first['w1']}/posts/${widget.post.id}';
+      String shareText = widget.post.text.isNotEmpty 
+          ? '${widget.post.text}\n\n$postUrl' 
+          : postUrl;
+      
+      final smsUrl = Uri.parse('sms:?body=${Uri.encodeComponent(shareText)}');
+      
+      if (await canLaunchUrl(smsUrl)) {
+        await launchUrl(smsUrl);
+        if (mounted) Navigator.of(context).pop();
+      } else {
+        throw Exception('Cannot open SMS');
+      }
+    } catch (e) {
+      if (mounted) {
+        Get.snackbar(
+          'error_title'.tr,
+          'Cannot send SMS',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -257,6 +442,11 @@ class _SharePostDialogState extends State<SharePostDialog> {
                       isSelected: _selectedShareType == 'event',
                       onTap: () => setState(() => _selectedShareType = 'event'),
                     ),
+               
+
+                    // قسم المشاركة على التطبيقات الاجتماعية
+                    const SizedBox(height: 12),
+                
 
                     // اختيار الصفحة إذا كان النوع صفحة
                     if (_selectedShareType == 'page') ...[
@@ -296,6 +486,15 @@ class _SharePostDialogState extends State<SharePostDialog> {
                         ),
                       ),
                     ),
+                    SizedBox(height: 10,),
+                        Text(
+                      'share_on_social_media'.tr,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    _buildSocialMediaIcons(theme),
                   ],
                 ),
               ),
@@ -335,6 +534,52 @@ class _SharePostDialogState extends State<SharePostDialog> {
           ],
         ),
       ),
+    );
+  }
+
+  /// بناء أيقونات التطبيقات الاجتماعية
+  Widget _buildSocialMediaIcons(ThemeData theme) {
+    return Wrap(
+      spacing: Get.width *0.1,
+      runSpacing: 12,
+      children: [
+        _SocialMediaButton(
+          icon: Iconsax.whatsapp,
+          label: 'WhatsApp',
+          color: const Color(0xFF25D366),
+          onTap: _shareOnWhatsApp,
+        ),
+        _SocialMediaButton(
+          icon: Iconsax.facebook,
+          label: 'Facebook',
+          color: const Color(0xFF1877F2),
+          onTap: _shareOnFacebook,
+        ),
+        _SocialMediaButton(
+          icon: Icons.telegram,
+          label: 'Telegram',
+          color: const Color(0xFF0088CC),
+          onTap: _shareOnTelegram,
+        ),
+        _SocialMediaButton(
+          icon: FontAwesomeIcons.x,
+          label: 'X',
+          color: Colors.black,
+          onTap: _shareOnTwitter,
+        ),
+        _SocialMediaButton(
+          icon: Iconsax.sms,
+          label: 'SMS',
+          color: Colors.green,
+          onTap: _shareViaSMS,
+        ),
+        _SocialMediaButton(
+          icon: Iconsax.more,
+          label: 'More',
+          color: theme.colorScheme.primary,
+          onTap: _shareExternal,
+        ),
+      ],
     );
   }
 
@@ -441,10 +686,12 @@ class _ShareTypeOption extends StatelessWidget {
     required this.title,
     required this.isSelected,
     required this.onTap,
+    this.subtitle,
   });
 
   final IconData icon;
   final String title;
+  final String? subtitle;
   final bool isSelected;
   final VoidCallback onTap;
 
@@ -479,12 +726,26 @@ class _ShareTypeOption extends StatelessWidget {
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: Text(
-                title,
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                  color: isSelected ? theme.colorScheme.primary : null,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      color: isSelected ? theme.colorScheme.primary : null,
+                    ),
+                  ),
+                  if (subtitle != null) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle!,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.textTheme.bodySmall?.color?.withOpacity(0.7),
+                      ),
+                    ),
+                  ],
+                ],
               ),
             ),
             if (isSelected)
@@ -492,6 +753,70 @@ class _ShareTypeOption extends StatelessWidget {
                 Icons.check_circle,
                 color: theme.colorScheme.primary,
               ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// زر التطبيق الاجتماعي
+class _SocialMediaButton extends StatelessWidget {
+  const _SocialMediaButton({
+    required this.icon,
+    required this.label,
+    required this.color,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final Color color;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        width: 80,
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: color.withOpacity(0.3),
+            width: 1,
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: color,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon,
+                color: Colors.white,
+                size: 24,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: color,
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ],
         ),
       ),

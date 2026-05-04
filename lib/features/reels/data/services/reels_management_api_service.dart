@@ -1,5 +1,6 @@
 import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/main.dart' show configCfgP;
+import 'package:flutter/foundation.dart';
 
 /// خدمة إدارة الريلز - تفاعل، حفظ، مشاهدة، إلخ
 class ReelsManagementApiService {
@@ -27,6 +28,7 @@ class ReelsManagementApiService {
         },
       );
 
+
       if (response['status'] == 'success') {
         return response;
       } else {
@@ -46,6 +48,7 @@ class ReelsManagementApiService {
     required String action, // save_post, unsave_post, etc.
   }) async {
     try {
+
       final response = await _apiClient.post(
         configCfgP('post_manage'), // نفس API إدارة المنشورات
         body: {
@@ -53,6 +56,7 @@ class ReelsManagementApiService {
           'action': action,
         },
       );
+
 
       if (response['status'] == 'success') {
         return response;
@@ -70,12 +74,14 @@ class ReelsManagementApiService {
   /// إبلاغ عن مشاهدة الريل
   Future<void> recordView(int reelId) async {
     try {
+      
       await _apiClient.post(
         configCfgP('reel_view'),
         body: {
           'reel_id': reelId,
         },
       );
+      
     } catch (e) {
       // لا نرمي الخطأ لأن تسجيل المشاهدة ليس عملية حرجة
     }
