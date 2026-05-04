@@ -38,6 +38,12 @@
       "languageVersion": "3.4"
     },
     {
+      "name": "audio_session",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/audio_session-0.1.25",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
       "name": "audioplayers",
       "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/audioplayers-6.5.1",
       "packageUri": "lib/",
@@ -128,6 +134,12 @@
       "languageVersion": "3.8"
     },
     {
+      "name": "chewie",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/chewie-1.13.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.8"
+    },
+    {
       "name": "cli_util",
       "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/cli_util-0.4.2",
       "packageUri": "lib/",
@@ -176,6 +188,18 @@
       "languageVersion": "3.1"
     },
     {
+      "name": "dart_openai",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/dart_openai-5.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "dbus",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/dbus-0.7.11",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "dio",
       "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/dio-5.9.0",
       "packageUri": "lib/",
@@ -194,6 +218,12 @@
       "languageVersion": "3.7"
     },
     {
+      "name": "emoji_picker_flutter",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/emoji_picker_flutter-4.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
       "name": "encrypt",
       "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/encrypt-5.0.3",
       "packageUri": "lib/",
@@ -210,6 +240,18 @@
       "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/fake_async-1.3.3",
       "packageUri": "lib/",
       "languageVersion": "3.3"
+    },
+    {
+      "name": "fetch_api",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/fetch_api-2.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
+    },
+    {
+      "name": "fetch_client",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/fetch_client-1.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
     },
     {
       "name": "ffi",
@@ -344,6 +386,12 @@
       "languageVersion": "3.5"
     },
     {
+      "name": "flutter_markdown",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/flutter_markdown-0.7.7+1",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
       "name": "flutter_native_splash",
       "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/flutter_native_splash-2.4.7",
       "packageUri": "lib/",
@@ -384,6 +432,60 @@
       "rootUri": "file:///Users/shaikhasfak/flutter/packages/flutter_web_plugins",
       "packageUri": "lib/",
       "languageVersion": "3.8"
+    },
+    {
+      "name": "flutter_widget_from_html",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/flutter_widget_from_html-0.15.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "flutter_widget_from_html_core",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/flutter_widget_from_html_core-0.15.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "font_awesome_flutter",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/font_awesome_flutter-10.12.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.9"
+    },
+    {
+      "name": "fwfh_cached_network_image",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/fwfh_cached_network_image-0.14.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "fwfh_chewie",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/fwfh_chewie-0.14.8",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "fwfh_just_audio",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/fwfh_just_audio-0.15.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "fwfh_svg",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/fwfh_svg-0.8.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "fwfh_url_launcher",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/fwfh_url_launcher-0.9.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "fwfh_webview",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/fwfh_webview-0.15.6",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
     },
     {
       "name": "get",
@@ -447,7 +549,7 @@
     },
     {
       "name": "http",
-      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/http-1.5.0",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/http-1.6.0",
       "packageUri": "lib/",
       "languageVersion": "3.4"
     },
@@ -531,15 +633,33 @@
     },
     {
       "name": "js",
-      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/js-0.7.2",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/js-0.6.7",
       "packageUri": "lib/",
-      "languageVersion": "3.7"
+      "languageVersion": "2.19"
     },
     {
       "name": "json_annotation",
       "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/json_annotation-4.9.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
+    },
+    {
+      "name": "just_audio",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/just_audio-0.9.46",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "just_audio_platform_interface",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/just_audio_platform_interface-4.6.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "just_audio_web",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/just_audio_web-0.4.16",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
     },
     {
       "name": "leak_tracker",
@@ -572,10 +692,22 @@
       "languageVersion": "2.18"
     },
     {
+      "name": "logging",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/logging-1.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
       "name": "lucide_icons_flutter",
       "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/lucide_icons_flutter-3.1.6",
       "packageUri": "lib/",
       "languageVersion": "2.17"
+    },
+    {
+      "name": "markdown",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/markdown-7.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
     },
     {
       "name": "matcher",
@@ -618,6 +750,18 @@
       "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/onesignal_flutter-5.3.4",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "package_info_plus",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/package_info_plus-9.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "package_info_plus_platform_interface",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/package_info_plus_platform_interface-3.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
     },
     {
       "name": "path",
@@ -806,6 +950,18 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "share_plus",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/share_plus-12.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "share_plus_platform_interface",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/share_plus_platform_interface-6.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
       "name": "shared_preferences",
       "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/shared_preferences-2.5.3",
       "packageUri": "lib/",
@@ -844,6 +1000,24 @@
     {
       "name": "shared_preferences_windows",
       "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/shared_preferences_windows-2.4.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "sign_in_with_apple",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/sign_in_with_apple-7.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "sign_in_with_apple_platform_interface",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/sign_in_with_apple_platform_interface-2.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "sign_in_with_apple_web",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/sign_in_with_apple_web-3.0.0",
       "packageUri": "lib/",
       "languageVersion": "3.3"
     },
@@ -1052,6 +1226,12 @@
       "languageVersion": "3.6"
     },
     {
+      "name": "vimeo_video_player",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/vimeo_video_player-1.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
       "name": "visibility_detector",
       "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/visibility_detector-0.4.0+2",
       "packageUri": "lib/",
@@ -1062,6 +1242,18 @@
       "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/vm_service-15.0.2",
       "packageUri": "lib/",
       "languageVersion": "3.5"
+    },
+    {
+      "name": "wakelock_plus",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/wakelock_plus-1.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "wakelock_plus_platform_interface",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/wakelock_plus_platform_interface-1.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
     },
     {
       "name": "web",
@@ -1118,14 +1310,8 @@
       "languageVersion": "3.4"
     },
     {
-      "name": "youtube_player_iframe",
-      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/youtube_player_iframe-5.2.2",
-      "packageUri": "lib/",
-      "languageVersion": "3.5"
-    },
-    {
-      "name": "youtube_player_iframe_web",
-      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/youtube_player_iframe_web-3.1.2",
+      "name": "youtube_player_flutter",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/youtube_player_flutter-9.1.3",
       "packageUri": "lib/",
       "languageVersion": "3.5"
     },
