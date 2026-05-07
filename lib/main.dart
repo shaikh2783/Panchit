@@ -10,6 +10,7 @@ import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/core/services/reactions_api_service.dart';
 import 'package:snginepro/core/services/reactions_service.dart';
 import 'package:snginepro/core/services/notification_navigation_service.dart';
+import 'package:snginepro/core/services/onesignal_service.dart';
 import 'package:snginepro/features/messenger/presentation/services/global_call_service.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:snginepro/features/settings/data/models/seeting.dart';
@@ -164,7 +165,10 @@ void _setupNotificationHandlers() {
   OneSignal.User.pushSubscription.addObserver((state) {
     final playerId = state.current.id;
     if (playerId != null && playerId.isNotEmpty) {
-      // يمكن حفظ Player ID هنا للاستخدام لاحقاً
+      if (globalApiClient.hasAuthToken) {
+        final oneSignalService = OneSignalService(globalApiClient);
+        oneSignalService.updateOneSignalPlayerId(playerId);
+      }
     }
   });
 
@@ -204,6 +208,18 @@ void _setupNotificationHandlers() {
   OneSignal.Notifications.addForegroundWillDisplayListener((event) {
     // Display notification normally (don't prevent default display)
     // If you want to prevent notification display in foreground, uncomment: event.preventDefault();
+    final additional = event.notification.additionalData;
+    final launchUrl = event.notification.launchUrl;
+    final data = <String, dynamic>{
+      if (additional != null) ...additional,
+      if (launchUrl != null && launchUrl.isNotEmpty) 'url': launchUrl,
+    };
+
+    NotificationNavigationService.handleForegroundNotification(
+      title: event.notification.title,
+      body: event.notification.body,
+      data: data,
+    );
   });
 }
 

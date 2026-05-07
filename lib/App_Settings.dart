@@ -70,7 +70,7 @@ class AppSettings {
 
   /// App ID الخاص بـ OneSignal
   /// احصل عليه من: https://app.onesignal.com/ > Settings > Keys & IDs
-  static const String oneSignalAppId = '0dc8d96f-0113-4a2b-ab63-e0cd64d751c7';
+  static const String oneSignalAppId = '4f06c127-3bc9-48be-b08e-fce0f8907d65';
 
   // ==================== إعدادات AdMob (الإعلانات) ====================
   // احصل على App IDs و Ad Unit IDs من: https://apps.admob.com/
@@ -112,7 +112,8 @@ class AppSettings {
 
   /// Reversed Client ID لـ iOS (من GoogleService-Info.plist)
   /// مثال: "com.googleusercontent.apps.123456789-abc123def456"
-  static const String googleReversedClientIdIOS = 'YOUR_REVERSED_CLIENT_ID';
+  static const String googleReversedClientIdIOS =
+      'com.googleusercontent.apps.655828953502-f2sds4bbkom2cbslkctolp3dh6r3uaco';
 
   // ==================== إعدادات الذكاء الاصطناعي (AI) ====================
 
@@ -121,7 +122,7 @@ class AppSettings {
 
   /// مفتاح API للذكاء الاصطناعي (OpenAI, Gemini, إلخ)
   /// احصل عليه من: https://platform.openai.com/api-keys
-  static const String aiApiKey = 'YOUR_OPENAI_API_KEY';
+  static const String aiApiKey = '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';
 
   /// نموذج الذكاء الاصطناعي المستخدم
   /// أمثلة: 'gpt-4', 'gpt-3.5-turbo', 'gemini-pro'
@@ -475,7 +476,7 @@ class AppSettings {
   /// التحقق من اكتمال إعدادات OneSignal
   static bool get isOneSignalConfigured {
     return oneSignalAppId.isNotEmpty &&
-        oneSignalAppId != 'YOUR_ONESIGNAL_APP_ID';
+        oneSignalAppId != '4f06c127-3bc9-48be-b08e-fce0f8907d65';
   }
 
   /// التحقق من صحة المبلغ للشحن

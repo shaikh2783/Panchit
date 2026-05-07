@@ -35,7 +35,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
 
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: ['email', 'profile', 'openid'],
-
+    clientId: defaultTargetPlatform == TargetPlatform.iOS
+        ? AppSettings.googleClientIdIOS
+        : null,
   );
 
   late AnimationController _backgroundController;
@@ -172,7 +174,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     try {
       // تسجيل الخروج أولاً لإظهار قائمة الحسابات في كل مرة
       await _googleSignIn.signOut();
-      
+
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
         // User cancelled sign in
@@ -182,20 +184,25 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       // الحصول على ID Token / Server Auth Code من Google
       final googleAuth = await googleUser.authentication;
       final idToken = googleAuth.idToken;
-      final serverAuthCode = googleUser.serverAuthCode; // قد يكون موجود بدلاً من idToken
-      
-      
+      final serverAuthCode = googleUser.serverAuthCode;
+
+      if ((idToken == null || idToken.isEmpty) &&
+          (serverAuthCode == null || serverAuthCode.isEmpty)) {
+        throw PlatformException(
+          code: 'google_sign_in_missing_token',
+          message: 'Google Sign-In did not return an ID token on this device.',
+        );
+      }
+
       if (!mounted) return;
       final authNotifier = context.read<AuthNotifier>();
-      print('idToken: ${googleUser.email}');
-      print('serverAuthCode: $serverAuthCode');
       final AuthResponse? response = await authNotifier.signInWithGoogle(
         googleId: googleUser.id,
         email: googleUser.email,
         firstName: googleUser.displayName?.split(' ').first,
         lastName: googleUser.displayName?.split(' ').skip(1).join(' '),
         picture: googleUser.photoUrl,
-        idToken: idToken ?? serverAuthCode, // استخدم serverAuthCode إذا لم يكن idToken متاح
+        idToken: idToken ?? serverAuthCode,
         deviceType: _deviceType,
       );
 
@@ -483,19 +490,22 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                 _buildLoginButton(isLoading),
                                 const SizedBox(height: 20),
 
-                                if (AppSettings.enableGoogleSignIn &&
-                                    defaultTargetPlatform ==
-                                        TargetPlatform.android) ...[
-                                  _buildDivider(),
-                                  const SizedBox(height: 20),
-                                  _buildGoogleSignInButton(isLoading),
-                                  const SizedBox(height: 20),
-                                ] else if (isIOS) ...[
-                                  _buildDivider(),
-                                  const SizedBox(height: 20),
-                                  _buildAppleSignInButton(isLoading),
-                                  const SizedBox(height: 20),
-                                ],
+                                if (defaultTargetPlatform == TargetPlatform.android &&
+                                      AppSettings.enableGoogleSignIn) ...[
+                                    _buildDivider(),
+                                    const SizedBox(height: 20),
+                                    _buildGoogleSignInButton(isLoading),
+                                    const SizedBox(height: 20),
+                                  ] else if (isIOS) ...[
+                                    _buildDivider(),
+                                    const SizedBox(height: 20),
+                                    if (AppSettings.enableGoogleSignIn) ...[
+                                      _buildGoogleSignInButton(isLoading),
+                                      const SizedBox(height: 20),
+                                    ],
+                                    _buildAppleSignInButton(isLoading),
+                                    const SizedBox(height: 20),
+                                  ],
 
                                 // Footer
                                 _buildFooter(),
