@@ -33,6 +33,8 @@ class ApiClient {
     _authToken = token;
   }
 
+  bool get hasAuthToken => _authToken != null && _authToken!.isNotEmpty;
+
   Future<Map<String, dynamic>> post(
     String relativePath, {
     Map<String, dynamic>? body,

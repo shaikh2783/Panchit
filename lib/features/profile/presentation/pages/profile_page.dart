@@ -43,10 +43,10 @@ class ProfilePage extends StatefulWidget {
   final int? userId;
 
   const ProfilePage({super.key, this.username, this.userId})
-    : assert(
-        username != null || userId != null,
-        'Either username or userId must be provided',
-      );
+      : assert(
+  username != null || userId != null,
+  'Either username or userId must be provided',
+  );
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -74,7 +74,7 @@ class _ProfilePageState extends State<ProfilePage>
   final int _productsLimit = 20;
   String _productsSearchQuery = '';
   final TextEditingController _productsSearchController =
-      TextEditingController();
+  TextEditingController();
 
   @override
   void initState() {
@@ -287,19 +287,19 @@ class _ProfilePageState extends State<ProfilePage>
               ),
               actions: relationship.isSelf
                   ? [
-                      IconButton(
-                        icon: const Icon(Iconsax.edit),
-                        onPressed: () async {
-                          final result = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => ProfileEditPage(profile: profile),
-                            ),
-                          );
-                          if (result == true && mounted) _loadProfile();
-                        },
+                IconButton(
+                  icon: const Icon(Iconsax.edit),
+                  onPressed: () async {
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ProfileEditPage(profile: profile),
                       ),
-                    ]
+                    );
+                    if (result == true && mounted) _loadProfile();
+                  },
+                ),
+              ]
                   : null,
             ),
           ],
@@ -333,14 +333,13 @@ class _ProfilePageState extends State<ProfilePage>
 
   // Header
   Widget _buildHeader(
-    UserProfile profile,
-    ProfileRelationship relationship,
-    ProfileStats stats,
-  ) {
+      UserProfile profile,
+      ProfileRelationship relationship,
+      ProfileStats stats,
+      ) {
     final achievementTags = profile.achievementTags.isNotEmpty
         ? profile.achievementTags
         : (_profileData?.achievementTags ?? const <String>[]);
-
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -521,8 +520,8 @@ class _ProfilePageState extends State<ProfilePage>
                   if (systemSettings.isFriendsEnabled) {
                     statWidgets.add(
                       _buildHeaderStat(
-                        'profile_stat_friends'.tr,
-                        stats.friends,
+                          'profile_stat_friends'.tr,
+                          stats.friends,
                           onTap: () => _tabController.animateTo(5)
                       ),
                     );
@@ -531,8 +530,8 @@ class _ProfilePageState extends State<ProfilePage>
                   if (systemSettings.isFollowersEnabled) {
                     statWidgets.add(
                       _buildHeaderStat(
-                        'profile_stat_followers'.tr,
-                        stats.followers,
+                          'profile_stat_followers'.tr,
+                          stats.followers,
                           onTap: () => _tabController.animateTo(5)
                       ),
                     );
@@ -790,11 +789,11 @@ class _ProfilePageState extends State<ProfilePage>
                     builder: (context) => ReportContentPage(
                       contentType: ReportContentType.user,
                       contentId:
-                          _profileData?.profile.id ??
+                      _profileData?.profile.id ??
                           widget.userId?.toString() ??
                           '',
                       contentAuthor:
-                          _profileData?.profile.fullName ??
+                      _profileData?.profile.fullName ??
                           _profileData?.profile.username ??
                           widget.username ??
                           'User',
@@ -870,7 +869,7 @@ class _ProfilePageState extends State<ProfilePage>
       UserPreview otherUser=UserPreview(userId: userId, username: _profileData?.profile.username??"", firstName: _profileData?.profile.firstName??"",lastName: _profileData?.profile.lastName??"",avatar: _profileData?.profile.picture??"",isVerified: _profileData?.profile.isVerified??false,link: _profileData?.profile.socialLinks.website);
       // Navigate to chat page with the real conversation
       Get.to(
-        () => ChatPage(
+            () => ChatPage(
           conversationId: conversation?.conversationId??"0",
           otherUser: conversation?.otherUser??otherUser,
         ),
@@ -931,8 +930,8 @@ class _ProfilePageState extends State<ProfilePage>
         final resp = await service.unblockUser(userId: userId);
         final ok =
             (resp['status']?.toString() == 'success') ||
-            (resp['message']?.toString().toLowerCase().contains('unblocked') ??
-                false);
+                (resp['message']?.toString().toLowerCase().contains('unblocked') ??
+                    false);
         if (ok) {
           setState(() => _isBlocked = false);
           ScaffoldMessenger.of(context).showSnackBar(
@@ -956,8 +955,8 @@ class _ProfilePageState extends State<ProfilePage>
         final resp = await service.blockUser(userId: userId);
         final ok =
             (resp['status']?.toString() == 'success') ||
-            (resp['message']?.toString().toLowerCase().contains('blocked') ??
-                false);
+                (resp['message']?.toString().toLowerCase().contains('blocked') ??
+                    false);
         if (ok) {
           setState(() => _isBlocked = true);
           ScaffoldMessenger.of(context).showSnackBar(
@@ -1180,17 +1179,17 @@ class _ProfilePageState extends State<ProfilePage>
         : (_profileData?.achievementTags ?? const <String>[]);
     final hasWork =
         (profile.work.title?.isNotEmpty ?? false) ||
-        (profile.work.place?.isNotEmpty ?? false) ||
-        (profile.work.website?.isNotEmpty ?? false);
+            (profile.work.place?.isNotEmpty ?? false) ||
+            (profile.work.website?.isNotEmpty ?? false);
 
     final hasLocation =
         (profile.location.currentCity?.isNotEmpty ?? false) ||
-        (profile.location.hometown?.isNotEmpty ?? false);
+            (profile.location.hometown?.isNotEmpty ?? false);
 
     final hasEducation =
         (profile.education.school?.isNotEmpty ?? false) ||
-        (profile.education.major?.isNotEmpty ?? false) ||
-        (profile.education.classYear?.isNotEmpty ?? false);
+            (profile.education.major?.isNotEmpty ?? false) ||
+            (profile.education.classYear?.isNotEmpty ?? false);
 
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -1400,7 +1399,7 @@ class _ProfilePageState extends State<ProfilePage>
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
                     decoration:
-                        TextDecoration.none, // ✅ يمنع أي خط أصفر أو أزرق
+                    TextDecoration.none, // ✅ يمنع أي خط أصفر أو أزرق
                   ),
                 ),
               ],
@@ -1484,15 +1483,15 @@ class _ProfilePageState extends State<ProfilePage>
               prefixIcon: const Icon(Iconsax.search_normal),
               suffixIcon: _productsSearchQuery.isNotEmpty
                   ? IconButton(
-                      icon: const Icon(Icons.clear),
-                      onPressed: () {
-                        _productsSearchController.clear();
-                        setState(() {
-                          _productsSearchQuery = '';
-                        });
-                        _loadUserProducts(refresh: true);
-                      },
-                    )
+                icon: const Icon(Icons.clear),
+                onPressed: () {
+                  _productsSearchController.clear();
+                  setState(() {
+                    _productsSearchQuery = '';
+                  });
+                  _loadUserProducts(refresh: true);
+                },
+              )
                   : null,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -1619,9 +1618,9 @@ class _ProfilePageState extends State<ProfilePage>
                         color: Colors.grey[200],
                         image: thumb != null
                             ? DecorationImage(
-                                image: CachedNetworkImageProvider(thumb),
-                                fit: BoxFit.cover,
-                              )
+                          image: CachedNetworkImageProvider(thumb),
+                          fit: BoxFit.cover,
+                        )
                             : null,
                       ),
                       child: thumb == null
@@ -2651,12 +2650,12 @@ class _SubscriptionListTile extends StatelessWidget {
             : null,
         child: picture == null
             ? Icon(
-                subscription.nodeType == 'profile'
-                    ? Iconsax.user
-                    : subscription.nodeType == 'page'
-                    ? Iconsax.folder
-                    : Iconsax.people,
-              )
+          subscription.nodeType == 'profile'
+              ? Iconsax.user
+              : subscription.nodeType == 'page'
+              ? Iconsax.folder
+              : Iconsax.people,
+        )
             : null,
       ),
       title: Text(name),
@@ -2715,7 +2714,7 @@ class _UserPhotosGridState extends State<_UserPhotosGrid> {
 
   void _onScroll() {
     if (_scrollController.position.pixels >=
-            _scrollController.position.maxScrollExtent * 0.8 &&
+        _scrollController.position.maxScrollExtent * 0.8 &&
         !_isLoading &&
         _hasMore) {
       _loadPhotos();
@@ -2800,7 +2799,7 @@ class _UserPhotosGridState extends State<_UserPhotosGrid> {
               mainAxisSpacing: 6,
             ),
             itemCount:
-                _photos.length +
+            _photos.length +
                 (_isLoading ? 1 : 0) +
                 ((_hasMore && !_isLoading) ? 1 : 0),
             itemBuilder: (context, index) {
@@ -2856,7 +2855,7 @@ class _UserPhotosGridState extends State<_UserPhotosGrid> {
                               ).colorScheme.surfaceContainerHighest,
                             ),
                             errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
+                            const Icon(Icons.error),
                           ),
                         ),
                         if (photo.isBlurred)
@@ -2920,7 +2919,7 @@ class _UserAlbumsGridState extends State<_UserAlbumsGrid> {
 
   void _onScroll() {
     if (_scrollController.position.pixels >=
-            _scrollController.position.maxScrollExtent * 0.8 &&
+        _scrollController.position.maxScrollExtent * 0.8 &&
         !_isLoading &&
         _hasMore) {
       _loadAlbums();
@@ -3000,23 +2999,23 @@ class _UserAlbumsGridState extends State<_UserAlbumsGrid> {
                 Expanded(
                   child: album.cover != null
                       ? CachedNetworkImage(
-                          imageUrl: album.cover!,
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                          placeholder: (context, url) => Container(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.surfaceContainerHighest,
-                          ),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
-                        )
+                    imageUrl: album.cover!,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    placeholder: (context, url) => Container(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.surfaceContainerHighest,
+                    ),
+                    errorWidget: (context, url, error) =>
+                    const Icon(Icons.error),
+                  )
                       : Container(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.surfaceContainerHighest,
-                          child: const Icon(Iconsax.folder_2, size: 48),
-                        ),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.surfaceContainerHighest,
+                    child: const Icon(Iconsax.folder_2, size: 48),
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(12),
@@ -3102,7 +3101,7 @@ class _AlbumPhotosGridState extends State<_AlbumPhotosGrid> {
 
   void _onScroll() {
     if (_scrollController.position.pixels >=
-            _scrollController.position.maxScrollExtent * 0.8 &&
+        _scrollController.position.maxScrollExtent * 0.8 &&
         !_isLoading &&
         _hasMore) {
       _loadPhotos();
@@ -3188,7 +3187,7 @@ class _AlbumPhotosGridState extends State<_AlbumPhotosGrid> {
               mainAxisSpacing: 6,
             ),
             itemCount:
-                _photos.length +
+            _photos.length +
                 (_isLoading ? 1 : 0) +
                 ((_hasMore && !_isLoading) ? 1 : 0),
             itemBuilder: (context, index) {
@@ -3244,7 +3243,7 @@ class _AlbumPhotosGridState extends State<_AlbumPhotosGrid> {
                               ).colorScheme.surfaceContainerHighest,
                             ),
                             errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
+                            const Icon(Icons.error),
                           ),
                         ),
                         if (photo.isBlurred)
@@ -3335,7 +3334,7 @@ class _PhotoViewerPageState extends State<_PhotoViewerPage> {
                           child: CircularProgressIndicator(),
                         ),
                         errorWidget: (context, url, error) =>
-                            const Icon(Icons.error, color: Colors.white),
+                        const Icon(Icons.error, color: Colors.white),
                       ),
                     ),
                   ),
@@ -3555,7 +3554,7 @@ class _VideosTabContentState extends State<_VideosTabContent> {
       child: NotificationListener<ScrollNotification>(
         onNotification: (ScrollNotification scrollInfo) {
           if (scrollInfo.metrics.pixels >=
-                  scrollInfo.metrics.maxScrollExtent - 200 &&
+              scrollInfo.metrics.maxScrollExtent - 200 &&
               !_isLoading &&
               _hasMore) {
             _loadVideos();
@@ -3571,7 +3570,7 @@ class _VideosTabContentState extends State<_VideosTabContent> {
             childAspectRatio: 9 / 16,
           ),
           itemCount:
-              _videos.length + (_isLoading && _videos.isNotEmpty ? 1 : 0),
+          _videos.length + (_isLoading && _videos.isNotEmpty ? 1 : 0),
           itemBuilder: (context, index) {
             if (index == _videos.length) {
               return const Center(child: CircularProgressIndicator());

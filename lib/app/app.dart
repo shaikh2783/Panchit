@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart'
-    as GetTransitions;
+as GetTransitions;
 import 'dart:ui' show Locale;
 import 'package:provider/provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -98,10 +98,10 @@ class App extends StatelessWidget {
   const App({super.key, required this.sharedPreferences});
 
   final SharedPreferences sharedPreferences;
-  
+
   /// Global NavigatorKey للتحكم في الملاحة من الخارج (الإشعارات)
-  static final GlobalKey<NavigatorState> navigatorKey = 
-      GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> navigatorKey =
+  GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {

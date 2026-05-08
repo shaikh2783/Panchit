@@ -38,6 +38,7 @@ import 'package:snginepro/features/movies/presentation/pages/movies_list_page.da
 import 'package:snginepro/features/ai_chat/pages/ai_chat_page.dart';
 import 'package:snginepro/features/auth/presentation/pages/login_page.dart';
 import 'package:snginepro/features/competitions/presentation/pages/competitions_hub_page.dart';
+import 'package:snginepro/features/competitions/presentation/pages/my_competitions_page.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({super.key, this.onNavigateToTab});
@@ -157,172 +158,172 @@ class _MenuPageState extends State<MenuPage> {
             ),
 
             SizedBox(height: 20),
-if(false)
+            if(false)
 
-            Container(
-              margin: const EdgeInsets.only(bottom: 8),
-              child: GestureDetector(
-                onTap: () => _toggleSection('feed'),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 4,
-                      height: 20,
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFF64B5F6), Color(0xFF1E88E5)],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
+              Container(
+                margin: const EdgeInsets.only(bottom: 8),
+                child: GestureDetector(
+                  onTap: () => _toggleSection('feed'),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 4,
+                        height: 20,
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF64B5F6), Color(0xFF1E88E5)],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                          borderRadius: BorderRadius.circular(2),
                         ),
-                        borderRadius: BorderRadius.circular(2),
                       ),
-                    ),
 
-                    const SizedBox(width: 12),
-                    
-                    const Icon(
-                      Iconsax.home,
-                      size: 20,
-                      color: Color(0xFF1E88E5),
-                    ),
-                    const SizedBox(width: 8),
-                    
-                    Text(
-                      'feed'.tr,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                      const SizedBox(width: 12),
+
+                      const Icon(
+                        Iconsax.home,
+                        size: 20,
                         color: Color(0xFF1E88E5),
-                        letterSpacing: 0.5,
                       ),
-                    ),
-                    const Spacer(),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 2,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF1E88E5).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Text(
-                        '4',
-                        style: TextStyle(
-                          fontSize: 12,
+                      const SizedBox(width: 8),
+
+                      Text(
+                        'feed'.tr,
+                        style: const TextStyle(
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF1E88E5),
+                          letterSpacing: 0.5,
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    AnimatedRotation(
-                      turns: _isFeedExpanded ? 0.5 : 0,
-                      duration: const Duration(milliseconds: 300),
-                      child: const Icon(
-                        Icons.keyboard_arrow_down,
-                        color: Color(0xFF1E88E5),
-                        size: 24,
+                      const Spacer(),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF1E88E5).withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Text(
+                          '4',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1E88E5),
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 8),
+                      AnimatedRotation(
+                        turns: _isFeedExpanded ? 0.5 : 0,
+                        duration: const Duration(milliseconds: 300),
+                        child: const Icon(
+                          Icons.keyboard_arrow_down,
+                          color: Color(0xFF1E88E5),
+                          size: 24,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-if(false)
+            if(false)
             // Feed Section Content
-            if (_isFeedExpanded) ...[
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Get.isDarkMode
-                      ? const Color(0xFF1E1E1E)
-                      : Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Get.isDarkMode
-                          ? Colors.black.withOpacity(0.3)
-                          : Colors.grey.withOpacity(0.1),
-                      spreadRadius: 0,
-                      blurRadius: 10,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                  border: Get.isDarkMode
-                      ? Border.all(color: const Color(0xFF333333), width: 0.5)
-                      : null,
+              if (_isFeedExpanded) ...[
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Get.isDarkMode
+                        ? const Color(0xFF1E1E1E)
+                        : Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Get.isDarkMode
+                            ? Colors.black.withOpacity(0.3)
+                            : Colors.grey.withOpacity(0.1),
+                        spreadRadius: 0,
+                        blurRadius: 10,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                    border: Get.isDarkMode
+                        ? Border.all(color: const Color(0xFF333333), width: 0.5)
+                        : null,
+                  ),
+                  child: GridView.count(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    childAspectRatio: 1.2,
+                    children: [
+                      if (AppSettings.enableNewsFeed)
+                        _FeedItem(
+                          icon: Iconsax.home,
+                          label: 'news_feed',
+                          gradient: const [Color(0xFF64B5F6), Color(0xFF1E88E5)],
+                          onTap: () {
+                            _hapticTap();
+                            // Navigate to HomePage (index 0 in main navigation)
+                            if (widget.onNavigateToTab != null) {
+                              widget.onNavigateToTab!(0); // Switch to Home tab
+                            } else {
+                              Navigator.pop(context); // Fallback
+                            }
+                          },
+                        ),
+                      if (AppSettings.enableRecentUpdates)
+                        _FeedItem(
+                          icon: Iconsax.refresh,
+                          label: 'recent_updates',
+                          gradient: const [Color(0xFF81C784), Color(0xFF43A047)],
+                          onTap: () {
+                            _hapticTap();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Recent Updates - Coming Soon'),
+                              ),
+                            );
+                          },
+                        ),
+                      if (AppSettings.enablePopularPosts)
+                        _FeedItem(
+                          icon: Iconsax.trend_up,
+                          label: 'popular_posts',
+                          gradient: const [Color(0xFFFFB74D), Color(0xFFF57C00)],
+                          onTap: () {
+                            _hapticTap();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Popular Posts - Coming Soon'),
+                              ),
+                            );
+                          },
+                        ),
+                      if (AppSettings.enableDiscoverPosts)
+                        _FeedItem(
+                          icon: Iconsax.discover,
+                          label: 'discover_posts',
+                          gradient: const [Color(0xFF26A69A), Color(0xFF00897B)],
+                          onTap: () {
+                            _hapticTap();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Discover Posts - Coming Soon'),
+                              ),
+                            );
+                          },
+                        ),
+                    ],
+                  ),
                 ),
-                child: GridView.count(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 1.2,
-                  children: [
-                    if (AppSettings.enableNewsFeed)
-                      _FeedItem(
-                        icon: Iconsax.home,
-                        label: 'news_feed',
-                        gradient: const [Color(0xFF64B5F6), Color(0xFF1E88E5)],
-                        onTap: () {
-                          _hapticTap();
-                          // Navigate to HomePage (index 0 in main navigation)
-                          if (widget.onNavigateToTab != null) {
-                            widget.onNavigateToTab!(0); // Switch to Home tab
-                          } else {
-                            Navigator.pop(context); // Fallback
-                          }
-                        },
-                      ),
-                    if (AppSettings.enableRecentUpdates)
-                      _FeedItem(
-                        icon: Iconsax.refresh,
-                        label: 'recent_updates',
-                        gradient: const [Color(0xFF81C784), Color(0xFF43A047)],
-                        onTap: () {
-                          _hapticTap();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Recent Updates - Coming Soon'),
-                            ),
-                          );
-                        },
-                      ),
-                    if (AppSettings.enablePopularPosts)
-                      _FeedItem(
-                        icon: Iconsax.trend_up,
-                        label: 'popular_posts',
-                        gradient: const [Color(0xFFFFB74D), Color(0xFFF57C00)],
-                        onTap: () {
-                          _hapticTap();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Popular Posts - Coming Soon'),
-                            ),
-                          );
-                        },
-                      ),
-                    if (AppSettings.enableDiscoverPosts)
-                      _FeedItem(
-                        icon: Iconsax.discover,
-                        label: 'discover_posts',
-                        gradient: const [Color(0xFF26A69A), Color(0xFF00897B)],
-                        onTap: () {
-                          _hapticTap();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Discover Posts - Coming Soon'),
-                            ),
-                          );
-                        },
-                      ),
-                  ],
-                ),
-              ),
-            ],
+              ],
 
             const SizedBox(height: 12),
 
@@ -468,7 +469,7 @@ if(false)
                             context,
                             MaterialPageRoute(
                               builder: (_) =>
-                                  const FundingListPage(mineOnly: true),
+                              const FundingListPage(mineOnly: true),
                             ),
                           );
                         },
@@ -484,7 +485,7 @@ if(false)
                             context,
                             MaterialPageRoute(
                               builder: (_) =>
-                                  const OffersListPage(mineOnly: true),
+                              const OffersListPage(mineOnly: true),
                             ),
                           );
                         },
@@ -500,7 +501,7 @@ if(false)
                             context,
                             MaterialPageRoute(
                               builder: (_) =>
-                                  const JobsListPage(mineOnly: true),
+                              const JobsListPage(mineOnly: true),
                             ),
                           );
                         },
@@ -566,6 +567,20 @@ if(false)
                           );
                         },
                       ),
+                    _FeedItem(
+                      icon: Iconsax.cup,
+                      label: 'my_competitions',
+                      gradient: const [Color(0xFF7C3AED), Color(0xFF0EA5E9)],
+                      onTap: () {
+                        _hapticTap();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const MyCompetitionsPage(),
+                          ),
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -733,8 +748,8 @@ if(false)
                     //       );
                     //     },
                     //   ),
-                  
-                  
+
+
                     if (AppSettings.enableBoostedPosts)
                       _FeedItem(
                         icon: Iconsax.note,
@@ -961,6 +976,23 @@ if(false)
                               );
                             },
                           ),
+                        _FeedItem(
+                          icon: Iconsax.cup,
+                          label: 'competitions',
+                          gradient: const [
+                            Color(0xFF7C3AED),
+                            Color(0xFF0EA5E9),
+                          ],
+                          onTap: () {
+                            _hapticTap();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const CompetitionsHubPage(),
+                              ),
+                            );
+                          },
+                        ),
                         if (AppSettings.enableWatch)
                           _FeedItem(
                             icon: Iconsax.video,
@@ -1086,23 +1118,6 @@ if(false)
                               );
                             },
                           ),
-                        _FeedItem(
-                          icon: Iconsax.cup,
-                          label: 'competitions',
-                          gradient: const [
-                            Color(0xFF7C3AED),
-                            Color(0xFF0EA5E9),
-                          ],
-                          onTap: () {
-                            _hapticTap();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const CompetitionsHubPage(),
-                              ),
-                            );
-                          },
-                        ),
 
                         if (AppSettings.enableCourses)
                           _FeedItem(
@@ -1244,7 +1259,7 @@ if(false)
                 child: FadeInAnimation(child: const _LogoutButton()),
               ),
             ),
-    
+
 
 
           ],
@@ -1386,11 +1401,11 @@ class _ExploreCarouselState extends State<_ExploreCarousel> {
               final t = (_page - i).abs().clamp(0.0, 1.0);
               final scale =
                   1 -
-                  (t *
-                      0.08); // Scale up for the central card // 'تكبير للبطاقة المركزية'
+                      (t *
+                          0.08); // Scale up for the central card // 'تكبير للبطاقة المركزية'
               final translateY =
                   6 *
-                  t; // Slight vertical shift for edges // 'نزول خفيف للأطراف'
+                      t; // Slight vertical shift for edges // 'نزول خفيف للأطراف'
               final d = items[i];
 
               return Transform.translate(
@@ -1571,7 +1586,7 @@ class _LogoutButton extends StatelessWidget {
     try {
       final navigator = Navigator.of(context);
       final messenger = ScaffoldMessenger.of(context);
-      
+
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -1587,7 +1602,7 @@ class _LogoutButton extends StatelessWidget {
 
       // Close the loading dialog first
       navigator.pop();
-      
+
       // Show success message
       messenger.showSnackBar(
         SnackBar(
@@ -1792,9 +1807,9 @@ class _AccountsCard extends StatelessWidget {
                         onTap: isActive
                             ? () => Navigator.pop(sheetContext)
                             : () async {
-                                Navigator.pop(sheetContext);
-                                await auth.switchAccount(account.accountId);
-                              },
+                          Navigator.pop(sheetContext);
+                          await auth.switchAccount(account.accountId);
+                        },
                       );
                     },
                   ),
@@ -1932,7 +1947,7 @@ class _UserProfileCard extends StatelessWidget {
                       child: CircleAvatar(
                         radius: 26,
                         backgroundImage:
-                            (avatarUrl != null && avatarUrl.isNotEmpty)
+                        (avatarUrl != null && avatarUrl.isNotEmpty)
                             ? CachedNetworkImageProvider(mediaAsset(avatarUrl).toString())
                             : null,
                         child: (avatarUrl == null || avatarUrl.isEmpty)
