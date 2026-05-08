@@ -3,6 +3,9 @@ import 'package:get/get.dart';
 import 'package:snginepro/features/feed/presentation/pages/post_detail_page.dart';
 import 'package:snginepro/features/notifications/presentation/pages/notifications_page.dart';
 import 'package:snginepro/features/profile/presentation/pages/profile_page.dart';
+import 'package:snginepro/features/settings/presentation/pages/manage_sessions_page.dart';
+import 'package:snginepro/features/competitions/presentation/pages/competition_detail_page.dart';
+import 'package:snginepro/features/wallet/presentation/pages/wallet_page.dart';
 
 /// خدمة التنقل من الإشعارات
 /// تتعامل مع جميع أنواع الإشعارات المدعومة في النظام
@@ -11,6 +14,7 @@ class NotificationNavigationService {
   static late GlobalKey<NavigatorState> navigatorKey;
   static Map<String, dynamic>? _queuedData;
   static bool _isNavigationReady = false;
+  static bool _isShowingSecurityAlert = false;
 
   /// يجب استدعاؤها بعد بناء التطبيق (مثلاً بعد runApp) لتفعيل التنقل
   static void markAppReady() {
@@ -73,6 +77,54 @@ class NotificationNavigationService {
     
     // No valid navigation found
   }
+
+  static Future<void> handleForegroundNotification({
+    required String? title,
+    required String? body,
+    required Map<String, dynamic> data,
+  }) async {
+    if (!_isNewLoginAlert(title: title, data: data)) {
+      return;
+    }
+    if (_isShowingSecurityAlert) {
+      return;
+    }
+
+    final context = navigatorKey.currentContext ?? Get.context;
+    if (context == null) {
+      return;
+    }
+
+    _isShowingSecurityAlert = true;
+    try {
+      final shouldReviewSessions = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: Text(title ?? 'New Login Alert'),
+          content: Text(
+            body ??
+                'A new sign-in to your account was detected. Review your active sessions to secure your account.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: const Text('Later'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: const Text('Review Sessions'),
+            ),
+          ],
+        ),
+      );
+
+      if (shouldReviewSessions == true) {
+        handleNotification(data);
+      }
+    } finally {
+      _isShowingSecurityAlert = false;
+    }
+  }
   
   /// التنقل بناءً على URL
   static void _navigateFromUrl(String url) {
@@ -123,10 +175,68 @@ class NotificationNavigationService {
         case 'notifications':
           Get.to(() => const NotificationsPage());
           break;
+
+        case 'competitions':
+        case 'competition':
+          if (pathSegments.length > 1) {
+            final competitionId = int.tryParse(pathSegments[1]) ?? 0;
+            if (competitionId > 0) {
+              Get.to(() => CompetitionDetailPage(competitionId: competitionId));
+            }
+          }
+          break;
+
+        case 'wallet':
+          Get.to(() => const WalletPage());
+          break;
+
+        case 'settings':
+          if (pathSegments.length > 1 && pathSegments[1] == 'sessions') {
+            Get.to(() => const ManageSessionsPage());
+          }
+          break;
           
         default:
       }
     } catch (e) {
+      // Ignore malformed deep links and keep the current screen intact.
+    }
+  }
+
+  static bool _isNewLoginAlert({
+    required String? title,
+    required Map<String, dynamic> data,
+  }) {
+    final url = (data['url'] ?? data['u'] ?? data['launchURL'])?.toString();
+    if (_isSessionsUrl(url)) {
+      return true;
+    }
+
+    final normalizedTitle = title?.toLowerCase().trim();
+    if (normalizedTitle == null || normalizedTitle.isEmpty) {
+      return false;
+    }
+    return normalizedTitle.contains('new login alert');
+  }
+
+  static bool _isSessionsUrl(String? url) {
+    if (url == null || url.trim().isEmpty) {
+      return false;
+    }
+
+    try {
+      final processedUrl = url.contains('://')
+          ? url
+          : url.startsWith('/')
+              ? 'https://app.local$url'
+              : 'https://app.local/$url';
+      final uri = Uri.parse(processedUrl);
+      final segments = uri.pathSegments;
+      return segments.length >= 2 &&
+          segments[0] == 'settings' &&
+          segments[1] == 'sessions';
+    } catch (_) {
+      return false;
     }
   }
   
@@ -177,6 +287,35 @@ class NotificationNavigationService {
       case 'system_notification':
         Get.to(() => const NotificationsPage());
         break;
+
+      case 'competition_started':
+      case 'competition_cancelled':
+      case 'competition_voting_started':
+      case 'competition_winner':
+        final competitionId = int.tryParse(
+              (data['competition_id'] ?? data['id'] ?? data['node_id'])
+                      ?.toString() ??
+                  '',
+            ) ??
+            0;
+        if (competitionId > 0) {
+          Get.to(() => CompetitionDetailPage(competitionId: competitionId));
+        } else {
+          Get.to(() => const NotificationsPage());
+        }
+        break;
+
+      case 'competition_refund':
+        final refundCompetitionId = int.tryParse(
+              (data['competition_id'] ?? data['id'])?.toString() ?? '',
+            ) ??
+            0;
+        if (refundCompetitionId > 0) {
+          Get.to(() => CompetitionDetailPage(competitionId: refundCompetitionId));
+        } else {
+          Get.to(() => const WalletPage());
+        }
+        break;
         
       // إشعارات أخرى
       default:
@@ -184,4 +323,3 @@ class NotificationNavigationService {
     }
   }
 }
-

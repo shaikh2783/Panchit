@@ -113,6 +113,7 @@ class Post {
     this.competitionStatus,
     this.competitionRank,
     this.competitionCategory,
+    this.competitionBadgeText,
     this.isWinner = false,
     this.winnerRank,
     // 🎖️ MERIT FIELD
@@ -250,6 +251,7 @@ class Post {
   final String? competitionStatus;
   final int? competitionRank;
   final String? competitionCategory;
+  final String? competitionBadgeText;
   final bool isWinner;
   final int? winnerRank;
 
@@ -533,6 +535,7 @@ class Post {
         competitionCategory:
             _string(json['competition_category']) ??
             _string(json['contest_category']),
+        competitionBadgeText: _string(json['competition_badge_text']),
         isWinner: _bool(json['is_winner']) || _int(json['winner_rank']) > 0,
         winnerRank:
             _int(json['winner_rank']) != 0 ? _int(json['winner_rank']) : null,
@@ -668,6 +671,7 @@ class Post {
     String? competitionStatus,
     int? competitionRank,
     String? competitionCategory,
+    String? competitionBadgeText,
     bool? isWinner,
     int? winnerRank,
     // 🎖️ MERIT PARAMETER
@@ -785,6 +789,7 @@ class Post {
       competitionStatus: competitionStatus ?? this.competitionStatus,
       competitionRank: competitionRank ?? this.competitionRank,
       competitionCategory: competitionCategory ?? this.competitionCategory,
+      competitionBadgeText: competitionBadgeText ?? this.competitionBadgeText,
       isWinner: isWinner ?? this.isWinner,
       winnerRank: winnerRank ?? this.winnerRank,
       // 🎖️ MERIT FIELD
@@ -1059,6 +1064,7 @@ class Post {
       competitionStatus: competitionStatus,
       competitionRank: competitionRank,
       competitionCategory: competitionCategory,
+      competitionBadgeText: competitionBadgeText,
       isWinner: isWinner,
       winnerRank: winnerRank,
       // 🎖️ MERIT FIELD - الحفاظ على بيانات الجدارة

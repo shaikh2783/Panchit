@@ -5,7 +5,7 @@
   "packages": [
     {
       "name": "snginepro",
-      "version": "1.0.10+15",
+      "version": "1.0.11+16",
       "dependencies": [
         "agora_rtc_engine",
         "audioplayers",

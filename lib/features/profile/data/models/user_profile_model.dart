@@ -212,10 +212,12 @@ class UserProfile {
       socialLinks: SocialLinks.fromJson(profile['social_links'] ?? {}),
       achievementTags: _parseTags(
         profile['winner_tags'] ??
+            profile['competition_tags'] ??
             profile['profile_tags'] ??
             profile['achievement_tags'] ??
             profile['category_tags'] ??
             json['winner_tags'] ??
+            json['competition_tags'] ??
             json['profile_tags'] ??
             json['achievement_tags'] ??
             json['category_tags'],
@@ -347,6 +349,7 @@ class UserProfileResponse {
       socialLinks: Map<String, String?>.from(data['social_links'] ?? {}),
       achievementTags: _parseTags(
         data['winner_tags'] ??
+            data['competition_tags'] ??
             data['profile_tags'] ??
             data['achievement_tags'] ??
             data['category_tags'],
