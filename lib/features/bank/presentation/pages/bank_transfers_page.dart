@@ -266,7 +266,7 @@ class _BankTransfersPageState extends State<BankTransfersPage>
                       const SizedBox(height: 4),
                       Text(
                         DateFormat('MMM dd, yyyy').format(
-                          DateTime.parse(transfer.time),
+                          DateTime.parse(transfer.time).toLocal(),
                         ),
                         style: TextStyle(
                           fontSize: 12,
@@ -369,7 +369,7 @@ class _BankTransfersPageState extends State<BankTransfersPage>
             _buildDetailItem(
               'Date',
               DateFormat('MMM dd, yyyy hh:mm a').format(
-                DateTime.parse(transfer.time),
+                DateTime.parse(transfer.time).toLocal(),
               ),
             ),
             if (transfer.bankReceipt != null)

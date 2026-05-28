@@ -17,26 +17,536 @@ import 'package:snginepro/features/feed/presentation/pages/create_story_page.dar
 import 'package:snginepro/features/feed/presentation/pages/story_viewer_page.dart';
 import 'package:snginepro/features/feed/presentation/widgets/post_card.dart';
 import 'package:snginepro/features/feed/presentation/widgets/promoted_post_widget.dart';
+import 'package:snginepro/features/feed/presentation/pages/reels_page.dart';
+import 'package:snginepro/features/reels/application/bloc/reels_bloc.dart';
 import 'package:snginepro/features/search/presentation/pages/search_page.dart';
 import 'package:snginepro/features/agora/presentation/pages/professional_live_stream_wrapper.dart';
+import 'package:snginepro/features/messenger/presentation/pages/conversations_page.dart';
+import 'package:snginepro/features/discover/data/services/homepage_widgets_api_service.dart';
+import 'package:snginepro/features/friends/data/services/friends_api_service.dart';
+import 'package:snginepro/core/network/api_client.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:snginepro/features/profile/presentation/pages/profile_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({super.key, this.onScrollDirectionChanged});
+
+  // true => scrolling down, false => scrolling up
+  final ValueChanged<bool>? onScrollDirectionChanged;
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePage> createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+/// شريط الريلز في الصفحة الرئيسية
+class _ReelsPreviewRail extends StatelessWidget {
+  const _ReelsPreviewRail({
+    required this.reels,
+    required this.mediaResolver,
+    required this.onOpenAll,
+    required this.onOpenAt,
+  });
+
+  final List<Post> reels;
+  final Uri Function(String) mediaResolver;
+  final VoidCallback onOpenAll;
+  final void Function(int) onOpenAt;
+
+  String _formatDuration(int seconds) {
+    if (seconds <= 0) return '';
+    final m = seconds ~/ 60;
+    final s = seconds % 60;
+    if (m >= 60) {
+      final h = m ~/ 60;
+      final mm = (m % 60).toString().padLeft(2, '0');
+      final ss = s.toString().padLeft(2, '0');
+      return '$h:$mm:$ss';
+    }
+    return '${m}:${s.toString().padLeft(2, '0')}';
+  }
+
+  String _thumbFor(Post reel) {
+    if (reel.video?.thumbnail != null && reel.video!.thumbnail.isNotEmpty) {
+      return reel.video!.thumbnail;
+    }
+    if (reel.photos != null && reel.photos!.isNotEmpty) {
+      return reel.photos!.first.source;
+    }
+    if (reel.ogImage != null && reel.ogImage!.isNotEmpty) {
+      return reel.ogImage!;
+    }
+    return '';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.red.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(Iconsax.video, color: Colors.red, size: 18),
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    'reels'.tr,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                  ),
+                ],
+              ),
+              TextButton(
+                onPressed: onOpenAll,
+                child: Text(
+                  'view_all'.tr,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 220,
+          child: ListView.separated(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            scrollDirection: Axis.horizontal,
+            itemCount: reels.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            itemBuilder: (context, index) {
+              final reel = reels[index];
+              final thumb = _thumbFor(reel);
+              final thumbUrl = thumb.isNotEmpty ? mediaResolver(thumb).toString() : null;
+                final durationText = reel.videoDurationSeconds != null
+                  ? _formatDuration(reel.videoDurationSeconds!)
+                  : null;
+
+              return GestureDetector(
+                onTap: () => onOpenAt(index),
+                child: Container(
+                  width: 140,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.12),
+                        blurRadius: 10,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: Stack(
+                    children: [
+                      // Thumbnail
+                      Positioned.fill(
+                        child: thumbUrl != null
+                            ? CachedNetworkImage(
+                                imageUrl: thumbUrl,
+                                fit: BoxFit.cover,
+                                placeholder: (_, __) => Container(
+                                  color: isDark ? const Color(0xFF1F1F1F) : Colors.grey[200],
+                                ),
+                                errorWidget: (_, __, ___) => Container(
+                                  color: isDark ? const Color(0xFF1F1F1F) : Colors.grey[300],
+                                  child: Icon(Icons.broken_image, color: Colors.grey[500]),
+                                ),
+                              )
+                            : Container(
+                                color: isDark ? const Color(0xFF1F1F1F) : Colors.grey[200],
+                              ),
+                      ),
+                      // Overlay gradient
+                      Positioned.fill(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.black.withValues(alpha: 0.05),
+                                Colors.black.withValues(alpha: 0.55),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      // Info
+                      Positioned(
+                        left: 10,
+                        right: 10,
+                        bottom: 12,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(Iconsax.play, color: Colors.white, size: 14),
+                                const SizedBox(width: 6),
+                                if (durationText != null)
+                                  Text(
+                                    durationText,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              reel.authorName,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 8),
+      ],
+    );
+  }
+}
+
+/// شريط اقتراحات الأصدقاء في الصفحة الرئيسية
+class _SuggestedFriendsRail extends StatefulWidget {
+  const _SuggestedFriendsRail({
+    required this.people,
+    required this.mediaResolver,
+  });
+
+  final List<SuggestedFriend> people;
+  final Uri Function(String) mediaResolver;
+
+  @override
+  State<_SuggestedFriendsRail> createState() => _SuggestedFriendsRailState();
+}
+
+class _SuggestedFriendsRailState extends State<_SuggestedFriendsRail> {
+  final Set<int> _pending = {};
+  final Set<int> _added = {};
+
+  /// Check if user was added to friends from profile page
+  void _checkIfAdded(int userId) {
+    // Mark as added without making API call
+    // This syncs the state after returning from ProfilePage
+    if (!_added.contains(userId)) {
+      setState(() {
+        _added.add(userId);
+      });
+    }
+  }
+
+  Future<void> _sendFriendRequest(SuggestedFriend person) async {
+    if (_pending.contains(person.userId) || _added.contains(person.userId)) return;
+    setState(() {
+      _pending.add(person.userId);
+    });
+
+    try {
+      final api = FriendsApiService(context.read<ApiClient>());
+      final result = await api.sendFriendRequest(person.userId);
+
+      if (!mounted) return;
+
+      if (result.success) {
+        setState(() {
+          _added.add(person.userId);
+        });
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(result.message),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor:
+              result.success ? Colors.green : Theme.of(context).colorScheme.error,
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to send request'),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _pending.remove(person.userId);
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    // Filter out friends that have been added
+    final filteredPeople = widget.people.where((person) => !_added.contains(person.userId)).toList();
+    
+    // If all friends were added, don't show the rail
+    if (filteredPeople.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      Iconsax.profile_2user,
+                      color: Theme.of(context).colorScheme.primary,
+                      size: 18,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    'suggested_friends_section_title'.tr,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 230,
+          child: ListView.separated(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            scrollDirection: Axis.horizontal,
+            itemCount: filteredPeople.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            itemBuilder: (context, index) {
+              final person = filteredPeople[index];
+              final picture = person.picture;
+              final avatarUrl =
+                  picture != null && picture.isNotEmpty ? widget.mediaResolver(picture).toString() : null;
+
+              final isPending = _pending.contains(person.userId);
+              final isAdded = _added.contains(person.userId);
+
+              return Container(
+                width: 170,
+                decoration: BoxDecoration(
+                  color: isDark ? const Color(0xFF1A1A1A) : Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.08),
+                      blurRadius: 10,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () async {
+                        final result = await Navigator.push<bool>(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => ProfilePage(username: person.username),
+                          ),
+                        );
+                        // If friend request was sent in profile page, update local state
+                        if (mounted && result == true) {
+                          _checkIfAdded(person.userId);
+                        }
+                      },
+                      child: Stack(
+                        children: [
+                          CircleAvatar(
+                            radius: 34,
+                            backgroundImage:
+                                avatarUrl != null ? CachedNetworkImageProvider(avatarUrl) : null,
+                            backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.12),
+                            child: avatarUrl == null
+                                ? Text(
+                                    person.fullName.isNotEmpty
+                                        ? person.fullName[0].toUpperCase()
+                                        : 'U',
+                                    style: TextStyle(
+                                      color: Theme.of(context).colorScheme.primary,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  )
+                                : null,
+                          ),
+                          if (person.verified)
+                          Positioned(
+                            right: 0,
+                            bottom: 0,
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.primary,
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: isDark ? const Color(0xFF1A1A1A) : Colors.white,
+                                  width: 2,
+                                ),
+                              ),
+                              child: const Icon(Iconsax.verify, color: Colors.white, size: 12),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      person.fullName,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '@${person.username}',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                          ),
+                    ),
+                    if (person.mutualFriendsCount > 0) ...[
+                      const SizedBox(height: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          '${person.mutualFriendsCount} mutual',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                    const Spacer(),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: (isPending || isAdded) ? null : () => _sendFriendRequest(person),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: isAdded
+                              ? Theme.of(context).colorScheme.surfaceVariant
+                              : Theme.of(context).colorScheme.primary,
+                          foregroundColor: isAdded
+                              ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.65)
+                              : Colors.white,
+                          elevation: 0,
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: isPending
+                            ? const SizedBox(
+                                width: 16,
+                                height: 16,
+                                child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                              )
+                            : Text(
+                                isAdded ? 'friends'.tr : 'add_friend_button'.tr,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class HomePageState extends State<HomePage> {
   late final ScrollController _scrollController;
   VoidCallback? _refreshPromotedPost;
+  double _lastScrollOffset = 0.0;
+  
+  // متغيرات الفلتر
+  String _selectedType = 'newsfeed';
+  Future<List<SuggestedFriend>>? _suggestedFriendsFuture;
 
   void _onScroll() {
     if (!_scrollController.hasClients) return;
     final max = _scrollController.position.maxScrollExtent;
     final current = _scrollController.position.pixels;
     final remaining = max - current;
+
+    // Detect scroll direction with a small threshold to avoid noise
+    const threshold = 4.0;
+    if ((current - _lastScrollOffset).abs() > threshold) {
+      final isScrollingDown = current > _lastScrollOffset;
+      // Avoid notifying when overscrolling at top
+      if (current <= 0) {
+        widget.onScrollDirectionChanged?.call(false);
+      } else {
+        widget.onScrollDirectionChanged?.call(isScrollingDown);
+      }
+      _lastScrollOffset = current;
+    }
 
     if (remaining <= 200) {
       final postsBloc = context.read<PostsBloc>();
@@ -49,10 +559,26 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Future<List<SuggestedFriend>> _fetchSuggestedFriends() async {
+    try {
+      final api = HomepageWidgetsApiService(context.read<ApiClient>());
+      final response = await api.getHomepageWidgets();
+
+      if (response.success &&
+          response.widgets?.suggestedFriends?.enabled == true) {
+        return response.widgets!.suggestedFriends!.people;
+      }
+    } catch (e) {
+    }
+
+    return [];
+  }
+
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController()..addListener(_onScroll);
+    _suggestedFriendsFuture = _fetchSuggestedFriends();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final postsBloc = context.read<PostsBloc>();
@@ -67,6 +593,12 @@ class _HomePageState extends State<HomePage> {
       if (storiesBloc.state is StoriesInitial) {
         storiesBloc.add(LoadStoriesEvent());
       }
+
+      // 🎞️ تحميل الريلز للصفحة الرئيسية
+      final reelsBloc = context.read<ReelsBloc>();
+      if (reelsBloc.state is ReelsInitialState) {
+        reelsBloc.add(LoadReelsEvent());
+      }
     });
   }
 
@@ -75,6 +607,17 @@ class _HomePageState extends State<HomePage> {
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     super.dispose();
+  }
+
+  // Method للـ scroll to top
+  void scrollToTop() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOutCubic,
+      );
+    }
   }
 
   Future<void> _handleRefresh() async {
@@ -100,6 +643,18 @@ class _HomePageState extends State<HomePage> {
     Navigator.of(
       context,
     ).push(MaterialPageRoute(builder: (_) => const CreatePostPageModern()));
+  }
+
+  void _applyFilter(String type) {
+    setState(() {
+      _selectedType = type;
+    });
+    
+    final postsBloc = context.read<PostsBloc>();
+    postsBloc.add(LoadPostsEvent(
+      type: type,
+      includeAds: '1',
+    ));
   }
 
   Widget _buildLoadingState() {
@@ -398,69 +953,6 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: isDark
           ? const Color(0xFF0A0A0A)
           : const Color(0xFFF8F9FA),
-      appBar: AppBar(
-        backgroundColor: isDark
-            ? const Color(0xFF1A1A1A).withValues(alpha: 0.95)
-            : Colors.white.withValues(alpha: 0.95),
-        elevation: 0,
-        shadowColor: Colors.transparent,
-        surfaceTintColor: Colors.transparent,
-        titleSpacing: 16,
-        toolbarHeight: 64,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: isDark
-                  ? [
-                      const Color(0xFF1A1A1A).withValues(alpha: 0.98),
-                      const Color(0xFF0A0A0A).withValues(alpha: 0.95),
-                    ]
-                  : [
-                      Colors.white.withValues(alpha: 0.98),
-                      const Color(0xFFF8F9FA).withValues(alpha: 0.95),
-                    ],
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: isDark
-                    ? Colors.black.withValues(alpha: 0.3)
-                    : Colors.black.withValues(alpha: 0.05),
-                blurRadius: 12,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-        ),
-        title: Row(
-          children: [
-            Image.asset('assets/app_icon.png',width: 40,height: 40),
-            const SizedBox(width: 12),
-            Text(
-              'Panchit',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: cs.primary,
-                fontSize: 26,
-                fontWeight: FontWeight.w900,
-                letterSpacing: -0.8,
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          _AppBarAction(
-            icon: Icons.search,
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const SearchPage()),
-              );
-            },
-          ),
-          _AppBarAction(icon: Iconsax.message, onTap: () {}),
-          const SizedBox(width: 12),
-        ],
-      ),
       body: BlocConsumer<PostsBloc, PostsState>(
         listener: (context, state) {
           // Handle any side effects here if needed
@@ -481,7 +973,6 @@ class _HomePageState extends State<HomePage> {
               ? state.isLoadingMore
               : false;
 
-          // إذا لم يكن هناك منشورات وليس في حالة تحميل
           if (posts.isEmpty && state is PostsLoadedState) {
             return RefreshIndicator(
               onRefresh: _handleRefresh,
@@ -489,6 +980,10 @@ class _HomePageState extends State<HomePage> {
                 controller: _scrollController,
                 physics: const AlwaysScrollableScrollPhysics(),
                 slivers: [
+                  _buildHomeSliverAppBar(context, isDark, cs),
+                  SliverToBoxAdapter(
+                    child: _buildFilterBar(),
+                  ),
                   SliverToBoxAdapter(
                     child: _ComposerCard(
                       displayName: displayName,
@@ -506,9 +1001,12 @@ class _HomePageState extends State<HomePage> {
             child: CustomScrollView(
               controller: _scrollController,
               physics: const ClampingScrollPhysics(), // منع scroll jump
-              cacheExtent: 500.0, // تحسين cache للـ widgets
+              cacheExtent: 1000.0, // زيادة cache للـ widgets لتحسين السكرول
               slivers: [
-                // 📖 قسم القصص
+                _buildHomeSliverAppBar(context, isDark, cs),
+                SliverToBoxAdapter(
+                  child: _buildFilterBar(),
+                ),
                 BlocBuilder<StoriesBloc, StoriesState>(
                   builder: (context, storiesState) {
                     // عرض القصص دائماً (مع زر الإضافة) إذا كانت في حالة StoriesLoaded
@@ -534,28 +1032,116 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                 ),
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final post = posts[index];
-                      return RepaintBoundary(
-                        key: ValueKey('post-${post.id}'),
-                        child: PostCard(
-                          post: post,
-                          onReactionChanged: (postId, reaction) {
-                            // Handle reaction with Bloc
-                            context.read<PostsBloc>().add(
-                              ReactToPostEvent(int.parse(postId), reaction),
-                            );
-                          },
+                // Posts with Ads as separate slivers
+                ...() {
+                  final List<Widget> slivers = [];
+                  
+                  for (int i = 0; i < posts.length; i++) {
+                    // Add post
+                    slivers.add(
+                      SliverToBoxAdapter(
+                        child: RepaintBoundary(
+                          key: ValueKey('post-${posts[i].id}'),
+                          child: PostCard(
+                            post: posts[i],
+                            onReactionChanged: (postId, reaction) {
+                              context.read<PostsBloc>().add(
+                                ReactToPostEvent(int.parse(postId), reaction),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    );
+
+                    // Insert reels rail after the third post (index 2) once
+                    if (i == 2) {
+                      slivers.add(
+                        SliverToBoxAdapter(
+                          child: BlocBuilder<ReelsBloc, ReelsState>(
+                            builder: (context, reelsState) {
+                              if (reelsState is ReelsLoadedState &&
+                                  reelsState.reels.isNotEmpty) {
+                                final mediaResolver =
+                                    context.read<AppConfig>().mediaAsset;
+                                final previewReels = reelsState.reels.length > 5
+                                    ? reelsState.reels.sublist(0, 5)
+                                    : reelsState.reels;
+                                return _ReelsPreviewRail(
+                                  reels: previewReels,
+                                  mediaResolver: mediaResolver,
+                                  onOpenAll: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => const ReelsPage(),
+                                      ),
+                                    );
+                                  },
+                                  onOpenAt: (startIndex) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => ReelsPage(initialIndex: startIndex),
+                                      ),
+                                    );
+                                  },
+                                );
+                              }
+
+                              if (reelsState is ReelsLoadingState) {
+                                return const SizedBox(
+                                  height: 220,
+                                  child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                );
+                              }
+
+                              return const SizedBox.shrink();
+                            },
+                          ),
                         ),
                       );
-                    },
-                    childCount: posts.length,
-                    addRepaintBoundaries: false, // منع إعادة الرسم الغير ضرورية
-                    addSemanticIndexes: false, // تحسين الأداء
-                  ),
-                ),
+                    }
+
+                    // Insert suggested friends rail after the 7th post (index 6) once
+                    if (i == 6) {
+                      slivers.add(
+                        SliverToBoxAdapter(
+                          child: FutureBuilder<List<SuggestedFriend>>(
+                            future: _suggestedFriendsFuture,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return const SizedBox(
+                                  height: 230,
+                                  child: Center(child: CircularProgressIndicator()),
+                                );
+                              }
+
+                              final people = snapshot.data ?? const [];
+                              if (people.isEmpty) {
+                                return const SizedBox.shrink();
+                              }
+
+                              final mediaResolver = context.read<AppConfig>().mediaAsset;
+                              final limited = people.length > 10
+                                  ? people.sublist(0, 10)
+                                  : people;
+
+                              return _SuggestedFriendsRail(
+                                people: limited,
+                                mediaResolver: mediaResolver,
+                              );
+                            },
+                          ),
+                        ),
+                      );
+                    }
+                  }
+                  
+                  return slivers;
+                }(),
                 SliverToBoxAdapter(
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 32),
@@ -608,6 +1194,155 @@ class _HomePageState extends State<HomePage> {
             ),
           );
         },
+      ),
+    );
+  }
+
+  SliverAppBar _buildHomeSliverAppBar(
+    BuildContext context,
+    bool isDark,
+    ColorScheme cs,
+  ) {
+    return SliverAppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      shadowColor: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
+      titleSpacing: 16,
+      toolbarHeight: 64,
+      floating: true,
+      snap: true,
+      pinned: false,
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: isDark
+                ? [
+                    const Color(0xFF1A1A1A).withValues(alpha: 0.98),
+                    const Color(0xFF0A0A0A).withValues(alpha: 0.95),
+                  ]
+                : [
+                    Colors.white.withValues(alpha: 0.98),
+                    const Color(0xFFF8F9FA).withValues(alpha: 0.95),
+                  ],
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: isDark
+                  ? Colors.black.withValues(alpha: 0.3)
+                  : Colors.black.withValues(alpha: 0.05),
+              blurRadius: 12,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+      ),
+      title: Row(
+        children: [
+          Image.asset('assets/app_icon.png',width: 40,height: 40),
+          const SizedBox(width: 12),
+          Image.asset('assets/ic_logo_txt.png',width: 120,height: 40)
+        ],
+      ),
+      actions: [
+        _AppBarAction(
+          icon: Icons.search,
+          onTap: () {
+            Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (context) => const SearchPage()));
+          },
+        ),
+        _AppBarAction(
+          icon: Iconsax.message,
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const ConversationsPage()),
+            );
+          },
+        ),
+        const SizedBox(width: 12),
+      ],
+    );
+  }
+
+  Widget _buildFilterBar() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cs = Theme.of(context).colorScheme;
+    
+    final filterOptions = [
+      {'label': 'filter_newsfeed'.tr, 'value': 'newsfeed'},
+      {'label': 'filter_popular'.tr, 'value': 'popular'},
+      {'label': 'filter_discover'.tr, 'value': 'discover'},
+    ];
+    
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+      child: Container(
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          color: isDark ? const Color(0xFF151518) : const Color(0xFFE7ECF3),
+          borderRadius: BorderRadius.circular(32),
+        ),
+        child: Row(
+          children: filterOptions.map((option) {
+            final value = option['value'] as String;
+            final label = option['label'] as String;
+            final isSelected = _selectedType == value;
+            
+            return Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 5),
+                child: InkWell(
+                  onTap: () => _applyFilter(value),
+                  borderRadius: BorderRadius.circular(28),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeInOut,
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? cs.primary
+                          : (isDark ? const Color(0xFF1E1F23) : Colors.transparent),
+                      borderRadius: BorderRadius.circular(28),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (isSelected) ...[
+                          Icon(
+                            Icons.check_circle,
+                            color: Colors.white,
+                            size: 18,
+                          ),
+                          const SizedBox(width: 6),
+                        ],
+                        Flexible(
+                          child: Text(
+                            label,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: isSelected
+                                  ? Colors.white
+                                  : (isDark ? Colors.white.withOpacity(0.9) : cs.onSurface),
+                              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
+                              fontSize: 14,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
@@ -788,17 +1523,17 @@ class _CreateStoryCard extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  top: 115,
+                  top: 110,
                   left: 0,
                   right: 0,
                   child: Center(
                     child: CircleAvatar(
-                      radius: 20,
+                      radius: 15,
                       backgroundColor: cs.primary,
                       child: const Icon(
                         Icons.add,
                         color: Colors.white,
-                        size: 26,
+                        size: 20,
                       ),
                     ),
                   ),
@@ -808,12 +1543,14 @@ class _CreateStoryCard extends StatelessWidget {
                   left: 0,
                   right: 0,
                   child: Container(
-                    height: 52,
+                    height: 35,
                     color: cs.surface.withValues(alpha: 0.92),
                     alignment: Alignment.bottomCenter,
                     padding: const EdgeInsets.only(bottom: 8),
                     child: Text(
                       'home_create_story'.tr,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
                         fontWeight: FontWeight.w800,
                       ),
@@ -974,25 +1711,28 @@ class _ComposerCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: cs.primary.withValues(alpha: 0.2),
-                      width: 2,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: cs.primary.withValues(alpha: 0.1),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
+                GestureDetector(
+                  onTap: onTap,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: cs.primary.withValues(alpha: 0.2),
+                        width: 2,
                       ),
-                    ],
-                  ),
-                  child: CircleAvatar(
-                    radius: 22,
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    child: Icon(Icons.add, color: Colors.white),
+                      boxShadow: [
+                        BoxShadow(
+                          color: cs.primary.withValues(alpha: 0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: CircleAvatar(
+                      radius: 22,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      child: Icon(Icons.add, color: Colors.white),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -1084,11 +1824,13 @@ class _ComposerCard extends StatelessWidget {
                   icon: Icons.photo_library_rounded,
                   color: const Color(0xFF45BD62),
                   label: 'home_photo'.tr,
+                  onTap: onTap
                 ),
                 _ComposerAction(
                   icon: Icons.flag_rounded,
                   color: const Color(0xFF1877F2),
                   label: 'home_event'.tr,
+                  onTap: onTap,
                 ),
               ],
             ),

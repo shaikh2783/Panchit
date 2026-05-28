@@ -460,7 +460,7 @@ class _PointsPaymentsPageState extends State<PointsPaymentsPage> {
                       DateFormat(
                         'dd MMM yyyy',
                         'en',
-                      ).format(DateTime.parse(payment.time)),
+                      ).format(DateTime.parse(payment.time).toLocal()),
                     ),
                   ),
                 ],

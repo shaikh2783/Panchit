@@ -2,11 +2,17 @@ import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/core/network/api_exception.dart';
 import 'package:snginepro/main.dart' show configCfgP;
 import 'package:snginepro/features/notifications/data/models/notifications_response.dart';
+import 'package:flutter/foundation.dart';
 
 class NotificationsApiService {
   NotificationsApiService(this._client);
 
   final ApiClient _client;
+
+  String _deleteEndpointPath() {
+    final cfg = configCfgP('notifications_delete');
+    return cfg.isNotEmpty ? cfg : 'data/notifications/delete';
+  }
 
   /// Fetch notifications with pagination
   Future<NotificationsResponse> getNotifications({
@@ -38,6 +44,45 @@ class NotificationsApiService {
     }
 
     return NotificationsResponse.fromJson(response);
+  }
+
+  /// Delete a specific notification
+  Future<Map<String, dynamic>> deleteNotification(int notificationId) async {
+    final path = _deleteEndpointPath();
+    final response = await _client.post(
+      path,
+      body: {
+        'notification_id': notificationId,
+      },
+    );
+
+    if (response['status'] != 'success') {
+      throw ApiException(
+        response['message'] ?? 'Failed to delete notification',
+        details: response,
+      );
+    }
+
+    return response;
+  }
+
+  /// Delete all notifications (optionally seen only)
+  Future<Map<String, dynamic>> deleteAllNotifications({bool seenOnly = false}) async {
+    final path = _deleteEndpointPath();
+    final body = {
+      'delete_all': true,
+      if (seenOnly) 'seen_only': true,
+    };
+    final response = await _client.post(path, body: body);
+
+    if (response['status'] != 'success') {
+      throw ApiException(
+        response['message'] ?? 'Failed to delete notifications',
+        details: response,
+      );
+    }
+
+    return response;
   }
 
   /// Mark a specific notification as read

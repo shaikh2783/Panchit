@@ -465,7 +465,7 @@ class _MyAffiliatesPageState extends State<MyAffiliatesPage> {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  '${'joined'.tr}: ${DateFormat('dd MMM yyyy', 'en').format(DateTime.parse(user.connectionDate))}',
+                  '${'joined'.tr}: ${DateFormat('dd MMM yyyy', 'en').format(DateTime.parse(user.connectionDate).toLocal())}',
                   style: TextStyle(
                     fontSize: 11,
                     color: Get.isDarkMode ? Colors.grey[500] : Colors.grey[600],

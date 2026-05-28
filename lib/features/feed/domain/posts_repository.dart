@@ -12,8 +12,15 @@ class PostsRepository {
   Future<PostsResponse> fetchNewsfeed({
     int limit = 10,
     int offset = 0,
+    String type = 'newsfeed',
+    String includeAds = '1',
   }) {
-    return _apiService.fetchNewsfeed(limit: limit, offset: offset);
+    return _apiService.fetchNewsfeed(
+      limit: limit,
+      offset: offset,
+      type: type,
+      includeAds: includeAds,
+    );
   }
 
   Future<PostsResponse> fetchUserPosts({
@@ -55,6 +62,10 @@ class PostsRepository {
 
   Future<Map<String, dynamic>> fetchPost(int postId) {
     return _apiService.fetchPost(postId);
+  }
+
+  Future<Map<String, dynamic>> purchasePaidPost(int postId) {
+    return _apiService.purchasePaidPost(postId);
   }
 
   Future<void> reactToPost(int postId, String reaction) {

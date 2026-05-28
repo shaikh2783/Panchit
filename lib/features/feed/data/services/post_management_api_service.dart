@@ -1,6 +1,7 @@
 import 'dart:convert';
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
+import 'package:flutter/foundation.dart';
 
 /// خدمة إدارة المنشورات - حفظ، تثبيت، إخفاء، حذف، تفاعل، تعديل
 class PostManagementApiService {

@@ -1,6 +1,7 @@
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
 import '../models/report_reason.dart';
+import 'package:flutter/foundation.dart';
 
 /// خدمة API للإبلاغ عن المحتوى
 class ReportsApiService {

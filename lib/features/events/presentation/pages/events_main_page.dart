@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:snginepro/core/utils/html_decoder.dart';
 import '../../application/bloc/events_bloc.dart';
 import '../../application/bloc/events_events.dart';
 import '../../application/bloc/events_states.dart';
@@ -320,7 +321,7 @@ class _EventsMainPageState extends State<EventsMainPage>
                   return Padding(
                     padding: const EdgeInsets.only(right: 8),
                     child: ChoiceChip(
-                      label: Text(category.categoryName),
+                      label: Text(HtmlDecoder.decode(category.categoryName)),
                       selected: isSelected,
                       onSelected: (selected) {
                         setState(() {

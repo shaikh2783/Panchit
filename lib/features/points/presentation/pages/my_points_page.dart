@@ -590,7 +590,7 @@ class _MyPointsPageState extends State<MyPointsPage> {
                 Text(
                   DateFormat(
                     'MMM dd, hh:mm a',
-                  ).format(DateTime.parse(transaction.time)),
+                  ).format(DateTime.parse(transaction.time).toLocal()),
                   style: TextStyle(
                     fontSize: 10,
                     color: Get.isDarkMode ? Colors.grey[500] : Colors.grey[600],

@@ -238,7 +238,7 @@ class _FundingCreatePageState extends State<FundingCreatePage> {
             
             TextFormField(
               controller: _amountCtrl,
-              decoration: InputDecoration(labelText: 'goal_amount'.tr, prefixIcon: const Icon(Iconsax.money_recive_copy)),
+              decoration: InputDecoration(labelText: 'goal_amount'.tr, prefixIcon: const Icon( Icons.currency_rupee)),
               keyboardType: TextInputType.number,
               validator: (v) {
                 if (v == null || v.trim().isEmpty) return 'required'.tr;

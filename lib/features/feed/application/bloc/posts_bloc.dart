@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snginepro/features/feed/application/bloc/posts_events.dart';
 import 'package:snginepro/features/feed/domain/posts_repository.dart';
 import 'package:snginepro/features/feed/data/models/post.dart';
+import 'package:flutter/foundation.dart';
 
 class PostsBloc extends Bloc<PostsEvent, PostsState> {
   final PostsRepository _repository;
@@ -29,6 +30,8 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
       final response = await _repository.fetchNewsfeed(
         limit: _pageSize,
         offset: 0,
+        type: event.type,
+        includeAds: event.includeAds,
       );
       
       
@@ -59,6 +62,8 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
       final response = await _repository.fetchNewsfeed(
         limit: _pageSize,
         offset: 0,
+        type: event.type,
+        includeAds: event.includeAds,
       );
       
       emit(PostsLoadedState(
@@ -92,6 +97,8 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
       final response = await _repository.fetchNewsfeed(
         limit: _pageSize,
         offset: _currentPage, // استخدام رقم الصفحة مباشرة (0, 1, 2, 3...)
+        type: event.type,
+        includeAds: event.includeAds,
       );
       
       
@@ -180,7 +187,6 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
     try {
       
       // Here you can add logic to fetch a promoted post
-      // For now, we'll just print a message since the promoted post functionality
       // might not be fully implemented yet
       
       

@@ -51,6 +51,7 @@ const Map<String, String> knIN = {
     "registration_failed": "ನೋಂದಣಿ ವಿಫಲವಾಗಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
     "email_username_required": "ಇಮೇಲ್ ಅಥವಾ ಬಳಕೆದಾರ ಹೆಸರು ಅಗತ್ಯವಿದೆ",
     "sign_in_with_google": "Google ಮೂಲಕ ಸೈನ್ ಇನ್ ಮಾಡಿ",
+    "sign_in_with_apple": "Apple ಮೂಲಕ ಸೈನ್ ಇನ್ ಮಾಡಿ",
     "getting_started": "ಪ್ರಾರಂಭಿಸುತ್ತಿದೆ",
     "complete_profile": "ಪ್ರಾರಂಭಿಸಲು ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಸಂಪೂರ್ಣ ಮಾಡಿ",
     "where_do_you_live": "ನೀವು ಎಲ್ಲಿದ್ದೀರಾ?",
@@ -221,6 +222,2729 @@ const Map<String, String> knIN = {
     "required": "ಅವಶ್ಯಕ ಕ್ಷೇತ್ರ",
     "publish": "ಪ್ರಕಶಿಸಿ",
     "try_different_search": "ಬೇರೊಂದು ಹುಡುಕಾಟ ಅಥವಾ ಫಿಲ್ಟರ್ ಪ್ರಯತ್ನಿಸಿ",
-    "filter": "ಫಿಲ್ಟರ್"
+    "filter": "ಫಿಲ್ಟರ್",
+    // Post Actions
+        'post_saved_successfully': 'ಪೋಸ್ಟ್ ಯಶಸ್ವಿಯಾಗಿ ಉಳಿಸಲಾಗಿದೆ',
+'post_removed_from_saved': 'ಪೋಸ್ಟ್ ಉಳಿಸಿದ ಪಟ್ಟಿಯಿಂದ ತೆಗೆದುಹಾಕಲಾಗಿದೆ',
+'post_pinned_to_profile': 'ಪೋಸ್ಟ್ ಪ್ರೊಫೈಲ್‌ಗೆ ಪಿನ್ ಮಾಡಲಾಗಿದೆ',
+'post_unpinned_from_profile': 'ಪೋಸ್ಟ್ ಪ್ರೊಫೈಲ್‌ನಿಂದ ಅನ್‌ಪಿನ್ ಮಾಡಲಾಗಿದೆ',
+'post_hidden_from_timeline': 'ಪೋಸ್ಟ್ ಟೈಮ್‌ಲೈನ್‌ನಿಂದ ಮರೆಮಾಡಲಾಗಿದೆ',
+'post_unhidden_on_timeline': 'ಪೋಸ್ಟ್ ಟೈಮ್‌ಲೈನ್‌ನಲ್ಲಿ ಮತ್ತೆ ತೋರಿಸಲಾಗಿದೆ',
+'post_deleted_successfully': 'ಪೋಸ್ಟ್ ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಲಾಗಿದೆ',
+'post_updated_successfully': 'ಪೋಸ್ಟ್ ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ',
+'comments_enabled': 'ಟಿಪ್ಪಣಿಗಳನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ',
+'action_completed_successfully': 'ಕ್ರಿಯೆ ಯಶಸ್ವಿಯಾಗಿ ಪೂರ್ಣಗೊಂಡಿದೆ',
+'comments_disabled_message': 'ಈ ಪೋಸ್ಟ್‌ಗೆ ಟಿಪ್ಪಣಿಗಳು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ',
+
+// Settings
+'arabic': 'ಅರೇಬಿಕ್',
+'english': 'ಇಂಗ್ಲಿಷ್',
+'french': 'ಫ್ರೆಂಚ್',
+'spanish': 'ಸ್ಪ್ಯಾನಿಷ್',
+'portuguese': 'ಪೋರ್ಚುಗೀಸ್',
+'portuguese_br': 'ಪೋರ್ಚುಗೀಸ್ (ಬ್ರೆಜಿಲ್)',
+'german': 'ಜರ್ಮನ್',
+'turkish': 'ಟರ್ಕಿಷ್',
+'dutch': 'ಡಚ್',
+'italian': 'ಇಟಾಲಿಯನ್',
+'russian': 'ರಷ್ಯನ್',
+'romanian': 'ರೊಮೇನಿಯನ್',
+'greek': 'ಗ್ರೀಕ್',
+'privacy': 'ಗೌಪ್ಯತೆ',
+
+// Language Settings
+'choose_language': 'ನಿಮ್ಮ ಇಷ್ಟದ ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+'language_changed': 'ಭಾಷೆ ಯಶಸ್ವಿಯಾಗಿ ಬದಲಾಯಿಸಲಾಗಿದೆ',
+'switch_to_arabic': 'ಅರೇಬಿಕ್‌ಗೆ ಬದಲಾಯಿಸಿ',
+'switch_to_english': 'ಇಂಗ್ಲಿಷ್‌ಗೆ ಬದಲಾಯಿಸಿ',
+
+// Demo & Examples
+'translation_demo': 'ಅನುವಾದ ಡೆಮೊ',
+'current_language': 'ಪ್ರಸ್ತುತ ಭಾಷೆ',
+
+// Actions & Buttons
+'apply': 'ಅನ್ವಯಿಸಿ',
+'confirm': 'ದೃಢೀಕರಿಸಿ',
+'close': 'ಮುಚ್ಚಿ',
+'continue': 'ಮುಂದುವರಿಸಿ',
+'back': 'ಹಿಂದೆ',
+'next': 'ಮುಂದೆ',
+'finish': 'ಮುಗಿಸಿ',
+
+// Status Messages
+'loading_please_wait': 'ಲೋಡ್ ಆಗುತ್ತಿದೆ, ದಯವಿಟ್ಟು ನಿರೀಕ್ಷಿಸಿ...',
+'operation_successful': 'ಕಾರ್ಯ ಯಶಸ್ವಿಯಾಗಿ ಪೂರ್ಣಗೊಂಡಿದೆ',
+'operation_failed': 'ಕಾರ್ಯ ವಿಫಲವಾಗಿದೆ',
+'try_again': 'ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
+'no_internet_connection': 'ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕ ಇಲ್ಲ',
+'server_error': 'ಸರ್ವರ್ ದೋಷ ಸಂಭವಿಸಿದೆ',
+
+// Post Related
+'post_options': 'ಪೋಸ್ಟ್ ಆಯ್ಕೆಗಳು',
+'post_menu': 'ಪೋಸ್ಟ್ ಮೆನು',
+'hide_post': 'ಪೋಸ್ಟ್ ಮರೆಮಾಡಿ',
+'unhide_post': 'ಪೋಸ್ಟ್ ತೋರಿಸಿ',
+'save_post': 'ಪೋಸ್ಟ್ ಉಳಿಸಿ',
+'unsave_post': 'ಉಳಿಸಿದುದರಿಂದ ತೆಗೆದುಹಾಕಿ',
+'pin_post': 'ಪ್ರೊಫೈಲ್‌ಗೆ ಪಿನ್ ಮಾಡಿ',
+'unpin_post': 'ಪ್ರೊಫೈಲ್‌ನಿಂದ ಅನ್‌ಪಿನ್ ಮಾಡಿ',
+'copy_link': 'ಲಿಂಕ್ ನಕಲಿಸಿ',
+'report_post': 'ಪೋಸ್ಟ್ ವರದಿ ಮಾಡಿ',
+
+// Time & Dates
+'just_now': 'ಇದೀಗ',
+'minutes_ago': 'ನಿಮಿಷಗಳ ಹಿಂದೆ',
+'hours_ago': 'ಗಂಟೆಗಳ ಹಿಂದೆ',
+'days_ago': 'ದಿನಗಳ ಹಿಂದೆ',
+'weeks_ago': 'ವಾರಗಳ ಹಿಂದೆ',
+'months_ago': 'ತಿಂಗಳುಗಳ ಹಿಂದೆ',
+'years_ago': 'ವರ್ಷಗಳ ಹಿಂದೆ',
+
+// Discover Page
+'discover': 'ಅನ್ವೇಷಿಸಿ',
+'login_required': 'ಲಾಗಿನ್ ಅಗತ್ಯವಿದೆ',
+'failed_to_load_content': 'ವಿಷಯವನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+'login_personalized_content':
+'ವೈಯಕ್ತಿಕ ವಿಷಯವನ್ನು ವೀಕ್ಷಿಸಲು ದಯವಿಟ್ಟು ಲಾಗಿನ್ ಮಾಡಿ',
+'merits_remaining_message': 'ನಿಮ್ಮ ಬಳಿ %s ಮೆರಿಟ್ಸ್ ಉಳಿದಿವೆ',
+'merits_total': 'ಒಟ್ಟು',
+'merits_spent': 'ಖರ್ಚು ಮಾಡಿದವು',
+'view_profile_button': 'ಪ್ರೊಫೈಲ್ ನೋಡಿ',
+'premium_members_subtitle': 'ಪ್ರೀಮಿಯಂ ಸದಸ್ಯರು',
+'premium_pages_subtitle': 'ಪ್ರೀಮಿಯಂ ಪುಟಗಳು',
+'trending_section_subtitle': 'ಈಗ ಟ್ರೆಂಡ್ ಆಗುತ್ತಿರುವುದು',
+'people_you_may_know_subtitle': 'ನೀವು ತಿಳಿದಿರಬಹುದಾದ ಜನರು',
+'pages_to_discover_subtitle': 'ಅನ್ವೇಷಿಸಲು ಪುಟಗಳು',
+'groups_to_join_subtitle': 'ಸೇರಲು ಗುಂಪುಗಳು',
+'events_to_attend_subtitle': 'ಹಾಜರಾಗಲು ಈವೆಂಟ್‌ಗಳು',
+'page_likes_label': '%s ಲೈಕ್ಸ್',
+'visit_page_button': 'ಪುಟ ನೋಡಿ',
+'trending_label': 'ಟ್ರೆಂಡಿಂಗ್',
+'hashtag_posts_label': '%s ಪೋಸ್ಟ್‌ಗಳು',
+'mutual_friends_label': '%s ಸಾಮಾನ್ಯ',
+'add_friend_button': 'ಮಿತ್ರರನ್ನು ಸೇರಿಸಿ',
+'like_page_button': 'ಪುಟ ಲೈಕ್ ಮಾಡಿ',
+'privacy_public': 'ಸಾರ್ವಜನಿಕ',
+'privacy_private': 'ಖಾಸಗಿ',
+'group_members_label': '%s ಸದಸ್ಯರು',
+'join_group_button': 'ಗುಂಪಿಗೆ ಸೇರಿ',
+'request_to_join_button': 'ಸೇರಲು ವಿನಂತಿಸಿ',
+'event_going_label': '%s ಹೋಗುತ್ತಿದ್ದಾರೆ',
+'interested_button': 'ಆಸಕ್ತಿ ಇದೆ',
+'trending_badge_label': 'ಟ್ರೆಂಡಿಂಗ್',
+'merits_section_title': 'ಮೆರಿಟ್ ಬ್ಯಾಲೆನ್ಸ್',
+'pro_users_section_title': 'ವಿಶೇಷ ಬಳಕೆದಾರರು',
+'pro_pages_section_title': 'ವಿಶೇಷ ಪುಟಗಳು',
+'trending_section_title': 'ಟ್ರೆಂಡಿಂಗ್',
+'suggested_friends_section_title': 'ಶಿಫಾರಸು ಮಾಡಿದ ಸ್ನೇಹಿತರು',
+'suggested_pages_section_title': 'ಶಿಫಾರಸು ಮಾಡಿದ ಪುಟಗಳು',
+'suggested_groups_section_title': 'ಶಿಫಾರಸು ಮಾಡಿದ ಗುಂಪುಗಳು',
+'suggested_events_section_title': 'ಶಿಫಾರಸು ಮಾಡಿದ ಈವೆಂಟ್‌ಗಳು',
+// Feelings - Actions
+  'feeling_action': 'ನಾನು ಅನುಭವಿಸುತ್ತಿದ್ದೇನೆ',
+  'listening_to_action': 'ನಾನು ಕೇಳುತ್ತಿದ್ದೇನೆ',
+  'watching_action': 'ನಾನು ನೋಡುತ್ತಿದ್ದೇನೆ',
+  'playing_action': 'ನಾನು ಆಡುತ್ತಿದ್ದೇನೆ',
+  'eating_action': 'ನಾನು ತಿನ್ನುತ್ತಿದ್ದೇನೆ',
+  'drinking_action': 'ನಾನು ಕುಡಿಯುತ್ತಿದ್ದೇನೆ',
+  'traveling_to_action': 'ನಾನು ಹೋಗುತ್ತಿದ್ದೇನೆ',
+  'reading_action': 'ನಾನು ಓದುತ್ತಿದ್ದೇನೆ',
+  'attending_action': 'ನಾನು ಭಾಗವಹಿಸುತ್ತಿದ್ದೇನೆ',
+  'celebrating_action': 'ನಾನು ಆಚರಿಸುತ್ತಿದ್ದೇನೆ',
+  'looking_for_action': 'ನಾನು ಹುಡುಕುತ್ತಿದ್ದೇನೆ',
+
+// Placeholders
+  'feeling_placeholder': 'ನೀವು ಹೇಗೆ ಅನುಭವಿಸುತ್ತಿದ್ದೀರಾ?',
+  'listening_to_placeholder': 'ನೀವು ಏನು ಕೇಳುತ್ತಿದ್ದೀರಾ?',
+  'watching_placeholder': 'ನೀವು ಏನು ನೋಡುತ್ತಿದ್ದೀರಾ?',
+  'playing_placeholder': 'ನೀವು ಏನು ಆಡುತ್ತಿದ್ದೀರಾ?',
+  'eating_placeholder': 'ನೀವು ಏನು ತಿನ್ನುತ್ತಿದ್ದೀರಾ?',
+  'drinking_placeholder': 'ನೀವು ಏನು ಕುಡಿಯುತ್ತಿದ್ದೀರಾ?',
+  'traveling_to_placeholder': 'ನೀವು ಎಲ್ಲಿಗೆ ಹೋಗುತ್ತಿದ್ದೀರಾ?',
+  'reading_placeholder': 'ನೀವು ಏನು ಓದುತ್ತಿದ್ದೀರಾ?',
+  'attending_placeholder': 'ನೀವು ಯಾವುದರಲ್ಲಿ ಭಾಗವಹಿಸುತ್ತಿದ್ದೀರಾ?',
+  'celebrating_placeholder': 'ನೀವು ಏನು ಆಚರಿಸುತ್ತಿದ್ದೀರಾ?',
+  'looking_for_placeholder': 'ನೀವು ಏನು ಹುಡುಕುತ್ತಿದ್ದೀರಾ?',
+
+// Emotions
+  'emotion_happy': 'ಸಂತೋಷ',
+  'emotion_loved': 'ಪ್ರೀತಿಸಲ್ಪಟ್ಟಂತೆ ಅನಿಸುತ್ತಿದೆ',
+  'emotion_satisfied': 'ತೃಪ್ತ',
+  'emotion_strong': 'ಬಲಿಷ್ಠ',
+  'emotion_sad': 'ದುಃಖಿತ',
+  'emotion_crazy': 'ಹುಚ್ಚು',
+  'emotion_tired': 'ದಣಿದ',
+  'emotion_sleepy': 'ನಿದ್ರೆ ಬರುತ್ತಿದೆ',
+  'emotion_confused': 'ಗೊಂದಲದಲ್ಲಿದ್ದೇನೆ',
+  'emotion_worried': 'ಚಿಂತಿತ',
+  'emotion_angry': 'ಕೋಪದಲ್ಲಿದ್ದೇನೆ',
+  'emotion_annoyed': 'ಕಿರಿಕಿರಿ',
+  'emotion_shocked': 'ಆಶ್ಚರ್ಯಗೊಂಡ',
+  'emotion_down': 'ಮನಸ್ಸು ಕುಗ್ಗಿದೆ',
+  'emotion_confounded': 'ತಲೆಸುತ್ತು',
+// Feelings - Interface
+  'feelings_activity_title': 'ಭಾವನೆಗಳು ಮತ್ತು ಚಟುವಟಿಕೆಗಳು',
+  'choose_feeling_or_activity': 'ಭಾವನೆ ಅಥವಾ ಚಟುವಟಿಕೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+  'select_a_feeling': 'ಒಂದು ಭಾವನೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+  'apply_button': 'ಅನ್ವಯಿಸಿ',
+  'clear_button': 'ಸ್ಪಷ್ಟಗೊಳಿಸಿ',
+
+// Create Post Page
+  'create_post_title': 'ಪೋಸ್ಟ್ ರಚಿಸಿ',
+  'create_post_button': 'ಪೋಸ್ಟ್ ಮಾಡಿ',
+  'post_as_user': '@name ಆಗಿ ಪೋಸ್ಟ್ ಮಾಡಿ',
+  'post_to_page': '@name ನಲ್ಲಿ ಪೋಸ್ಟ್ ಮಾಡಿ',
+  'failed_to_create_post': 'ಪೋಸ್ಟ್ ರಚಿಸಲು ವಿಫಲವಾಗಿದೆ: @error',
+  'what_do_you_want_to_share': 'ನೀವು ಏನು ಹಂಚಿಕೊಳ್ಳಲು ಬಯಸುತ್ತೀರಿ?',
+  'add_to_your_post': 'ನಿಮ್ಮ ಪೋಸ್ಟ್‌ಗೆ ಸೇರಿಸಿ',
+  'photos_button': 'ಫೋಟೋಗಳು',
+  'colored_button': 'ಬಣ್ಣದ',
+  'feeling_button': 'ಭಾವನೆ',
+  'location_button': 'ಸ್ಥಳ',
+  'tag_button': 'ಟ್ಯಾಗ್',
+  'photos_count': 'ಫೋಟೋಗಳು (@count)',
+  'add_more_photos': 'ಇನ್ನಷ್ಟು ಫೋಟೋಗಳನ್ನು ಸೇರಿಸಿ',
+  'video_selected': 'ವೀಡಿಯೊ ಆಯ್ಕೆ ಮಾಡಲಾಗಿದೆ',
+  'video_button': 'ವೀಡಿಯೊ',
+  'audio_selected': 'ಆಡಿಯೊ ಆಯ್ಕೆ ಮಾಡಲಾಗಿದೆ',
+  'audio_button': 'ಆಡಿಯೊ',
+  'poll_options': 'ಪೋಲ್ ಆಯ್ಕೆಗಳು',
+  'add_option': 'ಆಯ್ಕೆಯನ್ನು ಸೇರಿಸಿ',
+  'option_number': 'ಆಯ್ಕೆ @count',
+  'post_successfully_created': 'ಪೋಸ್ಟ್ ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ',
+  'post_published_video_processing':
+  'ಪೋಸ್ಟ್ ಪ್ರಕಟಿಸಲಾಗಿದೆ! ವೀಡಿಯೊ ಪ್ರಕ್ರಿಯೆಯಲ್ಲಿದೆ ಮತ್ತು ಶೀಘ್ರದಲ್ಲೇ ಕಾಣಿಸುತ್ತದೆ',
+  'please_write_text_or_add_content':
+  'ದಯವಿಟ್ಟು ಪಠ್ಯವನ್ನು ಬರೆಯಿರಿ ಅಥವಾ ವಿಷಯವನ್ನು ಸೇರಿಸಿ (ಫೋಟೋ/ವೀಡಿಯೊ/ಆಡಿಯೊ)',
+  'colored_posts_not_enabled': 'ಬಣ್ಣದ ಪೋಸ್ಟ್‌ಗಳು ಸಕ್ರಿಯವಾಗಿಲ್ಲ',
+  'colored_posts_not_enabled_description':
+  'ಈ ವೈಶಿಷ್ಟ್ಯವನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಲು ನಿರ್ವಾಹಕರನ್ನು ಸಂಪರ್ಕಿಸಿ',
+  'no_patterns_available': 'ಯಾವುದೇ ಪ್ಯಾಟರ್ನ್ ಲಭ್ಯವಿಲ್ಲ',
+  'no_patterns_description': 'ಸೆಟ್ಟಿಂಗ್‌ಗಳಲ್ಲಿ ಬಣ್ಣದ ಪ್ಯಾಟರ್ನ್ ಕಂಡುಬಂದಿಲ್ಲ',
+  'choose_background': 'ಹಿನ್ನಲೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+  'tap_to_write': 'ಬರೆಯಲು ಟ್ಯಾಪ್ ಮಾಡಿ...',
+  'click_here_to_start_writing': 'ಬರೆಯಲು ಇಲ್ಲಿ ಕ್ಲಿಕ್ ಮಾಡಿ',
+  'feelings_not_enabled': 'ಭಾವನೆಗಳು ಸಕ್ರಿಯವಾಗಿಲ್ಲ',
+  'close_dialog': 'ಮುಚ್ಚಿ',
+  'privacy_settings': 'ಗೌಪ್ಯತಾ ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
+  'public_privacy': 'ಸಾರ್ವಜನಿಕ',
+  'friends_privacy': 'ಸ್ನೇಹಿತರು',
+  'private_privacy': 'ಖಾಸಗಿ',
+  'everyone_can_see': 'ಎಲ್ಲರೂ ನೋಡಬಹುದು',
+  'friends_only': 'ಸ್ನೇಹಿತರು ಮಾತ್ರ',
+  'only_you': 'ನೀವು ಮಾತ್ರ',
+
+// Post Type Labels
+  'post_type_text': 'ಪಠ್ಯ',
+  'post_type_photos': 'ಫೋಟೋಗಳು',
+  'post_type_album': 'ಆಲ್ಬಮ್',
+  'post_type_video': 'ವೀಡಿಯೊ',
+  'post_type_reel': 'ರೀಲ್',
+  'post_type_audio': 'ಆಡಿಯೊ',
+  'post_type_file': 'ಫೈಲ್',
+  'post_type_poll': 'ಪೋಲ್',
+  'post_type_feeling': 'ಭಾವನೆ',
+  'post_type_colored': 'ಬಣ್ಣದ',
+  'post_type_offer': 'ಆಫರ್',
+  'post_type_job': 'ಉದ್ಯೋಗ',
+// Events
+  'events': 'ಈವೆಂಟ್‌ಗಳು',
+  'my_events': 'ನನ್ನ ಈವೆಂಟ್‌ಗಳು',
+  'suggested_events': 'ಶಿಫಾರಸು ಮಾಡಿದ ಈವೆಂಟ್‌ಗಳು',
+  'going_events': 'ನಾನು ಹೋಗುತ್ತಿರುವುದು',
+  'interested_events': 'ಆಸಕ್ತಿ ಇದೆ',
+  'invited_events': 'ಆಮಂತ್ರಿತ',
+  'past_events': 'ಹಿಂದಿನ ಈವೆಂಟ್‌ಗಳು',
+  'create_event': 'ಈವೆಂಟ್ ರಚಿಸಿ',
+  'edit_event': 'ಈವೆಂಟ್ ಸಂಪಾದಿಸಿ',
+  'delete_event': 'ಈವೆಂಟ್ ಅಳಿಸಿ',
+  'event_details': 'ಈವೆಂಟ್ ವಿವರಗಳು',
+  'event_title': 'ಈವೆಂಟ್ ಶೀರ್ಷಿಕೆ',
+  'event_location': 'ಸ್ಥಳ',
+  'event_description': 'ವಿವರಣೆ',
+  'event_category': 'ವರ್ಗ',
+  'start_date': 'ಪ್ರಾರಂಭ ದಿನಾಂಕ',
+  'end_date': 'ಅಂತ್ಯ ದಿನಾಂಕ',
+  'going': 'ಹೋಗುತ್ತಿದ್ದೇನೆ',
+  'interested': 'ಆಸಕ್ತಿ ಇದೆ',
+  'not_going': 'ಹೋಗುವುದಿಲ್ಲ',
+  'members': 'ಸದಸ್ಯರು',
+  'invited': 'ಆಮಂತ್ರಿತ',
+  'invite_friends': 'ಸ್ನೇಹಿತರನ್ನು ಆಹ್ವಾನಿಸಿ',
+  'event_posts': 'ಈವೆಂಟ್ ಪೋಸ್ಟ್‌ಗಳು',
+  'join_event': 'ಈವೆಂಟ್‌ಗೆ ಸೇರಿ',
+  'leave_event': 'ಈವೆಂಟ್ ಬಿಡಿ',
+  'event_created_successfully': 'ಈವೆಂಟ್ ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ',
+  'event_updated_successfully': 'ಈವೆಂಟ್ ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ',
+  'event_deleted_successfully': 'ಈವೆಂಟ್ ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಲಾಗಿದೆ',
+  'joined_event_successfully': 'ಈವೆಂಟ್‌ಗೆ ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿದ್ದೀರಿ',
+  'left_event_successfully': 'ಈವೆಂಟ್ ಯಶಸ್ವಿಯಾಗಿ ಬಿಡಲಾಗಿದೆ',
+  'no_events_found': 'ಯಾವುದೇ ಈವೆಂಟ್ ಕಂಡುಬಂದಿಲ್ಲ',
+  'search_events': 'ಈವೆಂಟ್ ಹುಡುಕಿ',
+  'event_name_required': 'ಈವೆಂಟ್ ಹೆಸರು ಅಗತ್ಯ',
+  'event_location_required': 'ಸ್ಥಳ ಅಗತ್ಯ',
+  'event_start_date_required': 'ಪ್ರಾರಂಭ ದಿನಾಂಕ ಅಗತ್ಯ',
+  'event_end_date_required': 'ಅಂತ್ಯ ದಿನಾಂಕ ಅಗತ್ಯ',
+  'loading_events': 'ಈವೆಂಟ್‌ಗಳು ಲೋಡ್ ಆಗುತ್ತಿವೆ...',
+  'no_members_yet': 'ಇನ್ನೂ ಯಾವುದೇ ಸದಸ್ಯರು ಇಲ್ಲ',
+  'no_posts_yet': 'ಇನ್ನೂ ಯಾವುದೇ ಪೋಸ್ಟ್‌ಗಳು ಇಲ್ಲ',
+  'view_all_members': 'ಎಲ್ಲಾ ಸದಸ್ಯರನ್ನು ನೋಡಿ',
+  'organizer': 'ಆಯೋಜಕ',
+  'event_privacy': 'ಈವೆಂಟ್ ಗೌಪ್ಯತೆ',
+  'try_different_category':
+  'ಬೇರೆ ವರ್ಗವನ್ನು ಪ್ರಯತ್ನಿಸಿ ಅಥವಾ ಹೊಸ ಈವೆಂಟ್‌ಗಳನ್ನು ಕಾಯಿರಿ',
+  'no_going_events': 'ನೀವು ಯಾವುದೇ ಈವೆಂಟ್‌ಗೆ ಹೋಗುತ್ತಿಲ್ಲ',
+  'join_events_to_see_them_here':
+  'ಈವೆಂಟ್‌ಗೆ ಸೇರಿಸಿದರೆ ಅವು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ',
+  'no_interested_events': 'ನೀವು ಯಾವುದೇ ಈವೆಂಟ್‌ನಲ್ಲಿ ಆಸಕ್ತಿ ತೋರಿಸಿಲ್ಲ',
+  'mark_events_interested':
+  'ಈವೆಂಟ್‌ನಲ್ಲಿ ಆಸಕ್ತಿ ತೋರಿಸಿದರೆ ಅವು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ',
+  'no_invitations': 'ಯಾವುದೇ ಆಹ್ವಾನಗಳಿಲ್ಲ',
+  'wait_for_friends_invitations':
+  'ಸ್ನೇಹಿತರು ಆಹ್ವಾನಿಸಿದಾಗ ಅವು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ',
+  'no_my_events': 'ನೀವು ಇನ್ನೂ ಯಾವುದೇ ಈವೆಂಟ್ ರಚಿಸಿಲ್ಲ',
+  'create_first_event': 'ನಿಮ್ಮ ಮೊದಲ ಈವೆಂಟ್ ರಚಿಸಲು + ಬಟನ್ ಒತ್ತಿರಿ',
+  'searching_for': 'ಹುಡುಕಲಾಗುತ್ತಿದೆ: {query}',
+  'search_results_for': '{query}ಗಾಗಿ ಹುಡುಕಾಟ ಫಲಿತಾಂಶಗಳು',
+  'event_picture_updated': 'ಈವೆಂಟ್ ಚಿತ್ರ ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ',
+  'event_cover_updated': 'ಈವೆಂಟ್ ಕವರ್ ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ',
+  'failed_to_upload_image': 'ಚಿತ್ರ ಅಪ್‌ಲೋಡ್ ವಿಫಲವಾಗಿದೆ',
+  'update_event_picture': 'ಈವೆಂಟ್ ಚಿತ್ರ ನವೀಕರಿಸಿ',
+  'events_members': 'ಸದಸ್ಯರು',
+  'all': 'ಎಲ್ಲಾ',
+  'loading_members': 'ಸದಸ್ಯರು ಲೋಡ್ ಆಗುತ್ತಿದ್ದಾರೆ...',
+  'no_going_members': 'ಹೋಗುತ್ತಿರುವ ಸದಸ್ಯರು ಇಲ್ಲ',
+  'no_interested_members': 'ಆಸಕ್ತ ಸದಸ್ಯರು ಇಲ್ಲ',
+  'remove_member': 'ಸದಸ್ಯರನ್ನು ತೆಗೆದುಹಾಕಿ',
+  'remove_member_confirmation':
+  '{name} ಅವರನ್ನು ಈವೆಂಟ್‌ನಿಂದ ತೆಗೆದುಹಾಕಬೇಕೆ?',
+  'retry': 'ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
+  'feature_coming_soon': 'ಫೀಚರ್ ಶೀಘ್ರದಲ್ಲೇ ಬರಲಿದೆ',
+// Market
+  'market_title': 'ಮಾರುಕಟ್ಟೆ',
+  'market_products': 'ಉತ್ಪನ್ನಗಳು',
+  'market_add_product': 'ಉತ್ಪನ್ನ ಸೇರಿಸಿ',
+  'market_no_products': 'ಇನ್ನೂ ಯಾವುದೇ ಉತ್ಪನ್ನಗಳಿಲ್ಲ',
+  'market_search_products': 'ಉತ್ಪನ್ನಗಳನ್ನು ಹುಡುಕಿ',
+  'market_invalid_fields': 'ದಯವಿಟ್ಟು ಫೀಲ್ಡ್‌ಗಳನ್ನು ಪರಿಶೀಲಿಸಿ',
+  'market_product_created': 'ಉತ್ಪನ್ನವನ್ನು ರಚಿಸಲಾಗಿದೆ',
+  'market_product_name': 'ಉತ್ಪನ್ನದ ಹೆಸರು',
+  'market_price': 'ಬೆಲೆ',
+  'market_quantity': 'ಪ್ರಮಾಣ',
+  'market_category_id': 'ವರ್ಗ ಐಡಿ',
+  'market_location': 'ಸ್ಥಳ',
+  'market_description': 'ವಿವರಣೆ',
+  'market_status': 'ಸ್ಥಿತಿ',
+  'market_for_adult': 'ವಯಸ್ಕರಿಗಾಗಿ (18+)',
+  'market_product_url': 'ಉತ್ಪನ್ನ URL',
+  'market_product_file': 'ಉತ್ಪನ್ನ ಫೈಲ್',
+  'market_photos': 'ಫೋಟೋಗಳು',
+  'market_submit_product': 'ಉತ್ಪನ್ನವನ್ನು ಸಲ್ಲಿಸಿ',
+  'market_category': 'ವರ್ಗ',
+  'market_digital_hint':
+  'ನೀವು ಡಿಜಿಟಲ್ ಉತ್ಪನ್ನವನ್ನು ಮಾರಾಟಿಸುತ್ತಿದ್ದರೆ ಈ ಆಯ್ಕೆಯನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ',
+  'market_download_url': 'ಡೌನ್‌ಲೋಡ್ URL',
+  'market_upload_file': 'ನಿಮ್ಮ ಫೈಲ್ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ',
+  'market_file_none': 'ಯಾವುದೇ ಫೈಲ್ ಆಯ್ಕೆ ಮಾಡಿಲ್ಲ',
+  'market_file_types': 'ಅನುಮತಿಸಿದ ಫೈಲ್ ಪ್ರಕಾರಗಳು: txt, zip, json, docx, pdf',
+  'market_search_hint': 'ಉತ್ಪನ್ನಗಳನ್ನು ಹುಡುಕಿ...',
+  'market_category_all': 'ಎಲ್ಲಾ',
+  'market_empty': 'ಯಾವುದೇ ಉತ್ಪನ್ನಗಳು ಕಂಡುಬಂದಿಲ್ಲ',
+  'market_error_loading_categories': 'ವರ್ಗಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+  'market_error_loading_products': 'ಉತ್ಪನ್ನಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+  'market_add_to_cart': 'ಕಾರ್ಟ್‌ಗೆ ಸೇರಿಸಿ',
+  'market_out_of_stock': 'ಸ್ಟಾಕ್ ಮುಗಿದಿದೆ',
+  'market_in_stock': 'ಸ್ಟಾಕ್ ಲಭ್ಯವಿದೆ',
+  'market_cart': 'ಕಾರ್ಟ್',
+  'market_cart_empty': 'ಶಾಪಿಂಗ್ ಕಾರ್ಟ್ ಖಾಲಿಯಾಗಿದೆ',
+  'market_empty_cart_subtitle': 'ನಿಮ್ಮ ಕಾರ್ಟ್‌ಗೆ ಉತ್ಪನ್ನಗಳನ್ನು ಸೇರಿಸಲು ಪ್ರಾರಂಭಿಸಿ',
+  'market_checkout': 'ಚೆಕ್‌ಔಟ್',
+  'market_total': 'ಒಟ್ಟು',
+  'market_clear_cart': 'ಕಾರ್ಟ್ ಖಾಲಿ ಮಾಡಿ',
+  'market_clear_cart_confirm':
+  'ನೀವು ಕಾರ್ಟ್‌ನಲ್ಲಿನ ಎಲ್ಲಾ ಐಟಂಗಳನ್ನು ತೆಗೆದುಹಾಕಲು ಖಚಿತವೇ?',
+  'market_remove_item': 'ಕಾರ್ಟ್‌ನಿಂದ ತೆಗೆದುಹಾಕಿ',
+  'market_digital': 'ಡಿಜಿಟಲ್',
+  'market_browse_products': 'ಉತ್ಪನ್ನಗಳನ್ನು ವೀಕ್ಷಿಸಿ',
+  'market_order_summary': 'ಆರ್ಡರ್ ಸಾರಾಂಶ',
+  'market_items': 'ಐಟಂಗಳು',
+  'market_confirm_order': 'ಆರ್ಡರ್ ದೃಢೀಕರಿಸಿ',
+  'market_order_placed_success': 'ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿ ಇಡಲಾಗಿದೆ',
+  'market_shipping_info': 'ಶಿಪ್ಪಿಂಗ್ ಮಾಹಿತಿ',
+  'market_payment_method': 'ಪಾವತಿ ವಿಧಾನ',
+  'market_payment_cod': 'ಡಿಲಿವರಿಯಲ್ಲಿ ನಗದು',
+  'market_payment_credit_card': 'ಕ್ರೆಡಿಟ್ ಕಾರ್ಡ್',
+  'market_payment_paypal': 'ಪೇಪಾಲ್',
+  'market_order_details': 'ಆರ್ಡರ್ ವಿವರಗಳು',
+  'market_order_hash': 'ಆರ್ಡರ್',
+  'market_seller': 'ಮಾರಾಟಗಾರ',
+  'market_buyer': 'ಖರೀದಿದಾರ',
+  'market_created_at': 'ರಚಿಸಲಾಗಿದೆ',
+  'market_shipping_address': 'ಶಿಪ್ಪಿಂಗ್ ವಿಳಾಸ',
+  'market_status_pending': 'ಬಾಕಿಯಿದೆ',
+  'market_status_processing': 'ಪ್ರಕ್ರಿಯೆಯಲ್ಲಿದೆ',
+  'market_status_shipped': 'ರವಾನಿಸಲಾಗಿದೆ',
+  'market_status_delivered': 'ವಿತರಣೆಯಾಗಿದೆ',
+  'market_status_cancelled': 'ರದ್ದುಪಡಿಸಲಾಗಿದೆ',
+
+// Checkout form
+  'full_name': 'ಪೂರ್ಣ ಹೆಸರು',
+  'phone_number': 'ಫೋನ್ ಸಂಖ್ಯೆ',
+  'address': 'ವಿಳಾಸ',
+  'city': 'ನಗರ',
+  'zip_code': 'ಪಿನ್ ಕೋಡ್',
+  'country': 'ದೇಶ',
+// Jobs
+  'jobs': 'ಉದ್ಯೋಗಗಳು',
+  'my_jobs': 'ನನ್ನ ಉದ್ಯೋಗಗಳು',
+  'job_details': 'ಉದ್ಯೋಗ ವಿವರಗಳು',
+  'create_job': 'ಉದ್ಯೋಗ ರಚಿಸಿ',
+  'edit_job': 'ಉದ್ಯೋಗ ಸಂಪಾದಿಸಿ',
+  'delete_job': 'ಉದ್ಯೋಗ ಅಳಿಸಿ',
+  'delete_job_confirm': 'ನೀವು ಈ ಉದ್ಯೋಗವನ್ನು ಅಳಿಸಲು ಖಚಿತವೇ?',
+  'salary': 'ವೇತನ',
+  'salary_min': 'ಕನಿಷ್ಠ ವೇತನ',
+  'salary_max': 'ಗರಿಷ್ಠ ವೇತನ',
+  'currency_id': 'ಕರೆನ್ಸಿ ಐಡಿ',
+  'select_currency': 'ಕರೆನ್ಸಿ ಆಯ್ಕೆಮಾಡಿ',
+  'job_title': 'ಉದ್ಯೋಗ ಶೀರ್ಷಿಕೆ',
+  'select_category': 'ವರ್ಗ ಆಯ್ಕೆಮಾಡಿ',
+  'candidates': 'ಅರ್ಜಿದಾರರು',
+  'apply_now': 'ಈಗ ಅರ್ಜಿ ಸಲ್ಲಿಸಿ',
+  'job_applied_successfully': 'ನಿಮ್ಮ ಅರ್ಜಿ ಯಶಸ್ವಿಯಾಗಿ ಸಲ್ಲಿಸಲಾಗಿದೆ',
+  'name': 'ಹೆಸರು',
+  'phone': 'ಫೋನ್',
+  'job_created_successfully': 'ಉದ್ಯೋಗ ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ',
+  'job_updated_successfully': 'ಉದ್ಯೋಗ ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ',
+  'job_deleted_successfully': 'ಉದ್ಯೋಗ ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಲಾಗಿದೆ',
+  'filters': 'ಫಿಲ್ಟರ್‌ಗಳು',
+  'no_filters': 'ಯಾವುದೇ ಫಿಲ್ಟರ್ ಅನ್ವಯಿಸಲಾಗಿಲ್ಲ',
+  'pay_per': 'ಪಾವತಿ ಅವಧಿ',
+  'search_location': 'ನಗರ, ರಾಜ್ಯ ಅಥವಾ ದೇಶದಿಂದ ಹುಡುಕಿ',
+  'salary_range': 'ವೇತನ ವ್ಯಾಪ್ತಿ',
+  'clear': 'ಸ್ಪಷ್ಟಗೊಳಿಸಿ',
+  'where_did_you_work': 'ನೀವು ಎಲ್ಲಲ್ಲಿ ಕೆಲಸ ಮಾಡಿದ್ದೀರಿ?',
+  'position_job': 'ಹುದ್ದೆ',
+  'from': 'ಇಂದ',
+  'to': 'ವರೆಗೆ',
+  'work_experience': 'ಕೆಲಸದ ಅನುಭವ',
+  'call': 'ಕಾಲ್',
+
+// Funding
+  'funding': 'ಹಣಸಹಾಯ',
+  'funding_details': 'ಹಣಸಹಾಯ ವಿವರಗಳು',
+  'create_funding': 'ಹಣಸಹಾಯ ರಚಿಸಿ',
+  'edit_funding': 'ಹಣಸಹಾಯ ಸಂಪಾದಿಸಿ',
+  'delete_funding': 'ಹಣಸಹಾಯ ಅಳಿಸಿ',
+  'delete_funding_confirm': 'ನೀವು ಈ ಹಣಸಹಾಯ ವಿನಂತಿಯನ್ನು ಅಳಿಸಲು ಖಚಿತವೇ?',
+  'funding_title': 'ಹಣಸಹಾಯ ಶೀರ್ಷಿಕೆ',
+  'goal_amount': 'ಲಕ್ಷ್ಯ ಮೊತ್ತ',
+  'raised': 'ಸಂಗ್ರಹಿಸಿದ ಮೊತ್ತ',
+  'goal': 'ಲಕ್ಷ್ಯ',
+  'donors': 'ದಾನಿಗಳು',
+  'completed': 'ಪೂರ್ಣಗೊಂಡಿದೆ',
+  'remaining': 'ಉಳಿದಿದೆ',
+  'donate': 'ದಾನ ಮಾಡಿ',
+  'donate_now': 'ಈಗ ದಾನ ಮಾಡಿ',
+  'donation_amount': 'ದಾನ ಮೊತ್ತ',
+  'amount': 'ಮೊತ್ತ',
+  'amount_must_be_positive': 'ಮೊತ್ತ ಶೂನ್ಯಕ್ಕಿಂತ ಹೆಚ್ಚಿರಬೇಕು',
+  'quick_amounts': 'ತ್ವರಿತ ಮೊತ್ತಗಳು',
+  'processing': 'ಪ್ರಕ್ರಿಯೆಯಲ್ಲಿದೆ',
+  'donation_successful': 'ನಿಮ್ಮ ದಾನಕ್ಕೆ ಧನ್ಯವಾದಗಳು!',
+  'view_donors': 'ದಾನಿಗಳನ್ನು ನೋಡಿ',
+  'no_donors_yet': 'ಇನ್ನೂ ಯಾವುದೇ ದಾನಿಗಳು ಇಲ್ಲ',
+  'no_funding_found': 'ಯಾವುದೇ ಹಣಸಹಾಯ ವಿನಂತಿಗಳು ಕಂಡುಬಂದಿಲ್ಲ',
+  'funding_created_successfully': 'ಹಣಸಹಾಯ ವಿನಂತಿ ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ',
+  'funding_updated_successfully': 'ಹಣಸಹಾಯ ವಿನಂತಿ ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ',
+  'funding_deleted': 'ಹಣಸಹಾಯ ವಿನಂತಿ ಅಳಿಸಲಾಗಿದೆ',
+  'cover_image_required': 'ಕವರ್ ಚಿತ್ರ ಅಗತ್ಯವಿದೆ',
+  'min_3_chars': 'ಕನಿಷ್ಠ 3 ಅಕ್ಷರಗಳು ಅಗತ್ಯ',
+  'min_16_chars': 'ಕನಿಷ್ಠ 16 ಅಕ್ಷರಗಳು ಅಗತ್ಯ',
+// Offers
+  'offers': 'ಆಫರ್‌ಗಳು',
+  'my_offers': 'ನನ್ನ ಆಫರ್‌ಗಳು',
+  'offer_details': 'ಆಫರ್ ವಿವರಗಳು',
+  'no_offers_found': 'ಯಾವುದೇ ಆಫರ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ',
+  'create_offer': 'ಆಫರ್ ರಚಿಸಿ',
+  'edit_offer': 'ಆಫರ್ ಸಂಪಾದಿಸಿ',
+  'delete_offer': 'ಆಫರ್ ಅಳಿಸಿ',
+  'delete_offer_confirm': 'ನೀವು ಈ ಆಫರ್ ಅನ್ನು ಅಳಿಸಲು ಖಚಿತವೇ?',
+  'offer_title': 'ಆಫರ್ ಶೀರ್ಷಿಕೆ',
+  'discount_type': 'ರಿಯಾಯಿತಿ ಪ್ರಕಾರ',
+  'discount_percent': 'ರಿಯಾಯಿತಿ ಶೇಕಡಾವಾರು',
+  'discount_amount': 'ರಿಯಾಯಿತಿ ಮೊತ್ತ',
+  'offer_created_successfully': 'ಆಫರ್ ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ',
+  'offer_updated_successfully': 'ಆಫರ್ ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ',
+  'offer_deleted_successfully': 'ಆಫರ್ ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಲಾಗಿದೆ',
+  'photos': 'ಫೋಟೋಗಳು',
+  'add_photos': 'ಫೋಟೋಗಳನ್ನು ಸೇರಿಸಿ',
+  'add_more': 'ಇನ್ನಷ್ಟು ಸೇರಿಸಿ',
+  'upload_photos': 'ಫೋಟೋಗಳನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ',
+
+// Ads / Campaigns
+  'my_campaigns': 'ನನ್ನ ಅಭಿಯಾನಗಳು',
+  'ads_campaigns_title': 'ಜಾಹೀರಾತು ಅಭಿಯಾನಗಳು',
+  'campaign_details': 'ಅಭಿಯಾನ ವಿವರಗಳು',
+  'create_campaign': 'ಅಭಿಯಾನ ರಚಿಸಿ',
+  'edit_campaign': 'ಅಭಿಯಾನ ಸಂಪಾದಿಸಿ',
+  'update_campaign': 'ಅಭಿಯಾನ ನವೀಕರಿಸಿ',
+  'delete_campaign': 'ಅಭಿಯಾನ ಅಳಿಸಿ',
+  'delete_campaign_confirm': 'ನೀವು ಈ ಅಭಿಯಾನವನ್ನು ಅಳಿಸಲು ಖಚಿತವೇ?',
+  'campaign_title': 'ಅಭಿಯಾನ ಶೀರ್ಷಿಕೆ',
+  'campaign_title_hint': 'ಅಭಿಯಾನದ ಶೀರ್ಷಿಕೆ ನಮೂದಿಸಿ',
+  'ads_campaign_created': 'ಅಭಿಯಾನ ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ',
+  'ads_campaign_updated': 'ಅಭಿಯಾನ ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ',
+  'campaign_created_successfully': 'ಅಭಿಯಾನ ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ',
+  'campaign_updated_successfully': 'ಅಭಿಯಾನ ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ',
+  'campaign_deleted_successfully': 'ಅಭಿಯಾನ ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಲಾಗಿದೆ',
+  'no_campaigns_found': 'ಯಾವುದೇ ಅಭಿಯಾನಗಳು ಕಂಡುಬಂದಿಲ್ಲ',
+
+// Boost System
+  'boost_post': 'ಪೋಸ್ಟ್ ಬೂಸ್ಟ್ ಮಾಡಿ',
+  'boost_page': 'ಪುಟ ಬೂಸ್ಟ್ ಮಾಡಿ',
+  'boosted': 'ಬೂಸ್ಟ್ ಮಾಡಲಾಗಿದೆ',
+  'unboost': 'ಬೂಸ್ಟ್ ತೆಗೆದುಹಾಕಿ',
+  'boost_statistics': 'ಬೂಸ್ಟ್ ಅಂಕಿಅಂಶಗಳು',
+  'boost_info_subtitle': 'ನಿಮ್ಮ ಬೂಸ್ಟ್ ಮಾಡಿದ ವಿಷಯವನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡಿ',
+  'boosted_posts': 'ಬೂಸ್ಟ್ ಮಾಡಿದ ಪೋಸ್ಟ್‌ಗಳು',
+  'boosted_pages': 'ಬೂಸ್ಟ್ ಮಾಡಿದ ಪುಟಗಳು',
+  'boost_remaining': 'ಉಳಿದಿದೆ',
+  'boost_limit': 'ಮಿತಿ',
+  'boost_limit_reached': 'ಮಿತಿಗೆ ತಲುಪಿದೆ',
+  'boost_limit_reached_message': 'ನೀವು ನಿಮ್ಮ ಬೂಸ್ಟ್ ಮಿತಿಗೆ ತಲುಪಿದ್ದೀರಿ',
+  'boost_success': 'ಯಶಸ್ವಿಯಾಗಿ ಬೂಸ್ಟ್ ಮಾಡಲಾಗಿದೆ',
+  'unboost_success': 'ಯಶಸ್ವಿಯಾಗಿ ಬೂಸ್ಟ್ ತೆಗೆದುಹಾಕಲಾಗಿದೆ',
+  'boost_permission_denied': 'ಬೂಸ್ಟ್ ಮಾಡಲು ಅನುಮತಿ ಇಲ್ಲ',
+  'boost_already_boosted': 'ಈಗಾಗಲೇ ಬೂಸ್ಟ್ ಮಾಡಲಾಗಿದೆ',
+  'boost_not_boosted': 'ಬೂಸ್ಟ್ ಮಾಡಲಾಗಿಲ್ಲ',
+  'my_boosted_posts': 'ನನ್ನ ಬೂಸ್ಟ್ ಪೋಸ್ಟ್‌ಗಳು',
+  'my_boosted_pages': 'ನನ್ನ ಬೂಸ್ಟ್ ಪುಟಗಳು',
+  'no_boosted_posts': 'ಯಾವುದೇ ಬೂಸ್ಟ್ ಪೋಸ್ಟ್‌ಗಳು ಇಲ್ಲ',
+  'no_boosted_pages': 'ಯಾವುದೇ ಬೂಸ್ಟ್ ಪುಟಗಳು ಇಲ್ಲ',
+// Feed & Menu Page
+  'news_feed': 'ಸುದ್ದಿ ಫೀಡ್',
+  'recent_updates': 'ಇತ್ತೀಚಿನ ನವೀಕರಣಗಳು',
+  'popular_posts': 'ಜನಪ್ರಿಯ ಪೋಸ್ಟ್‌ಗಳು',
+  'discover_posts': 'ಹೊಸ ಪೋಸ್ಟ್‌ಗಳನ್ನು ಹುಡುಕಿ',
+  'mine': 'ನನ್ನದು',
+
+  'my_courses': 'ನನ್ನ ಕೋರ್ಸ್‌ಗಳು',
+  'saved': 'ಉಳಿಸಿದವು',
+  'scheduled': 'ನಿಗದಿಪಡಿಸಲಾಗಿದೆ',
+  'memories': 'ಸ್ಮೃತಿಗಳು',
+  'advertising': 'ಜಾಹೀರಾತು',
+  'wallet': 'ವಾಲೆಟ್',
+  'premium_packages': 'ಪ್ರೀಮಿಯಂ ಪ್ಯಾಕೇಜ್‌ಗಳು',
+  'people': 'ಜನ',
+
+  'courses': 'ಕೋರ್ಸ್‌ಗಳು',
+  'forums': 'ಫೋರಂಗಳು',
+  'movies': 'ಚಿತ್ರಗಳು',
+  'games': 'ಆಟಗಳು',
+  'developers': 'ಡೆವಲಪರ್‌ಗಳು',
+  'merits': 'ಮೆರಿಟ್‌ಗಳು',
+  'watch': 'ನೋಡಿ',
+  'reels': 'ರೀಲ್ಸ್',
+
+// Home Page
+  'loading_posts': 'ಪೋಸ್ಟ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ...',
+  'connection_error': 'ಸಂಪರ್ಕ ದೋಷ',
+  'no_posts': 'ಇನ್ನೂ ಯಾವುದೇ ಪೋಸ್ಟ್ ಇಲ್ಲ',
+  'be_first_to_post': 'ಮೊದಲು ನೀವು ಪೋಸ್ಟ್ ಮಾಡಿ!',
+  'loading_more': 'ಇನ್ನಷ್ಟು ಲೋಡ್ ಆಗುತ್ತಿದೆ...',
+  'no_more_posts': 'ಇನ್ನಷ್ಟು ಪೋಸ್ಟ್‌ಗಳು ಲಭ್ಯವಿಲ್ಲ',
+  'whats_on_your_mind': 'ನಿಮ್ಮ ಮನಸ್ಸಿನಲ್ಲಿ ಏನು ಇದೆ?',
+  'add_story': 'ಸ್ಟೋರಿ ಸೇರಿಸಿ',
+  'friends_page': 'ಸ್ನೇಹಿತರ ಪುಟ',
+  'coming_soon_feature': 'ಶೀಘ್ರದಲ್ಲೇ ಲಭ್ಯ',
+
+  'logout_confirm': 'ನೀವು ಖಚಿತವಾಗಿ ಲಾಗ್‌ಔಟ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಾ?',
+  'search_placeholder': 'ಹುಡುಕಿ...',
+  'view_all': 'ಎಲ್ಲವನ್ನೂ ನೋಡಿ',
+
+// Settings Page
+  'customize_experience': 'ನಿಮ್ಮ ಅನುಭವವನ್ನು ವೈಯಕ್ತಿಕಗೊಳಿಸಿ',
+  'customize_experience_subtitle':
+  'ಗೌಪ್ಯತೆ, ಅಧಿಸೂಚನೆಗಳು ಮತ್ತು ಖಾತೆಯನ್ನು ನಿರ್ವಹಿಸಿ',
+  'privacy_security': 'ಗೌಪ್ಯತೆ ಮತ್ತು ಭದ್ರತೆ',
+  'privacy_settings_subtitle':
+  'ನಿಮ್ಮ ಮಾಹಿತಿಯನ್ನು ಯಾರು ನೋಡಬಹುದು ಎಂಬುದನ್ನು ನಿಯಂತ್ರಿಸಿ',
+  'change_password': 'ಪಾಸ್‌ವರ್ಡ್ ಬದಲಾಯಿಸಿ',
+  'change_password_subtitle':
+  'ನಿಮ್ಮ ಖಾತೆಯ ಭದ್ರತೆಯನ್ನು ನವೀಕರಿಸಿ',
+  'two_factor_auth': 'ಎರಡು ಹಂತದ ದೃಢೀಕರಣ',
+  'two_factor_auth_subtitle':
+  'ಹೆಚ್ಚುವರಿ ಭದ್ರತೆಯನ್ನು ಸೇರಿಸಿ',
+  'manage_sessions': 'ಸೆಷನ್‌ಗಳನ್ನು ನಿರ್ವಹಿಸಿ',
+  'manage_sessions_subtitle':
+  'ಸಕ್ರಿಯ ಸೆಷನ್‌ಗಳನ್ನು ನಿಯಂತ್ರಿಸಿ',
+  'blocked_users': 'ನಿರ್ಬಂಧಿತ ಬಳಕೆದಾರರು',
+  'blocked_users_subtitle':
+  'ನಿರ್ಬಂಧಿತ ಬಳಕೆದಾರರನ್ನು ನಿರ್ವಹಿಸಿ',
+  'account': 'ಖಾತೆ',
+  'my_information': 'ನನ್ನ ಮಾಹಿತಿ',
+  'my_information_subtitle':
+  'ನಿಮ್ಮ ವೈಯಕ್ತಿಕ ಮಾಹಿತಿಯನ್ನು ನವೀಕರಿಸಿ',
+  'my_addresses': 'ನನ್ನ ವಿಳಾಸಗಳು',
+  'my_addresses_subtitle':
+  'ಉಳಿಸಿದ ವಿಳಾಸಗಳನ್ನು ನಿರ್ವಹಿಸಿ',
+  'verification': 'ಪರಿಶೀಲನೆ',
+  'verification_subtitle':
+  'ನಿಮ್ಮ ಖಾತೆಯ ಗುರುತನ್ನು ಪರಿಶೀಲಿಸಿ',
+  'switch_to_light_mode': 'ಲೈಟ್ ಮೋಡ್‌ಗೆ ಬದಲಾಯಿಸಿ',
+  'switch_to_dark_mode': 'ಡಾರ್ಕ್ ಮೋಡ್‌ಗೆ ಬದಲಾಯಿಸಿ',
+  'appearance_preferences': 'ರೂಪ ಮತ್ತು ಆದ್ಯತೆಗಳು',
+  'display_settings': 'ಡಿಸ್ಪ್ಲೇ ಮತ್ತು ಅಪ್‌ನ ರೂಪ',
+  'language_region': 'ಭಾಷೆ ಮತ್ತು ಪ್ರದೇಶ ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
+  'cache_settings': 'ಕ್ಯಾಶ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
+  'cache_settings_subtitle':
+  'ಕ್ಯಾಶ್ ಮತ್ತು ಸಂಗ್ರಹಣೆಯನ್ನು ತೆರವುಗೊಳಿಸಿ',
+  'monetization_settings': 'ಆದಾಯ',
+  'monetization_settings_subtitle':
+  'ಆದಾಯ ಮತ್ತು ಪಾವತಿ ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
+  'market_settings': 'ಮಾರ್ಕೆಟ್',
+  'market_settings_subtitle':
+  'ಮಾರ್ಕೆಟ್‌ಪ್ಲೇಸ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
+  'bank_settings': 'ಬ್ಯಾಂಕ್',
+  'bank_settings_subtitle':
+  'ಬ್ಯಾಂಕ್ ಖಾತೆ ಮತ್ತು ಪಾವತಿಗಳು',
+  'funding_settings': 'ಫಂಡಿಂಗ್',
+  'funding_settings_subtitle':
+  'ಫಂಡಿಂಗ್ ಆದ್ಯತೆಗಳು',
+  'about_app': 'ಆ್ಯಪ್ ಬಗ್ಗೆ ಮತ್ತು ಸಹಾಯ',
+  'developer_info': 'ಡೆವಲಪರ್ ಮಾಹಿತಿ',
+  'developer_info_subtitle':
+  'ಆ್ಯಪ್ ಆವೃತ್ತಿ ಮತ್ತು ಡೆವಲಪರ್ ವಿವರಗಳು',
+  'report_bug': 'ಬಗ್ ವರದಿ ಮಾಡಿ',
+  'report_bug_subtitle':
+  'ಸಮಸ್ಯೆಗಳನ್ನು ವರದಿ ಮಾಡಿ ನಮಗೆ ಸುಧಾರಣೆಗೆ ಸಹಾಯ ಮಾಡಿ',
+  'danger_zone': 'ಅಪಾಯ ವಲಯ',
+  'delete_account': 'ಖಾತೆ ಅಳಿಸಿ',
+  'delete_account_subtitle':
+  'ನಿಮ್ಮ ಖಾತೆಯನ್ನು ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಿ',
+// Additional Settings
+  'notification_settings': 'ಅಧಿಸೂಚನೆ ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
+  'notification_settings_subtitle': 'ಅಲರ್ಟ್‌ಗಳು ಮತ್ತು ಅಧಿಸೂಚನೆಗಳನ್ನು ನಿರ್ವಹಿಸಿ',
+  'membership_monetization': 'ಸದಸ್ಯತ್ವ ಮತ್ತು ಆದಾಯ',
+  'membership': 'ಸದಸ್ಯತ್ವ',
+  'membership_subtitle': 'ನಿಮ್ಮ ಸದಸ್ಯತ್ವ ಯೋಜನೆಯನ್ನು ನಿರ್ವಹಿಸಿ',
+  'monetization': 'ಆದಾಯ',
+  'monetization_subtitle': 'ಆದಾಯ ಮತ್ತು ಪಾವತಿ ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
+  'monetization_options': 'ಆದಾಯ ಆಯ್ಕೆಗಳು ಸಂರಚಿಸಿ',
+  'payments': 'ಪಾವತಿಗಳು',
+  'payments_subtitle': 'ಪಾವತಿ ವಿಧಾನಗಳು ಮತ್ತು ಇತಿಹಾಸ',
+  'earnings': 'ಆದಾಯ',
+  'earnings_subtitle': 'ನಿಮ್ಮ ಆದಾಯವನ್ನು ವೀಕ್ಷಿಸಿ',
+  'affiliates': 'ಅಫಿಲಿಯೇಟ್ಸ್',
+  'affiliates_subtitle': 'ರಿಫರಲ್‌ಗಳು ಮತ್ತು ಆದಾಯವನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡಿ',
+  'my_affiliates': 'ನನ್ನ ಅಫಿಲಿಯೇಟ್ಸ್',
+  'my_affiliates_subtitle': 'ನಿಮ್ಮ ರಿಫರಲ್‌ಗಳನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡಿ',
+  'affiliate_payments': 'ಅಫಿಲಿಯೇಟ್ಸ್ ಪಾವತಿಗಳು',
+  'affiliate_payments_subtitle': 'ಅಫಿಲಿಯೇಟ್ಸ್ ಪಾವತಿಗಳನ್ನು ನಿರ್ವಹಿಸಿ',
+  'points_section': 'ಪಾಯಿಂಟ್‌ಗಳು',
+  'points_subtitle': 'ಪಾಯಿಂಟ್‌ಗಳು ಮತ್ತು ಬಹುಮಾನಗಳನ್ನು ನಿರ್ವಹಿಸಿ',
+  'my_points': 'ನನ್ನ ಪಾಯಿಂಟ್‌ಗಳು',
+  'my_points_subtitle': 'ನಿಮ್ಮ ಪಾಯಿಂಟ್ ಬ್ಯಾಲೆನ್ಸ್ ವೀಕ್ಷಿಸಿ',
+  'points_payments': 'ಪಾಯಿಂಟ್ ಪಾವತಿಗಳು',
+  'points_payments_subtitle': 'ಪಾಯಿಂಟ್‌ಗಳನ್ನು ರಿಡೀಮ್ ಮಾಡಿ',
+  'financial': 'ಆರ್ಥಿಕ',
+  'bank_transfers': 'ಬ್ಯಾಂಕ್ ವರ್ಗಾವಣೆಗಳು',
+  'bank_transfers_subtitle': 'ಬ್ಯಾಂಕ್ ವರ್ಗಾವಣೆ ಇತಿಹಾಸ',
+  'marketplace_funding': 'ಮಾರ್ಕೆಟ್‌ಪ್ಲೇಸ್ ಮತ್ತು ಫಂಡಿಂಗ್',
+  'marketplace': 'ಮಾರ್ಕೆಟ್‌ಪ್ಲೇಸ್',
+  'marketplace_subtitle': 'ಮಾರಾಟಗಾರರ ಬ್ಯಾಲೆನ್ಸ್ ನಿರ್ವಹಿಸಿ',
+  'funding_subtitle': 'ಫಂಡಿಂಗ್ ಅಭಿಯಾನಗಳನ್ನು ನಿರ್ವಹಿಸಿ',
+  'storage_cache': 'ಸ್ಟೋರೇಜ್ ಮತ್ತು ಕ್ಯಾಶ್',
+  'cache_management': 'ಕ್ಯಾಶ್ ನಿರ್ವಹಣೆ',
+  'cache_management_subtitle': 'ವೀಡಿಯೊ ಕ್ಯಾಶ್ ಮತ್ತು ಸ್ಟೋರೇಜ್ ನಿರ್ವಹಿಸಿ',
+
+// Cache Settings Page
+  'cache_settings_title': 'ಕ್ಯಾಶ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
+  'cache_manage_title': 'ಕ್ಯಾಶ್ ನಿರ್ವಹಿಸಿ',
+  'cache_manage_subtitle': 'ವೀಡಿಯೊ ಕ್ಯಾಶ್ ಮತ್ತು ಸ್ಟೋರೇಜ್ ನಿಯಂತ್ರಿಸಿ',
+  'cache_information_section': 'ಕ್ಯಾಶ್ ಮಾಹಿತಿ',
+  'cached_videos_label': 'ಕ್ಯಾಶ್ ಮಾಡಲಾದ ವೀಡಿಯೊಗಳು',
+  'cache_duration_label': 'ಕ್ಯಾಶ್ ಅವಧಿ',
+  'max_cache_size_label': 'ಗರಿಷ್ಠ ಕ್ಯಾಶ್ ಗಾತ್ರ',
+  'cache_duration_value': '@days ದಿನಗಳು',
+  'cache_size_value': '@size MB',
+  'pre_cache_settings_section': 'ಪ್ರೀ-ಕ್ಯಾಶ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
+  'enable_auto_pre_cache': 'ಸ್ವಯಂ ಪ್ರೀ-ಕ್ಯಾಶ್ ಸಕ್ರಿಯಗೊಳಿಸಿ',
+  'enable_auto_pre_cache_subtitle': 'ಬರುವ ವೀಡಿಯೊಗಳನ್ನು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಉಳಿಸಿ',
+  'pre_cache_enabled_message': '✅ ಪ್ರೀ-ಕ್ಯಾಶ್ ಸಕ್ರಿಯಗೊಂಡಿದೆ',
+  'pre_cache_disabled_message': '❌ ಪ್ರೀ-ಕ್ಯಾಶ್ ನಿಷ್ಕ್ರಿಯಗೊಂಡಿದೆ',
+  'pre_cache_count_title': 'ಪ್ರೀ-ಕ್ಯಾಶ್ ಸಂಖ್ಯೆ',
+  'pre_cache_count_subtitle': 'ಮುಂದಿನ ಕ್ಯಾಶ್ ಆಗುವ ವೀಡಿಯೊಗಳ ಸಂಖ್ಯೆ',
+  'pre_cache_set_message': 'ಪ್ರೀ-ಕ್ಯಾಶ್ @count ವೀಡಿಯೊಗಳಿಗೆ ಸೆಟ್ ಮಾಡಲಾಗಿದೆ',
+  'pre_cache_option_single': '@count ವೀಡಿಯೊ',
+  'pre_cache_option_multiple': '@count ವೀಡಿಯೊಗಳು',
+  'wifi_only_pre_cache_title': 'WiFi ನಲ್ಲಿ ಮಾತ್ರ ಪ್ರೀ-ಕ್ಯಾಶ್',
+  'wifi_only_pre_cache_subtitle': 'ಮೊಬೈಲ್ ಡೇಟಾವನ್ನು ಉಳಿಸಿ',
+  'wifi_only_pre_cache_snackbar': '📡 WiFi ನಲ್ಲಿ ಮಾತ್ರ ಪ್ರೀ-ಕ್ಯಾಶ್',
+  'wifi_all_networks_snackbar': '📡 ಎಲ್ಲಾ ನೆಟ್‌ವರ್ಕ್‌ಗಳಲ್ಲಿ ಪ್ರೀ-ಕ್ಯಾಶ್',
+  'cache_management_section': 'ಕ್ಯಾಶ್ ನಿರ್ವಹಣೆ',
+  'clear_all_cache': 'ಎಲ್ಲಾ ಕ್ಯಾಶ್ ತೆರವುಗೊಳಿಸಿ',
+  'delete_all_cached_videos': 'ಎಲ್ಲಾ ಕ್ಯಾಶ್ ವೀಡಿಯೊಗಳನ್ನು ಅಳಿಸಿ',
+  'clear_cache_title': 'ಕ್ಯಾಶ್ ತೆರವುಗೊಳಿಸಿ',
+  'clear_cache_confirmation':
+  'ನೀವು ಎಲ್ಲಾ ಕ್ಯಾಶ್ ವೀಡಿಯೊಗಳನ್ನು ಅಳಿಸಲು ಖಚಿತವಾಗಿದ್ದೀರಾ?',
+  'cache_cleared_success_message': '✅ ಕ್ಯಾಶ್ ಯಶಸ್ವಿಯಾಗಿ ತೆರವುಗೊಳಿಸಲಾಗಿದೆ',
+  'cache_pro_tips_title': 'ಪ್ರೊ ಟಿಪ್ಸ್',
+  'cache_pro_tips_body':
+  '• ಪ್ರೀ-ಕ್ಯಾಶ್ ವೇಗವಾದ ಪ್ಲೇಬ್ಯಾಕ್‌ಗಾಗಿ ಬರುವ ವೀಡಿಯೊಗಳನ್ನು ಉಳಿಸುತ್ತದೆ\n'
+      '• ವೀಡಿಯೊಗಳು @days ದಿನಗಳ ನಂತರ ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಅಳಿಸಲಾಗುತ್ತವೆ\n'
+      '• WiFi ಮೋಡ್ ಮೊಬೈಲ್ ಡೇಟಾವನ್ನು ಉಳಿಸುತ್ತದೆ\n'
+      '• ಕ್ಯಾಶ್ ಅನ್ನು ಯಾವಾಗ ಬೇಕಾದರೂ ಕೈಯಾರೆ ತೆರವುಗೊಳಿಸಬಹುದು',
+
+// Menu Page
+  'menu_view_profile': 'ಪ್ರೊಫೈಲ್ ವೀಕ್ಷಿಸಿ',
+  'menu_points': 'ಪಾಯಿಂಟ್‌ಗಳು',
+  'menu_followers': 'ಅನುಯಾಯಿಗಳು',
+  'menu_following': 'ಅನುಸರಿಸುತ್ತಿರುವವರು',
+  'menu_search_placeholder': 'ಹುಡುಕಿ…',
+  'menu_sign_out': 'ಸೈನ್ ಔಟ್',
+  'menu_sign_out_confirm': 'ನೀವು ನಿಜವಾಗಿಯೂ ಸೈನ್ ಔಟ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಾ?',
+  'menu_sign_out_cancel': 'ರದ್ದುಮಾಡಿ',
+  'menu_sign_out_success': 'ಯಶಸ್ವಿಯಾಗಿ ಸೈನ್ ಔಟ್ ಮಾಡಲಾಗಿದೆ',
+
+// Profile Page
+  'profile_retry': 'ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
+  'profile_not_found': 'ಪ್ರೊಫೈಲ್ ಕಂಡುಬಂದಿಲ್ಲ',
+  'profile_error_loading_friends': 'ಸ್ನೇಹಿತರನ್ನು ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ',
+  'profile_error_loading_followers': 'ಅನುಯಾಯಿಗಳನ್ನು ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ',
+  'profile_error_loading_followings': 'ಫಾಲೋಯಿಂಗ್ ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ',
+  'profile_error_loading_subscriptions': 'ಚಂದಾದಾರಿಕೆಗಳನ್ನು ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ',
+  'profile_no_friends': 'ಇನ್ನೂ ಸ್ನೇಹಿತರು ಇಲ್ಲ',
+  'profile_no_followers': 'ಇನ್ನೂ ಅನುಯಾಯಿಗಳು ಇಲ್ಲ',
+  'profile_not_following': 'ಯಾರನ್ನೂ ಅನುಸರಿಸುತ್ತಿಲ್ಲ',
+  'profile_no_subscriptions': 'ಇನ್ನೂ ಚಂದಾದಾರಿಕೆಗಳಿಲ್ಲ',
+  'profile_mutual_friends': '@count ಪರಸ್ಪರ ಸ್ನೇಹಿತರು',
+  'profile_videos_coming_soon': 'ವೀಡಿಯೊಗಳು ಶೀಘ್ರದಲ್ಲೇ ಬರುತ್ತಿವೆ...',
+  'profile_no_social_links': 'ಯಾವುದೇ ಸಾಮಾಜಿಕ ಲಿಂಕ್‌ಗಳಿಲ್ಲ',
+  'profile_tab_posts': 'ಪೋಸ್ಟ್‌ಗಳು',
+  'profile_tab_about': 'ವಿವರ',
+  'profile_tab_photos': 'ಫೋಟೋಗಳು',
+  'profile_tab_videos': 'ವೀಡಿಯೊಗಳು',
+  'profile_tab_friends': 'ಸ್ನೇಹಿತರು',
+  'profile_tab_more': 'ಇನ್ನಷ್ಟು',
+  'profile_about_title': 'ಪರಿಚಯ',
+  'profile_work_title': 'ಕೆಲಸ',
+  'profile_location_title': 'ಸ್ಥಳ',
+  'profile_education_title': 'ಶಿಕ್ಷಣ',
+  'profile_details_title': 'ವಿವರಗಳು',
+  'profile_position': 'ಪದವಿ',
+  'profile_company': 'ಕಂಪನಿ',
+  'profile_website': 'ವೆಬ್‌ಸೈಟ್',
+  'profile_current_city': 'ಪ್ರಸ್ತುತ ನಗರ',
+  'profile_hometown': 'ಸ್ವಗ್ರಾಮ',
+  'profile_school': 'ಶಾಲೆ',
+  'profile_major': 'ವಿಷಯ',
+  'profile_class_year': 'ತರಗತಿ ವರ್ಷ',
+  'profile_country': 'ದೇಶ',
+  'profile_gender': 'ಲಿಂಗ',
+  'profile_gender_male': 'ಪುರುಷ',
+  'profile_gender_female': 'ಮಹಿಳೆ',
+  'profile_birthday': 'ಜನ್ಮದಿನ',
+  'profile_social_links': 'ಸಾಮಾಜಿಕ ಲಿಂಕ್‌ಗಳು',
+  'profile_photos': 'ಫೋಟೋಗಳು',
+  'profile_albums': 'ಆಲ್ಬಮ್‌ಗಳು',
+  'profile_albums_menu': 'ಆಲ್ಬಮ್‌ಗಳು',
+  'profile_showing_photos': '@count ಫೋಟೋಗಳನ್ನು ತೋರಿಸಲಾಗುತ್ತಿದೆ',
+  'profile_total_photos': '@total ನಲ್ಲಿ',
+  'profile_no_photos': 'ಯಾವುದೇ ಫೋಟೋಗಳು ಇಲ್ಲ',
+  'profile_no_photos_album': 'ಈ ಆಲ್ಬಮ್‌ನಲ್ಲಿ ಫೋಟೋಗಳು ಇಲ್ಲ',
+  'profile_load_more': 'ಇನ್ನಷ್ಟು ಲೋಡ್ ಮಾಡಿ',
+  'profile_no_albums': 'ಯಾವುದೇ ಆಲ್ಬಮ್‌ಗಳು ಇಲ್ಲ',
+  'profile_friends_menu': 'ಸ್ನೇಹಿತರು',
+  'profile_followers_menu': 'ಅನುಯಾಯಿಗಳು',
+  'profile_followings_menu': 'ಫಾಲೋಯಿಂಗ್',
+  'profile_subscriptions_menu': 'ಚಂದಾದಾರಿಕೆಗಳು',
+  'profile_subscription_type_profile': 'ಪ್ರೊಫೈಲ್',
+  'profile_subscription_type_page': 'ಪುಟ',
+  'profile_subscription_type_group': 'ಗುಂಪು',
+  'profile_viewing': 'ವೀಕ್ಷಿಸಲಾಗುತ್ತಿದೆ',
+  'profile_error_loading_photos': 'ಫೋಟೋಗಳನ್ನು ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ',
+  'profile_error_loading_albums': 'ಆಲ್ಬಮ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ',
+  'profile_blurred': 'ಮಸುಕಾದ',
+  'profile_block_user': 'ಬಳಕೆದಾರರನ್ನು ಬ್ಲಾಕ್ ಮಾಡಿ',
+  'profile_unblock_user': 'ಬಳಕೆದಾರರನ್ನು ಅನ್‌ಬ್ಲಾಕ್ ಮಾಡಿ',
+  'profile_block_warning':
+  'ಈ ಬಳಕೆದಾರರು ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಅನ್ನು ನೋಡಲು ಸಾಧ್ಯವಿಲ್ಲ',
+  'profile_cannot_block_self': 'ನೀವು ನಿಮ್ಮನ್ನು ಬ್ಲಾಕ್ ಮಾಡಲು ಸಾಧ್ಯವಿಲ್ಲ',
+  'profile_unblocked_success': 'ಬಳಕೆದಾರರನ್ನು ಅನ್‌ಬ್ಲಾಕ್ ಮಾಡಲಾಗಿದೆ',
+  'profile_blocked_success': 'ಬಳಕೆದಾರರನ್ನು ಬ್ಲಾಕ್ ಮಾಡಲಾಗಿದೆ',
+  'profile_unblock_failed': 'ಅನ್‌ಬ್ಲಾಕ್ ವಿಫಲವಾಗಿದೆ',
+  'profile_block_failed': 'ಬ್ಲಾಕ್ ವಿಫಲವಾಗಿದೆ',
+  'profile_report': 'ವರದಿ ಮಾಡಿ',
+  'profile_share': 'ಪ್ರೊಫೈಲ್ ಹಂಚಿಕೊಳ್ಳಿ',
+  'profile_subscriptions': 'ಚಂದಾದಾರಿಕೆಗಳು',
+  'application': 'ಅಪ್ಲಿಕೇಶನ್',
+  'theme_subtitle': 'ಲೈಟ್ / ಡಾರ್ಕ್ ಮೋಡ್',
+  'language_subtitle': 'ಇಂಗ್ಲಿಷ್ / ಅರೇಬಿಕ್',
+// Reviews
+  'post_reviews_title': 'ವಿಮರ್ಶೆಗಳು (@count)',
+  'add_review_title': 'ನಿಮ್ಮ ವಿಮರ್ಶೆಯನ್ನು ಸೇರಿಸಿ',
+  'add_review_placeholder':
+  'ಈ ಪೋಸ್ಟ್ ಕುರಿತು ನಿಮ್ಮ ಅಭಿಪ್ರಾಯವನ್ನು ಹಂಚಿಕೊಳ್ಳಿ (ಐಚ್ಛಿಕ)',
+  'submit_review': 'ವಿಮರ್ಶೆ ಸಲ್ಲಿಸಿ',
+  'review_added_success': 'ವಿಮರ್ಶೆ ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿಸಲಾಗಿದೆ',
+  'review_deleted_success': 'ವಿಮರ್ಶೆ ಅಳಿಸಲಾಗಿದೆ',
+  'review_delete_failed': 'ವಿಮರ್ಶೆ ಅಳಿಸಲು ವಿಫಲವಾಗಿದೆ',
+  'review_rating_required': 'ದಯವಿಟ್ಟು 1 ರಿಂದ 5 ರ ನಡುವಿನ ರೇಟಿಂಗ್ ಆಯ್ಕೆಮಾಡಿ',
+  'reviews_stats_title': 'ರೇಟಿಂಗ್ ವಿವರಗಳು',
+  'average_rating': 'ಸರಾಸರಿ ರೇಟಿಂಗ್',
+  'total_reviews': 'ಒಟ್ಟು ವಿಮರ್ಶೆಗಳು: @count',
+  'no_reviews': 'ಇನ್ನೂ ಯಾವುದೇ ವಿಮರ್ಶೆಗಳಿಲ್ಲ',
+  'add_reply': 'ಪ್ರತ್ಯುತ್ತರ ಸೇರಿಸಿ',
+  'edit_reply': 'ಪ್ರತ್ಯುತ್ತರ ಸಂಪಾದಿಸಿ',
+  'add_reply_placeholder': 'ಪ್ರತ್ಯುತ್ತರ ಬರೆಯಿರಿ...',
+  'submit_reply': 'ಪ್ರತ್ಯುತ್ತರ ಸಲ್ಲಿಸಿ',
+  'review_reply_success': 'ಪ್ರತ್ಯುತ್ತರ ಸೇರಿಸಲಾಗಿದೆ',
+  'review_reply_failed': 'ಪ್ರತ್ಯುತ್ತರ ಸೇರಿಸಲು ವಿಫಲವಾಗಿದೆ',
+  'review_owner_cannot_rate': 'ನೀವು ನಿಮ್ಮದೇ ಪೋಸ್ಟ್‌ಗೆ ರೇಟಿಂಗ್ ನೀಡಲು ಸಾಧ್ಯವಿಲ್ಲ',
+  'load_more_reviews': 'ಹೆಚ್ಚು ವಿಮರ್ಶೆಗಳನ್ನು ಲೋಡ್ ಮಾಡಿ',
+
+// Support
+  'support': 'ಬೆಂಬಲ',
+  'report_issue': 'ಸಮಸ್ಯೆಯನ್ನು ವರದಿ ಮಾಡಿ',
+  'report_issue_subtitle': 'ಸಮಸ್ಯೆಯ ವೀಡಿಯೊವನ್ನು ಕಳುಹಿಸಿ',
+  'help_center': 'ಸಹಾಯ ಕೇಂದ್ರ',
+  'help_center_subtitle': 'FAQಗಳು ಮತ್ತು ಸಹಾಯ',
+  'terms_policies': 'ನಿಯಮಗಳು ಮತ್ತು ನೀತಿಗಳು',
+  'terms_policies_subtitle': 'ಸೇವಾ ನಿಯಮಗಳು ಮತ್ತು ಗೌಪ್ಯತಾ ನೀತಿ',
+  'delete_account_title': 'ಖಾತೆಯನ್ನು ಅಳಿಸಿ',
+  'delete_account_confirm': 'ನೀವು ಖಂಡಿತವಾಗಿಯೂ ನಿಮ್ಮ ಖಾತೆಯನ್ನು ಅಳಿಸಲು ಬಯಸುವಿರಾ?',
+  'delete_account_warning':
+  'ಈ ಕ್ರಿಯೆಯನ್ನು ಹಿಂಪಡೆಯಲಾಗುವುದಿಲ್ಲ. ನಿಮ್ಮ ಎಲ್ಲಾ ಡೇಟಾ ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಲಾಗುತ್ತದೆ.',
+
+// Privacy Settings Page
+  'privacy_settings_title': 'ಗೌಪ್ಯತಾ ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
+  'privacy_tab': 'ಗೌಪ್ಯತೆ',
+  'notifications_tab': 'ಅಧಿಸೂಚನೆಗಳು',
+  'settings_updated': 'ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಡೇಟ್ ಮಾಡಲಾಗಿದೆ',
+  'server_error_backend': 'ಸರ್ವರ್ ದೋಷ: ಬ್ಯಾಕ್‌ಎಂಡ್ ಸರಿಪಡಿಸುವ ಅಗತ್ಯವಿದೆ',
+  'backend_bug_message': 'ಬ್ಯಾಕ್‌ಎಂಡ್ ದೋಷ: getParsedBody() ವಿಧಾನ ಕಾಣೆಯಾಗಿದೆ',
+  'details': 'ವಿವರಗಳು',
+  'backend_bug_title': '⚠️ ಬ್ಯಾಕ್‌ಎಂಡ್ ದೋಷ',
+  'issue': 'ಸಮಸ್ಯೆ',
+  'fix': 'ಪರಿಹಾರ',
+
+// Privacy Sections
+  'profile_information': 'ಪ್ರೊಫೈಲ್ ಮಾಹಿತಿ',
+  'basic_info': 'ಮೂಲ ಮಾಹಿತಿ',
+  'work_info': 'ಕೆಲಸದ ಮಾಹಿತಿ',
+  'education_info': 'ಶಿಕ್ಷಣ',
+  'other_info': 'ಇತರೆ ಮಾಹಿತಿ',
+  'personal_details': 'ವೈಯಕ್ತಿಕ ವಿವರಗಳು',
+  'relationship_status': 'ಸಂಬಂಧ ಸ್ಥಿತಿ',
+  'content': 'ವಿಷಯ',
+  'friends': 'ಸ್ನೇಹಿತರು',
+  'subscriptions': 'ಚಂದಾದಾರಿಕೆಗಳು',
+  'interactions': 'ಅಂತರ್‌ಕ್ರಿಯೆಗಳು',
+  'post_on_wall': 'ನನ್ನ ವಾಲ್ ಮೇಲೆ ಪೋಸ್ಟ್ ಮಾಡಿ',
+  'chat': 'ಚಾಟ್',
+  'poke': 'ಪೋಕ್',
+  'gifts': 'ಉಡುಗೊರೆಗಳು',
+  'general_settings': 'ಸಾಮಾನ್ಯ ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
+  'enable_chat': 'ಚಾಟ್ ಸಕ್ರಿಯಗೊಳಿಸಿ',
+  'enable_newsletter': 'ನ್ಯೂಸ್‌ಲೆಟರ್ ಸಕ್ರಿಯಗೊಳಿಸಿ',
+  'enable_tips': 'ಟಿಪ್ಸ್ ಸಕ್ರಿಯಗೊಳಿಸಿ',
+  'hide_friend_suggestions': 'ಸ್ನೇಹಿತರ ಸಲಹೆಗಳನ್ನು ಮರೆಮಾಡಿ',
+
+// Privacy Options
+  'public': 'ಸಾರ್ವಜನಿಕ',
+  'only_me': 'ನನ್ನಷ್ಟೇ',
+
+// Notifications Section
+  'email_notifications': 'ಇಮೇಲ್ ಅಧಿಸೂಚನೆಗಳು',
+  'post_likes': 'ಪೋಸ್ಟ್ ಲೈಕ್‌ಗಳು',
+  'post_comments': 'ಪೋಸ್ಟ್ ಕಾಮೆಂಟ್‌ಗಳು',
+  'post_shares': 'ಪೋಸ್ಟ್ ಹಂಚಿಕೆಗಳು',
+  'wall_posts': 'ವಾಲ್ ಪೋಸ್ಟ್‌ಗಳು',
+  'mentions': 'ಮೆನ್ಷನ್‌ಗಳು',
+  'profile_visits': 'ಪ್ರೊಫೈಲ್ ಭೇಟಿ',
+  'friend_requests': 'ಸ್ನೇಹ ವಿನಂತಿಗಳು',
+  'sounds': 'ಧ್ವನಿಗಳು',
+  'notifications_sound': 'ಅಧಿಸೂಚನೆ ಧ್ವನಿ',
+  'chat_sound': 'ಚಾಟ್ ಧ್ವನಿ',
+
+// Blocked Users Page
+  'blocked_users_title': 'ಬ್ಲಾಕ್ ಮಾಡಿದ ಬಳಕೆದಾರರು',
+  'no_blocked_users': 'ಯಾವುದೇ ಬ್ಲಾಕ್ ಮಾಡಿದ ಬಳಕೆದಾರರು ಇಲ್ಲ',
+  'unblock': 'ಅನ್‌ಬ್ಲಾಕ್ ಮಾಡಿ',
+  'error_loading_blocked_users': 'ಬ್ಲಾಕ್ ಮಾಡಿದ ಬಳಕೆದಾರರನ್ನು ಲೋಡ್ ಮಾಡಲು ದೋಷ',
+  'user_unblocked_successfully': 'ಬಳಕೆದಾರರನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಅನ್‌ಬ್ಲಾಕ್ ಮಾಡಲಾಗಿದೆ',
+  'failed_to_unblock_user': 'ಬಳಕೆದಾರರನ್ನು ಅನ್‌ಬ್ಲಾಕ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+
+// Change Password Page
+  'change_password_title': 'ಪಾಸ್ವರ್ಡ್ ಬದಲಾಯಿಸಿ',
+  'secure_your_account': 'ನಿಮ್ಮ ಖಾತೆಯನ್ನು ಸುರಕ್ಷಿತಗೊಳಿಸಿ',
+  'secure_account_description':
+  'ನಿಮ್ಮ ಖಾತೆಯ ಸುರಕ್ಷತೆಗೆ ಬಲವಾದ ಪಾಸ್ವರ್ಡ್ ರಚಿಸಿ',
+  'security_tip': 'ಸುರಕ್ಷತಾ ಸಲಹೆ',
+  'never_share_password': 'ನಿಮ್ಮ ಪಾಸ್ವರ್ಡ್ ಯಾರೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಬೇಡಿ',
+  'current_password': 'ಪ್ರಸ್ತುತ ಪಾಸ್ವರ್ಡ್',
+  'enter_current_password': 'ಪ್ರಸ್ತುತ ಪಾಸ್ವರ್ಡ್ ನಮೂದಿಸಿ',
+  'please_enter_current_password': 'ದಯವಿಟ್ಟು ಪ್ರಸ್ತುತ ಪಾಸ್ವರ್ಡ್ ನಮೂದಿಸಿ',
+  'new_password': 'ಹೊಸ ಪಾಸ್ವರ್ಡ್',
+  'enter_new_password': 'ಹೊಸ ಪಾಸ್ವರ್ಡ್ ನಮೂದಿಸಿ',
+  'please_enter_new_password': 'ದಯವಿಟ್ಟು ಹೊಸ ಪಾಸ್ವರ್ಡ್ ನಮೂದಿಸಿ',
+  'password_min_6_chars': 'ಪಾಸ್ವರ್ಡ್ ಕನಿಷ್ಠ 6 ಅಕ್ಷರಗಳಿರಬೇಕು',
+  'new_password_different': 'ಹೊಸ ಪಾಸ್ವರ್ಡ್ ಹಳೆಯದರಿಂದ ವಿಭಿನ್ನವಾಗಿರಬೇಕು',
+  'confirm_new_password': 'ಹೊಸ ಪಾಸ್ವರ್ಡ್ ದೃಢೀಕರಿಸಿ',
+  'reenter_new_password': 'ಹೊಸ ಪಾಸ್ವರ್ಡ್ ಮತ್ತೆ ನಮೂದಿಸಿ',
+  'please_confirm_new_password': 'ದಯವಿಟ್ಟು ಹೊಸ ಪಾಸ್ವರ್ಡ್ ದೃಢೀಕರಿಸಿ',
+  'passwords_do_not_match': 'ಪಾಸ್ವರ್ಡ್‌ಗಳು ಹೊಂದಿಕೆಯಾಗುತ್ತಿಲ್ಲ',
+  'password_strength': 'ಪಾಸ್ವರ್ಡ್ ಬಲ',
+  'weak': 'ದುರ್ಬಲ',
+  'medium': 'ಮಧ್ಯಮ',
+  'strong': 'ಬಲವಾದ',
+  'update_password': 'ಪಾಸ್ವರ್ಡ್ ಅಪ್‌ಡೇಟ್ ಮಾಡಿ',
+  'password_requirements': 'ಪಾಸ್ವರ್ಡ್ ಅಗತ್ಯಗಳು',
+  'at_least_6_chars': 'ಕನಿಷ್ಠ 6 ಅಕ್ಷರಗಳು',
+  'mix_upper_lower': 'ದೊಡ್ಡ ಮತ್ತು ಸಣ್ಣ ಅಕ್ಷರಗಳ ಮಿಶ್ರಣ',
+  'include_numbers_symbols': 'ಸಂಖ್ಯೆಗಳು ಮತ್ತು ಚಿಹ್ನೆಗಳು ಸೇರಿಸಿ',
+  'avoid_common_passwords': 'ಸಾಮಾನ್ಯ ಪಾಸ್ವರ್ಡ್‌ಗಳನ್ನು ತಪ್ಪಿಸಿ',
+  'failed_change_password':
+  'ಪಾಸ್ವರ್ಡ್ ಬದಲಾಯಿಸಲು ವಿಫಲವಾಗಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
+// Manage Sessions Page
+  'manage_sessions_title': 'ಸೆಷನ್‌ಗಳನ್ನು ನಿರ್ವಹಿಸಿ',
+  'sign_out_all_devices': 'ಎಲ್ಲಾ ಸಾಧನಗಳಿಂದ ಸೈನ್ ಔಟ್ ಮಾಡಿ',
+  'active_sessions': 'ಸಕ್ರಿಯ ಸೆಷನ್‌ಗಳು',
+  'device': 'ಸಾಧನ',
+  'devices': 'ಸಾಧನಗಳು',
+  'no_active_sessions': 'ಯಾವುದೇ ಸಕ್ರಿಯ ಸೆಷನ್ ಇಲ್ಲ',
+  'failed_load_sessions': 'ಸೆಷನ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+  'sign_out_device': 'ಸಾಧನದಿಂದ ಸೈನ್ ಔಟ್ ಮಾಡಿ',
+  'sign_out_device_confirm': 'ನೀವು ಖಂಡಿತವಾಗಿಯೂ ಸೈನ್ ಔಟ್ ಮಾಡಲು ಬಯಸುವಿರಾ?',
+  'sign_out_all_title': 'ಎಲ್ಲಾ ಸಾಧನಗಳಿಂದ ಸೈನ್ ಔಟ್ ಮಾಡಿ',
+  'sign_out_all_confirm':
+  'ನೀವು ಖಂಡಿತವಾಗಿಯೂ ಎಲ್ಲಾ ಇತರ ಸಾಧನಗಳಿಂದ ಸೈನ್ ಔಟ್ ಮಾಡಲು ಬಯಸುವಿರಾ?',
+  'active_sessions_text': 'ಸಕ್ರಿಯ ಸೆಷನ್‌ಗಳು',
+  'sign_out': 'ಸೈನ್ ಔಟ್',
+  'sign_out_all': 'ಎಲ್ಲಿಂದಲೂ ಸೈನ್ ಔಟ್',
+  'sessions_signed_out': 'ಸೆಷನ್‌ಗಳು ಯಶಸ್ವಿಯಾಗಿ ಸೈನ್ ಔಟ್ ಆಗಿವೆ',
+  'current': 'ಪ್ರಸ್ತುತ',
+
+  'signed_in_on_other': 'ನೀವು ಸೈನ್ ಇನ್ ಆಗಿರುವಿರಿ',
+  'other': 'ಇತರೆ',
+  'signed_in_only_this': 'ನೀವು ಈ ಸಾಧನದಲ್ಲೇ ಮಾತ್ರ ಸೈನ್ ಇನ್ ಆಗಿದ್ದೀರಿ',
+
+// Addresses Page
+  'error_loading_addresses': 'ವಿಳಾಸಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ದೋಷ',
+  'delete_address_title': 'ವಿಳಾಸವನ್ನು ಅಳಿಸಿ',
+  'delete_address_confirm': 'ನೀವು ಖಂಡಿತವಾಗಿಯೂ ಈ ವಿಳಾಸವನ್ನು ಅಳಿಸಲು ಬಯಸುವಿರಾ?',
+  'add_address': 'ವಿಳಾಸ ಸೇರಿಸಿ',
+  'no_addresses_yet': 'ಇನ್ನೂ ಯಾವುದೇ ವಿಳಾಸಗಳಿಲ್ಲ',
+  'add_first_address': 'ಪ್ರಾರಂಭಿಸಲು ಮೊದಲ ವಿಳಾಸವನ್ನು ಸೇರಿಸಿ',
+  'add_your_first_address': 'ನಿಮ್ಮ ಮೊದಲ ವಿಳಾಸವನ್ನು ಸೇರಿಸಿ',
+  'zip': 'ಪಿನ್ ಕೋಡ್',
+
+  'add_new_address': 'ಹೊಸ ವಿಳಾಸವನ್ನು ಸೇರಿಸಿ',
+  'edit_address': 'ವಿಳಾಸವನ್ನು ಸಂಪಾದಿಸಿ',
+  'title': 'ಶೀರ್ಷಿಕೆ',
+  'title_required': 'ಶೀರ್ಷಿಕೆ ಅಗತ್ಯವಿದೆ',
+  'country_required': 'ದೇಶ ಅಗತ್ಯವಿದೆ',
+  'city_required': 'ನಗರ ಅಗತ್ಯವಿದೆ',
+  'zip_code_required': 'ಪಿನ್ ಕೋಡ್ ಅಗತ್ಯವಿದೆ',
+  'phone_number_required': 'ಫೋನ್ ಸಂಖ್ಯೆ ಅಗತ್ಯವಿದೆ',
+  'address_details': 'ವಿಳಾಸ ವಿವರಗಳು',
+  'address_details_required': 'ವಿಳಾಸ ವಿವರಗಳು ಅಗತ್ಯವಿದೆ',
+
+// Verification Page
+  'verification_center': 'ಸತ್ಯಾಪನ ಕೇಂದ್ರ',
+  'identity_verification_request': 'ಗುರುತಿನ ಸತ್ಯಾಪನ ವಿನಂತಿ',
+  'get_blue_checkmark':
+  'ನಿಮ್ಮ ಖಾತೆಯ ವಿಶ್ವಾಸಾರ್ಹತೆಯನ್ನು ಹೆಚ್ಚಿಸಲು ಬ್ಲೂ ಟಿಕ್ ಪಡೆಯಿರಿ',
+  'account_is_verified': 'ನಿಮ್ಮ ಖಾತೆ ಸತ್ಯಾಪಿತವಾಗಿದೆ',
+  'enjoy_verified_features':
+  'ನೀವು ಈಗ ಎಲ್ಲಾ ಸತ್ಯಾಪಿತ ಖಾತೆ ವೈಶಿಷ್ಟ್ಯಗಳನ್ನು ಬಳಸಬಹುದು',
+  'request_under_review': 'ವಿನಂತಿ ಪರಿಶೀಲನೆಯಲ್ಲಿದೆ',
+  'team_reviewing_info':
+  'ನಮ್ಮ ತಂಡ ನಿಮ್ಮ ಮಾಹಿತಿಯನ್ನು ಪರಿಶೀಲಿಸುತ್ತಿದೆ. ಶೀಘ್ರದಲ್ಲೇ ಪ್ರತಿಕ್ರಿಯೆ ದೊರೆಯಲಿದೆ',
+  'what_to_verify': 'ನೀವು ಏನನ್ನು ಸತ್ಯಾಪಿಸಲು ಬಯಸುತ್ತೀರಿ?',
+  'request_message': 'ವಿನಂತಿ ಸಂದೇಶ',
+  'why_verified': 'ಈ ಖಾತೆಯನ್ನು ಏಕೆ ಸತ್ಯಾಪಿಸಬೇಕು?',
+  'page_id': 'ಪುಟ ಐಡಿ',
+  'enter_page_id': 'ಪುಟ ಐಡಿ ನಮೂದಿಸಿ',
+  'business_website': 'ವ್ಯವಹಾರ ವೆಬ್‌ಸೈಟ್',
+  'website_placeholder': 'https://example.com',
+  'identity_documents': 'ಗುರುತು ದಾಖಲೆಗಳು',
+  'personal_photo': 'ವೈಯಕ್ತಿಕ ಫೋಟೋ',
+  'passport': 'ಪಾಸ್‌ಪೋರ್ಟ್',
+  'personal_account': 'ವೈಯಕ್ತಿಕ ಖಾತೆ',
+  'public_page': 'ಸಾರ್ವಜನಿಕ ಪುಟ',
+  'field_required': 'ಈ ಕ್ಷೇತ್ರ ಅಗತ್ಯವಿದೆ',
+  'send_verification_request': 'ಸತ್ಯಾಪನ ವಿನಂತಿಯನ್ನು ಕಳುಹಿಸಿ',
+  'request_under_review_message':
+  'ನಿಮ್ಮ ವಿನಂತಿ ಪರಿಶೀಲನೆಯಲ್ಲಿದೆ. ಶೀಘ್ರದಲ್ಲೇ ನಿಮಗೆ ತಿಳಿಸಲಾಗುತ್ತದೆ',
+  'attach_photo_passport':
+  'ದಯವಿಟ್ಟು ವೈಯಕ್ತಿಕ ಫೋಟೋ ಮತ್ತು ಪಾಸ್‌ಪೋರ್ಟ್ ಅನ್ನು ಲಗತ್ತಿಸಿ',
+  'request_sent_successfully': 'ವಿನಂತಿಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಕಳುಹಿಸಲಾಗಿದೆ',
+
+// Monetization Settings Page
+  'subscribers': 'ಚಂದಾದಾರರು',
+  'plans': 'ಯೋಜನೆಗಳು',
+  'enable_monetization': 'ಮೋನೆಟೈಸೇಶನ್ ಸಕ್ರಿಯಗೊಳಿಸಿ',
+  'monetization_active': 'ನಿಮ್ಮ ವಿಷಯದ ಮೋನೆಟೈಸೇಶನ್ ಸಕ್ರಿಯವಾಗಿದೆ',
+  'enable_to_earn': 'ಆದಾಯ ಆರಂಭಿಸಲು ಸಕ್ರಿಯಗೊಳಿಸಿ',
+  'verification_required_monetization':
+  'ಮೋನೆಟೈಸೇಶನ್ ಸಕ್ರಿಯಗೊಳಿಸಲು ಖಾತೆ ಸತ್ಯಾಪನ ಅಗತ್ಯವಿದೆ',
+  'chat_price': 'ಚಾಟ್ ಬೆಲೆ',
+  'call_price': 'ಕಾಲ್ ಬೆಲೆ',
+  'save_settings': 'ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ಉಳಿಸಿ',
+  'subscription_plans': 'ಚಂದಾದಾರಿಕೆ ಯೋಜನೆಗಳು',
+  'no_subscription_plans': 'ಈಗ ಯಾವುದೇ ಚಂದಾದಾರಿಕೆ ಯೋಜನೆಗಳಿಲ್ಲ',
+  'monetization_not_available': 'ಮೋನೆಟೈಸೇಶನ್ ಲಭ್ಯವಿಲ್ಲ',
+  'no_permission_monetize':
+  'ನೀವು ವಿಷಯವನ್ನು ಮೋನೆಟೈಸ್ ಮಾಡಲು ಅನುಮತಿ ಹೊಂದಿಲ್ಲ',
+  'failed_load_settings': 'ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+  'enter_valid_prices': 'ದಯವಿಟ್ಟು ಮಾನ್ಯ ಬೆಲೆಗಳನ್ನು ನಮೂದಿಸಿ',
+  'minimum_price_is': 'ಕನಿಷ್ಠ ಬೆಲೆ',
+  'per': 'ಪ್ರತಿ',
+
+// Monetization Payments Page
+  'your_balance': 'ನಿಮ್ಮ ಬ್ಯಾಲೆನ್ಸ್',
+  'withdrawal_request': 'ಹಿಂಪಡೆದಿನ ವಿನಂತಿ',
+  'amount_usd': 'ಮೊತ್ತ (USD)',
+  'minimum_withdrawal_amount': 'ಕನಿಷ್ಠ ಹಿಂಪಡೆದಿನ ಮೊತ್ತ ₹50',
+  'payment_method': 'ಪಾವತಿ ವಿಧಾನ',
+  'transfer_to': 'ಟ್ರಾನ್ಸ್‌ಫರ್ ಮಾಡಿ',
+  'transfer_to_hint':
+  'ನಿಮ್ಮ ಪಾವತಿ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ (ಇಮೇಲ್, ಖಾತೆ ಇತ್ಯಾದಿ)',
+  'request_withdrawal': 'ಹಿಂಪಡೆದಿನ ವಿನಂತಿ ಸಲ್ಲಿಸಿ',
+  'withdrawal_history': 'ಹಿಂಪಡೆದಿನ ಇತಿಹಾಸ',
+  'no_transactions_yet': 'ಇನ್ನೂ ಯಾವುದೇ ವಹಿವಾಟುಗಳು ನಡೆದಿಲ್ಲ',
+  'please_enter_amount': 'ದಯವಿಟ್ಟು ಮೊತ್ತವನ್ನು ನಮೂದಿಸಿ',
+  'minimum_withdrawal_50': 'ಕನಿಷ್ಠ ಹಿಂಪಡೆದಿನ ಮೊತ್ತ ₹50',
+  'please_enter_transfer': 'ದಯವಿಟ್ಟು ಟ್ರಾನ್ಸ್‌ಫರ್ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ',
+  'withdrawal_request_submitted': 'ಹಿಂಪಡೆದಿನ ವಿನಂತಿ ಸಲ್ಲಿಸಲಾಗಿದೆ',
+  'paid': 'ಪಾವತಿಸಲಾಗಿದೆ',
+  'pending': 'ಬಾಕಿ ಇದೆ',
+  'declined': 'ನಿರಾಕರಿಸಲಾಗಿದೆ',
+  'method': 'ವಿಧಾನ',
+  'date': 'ದಿನಾಂಕ',
+
+// Monetization Earnings Page
+  'my_earnings': 'ನನ್ನ ಆದಾಯ',
+  'total_earnings': 'ಒಟ್ಟು ಆದಾಯ',
+  'subscription': 'ಚಂದಾದಾರಿಕೆ',
+  'no_earnings_yet': 'ಇನ್ನೂ ಯಾವುದೇ ಆದಾಯವಿಲ್ಲ',
+  'earnings_will_appear_here':
+  'ಚಂದಾದಾರಿಕೆಗಳಿಂದ ಆಗುವ ಆದಾಯ ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತದೆ',
+  'subscription_label': 'ಚಂದಾದಾರಿಕೆ',
+  'commission': 'ಕಮಿಷನ್',
+// Affiliates Page
+  'affiliates_system': 'ಅಫಿಲಿಯೇಟ್ ವ್ಯವಸ್ಥೆ',
+  'earn_per_referral':
+  'ಪ್ರತಿ ರೆಫರಲ್‌ಗೆ ₹0.15 (ಮಟ್ಟ 1), ₹0.10 (ಮಟ್ಟ 2), ₹0.05 (ಮಟ್ಟ 3) ವರೆಗೆ ಸಂಪಾದಿಸಿ.',
+  'paid_when_register':
+  'ಹೊಸ ಬಳಕೆದಾರರು ನೋಂದಣಿ ಮಾಡಿ ಪ್ಯಾಕೇಜ್ ಖರೀದಿಸಿದಾಗ ಅಥವಾ ಮೋನೆಟೈಸ್ ಮಾಡಿದಾಗ ಪಾವತಿ ಸಿಗುತ್ತದೆ',
+  'withdraw_or_transfer':
+  'ನೀವು ಹಣವನ್ನು ಹಿಂಪಡೆಯಬಹುದು ಅಥವಾ ವಾಲೆಟ್‌ಗೆ ವರ್ಗಾಯಿಸಬಹುದು',
+  'your_affiliate_link': 'ನಿಮ್ಮ ಅಫಿಲಿಯೇಟ್ ಲಿಂಕ್',
+  'referral_link_copied': 'ರೆಫರಲ್ ಲಿಂಕ್ ನಕಲಿಸಲಾಗಿದೆ',
+  'referral_link_share': 'ರೆಫರಲ್ ಲಿಂಕ್ ಹಂಚಿಕೊಳ್ಳಲು ಸಿದ್ಧವಾಗಿದೆ',
+  'affiliates_money_balance': 'ಅಫಿಲಿಯೇಟ್ ಬ್ಯಾಲೆನ್ಸ್',
+  'total_balance': 'ಒಟ್ಟು ಬ್ಯಾಲೆನ್ಸ್',
+  'referrals': 'ರೆಫರಲ್‌ಗಳು',
+  'your_referrals': 'ನಿಮ್ಮ ರೆಫರಲ್‌ಗಳು',
+  'failed_load_data': 'ಡೇಟಾ ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+  'no_affiliates': 'ಯಾವುದೇ ಅಫಿಲಿಯೇಟ್‌ಗಳು ಇಲ್ಲ',
+  'start_sharing_link': 'ನಿಮ್ಮ ರೆಫರಲ್ ಲಿಂಕ್ ಹಂಚಿಕೊಳ್ಳಲು ಪ್ರಾರಂಭಿಸಿ',
+  'joined': 'ಸೇರಿದ್ದಾರೆ',
+  'currency': 'ಕರೆನ್ಸಿ',
+
+// Points Page
+  'points_rewards': 'ಪಾಯಿಂಟ್‌ಗಳು ಮತ್ತು ಬಹುಮಾನಗಳು',
+  'pts': 'ಪಾಯಿಂಟ್‌ಗಳು',
+  'total_points': 'ಒಟ್ಟು ಪಾಯಿಂಟ್‌ಗಳು',
+  'equivalent_to': 'ಸಮಾನವಾಗಿದೆ',
+  'today': 'ಇಂದು',
+  'how_to_earn': 'ಸಂಪಾದಿಸುವ ವಿಧಾನ',
+  'post_view': 'ಪೋಸ್ಟ್ ವೀಕ್ಷಣೆ',
+  'post_comment': 'ಪೋಸ್ಟ್ ಕಾಮೆಂಟ್',
+  'post_reaction': 'ಪೋಸ್ಟ್ ಪ್ರತಿಕ್ರಿಯೆ',
+  'reaction': 'ಪ್ರತಿಕ್ರಿಯೆ',
+  'follower': 'ಫಾಲೋವರ್',
+  'your_stats': 'ನಿಮ್ಮ ಅಂಕಿಅಂಶಗಳು',
+  'can_withdraw': 'ಹಿಂಪಡೆಯಬಹುದು',
+  'yes': 'ಹೌದು',
+  'min_amount': 'ಕನಿಷ್ಠ ಮೊತ್ತ',
+  'recent_transactions': 'ಇತ್ತೀಚಿನ ವಹಿವಾಟುಗಳು',
+  'no_transactions_yet_points': 'ಇನ್ನೂ ಯಾವುದೇ ವಹಿವಾಟುಗಳಿಲ್ಲ',
+  'start_earning_points': 'ಎಂಗೇಜ್‌ಮೆಂಟ್ ಮೂಲಕ ಪಾಯಿಂಟ್‌ಗಳನ್ನು ಸಂಪಾದಿಸಲು ಪ್ರಾರಂಭಿಸಿ',
+
+// Points Payments
+  'minimum_withdrawal': 'ಕನಿಷ್ಠ ಹಿಂಪಡೆ',
+  'enter_payment_details':
+  'ನಿಮ್ಮ ಪಾವತಿ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ (ಇಮೇಲ್, ಖಾತೆ ಇತ್ಯಾದಿ)',
+  'minimum_withdrawal_amount_50': 'ಕನಿಷ್ಠ ಹಿಂಪಡೆ ಮೊತ್ತ ₹50',
+  'please_enter_transfer_details': 'ದಯವಿಟ್ಟು ವರ್ಗಾವಣೆ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ',
+  'request_submitted': 'ವಿನಂತಿ ಸಲ್ಲಿಸಲಾಗಿದೆ',
+  'failed_to_submit_request': 'ವಿನಂತಿ ಸಲ್ಲಿಸಲು ವಿಫಲವಾಗಿದೆ',
+  'no_withdrawals_yet': 'ಇನ್ನೂ ಯಾವುದೇ ಹಿಂಪಡೆಗಳಿಲ್ಲ',
+
+  'unknown': 'ಅಜ್ಞಾತ',
+  'minimum_withdrawal_request_info':
+  'ಕನಿಷ್ಠ ಹಿಂಪಡೆ ವಿನಂತಿ ಮೊತ್ತ ₹50',
+  'id': 'ಐಡಿ',
+
+// Bank Settings
+  'refresh': 'ರಿಫ್ರೆಶ್',
+  'bank_information': 'ಬ್ಯಾಂಕ್ ಮಾಹಿತಿ',
+  'bank_name': 'ಬ್ಯಾಂಕ್ ಹೆಸರು',
+  'account_name': 'ಖಾತೆ ಹೆಸರು',
+  'account_number': 'ಖಾತೆ ಸಂಖ್ಯೆ',
+  'routing_number': 'ರೂಟಿಂಗ್ ಸಂಖ್ಯೆ',
+  'transfer_instructions': 'ವರ್ಗಾವಣೆ ಸೂಚನೆಗಳು',
+  'copy_account': 'ಖಾತೆ ನಕಲಿಸಿ',
+  'account_number_copied': 'ಖಾತೆ ಸಂಖ್ಯೆ ನಕಲಿಸಲಾಗಿದೆ',
+  'copy_routing': 'ರೂಟಿಂಗ್ ನಕಲಿಸಿ',
+  'routing_copied': 'ರೂಟಿಂಗ್ ನಕಲಿಸಲಾಗಿದೆ',
+  'transfer_history': 'ವರ್ಗಾವಣೆ ಇತಿಹಾಸ',
+  'view_all_transfers': 'ಎಲ್ಲಾ ವರ್ಗಾವಣೆಗಳನ್ನು ವೀಕ್ಷಿಸಿ',
+  'failed_to_load': 'ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+  'check_connection_try_again':
+  'ದಯವಿಟ್ಟು ಸಂಪರ್ಕ ಪರಿಶೀಲಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
+  'bank_transfers_disabled': 'ಬ್ಯಾಂಕ್ ವರ್ಗಾವಣೆ ನಿಷ್ಕ್ರಿಯವಾಗಿದೆ',
+  'bank_transfers_not_available':
+  'ಈ ಸಮಯದಲ್ಲಿ ಬ್ಯಾಂಕ್ ವರ್ಗಾವಣೆ ಲಭ್ಯವಿಲ್ಲ',
+  'copied_to_clipboard': 'ಕ್ಲಿಪ್‌ಬೋರ್ಡ್‌ಗೆ ನಕಲಿಸಲಾಗಿದೆ',
+
+// Market Settings
+  'market_balance': 'ಮಾರ್ಕೆಟ್ ಬ್ಯಾಲೆನ್ಸ್',
+  'ready_to_withdraw': 'ಹಿಂಪಡೆಯಲು ಸಿದ್ಧ',
+  'need_more': '@amount ಇನ್ನಷ್ಟು ಬೇಕು',
+  'can_transfer_to_wallet': '💡 ವಾಲೆಟ್‌ಗೆ ವರ್ಗಾಯಿಸಬಹುದು',
+  'withdraw': 'ಹಿಂಪಡೆಯಿರಿ',
+  'transfer': 'ವರ್ಗಾಯಿಸಿ',
+  'payment_methods': 'ಪಾವತಿ ವಿಧಾನಗಳು',
+  'custom': 'ಕಸ್ಟಮ್',
+  'statistics': 'ಅಂಕಿಅಂಶಗಳು',
+  'total_earned': 'ಒಟ್ಟು ಸಂಪಾದನೆ',
+  'total_paid': 'ಒಟ್ಟು ಪಾವತಿ',
+  'current_balance': 'ಪ್ರಸ್ತುತ ಬ್ಯಾಲೆನ್ಸ್',
+  'market_not_enabled': 'ಮಾರ್ಕೆಟ್ ಸಕ್ರಿಯಗೊಳಿಸಲಾಗಿಲ್ಲ',
+  'no_market_permission':
+  'ನಿಮ್ಮ ಖಾತೆಗೆ ಮಾರ್ಕೆಟ್ ಬಳಸುವ ಅನುಮತಿ ಇಲ್ಲ',
+  'transfer_to_wallet': 'ವಾಲೆಟ್‌ಗೆ ವರ್ಗಾಯಿಸಿ',
+  'available': 'ಲಭ್ಯವಿದೆ',
+  'enter_amount': 'ಮೊತ್ತ ನಮೂದಿಸಿ',
+  'invalid_amount': 'ಅಮಾನ್ಯ ಮೊತ್ತ',
+  'transfer_successful': 'ವರ್ಗಾವಣೆ ಯಶಸ್ವಿಯಾಗಿದೆ',
+  'transfer_failed': 'ವರ್ಗಾವಣೆ ವಿಫಲವಾಗಿದೆ',
+  'paypal': 'ಪೇಪಾಲ್',
+  'skrill': 'ಸ್ಕ್ರಿಲ್',
+  'bank_transfer': 'ಬ್ಯಾಂಕ್ ವರ್ಗಾವಣೆ',
+  'stripe': 'ಸ್ಟ್ರೈಪ್',
+
+// Funding Settings
+  'funding_settings_title': 'ಫಂಡಿಂಗ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
+  'funding_balance': 'ಫಂಡಿಂಗ್ ಬ್ಯಾಲೆನ್ಸ್',
+  'transfer_wallet_enabled': '💡 ವಾಲೆಟ್‌ಗೆ ವರ್ಗಾವಣೆ ಸಕ್ರಿಯವಾಗಿದೆ',
+  'funding_disabled': 'ಫಂಡಿಂಗ್ ನಿಷ್ಕ್ರಿಯವಾಗಿದೆ',
+  'funding_not_enabled_message':
+  'ನಿಮ್ಮ ಖಾತೆಗೆ ಫಂಡಿಂಗ್ ಸಕ್ರಿಯಗೊಳಿಸಲಾಗಿಲ್ಲ',
+  'failed_load_funding':
+  'ಫಂಡಿಂಗ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+  'moneypoolscash': 'MoneyPoolsCash',
+  'bank': 'ಬ್ಯಾಂಕ್',
+
+// Notifications
+  'notifications_title': 'ಅಧಿಸೂಚನೆಗಳು',
+  'notifications_mark_all_read': 'ಎಲ್ಲವನ್ನೂ ಓದಲಾಗಿದೆ ಎಂದು ಗುರುತಿಸಿ',
+  'notifications_mark_read': 'ಓದಲಾಗಿದೆ ಎಂದು ಗುರುತಿಸಿ',
+  'notifications_delete': 'ಅಳಿಸಿ',
+  'notifications_connection_error': 'ಸಂಪರ್ಕ ದೋಷ',
+  'notifications_try_again': 'ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
+  'notifications_empty_title': 'ಯಾವುದೇ ಅಧಿಸೂಚನೆಗಳಿಲ್ಲ',
+  'notifications_empty_subtitle': 'ನವೀಕರಣಗಳು ಮತ್ತು ಎಚ್ಚರಿಕೆಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ',
+  'notifications_empty_hint': 'ಹೊಸ ಚಟುವಟಿಕೆಗಾಗಿ ಸಂಪರ್ಕದಲ್ಲಿರಿ!',
+  'notifications_success': 'ಯಶಸ್ವಿ',
+  'notifications_marked_success':
+  'ಎಲ್ಲಾ ಅಧಿಸೂಚನೆಗಳನ್ನು ಓದಲಾಗಿದೆ ಎಂದು ಗುರುತಿಸಲಾಗಿದೆ',
+  'notifications_error': 'ದೋಷ',
+  'notifications_mark_error':
+  'ಅಧಿಸೂಚನೆಗಳನ್ನು ಓದಲಾಗಿದೆ ಎಂದು ಗುರುತಿಸಲು ವಿಫಲವಾಗಿದೆ',
+
+// Friend Requests
+  'friend_requests_title': 'ಮಿತ್ರ ವಿನಂತಿಗಳು',
+  'friend_requests_received': 'ಸ್ವೀಕರಿಸಿದವು',
+  'friend_requests_sent': 'ಕಳುಹಿಸಿದವು',
+  'friend_requests_empty_received_title': 'ಯಾವುದೇ ಮಿತ್ರ ವಿನಂತಿಗಳಿಲ್ಲ',
+  'friend_requests_empty_received_subtitle':
+  'ಯಾರಾದರೂ ನಿಮಗೆ ಮಿತ್ರ ವಿನಂತಿ ಕಳುಹಿಸಿದಾಗ ಅದು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತದೆ.',
+  'friend_requests_empty_sent_title': 'ಯಾವುದೇ ಕಳುಹಿಸಿದ ವಿನಂತಿಗಳಿಲ್ಲ',
+  'friend_requests_empty_sent_subtitle':
+  'ನೀವು ಕಳುಹಿಸಿದ ಮಿತ್ರ ವಿನಂತಿಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.',
+  'friend_requests_accept': 'ಸ್ವೀಕರಿಸಿ',
+  'friend_requests_decline': 'ನಿರಾಕರಿಸಿ',
+  'friend_requests_cancel': 'ರದ್ದುಮಾಡಿ',
+  'friend_requests_sent_time': '@time ರಂದು ಕಳುಹಿಸಲಾಗಿದೆ',
+  'friend_requests_accept_success':
+  '@name ಅವರ ಮಿತ್ರ ವಿನಂತಿಯನ್ನು ಸ್ವೀಕರಿಸಲಾಗಿದೆ',
+  'friend_requests_accept_error':
+  'ವಿನಂತಿಯನ್ನು ಸ್ವೀಕರಿಸಲು ವಿಫಲವಾಗಿದೆ: @message',
+  'friend_requests_decline_success':
+  '@name ಅವರ ಮಿತ್ರ ವಿನಂತಿಯನ್ನು ನಿರಾಕರಿಸಲಾಗಿದೆ',
+  'friend_requests_decline_error':
+  'ವಿನಂತಿಯನ್ನು ನಿರಾಕರಿಸಲು ವಿಫಲವಾಗಿದೆ: @message',
+  'friend_requests_cancel_success':
+  '@name ಗೆ ಕಳುಹಿಸಿದ ವಿನಂತಿಯನ್ನು ರದ್ದುಮಾಡಲಾಗಿದೆ',
+  'friend_requests_cancel_error':
+  'ವಿನಂತಿಯನ್ನು ರದ್ದುಮಾಡಲು ವಿಫಲವಾಗಿದೆ: @message',
+  'friend_requests_accept_error_general':
+  'ವಿನಂತಿಯನ್ನು ಸ್ವೀಕರಿಸುವಾಗ ದೋಷ: @error',
+  'friend_requests_decline_error_general':
+  'ವಿನಂತಿಯನ್ನು ನಿರಾಕರಿಸುವಾಗ ದೋಷ: @error',
+  'friend_requests_cancel_error_general':
+  'ವಿನಂತಿಯನ್ನು ರದ್ದುಮಾಡುವಾಗ ದೋಷ: @error',
+
+// Home
+  'home_create_story': 'ಕಥೆ ರಚಿಸಿ',
+  'home_composer_placeholder': 'ನಿಮ್ಮ ಮನಸ್ಸಿನಲ್ಲಿ ಏನಿದೆ, @name?',
+  'home_live': 'ಲೈವ್',
+  'home_photo': 'ಫೋಟೋ',
+  'home_event': 'ಈವೆಂಟ್',
+  'home_loading_more': 'ಇನ್ನಷ್ಟು ಪೋಸ್ಟ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ...',
+
+// Post Menu
+  'post_menu_options': 'ಪೋಸ್ಟ್ ಆಯ್ಕೆಗಳು',
+  'post_menu_save': 'ಪೋಸ್ಟ್ ಉಳಿಸಿ',
+  'post_menu_save_subtitle': 'ಉಳಿಸಿದ ಅಂಶಗಳಿಗೆ ಸೇರಿಸಿ',
+  'post_menu_unsave': 'ಉಳಿಸುವುದನ್ನು ತೆಗೆದುಹಾಕಿ',
+  'post_menu_unsave_subtitle': 'ಉಳಿಸಿದ ಅಂಶಗಳಿಂದ ತೆಗೆದುಹಾಕಿ',
+  'post_menu_copy_link': 'ಲಿಂಕ್ ನಕಲಿಸಿ',
+  'post_menu_copy_link_subtitle': 'ಈ ಪೋಸ್ಟ್‌ನ ಲಿಂಕ್ ನಕಲಿಸಿ',
+  'post_menu_hide': 'ಪೋಸ್ಟ್ ಮರೆಮಾಡಿ',
+  'post_menu_hide_subtitle': 'ಇಂತಹ ಪೋಸ್ಟ್‌ಗಳನ್ನು ಕಡಿಮೆ ನೋಡಿ',
+  'post_menu_show': 'ಪೋಸ್ಟ್ ತೋರಿಸಿ',
+  'post_menu_show_subtitle': 'ಈ ಪೋಸ್ಟ್ ಅನ್ನು ಮತ್ತೆ ತೋರಿಸಿ',
+  'post_menu_report': 'ಪೋಸ್ಟ್ ವರದಿ ಮಾಡಿ',
+  'post_menu_report_subtitle': 'ಈ ಪೋಸ್ಟ್ ಬಗ್ಗೆ ನನಗೆ ಚಿಂತೆ ಇದೆ',
+  'post_menu_report_success':
+  'ವರದಿಗೆ ಧನ್ಯವಾದಗಳು. ನಾವು ಶೀಘ್ರದಲ್ಲೇ ಪರಿಶೀಲಿಸುತ್ತೇವೆ.',
+  'post_menu_report_error': 'ವರದಿ ಸಲ್ಲಿಸಲು ವಿಫಲವಾಗಿದೆ',
+  'post_menu_report_already':
+  'ನೀವು ಈಗಾಗಲೇ ಈ ಪೋಸ್ಟ್ ಅನ್ನು ವರದಿ ಮಾಡಿದ್ದೀರಿ',
+  'post_menu_report_network_error':
+  'ನೆಟ್ವರ್ಕ್ ದೋಷ. ದಯವಿಟ್ಟು ಸಂಪರ್ಕ ಪರಿಶೀಲಿಸಿ',
+  'post_menu_report_server_error':
+  'ಸರ್ವರ್ ದೋಷ. ದಯವಿಟ್ಟು ನಂತರ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
+  'post_menu_pin': 'ಪ್ರೊಫೈಲ್‌ಗೆ ಪಿನ್ ಮಾಡಿ',
+  'post_menu_pin_subtitle': 'ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಮೇಲ್ಭಾಗದಲ್ಲಿ ಪಿನ್ ಮಾಡಿ',
+  'post_menu_unpin': 'ಪ್ರೊಫೈಲ್‌ನಿಂದ ಅನ್ಪಿನ್ ಮಾಡಿ',
+  'post_menu_unpin_subtitle': 'ಪ್ರೊಫೈಲ್ ಮೇಲ್ಭಾಗದಿಂದ ತೆಗೆದುಹಾಕಿ',
+  'post_menu_enable_comments': 'ಕಾಮೆಂಟ್‌ಗಳನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ',
+  'post_menu_enable_comments_subtitle':
+  'ಜನರಿಗೆ ಕಾಮೆಂಟ್ ಮಾಡಲು ಅನುಮತಿಸಿ',
+  'post_menu_disable_comments': 'ಕಾಮೆಂಟ್‌ಗಳನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಿ',
+  'post_menu_disable_comments_subtitle':
+  'ಜನರು ಕಾಮೆಂಟ್ ಮಾಡುವುದನ್ನು ತಡೆಯಿರಿ',
+  'post_menu_edit': 'ಪೋಸ್ಟ್ ಸಂಪಾದಿಸಿ',
+  'post_menu_edit_subtitle': 'ನಿಮ್ಮ ಪೋಸ್ಟ್ ವಿಷಯವನ್ನು ಬದಲಾಯಿಸಿ',
+  'post_menu_unmark_adult': 'ವಯಸ್ಕ ವಿಷಯವನ್ನು ತೆಗೆದುಹಾಕಿ',
+  'post_menu_unmark_adult_subtitle':
+  '18+ ಲೇಬಲ್ ಮತ್ತು ಬ್ಲರ್ ತೆಗೆದುಹಾಕಿ',
+  'post_menu_mark_adult': 'ವಯಸ್ಕ ವಿಷಯ ಎಂದು ಗುರುತಿಸಿ',
+  'post_menu_mark_adult_subtitle':
+  '18+ ಎಂದು ಗುರುತಿಸಿ ಮತ್ತು ಫೋಟೋಗಳನ್ನು ಬ್ಲರ್ ಮಾಡಿ',
+  'post_menu_delete': 'ಪೋಸ್ಟ್ ಅಳಿಸಿ',
+  'post_menu_delete_subtitle': 'ಈ ಪೋಸ್ಟ್ ಅನ್ನು ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಿ',
+  'post_menu_delete_title': 'ಪೋಸ್ಟ್ ಅಳಿಸಿ',
+  'post_menu_delete_confirm':
+  'ನೀವು ಖಚಿತವಾಗಿಯೂ ಈ ಪೋಸ್ಟ್ ಅನ್ನು ಅಳಿಸಲು ಬಯಸುತ್ತೀರಾ? ಈ ಕ್ರಿಯೆಯನ್ನು ಹಿಂತಿರುಗಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ.',
+  'post_menu_cancel': 'ರದ್ದುಮಾಡಿ',
+  'post_menu_delete_button': 'ಅಳಿಸಿ',
+
+// Events & Live
+  'groups_no_longer_available': 'ಗುಂಪುಗಳು ಇನ್ನು ಲಭ್ಯವಿಲ್ಲ.',
+  'event_action_created': 'ಒಂದು ಈವೆಂಟ್ ರಚಿಸಿದರು',
+  'event_action_updated_cover':
+  'ಈವೆಂಟ್ ಕವರ್ ಫೋಟೋವನ್ನು ಅಪ್ಡೇಟ್ ಮಾಡಿದರು',
+  'event_action_posted_in': '@event ನಲ್ಲಿ ಪೋಸ್ಟ್ ಮಾಡಿದರು',
+  'live_action_is_live': 'ಈಗ ಲೈವ್ ಆಗಿದ್ದಾರೆ',
+  'live_action_was_live': 'ಲೈವ್ ಆಗಿದ್ದರು',
+
+// Time
+  'time_today': 'ಇಂದು',
+  'time_tomorrow': 'ನಾಳೆ',
+  'time_period_am': 'AM',
+  'time_period_pm': 'PM',
+
+// Offers
+  'offer_discount_buy_get': '@buy ಖರೀದಿಸಿ ಮತ್ತು @get ಪಡೆಯಿರಿ',
+  'offer_discount_spend_get':
+  '@spend ಖರ್ಚು ಮಾಡಿ ಮತ್ತು @amount ರಿಯಾಯಿತಿ ಪಡೆಯಿರಿ',
+  'offer_special': 'ವಿಶೇಷ ಆಫರ್',
+
+// Misc
+  'recording_coming_soon':
+  'ರೆಕಾರ್ಡಿಂಗ್ ಪ್ಲೇಬ್ಯಾಕ್ ವೈಶಿಷ್ಟ್ಯ ಶೀಘ್ರದಲ್ಲೇ ಬರುತ್ತಿದೆ!',
+  'vote_singular': 'ಮತ',
+  'vote_plural': 'ಮತಗಳು',
+  'link_open_failed': 'ಲಿಂಕ್ ತೆರೆಯಲು ವಿಫಲವಾಗಿದೆ: @error',
+
+  'live_status_live': 'ಲೈವ್',
+  'live_status_ended': 'ಮುಗಿದಿದೆ',
+  'post_promoted': 'ಪ್ರಚಾರಗೊಂಡಿದೆ',
+  'post_reviews': '@count ವಿಮರ್ಶೆಗಳು',
+  'post_views': '@count ವೀಕ್ಷಣೆಗಳು',
+  'post_shares2': '@count ಹಂಚಿಕೆಗಳು',
+  'action_review': 'ವಿಮರ್ಶೆ',
+  'action_tip': 'ಟಿಪ್',
+  'action_share': 'ಹಂಚಿಕೆ',
+  'share_feature_coming':
+  'ಹಂಚಿಕೆ ವೈಶಿಷ್ಟ್ಯ ಶೀಘ್ರದಲ್ಲೇ ಬರುತ್ತಿದೆ!',
+// Courses
+  'my_courses_enrolled': 'ನೋಂದಾಯಿತ',
+  'my_courses_created': 'ರಚಿಸಿದವು',
+  'my_courses_create': 'ಕೋರ್ಸ್ ರಚಿಸಿ',
+  'my_courses_no_enrolled': 'ಈಗಾಗಲೇ ಯಾವುದೇ ನೋಂದಾಯಿತ ಕೋರ್ಸ್ ಇಲ್ಲ',
+  'my_courses_no_created': 'ಈಗಾಗಲೇ ಯಾವುದೇ ರಚಿಸಿದ ಕೋರ್ಸ್ ಇಲ್ಲ',
+  'my_courses_load_enrolled_error':
+  'ನೋಂದಾಯಿತ ಕೋರ್ಸ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+  'my_courses_load_created_error':
+  'ರಚಿಸಿದ ಕೋರ್ಸ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+  'my_courses_retry': 'ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
+
+  'transactions': 'ವಹಿವಾಟುಗಳು',
+
+// Friend Request Dialog
+  'friend_request_title': 'ಮಿತ್ರ ವಿನಂತಿ',
+  'accept_or_decline':
+  'ಈ ಮಿತ್ರ ವಿನಂತಿಯನ್ನು ಸ್ವೀಕರಿಸಬೇಕಾ ಅಥವಾ ನಿರಾಕರಿಸಬೇಕಾ?',
+  'decline_button': 'ನಿರಾಕರಿಸಿ',
+  'accept_button': 'ಸ್ವೀಕರಿಸಿ',
+  'remove_friend_title': 'ಮಿತ್ರರನ್ನು ತೆಗೆದುಹಾಕಿ',
+  'are_you_sure_remove':
+  'ನೀವು ಖಚಿತವಾಗಿಯೂ ಈ ಮಿತ್ರರನ್ನು ತೆಗೆದುಹಾಕಲು ಬಯಸುತ್ತೀರಾ?',
+  'remove_button': 'ತೆಗೆದುಹಾಕಿ',
+
+// Subscription Dialog
+  'subscription_required': '🔒 ಚಂದಾದಾರಿಕೆ ಅಗತ್ಯ',
+  'need_subscription_to_boost':
+  'ಪೋಸ್ಟ್ ಬೂಸ್ಟ್ ಮಾಡಲು ಚಂದಾದಾರಿಕೆ ಅಗತ್ಯ.\nಪ್ಯಾಕೇಜ್ ಪುಟಕ್ಕೆ ಹೋಗಬೇಕೇ?',
+  'cancel_action': 'ರದ್ದುಮಾಡಿ',
+  'show_packages_button': 'ಪ್ಯಾಕೇಜ್‌ಗಳನ್ನು ನೋಡಿ',
+
+// General UI
+  'enter_email_or_username': 'ನಿಮ್ಮ ಇಮೇಲ್ ಅಥವಾ ಬಳಕೆದಾರಹೆಸರು ನಮೂದಿಸಿ',
+  'enter_password_text': 'ನಿಮ್ಮ ಪಾಸ್‌ವರ್ಡ್ ನಮೂದಿಸಿ',
+  'details_button': 'ವಿವರಗಳು',
+  'watch_live_button': 'ಲೈವ್ ನೋಡಿ',
+  'unable_to_load_history': 'ಇತಿಹಾಸವನ್ನು ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ',
+  'no_payments_yet': 'ಇನ್ನೂ ಯಾವುದೇ ಪಾವತಿಗಳು ಇಲ್ಲ',
+  'withdraw_funds_title': 'ಹಣವನ್ನು ಹಿಂತೆಗೆದುಕೊಳ್ಳಿ',
+  'submit_request_button': 'ಅರ್ಜಿಯನ್ನು ಸಲ್ಲಿಸಿ',
+
+// Page Settings
+  'page_settings': 'ಪುಟ ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
+  'enable_page_tips_title': 'ಪುಟ ಟಿಪ್‌ಗಳನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ',
+  'allow_users_send_tips_desc':
+  'ಬಳಕೆದಾರರಿಗೆ ಈ ಪುಟಕ್ಕೆ ಟಿಪ್ ಕಳುಹಿಸಲು ಅನುಮತಿಸಿ',
+  'enable_monetization_page_title': 'ಮೋನೆಟೈಜೆಷನ್ ಸಕ್ರಿಯಗೊಳಿಸಿ',
+  'allow_page_earn_money_desc':
+  'ಈ ಪುಟವು ವಿಷಯದಿಂದ ಆದಾಯ ಗಳಿಸಲು ಅನುಮತಿಸಿ',
+  'delete_permanently_button': 'ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಿ',
+
+// Verification & Creation
+  'request_verification_title': 'ಪರಿಶೀಲನೆ ವಿನಂತಿ',
+  'take_photo_button': 'ಫೋಟೋ ತೆಗೆದುಕೊಳ್ಳಿ',
+  'choose_from_gallery_button': 'ಗ್ಯಾಲರಿಯಿಂದ ಆಯ್ಕೆಮಾಡಿ',
+  'view_button': 'ನೋಡಿ',
+  'update_page_pictures_title': 'ಪುಟದ ಚಿತ್ರಗಳನ್ನು ನವೀಕರಿಸಿ',
+  'choose_photo_button': 'ಫೋಟೋ ಆಯ್ಕೆಮಾಡಿ',
+  'upload_button': 'ಅಪ್‌ಲೋಡ್ ಮಾಡಿ',
+  'create_page_title': 'ಪುಟ ರಚಿಸಿ',
+  'select_category_placeholder': 'ವರ್ಗವನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+  'select_country_placeholder': 'ದೇಶವನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+  'select_language_placeholder': 'ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+
+// Photos & Albums
+  'photos_page_title': 'ಫೋಟೋಗಳು',
+  'load_more_button': 'ಇನ್ನಷ್ಟು ಲೋಡ್ ಮಾಡಿ',
+  'albums_page_title': 'ಆಲ್ಬಮ್‌ಗಳು',
+  'no_people_found': 'ಯಾವುದೇ ವ್ಯಕ್ತಿಗಳು ಕಂಡುಬಂದಿಲ್ಲ',
+  'people_page_title': 'ಜನ',
+
+// Courses & Details
+  'edit_course_button': 'ಸಂಪಾದಿಸಿ',
+  'course_enrollment_title': 'ಕೋರ್ಸ್ ನೋಂದಣಿ',
+  'course_enrollment_cancel': 'ರದ್ದುಮಾಡಿ',
+  'course_enrollment_confirm': 'ನೋಂದಾಯಿಸಿ',
+  'course_details_button': 'ವಿವರಗಳು',
+
+// Audio Controls
+  'restart_from_beginning': 'ಆರಂಭದಿಂದ ಮರುಪ್ರಾರಂಭಿಸಿ',
+  'download_button': 'ಡೌನ್‌ಲೋಡ್',
+  'share_button_action': 'ಹಂಚಿಕೊಳ್ಳಿ',
+  'audio_info_button': 'ಆಡಿಯೋ ಮಾಹಿತಿ',
+  'audio_information_title': 'ಆಡಿಯೋ ವಿವರಗಳು',
+  'close_button': 'ಮುಚ್ಚಿ',
+
+// Reactions & Status
+  'all_reactions': 'ಎಲ್ಲಾ',
+  'retry_button': 'ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
+  'following_status': 'ಅನುಸರಿಸುತ್ತಿದ್ದಾರೆ',
+  'follow_status': 'ಅನುಸರಿಸಿ',
+
+// Wallet & Payment
+  'recharge_wallet_title': 'ವಾಲೆಟ್ ರಿಚಾರ್ಜ್ ಮಾಡಿ',
+  'filter_by_country_title': 'ದೇಶದ ಆಧಾರದಲ್ಲಿ ಫಿಲ್ಟರ್ ಮಾಡಿ',
+  'watch_page_title': 'ನೋಡಿ',
+  'wallet_page_title': 'ವಾಲೆಟ್',
+  'post_details_title': 'ಪೋಸ್ಟ್ ವಿವರಗಳು',
+
+// Market Withdrawals & Movies
+  'market_withdrawals_title': 'ಮಾರ್ಕೆಟ್ ಹಿಂಪಡೆಯುವಿಕೆಗಳು',
+  'movie_detail_title': 'ಚಿತ್ರ',
+  'invalid_youtube_url': 'ಅಮಾನ್ಯ YouTube URL',
+  'all_genres_title': 'ಎಲ್ಲಾ ಶೈಲಿಗಳು',
+  'movies_title': 'ಚಿತ್ರಗಳು',
+  'search_movies_title': 'ಚಿತ್ರಗಳನ್ನು ಹುಡುಕಿ',
+  'search_button': 'ಹುಡುಕಿ',
+  'paid_badge': 'ಪಾವತಿಸಿದ',
+  'interested_button_event': 'ಆಸಕ್ತಿ ಇದೆ',
+  'going_button_event': 'ಹೋಗುತ್ತಿದ್ದಾರೆ',
+  'remaining_label': 'ಉಳಿದಿದೆ',
+
+// Job & Event UI
+  'per_hour_option': 'ಪ್ರತಿ ಗಂಟೆ',
+  'per_day_option': 'ಪ್ರತಿ ದಿನ',
+  'per_week_option': 'ಪ್ರತಿ ವಾರ',
+  'per_month_option': 'ಪ್ರತಿ ತಿಂಗಳು',
+  'full_time_option': 'ಪೂರ್ಣಕಾಲಿಕ',
+  'part_time_option': 'ಅಂಶಕಾಲಿಕ',
+  'contract_option': 'ಒಪ್ಪಂದ',
+  'temporary_option': 'ತಾತ್ಕಾಲಿಕ',
+  'internship_option': 'ಇಂಟರ್ನ್‌ಶಿಪ್',
+  'online_event': 'ಆನ್‌ಲೈನ್ ಈವೆಂಟ್',
+  'this_event_held_online':
+  'ಈ ಈವೆಂಟ್ ಆನ್‌ಲೈನ್‌ನಲ್ಲಿ ಆಯೋಜಿಸಲಾಗುತ್ತದೆ',
+// Page Links
+  'facebook_link': 'Facebook',
+  'twitter_link': 'Twitter',
+  'youtube_link': 'YouTube',
+  'instagram_link': 'Instagram',
+  'linkedin_link': 'LinkedIn',
+  'vk_link': 'VK',
+
+// Page Actions
+  'invite_friends_label': 'ಮಿತ್ರರನ್ನು ಆಹ್ವಾನಿಸಿ',
+  'manage_admins_label': 'ಅಡ್ಮಿನ್‌ಗಳನ್ನು ನಿರ್ವಹಿಸಿ',
+
+// Event Dialog
+  'delete_event_confirm_message':
+  'ನೀವು ಖಚಿತವಾಗಿಯೂ ಈ ಈವೆಂಟ್ ಅನ್ನು ಅಳಿಸಲು ಬಯಸುತ್ತೀರಾ?',
+
+// Misc
+  'see_details_button': 'ವಿವರಗಳನ್ನು ನೋಡಿ',
+  'confirmed_button': 'ದೃಢೀಕರಿಸಿ',
+  'recommended_badge': 'ಶಿಫಾರಸು ಮಾಡಿದ',
+  'your_current_plan': 'ನಿಮ್ಮ ಪ್ರಸ್ತುತ ಯೋಜನೆ',
+  'popular_choice_badge': 'ಜನಪ್ರಿಯ ಆಯ್ಕೆ',
+  'price_label': 'ಬೆಲೆ',
+  'billing_cycle_label': 'ಬಿಲ್ಲಿಂಗ್ ಚಕ್ರ',
+  'purchased_on_label': 'ಖರೀದಿ ದಿನಾಂಕ',
+  'expiry_label': 'ಅವಧಿ ಮುಕ್ತಾಯ',
+  'lifetime_access': 'ಆಜೀವ ಪ್ರವೇಶ',
+  'market_candidates_title': 'ಅಭ್ಯರ್ಥಿಗಳು',
+  'course_candidates_title': 'ಅಭ್ಯರ್ಥಿಗಳು',
+  'event_members_label': 'ಸದಸ್ಯರು',
+
+// Invite Event
+  'invite_to_event': '@eventTitle ಗೆ ಮಿತ್ರರನ್ನು ಆಹ್ವಾನಿಸಿ',
+  'invite_button': 'ಆಹ್ವಾನಿಸಿ',
+
+// Reports
+  'please_select_reason': 'ದಯವಿಟ್ಟು ವರದಿ ಮಾಡುವ ಕಾರಣವನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+  'report_submitted_success':
+  'ವರದಿ ಯಶಸ್ವಿಯಾಗಿ ಸಲ್ಲಿಸಲಾಗಿದೆ. ನಮ್ಮ ಸಮುದಾಯವನ್ನು ಸುರಕ್ಷಿತವಾಗಿರಿಸಲು ಸಹಾಯ ಮಾಡಿದಕ್ಕಾಗಿ ಧನ್ಯವಾದಗಳು.',
+  'report_submit_error': 'ವರದಿ ಸಲ್ಲಿಸಲು ವಿಫಲವಾಗಿದೆ: @error',
+  'report_title_dialog': '@contentType ವರದಿ ಮಾಡಿ',
+
+// Error Messages
+  'error_loading': 'ದೋಷ: @message',
+  'connection_error_text': 'ಕನೆಕ್ಷನ್ ದೋಷ',
+
+// Page Profile
+  'page_update_pictures_title': 'ಚಿತ್ರಗಳನ್ನು ನವೀಕರಿಸಿ',
+  'live_stream': 'ಲೈವ್ ಸ್ಟ್ರೀಮ್',
+  'likes_label': 'ಲೈಕ್ಸ್',
+  'posts_label': 'ಪೋಸ್ಟ್‌ಗಳು',
+  'page_liked_button': 'ಲೈಕ್ ಮಾಡಲಾಗಿದೆ',
+  'page_like_button': 'ಲೈಕ್ ಮಾಡಿ',
+  'page_like_failed': 'ಪುಟವನ್ನು @action ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+  'page_no_posts_title': 'ಈಗ ಯಾವುದೇ ಪೋಸ್ಟ್‌ಗಳು ಇಲ್ಲ',
+  'page_no_posts_subtitle':
+  'ಈ ಪುಟದಿಂದ ಪ್ರಕಟಿಸಲಾದ ಪೋಸ್ಟ್‌ಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.',
+  'page_no_photos_title': 'ಯಾವುದೇ ಫೋಟೋಗಳಿಲ್ಲ',
+  'page_no_photos_subtitle':
+  'ಈ ಪುಟದಿಂದ ಪೋಸ್ಟ್ ಮಾಡಲಾದ ಫೋಟೋಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.',
+  'page_no_videos_title': 'ಯಾವುದೇ ವೀಡಿಯೊಗಳಿಲ್ಲ',
+  'page_no_videos_subtitle':
+  'ಈ ಪುಟದಿಂದ ಪೋಸ್ಟ್ ಮಾಡಲಾದ ವೀಡಿಯೊಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.',
+  'page_no_reviews_title': 'ಈಗ ಯಾವುದೇ ವಿಮರ್ಶೆಗಳಿಲ್ಲ',
+  'page_no_reviews_subtitle':
+  'ಬಳಕೆದಾರರು ವಿಮರ್ಶೆಗಳನ್ನು ನೀಡಿದಾಗ, ಅವು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.',
+  'page_no_events_title': 'ಯಾವುದೇ ಈವೆಂಟ್ ಇಲ್ಲ',
+  'page_no_events_subtitle':
+  'ಈ ಪುಟದಿಂದ ರಚಿಸಲಾದ ಈವೆಂಟ್‌ಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.',
+  'page_tab_timeline': 'ಟೈಮ್‌ಲೈನ್',
+  'page_tab_about': 'ಮಾಹಿತಿ',
+  'page_tab_photos': 'ಚಿತ್ರಗಳು',
+  'page_tab_videos': 'ವೀಡಿಯೊಗಳು',
+  'page_tab_reviews': 'ವಿಮರ್ಶೆಗಳು',
+  'page_tab_events': 'ಈವೆಂಟ್‌ಗಳು',
+  'about_section_title': 'ಮಾಹಿತಿ',
+  'contact_information_title': 'ಸಂಪರ್ಕ ಮಾಹಿತಿ',
+
+  'page_no_info_title': 'ಯಾವುದೇ ಮಾಹಿತಿ ಇಲ್ಲ',
+  'page_no_info_subtitle':
+  'ಲಭ್ಯವಾಗುವಾಗ, ಪುಟದ ಮಾಹಿತಿ ಇಲ್ಲಿ ಪ್ರದರ್ಶಿಸಲಾಗುತ್ತದೆ.',
+
+// Group Profile
+  'cancel_group_request_title': 'ಅರ್ಜಿಯನ್ನು ರದ್ದುಮಾಡಿ',
+  'cancel_group_request_message':
+  'ನೀವು ಈ ಗುಂಪಿಗೆ ಸಲ್ಲಿಸಿದ ಸದಸ್ಯತ್ವ ವಿನಂತಿಯನ್ನು ರದ್ದುಮಾಡಲು ಬಯಸುತ್ತೀರಾ?',
+  'group_request_cancelled_success':
+  'ಸದಸ್ಯತ್ವ ವಿನಂತಿ ಯಶಸ್ವಿಯಾಗಿ ರದ್ದುಮಾಡಲಾಗಿದೆ',
+  'group_request_cancel_failed':
+  'ವಿನಂತಿಯನ್ನು ರದ್ದುಮಾಡಲು ವಿಫಲವಾಗಿದೆ, ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
+  'error_occurred_with_message': 'ದೋಷ ಸಂಭವಿಸಿದೆ: @error',
+  'group_not_available': 'ಗುಂಪು ಲಭ್ಯವಿಲ್ಲ',
+  'group_secret_no_access':
+  'ಇದು ಗುಪ್ತ ಗುಂಪಾಗಿದೆ ಮತ್ತು ನೀವು ಇದನ್ನು ಪ್ರವೇಶಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ',
+  'group_may_be_deleted':
+  'ಗುಂಪು ಅಳಿಸಲ್ಪಟ್ಟಿರಬಹುದು ಅಥವಾ ಅದರ ಸೆಟ್ಟಿಂಗ್‌ಗಳು ಬದಲಾಯಿಸಲ್ಪಟ್ಟಿವೆ',
+  'group_no_access_permission':
+  'ಗುಂಪು ಅಳಿಸಲ್ಪಟ್ಟಿರಬಹುದು ಅಥವಾ ನಿಮಗೆ ಪ್ರವೇಶ ಅನುಮತಿ ಇಲ್ಲ',
+  'back_button': 'ಹಿಂದೆ',
+  'group_secret': 'ಗುಪ್ತ ಗುಂಪು',
+  'group_closed': 'ಮುಚ್ಚಿದ ಗುಂಪು',
+  'group_member_to_see_secret':
+  'ಈ ಗುಪ್ತ ಗುಂಪಿನ ವಿಷಯವನ್ನು ನೋಡಲು ನೀವು ಸದಸ್ಯರಾಗಿರಬೇಕು',
+  'group_member_to_see_posts':
+  'ಈ ಗುಂಪಿನ ಪೋಸ್ಟ್‌ಗಳನ್ನು ನೋಡಲು ನೀವು ಸದಸ್ಯರಾಗಿರಬೇಕು',
+  'group_request_join': 'ಸೇರಲು ವಿನಂತಿಸಿ',
+  'group_join': 'ಗುಂಪಿಗೆ ಸೇರಿ',
+  'group_privacy': 'ಗೌಪ್ಯತೆ',
+  'group_privacy_secret': 'ಗುಪ್ತ',
+  'group_privacy_closed': 'ಮುಚ್ಚಿದ',
+  'group_description': 'ವಿವರಣೆ',
+  'group_members': 'ಸದಸ್ಯರು',
+  'group_request_pending': 'ನಿಮ್ಮ ವಿನಂತಿ ಪರಿಶೀಲನೆಯಲ್ಲಿದೆ',
+  'group_request_sent_secret':
+  'ನಿಮ್ಮ ವಿನಂತಿಯನ್ನು ಗುಪ್ತ ಗುಂಪಿನ ಅಡ್ಮಿನ್‌ಗೆ ಕಳುಹಿಸಲಾಗಿದೆ.\nಅನುಮೋದನೆಯಾದ ನಂತರ ನಿಮಗೆ ಮಾಹಿತಿ ನೀಡಲಾಗುತ್ತದೆ.',
+  'group_request_sent':
+  'ನಿಮ್ಮ ವಿನಂತಿಯನ್ನು ಗುಂಪಿನ ಅಡ್ಮಿನ್‌ಗೆ ಕಳುಹಿಸಲಾಗಿದೆ.\nಅನುಮೋದನೆಯಾದ ನಂತರ ನಿಮಗೆ ಮಾಹಿತಿ ನೀಡಲಾಗುತ್ತದೆ.',
+  'group_cancel_request': 'ವಿನಂತಿಯನ್ನು ರದ್ದುಮಾಡಿ',
+  'group_settings': 'ಗುಂಪು ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
+  'group_posts_label': 'ಪೋಸ್ಟ್‌ಗಳು',
+  'group_invite_button': 'ಆಹ್ವಾನಿಸಿ',
+  'group_members_button': 'ಸದಸ್ಯರು',
+  'group_requests_button': 'ವಿನಂತಿಗಳು',
+  'group_tab_posts': 'ಪೋಸ್ಟ್‌ಗಳು',
+  'group_tab_about': 'ಮಾಹಿತಿ',
+  'group_tab_members': 'ಸದಸ್ಯರು',
+  'group_tab_photos': 'ಚಿತ್ರಗಳು',
+  'group_tab_videos': 'ವೀಡಿಯೊಗಳು',
+  'group_tab_events': 'ಈವೆಂಟ್‌ಗಳು',
+  'group_description_section': 'ವಿವರಣೆ',
+  'group_information_section': 'ಗುಂಪು ಮಾಹಿತಿ',
+  'group_member_unit': 'ಸದಸ್ಯ',
+  'group_category': 'ವರ್ಗ',
+  'group_creation_date': 'ರಚನೆಯ ದಿನಾಂಕ',
+  'group_admin_section': 'ಗುಂಪು ಅಡ್ಮಿನ್',
+  'group_no_posts': 'ಯಾವುದೇ ಪೋಸ್ಟ್ ಇಲ್ಲ',
+  'group_no_photos': 'ಯಾವುದೇ ಚಿತ್ರಗಳಿಲ್ಲ',
+  'group_no_videos': 'ಯಾವುದೇ ವೀಡಿಯೊಗಳಿಲ್ಲ',
+  'group_no_events': 'ಯಾವುದೇ ಈವೆಂಟ್ ಇಲ್ಲ',
+  'group_pending_review': 'ಪರಿಶೀಲನೆಯಲ್ಲಿದೆ',
+  'group_leave': 'ಗುಂಪನ್ನು ಬಿಡಿ',
+// Group Card
+  'group_leave_button': 'ಬಿಡಿ',
+  'group_pending_status': 'ಬಾಕಿಯಿದೆ',
+  'group_join_button': 'ಸೇರಿರಿ',
+
+// Groups Page
+  'groups_page_title': 'ಗುಂಪುಗಳು',
+  'groups_search_tooltip': 'ಗುಂಪು ಹುಡುಕಿ',
+  'groups_create_tooltip': 'ಗುಂಪು ರಚಿಸಿ',
+  'groups_tab_joined': 'ಸೇರಿರುವವು',
+  'groups_tab_managed': 'ನನ್ನ ಗುಂಪುಗಳು',
+  'groups_tab_suggested': 'ಶಿಫಾರಸು ಮಾಡಿದವು',
+  'groups_join_request_sent': 'ಸೇರಲು ವಿನಂತಿ ಕಳುಹಿಸಲಾಗಿದೆ',
+  'groups_join_success': 'ಗುಂಪಿಗೆ ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿದ್ದೀರಿ',
+  'groups_join_failed': 'ಗುಂಪಿಗೆ ಸೇರಲು ವಿಫಲವಾಗಿದೆ',
+  'groups_leave_confirm_title': 'ಬಿಡುವಿಕೆಗೆ ದೃಢೀಕರಣ',
+  'groups_leave_confirm_message':
+  'ನೀವು ಖಚಿತವಾಗಿಯೂ "@title" ಗುಂಪನ್ನು ಬಿಡಲು ಬಯಸುತ್ತೀರಾ?',
+  'groups_leave_success': 'ಗುಂಪನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಬಿಡಲಾಗಿದೆ',
+  'groups_leave_failed': 'ಗುಂಪನ್ನು ಬಿಡಲು ವಿಫಲವಾಗಿದೆ',
+  'groups_load_failed': 'ಗುಂಪುಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+  'groups_empty_joined': 'ನೀವು ಇನ್ನೂ ಯಾವುದೇ ಗುಂಪಿಗೆ ಸೇರಿಲ್ಲ',
+  'groups_empty_managed': 'ನಿರ್ವಹಿಸಲಾದ ಗುಂಪುಗಳಿಲ್ಲ',
+  'groups_empty_suggested': 'ಯಾವುದೇ ಶಿಫಾರಸು ಮಾಡಿದ ಗುಂಪುಗಳಿಲ್ಲ',
+
+// Edit Group Page
+  'edit_group_title': 'ಗುಂಪನ್ನು ಸಂಪಾದಿಸಿ',
+  'edit_group_tab_settings': 'ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
+  'edit_group_tab_info': 'ಮಾಹಿತಿ',
+  'edit_group_tab_pictures': 'ಚಿತ್ರಗಳು',
+  'edit_group_tab_danger': 'ಅಪಾಯದ ವಿಭಾಗ',
+  'edit_group_title_label': 'ಗುಂಪಿನ ಶೀರ್ಷಿಕೆ *',
+  'edit_group_title_hint': 'ಉದಾಹರಣೆ: UAE ನಲ್ಲಿ Flutter ಡೆವಲಪರ್‌ಗಳು',
+  'edit_group_username_label': 'ಬಳಕೆದಾರ ಹೆಸರು *',
+  'edit_group_username_hint': 'ಉದಾಹರಣೆ: flutter_devs_uae',
+  'edit_group_username_helper':
+  'ಇಂಗ್ಲಿಷ್ ಅಕ್ಷರಗಳು, ಸಂಖ್ಯೆಗಳು ಮತ್ತು ಅಂಡರ್‌ಸ್ಕೋರ್ ಮಾತ್ರ',
+  'edit_group_category_label': 'ವರ್ಗ *',
+  'edit_group_loading': 'ಲೋಡ್ ಆಗುತ್ತಿದೆ...',
+  'edit_group_country_label': 'ದೇಶ',
+  'edit_group_country_placeholder': '-- ದೇಶವನ್ನು ಆಯ್ಕೆಮಾಡಿ --',
+  'edit_group_language_label': 'ಭಾಷೆ',
+  'edit_group_language_placeholder': '-- ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ --',
+  'edit_group_privacy_label': 'ಗೌಪ್ಯತೆ',
+  'edit_group_privacy_public': 'ಸಾರ್ವಜನಿಕ',
+  'edit_group_privacy_public_desc':
+  'ಯಾರಾದರೂ ಗುಂಪು ಮತ್ತು ಪೋಸ್ಟ್‌ಗಳನ್ನು ನೋಡಬಹುದು',
+  'edit_group_privacy_closed': 'ಮುಚ್ಚಿದ',
+  'edit_group_privacy_closed_desc':
+  'ಸದಸ್ಯರು ಮಾತ್ರ ಪೋಸ್ಟ್‌ಗಳನ್ನು ನೋಡಬಹುದು',
+  'edit_group_privacy_secret': 'ಗುಪ್ತ',
+  'edit_group_privacy_secret_desc':
+  'ಅನುಮೋದಿತ ಸದಸ್ಯರು ಮಾತ್ರ',
+  'edit_group_description_label': 'ವಿವರಣೆ',
+  'edit_group_description_hint': 'ಗುಂಪಿನ ವಿವರವನ್ನು ಬರೆಯಿರಿ...',
+  'edit_group_website_label': 'ವೆಬ್‌ಸೈಟ್',
+  'edit_group_location_label': 'ಸ್ಥಳ',
+  'edit_group_location_hint': 'ದುಬೈ, UAE',
+  'edit_group_pick_image': 'ಚಿತ್ರವನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+  'edit_group_upload': 'ಅಪ್‌ಲೋಡ್ ಮಾಡಿ',
+  'edit_group_uploading': 'ಅಪ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ...',
+  'edit_group_danger_zone_title': 'ಅಪಾಯದ ವಿಭಾಗ',
+  'edit_group_danger_zone_desc':
+  'ಈ ವಿಭಾಗದ ಕ್ರಿಯೆಗಳು ಅಪಾಯಕಾರಿ ಮತ್ತು ಹಿಂತಿರುಗಿಸಲಾಗುವುದಿಲ್ಲ',
+  'edit_group_info_section': 'ಗುಂಪಿನ ಮಾಹಿತಿ',
+  'edit_group_members': 'ಸದಸ್ಯರು',
+  'edit_group_creation_date': 'ರಚಿಸಿದ ದಿನಾಂಕ',
+  'edit_group_privacy': 'ಗೌಪ್ಯತೆ',
+  'edit_group_delete_title': 'ಗುಂಪನ್ನು ಅಳಿಸಿ',
+  'edit_group_delete_message':
+  'ನೀವು ಖಚಿತವಾಗಿಯೂ "@title" ಗುಂಪನ್ನು ಅಳಿಸಲು ಬಯಸುತ್ತೀರಾ?\n\nಅಳಿಸಲಾಗುವುದು:\n• ಎಲ್ಲಾ ಪೋಸ್ಟ್‌ಗಳು\n• ಎಲ್ಲಾ ಸದಸ್ಯರು\n• ಎಲ್ಲಾ ಡೇಟಾ\n\nಈ ಕ್ರಿಯೆಯನ್ನು ಹಿಂತಿರುಗಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ!',
+  'edit_group_delete_permanently': 'ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಿ',
+  'edit_group_delete_button': 'ಗುಂಪನ್ನು ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಿ',
+  'edit_group_deleting': 'ಅಳಿಸಲಾಗುತ್ತಿದೆ...',
+  'edit_group_save_success': 'ಬದಲಾವಣೆಗಳು ಯಶಸ್ವಿಯಾಗಿ ಉಳಿಸಲಾಗಿದೆ',
+  'edit_group_save_failed': 'ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಲು ವಿಫಲವಾಗಿದೆ',
+  'edit_group_delete_success': 'ಗುಂಪು ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಲಾಗಿದೆ',
+  'edit_group_delete_failed': 'ಗುಂಪನ್ನು ಅಳಿಸಲು ವಿಫಲವಾಗಿದೆ',
+  'edit_group_picture_upload_success':
+  'ಗುಂಪಿನ ಚಿತ್ರ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಲೋಡ್ ಆಗಿದೆ',
+  'edit_group_picture_upload_failed':
+  'ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ: @error',
+  'edit_group_cover_upload_success':
+  'ಕವರ್ ಚಿತ್ರ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಲೋಡ್ ಆಗಿದೆ',
+  'edit_group_cover_upload_failed':
+  'ಕವರ್ ಅಪ್‌ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ: @error',
+  'edit_group_image_pick_error':
+  'ಚಿತ್ರವನ್ನು ಆಯ್ಕೆಮಾಡುವಲ್ಲಿ ದೋಷ: @error',
+  'edit_group_picture_section_title': 'ಗುಂಪಿನ ಚಿತ್ರ',
+  'edit_group_picture_section_subtitle':
+  'ಗುಂಪಿನ ಪ್ರೊಫೈಲ್ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ',
+  'edit_group_cover_section_title': 'ಕವರ್ ಚಿತ್ರ',
+  'edit_group_cover_section_subtitle':
+  'ಗುಂಪಿನ ಕವರ್ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ',
+
+// My Pages Page
+  'my_pages_title': 'ಪುಟಗಳು',
+  'my_pages_tab_my_pages': 'ನನ್ನ ಪುಟಗಳು',
+  'my_pages_tab_liked': 'ಲೈಕ್ ಮಾಡಿದವು',
+  'my_pages_tab_suggested': 'ಶಿಫಾರಸು ಮಾಡಿದವು',
+  'my_pages_search_tooltip': 'ಹುಡುಕಿ',
+  'my_pages_error_title': 'ಏನೋ ತಪ್ಪಾಗಿದೆ',
+  'my_pages_admin_badge': 'ಅಡ್ಮಿನ್',
+  'my_pages_featured_badge': 'ವಿಶೇಷ',
+  'my_pages_likes_label': '@count ಲೈಕ್‌ಗಳು',
+  'my_pages_like_button': 'ಲೈಕ್',
+  'my_pages_liked_button': 'ಲೈಕ್ ಮಾಡಲಾಗಿದೆ',
+  'my_pages_boost_button': 'ಬೂಸ್ಟ್',
+  'my_pages_boosted_button': 'ಬೂಸ್ಟ್ ಮಾಡಲಾಗಿದೆ',
+  'my_pages_empty_my_pages_title': 'ಯಾವುದೇ ಪುಟಗಳಿಲ್ಲ',
+  'my_pages_empty_my_pages_subtitle':
+  'ಇಲ್ಲಿ ಕಾಣಿಸಿಕೊಳ್ಳಲು ಪುಟಗಳನ್ನು ರಚಿಸಿ ಅಥವಾ ನಿರ್ವಹಿಸಿ.',
+  'my_pages_empty_liked_title': 'ಯಾವುದೇ ಲೈಕ್ ಮಾಡಿದ ಪುಟಗಳಿಲ್ಲ',
+  'my_pages_empty_liked_subtitle':
+  'ನೀವು ಲೈಕ್ ಮಾಡಿದ ಪುಟಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.',
+  'my_pages_empty_suggested_title': 'ಯಾವುದೇ ಶಿಫಾರಸು ಇಲ್ಲ',
+  'my_pages_empty_suggested_subtitle':
+  'ಲಭ್ಯವಾದಾಗ ಶಿಫಾರಸು ಮಾಡಿದ ಪುಟಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.',
+
+// Movies List Page
+  'movies_select_genre': 'ಶೈಲಿಯನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+  'movies_unknown_genre': 'ಅಜ್ಞಾತ',
+  'movies_search_hint': 'ಶೀರ್ಷಿಕೆ ಅಥವಾ ಕೀವರ್ಡ್ ನಮೂದಿಸಿ',
+  'movies_apply_filter': 'ಅನ್ವಯಿಸಿ',
+  'movies_empty': 'ಯಾವುದೇ ಚಿತ್ರಗಳು ಲಭ್ಯವಿಲ್ಲ',
+
+// Movie Detail Page
+  'movie_not_found': 'ಚಿತ್ರ ಕಂಡುಬಂದಿಲ್ಲ',
+  'movie_overview': 'ಸಾರಾಂಶ',
+  'movie_cast': 'ನಟರು',
+  'movie_genres': 'ಶೈಲಿಗಳು',
+  'movie_purchase_success': 'ಖರೀದಿ ಪೂರ್ಣಗೊಂಡಿದೆ. ತೆರೆಯಿರಿ: @url',
+  'movie_open_link': 'ತೆರೆಯಿರಿ: @url',
+  'movie_views_label': '@count ಬಾರಿ ವೀಕ್ಷಿಸಲಾಗಿದೆ',
+  'movie_available_for_days': '@days ದಿನಗಳ ಕಾಲ ಲಭ್ಯ',
+  'movie_source_youtube': 'ಯೂಟ್ಯೂಬ್',
+  'movie_watch_now': 'ಈಗ ವೀಕ್ಷಿಸಿ',
+  'movie_purchase': 'ಖರೀದಿ ಮಾಡಿ',
+  'movie_purchasing': 'ಖರೀದಿ ನಡೆಯುತ್ತಿದೆ...',
+  'movie_watch': 'ವೀಕ್ಷಿಸಿ',
+
+// Course Create Page
+  'course_create_title': 'ಕೋರ್ಸ್ ರಚಿಸಿ',
+  'course_create_success': 'ಕೋರ್ಸ್ ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ',
+  'course_create_failed': 'ಕೋರ್ಸ್ ರಚಿಸಲು ವಿಫಲವಾಗಿದೆ',
+  'course_title_label': 'ಕೋರ್ಸ್ ಶೀರ್ಷಿಕೆ *',
+  'course_title_hint': 'ಉದಾಹರಣೆ: Flutter ಅಪ್ಲಿಕೇಶನ್ ಅಭಿವೃದ್ಧಿ ಕೋರ್ಸ್',
+  'course_description_label': 'ಕೋರ್ಸ್ ವಿವರಣೆ *',
+  'course_description_hint':
+  'ಕೋರ್ಸ್‌ಗಾಗಿ ವಿವರವಾದ ವಿವರಣೆ ಬರೆಯಿರಿ...',
+  'course_location_label': 'ಸ್ಥಳ *',
+  'course_location_hint': 'ಉದಾಹರಣೆ: ರಿಯಾದ್ - ಸೌದಿ ಅರೇಬಿಯಾ ಅಥವಾ ಆನ್‌ಲೈನ್',
+  'course_start_date': 'ಪ್ರಾರಂಭ ದಿನಾಂಕ',
+  'course_end_date': 'ಮುಕ್ತಾಯ ದಿನಾಂಕ',
+  'course_select_date': 'ದಿನಾಂಕ ಆಯ್ಕೆಮಾಡಿ',
+  'course_free_toggle': 'ಉಚಿತ ಕೋರ್ಸ್',
+  'course_fees_label': 'ಕೋರ್ಸ್ ಶುಲ್ಕ *',
+  'course_fees_hint': 'ಉದಾಹರಣೆ: 500',
+  'course_fees_required': 'ದಯವಿಟ್ಟು ಕೋರ್ಸ್ ಶುಲ್ಕವನ್ನು ನಮೂದಿಸಿ',
+  'course_currency_sar': 'SAR',
+  'course_available_title': 'ನೋಂದಣಿಗೆ ತೆರೆದಿದೆ',
+  'course_available_open': 'ಬಳಕೆದಾರರು ನೋಂದಾಯಿಸಬಹುದು',
+  'course_available_closed': 'ಈಗ ಮುಚ್ಚಲಾಗಿದೆ',
+  'course_create_button': 'ಕೋರ್ಸ್ ರಚಿಸಿ',
+  'course_cover_label': 'ಕವರ್ ಚಿತ್ರ',
+  'course_cover_tap': 'ಕವರ್ ಚಿತ್ರ ಆಯ್ಕೆ ಮಾಡಲು ಟ್ಯಾಪ್ ಮಾಡಿ',
+  'course_cover_upload_fail': 'ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+// Share Post Dialog
+  'share_post_title': 'ಪೋಸ್ಟ್ ಹಂಚಿಕೊಳ್ಳಿ',
+  'share_to_label': 'ಹಂಚಿಕೊಳ್ಳಿ',
+  'share_to_timeline': 'ಟೈಮ್‌ಲೈನ್',
+  'share_to_page': 'ಪುಟ',
+  'share_to_group': 'ಗುಂಪು',
+  'share_to_event': 'ಈವೆಂಟ್',
+  'share_select_page': 'ಪುಟವನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+  'share_select_group': 'ಗುಂಪನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+  'share_select_event': 'ಈವೆಂಟ್ ಆಯ್ಕೆಮಾಡಿ',
+  'share_no_pages': 'ಯಾವುದೇ ಪುಟಗಳು ಲಭ್ಯವಿಲ್ಲ',
+  'share_no_groups': 'ಯಾವುದೇ ಗುಂಪುಗಳು ಲಭ್ಯವಿಲ್ಲ',
+  'share_no_events': 'ಯಾವುದೇ ಈವೆಂಟ್ ಲಭ್ಯವಿಲ್ಲ',
+  'share_message_label': 'ಹೆಚ್ಚುವರಿ ಸಂದೇಶ (ಐಚ್ಛಿಕ)',
+  'share_message_hint': 'ನಿಮ್ಮ ಸಂದೇಶವನ್ನು ಇಲ್ಲಿ ಬರೆಯಿರಿ...',
+  'share_button': 'ಹಂಚಿಕೊಳ್ಳಿ',
+  'cancel_button': 'ರದ್ದುಮಾಡಿ',
+  'share_success': 'ಯಶಸ್ವಿಯಾಗಿ ಹಂಚಲಾಗಿದೆ',
+  'share_error': 'ಹಂಚಲು ವಿಫಲವಾಗಿದೆ',
+  'error_title': 'ದೋಷ',
+  'success_title': 'ಯಶಸ್ಸು',
+  'reel_deleted_success': 'ರೀಲ್ ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಲಾಗಿದೆ',
+  'confirm_delete': 'ಅಳಿಸುವುದನ್ನು ದೃಢೀಕರಿಸಿ',
+  'delete_post_message': 'ನೀವು ಖಚಿತವಾಗಿಯೂ ಈ ಪೋಸ್ಟ್ ಅನ್ನು ಅಳಿಸಲು ಬಯಸುತ್ತೀರಾ?',
+  'delete_button': 'ಅಳಿಸಿ',
+  'error_deleting_post': 'ಪೋಸ್ಟ್ ಅಳಿಸಲು ವಿಫಲವಾಗಿದೆ',
+  'report_feature_coming': 'ರಿಪೋರ್ಟ್ ವೈಶಿಷ್ಟ್ಯ ಶೀಘ್ರದಲ್ಲೇ ಬರಲಿದೆ',
+  'we_will_send_verification_code':
+  'ನಿಮ್ಮ ಪಾಸ್ವರ್ಡ್ ರೀಸೆಟ್ ಮಾಡಲು ನಾವು ನಿಮ್ಮ ಇಮೇಲ್‌ಗೆ ಪರಿಶೀಲನಾ ಕೋಡ್ ಕಳುಹಿಸುತ್ತೇವೆ',
+  'email_or_username': 'ಇಮೇಲ್ ಅಥವಾ ಬಳಕೆದಾರ ಹೆಸರು',
+  'send_code': 'ಕೋಡ್ ಕಳುಹಿಸಿ',
+  'enter_verification_code': 'ಪರಿಶೀಲನಾ ಕೋಡ್ ನಮೂದಿಸಿ',
+  'we_sent_code_to_your_email':
+  'ನಾವು ನಿಮ್ಮ ಇಮೇಲ್ ವಿಳಾಸಕ್ಕೆ 6 ಅಂಕಿಯ ಕೋಡ್ ಕಳುಹಿಸಿದ್ದೇವೆ',
+  'enter_all_digits': 'ದಯವಿಟ್ಟು ಎಲ್ಲಾ 6 ಅಂಕಿಗಳನ್ನು ನಮೂದಿಸಿ',
+  'resend_code_in': 'ಕೋಡ್ ಮರುಕಳುಹಿಸಿ',
+  'seconds': 'ಸೆಕೆಂಡುಗಳು',
+  'resend_code': 'ಕೋಡ್ ಮರುಕಳುಹಿಸಿ',
+  'verify_code': 'ಕೋಡ್ ಪರಿಶೀಲಿಸಿ',
+  'create_new_password': 'ಹೊಸ ಪಾಸ್ವರ್ಡ್ ರಚಿಸಿ',
+  'enter_strong_password':
+  'ದಯವಿಟ್ಟು ಕನಿಷ್ಠ 8 ಅಕ್ಷರಗಳಿರುವ ಬಲವಾದ ಪಾಸ್ವರ್ಡ್ ನಮೂದಿಸಿ',
+  'password_too_short': 'ಪಾಸ್ವರ್ಡ್ ಕನಿಷ್ಠ 8 ಅಕ್ಷರಗಳಿರಬೇಕು',
+  'reset_password': 'ಪಾಸ್ವರ್ಡ್ ರೀಸೆಟ್ ಮಾಡಿ',
+  'skip_all': 'ಎಲ್ಲವನ್ನೂ ಬಿಟ್ಟುಬಿಡಿ',
+  'step': 'ಹಂತ',
+  'of': 'ನಲ್ಲಿ',
+  'profile_setup_complete': 'ಪ್ರೊಫೈಲ್ ಸೆಟ್‌ಅಪ್ ಪೂರ್ಣಗೊಂಡಿದೆ!',
+  'please_select_country': 'ದಯವಿಟ್ಟು ನಿಮ್ಮ ದೇಶವನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+  'select_your_country': 'ನಿಮ್ಮ ದೇಶವನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+  'job_title_hint': 'ಉದಾಹರಣೆ: ಸಾಫ್ಟ್‌ವೇರ್ ಎಂಜಿನಿಯರ್',
+  'field_of_study': 'ಅಧ್ಯಯನ ಕ್ಷೇತ್ರ',
+  'field_of_study_hint': 'ಉದಾಹರಣೆ: ಕಂಪ್ಯೂಟರ್ ಸೈನ್ಸ್',
+  'add_profile_photo': 'ಪ್ರೊಫೈಲ್ ಫೋಟೋ ಸೇರಿಸಿ',
+  'profile_photo_description':
+  'ಫೋಟೋ ಸೇರಿಸಿ যাতে ಜನರು ನಿಮ್ಮನ್ನು ಗುರುತಿಸಬಹುದು',
+  'tap_to_change_photo': 'ಫೋಟೋ ಬದಲಾಯಿಸಲು ಟ್ಯಾಪ್ ಮಾಡಿ',
+  'choose_photo_source': 'ಫೋಟೋ ಮೂಲ ಆಯ್ಕೆಮಾಡಿ',
+  'camera': 'ಕ್ಯಾಮೆರಾ',
+  'gallery': 'ಗ್ಯಾಲರಿ',
+  'photo_uploaded_successfully': 'ಫೋಟೋ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಲೋಡ್ ಆಗಿದೆ!',
+  'error_uploading_photo': 'ಫೋಟೋ ಅಪ್‌ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ',
+  'error_picking_image': 'ಚಿತ್ರವನ್ನು ಆಯ್ಕೆಮಾಡುವಲ್ಲಿ ದೋಷ',
+  'tell_us_about_yourself': 'ನಿಮ್ಮ ಬಗ್ಗೆ ನಮಗೆ ತಿಳಿಸಿ',
+  'bio_description': 'ಚಿಕ್ಕ ಪರಿಚಯ ಬರೆಯಿರಿ',
+  'bio': 'ಪರಿಚಯ',
+  'write_something_about_yourself': 'ನಿಮ್ಮ ಬಗ್ಗೆ ಸ್ವಲ್ಪ ಬರೆಯಿರಿ...',
+
+  'delete_story': 'ಸ್ಟೋರಿ ಅಳಿಸಿ',
+  'delete_story_confirmation':
+  'ನೀವು ಖಚಿತವಾಗಿಯೂ ನಿಮ್ಮ ಸ್ಟೋರಿಯನ್ನು ಅಳಿಸಲು ಬಯಸುತ್ತೀರಾ? ಈ ಕ್ರಿಯೆಯನ್ನು ಹಿಂತಿರುಗಿಸಲಾಗುವುದಿಲ್ಲ.',
+  'story_deleted_successfully': 'ಸ್ಟೋರಿ ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಲಾಗಿದೆ',
+
+
+// Time
+  'second_ago': 'ಒಂದು ಸೆಕೆಂಡ್ ಹಿಂದೆ',
+  'seconds_ago': 'ಸೆಕೆಂಡುಗಳ ಹಿಂದೆ',
+  'minute_ago': 'ಒಂದು ನಿಮಿಷ ಹಿಂದೆ',
+  'hour_ago': 'ಒಂದು ಗಂಟೆ ಹಿಂದೆ',
+  'day_ago': 'ಒಂದು ದಿನ ಹಿಂದೆ',
+  'week_ago': 'ಒಂದು ವಾರ ಹಿಂದೆ',
+  'month_ago': 'ಒಂದು ತಿಂಗಳು ಹಿಂದೆ',
+  'year_ago': 'ಒಂದು ವರ್ಷ ಹಿಂದೆ',
+
+// Buttons / Common Actions
+  'send_now': 'ಈಗ ಕಳುಹಿಸಿ',
+  'send_message': 'ಸಂದೇಶ ಕಳುಹಿಸಿ',
+  'more_options': 'ಹೆಚ್ಚು ಆಯ್ಕೆಗಳು',
+  'anonymous_user': 'ಅಜ್ಞಾತ ಬಳಕೆದಾರ',
+
+// Status
+  'status_updated': 'ಸ್ಥಿತಿ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಡೇಟ್ ಆಗಿದೆ',
+  'sold': 'ಮಾರಾಟವಾಗಿದೆ',
+
+// Chat / Call
+  'video_call': 'ವೀಡಿಯೊ ಕರೆ',
+  'audio_call': 'ಆಡಿಯೊ ಕರೆ',
+  'mute': 'ಮ್ಯೂಟ್',
+  'unmute': 'ಅನ್‌ಮ್ಯೂಟ್',
+  'speaker': 'ಸ್ಪೀಕರ್',
+  'end_call': 'ಕರೆ ಮುಗಿಸಿ',
+  'calling': 'ಕರೆ ಮಾಡಲಾಗುತ್ತಿದೆ',
+  'answer': 'ಉತ್ತರಿಸಿ',
+  'decline': 'ನಿರಾಕರಿಸಿ',
+
+// AI
+  'ai_assistant': 'ಎಐ ಸಹಾಯಕ',
+  'ai_typing': 'ಟೈಪ್ ಮಾಡುತ್ತಿದೆ...',
+  'ai_error': 'ದೋಷ',
+  'ai_success': 'ಯಶಸ್ಸು',
+  'ai_clear_chat': 'ಚಾಟ್ ತೆರವುಗೊಳಿಸಿ',
+  'ai_coming_soon': 'ಶೀಘ್ರದಲ್ಲೇ ಬರಲಿದೆ...',
+
+// Theme
+  'switched_to_light_mode': 'ಲೈಟ್ ಮೋಡ್‌ಗೆ ಬದಲಾಯಿಸಲಾಗಿದೆ',
+  'switched_to_dark_mode': 'ಡಾರ್ಕ್ ಮೋಡ್‌ಗೆ ಬದಲಾಯಿಸಲಾಗಿದೆ',
+// Cart / Orders
+  'shopping_cart': 'ಶಾಪಿಂಗ್ ಕಾರ್ಟ್',
+  'checkout': 'ಚೆಕ್‌ಔಟ್',
+  'orders': 'ಆರ್ಡರ್‌ಗಳು',
+  'order_details': 'ಆರ್ಡರ್ ವಿವರಗಳು',
+  'order_status_pending': 'ಬಾಕಿ',
+  'order_status_delivered': 'ಡೆಲಿವರ್ ಮಾಡಲಾಗಿದೆ',
+
+  'description_plain_text': 'ವಿವರಣೆ (HTML ಬೆಂಬಲಿತ)',
+  'enter_description': 'ಇಲ್ಲಿ ವಿವರಣೆ ನಮೂದಿಸಿ',
+  'preview': 'ಪೂರ್ವವೀಕ್ಷಣೆ',
+  'chat_seller_privacy_restricted':
+  'ಮಾರಾಟಗಾರರು ಚಾಟ್ ಗೌಪ್ಯತಾ ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ನಿರ್ಬಂಧಿಸಿದ್ದಾರೆ',
+  'cannot_chat_with_yourself': 'ನೀವು ನಿಮ್ಮನ್ನೇ ಸಂದೇಶ ಕಳುಹಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ',
+  'no_posts_found': 'ಯಾವುದೇ ಪೋಸ್ಟ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ',
+
+  'send_merits_title': 'ಮೆರಿಟ್ ಪಾಯಿಂಟ್‌ಗಳನ್ನು ಕಳುಹಿಸಿ',
+  'send_merits_subtitle': 'ಇತರರಿಗಾಗಿ ನಿಮ್ಮ ಮೆಚ್ಚುಗೆಯನ್ನು ಹಂಚಿಕೊಳ್ಳಿ',
+  'send_merits_info':
+  'ಇತರರ ಮೌಲ್ಯಯುತ ಕೊಡುಗೆಗಳಿಗೆ ಮೆಚ್ಚುಗೆ ಸೂಚಿಸಲು ಮೆರಿಟ್ ಪಾಯಿಂಟ್‌ಗಳನ್ನು ಕಳುಹಿಸಿ',
+  'merits_available': '%s ಪಾಯಿಂಟ್‌ಗಳು ಲಭ್ಯವಿವೆ',
+  'send_merits_coming_soon': 'ಶೀಘ್ರದಲ್ಲೇ – ಮೆರಿಟ್ ಕಳುಹಿಸುವ ಪುಟ',
+  'failed_to_pick_file': 'ಫೈಲ್ ಆಯ್ಕೆ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+  'no_created_events': 'ನೀವು ಇನ್ನೂ ಯಾವುದೇ ಈವೆಂಟ್ ರಚಿಸಿಲ್ಲ',
+  'create_your_first_event':
+  'ನಿಮ್ಮ ಮೊದಲ ಈವೆಂಟ್ ರಚಿಸಲು + ಬಟನ್ ಮೇಲೆ ಟ್ಯಾಪ್ ಮಾಡಿ!',
+  'search_products': 'ಉತ್ಪನ್ನಗಳನ್ನು ಹುಡುಕಿ...',
+  'edit_product': 'ಉತ್ಪನ್ನ ಸಂಪಾದಿಸಿ',
+  'mark_as_sold': 'ಮಾರಾಟವಾದಂತೆ ಗುರುತಿಸಿ',
+  'mark_as_unsold': 'ಲಭ್ಯವಿರುವಂತೆ ಗುರುತಿಸಿ',
+  'are_you_sure_mark_product_sold':
+  'ನೀವು ಖಚಿತವಾಗಿಯೂ ಈ ಉತ್ಪನ್ನವನ್ನು ಮಾರಾಟವಾಗಿದೆ ಎಂದು ಗುರುತಿಸಲು ಬಯಸುತ್ತೀರಾ?',
+  'product_marked_sold': 'ಉತ್ಪನ್ನವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಮಾರಾಟವಾಗಿದೆ ಎಂದು ಗುರುತಿಸಲಾಗಿದೆ',
+  'product_marked_unsold':
+  'ಉತ್ಪನ್ನವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಲಭ್ಯವಿರುವಂತೆ ಗುರುತಿಸಲಾಗಿದೆ',
+  'error_marking_product_sold': 'ಉತ್ಪನ್ನವನ್ನು ಮಾರಾಟವಾಗಿದೆ ಎಂದು ಗುರುತಿಸುವಲ್ಲಿ ದೋಷ',
+  'error_marking_product_unsold': 'ಉತ್ಪನ್ನವನ್ನು ಲಭ್ಯವಿರುವಂತೆ ಗುರುತಿಸುವಲ್ಲಿ ದೋಷ',
+  'market_status_refunded': 'ರಿಫಂಡ್ ಮಾಡಲಾಗಿದೆ',
+  'change_status': 'ಸ್ಥಿತಿ ಬದಲಾಯಿಸಿ',
+  'upload_image_or_video': 'ದಯವಿಟ್ಟು ಒಂದು ಚಿತ್ರ ಅಥವಾ ವೀಡಿಯೊ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ',
+  'select_media_below': 'ಕೆಳಗೆ ಮಾಧ್ಯಮ ಪ್ರಕಾರ ಆಯ್ಕೆಮಾಡಿ',
+  'video': 'ವೀಡಿಯೊ',
+  'image': 'ಚಿತ್ರ',
+
+// Ads Sorting
+  'ads_sort_newest': 'ಇತ್ತೀಚಿನ',
+  'ads_sort_top_spend': 'ಅತಿ ಹೆಚ್ಚು ಖರ್ಚು',
+  'ads_sort_ending_soon': 'ಶೀಘ್ರ ಮುಕ್ತಾಯವಾಗುತ್ತಿದೆ',
+
+// Filter Chips
+  'filter_newsfeed': 'ಮುಖಪುಟ',
+  'filter_popular': 'ಜನಪ್ರಿಯ',
+  'filter_discover': 'ಹುಡುಕಿ',
+  'post_type': 'ಪೋಸ್ಟ್ ಪ್ರಕಾರ',
+  'my_funding': 'ನನ್ನ ಫಂಡಿಂಗ್',
+
+  'profile_no_videos': 'ಯಾವುದೇ ವೀಡಿಯೊಗಳಿಲ್ಲ',
+  'profile_videos_load_error': 'ವೀಡಿಯೊಗಳನ್ನು ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ',
+
+// Notifications
+  'notification_started_following': 'ನಿಮ್ಮನ್ನು ಫಾಲೋ ಮಾಡಲು ಪ್ರಾರಂಭಿಸಿದ್ದಾರೆ',
+  'notification_friend_request_sent': 'ನಿಮಗೆ ಸ್ನೇಹ ವಿನಂತಿಯನ್ನು ಕಳುಹಿಸಿದ್ದಾರೆ',
+  'notification_friend_request_accepted': 'ನಿಮ್ಮ ಸ್ನೇಹ ವಿನಂತಿಯನ್ನು ಸ್ವೀಕರಿಸಿದ್ದಾರೆ',
+  'notification_commented_post': 'ನಿಮ್ಮ ಪೋಸ್ಟ್‌ಗೆ ಕಾಮೆಂಟ್ ಮಾಡಿದ್ದಾರೆ',
+  'notification_reacted_like_to_post': 'ನಿಮ್ಮ ಪೋಸ್ಟ್‌ಗೆ ಲೈಕ್ ಪ್ರತಿಕ್ರಿಯೆ ನೀಡಿದ್ದಾರೆ',
+  'notification_reacted_love_to_post': 'ನಿಮ್ಮ ಪೋಸ್ಟ್‌ಗೆ ಲವ್ ಪ್ರತಿಕ್ರಿಯೆ ನೀಡಿದ್ದಾರೆ',
+  'notification_reacted_haha_to_post': 'ನಿಮ್ಮ ಪೋಸ್ಟ್‌ಗೆ ಹಾಹಾ ಪ್ರತಿಕ್ರಿಯೆ ನೀಡಿದ್ದಾರೆ',
+  'notification_reacted_wow_to_post': 'ನಿಮ್ಮ ಪೋಸ್ಟ್‌ಗೆ ವಾವ್ ಪ್ರತಿಕ್ರಿಯೆ ನೀಡಿದ್ದಾರೆ',
+  'notification_reacted_sad_to_post': 'ನಿಮ್ಮ ಪೋಸ್ಟ್‌ಗೆ ಸ್ಯಾಡ್ ಪ್ರತಿಕ್ರಿಯೆ ನೀಡಿದ್ದಾರೆ',
+  'notification_reacted_angry_to_post': 'ನಿಮ್ಮ ಪೋಸ್ಟ್‌ಗೆ ಆಂಗ್ರಿ ಪ್ರತಿಕ್ರಿಯೆ ನೀಡಿದ್ದಾರೆ',
+  'notification_shared_your_post': 'ನಿಮ್ಮ ಪೋಸ್ಟ್ ಅನ್ನು ಹಂಚಿಕೊಂಡಿದ್ದಾರೆ',
+  'notification_group_join_request':
+  'ನಿಮ್ಮ ಗುಂಪಿನಲ್ಲಿ ಸೇರಲು ವಿನಂತಿಸಿದ್ದಾರೆ',
+  'notification_group_join_approved':
+  'ನಿಮ್ಮ ಗುಂಪಿಗೆ ಸೇರಲು ವಿನಂತಿಯನ್ನು ಅನುಮೋದಿಸಿದ್ದಾರೆ',
+  'notification_mentioned_you_post': 'ನಿಮ್ಮನ್ನು ಒಂದು ಪೋಸ್ಟ್‌ನಲ್ಲಿ ಉಲ್ಲೇಖಿಸಿದ್ದಾರೆ',
+  'notification_mentioned_you_comment':
+  'ನಿಮ್ಮನ್ನು ಒಂದು ಕಾಮೆಂಟ್‌ನಲ್ಲಿ ಉಲ್ಲೇಖಿಸಿದ್ದಾರೆ',
+  'notification_posted_on_wall': 'ನಿಮ್ಮ ವಾಲ್‌ನಲ್ಲಿ ಪೋಸ್ಟ್ ಮಾಡಿದ್ದಾರೆ',
+  'notification_replied_comment': 'ನಿಮ್ಮ ಕಾಮೆಂಟ್‌ಗೆ ಉತ್ತರಿಸಿದ್ದಾರೆ',
+  'notification_page_invitation':
+  'ನಿಮಗೆ ಒಂದು ಪುಟವನ್ನು ಲೈಕ್ ಮಾಡಲು ಆಹ್ವಾನಿಸಿದ್ದಾರೆ',
+  'notification_group_invitation':
+  'ನಿಮಗೆ ಒಂದು ಗುಂಪಿಗೆ ಸೇರಲು ಆಹ್ವಾನಿಸಿದ್ದಾರೆ',
+  'notification_event_invitation':
+  'ನಿಮಗೆ ಒಂದು ಈವೆಂಟ್‌ಗೆ ಆಹ್ವಾನಿಸಿದ್ದಾರೆ',
+  'notification_tagged_photo': 'ನಿಮ್ಮನ್ನು ಒಂದು ಫೋಟೋದಲ್ಲಿ ಟ್ಯಾಗ್ ಮಾಡಿದ್ದಾರೆ',
+  'notification_birthday': 'ಇಂದು ಜನ್ಮದಿನ ಆಚರಿಸುತ್ತಿದ್ದಾರೆ',
+
+  'your_addresses': 'ನಿಮ್ಮ ವಿಳಾಸಗಳು',
+  'edit_group_danger_zone': 'ಅಪಾಯ ಪ್ರದೇಶ',
+  'edit_group_danger_warning':
+  'ಈ ವಿಭಾಗದಲ್ಲಿ ಮಾಡಿದ ಕ್ರಿಯೆಗಳು ಅಪಾಯಕಾರಿ ಮತ್ತು ಹಿಂತಿರುಗಿಸಲಾಗುವುದಿಲ್ಲ',
+
+// Group Pending Requests Page
+  'pending_requests_title': 'ಸೇರಲು ವಿನಂತಿಗಳು',
+  'pending_requests_refresh': 'ರಿಫ್ರೆಶ್',
+  'pending_requests_load_failed': 'ವಿನಂತಿಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+  'pending_requests_accepted': '@name ಅವರನ್ನು ಗುಂಪಿಗೆ ಸ್ವೀಕರಿಸಲಾಗಿದೆ',
+  'pending_requests_accept_failed':
+  'ವಿನಂತಿಯನ್ನು ಸ್ವೀಕರಿಸಲು ವಿಫಲವಾಗಿದೆ, ದಯವಿಟ್ಟು ಮರುಪ್ರಯತ್ನಿಸಿ',
+  'pending_requests_decline_title': 'ವಿನಂತಿಯನ್ನು ತಿರಸ್ಕರಿಸಿ',
+  'pending_requests_decline_message':
+  '@name ಅವರ ಗುಂಪಿಗೆ ಸೇರುವ ವಿನಂತಿಯನ್ನು ನೀವು ತಿರಸ್ಕರಿಸಲು ಬಯಸುತ್ತೀರಾ?',
+  'pending_requests_declined': '@name ಅವರ ವಿನಂತಿಯನ್ನು ತಿರಸ್ಕರಿಸಲಾಗಿದೆ',
+  'pending_requests_decline_failed':
+  'ವಿನಂತಿಯನ್ನು ತಿರಸ್ಕರಿಸಲು ವಿಫಲವಾಗಿದೆ, ದಯವಿಟ್ಟು ಮರುಪ್ರಯತ್ನಿಸಿ',
+  'pending_requests_retry': 'ಮರುಪ್ರಯತ್ನಿಸಿ',
+  'pending_requests_empty': 'ಯಾವುದೇ ಬಾಕಿ ವಿನಂತಿಗಳಿಲ್ಲ',
+  'pending_requests_empty_subtitle':
+  'ಎಲ್ಲಾ ವಿನಂತಿಗಳನ್ನು ಪ್ರಕ್ರಿಯೆಗೊಳಿಸಲಾಗಿದೆ',
+  'pending_requests_date': 'ವಿನಂತಿ ದಿನಾಂಕ',
+  'pending_requests_accept': 'ಸ್ವೀಕರಿಸಿ',
+  'pending_requests_decline': 'ತಿರಸ್ಕರಿಸಿ',
+
+// Group Privacy Types
+  'group_privacy_public': 'ಸಾರ್ವಜನಿಕ',
+  'group_privacy_public_desc':
+  'ತಕ್ಷಣ ಸೇರಬಹುದು, ಎಲ್ಲರಿಗೂ ಕಾಣಿಸುತ್ತದೆ',
+  'group_privacy_closed_desc':
+  'ಸೇರಲು ವಿನಂತಿ ಅಗತ್ಯ, ಹುಡುಕಾಟದಲ್ಲಿ ಕಾಣಿಸುತ್ತದೆ',
+  'group_privacy_secret_desc':
+  'ಸೇರಲು ವಿನಂತಿ ಅಗತ್ಯ, ಹುಡುಕಾಟದಿಂದ ಮರೆಮಾಡಲ್ಪಡುತ್ತದೆ',
+
+// Groups Search Page
+  'groups_search_title': 'ಗುಂಪುಗಳನ್ನು ಹುಡುಕಿ',
+  'groups_search_clear_filters': 'ಫಿಲ್ಟರ್‌ಗಳನ್ನು ತೆರವುಗೊಳಿಸಿ',
+  'groups_search_hint': 'ಗುಂಪುಗಳನ್ನು ಹುಡುಕಿ...',
+  'groups_search_filters': 'ಫಿಲ್ಟರ್‌ಗಳು',
+  'groups_search_category_label': 'ವರ್ಗ: @id',
+  'groups_search_empty_title': 'ಗುಂಪುಗಳನ್ನು ಹುಡುಕಿ',
+  'groups_search_empty_subtitle':
+  'ಗುಂಪುಗಳನ್ನು ಹುಡುಕಲು ಹುಡುಕಾಟ ಅಥವಾ ಫಿಲ್ಟರ್ ಬಳಸಿ',
+  'groups_search_no_results': 'ಯಾವುದೇ ಫಲಿತಾಂಶಗಳಿಲ್ಲ',
+  'groups_search_no_results_subtitle':
+  'ಬೇರೆ ಕೀವರ್ಡ್ ಪ್ರಯತ್ನಿಸಿ ಅಥವಾ ಫಿಲ್ಟರ್‌ಗಳನ್ನು ಬದಲಾಯಿಸಿ',
+  'groups_search_filter_title': 'ಫಿಲ್ಟರ್',
+  'groups_search_clear_all': 'ಎಲ್ಲವನ್ನೂ ತೆರವುಗೊಳಿಸಿ',
+  'groups_search_category': 'ವರ್ಗ',
+  'groups_search_category_hint': 'ವರ್ಗ ID (ಉದಾ: 1)',
+  'groups_search_privacy': 'ಗೋಪನೀಯತೆ',
+  'groups_search_apply_filters': 'ಫಿಲ್ಟರ್ ಅನ್ವಯಿಸಿ',
+
+// Group Invite Friends Page
+  'invite_friends_title': 'ಮಿತ್ರರನ್ನು ಆಹ್ವಾನಿಸಿ',
+  'invite_friends_select_all': 'ಎಲ್ಲವನ್ನೂ ಆಯ್ಕೆಮಾಡಿ',
+  'invite_friends_deselect_all': 'ಎಲ್ಲವನ್ನೂ ತೆಗೆದುಹಾಕಿ',
+  'invite_friends_search_hint': 'ಮಿತ್ರರನ್ನು ಹುಡುಕಿ...',
+  'invite_friends_selected_count': '@count ಮಿತ್ರರು ಆಯ್ಕೆಯಾಗಿದೆ',
+  'invite_friends_error_title': 'ದೋಷ ಉಂಟಾಗಿದೆ',
+  'invite_friends_retry': 'ಮರುಪ್ರಯತ್ನಿಸಿ',
+  'invite_friends_no_results': 'ಯಾವುದೇ ಫಲಿತಾಂಶಗಳಿಲ್ಲ',
+  'invite_friends_no_friends': 'ಆಹ್ವಾನಿಸಲು ಯಾವುದೇ ಮಿತ್ರರು ಇಲ್ಲ',
+  'invite_friends_try_different_search':
+  'ಬೇರೆ ಕೀವರ್ಡ್ ಪ್ರಯತ್ನಿಸಿ',
+  'invite_friends_all_members':
+  'ನಿಮ್ಮ ಎಲ್ಲಾ ಮಿತ್ರರು ಈಗಾಗಲೇ ಸದಸ್ಯರಾಗಿದ್ದಾರೆ',
+  'invite_friends_invited_label': 'ಆಹ್ವಾನಿಸಲಾಗಿದೆ',
+  'invite_friends_sending': 'ಕಳುಹಿಸಲಾಗುತ್ತಿದೆ...',
+  'invite_friends_send_button':
+  'ಆಹ್ವಾನ ಕಳುಹಿಸಿ (@count)',
+  'invite_friends_select_friends':
+  'ದಯವಿಟ್ಟು ಆಹ್ವಾನಿಸಲು ಮಿತ್ರರನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+  'invite_friends_success':
+  '@count ಆಹ್ವಾನಗಳನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಕಳುಹಿಸಲಾಗಿದೆ',
+  'invite_friends_partial_success':
+  '@success ಕಳುಹಿಸಲಾಗಿದೆ, @failed ವಿಫಲವಾಗಿದೆ',
+  'invite_friends_all_failed':
+  'ಎಲ್ಲಾ ಆಹ್ವಾನಗಳು ವಿಫಲವಾದವು',
+  'invite_friends_send_error':
+  'ಆಹ್ವಾನ ಕಳುಹಿಸುವಲ್ಲಿ ವಿಫಲವಾಗಿದೆ: @error',
+
+// Profile Page Stats & Buttons
+  'profile_stat_posts': 'ಪೋಸ್ಟ್‌ಗಳು',
+  'profile_stat_photos': 'ಫೋಟೋಗಳು',
+  'profile_stat_friends': 'ಮಿತ್ರರು',
+  'profile_stat_followers': 'ಫಾಲೋವರ್‌ಗಳು',
+  'profile_following': 'ಫಾಲೋ ಮಾಡುತ್ತಿದ್ದೀರಿ',
+  'profile_follow': 'ಫಾಲೋ ಮಾಡಿ',
+  'profile_no_posts': 'ಇನ್ನೂ ಯಾವುದೇ ಪೋಸ್ಟ್‌ಗಳಿಲ್ಲ',
+  'profile_allow_interaction':
+  'ಈ ಬಳಕೆದಾರರಿಗೆ ನಿಮ್ಮೊಂದಿಗೆ ಸಂವಹನ ಮಾಡಲು ಅನುಮತಿಸಿ',
+  'profile_prevent_interaction':
+  'ಈ ಬಳಕೆದಾರರು ನಿಮ್ಮೊಂದಿಗೆ ಸಂವಹನ ಮಾಡದಂತೆ ತಡೆಹಿಡಿಯಿರಿ',
+  'profile_user_blocked_success':
+  'ಬಳಕೆದಾರರನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಬ್ಲಾಕ್ ಮಾಡಲಾಗಿದೆ',
+  'profile_user_unblocked_success':
+  'ಬಳಕೆದಾರರನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಅನ್ಬ್ಲಾಕ್ ಮಾಡಲಾಗಿದೆ',
+  'profile_invalid_user_id': 'ಅಮಾನ್ಯ ಬಳಕೆದಾರ ID',
+  'profile_failed_open_chat': 'ಚಾಟ್ ತೆರೆಯಲು ವಿಫಲವಾಗಿದೆ',
+  'profile_must_be_friend':
+  'ಮೊದಲು ಮಿತ್ರರಾಗಿರಬೇಕು',
+
+// Group Members Page
+  'group_members_title': 'ಗುಂಪು ಸದಸ್ಯರು',
+  'group_members_tab_all': 'ಎಲ್ಲರೂ',
+  'group_members_tab_admins': 'ಆಡ್ಮಿನ್‌ಗಳು',
+  'group_members_tab_members': 'ಸದಸ್ಯರು',
+  'group_members_error_loading':
+  'ಸದಸ್ಯರನ್ನು ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ: @error',
+  'group_members_no_members': 'ಯಾವುದೇ ಸದಸ್ಯರು ಇಲ್ಲ',
+  'group_members_user_default': 'ಬಳಕೆದಾರ',
+  'group_members_admin_badge': 'ಆಡ್ಮಿನ್',
+  'group_members_make_admin': 'ಆಡ್ಮಿನ್ ಮಾಡಿ',
+  'group_members_remove_admin':
+  'ಆಡ್ಮಿನ್ ಅನುಮತಿಗಳನ್ನು ತೆಗೆದುಹಾಕಿ',
+  'group_members_remove_member': 'ಸದಸ್ಯರನ್ನು ತೆಗೆದುಹಾಕಿ',
+  'group_members_make_admin_title': 'ಆಡ್ಮಿನ್ ಮಾಡಿ',
+  'group_members_make_admin_confirm':
+  '@name ಅವರನ್ನು ಈ ಗುಂಪಿನ ಆಡ್ಮಿನ್ ಆಗಿ ಮಾಡಬೇಕೆ?',
+  'group_members_cancel': 'ರದ್ದುಮಾಡಿ',
+  'group_members_confirm': 'ದೃಢೀಕರಿಸಿ',
+  'group_members_make_admin_success':
+  'ಸದಸ್ಯರನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಆಡ್ಮಿನ್ ಮಾಡಲಾಗಿದೆ',
+  'group_members_feature_development':
+  'ಈ ವೈಶಿಷ್ಟ್ಯ ಅಭಿವೃದ್ಧಿಯಲ್ಲಿದೆ',
+  'group_members_make_admin_failed':
+  'ಆಡ್ಮಿನ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+  'group_members_remove_admin_title':
+  'ಆಡ್ಮಿನ್ ಅನುಮತಿಗಳನ್ನು ತೆಗೆದುಹಾಕಿ',
+  'group_members_remove_admin_confirm':
+  '@name ಅವರಿಂದ ಆಡ್ಮಿನ್ ಅನುಮತಿಗಳನ್ನು ತೆಗೆದುಹಾಕಿ ಅವರನ್ನು ಸಾಮಾನ್ಯ ಸದಸ್ಯರನ್ನಾಗಿ ಮಾಡಬೇಕೆ?',
+  'group_members_remove_permissions':
+  'ಅನುಮತಿಗಳನ್ನು ತೆಗೆದುಹಾಕಿ',
+  'group_members_remove_admin_success':
+  'ಆಡ್ಮಿನ್ ಅನುಮತಿಗಳನ್ನು ಯಶಸ್ವಿಯಾಗಿ ತೆಗೆದುಹಾಕಲಾಗಿದೆ',
+  'group_members_remove_admin_failed':
+  'ಆಡ್ಮಿನ್ ಅನುಮತಿಗಳನ್ನು ತೆಗೆದುಹಾಕಲು ವಿಫಲವಾಗಿದೆ',
+  'group_members_remove_member_title':
+  'ಸದಸ್ಯರನ್ನು ತೆಗೆದುಹಾಕಿ',
+  'group_members_remove_member_confirm':
+  '@name ಅವರನ್ನು ಗುಂಪಿನಿಂದ ತೆಗೆದುಹಾಕಬೇಕೆ?',
+  'group_members_remove': 'ತೆಗೆದುಹಾಕಿ',
+  'group_members_remove_member_success':
+  'ಸದಸ್ಯರನ್ನು ಯಶಸ್ವಿಯಾಗಿ ತೆಗೆದುಹಾಕಲಾಗಿದೆ',
+  'group_members_remove_member_failed':
+  'ದೋಷ: ಸದಸ್ಯರನ್ನು ತೆಗೆದುಹಾಕಲು ವಿಫಲವಾಗಿದೆ',
+
+// Product Conditions & Status
+  'product_condition_new': 'ಹೊಸದು',
+  'product_condition_like_new': 'ಹೊಸದಂತಿದೆ',
+  'product_condition_excellent': 'ಅತ್ಯುತ್ತಮ',
+  'product_condition_good': 'ಉತ್ತಮ',
+  'product_condition_fair': 'ಸರಾಸರಿ',
+  'product_condition_poor': 'ಕಳಪೆ',
+  'product_status_available': 'ಲಭ್ಯ',
+  'product_status_sold': 'ಮಾರಾಟವಾಗಿದೆ',
+  'product_status_unavailable': 'ಲಭ್ಯವಿಲ್ಲ',
+  'product_type_digital': 'ಡಿಜಿಟಲ್ ಉತ್ಪನ್ನ',
+  'product_type_physical': 'ಭೌತಿಕ ಉತ್ಪನ್ನ',
+  'cashfree': 'Cashfree',
+  'razorpay': 'Razorpay',
+  'no_payment_methods_available':
+  'ಯಾವುದೇ ಪಾವತಿ ವಿಧಾನಗಳು ಲಭ್ಯವಿಲ್ಲ',
+  'notifications_deleted':
+  'ಅಧಿಸೂಚನೆ ಅಳಿಸಲಾಗಿದೆ',
+  'wallet_balance': 'ವಾಲೆಟ್ ಶೇಷ',
+  'wallet_balance_available':
+  'ಲಭ್ಯವಿರುವ ವಾಲೆಟ್ ಶೇಷ',
+  'wallet_balance_current':
+  'ಪ್ರಸ್ತುತ ವಾಲೆಟ್ ಶೇಷ',
+  'wallet_order_total': 'ಒಟ್ಟು ಆರ್ಡರ್ ಮೊತ್ತ',
+  'wallet_insufficient_for_checkout':
+  'ವಾಲೆಟ್ ಶೇಷ ಸಾಕಷ್ಟಿಲ್ಲ, ದಯವಿಟ್ಟು ಚೆಕ್‌ಔಟ್ ಮೊದಲು ರಿಚಾರ್ಜ್ ಮಾಡಿ',
+  'market_cart_not_ready':
+  'ಕಾರ್ಟ್ ಇನ್ನೂ ಸಿದ್ಧವಾಗಿಲ್ಲ, ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
+  'market_create_product': 'ಉತ್ಪನ್ನವನ್ನು ರಚಿಸಿ',
+  'page_no_products_title': 'ಯಾವುದೇ ಉತ್ಪನ್ನಗಳಿಲ್ಲ',
+  'page_no_products_subtitle':
+  'ಈ ಪುಟದಲ್ಲಿ ಪೋಸ್ಟ್ ಮಾಡಲಾದ ಉತ್ಪನ್ನಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.',
+  'page_tab_products': 'ಉತ್ಪನ್ನಗಳು',
+  'group_tab_products': 'ಉತ್ಪನ್ನಗಳು',
+  'group_no_products': 'ಯಾವುದೇ ಉತ್ಪನ್ನಗಳಿಲ್ಲ',
+  'share_external': 'ಬಾಹ್ಯವಾಗಿ ಹಂಚಿಕೊಳ್ಳಿ',
+  'share_external_subtitle':
+  'ಇತರೆ ಅಪ್ಲಿಕೇಶನ್‌ಗಳ ಮೂಲಕ ಹಂಚಿಕೊಳ್ಳಿ',
+  'share_on_social_media':
+  'ಸಾಮಾಜಿಕ ಮಾಧ್ಯಮದಲ್ಲಿ ಹಂಚಿಕೊಳ್ಳಿ',
+  'share_post_subject':
+  'ಈ ಪೋಸ್ಟ್ ಅನ್ನು ನೋಡಿ',
+  'share_external_success':
+  'ಯಶಸ್ವಿಯಾಗಿ ಹಂಚಲಾಗಿದೆ',
+  'share_external_error':
+  'ಹಂಚಿಕೊಳ್ಳಲು ವಿಫಲವಾಗಿದೆ',
+
+// Create Reel Page
+  'create_reel': 'ರೀಲ್ ರಚಿಸಿ',
+  'publish_reel': 'ಪ್ರಕಟಿಸಿ',
+  'video_uploaded_success':
+  '✅ ವೀಡಿಯೋ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್ಲೋಡ್ ಆಗಿದೆ',
+  'video_upload_failed':
+  '❌ ವೀಡಿಯೋ ಅಪ್ಲೋಡ್ ವಿಫಲವಾಗಿದೆ',
+  'select_video_first':
+  '⚠️ ದಯವಿಟ್ಟು ಮೊದಲು ಒಂದು ವೀಡಿಯೋ ಆಯ್ಕೆಮಾಡಿ',
+  'reel_published_success':
+  '🎉 ರೀಲ್ ಯಶಸ್ವಿಯಾಗಿ ಪ್ರಕಟಿಸಲಾಗಿದೆ!',
+  'reel_publish_failed':
+  '❌ ರೀಲ್ ಪ್ರಕಟಿಸಲು ವಿಫಲವಾಗಿದೆ',
+  'failed_to_create_reel':
+  'ರೀಲ್ ರಚಿಸಲು ವಿಫಲವಾಗಿದೆ',
+  'select_video_for_reel':
+  'ರೀಲ್‌ಗಾಗಿ ವೀಡಿಯೋ ಆಯ್ಕೆಮಾಡಿ',
+  'select_video': 'ವೀಡಿಯೋ ಆಯ್ಕೆಮಾಡಿ',
+  'uploading_video': 'ವೀಡಿಯೋ ಅಪ್ಲೋಡ್ ಆಗುತ್ತಿದೆ...',
+  'add_reel_description':
+  'ರೀಲ್ ವಿವರಣೆ ಸೇರಿಸಿ...',
+
+// Edit Profile Page
+  'edit_profile': 'ಪ್ರೊಫೈಲ್ ಸಂಪಾದಿಸಿ',
+  'tab_basic': 'ಮೂಲ ಮಾಹಿತಿ',
+  'tab_work': 'ಕೆಲಸ',
+  'tab_location': 'ಸ್ಥಳ',
+  'tab_education': 'ಶಿಕ್ಷಣ',
+  'tab_social': 'ಸಾಮಾಜಿಕ',
+  'tab_photos': 'ಫೋಟೋಗಳು',
+
+// Basic Info
+  'first_name_label': 'ಮೊದಲ ಹೆಸರು',
+  'last_name_label': 'ಕೊನೆಯ ಹೆಸರು',
+  'birthdate_label': 'ಜನ್ಮ ದಿನಾಂಕ',
+  'website_label': 'ವೆಬ್‌ಸೈಟ್',
+  'save_button': 'ಉಳಿಸಿ',
+
+// Work Info
+  'job_title_label': 'ಹುದ್ದೆ',
+  'enter_job_title': 'ಹುದ್ದೆ ನಮೂದಿಸಿ',
+  'company_label': 'ಕಂಪನಿ',
+  'company_website_label': 'ಕಂಪನಿ ವೆಬ್‌ಸೈಟ್',
+
+// Location
+  'current_city_label': 'ಪ್ರಸ್ತುತ ನಗರ',
+  'hometown_label': 'ಸ್ವಗ್ರಾಮ',
+
+// Education
+  'major_label': 'ಮುಖ್ಯ ವಿಷಯ',
+  'educational_institution_label': 'ಶೈಕ್ಷಣಿಕ ಸಂಸ್ಥೆ',
+  'graduation_year_label': 'ಪದವಿ ಪಡೆದ ವರ್ಷ',
+
+// Photos
+  'profile_picture': 'ಪ್ರೊಫೈಲ್ ಚಿತ್ರ',
+  'cover_photo': 'ಕವರ್ ಫೋಟೋ',
+  'tap_to_add_cover': 'ಕವರ್ ಫೋಟೋ ಸೇರಿಸಲು ಟ್ಯಾಪ್ ಮಾಡಿ',
+  'choose_image': 'ಚಿತ್ರ ಆಯ್ಕೆಮಾಡಿ',
+
+// Password Dialog
+  'confirm_password_label': 'ಪಾಸ್ವರ್ಡ್ ದೃಢೀಕರಿಸಿ',
+  'change': 'ಬದಲಿಸಿ',
+  'new_password_too_short': 'ಹೊಸ ಪಾಸ್ವರ್ಡ್ ತುಂಬಾ ಚಿಕ್ಕದಾಗಿದೆ',
+
+// Country Picker
+  'country_label': 'ದೇಶ',
+  'loading_text': 'ಲೋಡ್ ಆಗುತ್ತಿದೆ…',
+  'select_country': 'ದೇಶ ಆಯ್ಕೆಮಾಡಿ',
+  'search_country': 'ದೇಶ ಹುಡುಕಿ…',
+
+// Error Messages
+  'error_loading_countries': 'ದೇಶಗಳನ್ನು ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ',
+  'error_uploading_image': 'ಚಿತ್ರ ಅಪ್ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ',
+  'error_uploading_cover': 'ಕವರ್ ಫೋಟೋ ಅಪ್ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ',
+
+// Messenger Messages
+  'empty_message': 'ಖಾಲಿ ಸಂದೇಶ',
+  'send': 'ಕಳುಹಿಸಿ',
+  'say_hello':
+  'ಸಂಭಾಷಣೆ ಪ್ರಾರಂಭಿಸಲು ನಮಸ್ಕಾರ ಹೇಳಿ',
+  'delete_conversation': 'ಸಂಭಾಷಣೆ ಅಳಿಸಿ',
+  'conversation_deleted': 'ಸಂಭಾಷಣೆ ಅಳಿಸಲಾಗಿದೆ',
+  'failed_to_delete_conversation':
+  'ಸಂಭಾಷಣೆ ಅಳಿಸಲು ವಿಫಲವಾಗಿದೆ',
+  'failed_to_open_chat': 'ಚಾಟ್ ತೆರೆಯಲು ವಿಫಲವಾಗಿದೆ',
+  'chat_privacy_friends_only':
+  'ಮಾರಾಟಗಾರರನ್ನು ಸಂಪರ್ಕಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ – ಸ್ನೇಹಿತರಿಗಷ್ಟೇ ಅನುಮತಿ ಇದೆ',
+  'chat_privacy_following_only':
+  'ಮಾರಾಟಗಾರರನ್ನು ಸಂಪರ್ಕಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ – ಮೊದಲು ಫಾಲೋ ಮಾಡಬೇಕು',
+  'chat_privacy_settings_prevent':
+  'ಈ ಸಮಯದಲ್ಲಿ ಮಾರಾಟಗಾರರನ್ನು ಸಂಪರ್ಕಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ',
+  'cannot_chat_with_user':
+  'ಈ ಬಳಕೆದಾರರೊಂದಿಗೆ ಚಾಟ್ ಮಾಡಲು ಸಾಧ್ಯವಿಲ್ಲ',
+  'user_blocked_you':
+  'ಈ ಬಳಕೆದಾರರು ನಿಮ್ಮನ್ನು ಬ್ಲಾಕ್ ಮಾಡಿದ್ದಾರೆ',
+  'failed_to_play_audio': 'ಆಡಿಯೋ ಪ್ಲೇ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+  'failed_to_load_image': 'ಚಿತ್ರ ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+  'no_image_url': 'ಚಿತ್ರ URL ಲಭ್ಯವಿಲ್ಲ',
+  'required_permissions_not_granted':
+  'ಅಗತ್ಯ ಅನುಮತಿಗಳನ್ನು ನೀಡಲಾಗಿಲ್ಲ',
+  'app_id_empty': 'App ID ಖಾಲಿಯಾಗಿದೆ',
+  'channel_name_empty': 'ಚಾನೆಲ್ ಹೆಸರು ಖಾಲಿಯಾಗಿದೆ',
+  'token_empty': 'ಟೋಕನ್ ಖಾಲಿಯಾಗಿದೆ',
+  'uid_zero': 'UID ಶೂನ್ಯವಾಗಿದೆ',
+  'agora_engine_null':
+  'ಪ್ರಾರಂಭದ ನಂತರ Agora ಎಂಜಿನ್ ಶೂನ್ಯವಾಗಿದೆ',
+  'call_user_busy': 'ಬಳಕೆದಾರರು ವ್ಯಸ್ತರಾಗಿದ್ದಾರೆ',
+  'waiting_for_participant':
+  'ಭಾಗವಹಿಸುವವರಿಗಾಗಿ ಕಾಯಲಾಗುತ್ತಿದೆ...',
+  'turn_on_camera': 'ಕ್ಯಾಮೆರಾ ಆನ್ ಮಾಡಿ',
+  'turn_off_camera': 'ಕ್ಯಾಮೆರಾ ಆಫ್ ಮಾಡಿ',
+  'switch_camera': 'ಕ್ಯಾಮೆರಾ ಬದಲಿಸಿ',
+  'starting_video_call':
+  'ವೀಡಿಯೋ ಕಾಲ್ ಪ್ರಾರಂಭವಾಗುತ್ತಿದೆ...',
+  'starting_audio_call':
+  'ಆಡಿಯೋ ಕಾಲ್ ಪ್ರಾರಂಭವಾಗುತ್ತಿದೆ...',
+  'cannot_start_call': 'ಕಾಲ್ ಪ್ರಾರಂಭಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ',
+  'call_start_failed': 'ಕಾಲ್ ಪ್ರಾರಂಭಿಸಲು ವಿಫಲವಾಗಿದೆ',
+  'user_busy_now': 'ಬಳಕೆದಾರರು ಈಗ ವ್ಯಸ್ತರಾಗಿದ್ದಾರೆ',
+  'must_be_friends_to_call':
+  'ಕಾಲ್ ಮಾಡಲು ಮೊದಲು ಸ್ನೇಹಿತರಾಗಿರಬೇಕು',
+  'user_not_found': 'ಬಳಕೆದಾರರು ಕಂಡುಬಂದಿಲ್ಲ',
+  'allow_microphone_only':
+  'ದಯವಿಟ್ಟು ಮೈಕ್ರೊಫೋನ್ ಅನುಮತಿ ನೀಡಿ',
+  'allow_microphone_camera':
+  'ದಯವಿಟ್ಟು ಮೈಕ್ರೊಫೋನ್ ಮತ್ತು ಕ್ಯಾಮೆರಾ ಅನುಮತಿ ನೀಡಿ',
+  'user_offline': 'ಬಳಕೆದಾರರು ಆಫ್‌ಲೈನ್‌ನಲ್ಲಿದ್ದಾರೆ',
+  'tap_to_stop': 'ನಿಲ್ಲಿಸಲು ಟ್ಯಾಪ್ ಮಾಡಿ',
+  'permission_required': 'ಅನುಮತಿ ಅಗತ್ಯ',
+  'microphone_permission_required':
+  'ಮೈಕ್ರೊಫೋನ್ ಅನುಮತಿ ಅಗತ್ಯ',
+  'failed_to_start_recording':
+  'ರೆಕಾರ್ಡಿಂಗ್ ಪ್ರಾರಂಭಿಸಲು ವಿಫಲವಾಗಿದೆ',
+  'recording_failed': 'ರೆಕಾರ್ಡಿಂಗ್ ವಿಫಲವಾಗಿದೆ',
+  'failed_to_upload_voice':
+  'ವಾಯ್ಸ್ ನೋಟ್ಸ್ ಅಪ್ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+  'failed_to_send_voice':
+  'ವಾಯ್ಸ್ ನೋಟ್ಸ್ ಕಳುಹಿಸಲು ವಿಫಲವಾಗಿದೆ',
+  'voice_sent_successfully':
+  'ವಾಯ್ಸ್ ನೋಟ್ಸ್ ಯಶಸ್ವಿಯಾಗಿ ಕಳುಹಿಸಲಾಗಿದೆ',
+  'your_story': 'ನಿಮ್ಮ ಕಥೆ',
+  'online': 'ಆನ್‌ಲೈನ್',
+  'call_cancelled': 'ಕಾಲ್ ರದ್ದುಗೊಂಡಿದೆ',
+  'failed_to_answer_call_with_error':
+  'ಕಾಲ್‌ಗೆ ಉತ್ತರಿಸಲು ವಿಫಲವಾಗಿದೆ: @error',
+  'failed_to_decline_call_with_error':
+  'ಕಾಲ್ ತಿರಸ್ಕರಿಸಲು ವಿಫಲವಾಗಿದೆ: @error',
+  'incoming_video_call': 'ಬರುವ ವೀಡಿಯೋ ಕಾಲ್',
+  'incoming_audio_call': 'ಬರುವ ಆಡಿಯೋ ಕಾಲ್',
+  'video_call_in_progress':
+  'ವೀಡಿಯೋ ಕಾಲ್ ನಡೆಯುತ್ತಿದೆ...',
+  'audio_call_in_progress':
+  'ಆಡಿಯೋ ಕಾಲ್ ನಡೆಯುತ್ತಿದೆ...',
+
+  'call_ended': 'ಕಾಲ್ ಮುಕ್ತಾಯವಾಗಿದೆ',
+  'user_busy': 'ಬಳಕೆದಾರರು ವ್ಯಸ್ತರಾಗಿದ್ದಾರೆ',
+  'outgoing_video_call': 'ಹೊರ ಹೋಗುವ ವೀಡಿಯೋ ಕಾಲ್',
+  'outgoing_audio_call': 'ಹೊರ ಹೋಗುವ ಆಡಿಯೋ ಕಾಲ್',
+  'start_chat': 'ಚಾಟ್ ಪ್ರಾರಂಭಿಸಿ',
+  'failed_to_load_friends':
+  'ಮಿತ್ರರ ಪಟ್ಟಿಯನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+  'no_friends_found':
+  'ಚಾಟ್ ಪ್ರಾರಂಭಿಸಲು ಯಾವುದೇ ಮಿತ್ರರು ಇಲ್ಲ',
+  'failed_to_start_conversation':
+  'ಸಂಭಾಷಣೆ ಪ್ರಾರಂಭಿಸಲು ವಿಫಲವಾಗಿದೆ',
+  'shared_media': 'ಹಂಚಿದ ಮಾಧ್ಯಮ',
+  'shared_media_conversation':
+  'ಸಂಭಾಷಣೆಯ ಮಾಧ್ಯಮ',
+  'conversation_info': 'ಸಂಭಾಷಣೆ ಮಾಹಿತಿ',
+  'shared_images': 'ಹಂಚಿದ ಚಿತ್ರಗಳು',
+  'shared_voice_notes': 'ಹಂಚಿದ ವಾಯ್ಸ್ ನೋಟ್ಸ್',
+  'blocked': 'ಬ್ಲಾಕ್ ಮಾಡಲಾಗಿದೆ',
+  'are_you_sure_block_user':
+  'ನೀವು ನಿಜವಾಗಿಯೂ ಈ ಬಳಕೆದಾರರನ್ನು ಬ್ಲಾಕ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಾ?',
+  'are_you_sure_unblock_user':
+  'ನೀವು ನಿಜವಾಗಿಯೂ ಈ ಬಳಕೆದಾರರನ್ನು ಅನ್ಬ್ಲಾಕ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಾ?',
+  'user_blocked_successfully':
+  'ಬಳಕೆದಾರರನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಬ್ಲಾಕ್ ಮಾಡಲಾಗಿದೆ',
+  'failed_to_block_user':
+  'ಬಳಕೆದಾರರನ್ನು ಬ್ಲಾಕ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+  'no_media_found': 'ಈಗ ಯಾವುದೇ ಮಾಧ್ಯಮ ಇಲ್ಲ',
+  'last_seen': 'ಕೊನೆಯ ಬಾರಿ ಕಂಡದ್ದು: @time',
+  'tap_to_play': 'ಪ್ಲೇ ಮಾಡಲು ಟ್ಯಾಪ್ ಮಾಡಿ',
+// Comments Section
+  'error_loading_comments': 'ಟಿಪ್ಪಣಿಗಳನ್ನು ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ',
+  'no_comments_yet': 'ಇನ್ನೂ ಯಾವುದೇ ಟಿಪ್ಪಣಿಗಳು ಇಲ್ಲ',
+  'be_first_to_comment': 'ಮೊದಲ ಟಿಪ್ಪಣಿ ಮಾಡಿ',
+  'hide_replies': 'ಉತ್ತರಗಳನ್ನು ಮರೆಮಾಡಿ',
+  'show_replies': '@count @label ತೋರಿಸಿ',
+  'reply_singular': 'ಉತ್ತರ',
+  'replies_plural': 'ಉತ್ತರಗಳು',
+  'replying_to': '@name ಗೆ ಉತ್ತರಿಸುತ್ತಿದ್ದಾರೆ',
+  'write_reply': 'ನಿಮ್ಮ ಉತ್ತರವನ್ನು ಬರೆಯಿರಿ...',
+  'write_comment': 'ಒಂದು ಟಿಪ್ಪಣಿ ಬರೆಯಿರಿ...',
+  'uploading_image': 'ಚಿತ್ರ ಅಪ್ಲೋಡ್ ಆಗುತ್ತಿದೆ...',
+  'failed_upload_image': 'ಚಿತ್ರ ಅಪ್ಲೋಡ್ ವಿಫಲವಾಗಿದೆ',
+  'uploading_voice': 'ವಾಯ್ಸ್ ರೆಕಾರ್ಡಿಂಗ್ ಅಪ್ಲೋಡ್ ಆಗುತ್ತಿದೆ...',
+  'failed_upload_voice': 'ರೆಕಾರ್ಡಿಂಗ್ ಅಪ್ಲೋಡ್ ವಿಫಲವಾಗಿದೆ',
+  'voice_recording': 'ವಾಯ್ಸ್ ರೆಕಾರ್ಡಿಂಗ್',
+  'ready_to_send': 'ಕಳುಹಿಸಲು ಸಿದ್ಧ',
+  'recording': 'ರೆಕಾರ್ಡ್ ಆಗುತ್ತಿದೆ...',
+  'edit_comment': 'ಸಂಪಾದಿಸಿ',
+  'delete_comment': 'ಅಳಿಸಿ',
+  'delete_comment_title': 'ಟಿಪ್ಪಣಿ ಅಳಿಸಿ',
+  'delete_comment_message':
+  'ನೀವು ನಿಜವಾಗಿಯೂ ಈ ಟಿಪ್ಪಣಿಯನ್ನು ಅಳಿಸಲು ಬಯಸುತ್ತೀರಾ?',
+  'comment_deleted': 'ಟಿಪ್ಪಣಿ ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಲಾಗಿದೆ',
+  'comment_updated': 'ಟಿಪ್ಪಣಿ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್ಡೇಟ್ ಮಾಡಲಾಗಿದೆ',
+  'failed_delete_comment': 'ಟಿಪ್ಪಣಿ ಅಳಿಸಲು ವಿಫಲವಾಗಿದೆ',
+  'failed_update_comment': 'ಟಿಪ್ಪಣಿ ಅಪ್ಡೇಟ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+  'reply': 'ಉತ್ತರ',
+  'show_more_replies': 'ಇನ್ನಷ್ಟು ಉತ್ತರಗಳನ್ನು ತೋರಿಸಿ',
+
+// Auth - Login/Signup
+  'welcome_back_user': 'ಮತ್ತೆ ಸ್ವಾಗತ, @name! 🎉',
+  'login_success': 'ಲಾಗಿನ್ ಯಶಸ್ವಿಯಾಗಿದೆ.',
+  'login_failed': 'ಲಾಗಿನ್ ವಿಫಲವಾಗಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
+  'or': 'ಅಥವಾ',
+  'google_sign_in_disabled':
+  'Google ಸೈನ್-ಇನ್ ಪ್ರಸ್ತುತ ಅಶಕ್ತಗೊಳಿಸಲಾಗಿದೆ',
+  'google_sign_in_failed': 'Google ಸೈನ್-ಇನ್ ವಿಫಲವಾಗಿದೆ',
+
+// Onboarding
+  'onboarding_connect_title': 'ಮಿತ್ರರೊಂದಿಗೆ ಸಂಪರ್ಕ ಸಾಧಿಸಿ',
+  'onboarding_connect_desc':
+  'ನಿಮ್ಮ ಆಸಕ್ತಿಗಳು ಮತ್ತು ಹವ್ಯಾಸಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳುವ ಜನರೊಂದಿಗೆ ಅರ್ಥಪೂರ್ಣ ಸಂಪರ್ಕಗಳನ್ನು ನಿರ್ಮಿಸಿ.',
+  'onboarding_share_title': 'ನಿಮ್ಮ ಕಥೆಯನ್ನು ಹಂಚಿಕೊಳ್ಳಿ',
+  'onboarding_share_desc':
+  'ಪೋಸ್ಟ್‌ಗಳು, ಫೋಟೋಗಳು, ವೀಡಿಯೋಗಳು ಮತ್ತು ಕಥೆಗಳ ಮೂಲಕ ನಿಮ್ಮನ್ನು ನಿಮ್ಮ ಸಮುದಾಯದೊಂದಿಗೆ ವ್ಯಕ್ತಪಡಿಸಿ.',
+  'onboarding_discover_title': 'ಹೊಸ ವಿಷಯಗಳನ್ನು ಅನ್ವೇಷಿಸಿ',
+  'onboarding_discover_desc':
+  'ಟ್ರೆಂಡಿಂಗ್ ವಿಷಯಗಳನ್ನು ಕಂಡುಹಿಡಿಯಿರಿ, ಗುಂಪುಗಳಲ್ಲಿ ಸೇರಿ ಮತ್ತು ನಿಮಗೆ ಹೊಂದುವ ವಿಷಯಗಳನ್ನು ಅನ್ವೇಷಿಸಿ.',
+  'onboarding_secure_title': 'ಸುರಕ್ಷಿತ ಮತ್ತು ಭದ್ರ',
+  'onboarding_secure_desc':
+  'ನಿಮ್ಮ ಗೌಪ್ಯತೆ ನಮಗೆ ಮುಖ್ಯ. ನಾವು ಉನ್ನತ ಭದ್ರತಾ ಕ್ರಮಗಳೊಂದಿಗೆ ನಿಮ್ಮ ಡೇಟಾವನ್ನು ರಕ್ಷಿಸುತ್ತೇವೆ.',
+  'onboarding_next': 'ಮುಂದೆ',
+  'onboarding_get_started': 'ಪ್ರಾರಂಭಿಸಿ',
+
+// Relationship Status
+  'relationship_single': 'ಅವಿವಾಹಿತ',
+  'relationship_in_relationship': 'ಸಂಬಂಧದಲ್ಲಿದ್ದಾರೆ',
+  'relationship_married': 'ವಿವಾಹಿತ',
+  'relationship_complicated': 'ಸಂಕೀರ್ಣವಾಗಿದೆ',
+  'relationship_separated': 'ಬೇರೆಯಾದವರು',
+  'relationship_divorced': 'ವಿಚ್ಛೇದಿತ',
+  'relationship_widowed': 'ವಿಧವೆ / ವಿಧುರ',
+
+// Gender Options
+  'gender_male': 'ಪುರುಷ',
+  'gender_female': 'ಮಹಿಳೆ',
+  'gender_other': 'ಇತರೆ',
+  'gender_all': 'ಎಲ್ಲಾ',
+  'relationship_all': 'ಎಲ್ಲಾ',
+
+// Profile Labels
+  'select_birth_date': 'ಜನ್ಮ ದಿನಾಂಕ ಆಯ್ಕೆಮಾಡಿ',
+  'about_you': 'ನಿಮ್ಮ ಬಗ್ಗೆ',
+
+// AI Chat
+  'ai_connected': 'ಸಂಪರ್ಕಿಸಲಾಗಿದೆ',
+  'ai_warning': 'ಎಚ್ಚರಿಕೆ',
+  'ai_disabled': 'ಸೆಟ್ಟಿಂಗ್‌ಗಳಲ್ಲಿ AI ವೈಶಿಷ್ಟ್ಯ ಅಶಕ್ತಗೊಳಿಸಲಾಗಿದೆ',
+  'ai_key_missing':
+  'ದಯವಿಟ್ಟು App_Settings.dart ನಲ್ಲಿ AI ಕೀ ಅನ್ನು ಅಪ್ಡೇಟ್ ಮಾಡಿ',
+  'ai_okay': 'ಸರಿ',
+  'ai_regenerate': 'ಉತ್ತರವನ್ನು ಮರುಸೃಷ್ಟಿಸಿ',
+  'ai_settings': 'ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
+  'ai_clear_confirm_title': 'ಚಾಟ್ ಕ್ಲಿಯರ್ ಮಾಡಿ',
+  'ai_clear_confirm_message':
+  'ನೀವು ನಿಜವಾಗಿಯೂ ಎಲ್ಲಾ ಸಂದೇಶಗಳನ್ನು ಅಳಿಸಲು ಬಯಸುತ್ತೀರಾ?',
+  'ai_cancel': 'ರದ್ದು ಮಾಡಿ',
+  'ai_clear': 'ಕ್ಲಿಯರ್ ಮಾಡಿ',
+  'ai_settings_title': 'ಚಾಟ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
+  'ai_more_settings_soon': 'ಹೆಚ್ಚುವರಿ ಸೆಟ್ಟಿಂಗ್‌ಗಳು ಶೀಘ್ರದಲ್ಲೇ ಲಭ್ಯವಾಗುತ್ತವೆ',
+  'ai_hello_message': 'ನಮಸ್ಕಾರ! ನಾನು ನಿಮ್ಮ AI ಸಹಾಯಕ',
+  'ai_help_message':
+  'ನೀವು ಏನೇ ಕೇಳಿದರೂ, ನಿಮಗೆ ಸಹಾಯ ಮಾಡಲು ನನಗೆ ಸಂತೋಷ',
+  'ai_suggestion_what_is_ai': 'ಕೃತಕ ಬುದ್ಧಿಮತ್ತೆ ಎಂದರೇನು?',
+  'ai_suggestion_write_story': 'ನನಗೆ ಒಂದು ಚಿಕ್ಕ ಕಥೆ ಬರೆಯಿರಿ',
+  'ai_suggestion_programming_tips': 'ಪ್ರೋಗ್ರಾಮಿಂಗ್ ಸಲಹೆಗಳು',
+  'ai_input_hint': 'ನಿಮ್ಮ ಸಂದೇಶವನ್ನು ಇಲ್ಲಿ ಬರೆಯಿರಿ...',
+  'ai_publish_as_post': 'ಪೋಸ್ಟ್ ಆಗಿ ಪ್ರಕಟಿಸಿ',
+  'ai_publish_confirm':
+  'ನೀವು ಈ ವಿಷಯವನ್ನು ನಿಮ್ಮ ಖಾತೆಯಲ್ಲಿ ಪ್ರಕಟಿಸಲು ಬಯಸುತ್ತೀರಾ?',
+  'ai_publish': 'ಪ್ರಕಟಿಸಿ',
+  'ai_publishing': 'ಪ್ರಕಟಿಸಲಾಗುತ್ತಿದೆ...',
+  'ai_publish_success':
+  'ವಿಷಯವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಪ್ರಕಟಿಸಲಾಗಿದೆ! 🎉',
+  'ai_publish_failed': 'ವಿಷಯ ಪ್ರಕಟಿಸಲು ವಿಫಲವಾಗಿದೆ',
+  'ai_post_published_message':
+  '✅ ಪೋಸ್ಟ್ ಯಶಸ್ವಿಯಾಗಿ ಪ್ರಕಟಿಸಲಾಗಿದೆ!',
+  'ai_view_post': 'ಪೋಸ್ಟ್ ನೋಡಿ',
+  'ai_go_to_post': 'ಪೋಸ್ಟ್‌ಗೆ ಹೋಗಿ',
+
+// Chat Page
+  'are_you_sure': 'ನೀವು ಖಚಿತವಾಗಿದ್ದೀರಾ?',
+  'suitable_for_daytime_use': 'ಹಗಲು ಬಳಕೆಗೆ ಸೂಕ್ತ',
+  'suitable_for_nighttime_use': 'ರಾತ್ರಿ ಬಳಕೆಗೆ ಸೂಕ್ತ',
+
+// URL Launcher
+  'cannot_open_url': 'URL ತೆರೆಯಲು ಸಾಧ್ಯವಿಲ್ಲ',
+
+// Group Profile Page
+  'group_secret_error': 'ಇದು ಒಂದು ರಹಸ್ಯ ಗುಂಪಾಗಿದೆ',
+  'group_not_found_error': 'ಗುಂಪು ಕಂಡುಬಂದಿಲ್ಲ',
+  'login_required_error': 'ಮೊದಲು ಲಾಗಿನ್ ಮಾಡಬೇಕು',
+  'group_load_error': 'ಗುಂಪು ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ',
+  'group_left_success': 'ಗುಂಪನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಬಿಟ್ಟಿದ್ದೀರಿ',
+  'group_join_request_sent': 'ಗುಂಪಿಗೆ ಸೇರಲು ವಿನಂತಿ ಕಳುಹಿಸಲಾಗಿದೆ',
+
+// AI Bot
+  'ai_bot_hello': 'ನಮಸ್ಕಾರ! ನಾನು ನಿಮಗೆ ಹೇಗೆ ಸಹಾಯ ಮಾಡಬಹುದು? 😊',
+  'ai_bot_service_unavailable':
+  'ಕ್ಷಮಿಸಿ, AI ಸೇವೆ ಪ್ರಸ್ತುತ ಲಭ್ಯವಿಲ್ಲ.',
+  'ai_bot_question_too_long':
+  'ಕ್ಷಮಿಸಿ, ಪ್ರಶ್ನೆ ತುಂಬಾ ಉದ್ದವಾಗಿದೆ. ಗರಿಷ್ಠ @max ಅಕ್ಷರಗಳು.',
+  'ai_bot_cannot_understand':
+  'ಕ್ಷಮಿಸಿ, ನಾನು ಪ್ರಶ್ನೆಯನ್ನು ಅರ್ಥಮಾಡಿಕೊಳ್ಳಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮರುಬರೆಯಿರಿ.',
+  'ai_bot_api_key_error':
+  'API ಕೀ ದೋಷ. ದಯವಿಟ್ಟು ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ಪರಿಶೀಲಿಸಿ.',
+  'ai_bot_rate_limit':
+  'ಕ್ಷಮಿಸಿ, ಮಿತಿಯನ್ನು ಮೀರಿ ಹೋಗಲಾಗಿದೆ. ನಂತರ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
+  'ai_bot_service_error':
+  'ಕ್ಷಮಿಸಿ, ಸೇವೆಯಲ್ಲಿ ದೋಷ ಸಂಭವಿಸಿದೆ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
+  'ai_bot_no_internet':
+  'ಕ್ಷಮಿಸಿ, ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕ ಇಲ್ಲ.',
+  'ai_bot_unexpected_error':
+  'ಕ್ಷಮಿಸಿ, ಅನಿರೀಕ್ಷಿತ ದೋಷ ಸಂಭವಿಸಿದೆ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
+  'ai_bot_daily_limit':
+  'ಕ್ಷಮಿಸಿ, ಇಂದು ನಿಮ್ಮ AI ಮಿತಿಯನ್ನು ಮುಗಿಸಿದ್ದೀರಿ.',
+  'ai_bot_replied': '✨ @username ಉತ್ತರಿಸಿದ್ದಾರೆ!',
+  'ai_bot_reply_failed': '⚠️ ಬಾಟ್ ಉತ್ತರ ಸೃಷ್ಟಿಸಲು ವಿಫಲವಾಗಿದೆ',
+  'ai_bot_info_title': 'ನಮಸ್ಕಾರ! ನಾನು @username 🤖',
+  'ai_bot_info_can_help': 'ನಾನು ನಿಮಗೆ ಸಹಾಯ ಮಾಡಬಹುದು:',
+  'ai_bot_info_verify_news': '• ಸುದ್ದಿಗಳನ್ನು ಪರಿಶೀಲಿಸುವುದು',
+  'ai_bot_info_answer_questions': '• ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಿಸುವುದು',
+  'ai_bot_info_provide_info': '• ಉಪಯುಕ್ತ ಮಾಹಿತಿಯನ್ನು ನೀಡುವುದು',
+  'ai_bot_info_usage':
+  'ಬಳಕೆ: ಕಾಮೆಂಟ್‌ನಲ್ಲಿ @ ನನ್ನ ಹೆಸರನ್ನು ಬರಿಸಿ ಮತ್ತು ಪ್ರಶ್ನೆ ಬರೆಯಿರಿ',
+  'ai_bot_info_example':
+  'ಉದಾಹರಣೆ: @username ಈ ಸುದ್ದಿ ಸತ್ಯವೇ?',
+  'ai_bot_tip_title': 'ಸಲಹೆ:',
+  'ai_bot_tip_body':
+  '• ಉತ್ತಮ ಉತ್ತರಕ್ಕಾಗಿ ಸ್ಪಷ್ಟ ಪ್ರಶ್ನೆ ಕೇಳಿ\n• ಸುದ್ದಿಯನ್ನು ಬಾಟ್ ಮೂಲಕ ಪರಿಶೀಲಿಸಬಹುದು\n• ಬಾಟ್ AI ಆಧಾರಿತವಾಗಿದೆ ಮತ್ತು ಕಲಿಯುತ್ತಿರುತ್ತದೆ',
+  'ai_bot_understood': 'ಅರ್ಥವಾಯಿತು',
+  'ai_bot_try_now': 'ಈಗ ಪ್ರಯತ್ನಿಸಿ',
+// Page Admins
+  'page_admins_title': 'ಪುಟ ನಿರ್ವಾಹಕರು',
+  'page_admins_failed_load': 'ಲೈಕ್ ಮಾಡಿದವರನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+  'page_admins_removed_admin': '@name ಅವರನ್ನು ನಿರ್ವಾಹಕರಿಂದ ತೆಗೆದುಹಾಕಲಾಗಿದೆ',
+  'page_admins_added_admin': '@name ಅವರನ್ನು ನಿರ್ವಾಹಕರಾಗಿ ನೇಮಕ ಮಾಡಲಾಗಿದೆ',
+  'page_admins_error_operation': 'ಕ್ರಿಯೆಯ ವೇಳೆ ದೋಷ ಸಂಭವಿಸಿದೆ',
+  'page_admins_no_likers': 'ಯಾವುದೇ ಲೈಕರ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ',
+  'page_admins_promote_hint':
+  'ನೀವು ಪುಟವನ್ನು ಲೈಕ್ ಮಾಡಿದವರನ್ನು ನಿರ್ವಾಹಕರಾಗಿಸಬಹುದು',
+  'page_admins_badge_admin': 'ನಿರ್ವಾಹಕ',
+  'page_admins_remove_tooltip': 'ನಿರ್ವಾಹಕ ಸ್ಥಾನದಿಂದ ತೆಗೆದುಹಾಕಿ',
+  'page_admins_add_tooltip': 'ನಿರ್ವಾಹಕರಾಗಿ ನೇಮಕ ಮಾಡಿ',
+
+// Invite Friends to Page
+  'page_invite_title': 'ಮಿತ್ರರನ್ನು ಆಹ್ವಾನಿಸಿ',
+  'page_invite_failed_load': 'ಮಿತ್ರರನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+  'page_invite_success': '@name ಅವರಿಗೆ ಆಹ್ವಾನ ಕಳುಹಿಸಲಾಗಿದೆ',
+  'page_invite_failed': '@name ಅವರನ್ನು ಆಹ್ವಾನಿಸಲು ವಿಫಲವಾಗಿದೆ',
+  'page_invite_error':
+  'ಆಹ್ವಾನ ಕಳುಹಿಸುವಾಗ ದೋಷ ಸಂಭವಿಸಿದೆ',
+  'page_invite_empty_title': 'ಆಹ್ವಾನಿಸಲು ಯಾವುದೇ ಮಿತ್ರರು ಇಲ್ಲ',
+  'page_invite_empty_body':
+  'ನಿಮ್ಮ ಎಲ್ಲಾ ಮಿತ್ರರು ಈಗಾಗಲೇ ಸದಸ್ಯರಾಗಿದ್ದಾರೆ ಅಥವಾ ಆಹ್ವಾನಿಸಲ್ಪಟ್ಟಿದ್ದಾರೆ',
+  'page_invite_invited': 'ಆಹ್ವಾನಿಸಲಾಗಿದೆ',
+  'page_invite_cta': 'ಆಹ್ವಾನಿಸಿ',
+
+// Create Group
+  'create_group_title': 'ಗುಂಪು ರಚಿಸಿ',
+  'create_group_cta': 'ರಚಿಸಿ',
+  'create_group_title_label': 'ಗುಂಪಿನ ಶೀರ್ಷಿಕೆ *',
+  'create_group_title_hint':
+  'ಉದಾಹರಣೆ: UAE ನಲ್ಲಿ Flutter ಡೆವಲಪರ್‌ಗಳು',
+  'create_group_title_required': 'ಶೀರ್ಷಿಕೆ ಅಗತ್ಯವಿದೆ',
+  'create_group_title_min':
+  'ಶೀರ್ಷಿಕೆ ಕನಿಷ್ಠ 3 ಅಕ್ಷರಗಳಿರಬೇಕು',
+  'create_group_username_label': 'ಬಳಕೆದಾರ ಹೆಸರು *',
+  'create_group_username_hint': 'ಉದಾಹರಣೆ: flutter_devs_uae',
+  'create_group_username_helper':
+  'ಇಂಗ್ಲಿಷ್ ಅಕ್ಷರಗಳು, ಸಂಖ್ಯೆಗಳು ಮತ್ತು ಅಂಡರ್‌ಸ್ಕೋರ್ ಮಾತ್ರ',
+  'create_group_username_required': 'ಬಳಕೆದಾರ ಹೆಸರು ಅಗತ್ಯವಿದೆ',
+  'create_group_username_min':
+  'ಬಳಕೆದಾರ ಹೆಸರು ಕನಿಷ್ಠ 3 ಅಕ್ಷರಗಳಿರಬೇಕು',
+  'create_group_username_invalid':
+  'ಇಂಗ್ಲಿಷ್ ಅಕ್ಷರಗಳು, ಸಂಖ್ಯೆಗಳು ಮತ್ತು ಅಂಡರ್‌ಸ್ಕೋರ್ ಮಾತ್ರ',
+  'create_group_description_label': 'ವಿವರಣೆ (ಐಚ್ಛಿಕ)',
+  'create_group_description_hint':
+  'ಗುಂಪಿಗಾಗಿ ವಿವರಣೆ ಬರೆಯಿರಿ...',
+  'create_group_privacy_label': 'ಗೌಪ್ಯತೆ *',
+  'create_group_privacy_public': 'ಸಾರ್ವಜನಿಕ',
+  'create_group_privacy_public_desc':
+  'ಯಾರಾದರೂ ಗುಂಪು ಮತ್ತು ಪೋಸ್ಟ್‌ಗಳನ್ನು ನೋಡಬಹುದು',
+  'create_group_privacy_closed': 'ಮುಚ್ಚಿದ',
+  'create_group_privacy_closed_desc':
+  'ಗುಂಪು ಎಲ್ಲರೂ ನೋಡಬಹುದು, ಪೋಸ್ಟ್‌ಗಳನ್ನು ಸದಸ್ಯರು ಮಾತ್ರ',
+  'create_group_privacy_secret': 'ರಹಸ್ಯ',
+  'create_group_privacy_secret_desc':
+  'ಅನುಮೋದಿತ ಸದಸ್ಯರು ಮಾತ್ರ ಗುಂಪು ಮತ್ತು ಪೋಸ್ಟ್‌ಗಳನ್ನು ನೋಡಬಹುದು',
+  'create_group_category_label': 'ವರ್ಗ *',
+  'create_group_category_tech': 'ತಂತ್ರಜ್ಞಾನ',
+  'create_group_category_sports': 'ಕ್ರೀಡೆ',
+  'create_group_category_education': 'ಶಿಕ್ಷಣ',
+  'create_group_category_entertainment': 'ಮನರಂಜನೆ',
+  'create_group_category_other': 'ಇತರೆ',
+  'create_group_button': 'ಗುಂಪು ರಚಿಸಿ',
+  'create_group_creating': 'ರಚಿಸಲಾಗುತ್ತಿದೆ...',
+  'create_group_note':
+  'ಗುಂಪು ರಚಿಸಿದ ನಂತರ ನೀವು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಮಾಡರೇಟರ್ ಆಗುತ್ತೀರಿ',
+  'create_group_success': 'ಗುಂಪು ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ',
+  'create_group_failed':
+  'ಗುಂಪು ರಚಿಸಲು ವಿಫಲವಾಗಿದೆ, ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
+  'create_group_error': 'ದೋಷ ಸಂಭವಿಸಿದೆ: @error',
+
+// Course Card
+  'course_free': 'ಉಚಿತ',
+  'course_candidates': 'ಅಭ್ಯರ್ಥಿಗಳು (@count)',
+  'course_enroll_button': 'ನೋಂದಣಿ ಮಾಡಿ',
+  'course_closed': 'ಮುಚ್ಚಲಾಗಿದೆ',
+
+  'course_enrollment_name': 'ಪೂರ್ಣ ಹೆಸರು *',
+  'course_enrollment_location': 'ಸ್ಥಳ *',
+  'course_enrollment_location_hint': 'ಉದಾಹರಣೆ: ರಿಯಾಧ್, ಸೌದಿ ಅರೇಬಿಯಾ',
+  'course_enrollment_phone': 'ದೂರವಾಣಿ ಸಂಖ್ಯೆ *',
+  'course_enrollment_phone_hint': 'ಉದಾಹರಣೆ: +966501234567',
+  'course_enrollment_email': 'ಇಮೇಲ್ *',
+  'course_field_required': 'ಅಗತ್ಯ',
+
+  'course_success': 'ಯಶಸ್ವಿ',
+  'course_error': 'ದೋಷ',
+  'course_login_required': 'ದಯವಿಟ್ಟು ಮೊದಲು ಲಾಗಿನ್ ಮಾಡಿ',
+  'course_candidates_count': '@count ಅರ್ಜಿದಾರರು',
+  'course_status_closed': 'ಮುಚ್ಚಲಾಗಿದೆ',
+  'course_status_ended': 'ಮುಗಿದಿದೆ',
+  'course_status_ongoing': 'ನಡೆಯುತ್ತಿದೆ',
+  'course_status_started': 'ಆರಂಭವಾಗಿದೆ',
+  'course_status_upcoming': 'ಮುಂದಿನದು',
+  'course_date_undefined': 'ನಿರ್ದಿಷ್ಟವಲ್ಲ',
+  'course_date_starts': '@date ರಿಂದ ಪ್ರಾರಂಭ',
+  'course_date_ends': '@date ರಂದು ಮುಕ್ತಾಯ',
+  'course_month_january': 'ಜನವರಿ',
+  'course_month_february': 'ಫೆಬ್ರವರಿ',
+  'course_month_march': 'ಮಾರ್ಚ್',
+  'course_month_april': 'ಏಪ್ರಿಲ್',
+  'course_month_may': 'ಮೇ',
+  'course_month_june': 'ಜೂನ್',
+  'course_month_july': 'ಜುಲೈ',
+  'course_month_august': 'ಆಗಸ್ಟ್',
+  'course_month_september': 'ಸೆಪ್ಟೆಂಬರ್',
+  'course_month_october': 'ಅಕ್ಟೋಬರ್',
+  'course_month_november': 'ನವೆಂಬರ್',
+  'course_month_december': 'ಡಿಸೆಂಬರ್',
+
+// Discover Page - Merits Send Dialog
+  'merit_category_select': 'ಮೆರಿಟ್ ವರ್ಗವನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+  'merit_category_hint': 'ಪಟ್ಟಿಯಿಂದ ಆಯ್ಕೆಮಾಡಿ',
+  'merit_recipients_select': 'ಸ್ವೀಕರಿಸುವವರನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+  'merit_search_friend': 'ಮಿತ್ರರನ್ನು ಹುಡುಕಿ',
+  'merit_selected_friends': '@count ಮಿತ್ರರನ್ನು ಆಯ್ಕೆಮಾಡಲಾಗಿದೆ',
+  'merit_message_label': 'ಸಂದೇಶ (ಐಚ್ಛಿಕ)',
+  'merit_message_hint': 'ಮೆರಿಟ್ ಜೊತೆಗೆ ಸಂದೇಶ ಸೇರಿಸಿ',
+  'merit_error_no_category': 'ದಯವಿಟ್ಟು ಒಂದು ವರ್ಗವನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+  'merit_error_no_friends': 'ಕನಿಷ್ಠ ಒಬ್ಬ ಮಿತ್ರರನ್ನು ಆಯ್ಕೆಮಾಡಬೇಕು',
+  'merit_categories_load_error': 'ವರ್ಗಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ದೋಷ',
+  'merit_no_categories': 'ಯಾವುದೇ ವರ್ಗಗಳು ಲಭ್ಯವಿಲ್ಲ',
+  'merit_friends_load_error': 'ಮಿತ್ರರನ್ನು ಲೋಡ್ ಮಾಡಲು ದೋಷ',
+  'merit_no_friends_available': 'ಯಾವುದೇ ಮಿತ್ರರು ಲಭ್ಯವಿಲ್ಲ',
+  'merit_friends_loading': 'ಮಿತ್ರರನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ...',
+  'merit_image_label': 'ಚಿತ್ರ (ಐಚ್ಛಿಕ)',
+  'merit_image_hint': 'ಚಿತ್ರ ಆಯ್ಕೆಮಾಡಲು ಟ್ಯಾಪ್ ಮಾಡಿ',
+  'merit_image_selected': 'ಚಿತ್ರ ಆಯ್ಕೆಮಾಡಲಾಗಿದೆ',
+  'merit_badge': 'ಮೆರಿಟ್ ಬ್ಯಾಡ್ಜ್',
+
+// Product
+  'product_name': 'ಉತ್ಪನ್ನದ ಹೆಸರು',
+  'enter_product_name': 'ಉತ್ಪನ್ನದ ಹೆಸರನ್ನು ನಮೂದಿಸಿ',
+  'price': 'ಬೆಲೆ',
+  'enter_price': 'ಬೆಲೆಯನ್ನು ನಮೂದಿಸಿ',
+  'quantity': 'ಪ್ರಮಾಣ',
+  'enter_quantity': 'ಪ್ರಮಾಣವನ್ನು ನಮೂದಿಸಿ',
+  'product_status': 'ಉತ್ಪನ್ನದ ಸ್ಥಿತಿ',
+  'status_new': 'ಹೊಸದು',
+  'status_used': 'ಬಳಸಿದ',
+  'status_old': 'ಹಳೆಯದು',
+  'enter_location': 'ಸ್ಥಳವನ್ನು ನಮೂದಿಸಿ',
+  'enter_product_description': 'ಉತ್ಪನ್ನದ ವಿವರಣೆ ನಮೂದಿಸಿ',
+  'save_changes': 'ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಿ',
+  'product_updated_successfully': 'ಉತ್ಪನ್ನವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಅಪ್ಡೇಟ್ ಮಾಡಲಾಗಿದೆ',
+  'error_updating_product': 'ಉತ್ಪನ್ನ ಅಪ್ಡೇಟ್ ಮಾಡುವಲ್ಲಿ ದೋಷ',
+  'invalid_product_data': 'ಅಮಾನ್ಯ ಉತ್ಪನ್ನ ಡೇಟಾ',
+  'product_name_required': 'ಉತ್ಪನ್ನದ ಹೆಸರು ಅಗತ್ಯವಿದೆ',
+  'valid_price_required':
+  'ಬೆಲೆ ಅಗತ್ಯವಿದೆ ಮತ್ತು 0 ಕ್ಕಿಂತ ಹೆಚ್ಚು ಇರಬೇಕು',
+  'valid_quantity_required':
+  'ಪ್ರಮಾಣ ಅಗತ್ಯವಿದೆ ಮತ್ತು 0 ಅಥವಾ ಅದಕ್ಕಿಂತ ಹೆಚ್ಚು ಇರಬೇಕು',
+
+// Cart Page
+  'product': 'ಉತ್ಪನ್ನ',
+  'clear_cart': 'ಕಾರ್ಟ್ ಖಾಲಿ ಮಾಡಿ',
+  'are_you_sure_clear_cart':
+  'ನೀವು ನಿಜವಾಗಿಯೂ ಎಲ್ಲಾ ಉತ್ಪನ್ನಗಳನ್ನು ತೆಗೆದುಹಾಕಲು ಬಯಸುತ್ತೀರಾ?',
+
+  'loading_cart': 'ಕಾರ್ಟ್ ಲೋಡ್ ಆಗುತ್ತಿದೆ...',
+
+  'your_cart_is_empty': 'ನಿಮ್ಮ ಕಾರ್ಟ್ ಖಾಲಿಯಾಗಿದೆ',
+  'no_products_added':
+  'ನಿಮ್ಮ ಕಾರ್ಟ್‌ಗೆ ಇನ್ನೂ ಯಾವುದೇ ಉತ್ಪನ್ನಗಳನ್ನು ಸೇರಿಸಲಾಗಿಲ್ಲ.\nಈಗಲೇ ಉತ್ಪನ್ನಗಳನ್ನು ಸೇರಿಸಿ',
+  'explore_products': 'ಉತ್ಪನ್ನಗಳನ್ನು ವೀಕ್ಷಿಸಿ',
+  'order_summary': 'ಆರ್ಡರ್ ಸಾರಾಂಶ',
+  'number_of_products': 'ಉತ್ಪನ್ನಗಳ ಸಂಖ್ಯೆ',
+  'total': 'ಒಟ್ಟು',
+  'seller': 'ಮಾರಾಟಗಾರ',
+  'free': 'ಉಚಿತ',
+
+// Orders Page
+  'my_orders': 'ನನ್ನ ಆರ್ಡರ್‌ಗಳು',
+  'my_sales': 'ನನ್ನ ಮಾರಾಟ',
+  'order_number': 'ಆರ್ಡರ್ #',
+  'order_placed': 'ಆರ್ಡರ್ ಮಾಡಲಾಗಿದೆ',
+  'status': 'ಸ್ಥಿತಿ',
+  'tracking_details': 'ಟ್ರ್ಯಾಕಿಂಗ್ ವಿವರಗಳು',
+  'tracking_link': 'ಟ್ರ್ಯಾಕಿಂಗ್ ಲಿಂಕ್',
+  'tracking_number': 'ಟ್ರ್ಯಾಕಿಂಗ್ ಸಂಖ್ಯೆ',
+  'shipping_address': 'ಶಿಪ್ಪಿಂಗ್ ವಿಳಾಸ',
+  'items': 'ವಸ್ತುಗಳು',
+  'no_orders_found': 'ಯಾವುದೇ ಆರ್ಡರ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ',
+  'no_orders_message':
+  'ನೀವು ಇನ್ನೂ ಯಾವುದೇ ಆರ್ಡರ್ ಮಾಡಿಲ್ಲ.\nಈಗಲೇ ಶಾಪಿಂಗ್ ಪ್ರಾರಂಭಿಸಿ!',
+  'view_details': 'ವಿವರಗಳನ್ನು ವೀಕ್ಷಿಸಿ',
+  'order_status_placed': 'ಇಡಲಾಗಿದೆ',
+  'order_status_shipped': 'ಕಳುಹಿಸಲಾಗಿದೆ',
+  'order_status_cancelled': 'ರದ್ದು ಮಾಡಲಾಗಿದೆ',
+  'order_status_refunded': 'ಮರುಪಾವತಿ ಮಾಡಲಾಗಿದೆ',
+  'loading_orders': 'ಆರ್ಡರ್‌ಗಳು ಲೋಡ್ ಆಗುತ್ತಿವೆ...',
+  'error_loading_orders': 'ಆರ್ಡರ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ದೋಷ',
+  'contact_seller': 'ಮಾರಾಟಗಾರರನ್ನು ಸಂಪರ್ಕಿಸಿ',
+  'buyer': 'ಖರೀದಿದಾರ',
+  'n_a': 'ಅನ್ವಯಿಸುವುದಿಲ್ಲ',
+  'no_shipping_address': 'ಯಾವುದೇ ಶಿಪ್ಪಿಂಗ್ ವಿಳಾಸ ಲಭ್ಯವಿಲ್ಲ',
+  "failed_to_initialize_stream_engine": "ಸ್ಟ್ರೀಮಿಂಗ್ ಎಂಜಿನ್ ಪ್ರಾರಂಭಿಸಲು ವಿಫಲವಾಗಿದೆ",
+  "stream_title_required": "ಸ್ಟ್ರೀಮ್ ಶೀರ್ಷಿಕೆಯನ್ನು ನಮೂದಿಸಬೇಕು",
+  "failed_to_join_stream_channel": "ಸ್ಟ್ರೀಮಿಂಗ್ ಚಾನೆಲ್‌ಗೆ ಸೇರುವಲ್ಲಿ ವಿಫಲವಾಗಿದೆ",
+  "stream_ended_successfully": "ಸ್ಟ್ರೀಮ್ ಯಶಸ್ವಿಯಾಗಿ ಮುಕ್ತಾಯಗೊಂಡಿದೆ",
+  "failed_to_end_stream": "ಸ್ಟ್ರೀಮ್ ಮುಕ್ತಾಯಗೊಳಿಸಲು ವಿಫಲವಾಗಿದೆ",
+  "stream_created_successfully_no_agora_token": "ಸ್ಟ್ರೀಮ್ ಯಶಸ್ವಿಯಾಗಿ ಸೃಷ್ಟಿಸಲಾಗಿದೆ! (Agora ಟೋಕನ್ ಇಲ್ಲದೆ)",
+  "stream_created_successfully": "ಸ್ಟ್ರೀಮ್ ಯಶಸ್ವಿಯಾಗಿ ಸೃಷ್ಟಿಸಲಾಗಿದೆ!",
+  "live_stream_active_professional": "ಪ್ರೊಫೆಷನಲ್ ಲೈವ್ ಸ್ಟ್ರೀಮ್",
+  "live": "LIVE",
+  "preparing_stream": "ಸ್ಟ್ರೀಮ್ ತಯಾರಾಗುತ್ತಿದೆ...",
+  "setup_live_stream": "ಲೈವ್ ಸ್ಟ್ರೀಮ್ ಸೆಟ್‌ಅಪ್",
+  "stream_title_label_required": "ಸ್ಟ್ರೀಮ್ ಶೀರ್ಷಿಕೆ *",
+  "stream_title_hint": "ಸ್ಟ್ರೀಮ್‌ಗೆ ಆಕರ್ಷಕ ಶೀರ್ಷಿಕೆಯನ್ನು ಬರೆಯಿರಿ",
+  "stream_description": "ಸ್ಟ್ರೀಮ್ ವಿವರಣೆ",
+  "stream_description_hint_optional": "ಸ್ಟ್ರೀಮ್‌ಗೆ ಸಂಕ್ಷಿಪ್ತ ವಿವರಣೆಯನ್ನು ಬರೆಯಿರಿ (ಐಚ್ಛಿಕ)",
+  "creating_live_start": "ಲೈವ್ ಸ್ಟ್ರೀಮ್ ಪ್ರಾರಂಭಿಸಿ",
+  "live_chat": "ಲೈವ್ ಚಾಟ್",
+  "now": "ಈಗ",
+  "start_chat_exclamation": "ಚಾಟ್ ಆರಂಭಿಸಿ!",
+  "write_your_comment": "ನಿಮ್ಮ ಕಾಮೆಂಟ್ ಬರೆಯಿರಿ...",
+  "live_stream_data_incomplete": "ಪ್ರತಿಕ್ರಿಯೆಯಲ್ಲಿ ಲೈವ್ ಸ್ಟ್ರೀಮ್ ಡೇಟಾ ಅಪೂರ್ಣವಾಗಿದೆ",
+  "must_login_first": "ಮೊದಲು ಲಾಗಿನ್ ಮಾಡಬೇಕು",
+  "connection_error_check_internet": "ಸಂಪರ್ಕ ದೋಷ, ಇಂಟರ್ನೆಟ್ ಪರಿಶೀಲಿಸಿ",
+  "no_permission_create_live_stream": "ಲೈವ್ ಸ್ಟ್ರೀಮ್ ಸೃಷ್ಟಿಸಲು ನಿಮಗೆ ಅನುಮತಿ ಇಲ್ಲ",
+  "no_reels_available": "ಈಗ ಯಾವುದೇ ರೀಲ್ಸ್ ಲಭ್ಯವಿಲ್ಲ.",
+  "record_or_upload_video_help": "ಸಮಸ್ಯೆಯನ್ನು ಅರ್ಥಮಾಡಿಕೊಳ್ಳಲು ಮತ್ತು ಬೇಗ ಸರಿಪಡಿಸಲು, ಸಮಸ್ಯೆ ತೋರಿಸುವ ವಿಡಿಯೋವನ್ನು ದಾಖಲಿಸಿ ಅಥವಾ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ.",
+  "issue_title": "ಸಮಸ್ಯೆಯ ಶೀರ್ಷಿಕೆ",
+  "brief_description": "ಸಮಸ್ಯೆಯ ಸಂಕ್ಷಿಪ್ತ ವಿವರಣೆ",
+  "additional_details_optional": "ಹೆಚ್ಚುವರಿ ವಿವರಗಳು (ಐಚ್ಛಿಕ)",
+  "add_more_details_placeholder": "ಸಮಸ್ಯೆಯ ಬಗ್ಗೆ ಇನ್ನಷ್ಟು ವಿವರಗಳನ್ನು ಸೇರಿಸಿ...",
+  "video_required": "ವಿಡಿಯೋ (ಅಗತ್ಯ)",
+  "tap_to_add_video": "ವಿಡಿಯೋ ಸೇರಿಸಲು ಟ್ಯಾಪ್ ಮಾಡಿ",
+  "max_2_minutes_50mb": "ಗರಿಷ್ಠ 2 ನಿಮಿಷಗಳು, 50MB",
+  "submit_report": "ವರದಿ ಸಲ್ಲಿಸಿ",
+  "video_file_too_large_max_50mb": "ವಿಡಿಯೋ ಫೈಲ್ ತುಂಬಾ ದೊಡ್ಡದು. ಗರಿಷ್ಠ ಗಾತ್ರ 50MB.",
+  "failed_to_load_video": "ವಿಡಿಯೋ ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ:",
+  "select_video_source": "ವಿಡಿಯೋ ಮೂಲವನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+  "record_video": "ವಿಡಿಯೋ ರೆಕಾರ್ಡ್ ಮಾಡಿ",
+  "record_a_new_video": "ಹೊಸ ವಿಡಿಯೋ ರೆಕಾರ್ಡ್ ಮಾಡಿ",
+  "choose_from_gallery": "ಗ್ಯಾಲರಿಯಿಂದ ಆಯ್ಕೆಮಾಡಿ",
+  "select_existing_video": "ಈಗಿರುವ ವಿಡಿಯೋ ಆಯ್ಕೆಮಾಡಿ",
+  "please_enter_issue_title": "ದಯವಿಟ್ಟು ಸಮಸ್ಯೆಗೆ ಶೀರ್ಷಿಕೆ ನಮೂದಿಸಿ",
+  "please_attach_issue_video": "ದಯವಿಟ್ಟು ಸಮಸ್ಯೆ ತೋರಿಸುವ ವಿಡಿಯೋವನ್ನು ಲಗತ್ತಿಸಿ",
+  "must_be_logged_in_submit_bug_report": "ಬಗ್ ರಿಪೋರ್ಟ್ ಸಲ್ಲಿಸಲು ನೀವು ಲಾಗಿನ್ ಆಗಿರಬೇಕು",
+  "failed_to_upload_video": "ವಿಡಿಯೋ ಅಪ್‌ಲೋಡ್ ವಿಫಲವಾಗಿದೆ",
+  "report_submitted": "ವರದಿ ಸಲ್ಲಿಸಲಾಗಿದೆ!",
+  "thank_you_help_improve_app": "ಆಪ್ ಅನ್ನು ಸುಧಾರಿಸಲು ಸಹಾಯ ಮಾಡಿದಕ್ಕಾಗಿ ಧನ್ಯವಾದಗಳು. ನಾವು ನಿಮ್ಮ ವರದಿಯನ್ನು ಪರಿಶೀಲಿಸಿ ಶೀಘ್ರದಲ್ಲೇ ನಿಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸುತ್ತೇವೆ.",
+  "failed_to_submit_report": "ವರದಿ ಸಲ್ಲಿಸಲು ವಿಫಲವಾಗಿದೆ:",
+  "no_products_for_user_currently":"ಈ ಬಳಕೆದಾರರಿಗೆ ಇದೀಗ ಯಾವುದೇ ಉತ್ಪನ್ನಗಳು ಲಭ್ಯವಿಲ್ಲ.",
+  "search_conversations": "ಸಂಭಾಷಣೆಗಳಲ್ಲಿ ಹುಡುಕಿ",
+  "no_conversations": "ಯಾವುದೇ ಸಂಭಾಷಣೆಗಳಿಲ್ಲ",
+  "messenger": "ಮೆಸೆಂಜರ್",
+  "type_message": "ಒಂದು ಸಂದೇಶವನ್ನು ಬರೆಯಿರಿ...",
+  "fetch_story_failed":"ಕಥೆಗಳನ್ನು ಪಡೆಯಲು ವಿಫಲವಾಗಿದೆ",
+  "create_story_failed":"ಕಥೆ ರಚಿಸಲು ವಿಫಲವಾಗಿದೆ",
+  "create_story_error":"ಕಥೆ ರಚಿಸುವಲ್ಲಿ ದೋಷ",
+  "delete_story_failed":"ಕಥೆಯನ್ನು ಅಳಿಸಲು ವಿಫಲವಾಗಿದೆ",
+  "delete_story_error":"ಕಥೆಯನ್ನು ಅಳಿಸುವಲ್ಲಿ ದೋಷ",
+  "video_story_created_success":"✅ ವೀಡಿಯೊ ಸ್ಟೋರಿ ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ",
+  "photo_story_created_success":"✅ ಫೋಟೋ ಸ್ಟೋರಿ ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ",
+  "create_story_error_prefix":"ಸ್ಟೋರಿ ರಚಿಸುವಲ್ಲಿ ದೋಷ:",
+  "video_upload_error_prefix":"ವೀಡಿಯೊ ಅಪ್‌ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ:",
+  "publishing":"ಪ್ರಕಟಿಸಲಾಗುತ್ತಿದೆ...",
+  "add_to_your_story":"ನಿಮ್ಮ ಸ್ಟೋರಿಗೆ ಸೇರಿಸಿ",
+  "share_moments":"ನಿಮ್ಮ ಕ್ಷಣಗಳನ್ನು ಸ್ನೇಹಿತರೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಿ",
+  "share_photo_option":"ಗ್ಯಾಲರಿಯಿಂದ ಫೋಟೋ ಹಂಚಿಕೊಳ್ಳಿ ಅಥವಾ ಹೊಸದನ್ನು ತೆಗೆದುಕೊಳ್ಳಿ",
+  "share_video_option":"ಗ್ಯಾಲರಿಯಿಂದ ವೀಡಿಯೊ ಹಂಚಿಕೊಳ್ಳಿ ಅಥವಾ ಹೊಸದನ್ನು ದಾಖಲಿಸಿ",
+  "video_ready":"ವೀಡಿಯೊ ಹಂಚಿಕೊಳ್ಳಲು ಸಿದ್ಧವಾಗಿದೆ",
+  "photo_ready":"ಫೋಟೋ ಹಂಚಿಕೊಳ್ಳಲು ಸಿದ್ಧವಾಗಿದೆ",
+  "choose_another":"ಮತ್ತೊಂದು ಆಯ್ಕೆಮಾಡಿ"
 
 };

@@ -1,8 +1,10 @@
+import 'package:get/get.dart';
+
 /// نوع خصوصية المجموعة
 enum GroupPrivacy {
-  public,   // عامة - انضمام فوري، مرئية للجميع
-  closed,   // مغلقة - طلب انضمام، مرئية في البحث
-  secret;   // سرية - طلب انضمام، غير مرئية في البحث
+  public, // عامة - انضمام فوري، مرئية للجميع
+  closed, // مغلقة - طلب انضمام، مرئية في البحث
+  secret; // سرية - طلب انضمام، غير مرئية في البحث
 
   static GroupPrivacy fromString(String? privacy) {
     switch (privacy?.toLowerCase()) {
@@ -32,11 +34,11 @@ enum GroupPrivacy {
   String get displayName {
     switch (this) {
       case GroupPrivacy.public:
-        return 'عامة';
+        return 'group_privacy_public'.tr;
       case GroupPrivacy.closed:
-        return 'مغلقة';
+        return 'group_privacy_closed'.tr;
       case GroupPrivacy.secret:
-        return 'سرية';
+        return 'group_privacy_secret'.tr;
     }
   }
 
@@ -44,11 +46,11 @@ enum GroupPrivacy {
   String get description {
     switch (this) {
       case GroupPrivacy.public:
-        return 'انضمام فوري، مرئية للجميع';
+        return 'group_privacy_public_desc'.tr;
       case GroupPrivacy.closed:
-        return 'طلب انضمام، مرئية في البحث';
+        return 'group_privacy_closed_desc'.tr;
       case GroupPrivacy.secret:
-        return 'طلب انضمام، غير مرئية في البحث';
+        return 'group_privacy_secret_desc'.tr;
     }
   }
 

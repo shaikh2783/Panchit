@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/reaction_model.dart';
 import 'reactions_api_service.dart';
+import '../localization/localization_controller.dart';
+import 'package:flutter/foundation.dart';
 
 /// سيرفس Singleton لإدارة التفاعلات مع Cache
 /// يجلب التفاعلات مرة واحدة ويحفظها محلياً
@@ -9,13 +12,32 @@ class ReactionsService {
   ReactionsService._();
   static final ReactionsService instance = ReactionsService._();
 
-  static const String _cacheKey = 'cached_reactions';
-  static const String _cacheTimestampKey = 'reactions_cache_timestamp';
+  static const String _cacheKeyPrefix = 'cached_reactions_';
+  static const String _cacheTimestampKeyPrefix = 'reactions_cache_timestamp_';
   static const int _cacheValidityHours = 24; // صلاحية الكاش 24 ساعة
 
   ReactionsApiService? _apiService;
   List<ReactionModel>? _cachedReactions;
   bool _isInitialized = false;
+  String? _cachedLanguage; // اللغة المحفوظة في الكاش
+
+  /// مفتاح الكاش بناءً على اللغة الحالية
+  String get _cacheKey => '$_cacheKeyPrefix${_getCurrentLanguageCode()}';
+  String get _cacheTimestampKey => '$_cacheTimestampKeyPrefix${_getCurrentLanguageCode()}';
+  
+  /// الحصول على كود اللغة الحالية (بنفس تنسيق API)
+  String _getCurrentLanguageCode() {
+    try {
+      if (Get.isRegistered<LocalizationController>()) {
+        final controller = Get.find<LocalizationController>();
+        final locale = controller.currentLocale;
+        // API format: ar_sa, en_us, fr_fr (language_country)
+        return '${locale.languageCode}_${locale.countryCode ?? locale.languageCode}'.toLowerCase();
+      }
+    } catch (e) {
+    }
+    return 'en_us';
+  }
 
   /// تهيئة السيرفس مع API Service
   void initialize(ReactionsApiService apiService) {
@@ -24,16 +46,27 @@ class ReactionsService {
 
   /// تحميل التفاعلات (من الكاش أو من السيرفر)
   Future<List<ReactionModel>> loadReactions({bool forceRefresh = false}) async {
+    final currentLang = _getCurrentLanguageCode();
+    
+    // إذا تغيرت اللغة، نحتاج لإعادة التحميل
+    if (_cachedLanguage != null && _cachedLanguage != currentLang) {
+      forceRefresh = true;
+    }
+    
     // إذا كانت موجودة في الذاكرة وليس force refresh
-    if (_cachedReactions != null && !forceRefresh) {
+    if (_cachedReactions != null && !forceRefresh && _cachedLanguage == currentLang) {
       return _cachedReactions!;
     }
+
+    // مسح الكاش القديم (بدون لغة) عند أول تشغيل
+    await _clearLegacyCache();
 
     // محاولة تحميل من SharedPreferences
     if (!forceRefresh) {
       final cached = await _loadFromCache();
       if (cached != null && cached.isNotEmpty) {
         _cachedReactions = cached;
+        _cachedLanguage = currentLang;
         _isInitialized = true;
         return cached;
       }
@@ -46,6 +79,7 @@ class ReactionsService {
         if (reactions.isNotEmpty) {
           await _saveToCache(reactions);
           _cachedReactions = reactions;
+          _cachedLanguage = currentLang;
           _isInitialized = true;
           return reactions;
         }
@@ -66,9 +100,10 @@ class ReactionsService {
   ReactionModel? getReactionByName(String reactionName) {
     final reactions = getReactions();
     try {
-      return reactions.firstWhere(
+      final found = reactions.firstWhere(
         (r) => r.reaction.toLowerCase() == reactionName.toLowerCase(),
       );
+      return found;
     } catch (e) {
       return null;
     }
@@ -103,6 +138,30 @@ class ReactionsService {
     } catch (e) {
     }
     return null;
+  }
+
+  /// مسح الكاش القديم (بدون لغة) - لمرة واحدة فقط
+  Future<void> _clearLegacyCache() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      // مفاتيح الكاش القديمة
+      const legacyKey = 'cached_reactions';
+      const legacyTimestampKey = 'reactions_cache_timestamp';
+      
+      if (prefs.containsKey(legacyKey)) {
+        await prefs.remove(legacyKey);
+        await prefs.remove(legacyTimestampKey);
+      }
+      
+      // مسح كل كاشات التفاعلات المتعلقة باللغات
+      final keys = prefs.getKeys();
+      for (final key in keys) {
+        if (key.startsWith('cached_reactions_') || key.startsWith('reactions_cache_timestamp_')) {
+          await prefs.remove(key);
+        }
+      }
+    } catch (e) {
+    }
   }
 
   /// حفظ في الكاش المحلي

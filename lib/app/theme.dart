@@ -5,7 +5,6 @@ class AppTheme {
 
   static ThemeData light() {
     const primaryColor = Color(0xFF2563EB);
-    const onPrimary = Colors.white;
     final colorScheme = ColorScheme.fromSeed(
       seedColor: primaryColor,
       brightness: Brightness.light,

@@ -261,7 +261,7 @@ class _FundingDetailPageState extends State<FundingDetailPage> {
                         Expanded(
                           child: _statCard(
                             context,
-                            icon: Iconsax.money_recive_copy,
+                            icon:  Icons.currency_rupee,
                             label: 'raised'.tr,
                             value: '\$${f.raisedAmount.toStringAsFixed(0)}',
                             color: scheme.primary,

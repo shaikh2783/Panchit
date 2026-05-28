@@ -2,27 +2,35 @@
 /// يحتوي على جميع المتغيرات والإعدادات القابلة للتخصيص
 class AppSettings {
   // ==================== معلومات التطبيق ====================
+
   /// اسم التطبيق
   static const String appName = 'Panchit';
   // ==================== إعدادات PayPal ====================
   // احصل على بيانات الاعتماد من: https://developer.paypal.com/
+
   /// معرف العميل - وضع الاختبار (Sandbox)
   /// احصل عليه من: https://developer.paypal.com/dashboard/applications/sandbox
   static const String paypalSandboxClientId =
       'AQZ9cJfUrNDIeaN01OBTx-SsfFGQdHLdsW27phb2lHUx630547ZGhVOBXUQk8JgPvn571rre7cr1NE-m';
+
   /// المفتاح السري - وضع الاختبار (Sandbox)
   static const String paypalSandboxSecretKey =
-      'EDoeQOfeM-S86IbmWhVYJN21rGuAzUJ0i10sV_047d47hhxoEsubWoOxJb7Ff0uAlkxFW32vMKmzSx-U';
+      '';
+
   /// معرف العميل - الوضع الحقيقي (Production)
   /// احصل عليه من: https://developer.paypal.com/dashboard/applications/live
   static const String paypalProductionClientId = 'YOUR_PRODUCTION_CLIENT_ID';
+
   /// المفتاح السري - الوضع الحقيقي (Production)
   static const String paypalProductionSecretKey = 'YOUR_PRODUCTION_SECRET_KEY';
+
   /// استخدام وضع الاختبار؟ (true = Sandbox, false = Production)
   static const bool paypalUseSandbox = true;
+
   /// اسم البيئة الحالية
   static String get paypalEnvironment =>
       paypalUseSandbox ? 'Sandbox' : 'Production';
+
   /// التحقق من صحة إعدادات PayPal قبل المعالجة
   static String? validatePayPalConfig() {
     if (!isPayPalConfigured) {
@@ -30,30 +38,58 @@ class AppSettings {
     }
     return null;
   }
+
   // ==================== إعدادات Agora (البث المباشر) ====================
   // احصل على App ID من: https://console.agora.io/
+
   /// App ID الخاص بـ Agora
   /// احصل عليه من: https://console.agora.io/
   static const String agoraAppId = '06e8cc01e5ce4a1ba6d1254c2a5aa7da';
+
   /// Token (اختياري للاختبار - يمكن أن يكون null في بيئة الاختبار)
   static const String? agoraToken = null;
+
   // إعدادات جودة الفيديو للبث
   static const int agoraVideoWidth = 1280;
   static const int agoraVideoHeight = 720;
   static const int agoraFrameRate = 30;
   static const int agoraBitrate = 1500; // kbps
+
   // إعدادات الصوت للبث
   static const int agoraAudioSampleRate = 48000;
   static const int agoraAudioChannels = 2;
+
   // مدة انتظار الاتصال
   static const int agoraConnectionTimeoutSeconds = 10;
+
   // أقصى عدد مستخدمين في البث
   static const int agoraMaxUsers = 100;
+
   // ==================== إعدادات OneSignal (الإشعارات) ====================
   // احصل على App ID من: https://app.onesignal.com/
+
   /// App ID الخاص بـ OneSignal
   /// احصل عليه من: https://app.onesignal.com/ > Settings > Keys & IDs
   static const String oneSignalAppId = '0dc8d96f-0113-4a2b-ab63-e0cd64d751c7';
+
+  // ==================== إعدادات AdMob (الإعلانات) ====================
+  // احصل على App IDs و Ad Unit IDs من: https://apps.admob.com/
+
+  /// إظهار إعلان في PostCard كل X منشور
+  /// مثال: 5 = إظهار إعلان بعد كل 5 منشورات
+  static const int adMobPostCardFrequency = 5;
+
+  /// إظهار إعلان في ProfilePage
+  static const bool enableAdMobInProfile = false;
+
+  /// إظهار إعلان في SearchPage
+  static const bool enableAdMobInSearch = false;
+
+  /// إظهار إعلان في نتائج البحث كل X نتيجة
+  static const int adMobSearchResultFrequency = 8;
+
+  /// إظهار إعلان Banner في Menu Page
+  static const bool enableAdMobInMenu = true;
 
   // ==================== إعدادات Google Sign-In ====================
   // احصل على المعرفات من: https://console.cloud.google.com/
@@ -64,12 +100,12 @@ class AppSettings {
   /// Google Client ID لـ iOS
   /// احصل عليه من: Google Cloud Console > APIs & Services > Credentials
   /// مثال: "123456789-abc123def456.apps.googleusercontent.com"
-  static const String googleClientIdIOS = 'YOUR_IOS_CLIENT_ID';
+  static const String googleClientIdIOS = '655828953502-f2sds4bbkom2cbslkctolp3dh6r3uaco.apps.googleusercontent.com';
 
   /// Google Client ID لـ Android
   /// مثال: "123456789-xyz789abc123.apps.googleusercontent.com"
   static const String googleClientIdAndroid =
-      '310376752754-aat3tcudo5enqedpecjvou8s6c7b80n1.apps.googleusercontent.com';
+      '655828953502-fn6iog5rv9hpkoucp540othl178h5cja.apps.googleusercontent.com';
 
   /// Google Client ID لـ Web (اختياري)
   static const String googleClientIdWeb = 'YOUR_WEB_CLIENT_ID';
@@ -77,6 +113,95 @@ class AppSettings {
   /// Reversed Client ID لـ iOS (من GoogleService-Info.plist)
   /// مثال: "com.googleusercontent.apps.123456789-abc123def456"
   static const String googleReversedClientIdIOS = 'YOUR_REVERSED_CLIENT_ID';
+
+  // ==================== إعدادات الذكاء الاصطناعي (AI) ====================
+
+  /// تفعيل ميزة الذكاء الاصطناعي
+  static const bool enableAI = true;
+
+  /// مفتاح API للذكاء الاصطناعي (OpenAI, Gemini, إلخ)
+  /// احصل عليه من: https://platform.openai.com/api-keys
+  static const String aiApiKey = 'YOUR_OPENAI_API_KEY';
+
+  /// نموذج الذكاء الاصطناعي المستخدم
+  /// أمثلة: 'gpt-4', 'gpt-3.5-turbo', 'gemini-pro'
+  static const String aiModel = 'gpt-3.5-turbo';
+
+  /// من يُسمح له باستخدام الذكاء الاصطناعي
+  /// 'all' = الجميع، 'pro' = فقط مستخدمي Pro، 'vip' = فقط VIP
+  static const String aiAccessLevel = 'all';
+
+  /// الحد الأقصى لعدد طلبات AI اليومية عند السماح للجميع (all)
+  static const int aiMaxRequestsPerDayAll = 5;
+
+  /// الحد الأقصى لعدد طلبات AI اليومية للمستخدم العادي
+  static const int aiMaxRequestsPerDayFree = 5;
+
+  /// الحد الأقصى لعدد طلبات AI اليومية لمستخدمي Pro
+  static const int aiMaxRequestsPerDayPro = 100;
+
+  /// الحد الأقصى لعدد الأحرف في الطلب الواحد
+  static const int aiMaxCharactersPerRequest = 2000;
+
+  /// اسم البوت للذكاء الاصطناعي (يُستخدم في المنشن @)
+  /// مثال: '@grock' أو '@ai' أو '@assistant'
+  static const String aiBotUsername = 'ai';
+
+  /// إيميل حساب البوت (للحصول على توكن)
+  static const String aiBotEmail = 'ai@example.com';
+
+  /// كلمة مرور حساب البوت
+  static const String aiBotPassword = 'ai@example.com';
+
+  /// تفعيل الرد التلقائي على التعليقات التي تحتوي منشن للبوت
+  static const bool enableAIAutoReply = true;
+
+  /// الرد على التعليقات الرئيسية فقط أم الردود أيضاً؟
+  static const bool aiReplyToReplies = true;
+
+  /// التحقق من اكتمال إعدادات AI
+  static bool get isAIConfigured {
+    return enableAI && aiApiKey.isNotEmpty && aiApiKey != 'YOUR_AI_API_KEY';
+  }
+
+  /// التحقق من صحة إعدادات AI قبل الاستخدام
+  static String? validateAIConfig() {
+    if (!enableAI) {
+      return 'ميزة الذكاء الاصطناعي معطلة في الإعدادات';
+    }
+    if (!isAIConfigured) {
+      return 'مفتاح API للذكاء الاصطناعي غير مكتمل. يرجى تحديث الإعدادات في App_Settings.dart';
+    }
+    return null;
+  }
+
+  /// التحقق من صلاحية المستخدم لاستخدام AI
+  /// @param userType: 'free', 'pro', 'vip'
+  static bool canUserAccessAI(String userType) {
+    if (!enableAI) return false;
+
+    switch (aiAccessLevel) {
+      case 'all':
+        return true;
+      case 'pro':
+        return userType == 'pro' || userType == 'vip';
+      case 'vip':
+        return userType == 'vip';
+      default:
+        return false;
+    }
+  }
+
+  /// الحصول على الحد الأقصى لطلبات AI بناءً على نوع المستخدم
+  static int getMaxAIRequestsPerDay(String userType) {
+    if (aiAccessLevel == 'all') {
+      return aiMaxRequestsPerDayAll;
+    }
+    if (userType == 'pro' || userType == 'vip') {
+      return aiMaxRequestsPerDayPro;
+    }
+    return aiMaxRequestsPerDayFree;
+  }
 
   // ==================== إعدادات التخزين المحلي ====================
 
@@ -137,6 +262,27 @@ class AppSettings {
 
   /// رمز العملة
   static const String currencySymbol = '\$';
+
+  // ==================== إعدادات تشغيل الفيديو ====================
+
+  /// فتح فيديوهات YouTube في التطبيق (WebView) أم في المتصفح الخارجي
+  /// true = تشغيل داخل التطبيق (WebView)
+  /// false = فتح في متصفح خارجي
+  static const bool playYouTubeInApp = false;
+
+  /// فتح فيديوهات TikTok في التطبيق (WebView) أم في المتصفح الخارجي
+  /// true = تشغيل داخل التطبيق (WebView)
+  /// false = فتح في متصفح خارجي
+  static const bool playTikTokInApp = false;
+
+  /// فتح فيديوهات Vimeo في التطبيق (WebView) أم في المتصفح الخارجي
+  /// true = تشغيل داخل التطبيق (WebView)
+  /// false = فتح في متصفح خارجي
+  static const bool playVimeoInApp = false;
+
+  /// فتح الفيديوهات المضمنة (Embedded) في تطبيق خارجي إذا كان مثبتاً
+  /// ملاحظة: هذا الإعداد حالياً غير مفعّل
+  static const bool useNativeVideoAppsIfAvailable = false;
 
   // ==================== إعدادات البث المباشر ====================
 

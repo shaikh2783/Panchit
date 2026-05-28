@@ -1,7 +1,9 @@
+import 'package:get/get.dart';
 import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/core/network/api_exception.dart';
 import 'package:snginepro/main.dart' show configCfgP;
 import 'package:snginepro/features/stories/data/models/stories_response.dart';
+import 'package:flutter/foundation.dart';
 
 class StoriesApiService {
   StoriesApiService(this._client);
@@ -27,7 +29,7 @@ class StoriesApiService {
     
     if (!storiesResponse.isSuccess) {
       throw ApiException(
-        storiesResponse.message ?? 'فشل في جلب القصص',
+        storiesResponse.message ?? 'fetch_story_failed'.tr,
         details: response,
       );
     }
@@ -39,6 +41,8 @@ class StoriesApiService {
     String? imagePath,
     String? videoPath,
     String? text,
+    bool isCommentEnable = true,
+    bool isReactionEnable = true,
   }) async {
     try {
       final fields = <String, String>{};
@@ -46,6 +50,9 @@ class StoriesApiService {
       if (text != null && text.isNotEmpty) {
         fields['text'] = text;
       }
+
+      fields['is_comment_enable'] = isCommentEnable ? 'true' : 'false';
+      fields['is_reaction_enable'] = isReactionEnable ? 'true' : 'false';
 
       // استخدام multipartPost لرفع ملف واحد
       if (imagePath != null) {
@@ -63,7 +70,7 @@ class StoriesApiService {
         
         if (!isSuccess) {
           throw ApiException(
-            response['message'] ?? 'فشل في إنشاء القصة',
+            response['message'] ?? 'create_story_failed'.tr,
             details: response,
           );
         }
@@ -86,7 +93,7 @@ class StoriesApiService {
         
         if (!isSuccess) {
           throw ApiException(
-            response['message'] ?? 'فشل في إنشاء القصة',
+            response['message'] ?? 'create_story_failed'.tr,
             details: response,
           );
         }
@@ -107,7 +114,7 @@ class StoriesApiService {
       
       if (!isSuccess) {
         throw ApiException(
-          response['message'] ?? 'فشل في إنشاء القصة',
+          response['message'] ?? 'create_story_failed'.tr,
           details: response,
         );
       }
@@ -115,7 +122,48 @@ class StoriesApiService {
       return response;
     } catch (e) {
       if (e is ApiException) rethrow;
-      throw ApiException('خطأ في إنشاء القصة: $e');
+      throw ApiException('${'create_story_error'.tr}:$e');
+    }
+  }
+
+  /// Delete a specific story by media_id
+  /// If mediaId is provided, deletes only that story
+  /// If mediaId is null, deletes all user's stories
+  Future<Map<String, dynamic>> deleteStory({String? mediaId}) async {
+    try {
+      final queryParams = <String, String>{};
+      if (mediaId != null && mediaId.isNotEmpty) {
+        // استخراج الرقم فقط من media_id (مثلاً: "media_35" -> "35")
+        final numericId = mediaId.replaceAll(RegExp(r'[^0-9]'), '');
+        if (numericId.isNotEmpty) {
+          queryParams['media_id'] = numericId;
+        }
+      }
+      
+      // طباعة للتصحيح
+      
+      final response = await _client.delete(
+        configCfgP('stories'),
+        queryParameters: queryParams.isNotEmpty ? queryParams : null,
+      );
+      
+
+      // التحقق من النجاح: status == "success" أو api_status == 200
+      final isSuccess = response['status'] == 'success' || 
+                       response['api_status'] == 200 ||
+                       response['code'] == 200;
+      
+      if (!isSuccess) {
+        throw ApiException(
+          response['message'] ?? 'delete_story_failed'.tr,
+          details: response,
+        );
+      }
+
+      return response;
+    } catch (e) {
+      if (e is ApiException) rethrow;
+      throw ApiException('${'delete_story_error'.tr}:$e');
     }
   }
 }

@@ -30,14 +30,14 @@ class CourseCard extends StatelessWidget {
     if (course == null) return const SizedBox.shrink();
 
     final isDark = Get.isDarkMode;
-    
+
     // Check if current user owns this course
     final auth = context.watch<AuthNotifier>();
     final currentUserId = auth.currentUser?['user_id']?.toString();
     final isOwner = currentUserId != null && post.authorId == currentUserId;
-    
+
     // Debug: Check ownership
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
@@ -45,7 +45,7 @@ class CourseCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: isDark 
+            color: isDark
                 ? Colors.black.withOpacity(0.3)
                 : Colors.black.withOpacity(0.05),
             blurRadius: 10,
@@ -59,7 +59,9 @@ class CourseCard extends StatelessWidget {
           // Course Cover Image
           if (course.coverImage != null && course.coverImage!.isNotEmpty)
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
+              ),
               child: AspectRatio(
                 aspectRatio: 16 / 9,
                 child: CachedNetworkImage(
@@ -67,9 +69,7 @@ class CourseCard extends StatelessWidget {
                   fit: BoxFit.cover,
                   placeholder: (context, url) => Container(
                     color: isDark ? Colors.grey[800] : Colors.grey[200],
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                    child: const Center(child: CircularProgressIndicator()),
                   ),
                   errorWidget: (context, url, error) => Container(
                     color: isDark ? Colors.grey[800] : Colors.grey[200],
@@ -120,7 +120,9 @@ class CourseCard extends StatelessWidget {
                             course.location!,
                             style: TextStyle(
                               fontSize: 14,
-                              color: isDark ? Colors.grey[300] : Colors.grey[700],
+                              color: isDark
+                                  ? Colors.grey[300]
+                                  : Colors.grey[700],
                             ),
                           ),
                         ),
@@ -145,7 +147,9 @@ class CourseCard extends StatelessWidget {
                             _formatDateRange(course.startDate, course.endDate),
                             style: TextStyle(
                               fontSize: 14,
-                              color: isDark ? Colors.grey[300] : Colors.grey[700],
+                              color: isDark
+                                  ? Colors.grey[300]
+                                  : Colors.grey[700],
                             ),
                           ),
                         ),
@@ -172,9 +176,9 @@ class CourseCard extends StatelessWidget {
                           color: Colors.green.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Text(
-                          'مجاني',
-                          style: TextStyle(
+                        child: Text(
+                          'course_free'.tr,
+                          style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: Colors.green,
@@ -218,7 +222,7 @@ class CourseCard extends StatelessWidget {
                             );
                           },
                           icon: const Icon(Iconsax.people, size: 18),
-                          label: Text('المتقدمين (${course.candidatesCount})'),
+                          label: Text('course_candidates'.trParams({'count': course.candidatesCount.toString()})),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.blue,
                             foregroundColor: Colors.white,
@@ -239,7 +243,7 @@ class CourseCard extends StatelessWidget {
                               builder: (_) => CourseEditPage(post: post),
                             ),
                           );
-                          
+
                           // If course was updated, you might want to refresh the list
                           if (result == true) {
                             // Trigger refresh if needed
@@ -261,144 +265,197 @@ class CourseCard extends StatelessWidget {
                       // Show enrollment and details for non-owners
                       Expanded(
                         child: ElevatedButton.icon(
-                          onPressed: course.available ? () async {
-                            // Handle enrollment - show dialog to collect user info
-                            final auth = context.read<AuthNotifier>();
-                            final currentUser = auth.currentUser;
-                            
-                            if (currentUser == null) {
-                              Get.snackbar(
-                                'خطأ',
-                                'يجب تسجيل الدخول أولاً',
-                                backgroundColor: Colors.red,
-                                colorText: Colors.white,
-                              );
-                              return;
-                            }
-                            
-                            // Pre-fill data from user profile
-                            final userName = '${currentUser['user_firstname'] ?? ''} ${currentUser['user_lastname'] ?? ''}'.trim();
-                            final userEmail = currentUser['user_email']?.toString().trim() ?? '';
-                            
-                            // Show dialog to collect enrollment data
-                            final formKey = GlobalKey<FormState>();
-                            final nameCtrl = TextEditingController(text: userName);
-                            final locationCtrl = TextEditingController(text: currentUser['user_current_city']?.toString().trim() ?? '');
-                            final phoneCtrl = TextEditingController(text: currentUser['user_phone']?.toString().trim() ?? '');
-                            final emailCtrl = TextEditingController(text: userEmail);
-                            
-                            final confirmed = await Get.dialog<bool>(
-                              AlertDialog(
-                                title: Text('course_enrollment_title'.tr),
-                                content: SingleChildScrollView(
-                                  child: Form(
-                                    key: formKey,
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        TextFormField(
-                                          controller: nameCtrl,
-                                          decoration: const InputDecoration(
-                                            labelText: 'الاسم الكامل *',
-                                            prefixIcon: Icon(Iconsax.user),
+                          onPressed: course.available
+                              ? () async {
+                                  // Handle enrollment - show dialog to collect user info
+                                  final auth = context.read<AuthNotifier>();
+                                  final currentUser = auth.currentUser;
+
+                                  if (currentUser == null) {
+                                    Get.snackbar(
+                                      'course_error'.tr,
+                                      'course_login_required'.tr,
+                                      backgroundColor: Colors.red,
+                                      colorText: Colors.white,
+                                    );
+                                    return;
+                                  }
+
+                                  // Pre-fill data from user profile
+                                  final userName =
+                                      '${currentUser['user_firstname'] ?? ''} ${currentUser['user_lastname'] ?? ''}'
+                                          .trim();
+                                  final userEmail =
+                                      currentUser['user_email']
+                                          ?.toString()
+                                          .trim() ??
+                                      '';
+
+                                  // Show dialog to collect enrollment data
+                                  final formKey = GlobalKey<FormState>();
+                                  final nameCtrl = TextEditingController(
+                                    text: userName,
+                                  );
+                                  final locationCtrl = TextEditingController(
+                                    text:
+                                        currentUser['user_current_city']
+                                            ?.toString()
+                                            .trim() ??
+                                        '',
+                                  );
+                                  final phoneCtrl = TextEditingController(
+                                    text:
+                                        currentUser['user_phone']
+                                            ?.toString()
+                                            .trim() ??
+                                        '',
+                                  );
+                                  final emailCtrl = TextEditingController(
+                                    text: userEmail,
+                                  );
+
+                                  final confirmed = await Get.dialog<bool>(
+                                    AlertDialog(
+                                      title: Text('course_enrollment_title'.tr),
+                                      content: SingleChildScrollView(
+                                        child: Form(
+                                          key: formKey,
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              TextFormField(
+                                                controller: nameCtrl,
+                                                decoration: InputDecoration(
+                                                  labelText: 'course_enrollment_name'.tr,
+                                                  prefixIcon: const Icon(
+                                                    Iconsax.user,
+                                                  ),
+                                                ),
+                                                validator: (v) =>
+                                                    v?.trim().isEmpty ?? true
+                                                    ? 'course_field_required'.tr
+                                                    : null,
+                                              ),
+                                              const SizedBox(height: 12),
+                                              TextFormField(
+                                                controller: locationCtrl,
+                                                decoration: InputDecoration(
+                                                  labelText: 'course_enrollment_location'.tr,
+                                                  prefixIcon: const Icon(
+                                                    Iconsax.location,
+                                                  ),
+                                                  hintText: 'course_enrollment_location_hint'.tr,
+                                                ),
+                                                validator: (v) =>
+                                                    v?.trim().isEmpty ?? true
+                                                    ? 'course_field_required'.tr
+                                                    : null,
+                                              ),
+                                              const SizedBox(height: 12),
+                                              TextFormField(
+                                                controller: phoneCtrl,
+                                                decoration: InputDecoration(
+                                                  labelText: 'course_enrollment_phone'.tr,
+                                                  prefixIcon: const Icon(
+                                                    Iconsax.call,
+                                                  ),
+                                                  hintText: 'course_enrollment_phone_hint'.tr,
+                                                ),
+                                                keyboardType:
+                                                    TextInputType.phone,
+                                                validator: (v) =>
+                                                    v?.trim().isEmpty ?? true
+                                                    ? 'course_field_required'.tr
+                                                    : null,
+                                              ),
+                                              const SizedBox(height: 12),
+                                              TextFormField(
+                                                controller: emailCtrl,
+                                                decoration: InputDecoration(
+                                                  labelText: 'course_enrollment_email'.tr,
+                                                  prefixIcon: const Icon(
+                                                    Iconsax.sms,
+                                                  ),
+                                                ),
+                                                keyboardType:
+                                                    TextInputType.emailAddress,
+                                                validator: (v) =>
+                                                    v?.trim().isEmpty ?? true
+                                                    ? 'course_field_required'.tr
+                                                    : null,
+                                              ),
+                                            ],
                                           ),
-                                          validator: (v) => v?.trim().isEmpty ?? true ? 'مطلوب' : null,
                                         ),
-                                        const SizedBox(height: 12),
-                                        TextFormField(
-                                          controller: locationCtrl,
-                                          decoration: const InputDecoration(
-                                            labelText: 'الموقع *',
-                                            prefixIcon: Icon(Iconsax.location),
-                                            hintText: 'مثال: الرياض، السعودية',
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Get.back(result: false),
+                                          child: Text(
+                                            'course_enrollment_cancel'.tr,
                                           ),
-                                          validator: (v) => v?.trim().isEmpty ?? true ? 'مطلوب' : null,
                                         ),
-                                        const SizedBox(height: 12),
-                                        TextFormField(
-                                          controller: phoneCtrl,
-                                          decoration: const InputDecoration(
-                                            labelText: 'رقم الهاتف *',
-                                            prefixIcon: Icon(Iconsax.call),
-                                            hintText: 'مثال: +966501234567',
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            if (formKey.currentState
+                                                    ?.validate() ??
+                                                false) {
+                                              Get.back(result: true);
+                                            }
+                                          },
+                                          child: Text(
+                                            'course_enrollment_confirm'.tr,
                                           ),
-                                          keyboardType: TextInputType.phone,
-                                          validator: (v) => v?.trim().isEmpty ?? true ? 'مطلوب' : null,
-                                        ),
-                                        const SizedBox(height: 12),
-                                        TextFormField(
-                                          controller: emailCtrl,
-                                          decoration: const InputDecoration(
-                                            labelText: 'البريد الإلكتروني *',
-                                            prefixIcon: Icon(Iconsax.sms),
-                                          ),
-                                          keyboardType: TextInputType.emailAddress,
-                                          validator: (v) => v?.trim().isEmpty ?? true ? 'مطلوب' : null,
                                         ),
                                       ],
                                     ),
-                                  ),
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Get.back(result: false),
-                                    child: Text('course_enrollment_cancel'.tr),
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      if (formKey.currentState?.validate() ?? false) {
-                                        Get.back(result: true);
-                                      }
-                                    },
-                                    child: Text('course_enrollment_confirm'.tr),
-                                  ),
-                                ],
-                              ),
-                            );
-                            
-                            if (confirmed != true) return;
-                            
-                            final apiClient = context.read<ApiClient>();
-                            final service = CoursesApiService(apiClient);
-                            
-                            Get.dialog(
-                              const Center(child: CircularProgressIndicator()),
-                              barrierDismissible: false,
-                            );
-                            
-                            final result = await service.enrollInCourse(
-                              post.id.toString(),
-                              name: nameCtrl.text.trim(),
-                              location: locationCtrl.text.trim(),
-                              phone: phoneCtrl.text.trim(),
-                              email: emailCtrl.text.trim(),
-                            );
-                            
-                            Get.back(); // Close loading dialog
-                            
-                            if (result.success) {
-                              Get.snackbar(
-                                'نجح',
-                                result.message,
-                                backgroundColor: Colors.green,
-                                colorText: Colors.white,
-                              );
-                            } else {
-                              Get.snackbar(
-                                'خطأ',
-                                result.message,
-                                backgroundColor: Colors.red,
-                                colorText: Colors.white,
-                              );
-                            }
-                          } : null,
+                                  );
+
+                                  if (confirmed != true) return;
+
+                                  final apiClient = context.read<ApiClient>();
+                                  final service = CoursesApiService(apiClient);
+
+                                  Get.dialog(
+                                    const Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                    barrierDismissible: false,
+                                  );
+
+                                  final result = await service.enrollInCourse(
+                                    post.id.toString(),
+                                    name: nameCtrl.text.trim(),
+                                    location: locationCtrl.text.trim(),
+                                    phone: phoneCtrl.text.trim(),
+                                    email: emailCtrl.text.trim(),
+                                  );
+
+                                  Get.back(); // Close loading dialog
+
+                                  if (result.success) {
+                                    Get.snackbar(
+                                      'course_success'.tr,
+                                      result.message,
+                                      backgroundColor: Colors.green,
+                                      colorText: Colors.white,
+                                    );
+                                  } else {
+                                    Get.snackbar(
+                                      'course_error'.tr,
+                                      result.message,
+                                      backgroundColor: Colors.red,
+                                      colorText: Colors.white,
+                                    );
+                                  }
+                                }
+                              : null,
                           icon: const Icon(Iconsax.user_add, size: 18),
-                          label: Text(
-                            course.available ? 'التسجيل' : 'مغلق',
-                          ),
+                          label: Text(course.available ? 'course_enroll_button'.tr : 'course_closed'.tr),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: course.available 
-                                ? Colors.blue 
+                            backgroundColor: course.available
+                                ? Colors.blue
                                 : Colors.grey,
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 12),
@@ -448,7 +505,7 @@ class CourseCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          '${course.candidatesCount} متقدم',
+                          'course_candidates_count'.trParams({'count': course.candidatesCount.toString()}),
                           style: TextStyle(
                             fontSize: 12,
                             color: isDark ? Colors.grey[400] : Colors.grey[600],
@@ -470,27 +527,24 @@ class CourseCard extends StatelessWidget {
     Color color;
 
     if (!course.available) {
-      text = 'مغلق';
+      text = 'course_status_closed'.tr;
       color = Colors.grey;
     } else if (course.hasEnded) {
-      text = 'انتهى';
+      text = 'course_status_ended'.tr;
       color = Colors.red;
     } else if (course.isOngoing) {
-      text = 'جاري';
+      text = 'course_status_ongoing'.tr;
       color = Colors.orange;
     } else if (course.hasStarted) {
-      text = 'بدأ';
+      text = 'course_status_started'.tr;
       color = Colors.blue;
     } else {
-      text = 'قريباً';
+      text = 'course_status_upcoming'.tr;
       color = Colors.green;
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 4,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(8),
@@ -508,7 +562,7 @@ class CourseCard extends StatelessWidget {
   }
 
   String _formatPrice(PostCourse course) {
-    if (course.fees == null || course.fees!.isEmpty) return 'مجاني';
+    if (course.fees == null || course.fees!.isEmpty) return 'course_free'.tr;
 
     final currency = course.feesCurrency;
     if (currency == null) return course.fees!;
@@ -521,7 +575,7 @@ class CourseCard extends StatelessWidget {
   }
 
   String _formatDateRange(String? startDate, String? endDate) {
-    if (startDate == null && endDate == null) return 'غير محدد';
+    if (startDate == null && endDate == null) return 'course_date_undefined'.tr;
 
     try {
       if (startDate != null && endDate != null) {
@@ -530,30 +584,40 @@ class CourseCard extends StatelessWidget {
         return '${_formatDate(start)} - ${_formatDate(end)}';
       } else if (startDate != null) {
         final start = DateTime.parse(startDate);
-        return 'يبدأ في ${_formatDate(start)}';
+        return 'course_date_starts'.trParams({'date': _formatDate(start)});
       } else if (endDate != null) {
         final end = DateTime.parse(endDate);
-        return 'ينتهي في ${_formatDate(end)}';
+        return 'course_date_ends'.trParams({'date': _formatDate(end)});
       }
     } catch (e) {
       // If parsing fails, return raw dates
       if (startDate != null && endDate != null) {
         return '$startDate - $endDate';
       } else if (startDate != null) {
-        return 'يبدأ في $startDate';
+        return 'course_date_starts'.trParams({'date': startDate});
       } else if (endDate != null) {
-        return 'ينتهي في $endDate';
+        return 'course_date_ends'.trParams({'date': endDate});
       }
     }
 
-    return 'غير محدد';
+    return 'course_date_undefined'.tr;
   }
 
   String _formatDate(DateTime date) {
     // Simple date formatting without intl
     final months = [
-      'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
-      'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'
+      'course_month_january'.tr,
+      'course_month_february'.tr,
+      'course_month_march'.tr,
+      'course_month_april'.tr,
+      'course_month_may'.tr,
+      'course_month_june'.tr,
+      'course_month_july'.tr,
+      'course_month_august'.tr,
+      'course_month_september'.tr,
+      'course_month_october'.tr,
+      'course_month_november'.tr,
+      'course_month_december'.tr,
     ];
     return '${date.day} ${months[date.month - 1]} ${date.year}';
   }

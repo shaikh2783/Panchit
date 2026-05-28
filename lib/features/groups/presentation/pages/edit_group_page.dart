@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/core/config/app_config.dart';
+import '../../../../core/utils/html_decoder.dart';
 import '../../data/models/group.dart';
 import '../../data/models/group_privacy.dart';
 import '../../data/models/group_category.dart';
@@ -161,7 +162,10 @@ class _EditGroupPageState extends State<EditGroupPage>
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('حدث خطأ: $e'), backgroundColor: Colors.red),
+        SnackBar(
+          content: Text('${'error'.tr}: $e'),
+          backgroundColor: Colors.red,
+        ),
       );
     } finally {
       if (mounted) {
@@ -176,7 +180,9 @@ class _EditGroupPageState extends State<EditGroupPage>
       builder: (context) => AlertDialog(
         title: Text('edit_group_delete_title'.tr),
         content: Text(
-          'edit_group_delete_message'.trParams({'title': widget.group.groupTitle}),
+          'edit_group_delete_message'.trParams({
+            'title': widget.group.groupTitle,
+          }),
         ),
         actions: [
           TextButton(
@@ -220,7 +226,10 @@ class _EditGroupPageState extends State<EditGroupPage>
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('حدث خطأ: $e'), backgroundColor: Colors.red),
+        SnackBar(
+          content: Text('${'error'.tr}: $e'),
+          backgroundColor: Colors.red,
+        ),
       );
     } finally {
       if (mounted) {
@@ -259,10 +268,22 @@ class _EditGroupPageState extends State<EditGroupPage>
           controller: _tabController,
           isScrollable: true,
           tabs: [
-            Tab(icon: const Icon(Iconsax.setting_2), text: 'edit_group_tab_settings'.tr),
-            Tab(icon: const Icon(Iconsax.info_circle), text: 'edit_group_tab_info'.tr),
-            Tab(icon: const Icon(Iconsax.gallery), text: 'edit_group_tab_pictures'.tr),
-            Tab(icon: const Icon(Iconsax.danger), text: 'edit_group_tab_danger'.tr),
+            Tab(
+              icon: const Icon(Iconsax.setting_2),
+              text: 'edit_group_tab_settings'.tr,
+            ),
+            Tab(
+              icon: const Icon(Iconsax.info_circle),
+              text: 'edit_group_tab_info'.tr,
+            ),
+            Tab(
+              icon: const Icon(Iconsax.gallery),
+              text: 'edit_group_tab_pictures'.tr,
+            ),
+            Tab(
+              icon: const Icon(Iconsax.danger),
+              text: 'edit_group_tab_danger'.tr,
+            ),
           ],
         ),
       ),
@@ -321,11 +342,16 @@ class _EditGroupPageState extends State<EditGroupPage>
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           ),
           items: _categories.isEmpty
-              ? [DropdownMenuItem(value: 1, child: Text('edit_group_loading'.tr))]
+              ? [
+                  DropdownMenuItem(
+                    value: 1,
+                    child: Text('edit_group_loading'.tr),
+                  ),
+                ]
               : _categories.map((cat) {
                   return DropdownMenuItem(
                     value: cat.categoryId,
-                    child: Text(cat.categoryName),
+                    child: Text(HtmlDecoder.decode(cat.categoryName)),
                   );
                 }).toList(),
           onChanged: (value) {
@@ -389,7 +415,10 @@ class _EditGroupPageState extends State<EditGroupPage>
         const SizedBox(height: 24),
 
         // الخصوصية
-        Text('edit_group_privacy_label'.tr, style: Theme.of(context).textTheme.titleMedium),
+        Text(
+          'edit_group_privacy_label'.tr,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
         const SizedBox(height: 12),
         _buildPrivacyOptions(),
       ],
@@ -614,7 +643,11 @@ class _EditGroupPageState extends State<EditGroupPage>
                         ),
                       )
                     : const Icon(Iconsax.arrow_up),
-                label: Text(isUploading ? 'edit_group_uploading'.tr : 'edit_group_upload'.tr),
+                label: Text(
+                  isUploading
+                      ? 'edit_group_uploading'.tr
+                      : 'edit_group_upload'.tr,
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
                   foregroundColor: Colors.white,
@@ -649,9 +682,9 @@ class _EditGroupPageState extends State<EditGroupPage>
             children: [
               const Icon(Iconsax.danger, size: 48, color: Colors.red),
               const SizedBox(height: 16),
-              const Text(
-                'منطقة الخطر',
-                style: TextStyle(
+              Text(
+                'edit_group_danger_zone'.tr,
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.red,
@@ -659,7 +692,7 @@ class _EditGroupPageState extends State<EditGroupPage>
               ),
               const SizedBox(height: 8),
               Text(
-                'الإجراءات في هذا القسم خطيرة ولا يمكن التراجع عنها',
+                'edit_group_danger_warning'.tr,
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.grey[600]),
               ),
@@ -684,7 +717,10 @@ class _EditGroupPageState extends State<EditGroupPage>
                   label: 'edit_group_members'.tr,
                   value: '${widget.group.groupMembers}',
                 ),
-                _InfoRow(label: 'edit_group_creation_date'.tr, value: widget.group.groupDate),
+                _InfoRow(
+                  label: 'edit_group_creation_date'.tr,
+                  value: widget.group.groupDate,
+                ),
                 _InfoRow(
                   label: 'edit_group_privacy'.tr,
                   value: widget.group.groupPrivacy.displayName,
@@ -711,7 +747,9 @@ class _EditGroupPageState extends State<EditGroupPage>
                   )
                 : const Icon(Iconsax.trash),
             label: Text(
-              _isLoading ? 'edit_group_deleting'.tr : 'edit_group_delete_button'.tr,
+              _isLoading
+                  ? 'edit_group_deleting'.tr
+                  : 'edit_group_delete_button'.tr,
               style: const TextStyle(fontSize: 16),
             ),
             style: ElevatedButton.styleFrom(
@@ -766,7 +804,9 @@ class _EditGroupPageState extends State<EditGroupPage>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('edit_group_image_pick_error'.trParams({'error': e.toString()})),
+            content: Text(
+              'edit_group_image_pick_error'.trParams({'error': e.toString()}),
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -802,7 +842,9 @@ class _EditGroupPageState extends State<EditGroupPage>
       );
 
       if (response['status'] != 'success') {
-        throw Exception(response['message'] ?? 'فشل رفع الصورة');
+        throw Exception(
+          response['message'] ?? 'edit_group_picture_upload_failed'.tr,
+        );
       }
 
       if (mounted) {
@@ -821,7 +863,7 @@ class _EditGroupPageState extends State<EditGroupPage>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('فشل رفع الصورة: $e'),
+            content: Text('${'edit_group_picture_upload_failed'.tr}: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -864,7 +906,9 @@ class _EditGroupPageState extends State<EditGroupPage>
       );
 
       if (response['status'] != 'success') {
-        throw Exception(response['message'] ?? 'فشل رفع الصورة');
+        throw Exception(
+          response['message'] ?? 'edit_group_cover_upload_failed'.tr,
+        );
       }
 
       if (mounted) {
@@ -883,7 +927,7 @@ class _EditGroupPageState extends State<EditGroupPage>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('فشل رفع الصورة: $e'),
+            content: Text('${'edit_group_cover_upload_failed'.tr}: $e'),
             backgroundColor: Colors.red,
           ),
         );

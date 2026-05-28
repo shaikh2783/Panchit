@@ -128,7 +128,7 @@ class DeveloperInfoPage extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Panchit',
+                                    'Sngine Pro',
                                     style: theme.textTheme.titleLarge?.copyWith(
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -267,7 +267,7 @@ class DeveloperInfoPage extends StatelessWidget {
     final Uri emailUri = Uri(
       scheme: 'mailto',
       path: 'amenaaa93@gmail.com',
-      query: 'subject=Panchit - Contact',
+      query: 'subject=Sngine Pro - Contact',
     );
     
     if (await canLaunchUrl(emailUri)) {

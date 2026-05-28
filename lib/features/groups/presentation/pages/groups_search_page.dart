@@ -21,16 +21,16 @@ class GroupsSearchPage extends StatefulWidget {
 class _GroupsSearchPageState extends State<GroupsSearchPage> {
   late GroupsRepository _repository;
   final TextEditingController _searchController = TextEditingController();
-  
+
   // Filters
   int? _selectedCategoryId;
   String? _selectedPrivacy;
-  
+
   // Data
   List<Group> _searchResults = [];
   bool _isLoading = false;
   bool _hasSearched = false;
-  
+
   // Pagination
   int _currentPage = 1;
   final int _limit = 20;
@@ -52,9 +52,11 @@ class _GroupsSearchPageState extends State<GroupsSearchPage> {
 
   Future<void> _performSearch({bool loadMore = false}) async {
     if (_isLoading || _isLoadingMore) return;
-    
+
     final query = _searchController.text.trim();
-    if (query.isEmpty && _selectedCategoryId == null && _selectedPrivacy == null) {
+    if (query.isEmpty &&
+        _selectedCategoryId == null &&
+        _selectedPrivacy == null) {
       return;
     }
 
@@ -97,9 +99,9 @@ class _GroupsSearchPageState extends State<GroupsSearchPage> {
           _isLoading = false;
           _isLoadingMore = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('حدث خطأ: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('$e')));
       }
     }
   }
@@ -156,13 +158,13 @@ class _GroupsSearchPageState extends State<GroupsSearchPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('البحث في المجموعات'),
+        title: Text('groups_search_title'.tr),
         actions: [
           // Clear filters button
           if (_selectedCategoryId != null || _selectedPrivacy != null)
             IconButton(
               icon: const Icon(Iconsax.refresh),
-              tooltip: 'مسح الفلاتر',
+              tooltip: 'groups_search_clear_filters'.tr,
               onPressed: _clearFilters,
             ),
         ],
@@ -178,7 +180,7 @@ class _GroupsSearchPageState extends State<GroupsSearchPage> {
                   child: TextField(
                     controller: _searchController,
                     decoration: InputDecoration(
-                      hintText: 'ابحث عن مجموعة...',
+                      hintText: 'groups_search_hint'.tr,
                       prefixIcon: const Icon(Iconsax.search_normal),
                       suffixIcon: _searchController.text.isNotEmpty
                           ? IconButton(
@@ -201,11 +203,12 @@ class _GroupsSearchPageState extends State<GroupsSearchPage> {
                 const SizedBox(width: 8),
                 // Filter button
                 Badge(
-                  isLabelVisible: _selectedCategoryId != null || _selectedPrivacy != null,
+                  isLabelVisible:
+                      _selectedCategoryId != null || _selectedPrivacy != null,
                   child: IconButton.filledTonal(
                     icon: const Icon(Iconsax.filter),
                     onPressed: _showFilterSheet,
-                    tooltip: 'الفلاتر',
+                    tooltip: 'groups_search_filters'.tr,
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -227,7 +230,11 @@ class _GroupsSearchPageState extends State<GroupsSearchPage> {
                 children: [
                   if (_selectedCategoryId != null)
                     Chip(
-                      label: Text('الفئة: $_selectedCategoryId'),
+                      label: Text(
+                        'groups_search_category_label'.trParams({
+                          'id': _selectedCategoryId.toString(),
+                        }),
+                      ),
                       deleteIcon: const Icon(Iconsax.close_circle, size: 18),
                       onDeleted: () {
                         setState(() => _selectedCategoryId = null);
@@ -250,9 +257,7 @@ class _GroupsSearchPageState extends State<GroupsSearchPage> {
           const SizedBox(height: 8),
 
           // Results
-          Expanded(
-            child: _buildBody(isDark),
-          ),
+          Expanded(child: _buildBody(isDark)),
         ],
       ),
     );
@@ -271,7 +276,7 @@ class _GroupsSearchPageState extends State<GroupsSearchPage> {
             Icon(Iconsax.search_normal, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text(
-              'ابحث عن مجموعة',
+              'groups_search_empty_title'.tr,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -280,7 +285,7 @@ class _GroupsSearchPageState extends State<GroupsSearchPage> {
             ),
             const SizedBox(height: 8),
             Text(
-              'استخدم البحث أو الفلاتر للعثور على مجموعات',
+              'groups_search_empty_subtitle'.tr,
               style: TextStyle(color: Colors.grey[500]),
             ),
           ],
@@ -296,7 +301,7 @@ class _GroupsSearchPageState extends State<GroupsSearchPage> {
             Icon(Iconsax.search_status, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text(
-              'لا توجد نتائج',
+              'groups_search_no_results'.tr,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -305,7 +310,7 @@ class _GroupsSearchPageState extends State<GroupsSearchPage> {
             ),
             const SizedBox(height: 8),
             Text(
-              'جرب كلمات بحث مختلفة أو قم بتغيير الفلاتر',
+              'groups_search_no_results_subtitle'.tr,
               style: TextStyle(color: Colors.grey[500]),
             ),
           ],
@@ -317,7 +322,8 @@ class _GroupsSearchPageState extends State<GroupsSearchPage> {
       onNotification: (scrollInfo) {
         if (!_isLoadingMore &&
             _hasMore &&
-            scrollInfo.metrics.pixels >= scrollInfo.metrics.maxScrollExtent - 200) {
+            scrollInfo.metrics.pixels >=
+                scrollInfo.metrics.maxScrollExtent - 200) {
           _performSearch(loadMore: true);
         }
         return false;
@@ -337,10 +343,7 @@ class _GroupsSearchPageState extends State<GroupsSearchPage> {
           }
 
           final group = _searchResults[index];
-          return GroupCard(
-            group: group,
-            onTap: () => _onGroupTap(group),
-          );
+          return GroupCard(group: group, onTap: () => _onGroupTap(group));
         },
       ),
     );
@@ -349,11 +352,11 @@ class _GroupsSearchPageState extends State<GroupsSearchPage> {
   String _getPrivacyLabel(String privacy) {
     switch (privacy) {
       case 'public':
-        return 'عامة';
+        return 'group_privacy_public'.tr;
       case 'closed':
-        return 'مغلقة';
+        return 'group_privacy_closed'.tr;
       case 'secret':
-        return 'سرية';
+        return 'group_privacy_secret'.tr;
       default:
         return privacy;
     }
@@ -405,9 +408,12 @@ class _FilterSheetState extends State<_FilterSheet> {
             children: [
               const Icon(Iconsax.filter),
               const SizedBox(width: 8),
-              const Text(
-                'الفلاتر',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              Text(
+                'groups_search_filter_title'.tr,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const Spacer(),
               TextButton(
@@ -417,18 +423,21 @@ class _FilterSheetState extends State<_FilterSheet> {
                     _privacy = null;
                   });
                 },
-                child: const Text('مسح الكل'),
+                child: Text('groups_search_clear_all'.tr),
               ),
             ],
           ),
           const SizedBox(height: 16),
 
           // Category Filter
-          const Text('الفئة', style: TextStyle(fontWeight: FontWeight.bold)),
+          Text(
+            'groups_search_category'.tr,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 8),
           TextField(
-            decoration: const InputDecoration(
-              hintText: 'رقم الفئة (مثال: 1)',
+            decoration: InputDecoration(
+              hintText: 'groups_search_category_hint'.tr,
               border: OutlineInputBorder(),
             ),
             keyboardType: TextInputType.number,
@@ -442,27 +451,30 @@ class _FilterSheetState extends State<_FilterSheet> {
           const SizedBox(height: 16),
 
           // Privacy Filter
-          const Text('الخصوصية', style: TextStyle(fontWeight: FontWeight.bold)),
+          Text(
+            'groups_search_privacy'.tr,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
             children: [
               ChoiceChip(
-                label: const Text('عامة'),
+                label: Text('group_privacy_public'.tr),
                 selected: _privacy == 'public',
                 onSelected: (selected) {
                   setState(() => _privacy = selected ? 'public' : null);
                 },
               ),
               ChoiceChip(
-                label: const Text('مغلقة'),
+                label: Text('group_privacy_closed'.tr),
                 selected: _privacy == 'closed',
                 onSelected: (selected) {
                   setState(() => _privacy = selected ? 'closed' : null);
                 },
               ),
               ChoiceChip(
-                label: const Text('سرية'),
+                label: Text('group_privacy_secret'.tr),
                 selected: _privacy == 'secret',
                 onSelected: (selected) {
                   setState(() => _privacy = selected ? 'secret' : null);
@@ -476,10 +488,8 @@ class _FilterSheetState extends State<_FilterSheet> {
           FilledButton.icon(
             onPressed: () => widget.onApply(_categoryId, _privacy),
             icon: const Icon(Iconsax.tick_circle),
-            label: const Text('تطبيق الفلاتر'),
-            style: FilledButton.styleFrom(
-              padding: const EdgeInsets.all(16),
-            ),
+            label: Text('groups_search_apply_filters'.tr),
+            style: FilledButton.styleFrom(padding: const EdgeInsets.all(16)),
           ),
           const SizedBox(height: 16),
         ],

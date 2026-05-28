@@ -16,7 +16,6 @@ class AppSettingsService {
 
       if (response['status'] == 'success' && response['data'] != null) {
         final settings = AppSettings.fromJson(response['data']);
-
         return settings;
       } else {
         return null;

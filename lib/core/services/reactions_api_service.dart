@@ -13,39 +13,38 @@ class ReactionsApiService {
     try {
       // Use authenticated endpoint
       final response = await _apiClient.get(configCfgP('reactions'));
-      
+
       if (response['status'] == 'success' && response['data'] != null) {
         final data = response['data'] as Map<String, dynamic>;
         final reactionsJson = data['reactions'] as List<dynamic>?;
-        
+
         if (reactionsJson != null) {
           final reactions = reactionsJson
-              .map((json) => ReactionModel.fromJson(json as Map<String, dynamic>))
+              .map(
+                (json) => ReactionModel.fromJson(json as Map<String, dynamic>),
+              )
               .where((reaction) => reaction.enabled) // Only enabled reactions
               .toList();
-          
+
           // Sort by order
           reactions.sort((a, b) => a.order.compareTo(b.order));
-          
+
           return reactions;
         }
       }
-      
+
       return [];
     } catch (e) {
-      // Use debugPrint in development, silent in production
-      if (kDebugMode) {
-      }
-      
       // If authentication fails, return default reactions as fallback
-      if (e.toString().contains('not logged in') || e.toString().contains('401')) {
+      if (e.toString().contains('not logged in') ||
+          e.toString().contains('401')) {
         return _getDefaultReactions();
       }
-      
+
       return [];
     }
   }
-  
+
   /// Fallback reactions when API call fails
   List<ReactionModel> _getDefaultReactions() {
     return [

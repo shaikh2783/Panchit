@@ -111,7 +111,6 @@ class _EventDetailPageState extends State<EventDetailPage> {
               setState(() {
                 _currentEvent = state.event;
               });
-              // Debug: Print i_admin value
             }
           } else if (state is EventPostsLoaded) {
             setState(() {
@@ -819,7 +818,8 @@ class _EventDetailPageState extends State<EventDetailPage> {
   }
 
   String _formatDateTime(DateTime dateTime) {
-    return DateFormat('EEEE, MMM dd, yyyy • hh:mm a').format(dateTime);
+    return DateFormat('EEEE, MMM dd, yyyy • hh:mm a')
+        .format(dateTime.toLocal());
   }
 
   void _handleJoinEvent(String action) {
@@ -887,6 +887,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
             handle: 'event',
             handleId: _currentEvent!.eventId,
             handleName: _currentEvent!.eventTitle,
+            showPrivacySelector: false,
           ),
         ))
         .then((_) {

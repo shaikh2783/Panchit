@@ -2,10 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:snginepro/features/messenger/data/models/conversation_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:snginepro/features/profile/data/services/profile_api_service.dart';
+import 'package:snginepro/features/profile/data/services/user_videos_service.dart';
 import 'package:snginepro/features/profile/application/bloc/profile_posts_bloc.dart';
 import 'package:snginepro/features/feed/data/models/post.dart';
+import 'package:snginepro/features/feed/presentation/pages/post_detail_page.dart';
+import 'package:snginepro/features/profile/data/services/user_products_service.dart';
+import 'package:snginepro/features/market/data/models/product.dart';
+import 'package:snginepro/core/utils/html_decoder.dart';
 import 'package:snginepro/features/friends/data/services/user_relationships_service.dart';
 import 'package:snginepro/features/friends/data/models/subscription.dart';
 import 'package:snginepro/features/photos/data/services/user_photos_service.dart';
@@ -14,6 +21,10 @@ import 'package:snginepro/features/photos/data/models/user_album.dart';
 import 'package:snginepro/features/photos/presentation/pages/user_photos_page.dart';
 import 'package:snginepro/features/photos/presentation/pages/user_albums_page.dart';
 import 'package:snginepro/features/blocking/data/services/blocking_service.dart';
+import 'package:provider/provider.dart';
+import '../../../../core/providers/system_settings_provider.dart';
+import '../../../messenger/data/services/messenger_api_service.dart';
+import '../../../messenger/presentation/pages/chat_page.dart';
 
 import '../../data/models/user_profile_model.dart';
 import '../../data/models/profile_completion_model.dart';
@@ -43,17 +54,31 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage>
     with SingleTickerProviderStateMixin {
   late ProfileApiService _profileService;
+  late UserProductsService _userProductsService;
   UserProfileResponse? _profileData;
   ProfileCompletionData? _completionData;
   bool _isLoading = true;
   String? _error;
   late TabController _tabController;
   bool _isBlocked = false;
+  bool _friendStatusChanged = false; // Track if friend request was sent
+
+  // Products tab state
+  List<Product> _userProducts = [];
+  bool _isLoadingProducts = false;
+  bool _isLoadingMoreProducts = false;
+  bool _hasMoreProducts = true;
+  String? _productsError;
+  int _productsOffset = 0;
+  final int _productsLimit = 20;
+  String _productsSearchQuery = '';
+  final TextEditingController _productsSearchController =
+      TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 6, vsync: this);
+    _tabController = TabController(length: 7, vsync: this);
     _loadProfile();
   }
 
@@ -81,6 +106,15 @@ class _ProfilePageState extends State<ProfilePage>
     try {
       final apiClient = context.read<ApiClient>();
       _profileService = ProfileApiService(apiClient);
+      _userProductsService = UserProductsService(apiClient);
+
+      // Reset products state when switching profile
+      _userProducts = [];
+      _productsOffset = 0;
+      _hasMoreProducts = true;
+      _productsError = null;
+      _isLoadingProducts = false;
+      _isLoadingMoreProducts = false;
 
       final profile = widget.username != null
           ? await _profileService.getProfileByUsername(widget.username!)
@@ -91,6 +125,9 @@ class _ProfilePageState extends State<ProfilePage>
         _profileData = profile;
         _isLoading = false;
       });
+
+      // Preload products for this profile
+      await _loadUserProducts(refresh: true);
 
       // Check blocked status (skip self)
       try {
@@ -137,6 +174,56 @@ class _ProfilePageState extends State<ProfilePage>
     context.read<ProfilePostsBloc>().add(LoadUserPostsEvent(userId));
   }
 
+  Future<void> _loadUserProducts({bool refresh = false}) async {
+    if (_profileData == null) return;
+
+    final profile = _profileData!.profile;
+    final userId = int.tryParse(profile.id);
+    final username = profile.username;
+
+    if (refresh) {
+      setState(() {
+        _isLoadingProducts = true;
+        _isLoadingMoreProducts = false;
+        _hasMoreProducts = true;
+        _productsOffset = 0;
+        _userProducts = [];
+        _productsError = null;
+      });
+    } else {
+      if (_isLoadingProducts || !_hasMoreProducts) return;
+      setState(() => _isLoadingMoreProducts = true);
+    }
+
+    try {
+      final result = await _userProductsService.getUserProducts(
+        userId: userId,
+        username: username,
+        search: _productsSearchQuery.isNotEmpty ? _productsSearchQuery : null,
+        offset: _productsOffset,
+        limit: _productsLimit,
+      );
+
+      if (!mounted) return;
+
+      setState(() {
+        _userProducts.addAll(result.products);
+        _productsOffset += _productsLimit;
+        _hasMoreProducts = result.hasMore;
+        _isLoadingProducts = false;
+        _isLoadingMoreProducts = false;
+        _productsError = null;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _productsError = e.toString();
+        _isLoadingProducts = false;
+        _isLoadingMoreProducts = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
@@ -181,54 +268,63 @@ class _ProfilePageState extends State<ProfilePage>
     final stats = _profileData!.stats;
     final relationship = _profileData!.relationship;
 
-    return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (_, __) => [
-          SliverAppBar(
-            expandedHeight: 340,
-            pinned: true,
-            flexibleSpace: FlexibleSpaceBar(
-              background: _buildHeader(profile, relationship, stats),
-            ),
-            actions: relationship.isSelf
-                ? [
-                    IconButton(
-                      icon: const Icon(Iconsax.edit),
-                      onPressed: () async {
-                        final result = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => ProfileEditPage(profile: profile),
-                          ),
-                        );
-                        if (result == true && mounted) _loadProfile();
-                      },
-                    ),
-                  ]
-                : null,
-          ),
-        ],
-        body: Column(
-          children: [
-            if (!relationship.isSelf) _buildActionButtons(relationship),
-            _buildTabBar(),
-            Expanded(
-              child: RefreshIndicator(
-                onRefresh: _loadProfile,
-                child: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    _buildPostsTab(),
-                    _buildAboutTab(profile),
-                    _buildPhotosTab(stats),
-                    _buildVideosTab(),
-                    _buildFriendsTab(stats),
-                    _buildMoreTab(profile),
-                  ],
-                ),
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (!didPop) {
+          Navigator.of(context).pop(_friendStatusChanged);
+        }
+      },
+      child: Scaffold(
+        body: NestedScrollView(
+          headerSliverBuilder: (_, __) => [
+            SliverAppBar(
+              expandedHeight: 340,
+              pinned: true,
+              flexibleSpace: FlexibleSpaceBar(
+                background: _buildHeader(profile, relationship, stats),
               ),
+              actions: relationship.isSelf
+                  ? [
+                      IconButton(
+                        icon: const Icon(Iconsax.edit),
+                        onPressed: () async {
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => ProfileEditPage(profile: profile),
+                            ),
+                          );
+                          if (result == true && mounted) _loadProfile();
+                        },
+                      ),
+                    ]
+                  : null,
             ),
           ],
+          body: Column(
+            children: [
+              if (!relationship.isSelf) _buildActionButtons(relationship),
+              _buildTabBar(),
+              Expanded(
+                child: RefreshIndicator(
+                  onRefresh: _loadProfile,
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      _buildPostsTab(),
+                      _buildAboutTab(profile),
+                      _buildPhotosTab(stats),
+                      _buildVideosTab(),
+                      _buildProductsTab(profile),
+                      _buildFriendsTab(stats),
+                      _buildMoreTab(profile),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -255,7 +351,7 @@ class _ProfilePageState extends State<ProfilePage>
         Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.transparent, Colors.black.withOpacity(0.8)],
+              colors: [Colors.transparent, Colors.black.withValues(alpha: 0.8)],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
             ),
@@ -271,38 +367,77 @@ class _ProfilePageState extends State<ProfilePage>
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 3),
-                    ),
-                    child: Stack(
-                      children: [
-                        CircleAvatar(
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 3),
+                        ),
+                        child: CircleAvatar(
                           radius: 50,
                           backgroundImage: CachedNetworkImageProvider(
                             profile.picture,
                           ),
                         ),
-                        if (profile.isOnline == true)
-                          Positioned(
-                            right: 0,
-                            bottom: 0,
+                      ),
+                      if (profile.isOnline == true)
+                        Positioned(
+                          top: -1,
+                          right: 0,
+                          child: Container(
+                            width: 20,
+                            height: 20,
+                            decoration: BoxDecoration(
+                              color: Colors.green,
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: Colors.white,
+                                width: 2,
+                              ),
+                            ),
+                          ),
+                        ),
+                      if (relationship.isSelf)
+                        Positioned(
+                          bottom: -2,
+                          right: -2,
+                          child: GestureDetector(
+                            onTap: () async {
+                              final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => ProfileEditPage(
+                                    profile: profile,
+                                    initialTabIndex: 5, // photos tab
+                                  ),
+                                ),
+                              );
+                              if (result == true && mounted) {
+                                _loadProfile();
+                              }
+                            },
                             child: Container(
-                              width: 20,
-                              height: 20,
+                              width: 28,
+                              height: 28,
                               decoration: BoxDecoration(
-                                color: Colors.green,
+                                color: Colors.blueAccent,
                                 shape: BoxShape.circle,
                                 border: Border.all(
                                   color: Colors.white,
                                   width: 2,
                                 ),
                               ),
+                              child: const Icon(
+                                Iconsax.edit,
+                                size: 16,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
-                      ],
-                    ),
+                        ),
+                    ],
                   ),
                   const SizedBox(width: 16),
                   Expanded(
@@ -348,7 +483,7 @@ class _ProfilePageState extends State<ProfilePage>
                         Text(
                           '@${profile.username}',
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.9),
+                            color: Colors.white.withValues(alpha: 0.9),
                             fontSize: 14,
                           ),
                         ),
@@ -358,14 +493,40 @@ class _ProfilePageState extends State<ProfilePage>
                 ],
               ),
               const SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildHeaderStat('posts', stats.posts),
-                  _buildHeaderStat('photos', stats.photos),
-                  _buildHeaderStat('friends', stats.friends),
-                  _buildHeaderStat('followers', stats.followers),
-                ],
+              Builder(
+                builder: (context) {
+                  final systemSettings = context
+                      .watch<SystemSettingsProvider>();
+                  final List<Widget> statWidgets = [
+                    _buildHeaderStat('profile_stat_posts'.tr, stats.posts,onTap: () => _tabController.animateTo(0)),
+                    _buildHeaderStat('profile_stat_photos'.tr, stats.photos,onTap: () => _tabController.animateTo(2))
+                  ];
+
+                  if (systemSettings.isFriendsEnabled) {
+                    statWidgets.add(
+                      _buildHeaderStat(
+                        'profile_stat_friends'.tr,
+                        stats.friends,
+                          onTap: () => _tabController.animateTo(5)
+                      ),
+                    );
+                  }
+
+                  if (systemSettings.isFollowersEnabled) {
+                    statWidgets.add(
+                      _buildHeaderStat(
+                        'profile_stat_followers'.tr,
+                        stats.followers,
+                          onTap: () => _tabController.animateTo(5)
+                      ),
+                    );
+                  }
+
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: statWidgets,
+                  );
+                },
               ),
             ],
           ),
@@ -374,25 +535,33 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  Widget _buildHeaderStat(String label, int count) {
-    return Column(
-      children: [
-        Text(
-          _formatNumber(count),
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
+  Widget _buildHeaderStat(String label, int count, {VoidCallback? onTap}) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap, // ✅
+      child: Column(
+        children: [
+          Text(
+            _formatNumber(count),
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label.tr,
-          style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 12),
-        ),
-      ],
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.8),
+              fontSize: 12,
+            ),
+          ),
+        ],
+      ),
     );
   }
+
 
   String _formatNumber(int number) {
     if (number >= 1000000) return '${(number / 1000000).toStringAsFixed(1)}M';
@@ -402,28 +571,92 @@ class _ProfilePageState extends State<ProfilePage>
 
   // Actions
   Widget _buildActionButtons(ProfileRelationship relationship) {
+    // Get system settings to check which features are enabled
+    final systemSettings = context.watch<SystemSettingsProvider>();
+    final friendsEnabled = systemSettings.isFriendsEnabled;
+    final followersEnabled = systemSettings.isFollowersEnabled;
+    final messagingEnabled = systemSettings.isMessagingEnabled;
+
+    // Build first row widgets based on enabled features
+    final List<Widget> firstRowWidgets = [];
+
+    if (friendsEnabled) {
+      firstRowWidgets.add(Expanded(child: _buildFriendButton(relationship)));
+      if (followersEnabled) {
+        firstRowWidgets.add(const SizedBox(width: 10));
+      }
+    }
+
+    if (followersEnabled) {
+      firstRowWidgets.add(Expanded(child: _buildFollowButton(relationship)));
+    }
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-      child: Row(
+      child: Column(
         children: [
-          // زر إضافة صديق
-          Expanded(child: _buildFriendButton(relationship)),
+          // الصف الأول: زر إضافة صديق + زر متابعة (حسب إعدادات النظام)
+          if (firstRowWidgets.isNotEmpty) ...[
+            Row(children: firstRowWidgets),
+            const SizedBox(height: 10),
+          ],
+          // الصف الثاني: زر الرسالة + زر المزيد
+          Row(
+            children: [
+              if (messagingEnabled)
+                Expanded(
+                  child: _buildActionButton(
+                    icon: Iconsax.message,
+                    label: 'send_message'.tr,
+                    onPressed: _openChat,
+                    isPrimary: false,
+                  ),
+                ),
+              if (messagingEnabled) const SizedBox(width: 10),
+              Expanded(
+                child: _buildActionButton(
+                  icon: Iconsax.more,
+                  label: 'more_options'.tr,
+                  onPressed: _showMoreOptions,
+                  isPrimary: false,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback onPressed,
+    bool isPrimary = true,
+  }) {
+    return FilledButton.tonal(
+      onPressed: onPressed,
+      style: FilledButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 18),
           const SizedBox(width: 8),
-          // زر متابعة
-          Expanded(child: _buildFollowButton(relationship)),
-          const SizedBox(width: 8),
-          _buildSecondaryButton(Iconsax.message, 'Message', () {
-            /* open chat */
-          }),
-          const SizedBox(width: 8),
-          _buildSecondaryButton(Iconsax.more, 'More', _showMoreOptions),
+          Text(
+            label,
+            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+          ),
         ],
       ),
     );
   }
 
   Widget _buildFriendButton(ProfileRelationship relationship) {
-    // Convert ProfileRelationship to FriendshipStatus for friend system
+    final resolvedUserId =
+        int.tryParse(_profileData?.profile.id ?? '') ?? widget.userId ?? 0;
     FriendshipStatus friendshipStatus;
     if (relationship.isFriend) {
       friendshipStatus = FriendshipStatus.friends;
@@ -436,13 +669,18 @@ class _ProfilePageState extends State<ProfilePage>
     }
 
     return AddFriendButton(
-      userId: widget.userId ?? 0,
+      userId: resolvedUserId,
       initialStatus: friendshipStatus,
       size: AddFriendButtonSize.medium,
       style: AddFriendButtonStyle.filled,
       onStatusChanged: (newStatus) {
-        // Reload profile to get updated relationship status
-        _loadProfile();
+        if (newStatus == FriendshipStatus.pending &&
+            friendshipStatus == FriendshipStatus.none) {
+          _friendStatusChanged = true;
+        }
+        Future.delayed(const Duration(seconds: 2), () {
+          if (mounted) _loadProfile();
+        });
       },
     );
   }
@@ -453,7 +691,7 @@ class _ProfilePageState extends State<ProfilePage>
     return ElevatedButton.icon(
       onPressed: () => _handleFollowAction(isFollowing),
       icon: Icon(isFollowing ? Iconsax.user_tick : Iconsax.user_add, size: 18),
-      label: Text(isFollowing ? 'متابع' : 'متابعة'),
+      label: Text(isFollowing ? 'profile_following'.tr : 'profile_follow'.tr),
       style: ElevatedButton.styleFrom(
         backgroundColor: isFollowing ? Colors.grey[300] : Colors.blue,
         foregroundColor: isFollowing ? Colors.black87 : Colors.white,
@@ -493,20 +731,6 @@ class _ProfilePageState extends State<ProfilePage>
     }
   }
 
-  Widget _buildSecondaryButton(
-    IconData icon,
-    String label,
-    VoidCallback onPressed,
-  ) {
-    return FilledButton.tonal(
-      onPressed: onPressed,
-      style: FilledButton.styleFrom(
-        padding: const EdgeInsets.all(12),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      ),
-      child: Icon(icon, size: 20),
-    );
-  }
 
   void _showMoreOptions() {
     showModalBottomSheet(
@@ -528,8 +752,8 @@ class _ProfilePageState extends State<ProfilePage>
                 ),
                 subtitle: Text(
                   _isBlocked
-                      ? 'Allow this user to interact with you'
-                      : 'Prevent this user from interacting with you',
+                      ? 'profile_allow_interaction'.tr
+                      : 'profile_prevent_interaction'.tr,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.outline,
                   ),
@@ -574,13 +798,109 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
+  Future<void> _openChat() async {
+    if (_profileData == null) return;
+
+    final profile = _profileData!.profile;
+    final userId = int.tryParse(profile.id) ?? 0;
+
+    if (userId <= 0) {
+      Get.snackbar(
+        'error'.tr,
+        'profile_invalid_user_id'.tr,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    // Show loading
+    Get.dialog(
+      Center(
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: const CircularProgressIndicator(),
+        ),
+      ),
+      barrierDismissible: false,
+    );
+
+    try {
+      // Get or create conversation with this user
+      final apiClient = context.read<ApiClient>();
+      final messengerService = MessengerApiService(apiClient);
+
+      final conversation = await messengerService.getOrCreateConversation(
+        userId: userId.toString(),
+      );
+
+      Get.back(); // Close loading dialog
+
+      if (conversation == null && _profileData?.relationship.isFriend==false) {
+        Get.snackbar(
+          'error'.tr,
+          'profile_must_be_friend'.tr,
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+        return;
+      }
+      UserPreview otherUser=UserPreview(userId: userId, username: _profileData?.profile.username??"", firstName: _profileData?.profile.firstName??"",lastName: _profileData?.profile.lastName??"",avatar: _profileData?.profile.picture??"",isVerified: _profileData?.profile.isVerified??false,link: _profileData?.profile.socialLinks.website);
+      // Navigate to chat page with the real conversation
+      Get.to(
+        () => ChatPage(
+          conversationId: conversation?.conversationId??"0",
+          otherUser: conversation?.otherUser??otherUser,
+        ),
+      );
+    } catch (e) {
+      Get.back(); // Close loading dialog
+
+      // Parse error message
+      String errorMessage = 'failed_to_open_chat'.tr;
+      final errorStr = e.toString();
+
+      if (errorStr.contains('403')) {
+        if (errorStr.contains('friends only') ||
+            errorStr.contains('صداقة فقط')) {
+          errorMessage = 'chat_privacy_friends_only'.tr;
+        } else if (errorStr.contains('following') ||
+            errorStr.contains('متابعين')) {
+          errorMessage = 'chat_privacy_following_only'.tr;
+        } else {
+          errorMessage = 'cannot_chat_with_user'.tr;
+        }
+      } else if (errorStr.contains('404')) {
+        errorMessage = 'user_not_found'.tr;
+      } else if (errorStr.contains('blocked') || errorStr.contains('محظور')) {
+        errorMessage = 'user_blocked_you'.tr;
+      }
+
+      Get.snackbar(
+        'error'.tr,
+        errorMessage,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 4),
+      );
+
+    }
+  }
+
   Future<void> _toggleBlockUser() async {
     if (_profileData == null) return;
     final isSelf = _profileData!.relationship.isSelf;
     if (isSelf) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('You cannot block yourself'.tr)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('profile_cannot_block_self'.tr)));
       return;
     }
 
@@ -602,7 +922,8 @@ class _ProfilePageState extends State<ProfilePage>
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                resp['message']?.toString() ?? 'User unblocked successfully',
+                resp['message']?.toString() ??
+                    'profile_user_unblocked_success'.tr,
               ),
             ),
           );
@@ -626,7 +947,8 @@ class _ProfilePageState extends State<ProfilePage>
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                resp['message']?.toString() ?? 'User blocked successfully',
+                resp['message']?.toString() ??
+                    'profile_user_blocked_success'.tr,
               ),
             ),
           );
@@ -654,7 +976,7 @@ class _ProfilePageState extends State<ProfilePage>
         color: Theme.of(context).cardColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -677,6 +999,7 @@ class _ProfilePageState extends State<ProfilePage>
             icon: const Icon(Iconsax.video_play),
             text: 'profile_tab_videos'.tr,
           ),
+          Tab(icon: const Icon(Iconsax.shopping_bag), text: 'page_tab_products'.tr),
           Tab(icon: const Icon(Iconsax.people), text: 'profile_tab_friends'.tr),
           Tab(
             icon: const Icon(Iconsax.more_square),
@@ -707,7 +1030,10 @@ class _ProfilePageState extends State<ProfilePage>
                 children: [
                   const Icon(Iconsax.warning_2, size: 64, color: Colors.red),
                   const SizedBox(height: 12),
-                  Text('${'error'.tr}: ${state.message}', textAlign: TextAlign.center),
+                  Text(
+                    '${'error'.tr}: ${state.message}',
+                    textAlign: TextAlign.center,
+                  ),
                   const SizedBox(height: 12),
                   ElevatedButton(
                     onPressed: () => _loadPosts(profile.id),
@@ -732,9 +1058,6 @@ class _ProfilePageState extends State<ProfilePage>
             // تحقق من الوصول لنهاية القائمة
             if (scrollInfo.metrics.pixels >=
                 scrollInfo.metrics.maxScrollExtent - 200) {
-              final remaining =
-                  scrollInfo.metrics.maxScrollExtent -
-                  scrollInfo.metrics.pixels;
 
               if (hasMore && !isLoadingMore) {
                 context.read<ProfilePostsBloc>().add(LoadMoreUserPostsEvent());
@@ -781,7 +1104,7 @@ class _ProfilePageState extends State<ProfilePage>
                         ),
                         const SizedBox(height: 12),
                         Text(
-                          'No posts yet',
+                          'profile_no_posts'.tr,
                           style: TextStyle(
                             fontSize: 18,
                             color: Colors.grey[600],
@@ -1097,11 +1420,263 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  Widget _buildVideosTab() =>
-      Center(child: Text('profile_videos_coming_soon'.tr));
-  Widget _buildFriendsTab(ProfileStats stats) {
-    return _FriendsRelationshipsTab(userId: widget.userId, stats: stats);
+  Widget _buildVideosTab() {
+    int? userId;
+
+    // Try to get userId from widget
+    if (widget.userId != null) {
+      userId = widget.userId;
+    }
+    // Try to get userId from profile data
+    else if (_profileData != null) {
+      userId = int.tryParse(_profileData!.profile.id);
+    }
+
+
+    return _VideosTabContent(userId: userId, username: widget.username);
   }
+
+  Widget _buildProductsTab(UserProfile profile) {
+    return Column(
+      children: [
+        // Search Bar
+        Padding(
+          padding: const EdgeInsets.all(12),
+          child: TextField(
+            controller: _productsSearchController,
+            decoration: InputDecoration(
+              hintText: 'search_products'.tr,
+              prefixIcon: const Icon(Iconsax.search_normal),
+              suffixIcon: _productsSearchQuery.isNotEmpty
+                  ? IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () {
+                        _productsSearchController.clear();
+                        setState(() {
+                          _productsSearchQuery = '';
+                        });
+                        _loadUserProducts(refresh: true);
+                      },
+                    )
+                  : null,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
+            ),
+            onSubmitted: (value) {
+              setState(() {
+                _productsSearchQuery = value.trim();
+              });
+              _loadUserProducts(refresh: true);
+            },
+          ),
+        ),
+        // Products List
+        Expanded(child: _buildProductsList(profile)),
+      ],
+    );
+  }
+
+  Widget _buildProductsList(UserProfile profile) {
+    if (_isLoadingProducts && _userProducts.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_productsError != null && _userProducts.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Iconsax.warning_2, size: 48, color: Colors.grey[600]),
+            const SizedBox(height: 12),
+            Text(
+              _productsError!,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.grey[700]),
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton.icon(
+              onPressed: () => _loadUserProducts(refresh: true),
+              icon: const Icon(Icons.refresh),
+              label: Text('retry'.tr),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (_userProducts.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Iconsax.box, size: 56, color: Colors.grey[500]),
+            const SizedBox(height: 12),
+            Text(
+              'no_products_for_user_currently'.tr,
+              style: TextStyle(color: Colors.grey[600], fontSize: 15),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return RefreshIndicator(
+      onRefresh: () => _loadUserProducts(refresh: true),
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (scroll) {
+          if (scroll.metrics.pixels >= scroll.metrics.maxScrollExtent - 180 &&
+              !_isLoadingMoreProducts &&
+              _hasMoreProducts) {
+            _loadUserProducts();
+          }
+          return false;
+        },
+        child: ListView.builder(
+          padding: const EdgeInsets.all(12),
+          itemCount: _userProducts.length + (_isLoadingMoreProducts ? 1 : 0),
+          itemBuilder: (context, index) {
+            if (index >= _userProducts.length) {
+              return const Padding(
+                padding: EdgeInsets.all(16),
+                child: Center(child: CircularProgressIndicator()),
+              );
+            }
+
+            final product = _userProducts[index];
+            final thumb = product.photos.isNotEmpty
+                ? product.photos.first
+                : null;
+
+            return Card(
+              margin: const EdgeInsets.only(bottom: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(12),
+                onTap: () {
+                  // Navigate to post detail if available
+                  if (product.productId.isNotEmpty) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => PostDetailPage(
+                          postId: int.tryParse(product.productId) ?? 0,
+                        ),
+                      ),
+                    );
+                  }
+                },
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 96,
+                      height: 96,
+                      margin: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.grey[200],
+                        image: thumb != null
+                            ? DecorationImage(
+                                image: CachedNetworkImageProvider(thumb),
+                                fit: BoxFit.cover,
+                              )
+                            : null,
+                      ),
+                      child: thumb == null
+                          ? Icon(Iconsax.box, color: Colors.grey[500])
+                          : null,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 12, 12, 12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              product.name,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              '${product.price} ${product.currency}',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Row(
+                              children: [
+                                Icon(
+                                  Iconsax.category,
+                                  size: 16,
+                                  color: Colors.grey[600],
+                                ),
+                                const SizedBox(width: 6),
+                                Expanded(
+                                  child: Text(
+                                    HtmlDecoder.decode(product.categoryName),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(color: Colors.grey[700]),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 6),
+                            Row(
+                              children: [
+                                Icon(
+                                  Iconsax.map,
+                                  size: 16,
+                                  color: Colors.grey[600],
+                                ),
+                                const SizedBox(width: 6),
+                                Expanded(
+                                  child: Text(
+                                    product.location.isNotEmpty
+                                        ? product.location
+                                        : 'N/A',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(color: Colors.grey[700]),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFriendsTab(ProfileStats stats) {
+    final resolvedUserId =
+        int.tryParse(_profileData?.profile.id ?? '') ?? widget.userId;
+    return _FriendsRelationshipsTab(userId: resolvedUserId, stats: stats);
+  }
+
 
   Widget _buildMoreTab(UserProfile profile) {
     final socialLinks = _profileData!.socialLinks;
@@ -1112,7 +1687,7 @@ class _ProfilePageState extends State<ProfilePage>
       children: [
         if (hasLinks)
           _InfoCard(
-            title: 'Social Links',
+            title: 'profile_social_links'.tr,
             icon: Iconsax.global,
             children: [
               if ((socialLinks['website'] ?? '').isNotEmpty)
@@ -1165,8 +1740,19 @@ class _ProfilePageState extends State<ProfilePage>
       title: Text(name),
       subtitle: Text(url, maxLines: 1, overflow: TextOverflow.ellipsis),
       trailing: const Icon(Iconsax.export_3, size: 20),
-      onTap: () {
-        // TODO: launch URL
+      onTap: () async {
+        final uri = Uri.parse(url);
+        if (await canLaunchUrl(uri)) {
+          await launchUrl(uri, mode: LaunchMode.externalApplication);
+        } else {
+          Get.snackbar(
+            'error'.tr,
+            'cannot_open_url'.tr,
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+          );
+        }
       },
     );
   }
@@ -1204,7 +1790,7 @@ class _FriendMenuTile extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: cs.primary.withOpacity(0.1),
+                  color: cs.primary.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(item.icon, color: cs.primary),
@@ -2795,4 +3381,305 @@ class _PhotoViewerPageState extends State<_PhotoViewerPage> {
       ),
     );
   }
+}
+
+// Videos Tab Widget
+class _VideosTabContent extends StatefulWidget {
+  final int? userId;
+  final String? username;
+
+  const _VideosTabContent({this.userId, this.username});
+
+  @override
+  State<_VideosTabContent> createState() => _VideosTabContentState();
+}
+
+class _VideosTabContentState extends State<_VideosTabContent> {
+  late UserVideosService _videosService;
+  List<dynamic> _videos = [];
+  bool _isLoading = true;
+  String? _error;
+  int _offset = 0;
+  bool _hasMore = true;
+  final int _limit = 10;
+
+  @override
+  void initState() {
+    super.initState();
+    try {
+      final apiClient = context.read<ApiClient>();
+      _videosService = UserVideosService(apiClient);
+      _isLoading = false; // Reset so first call doesn't get skipped
+      _loadVideos(refresh: true);
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+        _error = 'Failed to initialize videos service: $e';
+      });
+    }
+  }
+
+  Future<void> _loadVideos({bool refresh = false}) async {
+    // Prevent duplicate calls
+    if (!refresh && _isLoading) {
+      return;
+    }
+
+    if (!refresh && !_hasMore) {
+      return;
+    }
+
+    if (refresh) {
+      setState(() {
+        _offset = 0;
+        _videos.clear();
+        _hasMore = true;
+        _isLoading = true;
+        _error = null;
+      });
+    } else {
+      setState(() => _isLoading = true);
+    }
+
+    try {
+
+      final videos = await _videosService.getUserVideos(
+        userId: widget.userId,
+        username: widget.username,
+        offset: _offset,
+        limit: _limit,
+      );
+
+
+      if (!mounted) return;
+
+      setState(() {
+        _videos.addAll(videos);
+        _offset += _limit;
+        _hasMore = videos.length >= _limit;
+        _isLoading = false;
+        _error = null;
+      });
+
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+        _error = e.toString();
+      });
+    }
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+
+    if (_isLoading && _videos.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_error != null && _videos.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Iconsax.video, size: 64, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Text(
+              'profile_videos_load_error'.tr,
+              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () => _loadVideos(refresh: true),
+              child: Text('retry'.tr),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (_videos.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Iconsax.video, size: 64, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Text(
+              'profile_no_videos'.tr,
+              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return RefreshIndicator(
+      onRefresh: () => _loadVideos(refresh: true),
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (ScrollNotification scrollInfo) {
+          if (scrollInfo.metrics.pixels >=
+                  scrollInfo.metrics.maxScrollExtent - 200 &&
+              !_isLoading &&
+              _hasMore) {
+            _loadVideos();
+          }
+          return false;
+        },
+        child: GridView.builder(
+          padding: const EdgeInsets.all(8),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 8,
+            mainAxisSpacing: 8,
+            childAspectRatio: 9 / 16,
+          ),
+          itemCount:
+              _videos.length + (_isLoading && _videos.isNotEmpty ? 1 : 0),
+          itemBuilder: (context, index) {
+            if (index == _videos.length) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            final video = _videos[index];
+            return _VideoThumbnail(
+              video: video,
+              onTap: () {
+                // فتح صفحة تفاصيل المنشور
+                final postId = video.postId;
+                if (postId != null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => PostDetailPage(postId: postId),
+                    ),
+                  );
+                }
+              },
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+// Video Thumbnail Widget
+class _VideoThumbnail extends StatelessWidget {
+  final dynamic video;
+  final VoidCallback? onTap;
+
+  const _VideoThumbnail({required this.video, this.onTap});
+
+  String _formatDuration(int seconds) {
+    final minutes = seconds ~/ 60;
+    final secs = seconds % 60;
+    return '$minutes:${secs.toString().padLeft(2, '0')}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final thumb = video.videoThumb ?? '';
+    final duration = _formatDuration(video.videoDuration ?? 0);
+    final videoId = video.videoId ?? 'unknown';
+    final postId = video.postId ?? 'unknown';
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Colors.black12,
+        ),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // Thumbnail Image
+            if (thumb.isNotEmpty)
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: CachedNetworkImage(
+                  imageUrl: thumb,
+                  fit: BoxFit.cover,
+                  errorWidget: (context, url, error) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Center(
+                        child: Icon(
+                          Iconsax.video,
+                          color: Colors.grey[600],
+                          size: 48,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              )
+            else
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Iconsax.video, color: Colors.grey[600], size: 48),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Video #$videoId',
+                      style: TextStyle(fontSize: 10, color: Colors.grey[600]),
+                      textAlign: TextAlign.center,
+                    ),
+                    Text(
+                      'Post #$postId',
+                      style: TextStyle(fontSize: 10, color: Colors.grey[600]),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+
+            // Play Button Overlay
+            Center(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.black54,
+                  shape: BoxShape.circle,
+                ),
+                padding: const EdgeInsets.all(12),
+                child: const Icon(Iconsax.play, color: Colors.white, size: 32),
+              ),
+            ),
+
+            // Duration Badge
+            Positioned(
+              bottom: 8,
+              right: 8,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: Colors.black87,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  duration,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
 }

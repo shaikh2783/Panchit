@@ -41,7 +41,6 @@ class DynamicAppConfigService {
       if (config != null) {
         await _cacheConfig(config);
         if (kDebugMode) {
-
         }
         return config;
       }

@@ -2,6 +2,7 @@ import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
 import '../models/user_profile_model.dart';
 import '../models/profile_completion_model.dart';
+import 'package:flutter/foundation.dart';
 
 class ProfileApiService {
   final ApiClient _apiClient;

@@ -1,6 +1,7 @@
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
 import '../models/session_model.dart';
+import 'package:flutter/foundation.dart';
 
 class SessionsApiService {
   final ApiClient _apiClient;

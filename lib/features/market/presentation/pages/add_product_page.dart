@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:snginepro/core/network/api_client.dart';
+import 'package:snginepro/core/widgets/html_text_widget.dart';
 import 'package:snginepro/main.dart' show configCfgP;
 
 import '../../domain/market_repository.dart';
@@ -13,7 +14,16 @@ import '../../data/models/models.dart';
 import '../../../../core/theme/ui_constants.dart';
 
 class AddProductPage extends StatefulWidget {
-  const AddProductPage({super.key});
+  const AddProductPage({
+    super.key,
+    this.handle,
+    this.handleId,
+    this.handleName,
+  });
+
+  final String? handle; // 'me', 'page', 'group'
+  final int? handleId; // ID for page/group
+  final String? handleName; // Display name for page/group
 
   @override
   State<AddProductPage> createState() => _AddProductPageState();
@@ -177,6 +187,8 @@ class _AddProductPageState extends State<AddProductPage> {
         description: _descriptionCtrl.text.trim(),
         photos: combinedPhotos,
         forAdult: _forAdult,
+        handle: widget.handle,
+        handleId: widget.handleId,
       );
 
       if (!mounted) return;
@@ -205,9 +217,15 @@ class _AddProductPageState extends State<AddProductPage> {
 
   @override
   Widget build(BuildContext context) {
+    final String title = widget.handle == 'page'
+        ? 'Add Product to ${widget.handleName ?? "Page"}'
+        : widget.handle == 'group'
+            ? 'Add Product to ${widget.handleName ?? "Group"}'
+            : 'market_add_product'.tr;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('market_add_product'.tr),
+        title: Text(title),
       ),
       body: SafeArea(
         child: Form(
@@ -408,7 +426,7 @@ class _AddProductPageState extends State<AddProductPage> {
                       .map(
                         (c) => DropdownMenuItem<int>(
                           value: c.categoryId,
-                          child: Text(c.categoryName),
+                          child: HtmlTextWidget(htmlContent: c.categoryName),
                         ),
                       )
                       .toList(),

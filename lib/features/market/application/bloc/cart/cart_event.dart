@@ -81,16 +81,19 @@ class RefreshCartEvent extends CartEvent {
 /// 
 /// حدث إتمام الطلب من السلة
 class CheckoutCartEvent extends CartEvent {
-  final ShippingAddress shippingAddress;
-  final String paymentMethod;
-  final String notes;
+  final ShippingAddress? shippingAddress;
+  final int? shippingAddressId;
+  final String? paymentMethod;
 
   const CheckoutCartEvent({
-    required this.shippingAddress,
-    required this.paymentMethod,
-    this.notes = '',
-  });
+    this.shippingAddress,
+    this.shippingAddressId,
+    this.paymentMethod,
+  }) : assert(
+         shippingAddress != null || shippingAddressId != null,
+         'يجب توفير عنوان الشحن أو معرف عنوان موجود',
+       );
 
   @override
-  List<Object?> get props => [shippingAddress, paymentMethod, notes];
+  List<Object?> get props => [shippingAddress, shippingAddressId, paymentMethod];
 }

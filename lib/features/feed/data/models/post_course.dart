@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 class PostCourse {
   PostCourse({
     required this.courseId,

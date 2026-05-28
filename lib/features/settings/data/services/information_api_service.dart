@@ -1,6 +1,7 @@
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
 import '../models/download_settings.dart';
+import 'package:flutter/foundation.dart';
 
 class InformationApiService {
   final ApiClient _apiClient;

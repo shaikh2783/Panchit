@@ -2,22 +2,28 @@ class Story {
   Story({
     required this.id,
     required this.authorName,
+    this.authorId,
     this.authorAvatarUrl,
     this.previewImageUrl,
     List<StoryMedia>? media,
     this.isOwner = false,
     this.timestamp,
     this.isSeen = false,
+    this.isCommentEnabled = true,
+    this.isReactionEnabled = true,
   }) : media = media ?? const <StoryMedia>[];
 
   final String id;
   final String authorName;
+  final String? authorId;
   final String? authorAvatarUrl;
   final String? previewImageUrl;
   final List<StoryMedia> media;
   final bool isOwner;
   final DateTime? timestamp;
   final bool isSeen;
+  final bool isCommentEnabled;
+  final bool isReactionEnabled;
 
   bool get hasMedia => media.isNotEmpty;
 
@@ -34,22 +40,28 @@ class Story {
   Story copyWith({
     String? id,
     String? authorName,
+    String? authorId,
     String? authorAvatarUrl,
     String? previewImageUrl,
     List<StoryMedia>? media,
     bool? isOwner,
     DateTime? timestamp,
     bool? isSeen,
+    bool? isCommentEnabled,
+    bool? isReactionEnabled,
   }) {
     return Story(
       id: id ?? this.id,
       authorName: authorName ?? this.authorName,
+      authorId: authorId ?? this.authorId,
       authorAvatarUrl: authorAvatarUrl ?? this.authorAvatarUrl,
       previewImageUrl: previewImageUrl ?? this.previewImageUrl,
       media: media ?? this.media,
       isOwner: isOwner ?? this.isOwner,
       timestamp: timestamp ?? this.timestamp,
       isSeen: isSeen ?? this.isSeen,
+      isCommentEnabled: isCommentEnabled ?? this.isCommentEnabled,
+      isReactionEnabled: isReactionEnabled ?? this.isReactionEnabled,
     );
   }
 
@@ -62,10 +74,12 @@ class Story {
 
     final publisher = _map(json['publisher']) ?? _map(json['user']);
     final authorName = _resolveAuthorName(json, publisher);
-    final authorAvatar =
-        _string(json['photo']) ??
-        _resolveAuthorAvatar(json, publisher) ??
-        _string(json['avatar']);
+    
+    // استخراج صورة البروفايل فقط للـ author avatar
+    // لا نستخدمها كجزء من محتوى القصة
+    final authorAvatar = _resolveAuthorAvatar(json, publisher) ??
+        _string(json['avatar']) ??
+        _string(json['profile_photo']);  // هذا للبروفايل، لا للقصة
 
     final mediaItems = <StoryMedia>[];
     void addMedia(Object? value) {
@@ -85,27 +99,16 @@ class Story {
     addMedia(json['items']);
     addMedia(json['stories']);
     addMedia(json['reels']); // Add support for reels array
-    
-    // Handle direct photo/video fields from API
-    final photo = _string(json['photo']);
-    if (photo != null && photo.isNotEmpty) {
-      mediaItems.add(StoryMedia(
-        id: '${id}_photo',
-        type: 'photo',
-        source: photo,
-        previewUrl: photo,
-      ));
-    }
-    
-    final video = _string(json['video']);
-    if (video != null && video.isNotEmpty) {
-      mediaItems.add(StoryMedia(
-        id: '${id}_video',
-        type: 'video',
-        source: video,
-        thumbnail: photo, // Use photo as thumbnail for video
-        previewUrl: photo ?? video,
-      ));
+    if (mediaItems.isEmpty) {
+      final video = _string(json['video']);
+      if (video != null && video.isNotEmpty) {
+        mediaItems.add(StoryMedia(
+          id: '${id}_video',
+          type: 'video',
+          source: video,
+          previewUrl: video,
+        ));
+      }
     }
 
     final preview = _string(json['thumbnail']) ??
@@ -114,18 +117,29 @@ class Story {
 
     final timestamp = _parseDate(json['time']) ?? _parseDate(json['date']);
 
-    final isOwner = _bool(json['is_user'] ?? json['is_owner']);
+    final isOwner = json['story_user']==json['my_user_id'];
     final isSeen = _bool(json['is_seen'] ?? json['seen']);
+    final isCommentEnabled = _bool(json['is_comment_enable']);
+    final isReactionEnabled = _bool(json['is_reaction_enable']);
+
+    // Extract author ID from various possible fields
+    final authorId = _string(json['user_id']) ??
+        _string(json['story_author_id']) ??
+        _string(json['author_id']) ??
+        (publisher != null ? _string(publisher['user_id']) : null);
 
     return Story(
       id: id,
       authorName: authorName,
+      authorId: authorId,
       authorAvatarUrl: authorAvatar,
       previewImageUrl: preview,
       media: mediaItems.where((item) => item.isValid).toList(),
       isOwner: isOwner,
       timestamp: timestamp,
       isSeen: isSeen,
+      isCommentEnabled: isCommentEnabled,
+      isReactionEnabled: isReactionEnabled,
     );
   }
 
@@ -165,6 +179,7 @@ class Story {
       _string(json['user_picture']),
       _string(json['picture']),
       _string(json['image']),
+      _string(json['photo']),
       if (publisher != null) _string(publisher['user_picture']),
       if (publisher != null) _string(publisher['picture']),
       if (publisher != null) _string(publisher['user_avatar']),
@@ -305,4 +320,3 @@ class StoryMedia {
     );
   }
 }
-

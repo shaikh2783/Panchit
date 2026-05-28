@@ -3,6 +3,7 @@ import 'cart_event.dart';
 import 'cart_state.dart';
 import '../../../domain/market_repository.dart';
 import '../../../data/models/models.dart';
+import 'package:flutter/foundation.dart';
 
 /// Cart Bloc
 /// 
@@ -293,24 +294,21 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       // Call checkout API with shipping address
       final result = await _repository.checkout(
         address: event.shippingAddress,
-        notes: event.notes.isNotEmpty ? event.notes : null,
+        shippingAddressId: event.shippingAddressId,
         paymentMethod: event.paymentMethod,
       );
 
-      // Check if orders were created
-      if (result.totalOrders > 0 && result.orders.isNotEmpty) {
-        // Get first order ID
-        final orderId = result.orders.first.orderId;
-        
-        emit(CartCheckoutSuccess(
-          orderId: orderId,
-          message: 'تم تقديم ${result.totalOrders} طلب بنجاح',
-        ));
-      } else {
-        emit(const CartCheckoutError('فشل في إتمام الطلب'));
-      }
+      // API الجديد يرجع orders_collection_id و total فقط
+      
+      emit(CartCheckoutSuccess(
+        orderId: result.ordersCollectionId,
+        message: 'تم إتمام الطلب بنجاح\nالمبلغ الإجمالي: ${result.totalAmount}',
+      ));
     } catch (e) {
-      emit(CartCheckoutError('فشل في إتمام الطلب: ${e.toString()}'));
+      final errorMessage = e.toString().contains('empty')
+          ? 'السلة فارغة. أضف منتجات أولاً'
+          : 'فشل في إتمام الطلب\n${e.toString()}';
+      emit(CartCheckoutError(errorMessage));
     }
   }
 }

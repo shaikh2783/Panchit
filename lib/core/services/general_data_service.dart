@@ -2,6 +2,7 @@ import '../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
 import '../../core/models/country.dart';
 import '../../core/models/language.dart';
+import 'package:flutter/foundation.dart';
 
 /// خدمة البيانات العامة (Countries, Languages)
 class GeneralDataService {
@@ -16,7 +17,10 @@ class GeneralDataService {
 
       if (response['status'] == 'success') {
         final data = response['data']['countries'] as List? ?? [];
-        return data.map((c) => Country.fromJson(c)).toList();
+        final countries = data.map((c) => Country.fromJson(c)).toList();
+        if (countries.isNotEmpty) {
+        }
+        return countries;
       }
 
       return [];
@@ -32,7 +36,10 @@ class GeneralDataService {
 
       if (response['status'] == 'success') {
         final data = response['data']['languages'] as List? ?? [];
-        return data.map((l) => Language.fromJson(l)).toList();
+        final languages = data.map((l) => Language.fromJson(l)).toList();
+        if (languages.isNotEmpty) {
+        }
+        return languages;
       }
 
       return [];

@@ -4,6 +4,7 @@ import 'package:snginepro/features/auth/application/bloc/auth_states.dart';
 import 'package:snginepro/features/auth/domain/auth_repository.dart';
 import 'package:snginepro/features/auth/data/storage/auth_storage.dart';
 import 'package:snginepro/features/auth/domain/models/auth_session.dart';
+import 'package:snginepro/features/auth/domain/models/stored_auth_account.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
@@ -65,10 +66,33 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         // Save auth session
         final session = AuthSession(
           token: response.authToken!,
-          sessionId: null,
+          sessionId: response.sessionId,
           user: response.user,
         );
-        await _authStorage.saveSession(session);
+        final user = response.user;
+        final account = StoredAuthAccount(
+          accountId: _buildAccountId(
+            userId: _readUserValue(user, const ['user_id', 'id']),
+            username: _readUserValue(user, const ['user_name', 'username']),
+            email: _readUserValue(user, const ['user_email', 'email']),
+            token: session.token,
+          ),
+          token: session.token,
+          sessionId: session.sessionId,
+          userId: _readUserValue(user, const ['user_id', 'id']),
+          username: _readUserValue(user, const ['user_name', 'username']),
+          email: _readUserValue(user, const ['user_email', 'email']),
+          displayName: _readUserValue(
+            user,
+            const ['user_fullname', 'name', 'display_name'],
+          ),
+          avatarUrl: _readUserValue(
+            user,
+            const ['user_picture', 'avatar', 'picture'],
+          ),
+          user: user,
+        );
+        await _authStorage.saveAccount(account, makeActive: true);
 
         emit(AuthAuthenticatedState(
           user: response.user ?? {},
@@ -95,7 +119,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     
     try {
       // Clear stored auth data
-      await _authStorage.clearSession();
+      await _authStorage.clearAllAccounts();
       
       emit(const AuthUnauthenticatedState());
     } catch (e) {
@@ -169,4 +193,36 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       state is AuthAuthenticatedState 
           ? (state as AuthAuthenticatedState).token 
           : null;
+
+  String _buildAccountId({
+    String? userId,
+    String? username,
+    String? email,
+    required String token,
+  }) {
+    if (userId != null && userId.isNotEmpty) {
+      return 'user:$userId';
+    }
+    if (username != null && username.isNotEmpty) {
+      return 'username:$username';
+    }
+    if (email != null && email.isNotEmpty) {
+      return 'email:$email';
+    }
+    final suffix = token.length > 12 ? token.substring(token.length - 12) : token;
+    return 'token:$suffix';
+  }
+
+  String? _readUserValue(Map<String, dynamic>? user, List<String> keys) {
+    if (user == null) return null;
+    for (final key in keys) {
+      final value = user[key];
+      if (value == null) continue;
+      final normalized = value.toString().trim();
+      if (normalized.isNotEmpty) {
+        return normalized;
+      }
+    }
+    return null;
+  }
 }

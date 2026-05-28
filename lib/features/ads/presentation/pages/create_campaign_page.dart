@@ -8,7 +8,7 @@ import 'package:snginepro/core/config/app_config.dart';
 import 'dart:io';
 import '../widgets/campaign_form_field.dart';
 import '../widgets/campaign_date_picker.dart';
-import '../widgets/campaign_image_upload.dart';
+import '../widgets/campaign_media_upload.dart';
 
 class CreateCampaignPage extends StatefulWidget {
   const CreateCampaignPage({super.key, this.initialCampaign});
@@ -37,9 +37,13 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
   List<String> _countries = [];
   String? _imageFilename; // uploaded filename returned by server
   String? _imagePreviewUrl; // absolute url for preview
+  String? _videoFilename; // uploaded video filename
+  String? _videoPreviewUrl; // absolute url for video preview
   bool _submitting = false;
   bool _uploading = false;
   File? _selectedImageFile;
+  File? _selectedVideoFile;
+  String _mediaType = 'image'; // 'image' or 'video'
   int? _campaignId; // edit mode id
   final _startDateCtrl = TextEditingController();
   final _endDateCtrl = TextEditingController();
@@ -89,6 +93,15 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
         _imageFilename = img;
         final config = context.read<AppConfig>();
         _imagePreviewUrl = config.mediaAsset(img).toString();
+        _mediaType = 'image';
+      }
+      // Video
+      final vid = (init['ads_video'] ?? init['campaign_video'] ?? init['video'])?.toString();
+      if (vid != null && vid.isNotEmpty) {
+        _videoFilename = vid;
+        final config = context.read<AppConfig>();
+        _videoPreviewUrl = config.mediaAsset(vid).toString();
+        _mediaType = 'video';
       }
       // Ad type specifics (best-effort)
       _adsType = (init['ads_type'] ?? _adsType)?.toString();
@@ -119,7 +132,9 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
       final apiClient = context.read<ApiClient>();
       final res = await apiClient.multipartPost(
         '/data/file/upload',
-        body: {},
+        body: {
+          'type': 'photos', // Server expects plural form for image uploads
+        },
         filePath: _selectedImageFile!.path,
         fileFieldName: 'file',
         fileName: _selectedImageFile!.path.split('/').last,
@@ -129,6 +144,44 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
           _imageFilename = res['data']['source'];
           final config = context.read<AppConfig>();
           _imagePreviewUrl = config.mediaAsset(res['data']['url'] ?? res['data']['source']).toString();
+        });
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('upload_failed'.tr)),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _uploading = false);
+    }
+  }
+
+  Future<void> _uploadVideo() async {
+    if (_selectedVideoFile == null) return;
+    setState(() => _uploading = true);
+    try {
+      final apiClient = context.read<ApiClient>();
+      final res = await apiClient.multipartPost(
+        '/data/file/upload',
+        body: {
+          'type': 'videos', // Server expects plural form for video uploads
+        },
+        filePath: _selectedVideoFile!.path,
+        fileFieldName: 'file',
+        fileName: _selectedVideoFile!.path.split('/').last,
+      );
+      if (res['data'] != null && res['data']['source'] != null) {
+        setState(() {
+          _videoFilename = res['data']['source'];
+          final config = context.read<AppConfig>();
+          _videoPreviewUrl = config.mediaAsset(res['data']['url'] ?? res['data']['source']).toString();
         });
       } else {
         if (mounted) {
@@ -182,9 +235,10 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
         );
         return;
       }
-      // Force placement/newsfeed and no image for post type
+      // Force placement/newsfeed and clear media for post type
       _placement = 'newsfeed';
       _imageFilename = null;
+      _videoFilename = null;
     } else if (_adsType == 'page' || _adsType == 'group' || _adsType == 'event') {
       if (_entityIdCtrl.text.trim().isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -193,10 +247,10 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
         return;
       }
     }
-    // Image requirement unless post
-    if (_adsType != 'post' && (_imageFilename == null || _imageFilename!.isEmpty)) {
+    // Media requirement unless post (image OR video required)
+    if (_adsType != 'post' && (_imageFilename == null || _imageFilename!.isEmpty) && (_videoFilename == null || _videoFilename!.isEmpty)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('upload_image'.tr)),
+        SnackBar(content: Text('upload_image_or_video'.tr)),
       );
       return;
     }
@@ -223,6 +277,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
         'adsGroupId': _adsType == 'group' ? _entityIdCtrl.text.trim() : null,
         'adsEventId': _adsType == 'event' ? _entityIdCtrl.text.trim() : null,
         'imageFilename': _imageFilename,
+        'videoFilename': _videoFilename,
         'adsTitle': _adsTitleCtrl.text.trim().isEmpty ? null : _adsTitleCtrl.text.trim(),
         'adsDescription': _adsDescCtrl.text.trim().isEmpty ? null : _adsDescCtrl.text.trim(),
       };
@@ -244,6 +299,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
           adsGroupId: payloadCommon['adsGroupId'] as String?,
           adsEventId: payloadCommon['adsEventId'] as String?,
           imageFilename: payloadCommon['imageFilename'] as String?,
+          videoFilename: payloadCommon['videoFilename'] as String?,
           adsTitle: payloadCommon['adsTitle'] as String?,
           adsDescription: payloadCommon['adsDescription'] as String?,
         );
@@ -268,11 +324,17 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
         adsGroupId: _adsType == 'group' ? _entityIdCtrl.text.trim() : null,
         adsEventId: _adsType == 'event' ? _entityIdCtrl.text.trim() : null,
         imageFilename: _imageFilename,
+        videoFilename: _videoFilename,
         adsTitle: _adsTitleCtrl.text.trim().isEmpty ? null : _adsTitleCtrl.text.trim(),
         adsDescription: _adsDescCtrl.text.trim().isEmpty ? null : _adsDescCtrl.text.trim(),
         );
       }
-      final ok = (_campaignId != null ? (res['code'] == 200 || res['success'] == true) : (res['code'] == 201 || res['success'] == true));
+      
+      // Check for success using multiple possible response formats
+      final ok = res['status'] == 'success' || 
+                 res['success'] == true || 
+                 (_campaignId != null ? res['code'] == 200 : res['code'] == 201);
+      
       if (ok && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(_campaignId != null ? 'ads_campaign_updated'.tr : 'ads_campaign_created'.tr)),
@@ -308,13 +370,32 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            // Image Upload Section
-            CampaignImageUpload(
+            // Media Upload Section
+            CampaignMediaUpload(
+              mediaType: _mediaType,
               imageUrl: _imagePreviewUrl,
-              onImagePicked: (file) {
-                setState(() => _selectedImageFile = file);
+              videoUrl: _videoPreviewUrl,
+              onMediaTypeChanged: (type) {
+                setState(() => _mediaType = type);
               },
-              onUpload: _uploadImage,
+              onImagePicked: (file) {
+                setState(() {
+                  _selectedImageFile = file;
+                  _selectedVideoFile = null;
+                  _videoFilename = null;
+                  _videoPreviewUrl = null;
+                });
+              },
+              onVideoPicked: (file) {
+                setState(() {
+                  _selectedVideoFile = file;
+                  _selectedImageFile = null;
+                  _imageFilename = null;
+                  _imagePreviewUrl = null;
+                });
+              },
+              onUploadImage: _uploadImage,
+              onUploadVideo: _uploadVideo,
               isUploading: _uploading,
             ),
             const SizedBox(height: 24),
@@ -493,10 +574,10 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                     label: 'gender'.tr,
                     value: _gender,
                     icon: Iconsax.user,
-                    items: const [
-                      DropdownMenuItem(value: 'all', child: Text('All')),
-                      DropdownMenuItem(value: 'male', child: Text('Male')),
-                      DropdownMenuItem(value: 'female', child: Text('Female')),
+                    items: [
+                      DropdownMenuItem(value: 'all', child: Text('gender_all'.tr)),
+                      DropdownMenuItem(value: 'male', child: Text('gender_male'.tr)),
+                      DropdownMenuItem(value: 'female', child: Text('gender_female'.tr)),
                     ],
                     onChanged: (v) => setState(() => _gender = v),
                   ),
@@ -507,10 +588,10 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                     label: 'relationship'.tr,
                     value: _relationship,
                     icon: Iconsax.heart,
-                    items: const [
-                      DropdownMenuItem(value: 'all', child: Text('All')),
-                      DropdownMenuItem(value: 'single', child: Text('Single')),
-                      DropdownMenuItem(value: 'married', child: Text('Married')),
+                    items: [
+                      DropdownMenuItem(value: 'all', child: Text('relationship_all'.tr)),
+                      DropdownMenuItem(value: 'single', child: Text('relationship_single'.tr)),
+                      DropdownMenuItem(value: 'married', child: Text('relationship_married'.tr)),
                     ],
                     onChanged: (v) => setState(() => _relationship = v),
                   ),

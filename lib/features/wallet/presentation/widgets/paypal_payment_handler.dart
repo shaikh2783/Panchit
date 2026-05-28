@@ -26,7 +26,6 @@ class PayPalPaymentHandler {
     final clientId = AppSettings.paypalClientId;
     final secret = AppSettings.paypalSecretKey;
 
-
     try {
       await Navigator.of(context).push(
         MaterialPageRoute(

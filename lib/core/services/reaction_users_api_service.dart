@@ -1,6 +1,7 @@
 import 'package:snginepro/core/models/reaction_user_model.dart';
 import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/main.dart' show configCfgP;
+import 'package:flutter/foundation.dart';
 
 class ReactionUsersApiService {
   final ApiClient _apiClient;

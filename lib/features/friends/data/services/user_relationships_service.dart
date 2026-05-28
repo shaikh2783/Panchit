@@ -1,6 +1,7 @@
 import 'package:snginepro/core/network/api_client.dart';
 import '../models/follower.dart';
 import '../models/subscription.dart';
+import 'package:flutter/foundation.dart';
 
 class UserRelationshipsService {
   final ApiClient _apiClient;

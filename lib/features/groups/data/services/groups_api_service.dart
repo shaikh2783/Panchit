@@ -8,6 +8,7 @@ import '../models/group_member.dart';
 import '../models/group_category.dart';
 import '../../../../core/models/country.dart';
 import '../../../../core/models/language.dart';
+import 'package:flutter/foundation.dart';
 
 /// خدمة API للمجموعات
 class GroupsApiService {
@@ -520,4 +521,3 @@ class GroupsApiService {
     };
   }
 }
-

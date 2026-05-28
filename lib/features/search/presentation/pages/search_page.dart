@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:get/get.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../feed/data/models/post.dart';
 import '../../../feed/presentation/widgets/post_card.dart';
@@ -11,6 +11,11 @@ import '../../../friends/presentation/widgets/add_friend_button.dart';
 import '../../../friends/data/models/friendship_model.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
 import '../../../pages/presentation/pages/page_profile_page.dart';
+import '../../../groups/presentation/pages/group_profile_page.dart';
+import '../../../groups/application/bloc/group_posts_bloc.dart';
+import '../../../groups/data/repositories/groups_repository.dart';
+import '../../../groups/data/services/groups_api_service.dart';
+import '../../../events/presentation/pages/event_detail_page.dart';
 import '../../data/services/search_api_service.dart';
 import '../../data/models/search_models.dart';
 
@@ -188,7 +193,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.1),
+                color: Colors.blue.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -265,13 +270,13 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isDarkMode 
-            ? Colors.grey.withOpacity(0.2)
-            : Colors.grey.withOpacity(0.3),
+            ? Colors.grey.withValues(alpha: 0.2)
+            : Colors.grey.withValues(alpha: 0.3),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.08),
+            color: Colors.black.withValues(alpha: isDarkMode ? 0.3 : 0.08),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -300,7 +305,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                   icon: Container(
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.2),
+                      color: Colors.grey.withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -362,11 +367,11 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
           end: Alignment.bottomCenter,
           colors: isDarkMode 
             ? [
-                Colors.black.withOpacity(0.8),
+                Colors.black.withValues(alpha: 0.8),
                 Colors.black,
               ]
             : [
-                Colors.white.withOpacity(0.8),
+                Colors.white.withValues(alpha: 0.8),
                 const Color(0xFFF5F6FA),
               ],
         ),
@@ -374,8 +379,9 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       child: ListView.builder(
         controller: _scrollController,
         padding: const EdgeInsets.symmetric(vertical: 8),
-        itemCount: _posts.length + (_isLoadingMore ? 1 : 0),
+        itemCount:_posts.length + (_isLoadingMore ? 1 : 0),
         itemBuilder: (context, index) {
+          // No ads - original behavior
           if (index == _posts.length) {
             return Container(
               padding: const EdgeInsets.all(20),
@@ -385,8 +391,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Colors.blue.withOpacity(0.3),
-                        Colors.purple.withOpacity(0.3),
+                        Colors.blue.withValues(alpha: 0.3),
+                        Colors.purple.withValues(alpha: 0.3),
                       ],
                     ),
                     shape: BoxShape.circle,
@@ -408,8 +414,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
               boxShadow: [
                 BoxShadow(
                   color: isDarkMode 
-                    ? Colors.black.withOpacity(0.3)
-                    : Colors.grey.withOpacity(0.2),
+                    ? Colors.black.withValues(alpha: 0.3)
+                    : Colors.grey.withValues(alpha: 0.2),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -434,11 +440,11 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
           end: Alignment.bottomCenter,
           colors: isDarkMode 
             ? [
-                Colors.black.withOpacity(0.8),
+                Colors.black.withValues(alpha: 0.8),
                 Colors.black,
               ]
             : [
-                Colors.white.withOpacity(0.8),
+                Colors.white.withValues(alpha: 0.8),
                 const Color(0xFFF5F6FA),
               ],
         ),
@@ -457,8 +463,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Colors.blue.withOpacity(0.3),
-                        Colors.purple.withOpacity(0.3),
+                        Colors.blue.withValues(alpha: 0.3),
+                        Colors.purple.withValues(alpha: 0.3),
                       ],
                     ),
                     shape: BoxShape.circle,
@@ -490,26 +496,26 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
           end: Alignment.bottomRight,
           colors: isDarkMode 
             ? [
-                Colors.white.withOpacity(0.1),
-                Colors.white.withOpacity(0.05),
+                Colors.white.withValues(alpha: 0.1),
+                Colors.white.withValues(alpha: 0.05),
               ]
             : [
-                Colors.white.withOpacity(0.9),
-                Colors.white.withOpacity(0.7),
+                Colors.white.withValues(alpha: 0.9),
+                Colors.white.withValues(alpha: 0.7),
               ],
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isDarkMode 
-            ? Colors.white.withOpacity(0.1)
-            : Colors.grey.withOpacity(0.3),
+            ? Colors.white.withValues(alpha: 0.1)
+            : Colors.grey.withValues(alpha: 0.3),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
             color: isDarkMode 
-              ? Colors.black.withOpacity(0.3)
-              : Colors.grey.withOpacity(0.2),
+              ? Colors.black.withValues(alpha: 0.3)
+              : Colors.grey.withValues(alpha: 0.2),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -553,7 +559,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.blue.withOpacity(0.3),
+                                    color: Colors.blue.withValues(alpha: 0.3),
                                     blurRadius: 6,
                                     offset: const Offset(0, 2),
                                   ),
@@ -575,7 +581,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: isDarkMode 
-                            ? Colors.white.withOpacity(0.7)
+                            ? Colors.white.withValues(alpha: 0.7)
                             : Colors.grey[600],
                           fontSize: 14,
                           height: 1.3,
@@ -602,13 +608,13 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         shape: BoxShape.circle,
         gradient: LinearGradient(
           colors: [
-            Colors.blue.withOpacity(0.3),
-            Colors.purple.withOpacity(0.3),
+            Colors.blue.withValues(alpha: 0.3),
+            Colors.purple.withValues(alpha: 0.3),
           ],
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.blue.withOpacity(0.3),
+            color: Colors.blue.withValues(alpha: 0.3),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -630,19 +636,19 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                       gradient: LinearGradient(
                         colors: isDarkMode 
                           ? [
-                              Colors.grey.withOpacity(0.3),
-                              Colors.grey.withOpacity(0.1),
+                              Colors.grey.withValues(alpha: 0.3),
+                              Colors.grey.withValues(alpha: 0.1),
                             ]
                           : [
-                              Colors.grey.withOpacity(0.5),
-                              Colors.grey.withOpacity(0.3),
+                              Colors.grey.withValues(alpha: 0.5),
+                              Colors.grey.withValues(alpha: 0.3),
                             ],
                       ),
                     ),
                     child: Icon(
                       _getIconForType(result.type),
                       color: isDarkMode 
-                        ? Colors.white.withOpacity(0.8)
+                        ? Colors.white.withValues(alpha: 0.8)
                         : Colors.grey[600],
                       size: 24,
                     ),
@@ -655,19 +661,19 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                   gradient: LinearGradient(
                     colors: isDarkMode 
                       ? [
-                          Colors.grey.withOpacity(0.3),
-                          Colors.grey.withOpacity(0.1),
+                          Colors.grey.withValues(alpha: 0.3),
+                          Colors.grey.withValues(alpha: 0.1),
                         ]
                       : [
-                          Colors.grey.withOpacity(0.5),
-                          Colors.grey.withOpacity(0.3),
+                          Colors.grey.withValues(alpha: 0.5),
+                          Colors.grey.withValues(alpha: 0.3),
                         ],
                   ),
                 ),
                 child: Icon(
                   _getIconForType(result.type),
                   color: isDarkMode 
-                    ? Colors.white.withOpacity(0.8)
+                    ? Colors.white.withValues(alpha: 0.8)
                     : Colors.grey[600],
                   size: 24,
                 ),
@@ -733,14 +739,14 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Colors.green.withOpacity(0.8),
-            Colors.teal.withOpacity(0.8),
+            Colors.green.withValues(alpha: 0.8),
+            Colors.teal.withValues(alpha: 0.8),
           ],
         ),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.green.withOpacity(0.3),
+            color: Colors.green.withValues(alpha: 0.3),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -781,14 +787,14 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Colors.grey.withOpacity(0.7),
-            Colors.blueGrey.withOpacity(0.7),
+            Colors.grey.withValues(alpha: 0.7),
+            Colors.blueGrey.withValues(alpha: 0.7),
           ],
         ),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.15),
+            color: Colors.black.withValues(alpha: 0.15),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -851,17 +857,33 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         }
         break;
       case 'group':
+        // Navigate to group detail
         if (result is SearchGroup) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Groups are no longer available.'),
-              duration: Duration(seconds: 2),
+          final groupsApiService = GroupsApiService(context.read<ApiClient>());
+          final groupsRepository = GroupsRepository(groupsApiService);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (context) => GroupPostsBloc(groupsRepository),
+                child: GroupProfilePage(
+                  groupId: result.groupId,
+                ),
+              ),
             ),
           );
         }
         break;
       case 'event':
-        // TODO: Navigate to event detail
+        // Navigate to event detail
+        if (result is SearchEvent) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EventDetailPage(eventId: result.eventId),
+            ),
+          );
+        }
         break;
       case 'post':
       case 'blog':
@@ -881,11 +903,11 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
           end: Alignment.bottomCenter,
           colors: isDarkMode 
             ? [
-                Colors.black.withOpacity(0.8),
+                Colors.black.withValues(alpha: 0.8),
                 Colors.black,
               ]
             : [
-                Colors.white.withOpacity(0.8),
+                Colors.white.withValues(alpha: 0.8),
                 const Color(0xFFF5F6FA),
               ],
         ),
@@ -901,19 +923,19 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                 gradient: LinearGradient(
                   colors: isDarkMode 
                     ? [
-                        Colors.white.withOpacity(0.1),
-                        Colors.white.withOpacity(0.05),
+                        Colors.white.withValues(alpha: 0.1),
+                        Colors.white.withValues(alpha: 0.05),
                       ]
                     : [
-                        Colors.white.withOpacity(0.9),
-                        Colors.white.withOpacity(0.7),
+                        Colors.white.withValues(alpha: 0.9),
+                        Colors.white.withValues(alpha: 0.7),
                       ],
                 ),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
                   color: isDarkMode 
-                    ? Colors.white.withOpacity(0.1)
-                    : Colors.grey.withOpacity(0.3),
+                    ? Colors.white.withValues(alpha: 0.1)
+                    : Colors.grey.withValues(alpha: 0.3),
                 ),
               ),
               child: Container(
@@ -937,19 +959,19 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                 gradient: LinearGradient(
                   colors: isDarkMode 
                     ? [
-                        Colors.white.withOpacity(0.1),
-                        Colors.white.withOpacity(0.05),
+                        Colors.white.withValues(alpha: 0.1),
+                        Colors.white.withValues(alpha: 0.05),
                       ]
                     : [
-                        Colors.white.withOpacity(0.9),
-                        Colors.white.withOpacity(0.7),
+                        Colors.white.withValues(alpha: 0.9),
+                        Colors.white.withValues(alpha: 0.7),
                       ],
                 ),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
                   color: isDarkMode 
-                    ? Colors.white.withOpacity(0.1)
-                    : Colors.grey.withOpacity(0.3),
+                    ? Colors.white.withValues(alpha: 0.1)
+                    : Colors.grey.withValues(alpha: 0.3),
                 ),
               ),
               child: Row(
@@ -962,12 +984,12 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                       gradient: LinearGradient(
                         colors: isDarkMode 
                           ? [
-                              Colors.grey.withOpacity(0.3),
-                              Colors.grey.withOpacity(0.1),
+                              Colors.grey.withValues(alpha: 0.3),
+                              Colors.grey.withValues(alpha: 0.1),
                             ]
                           : [
-                              Colors.grey.withOpacity(0.4),
-                              Colors.grey.withOpacity(0.2),
+                              Colors.grey.withValues(alpha: 0.4),
+                              Colors.grey.withValues(alpha: 0.2),
                             ],
                       ),
                     ),
@@ -984,12 +1006,12 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                             gradient: LinearGradient(
                               colors: isDarkMode 
                                 ? [
-                                    Colors.grey.withOpacity(0.3),
-                                    Colors.grey.withOpacity(0.1),
+                                    Colors.grey.withValues(alpha: 0.3),
+                                    Colors.grey.withValues(alpha: 0.1),
                                   ]
                                 : [
-                                    Colors.grey.withOpacity(0.4),
-                                    Colors.grey.withOpacity(0.2),
+                                    Colors.grey.withValues(alpha: 0.4),
+                                    Colors.grey.withValues(alpha: 0.2),
                                   ],
                             ),
                             borderRadius: BorderRadius.circular(8),
@@ -1003,12 +1025,12 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                             gradient: LinearGradient(
                               colors: isDarkMode 
                                 ? [
-                                    Colors.grey.withOpacity(0.2),
-                                    Colors.grey.withOpacity(0.05),
+                                    Colors.grey.withValues(alpha: 0.2),
+                                    Colors.grey.withValues(alpha: 0.05),
                                   ]
                                 : [
-                                    Colors.grey.withOpacity(0.3),
-                                    Colors.grey.withOpacity(0.15),
+                                    Colors.grey.withValues(alpha: 0.3),
+                                    Colors.grey.withValues(alpha: 0.15),
                                   ],
                             ),
                             borderRadius: BorderRadius.circular(6),
@@ -1043,26 +1065,26 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
             end: Alignment.bottomRight,
             colors: isDarkMode 
               ? [
-                  Colors.white.withOpacity(0.1),
-                  Colors.white.withOpacity(0.05),
+                  Colors.white.withValues(alpha: 0.1),
+                  Colors.white.withValues(alpha: 0.05),
                 ]
               : [
-                  Colors.white.withOpacity(0.9),
-                  Colors.white.withOpacity(0.7),
+                  Colors.white.withValues(alpha: 0.9),
+                  Colors.white.withValues(alpha: 0.7),
                 ],
           ),
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
             color: isDarkMode 
-              ? Colors.white.withOpacity(0.1)
-              : Colors.grey.withOpacity(0.3),
+              ? Colors.white.withValues(alpha: 0.1)
+              : Colors.grey.withValues(alpha: 0.3),
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
               color: isDarkMode 
-                ? Colors.black.withOpacity(0.3)
-                : Colors.grey.withOpacity(0.2),
+                ? Colors.black.withValues(alpha: 0.3)
+                : Colors.grey.withValues(alpha: 0.2),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -1076,14 +1098,14 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Colors.blue.withOpacity(0.3),
-                    Colors.purple.withOpacity(0.3),
+                    Colors.blue.withValues(alpha: 0.3),
+                    Colors.purple.withValues(alpha: 0.3),
                   ],
                 ),
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.blue.withOpacity(0.3),
+                    color: Colors.blue.withValues(alpha: 0.3),
                     blurRadius: 15,
                     offset: const Offset(0, 8),
                   ),
@@ -1110,7 +1132,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
               subtitle,
               style: TextStyle(
                 color: isDarkMode 
-                  ? Colors.white.withOpacity(0.7)
+                  ? Colors.white.withValues(alpha: 0.7)
                   : Colors.grey[600],
                 fontSize: 16,
                 height: 1.5,

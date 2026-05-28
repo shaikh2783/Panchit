@@ -2,6 +2,7 @@ import '../../../../core/network/api_client.dart';
 import '../models/market_settings.dart';
 import '../models/market_payment.dart';
 import '../models/market_stats.dart';
+import 'package:flutter/foundation.dart';
 
 /// Market Settings & Payments API Service
 /// خدمة API لإدارة رصيد البائع والدفعات والسحب

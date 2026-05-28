@@ -1,5 +1,6 @@
 import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/features/auth/data/models/gender.dart';
+import 'package:flutter/foundation.dart';
 
 class GenderApiService {
   final ApiClient _client;
@@ -11,7 +12,8 @@ class GenderApiService {
     
     if (response['status'] == 'success' && response['data'] is List) {
       final List<dynamic> data = response['data'];
-      return data.map((json) => Gender.fromJson(json)).toList();
+      final genders = data.map((json) => Gender.fromJson(json)).toList();
+      return genders;
     }
     
     return [];

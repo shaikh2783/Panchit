@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snginepro/features/feed/data/models/post.dart';
 import 'package:snginepro/features/feed/domain/posts_repository.dart';
+import 'package:flutter/foundation.dart';
 
 // Events
 abstract class ProfilePostsEvent {}

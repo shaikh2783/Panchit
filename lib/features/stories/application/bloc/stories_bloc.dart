@@ -16,16 +16,21 @@ class CreateStoryEvent extends StoriesEvent {
   final String? videoPath;
   final String? text;
   final Duration? duration;
+  final bool isCommentEnable;
+  final bool isReactionEnable;
 
   CreateStoryEvent({
     this.imagePath,
     this.videoPath,
     this.text,
     this.duration,
+    this.isCommentEnable = true,
+    this.isReactionEnable = true,
   });
 
   @override
-  List<Object?> get props => [imagePath, videoPath, text, duration];
+  List<Object?> get props =>
+      [imagePath, videoPath, text, duration, isCommentEnable, isReactionEnable];
 }
 
 class ViewStoryEvent extends StoriesEvent {
@@ -39,12 +44,13 @@ class ViewStoryEvent extends StoriesEvent {
 }
 
 class DeleteStoryEvent extends StoriesEvent {
-  final String storyId;
+  final String mediaId;
+  final String storyId; // معرف القصة للحذف المحلي
 
-  DeleteStoryEvent(this.storyId);
+  DeleteStoryEvent({required this.mediaId, required this.storyId});
 
   @override
-  List<Object?> get props => [storyId];
+  List<Object?> get props => [mediaId, storyId];
 }
 
 class ReactToStoryEvent extends StoriesEvent {
@@ -213,8 +219,12 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
         feedStories.add(Story(
           id: story.id,
           authorName: story.authorName,
+          authorId: story.authorId,
           authorAvatarUrl: story.authorAvatarUrl,
           items: items,
+          isOwner: story.isOwner,
+          isCommentEnabled: story.isCommentEnabled,
+          isReactionEnabled: story.isReactionEnabled,
         ));
       }
 
@@ -259,11 +269,12 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
     ));
 
     try {
-      // ✅ استخدام API الحقيقي لإنشاء القصة
       await _repository.createStory(
         imagePath: event.imagePath,
         videoPath: event.videoPath,
         text: event.text,
+        isCommentEnable: event.isCommentEnable,
+        isReactionEnable: event.isReactionEnable,
       );
 
       // إعادة تحميل القصص بعد الإنشاء
@@ -308,20 +319,45 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
     DeleteStoryEvent event,
     Emitter<StoriesState> emit,
   ) async {
-    // Simple local deletion since delete API isn't available
-    final updatedStories = state.stories
-        .where((story) => story.id != event.storyId)
-        .toList();
-    final updatedMyStories = state.myStories
-        .where((story) => story.id != event.storyId)
-        .toList();
-
-    emit(StoryDeleted(
-      deletedStoryId: event.storyId,
-      stories: updatedStories,
-      myStories: updatedMyStories,
+    emit(StoriesLoading(
+      stories: state.stories,
+      myStories: state.myStories,
       currentStoryIndex: state.currentStoryIndex,
     ));
+
+    try {
+      // ✅ استخدام API الحقيقي لحذف القصة باستخدام media_id
+      await _repository.deleteStory(mediaId: event.mediaId);
+
+      // إزالة القصة من القائمة المحلية
+      final updatedStories = state.stories
+          .where((story) => story.id != event.storyId)
+          .toList();
+      final updatedMyStories = state.myStories
+          .where((story) => story.id != event.storyId)
+          .toList();
+
+      emit(StoryDeleted(
+        deletedStoryId: event.storyId,
+        stories: updatedStories,
+        myStories: updatedMyStories,
+        currentStoryIndex: state.currentStoryIndex,
+      ));
+    } on ApiException catch (e) {
+      emit(StoriesError(
+        e.message,
+        stories: state.stories,
+        myStories: state.myStories,
+        currentStoryIndex: state.currentStoryIndex,
+      ));
+    } catch (e) {
+      emit(StoriesError(
+        'خطأ في حذف القصة: $e',
+        stories: state.stories,
+        myStories: state.myStories,
+        currentStoryIndex: state.currentStoryIndex,
+      ));
+    }
   }
 
   Future<void> _onReactToStory(

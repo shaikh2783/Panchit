@@ -172,13 +172,25 @@ class UserProfile {
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
     final profile = json['profile'] ?? json;
+    
+    // Convert gender from API format (1/2/3) to string format (male/female/other)
+    String genderValue = 'male';
+    final genderFromApi = profile['gender']?.toString() ?? '1';
+    if (genderFromApi == '1' || genderFromApi.toLowerCase() == 'male') {
+      genderValue = 'male';
+    } else if (genderFromApi == '2' || genderFromApi.toLowerCase() == 'female') {
+      genderValue = 'female';
+    } else if (genderFromApi == '3' || genderFromApi.toLowerCase() == 'other') {
+      genderValue = 'other';
+    }
+    
     return UserProfile(
       id: profile['id']?.toString() ?? '',
       username: profile['username'] ?? '',
       firstName: profile['first_name'] ?? '',
       lastName: profile['last_name'] ?? '',
       fullName: profile['full_name'] ?? '',
-      gender: profile['gender'] ?? 'male',
+      gender: genderValue,
       picture: profile['picture'] ?? '',
       cover: profile['cover'],
       isVerified: profile['is_verified'] == true,

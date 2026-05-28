@@ -4,9 +4,44 @@ import 'package:snginepro/features/feed/data/models/post.dart';
 // Events
 abstract class PostsEvent extends BaseEvent {}
 
-class LoadPostsEvent extends PostsEvent {}
-class RefreshPostsEvent extends PostsEvent {}
-class LoadMorePostsEvent extends PostsEvent {}
+class LoadPostsEvent extends PostsEvent {
+  final String type;
+  final String includeAds;
+  
+  LoadPostsEvent({
+    this.type = 'newsfeed',
+    this.includeAds = '1',
+  });
+  
+  @override
+  List<Object?> get props => [type, includeAds];
+}
+
+class RefreshPostsEvent extends PostsEvent {
+  final String type;
+  final String includeAds;
+  
+  RefreshPostsEvent({
+    this.type = 'newsfeed',
+    this.includeAds = '1',
+  });
+  
+  @override
+  List<Object?> get props => [type, includeAds];
+}
+
+class LoadMorePostsEvent extends PostsEvent {
+  final String type;
+  final String includeAds;
+  
+  LoadMorePostsEvent({
+    this.type = 'newsfeed',
+    this.includeAds = '1',
+  });
+  
+  @override
+  List<Object?> get props => [type, includeAds];
+}
 class AddPostEvent extends PostsEvent {
   final Post post;
   AddPostEvent(this.post);

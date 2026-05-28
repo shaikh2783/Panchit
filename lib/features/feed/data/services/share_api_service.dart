@@ -1,5 +1,6 @@
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
+import 'package:flutter/foundation.dart';
 
 /// خدمة API لمشاركة المنشورات
 class ShareApiService {

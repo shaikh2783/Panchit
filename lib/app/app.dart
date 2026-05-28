@@ -13,6 +13,7 @@ import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/core/theme/app_theme.dart';
 import 'package:snginepro/core/localization/app_translations.dart';
 import 'package:snginepro/core/localization/localization_controller.dart';
+import 'package:snginepro/features/ads/domain/ads_repository.dart';
 import 'package:snginepro/features/auth/application/auth_notifier.dart';
 import 'package:snginepro/core/services/notification_navigation_service.dart';
 import 'package:snginepro/features/auth/application/bloc/auth_bloc.dart';
@@ -30,7 +31,6 @@ import 'package:snginepro/features/pages/application/bloc/page_posts_bloc.dart';
 import 'package:snginepro/features/feed/data/datasources/posts_api_service.dart';
 import 'package:snginepro/features/feed/domain/posts_repository.dart';
 import 'package:snginepro/features/feed/presentation/pages/main_navigation_page.dart';
-import 'package:snginepro/features/feed/presentation/pages/post_detail_page.dart';
 import 'package:snginepro/features/pages/application/pages_notifier.dart';
 import 'package:snginepro/features/pages/application/pages_posts_notifier.dart';
 import 'package:snginepro/features/pages/data/datasources/pages_api_service.dart';
@@ -48,6 +48,8 @@ import 'package:snginepro/features/stories/application/bloc/stories_bloc.dart';
 import 'package:snginepro/features/pages/application/bloc/pages_bloc.dart';
 import 'package:snginepro/features/comments/application/replies_notifier.dart';
 import 'package:snginepro/features/comments/data/datasources/comments_api_service.dart';
+import 'package:snginepro/core/providers/system_settings_provider.dart';
+import 'package:snginepro/core/data/services/system_settings_api_service.dart';
 import 'package:snginepro/features/comments/domain/comments_repository.dart';
 import 'package:snginepro/features/profile/data/services/profile_api_service.dart';
 import 'package:snginepro/features/reels/application/reels_notifier.dart';
@@ -78,34 +80,40 @@ import 'package:snginepro/features/movies/domain/movies_repository.dart';
 import 'package:snginepro/features/wallet/data/services/wallet_api_service.dart';
 import 'package:snginepro/features/wallet/domain/wallet_repository.dart';
 import 'package:snginepro/features/ads/data/services/ads_api_service.dart';
-import 'package:snginepro/features/ads/domain/ads_repository.dart';
-import 'package:snginepro/features/ads/presentation/pages/ads_campaigns_page.dart';
-import 'package:snginepro/features/ads/presentation/pages/create_campaign_page.dart';
 import 'package:snginepro/features/boost/data/services/boost_api_service.dart';
 import 'package:snginepro/features/boost/domain/boost_repository.dart';
 import 'package:snginepro/features/feed/data/services/share_api_service.dart';
 import 'package:snginepro/features/feed/domain/share_repository.dart';
 import 'package:snginepro/features/feed/data/services/reviews_api_service.dart';
 import 'package:snginepro/features/feed/domain/reviews_repository.dart';
+import 'package:snginepro/features/onboarding/presentation/pages/onboarding_page.dart';
+import 'package:snginepro/features/ai_chat/providers/ai_chat_provider.dart';
 
 class App extends StatelessWidget {
   const App({super.key, required this.sharedPreferences});
 
   final SharedPreferences sharedPreferences;
+  
+  /// Global NavigatorKey للتحكم في الملاحة من الخارج (الإشعارات)
+  static final GlobalKey<NavigatorState> navigatorKey = 
+      GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
-    // تأجيل تفعيل التنقل من الإشعارات حتى يصبح الـ Navigator جاهز (يمنع الشاشة السوداء عند الفتح من إشعار)
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      NotificationNavigationService.markAppReady();
-    });
-
     return MultiProvider(
       providers: [
         Provider<AppConfig>.value(value: appConfig),
         Provider<SharedPreferences>.value(value: sharedPreferences),
         Provider<ApiClient>.value(
           value: globalApiClient, // Use the global instance with auth token
+        ),
+        Provider<SystemSettingsApiService>(
+          create: (context) => SystemSettingsApiService(context.read<ApiClient>()),
+        ),
+        ChangeNotifierProvider<SystemSettingsProvider>(
+          create: (context) => SystemSettingsProvider(
+            context.read<SystemSettingsApiService>(),
+          )..initialize(),
         ),
         Provider<AuthStorage>(
           create: (context) => AuthStorage(context.read<SharedPreferences>()),
@@ -280,6 +288,11 @@ class App extends StatelessWidget {
               DynamicAppConfigService(context.read<ApiClient>()),
         ),
 
+        // AI Chat Provider
+        ChangeNotifierProvider<AIChatProvider>(
+          create: (context) => AIChatProvider(),
+        ),
+
         // Keep existing ChangeNotifier providers for gradual migration
         ChangeNotifierProvider<AuthNotifier>(
           create: (context) {
@@ -418,41 +431,6 @@ class App extends StatelessWidget {
             translations: AppTranslations(),
             locale: localizationController.currentLocale,
             fallbackLocale: const Locale('en', 'US'), // English as fallback
-            getPages: [
-              // Dynamic post viewer route: /post/:id
-              GetPage(
-                name: '/post/:id',
-                page: () {
-                  // Prefer path param, fall back to argument, and extract digits safely
-                  final idParam =
-                      Get.parameters['id'] ??
-                      (Get.arguments is Map
-                          ? (Get.arguments['id']?.toString())
-                          : Get.arguments?.toString());
-                  final digits = RegExp(r'\d+').stringMatch(idParam ?? '');
-                  final id = int.tryParse(digits ?? '') ?? 0;
-                  return PostDetailPage(postId: id);
-                },
-              ),
-              GetPage(
-                name: '/ads/campaigns',
-                page: () => const AdsCampaignsPage(),
-              ),
-              GetPage(
-                name: '/ads/campaigns/create',
-                page: () => const CreateCampaignPage(),
-              ),
-              GetPage(
-                name: '/ads/campaigns/edit',
-                page: () {
-                  final args = Get.arguments;
-                  final map = (args is Map<String, dynamic>)
-                      ? args
-                      : (args is Map ? Map<String, dynamic>.from(args) : null);
-                  return CreateCampaignPage(initialCampaign: map);
-                },
-              ),
-            ],
           ),
         ),
       ),
@@ -460,11 +438,54 @@ class App extends StatelessWidget {
   }
 }
 
-class _AuthSwitcher extends StatelessWidget {
+class _AuthSwitcher extends StatefulWidget {
   const _AuthSwitcher();
 
   @override
+  State<_AuthSwitcher> createState() => _AuthSwitcherState();
+}
+
+class _AuthSwitcherState extends State<_AuthSwitcher> {
+  bool? _onboardingCompleted;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkOnboarding();
+    // تفعيل التنقل من الإشعارات بعد بناء أول widget
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      NotificationNavigationService.markAppReady();
+    });
+  }
+
+  Future<void> _checkOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    final completed = prefs.getBool('onboarding_completed') ?? false;
+    if (mounted) {
+      setState(() {
+        _onboardingCompleted = completed;
+      });
+    }
+  }
+
+  void _onOnboardingComplete() {
+    setState(() {
+      _onboardingCompleted = true;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // Still checking onboarding status
+    if (_onboardingCompleted == null) {
+      return const SplashPage();
+    }
+
+    // Show onboarding if not completed
+    if (!_onboardingCompleted!) {
+      return OnboardingPage(onComplete: _onOnboardingComplete);
+    }
+
     return Consumer<AuthNotifier>(
       builder: (context, auth, _) {
         if (!auth.isInitialized) {

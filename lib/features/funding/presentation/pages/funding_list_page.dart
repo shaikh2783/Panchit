@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:snginepro/core/widgets/html_text_widget.dart';
 import 'package:snginepro/core/widgets/skeletons.dart';
 import 'package:snginepro/features/auth/application/auth_notifier.dart';
 
@@ -44,7 +45,8 @@ class _FundingListPageState extends State<FundingListPage> {
   }
 
   void _onScroll() {
-    if (_scrollCtrl.position.pixels >= _scrollCtrl.position.maxScrollExtent * 0.8) {
+    if (_scrollCtrl.position.pixels >=
+        _scrollCtrl.position.maxScrollExtent * 0.8) {
       _loadMore();
     }
   }
@@ -59,7 +61,9 @@ class _FundingListPageState extends State<FundingListPage> {
       final repo = context.read<FundingRepository>();
       final response = await repo.getFunding(offset: 0, limit: _limit);
       final data = response['data'] as Map<String, dynamic>;
-      final list = (data['funding'] as List).map((e) => Funding.fromJson(e as Map<String, dynamic>)).toList();
+      final list = (data['funding'] as List)
+          .map((e) => Funding.fromJson(e as Map<String, dynamic>))
+          .toList();
       final filtered = widget.mineOnly ? _filterMine(list) : list;
       setState(() {
         _items = filtered;
@@ -82,7 +86,9 @@ class _FundingListPageState extends State<FundingListPage> {
       final newOffset = _offset + _limit;
       final response = await repo.getFunding(offset: newOffset, limit: _limit);
       final data = response['data'] as Map<String, dynamic>;
-      final list = (data['funding'] as List).map((e) => Funding.fromJson(e as Map<String, dynamic>)).toList();
+      final list = (data['funding'] as List)
+          .map((e) => Funding.fromJson(e as Map<String, dynamic>))
+          .toList();
       final filtered = widget.mineOnly ? _filterMine(list) : list;
       setState(() {
         _items.addAll(filtered);
@@ -98,7 +104,9 @@ class _FundingListPageState extends State<FundingListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.mineOnly ? 'funding'.tr : 'funding'.tr)),
+      appBar: AppBar(
+        title: Text(widget.mineOnly ? 'funding'.tr : 'funding'.tr),
+      ),
       floatingActionButton: Container(
         height: 56,
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -122,7 +130,8 @@ class _FundingListPageState extends State<FundingListPage> {
           color: Colors.transparent,
           child: InkWell(
             borderRadius: BorderRadius.circular(28),
-            onTap: () => Get.to(() => const FundingCreatePage())?.then((_) => _load()),
+            onTap: () =>
+                Get.to(() => const FundingCreatePage())?.then((_) => _load()),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
@@ -151,45 +160,61 @@ class _FundingListPageState extends State<FundingListPage> {
       body: _loading
           ? _buildSkeleton()
           : _error.isNotEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Iconsax.danger_copy, size: 48, color: UI.subtleText(context)),
-                      SizedBox(height: UI.md),
-                      Text(_error, textAlign: TextAlign.center),
-                      SizedBox(height: UI.md),
-                      ElevatedButton(onPressed: _load, child: Text('retry'.tr)),
-                    ],
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Iconsax.danger_copy,
+                    size: 48,
+                    color: UI.subtleText(context),
                   ),
-                )
-              : _items.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Iconsax.money_recive_copy, size: 48, color: UI.subtleText(context)),
-                          SizedBox(height: UI.md),
-                          Text('no_funding_found'.tr, style: TextStyle(color: UI.subtleText(context))),
-                        ],
+                  SizedBox(height: UI.md),
+                  Text(_error, textAlign: TextAlign.center),
+                  SizedBox(height: UI.md),
+                  ElevatedButton(onPressed: _load, child: Text('retry'.tr)),
+                ],
+              ),
+            )
+          : _items.isEmpty
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.currency_rupee,
+                    size: 48,
+                    color: UI.subtleText(context),
+                  ),
+                  SizedBox(height: UI.md),
+                  Text(
+                    'no_funding_found'.tr,
+                    style: TextStyle(color: UI.subtleText(context)),
+                  ),
+                ],
+              ),
+            )
+          : RefreshIndicator(
+              onRefresh: _load,
+              child: ListView.separated(
+                controller: _scrollCtrl,
+                padding: EdgeInsets.all(UI.lg),
+                itemCount: _items.length + (_loadingMore ? 1 : 0),
+                separatorBuilder: (_, __) => SizedBox(height: UI.lg),
+                itemBuilder: (context, i) {
+                  if (i >= _items.length) {
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: CircularProgressIndicator(),
                       ),
-                    )
-                  : RefreshIndicator(
-                      onRefresh: _load,
-                      child: ListView.separated(
-                        controller: _scrollCtrl,
-                        padding: EdgeInsets.all(UI.lg),
-                        itemCount: _items.length + (_loadingMore ? 1 : 0),
-                        separatorBuilder: (_, __) => SizedBox(height: UI.lg),
-                        itemBuilder: (context, i) {
-                          if (i >= _items.length) {
-                            return const Center(child: Padding(padding: EdgeInsets.all(16), child: CircularProgressIndicator()));
-                          }
-                          final item = _items[i];
-                          return _buildCard(context, item);
-                        },
-                      ),
-                    ),
+                    );
+                  }
+                  final item = _items[i];
+                  return _buildCard(context, item);
+                },
+              ),
+            ),
     );
   }
 
@@ -204,7 +229,9 @@ class _FundingListPageState extends State<FundingListPage> {
   Widget _buildCard(BuildContext context, Funding f) {
     final scheme = Theme.of(context).colorScheme;
     return GestureDetector(
-      onTap: () => Get.to(() => FundingDetailPage(fundingId: int.parse(f.postId)))?.then((_) => _load()),
+      onTap: () => Get.to(
+        () => FundingDetailPage(fundingId: int.parse(f.postId)),
+      )?.then((_) => _load()),
       child: Container(
         decoration: BoxDecoration(
           color: UI.surfaceCard(context),
@@ -224,7 +251,8 @@ class _FundingListPageState extends State<FundingListPage> {
                     height: 180,
                     width: double.infinity,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(height: 180, color: Colors.grey[300]),
+                    errorBuilder: (_, __, ___) =>
+                        Container(height: 180, color: Colors.grey[300]),
                   ),
                   Positioned.fill(
                     child: Container(
@@ -232,30 +260,29 @@ class _FundingListPageState extends State<FundingListPage> {
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
-                          colors: [Colors.transparent, Colors.black.withOpacity(0.3)],
+                          colors: [
+                            Colors.transparent,
+                            Colors.black.withOpacity(0.3),
+                          ],
                         ),
                       ),
                     ),
                   ),
                 ],
               ),
-            
+
             Padding(
               padding: EdgeInsets.all(UI.lg),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Title
-                  Text(
-                    f.title,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w800,
-                        ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                  HtmlTextWidget(
+                    htmlContent: f.title,
+                
                   ),
                   SizedBox(height: UI.sm),
-                  
+
                   // Progress bar
                   ClipRRect(
                     borderRadius: BorderRadius.circular(4),
@@ -267,7 +294,7 @@ class _FundingListPageState extends State<FundingListPage> {
                     ),
                   ),
                   SizedBox(height: UI.sm),
-                  
+
                   // Amount info
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -277,11 +304,14 @@ class _FundingListPageState extends State<FundingListPage> {
                         children: [
                           Text(
                             'raised'.tr,
-                            style: TextStyle(fontSize: 11, color: UI.subtleText(context)),
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: UI.subtleText(context),
+                            ),
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            '\$${f.raisedAmount.toStringAsFixed(0)}',
+                            '₹${f.raisedAmount.toStringAsFixed(0)}',
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w700,
@@ -295,11 +325,14 @@ class _FundingListPageState extends State<FundingListPage> {
                         children: [
                           Text(
                             'goal'.tr,
-                            style: TextStyle(fontSize: 11, color: UI.subtleText(context)),
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: UI.subtleText(context),
+                            ),
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            '\$${f.amount.toStringAsFixed(0)}',
+                            '₹${f.amount.toStringAsFixed(0)}',
                             style: const TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w600,
@@ -312,7 +345,10 @@ class _FundingListPageState extends State<FundingListPage> {
                         children: [
                           Text(
                             'donors'.tr,
-                            style: TextStyle(fontSize: 11, color: UI.subtleText(context)),
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: UI.subtleText(context),
+                            ),
                           ),
                           const SizedBox(height: 2),
                           Text(
@@ -327,27 +363,37 @@ class _FundingListPageState extends State<FundingListPage> {
                     ],
                   ),
                   SizedBox(height: UI.md),
-                  
+
                   // Publisher row
                   Row(
                     children: [
                       // Avatar
-                      if (f.author.userPicture != null && f.author.userPicture!.isNotEmpty)
+                      if (f.author.userPicture != null &&
+                          f.author.userPicture!.isNotEmpty)
                         CircleAvatar(
                           radius: 14,
-                          backgroundImage: CachedNetworkImageProvider(f.author.userPicture!),
+                          backgroundImage: CachedNetworkImageProvider(
+                            f.author.userPicture!,
+                          ),
                         )
                       else
                         CircleAvatar(
                           radius: 14,
                           backgroundColor: scheme.primary.withOpacity(0.2),
-                          child: Icon(Iconsax.user_copy, size: 14, color: scheme.primary),
+                          child: Icon(
+                            Iconsax.user_copy,
+                            size: 14,
+                            color: scheme.primary,
+                          ),
                         ),
                       SizedBox(width: UI.sm),
                       Expanded(
                         child: Text(
                           f.author.userName,
-                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                          ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -355,7 +401,10 @@ class _FundingListPageState extends State<FundingListPage> {
                       const Spacer(),
                       // Completion badge
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: scheme.primary.withOpacity(0.08),
                           borderRadius: BorderRadius.circular(12),
@@ -386,27 +435,36 @@ class _FundingListPageState extends State<FundingListPage> {
       itemCount: 5,
       separatorBuilder: (_, __) => SizedBox(height: UI.lg),
       itemBuilder: (_, __) => Container(
-        decoration: BoxDecoration(color: UI.surfaceCard(context), borderRadius: BorderRadius.circular(UI.rLg)),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const SkeletonBox(height: 180, radius: 0),
-          Padding(
-            padding: EdgeInsets.all(UI.lg),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-              SkeletonBox(height: 20, width: 200, radius: 8),
-              SizedBox(height: 12),
-              SkeletonBox(height: 8, width: double.infinity, radius: 4),
-              SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SkeletonBox(height: 14, width: 80, radius: 8),
-                  SkeletonBox(height: 14, width: 80, radius: 8),
-                  SkeletonBox(height: 14, width: 60, radius: 8),
+        decoration: BoxDecoration(
+          color: UI.surfaceCard(context),
+          borderRadius: BorderRadius.circular(UI.rLg),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SkeletonBox(height: 180, radius: 0),
+            Padding(
+              padding: EdgeInsets.all(UI.lg),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  SkeletonBox(height: 20, width: 200, radius: 8),
+                  SizedBox(height: 12),
+                  SkeletonBox(height: 8, width: double.infinity, radius: 4),
+                  SizedBox(height: 12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SkeletonBox(height: 14, width: 80, radius: 8),
+                      SkeletonBox(height: 14, width: 80, radius: 8),
+                      SkeletonBox(height: 14, width: 60, radius: 8),
+                    ],
+                  ),
                 ],
               ),
-            ]),
-          ),
-        ]),
+            ),
+          ],
+        ),
       ),
     );
   }

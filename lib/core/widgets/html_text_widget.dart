@@ -21,6 +21,9 @@ class HtmlTextWidget extends StatefulWidget {
     this.showMoreText = 'Show more',
     this.showLessText = 'Hide',
     this.textAlign = TextAlign.start, // إضافة دعم للمحاذاة
+    this.fontWeight,
+    this.maxLines,
+    this.overflow,
   });
 
   /// HTML content to display
@@ -53,6 +56,15 @@ class HtmlTextWidget extends StatefulWidget {
   /// Text alignment (default: TextAlign.start)
   final TextAlign textAlign;
 
+  /// Optional font weight for the rendered text
+  final FontWeight? fontWeight;
+
+  /// Optional max lines for the rendered HTML
+  final int? maxLines;
+
+  /// Optional overflow behavior when maxLines is set
+  final TextOverflow? overflow;
+
   @override
   State<HtmlTextWidget> createState() => _HtmlTextWidgetState();
 }
@@ -83,6 +95,12 @@ class _HtmlTextWidgetState extends State<HtmlTextWidget> {
     // Extract plain text to check length
     final plainText = _getPlainText(widget.htmlContent);
     final isLongText = plainText.length > widget.maxLength;
+    final effectiveMaxLines =
+        widget.maxLines ?? (isLongText && !_isExpanded ? 10 : null);
+    final effectiveOverflow = widget.overflow ??
+        ((widget.maxLines != null || (isLongText && !_isExpanded))
+            ? TextOverflow.ellipsis
+            : null);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,12 +113,11 @@ class _HtmlTextWidgetState extends State<HtmlTextWidget> {
               padding: HtmlPaddings.zero,
               fontSize: FontSize(widget.fontSize),
               lineHeight: LineHeight(widget.lineHeight),
+              fontWeight: widget.fontWeight,
               color: effectiveTextColor,
               textAlign: widget.textAlign, // استخدام محاذاة النص المخصصة
-              maxLines: isLongText && !_isExpanded ? 10 : null,
-              textOverflow: isLongText && !_isExpanded
-                  ? TextOverflow.ellipsis
-                  : null,
+              maxLines: effectiveMaxLines,
+              textOverflow: effectiveOverflow,
             ),
             "a": Style(
               color: effectiveLinkColor,
