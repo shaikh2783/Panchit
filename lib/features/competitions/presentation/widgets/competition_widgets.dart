@@ -30,7 +30,6 @@ class CompetitionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final mutedColor = theme.colorScheme.onSurface.withValues(alpha: 0.72);
 
     return FrostedGlassCard(
       onTap: onTap,
@@ -62,8 +61,8 @@ class CompetitionCard extends StatelessWidget {
                       const SizedBox(height: Spacing.xs),
                       Text(
                         competition.category!,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: mutedColor,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
                         ),
                       ),
                     ],
@@ -523,6 +522,78 @@ class GlassPopupDialog extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () => Navigator.of(context).pop(true),
                     child: Text(primaryLabel),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CompetitionRulesDialog extends StatelessWidget {
+  const CompetitionRulesDialog({
+    super.key,
+    required this.rules,
+  });
+
+  final String rules;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      child: FrostedGlassCard(
+        blurAmount: 18,
+        borderRadius: Radii.xLarge,
+        gradientColors: [
+          theme.colorScheme.surface.withValues(alpha: 0.8),
+          theme.colorScheme.primary.withValues(alpha: 0.12),
+        ],
+        borderColor: Colors.white.withValues(alpha: 0.18),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.gavel_outlined, size: 28, color: theme.colorScheme.primary),
+                const SizedBox(width: Spacing.sm),
+                Text(
+                  'Competition Rules',
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: Spacing.md),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 300),
+              child: SingleChildScrollView(
+                child: Text(
+                  rules,
+                  style: theme.textTheme.bodyMedium?.copyWith(height: 1.6),
+                ),
+              ),
+            ),
+            const SizedBox(height: Spacing.lg),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text('Cancel'),
+                  ),
+                ),
+                const SizedBox(width: Spacing.md),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: const Text('I Agree'),
                   ),
                 ),
               ],

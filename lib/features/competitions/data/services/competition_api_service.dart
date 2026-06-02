@@ -40,6 +40,7 @@ class CompetitionApiService {
         fallbackBase: '/data/competitions/$competitionId',
         id: competitionId,
       ),
+      queryParameters: {'competition_id': '$competitionId'},
     );
 
     final item = _extractCompetitionMap(response);
@@ -238,6 +239,27 @@ class CompetitionApiService {
         details: response,
       );
     }
+  }
+
+  Future<List<String>> getCompetitionCategories() async {
+    final response = await _client.get(
+      _endpoint('competition_categories', '/data/competitions/categories'),
+    );
+    final items = _extractItems(
+      response,
+      preferredKeys: const ['categories', 'items', 'results', 'data'],
+    );
+    return items
+        .map((item) {
+          if (item is String) return item.trim();
+          if (item is Map<String, dynamic>) {
+            final name = item['name'] ?? item['title'] ?? item['category'] ?? item['label'];
+            return name?.toString().trim() ?? '';
+          }
+          return item?.toString().trim() ?? '';
+        })
+        .where((s) => s.isNotEmpty)
+        .toList(growable: false);
   }
 
   Future<List<CompetitionTagModel>> getUserCompetitionTags(int userId) async {
