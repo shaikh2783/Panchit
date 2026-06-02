@@ -1980,7 +1980,7 @@ class _PostCardState extends State<PostCard>
                           alignment: Alignment.centerLeft,
                           child: CompetitionEntryBadge(
                             label: _currentPost.competitionBadgeText ??
-                                '${_currentPost.competitionName ?? 'Competition'} Entry - Tap to Vote',
+                                '${_currentPost.competitionName ?? 'Competition'} Entry',
                             onTap: _openCompetitionDetails,
                           ),
                         ),

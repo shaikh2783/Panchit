@@ -14,7 +14,7 @@ import 'package:snginepro/features/friends/data/services/friends_api_service.dar
 import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/core/theme/design_tokens.dart';
 import 'package:snginepro/features/notifications/presentation/pages/notifications_page.dart';
-import 'package:snginepro/features/discover/presentation/pages/discover_page.dart';
+import 'package:snginepro/features/competitions/presentation/pages/competitions_hub_page.dart';
 
 // ... (صفحة FriendsPage كما هي) ...
 class FriendsPage extends StatelessWidget {
@@ -125,7 +125,7 @@ class _MainNavigationPageState extends State<MainNavigationPage>
       },
     ),
     const FriendRequestsPage(),
-    const DiscoverPage(),
+    const CompetitionsHubPage(),
     const ReelsPage(),
     const NotificationsPage(),
     MenuPage(onNavigateToTab: (index) => setState(() => _currentIndex = index)),
@@ -139,9 +139,9 @@ class _MainNavigationPageState extends State<MainNavigationPage>
       label: 'Friends',
     ),
     _NavItem(
-      icon: Iconsax.search_normal_1,
-      activeIcon: Iconsax.search_normal_1,
-      label: 'Discover',
+      icon: Iconsax.cup,
+      activeIcon: Iconsax.cup,
+      label: 'Compete',
     ),
     _NavItem(
       icon: Iconsax.video_play,

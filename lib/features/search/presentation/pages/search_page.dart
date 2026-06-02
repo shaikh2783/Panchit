@@ -18,6 +18,7 @@ import '../../../groups/data/services/groups_api_service.dart';
 import '../../../events/presentation/pages/event_detail_page.dart';
 import '../../data/services/search_api_service.dart';
 import '../../data/models/search_models.dart';
+import '../../../discover/presentation/pages/discover_page.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -33,7 +34,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   
   // البحث والنتائج
   String _currentQuery = '';
-  SearchType _currentTab = SearchType.posts;
+  SearchType _currentTab = SearchType.users;
   bool _isSearching = false;
   bool _hasSearched = false;
   
@@ -213,6 +214,27 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
             ),
           ],
         ),
+        actions: [
+          IconButton(
+            tooltip: 'Discover',
+            icon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.blue.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Iconsax.discover_1,
+                color: Colors.blue,
+                size: 18,
+              ),
+            ),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const DiscoverPage()),
+            ),
+          ),
+          const SizedBox(width: 4),
+        ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(48),
           child: Container(
