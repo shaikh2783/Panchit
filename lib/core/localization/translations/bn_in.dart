@@ -3022,5 +3022,10 @@ const Map<String, String> bnIN = {
   "widget_current_rank": "বর্তমান র‍্যাংক: #@rank",
   "widget_prize_won": "জিতে নেওয়া পুরস্কার: @amount",
   "widget_refund": "ফেরত: @status",
-  "widget_timer_unavailable": "টাইমার অনুপলব্ধ"
+  "widget_timer_unavailable": "টাইমার অনুপলব্ধ",
+
+  // Hub Filter
+  "hub_no_filtered_competitions": "কোনো \"@category\" প্রতিযোগিতা নেই",
+  "hub_no_filtered_msg": "এই বিভাগের সাথে কোনো প্রতিযোগিতা মেলে না। ভিন্ন ফিল্টার ব্যবহার করুন।",
+  "hub_clear_filter": "ফিল্টার সাফ করুন"
 };

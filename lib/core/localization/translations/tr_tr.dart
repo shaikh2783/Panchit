@@ -1943,4 +1943,7 @@ const Map<String, String> trTR = {
   'widget_prize_won': 'Kazanılan Ödül: @amount',
   'widget_refund': 'İade: @status',
   'widget_timer_unavailable': 'Zamanlayıcı kullanılamıyor',
+  'hub_no_filtered_competitions': '"@category" yarışması yok',
+  'hub_no_filtered_msg': 'Bu kategoriye uyan yarışma yok. Farklı bir filtre deneyin.',
+  'hub_clear_filter': 'Filtreyi temizle',
 };

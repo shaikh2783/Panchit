@@ -1943,4 +1943,9 @@ const Map<String, String> esES = {
   'widget_prize_won': 'Premio ganado: @amount',
   'widget_refund': 'Reembolso: @status',
   'widget_timer_unavailable': 'Temporizador no disponible',
+
+  // Hub Filter
+  'hub_no_filtered_competitions': 'No hay competiciones de \"@category\"',
+  'hub_no_filtered_msg': 'Ninguna competición coincide con esta categoría. Prueba un filtro diferente.',
+  'hub_clear_filter': 'Borrar filtro',
 };

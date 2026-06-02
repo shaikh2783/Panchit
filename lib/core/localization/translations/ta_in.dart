@@ -2923,5 +2923,8 @@ const Map<String, String> taIN = {
   "widget_prize_won": "வெற்றி பரிசு: @amount",
   "widget_refund": "திரும்பப் பெறுதல்: @status",
   "widget_timer_unavailable": "டைமர் கிடைக்கவில்லை",
+  "hub_no_filtered_competitions": "\"@category\" போட்டிகள் இல்லை",
+  "hub_no_filtered_msg": "இந்த வகைக்கு எந்த போட்டியும் பொருந்தவில்லை. வேறு வடிகட்டியை முயற்சிக்கவும்.",
+  "hub_clear_filter": "வடிகட்டியை அழி"
 
 };

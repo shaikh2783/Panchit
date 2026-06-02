@@ -1943,4 +1943,7 @@ const Map<String, String> nlNL = {
   'widget_prize_won': 'Gewonnen prijs: @amount',
   'widget_refund': 'Terugbetaling: @status',
   'widget_timer_unavailable': 'Timer niet beschikbaar',
+  'hub_no_filtered_competitions': 'Geen "@category" wedstrijden',
+  'hub_no_filtered_msg': 'Geen wedstrijden komen overeen met deze categorie. Probeer een ander filter.',
+  'hub_clear_filter': 'Filter wissen',
 };

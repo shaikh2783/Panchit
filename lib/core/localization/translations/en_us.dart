@@ -2946,4 +2946,9 @@ const Map<String, String> enUS = {
   'widget_prize_won': 'Prize Won: @amount',
   'widget_refund': 'Refund: @status',
   'widget_timer_unavailable': 'Timer unavailable',
+
+  // Category filter empty state
+  'hub_no_filtered_competitions': 'No "@category" competitions',
+  'hub_no_filtered_msg': 'No competitions match this category. Try a different filter.',
+  'hub_clear_filter': 'Clear Filter',
 };

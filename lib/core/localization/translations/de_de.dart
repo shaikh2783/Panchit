@@ -1943,4 +1943,9 @@ const Map<String, String> deDE = {
   'widget_prize_won': 'Gewonnener Preis: @amount',
   'widget_refund': 'Erstattung: @status',
   'widget_timer_unavailable': 'Timer nicht verfügbar',
+
+  // Hub Filter
+  'hub_no_filtered_competitions': 'Keine \"@category\"-Wettbewerbe',
+  'hub_no_filtered_msg': 'Keine Wettbewerbe entsprechen dieser Kategorie. Versuche einen anderen Filter.',
+  'hub_clear_filter': 'Filter zurücksetzen',
 };

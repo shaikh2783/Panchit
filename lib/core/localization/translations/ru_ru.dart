@@ -1943,4 +1943,7 @@ const Map<String, String> ruRU = {
   'widget_prize_won': 'Выигранный приз: @amount',
   'widget_refund': 'Возврат: @status',
   'widget_timer_unavailable': 'Таймер недоступен',
+  'hub_no_filtered_competitions': 'Нет соревнований "@category"',
+  'hub_no_filtered_msg': 'Ни одно соревнование не соответствует этой категории. Попробуйте другой фильтр.',
+  'hub_clear_filter': 'Сбросить фильтр',
 };

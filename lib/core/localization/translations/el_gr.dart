@@ -1943,4 +1943,9 @@ const Map<String, String> elGR = {
   'widget_prize_won': 'Κερδισμένο Έπαθλο: @amount',
   'widget_refund': 'Επιστροφή: @status',
   'widget_timer_unavailable': 'Χρονόμετρο μη διαθέσιμο',
+
+  // Hub Filter
+  'hub_no_filtered_competitions': 'Δεν υπάρχουν διαγωνισμοί \"@category\"',
+  'hub_no_filtered_msg': 'Κανένας διαγωνισμός δεν ταιριάζει με αυτή την κατηγορία. Δοκιμάστε διαφορετικό φίλτρο.',
+  'hub_clear_filter': 'Εκκαθάριση φίλτρου',
 };

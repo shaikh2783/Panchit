@@ -2923,4 +2923,7 @@ const Map<String, String> urPK = {
   "widget_prize_won": "جیتا ہوا انعام: @amount",
   "widget_refund": "واپسی: @status",
   "widget_timer_unavailable": "ٹائمر دستیاب نہیں",
+  "hub_no_filtered_competitions": "\"@category\" مقابلے نہیں ہیں",
+  "hub_no_filtered_msg": "اس زمرے سے کوئی مقابلہ میل نہیں کھاتا۔ کوئی اور فلٹر آزمائیں۔",
+  "hub_clear_filter": "فلٹر صاف کریں",
 };

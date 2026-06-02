@@ -1943,4 +1943,9 @@ const Map<String, String> frFR = {
   'widget_prize_won': 'Prix remporté : @amount',
   'widget_refund': 'Remboursement : @status',
   'widget_timer_unavailable': 'Minuterie indisponible',
+
+  // Hub Filter
+  'hub_no_filtered_competitions': 'Aucune compétition \"@category\"',
+  'hub_no_filtered_msg': 'Aucune compétition ne correspond à cette catégorie. Essayez un filtre différent.',
+  'hub_clear_filter': 'Effacer le filtre',
 };

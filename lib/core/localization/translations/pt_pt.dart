@@ -173,4 +173,7 @@ const Map<String, String> ptPT = {
   'widget_prize_won': 'Prémio Ganho: @amount',
   'widget_refund': 'Reembolso: @status',
   'widget_timer_unavailable': 'Temporizador indisponível',
+  'hub_no_filtered_competitions': 'Nenhuma competição "@category"',
+  'hub_no_filtered_msg': 'Nenhuma competição corresponde a esta categoria. Tente um filtro diferente.',
+  'hub_clear_filter': 'Limpar filtro',
 };

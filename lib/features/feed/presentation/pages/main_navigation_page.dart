@@ -39,6 +39,7 @@ class _MainNavigationPageState extends State<MainNavigationPage>
   int _friendRequestsCount = 0;
   late AnimationController _badgeAnimationController;
   bool _showNavBar = true;
+  DateTime? _lastBackPress;
   static const double _navBarHeight = 75;
   static const double _navBarBottomMargin = 8;
   // Global Keys للوصول إلى ScrollControllers
@@ -162,11 +163,40 @@ class _MainNavigationPageState extends State<MainNavigationPage>
     final isDarkDestination = _currentIndex == 3; // Reels page (updated index)
     final theme = Theme.of(context);
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: isDarkDestination
-          ? SystemUiOverlayStyle.light
-          : SystemUiOverlayStyle.dark,
-      child: Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+
+        // Not on home tab → go home
+        if (_currentIndex != 0) {
+          setState(() {
+            _currentIndex = 0;
+            _showNavBar = true;
+          });
+          return;
+        }
+
+        // On home tab → double-back to exit
+        final now = DateTime.now();
+        if (_lastBackPress == null ||
+            now.difference(_lastBackPress!) > const Duration(seconds: 2)) {
+          _lastBackPress = now;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Press back again to exit'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        } else {
+          SystemNavigator.pop();
+        }
+      },
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: isDarkDestination
+            ? SystemUiOverlayStyle.light
+            : SystemUiOverlayStyle.dark,
+        child: Scaffold(
         extendBody: true,
         backgroundColor: theme.brightness == Brightness.dark
             ? const Color(0xFF0A0A0A)
@@ -241,6 +271,7 @@ class _MainNavigationPageState extends State<MainNavigationPage>
             },
           ),
         ),
+      ),
       ),
     );
   }

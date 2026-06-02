@@ -1943,4 +1943,7 @@ const Map<String, String> itIT = {
   'widget_prize_won': 'Premio vinto: @amount',
   'widget_refund': 'Rimborso: @status',
   'widget_timer_unavailable': 'Timer non disponibile',
+  'hub_no_filtered_competitions': 'Nessuna competizione "@category"',
+  'hub_no_filtered_msg': 'Nessuna competizione corrisponde a questa categoria. Prova un filtro diverso.',
+  'hub_clear_filter': 'Rimuovi filtro',
 };

@@ -2933,5 +2933,10 @@ const Map<String, String> arSA = {
   "widget_current_rank": "الترتيب الحالي: #@rank",
   "widget_prize_won": "الجائزة المُحرزة: @amount",
   "widget_refund": "الاسترداد: @status",
-  "widget_timer_unavailable": "المؤقت غير متاح"
+  "widget_timer_unavailable": "المؤقت غير متاح",
+
+  // Hub Filter
+  "hub_no_filtered_competitions": "لا توجد مسابقات \"@category\"",
+  "hub_no_filtered_msg": "لا توجد مسابقات تطابق هذه الفئة. جرّب فلتراً مختلفاً.",
+  "hub_clear_filter": "مسح الفلتر"
 };

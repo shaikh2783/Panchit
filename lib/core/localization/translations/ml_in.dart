@@ -3147,6 +3147,9 @@ const Map<String, String> mlIN = {
   "widget_current_rank": "നിലവിലെ റാങ്ക്: #@rank",
   "widget_prize_won": "നേടിയ സമ്മാനം: @amount",
   "widget_refund": "റീഫണ്ട്: @status",
-  "widget_timer_unavailable": "ടൈമർ ലഭ്യമല്ല"
+  "widget_timer_unavailable": "ടൈമർ ലഭ്യമല്ല",
+  "hub_no_filtered_competitions": "\"@category\" മത്സരങ്ങളൊന്നുമില്ല",
+  "hub_no_filtered_msg": "ഈ വിഭാഗത്തിന് യോജിക്കുന്ന മത്സരങ്ങളൊന്നുമില്ല. മറ്റൊരു ഫിൽറ്റർ പരീക്ഷിക്കുക.",
+  "hub_clear_filter": "ഫിൽറ്റർ മായ്ക്കുക"
 
 };

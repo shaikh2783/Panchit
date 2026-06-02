@@ -1943,4 +1943,7 @@ const Map<String, String> roRO = {
   'widget_prize_won': 'Premiu Câștigat: @amount',
   'widget_refund': 'Rambursare: @status',
   'widget_timer_unavailable': 'Cronometru indisponibil',
+  'hub_no_filtered_competitions': 'Nicio competiție "@category"',
+  'hub_no_filtered_msg': 'Nicio competiție nu corespunde acestei categorii. Încercați un alt filtru.',
+  'hub_clear_filter': 'Șterge filtrul',
 };
