@@ -571,7 +571,7 @@ class _MenuPageState extends State<MenuPage> {
                       ),
                     _FeedItem(
                       icon: Iconsax.cup,
-                      label: 'my_competitions',
+                      label: 'my_competitions_title',
                       gradient: const [Color(0xFF7C3AED), Color(0xFF0EA5E9)],
                       onTap: () {
                         _hapticTap();
@@ -984,7 +984,7 @@ class _MenuPageState extends State<MenuPage> {
                           ),
                         _FeedItem(
                           icon: Iconsax.cup,
-                          label: 'competitions',
+                          label: 'hub_competitions_title',
                           gradient: const [
                             Color(0xFF7C3AED),
                             Color(0xFF0EA5E9),

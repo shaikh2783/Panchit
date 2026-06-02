@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:snginepro/core/theme/design_tokens.dart';
@@ -54,7 +55,7 @@ class _CompetitionEntryPageState extends State<CompetitionEntryPage> {
   Future<void> _pickImages() async {
     if (!_canPickImages) {
       _showMessage(
-        'This competition accepts ${competition.allowedMediaType.label.toLowerCase()} entries only.',
+        'entry_media_type_only'.trParams({'type': competition.allowedMediaType.label.toLowerCase()}),
         isError: true,
       );
       return;
@@ -74,7 +75,7 @@ class _CompetitionEntryPageState extends State<CompetitionEntryPage> {
   Future<void> _pickVideo() async {
     if (!_canPickVideo) {
       _showMessage(
-        'This competition accepts ${competition.allowedMediaType.label.toLowerCase()} entries only.',
+        'entry_media_type_only'.trParams({'type': competition.allowedMediaType.label.toLowerCase()}),
         isError: true,
       );
       return;
@@ -91,18 +92,12 @@ class _CompetitionEntryPageState extends State<CompetitionEntryPage> {
 
   Future<void> _submit() async {
     if (!competition.isRegistrationOpen) {
-      _showMessage(
-        'Competition registration is no longer open.',
-        isError: true,
-      );
+      _showMessage('entry_registration_closed'.tr, isError: true);
       return;
     }
 
     if (!_hasValidEntry) {
-      _showMessage(
-        'Add text, image, or video before submitting your entry.',
-        isError: true,
-      );
+      _showMessage('entry_no_content'.tr, isError: true);
       return;
     }
 
@@ -113,12 +108,12 @@ class _CompetitionEntryPageState extends State<CompetitionEntryPage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => GlassPopupDialog(
-        title: 'Confirm Entry',
+        title: 'entry_confirm_title'.tr,
         message:
-            '${formatMoney(competition.entryFee, competition.currencySymbol)} will be deducted from your wallet after submission. Your entry will be published as a competition post.\n\n${_buildSummaryText()}',
+            '${formatMoney(competition.entryFee, competition.currencySymbol)} ${'entry_deduction_msg'.tr}\n\n${_buildSummaryText()}',
         icon: Icons.verified,
-        secondaryLabel: 'Cancel',
-        primaryLabel: 'Submit Entry',
+        secondaryLabel: 'cancel'.tr,
+        primaryLabel: 'entry_submit'.tr,
       ),
     );
 
@@ -143,7 +138,7 @@ class _CompetitionEntryPageState extends State<CompetitionEntryPage> {
             type: FileUploadType.photo,
           );
           if (uploaded == null) {
-            throw Exception('Image upload failed.');
+            throw Exception('entry_image_upload_failed'.tr);
           }
           uploadedPhotos.add(_mapPhoto(uploaded));
         }
@@ -162,7 +157,7 @@ class _CompetitionEntryPageState extends State<CompetitionEntryPage> {
           },
         );
         if (uploaded == null) {
-          throw Exception('Video upload failed.');
+          throw Exception('entry_video_upload_failed'.tr);
         }
         uploadedVideo = _mapVideo(uploaded);
       }
@@ -185,7 +180,7 @@ class _CompetitionEntryPageState extends State<CompetitionEntryPage> {
       } catch (_) {
         // Wallet bloc is not always mounted in this route tree.
       }
-      _showMessage(result.message ?? 'Competition entry submitted successfully.');
+      _showMessage(result.message ?? 'competition_entry_submitted'.tr);
       Navigator.of(context).pop(true);
     } catch (error) {
       if (!mounted) return;
@@ -204,49 +199,31 @@ class _CompetitionEntryPageState extends State<CompetitionEntryPage> {
     switch (competition.allowedMediaType) {
       case CompetitionAllowedMediaType.imageOnly:
         if (_video != null) {
-          _showMessage(
-            'Video entries are not allowed for this competition.',
-            isError: true,
-          );
+          _showMessage('entry_video_not_allowed'.tr, isError: true);
           return false;
         }
         if (_images.isEmpty) {
-          _showMessage(
-            'Please select at least one image for this competition.',
-            isError: true,
-          );
+          _showMessage('entry_image_required'.tr, isError: true);
           return false;
         }
         return true;
       case CompetitionAllowedMediaType.videoOnly:
         if (_images.isNotEmpty) {
-          _showMessage(
-            'Image entries are not allowed for this competition.',
-            isError: true,
-          );
+          _showMessage('entry_image_not_allowed'.tr, isError: true);
           return false;
         }
         if (_video == null) {
-          _showMessage(
-            'Please select a video for this competition.',
-            isError: true,
-          );
+          _showMessage('entry_video_required'.tr, isError: true);
           return false;
         }
         return true;
       case CompetitionAllowedMediaType.textOnly:
         if (_images.isNotEmpty || _video != null) {
-          _showMessage(
-            'Only text entries are allowed for this competition.',
-            isError: true,
-          );
+          _showMessage('entry_text_only'.tr, isError: true);
           return false;
         }
         if (_textController.text.trim().isEmpty) {
-          _showMessage(
-            'Please enter your text submission before continuing.',
-            isError: true,
-          );
+          _showMessage('entry_text_required'.tr, isError: true);
           return false;
         }
         return true;
@@ -263,12 +240,12 @@ class _CompetitionEntryPageState extends State<CompetitionEntryPage> {
 
   String _buildSummaryText() {
     if (_video != null) {
-      return 'Selected media: 1 video';
+      return 'entry_summary_video'.tr;
     }
     if (_images.isNotEmpty) {
-      return 'Selected media: ${_images.length} image(s)';
+      return 'entry_summary_images'.trParams({'count': '${_images.length}'});
     }
-    return 'Selected entry: text submission';
+    return 'entry_summary_text'.tr;
   }
 
   Map<String, dynamic> _mapPhoto(UploadedFileData file) {
@@ -307,18 +284,18 @@ class _CompetitionEntryPageState extends State<CompetitionEntryPage> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Competition Entry'),
+        title: Text('entry_title'.tr),
       ),
       body: ListView(
         padding: const EdgeInsets.all(Spacing.lg),
         children: [
           CompetitionCard(
             competition: competition,
-            primaryButtonLabel: 'View Details',
+            primaryButtonLabel: 'entry_view_details'.tr,
             onPrimaryTap: () => Navigator.of(context).maybePop(),
             showCountdown: true,
             secondaryChild: Text(
-              'Allowed media: ${competition.allowedMediaType.label}',
+              'entry_allowed_media'.trParams({'type': competition.allowedMediaType.label}),
               style: theme.textTheme.bodyMedium,
             ),
           ),
@@ -346,7 +323,7 @@ class _CompetitionEntryPageState extends State<CompetitionEntryPage> {
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
             ),
-            child: Text(_isSubmitting ? 'Submitting...' : 'Submit Entry'),
+            child: Text(_isSubmitting ? 'entry_submitting'.tr : 'entry_submit'.tr),
           ),
         ),
       ),
@@ -365,7 +342,7 @@ class _CompetitionEntryPageState extends State<CompetitionEntryPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Create your competition entry',
+              'entry_create_title'.tr,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w700,
                   ),
@@ -375,9 +352,9 @@ class _CompetitionEntryPageState extends State<CompetitionEntryPage> {
               controller: _textController,
               enabled: _canUseText && !_isSubmitting,
               maxLines: 6,
-              decoration: const InputDecoration(
-                hintText: 'Write your caption or text entry',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                hintText: 'entry_caption_hint'.tr,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: Spacing.lg),
@@ -388,22 +365,22 @@ class _CompetitionEntryPageState extends State<CompetitionEntryPage> {
                 OutlinedButton.icon(
                   onPressed: _isSubmitting || !_canPickImages ? null : _pickImages,
                   icon: const Icon(Icons.image_outlined),
-                  label: const Text('Add Images'),
+                  label: Text('entry_add_images'.tr),
                 ),
                 OutlinedButton.icon(
                   onPressed: _isSubmitting || !_canPickVideo ? null : _pickVideo,
                   icon: const Icon(Icons.videocam_outlined),
-                  label: const Text('Add Video'),
+                  label: Text('entry_add_video'.tr),
                 ),
               ],
             ),
             if (_images.isNotEmpty) ...[
               const SizedBox(height: Spacing.md),
-              Text('Selected images: ${_images.length}'),
+              Text('entry_selected_images'.trParams({'count': '${_images.length}'})),
             ],
             if (_video != null) ...[
               const SizedBox(height: Spacing.md),
-              Text('Selected video: ${_video!.path.split('/').last}'),
+              Text('${'entry_selected_video'.tr}: ${_video!.path.split('/').last}'),
             ],
           ],
         ),

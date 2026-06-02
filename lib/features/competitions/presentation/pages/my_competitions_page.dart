@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:snginepro/core/theme/design_tokens.dart';
 import 'package:snginepro/features/competitions/data/models/competition_models.dart';
@@ -63,7 +64,7 @@ class _MyCompetitionsPageState extends State<MyCompetitionsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Competitions'),
+        title: Text('my_competitions_title'.tr),
       ),
       body: RefreshIndicator(
         onRefresh: _load,
@@ -72,13 +73,13 @@ class _MyCompetitionsPageState extends State<MyCompetitionsPage> {
           CompetitionListState.loading => const Center(
               child: CircularProgressIndicator(),
             ),
-          CompetitionListState.empty => const CompetitionSectionPlaceholder(
-              title: 'No competitions joined yet',
-              message: 'Your active, completed, won, and refunded competitions will appear here.',
+          CompetitionListState.empty => CompetitionSectionPlaceholder(
+              title: 'my_competitions_empty_title'.tr,
+              message: 'my_competitions_empty_msg'.tr,
             ),
           CompetitionListState.error => CompetitionSectionPlaceholder(
-              title: 'Unable to load your competitions',
-              message: _error ?? 'Something went wrong.',
+              title: 'my_competitions_load_failed'.tr,
+              message: _error ?? 'something_went_wrong'.tr,
               showRetry: true,
               onRetry: _load,
             ),

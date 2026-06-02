@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:snginepro/core/config/app_config.dart';
@@ -72,7 +73,7 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
     if (competition == null) return;
 
     if (competition.isCancelled) {
-      _showMessage('This competition has been cancelled.');
+      _showMessage('competition_cancelled_msg'.tr);
       return;
     }
 
@@ -82,7 +83,7 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
     }
 
     if (competition.isVotingOngoing) {
-      _showMessage('Voting is ongoing. Entries are closed.');
+      _showMessage('competition_voting_entries_closed'.tr);
       _openLeaderboard();
       return;
     }
@@ -90,12 +91,11 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
     if (competition.isRegistrationNotStarted) {
       final shouldNotify = await showDialog<bool>(
         context: context,
-        builder: (context) => const GlassPopupDialog(
-          title: 'Starts Soon',
-          message:
-              'Registration has not started yet. Enable notifications and we will remind you when the competition opens.',
-          primaryLabel: 'Notify Me',
-          secondaryLabel: 'Later',
+        builder: (context) => GlassPopupDialog(
+          title: 'competition_starts_soon'.tr,
+          message: 'competition_registration_not_started_msg'.tr,
+          primaryLabel: 'competition_notify_me'.tr,
+          secondaryLabel: 'later'.tr,
           icon: Icons.notifications_active_outlined,
         ),
       );
@@ -107,7 +107,7 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
 
     if (!competition.isRegistrationOpen) {
       _showMessage(
-        'Registration is closed for this competition.',
+        'competition_registration_closed'.tr,
         isError: true,
       );
       await _loadDetails();
@@ -141,7 +141,7 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
       setState(() {
         _competition = competition.copyWith(isNotifyEnabled: true);
       });
-      _showMessage('Competition reminder enabled.');
+      _showMessage('competition_reminder_enabled'.tr);
     } catch (error) {
       _showMessage(error.toString(), isError: true);
     }
@@ -159,7 +159,7 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
 
       if (!eligibility.success &&
           (eligibility.message ?? '').toLowerCase().contains('already')) {
-        _showMessage(eligibility.message ?? 'You have already joined this competition.');
+        _showMessage(eligibility.message ?? 'competition_already_joined'.tr);
         await _loadDetails();
         return;
       }
@@ -171,12 +171,11 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
       if (wallet.balance < entryFee) {
         final shouldAddMoney = await showDialog<bool>(
           context: context,
-          builder: (context) => const GlassPopupDialog(
-            title: 'Insufficient Balance',
-            message:
-                'Insufficient Balance. Please recharge your wallet to join.',
-            primaryLabel: 'Add Money',
-            secondaryLabel: 'Cancel',
+          builder: (context) => GlassPopupDialog(
+            title: 'competition_insufficient_balance_title'.tr,
+            message: 'competition_insufficient_balance_msg'.tr,
+            primaryLabel: 'add_money'.tr,
+            secondaryLabel: 'cancel'.tr,
             icon: Icons.account_balance_wallet_outlined,
           ),
         );
@@ -195,7 +194,7 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
       );
 
       if (submitted == true && mounted) {
-        _showMessage('Competition entry submitted successfully.');
+        _showMessage('competition_entry_submitted'.tr);
         _loadDetails();
       }
     } catch (error) {
@@ -239,16 +238,16 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
 
     if (_isLoading && competition == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Competition Details')),
+        appBar: AppBar(title: Text('competition_details'.tr)),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     if (_errorMessage != null && competition == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Competition Details')),
+        appBar: AppBar(title: Text('competition_details'.tr)),
         body: CompetitionSectionPlaceholder(
-          title: 'Unable to load competition',
+          title: 'competition_load_failed'.tr,
           message: _errorMessage!,
           showRetry: true,
           onRetry: _loadDetails,
@@ -309,7 +308,7 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
                 child: Expanded(
                   child: OutlinedButton(
                     onPressed: _openLeaderboard,
-                    child: const Text('View Entries'),
+                    child: Text('competition_view_entries'.tr),
                   ),
                 ),
               ),
@@ -319,7 +318,7 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
                   onPressed: _isCheckingWallet ? null : _handlePrimaryAction,
                   child: Text(
                     _isCheckingWallet
-                        ? 'Checking...'
+                        ? 'competition_checking'.tr
                         : _primaryActionLabel(competition),
                   ),
                 ),
@@ -490,15 +489,15 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
                     const SizedBox(height: Spacing.sm),
                     CompetitionCountdownTimer(
                       targetTime: competition.registrationEnd,
-                      prefix: 'Closes in',
-                      emptyLabel: 'Closing soon',
+                      prefix: 'competition_closes_in'.tr,
+                      emptyLabel: 'competition_closing_soon'.tr,
                     ),
                   ] else if (competition.isRegistrationNotStarted) ...[
                     const SizedBox(height: Spacing.sm),
                     CompetitionCountdownTimer(
                       targetTime: competition.registrationStart,
-                      prefix: 'Opens in',
-                      emptyLabel: 'Opening soon',
+                      prefix: 'competition_opens_in'.tr,
+                      emptyLabel: 'competition_opening_soon'.tr,
                     ),
                   ],
                 ],
@@ -538,31 +537,31 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
 
   Widget _buildOverviewCard(CompetitionModel competition) {
     return _sectionCard(
-      title: 'Overview',
+      title: 'competition_overview'.tr,
       icon: Iconsax.info_circle,
       child: Column(
         children: [
-          _detailRow('Category', competition.category ?? 'General'),
-          _detailRow('Allowed Media', competition.allowedMediaType.label),
+          _detailRow('competition_category'.tr, competition.category ?? 'competition_general'.tr),
+          _detailRow('competition_allowed_media'.tr, competition.allowedMediaType.label),
           _detailRow(
-            'Entry Fee',
+            'competition_entry_fee'.tr,
             formatMoney(competition.entryFee, competition.currencySymbol),
           ),
           _detailRow(
-            'Prize Pool',
+            'competition_prize_pool'.tr,
             formatMoney(competition.prizePool, competition.currencySymbol),
           ),
           if (competition.minimumUsersRequired != null)
             _detailRow(
-              'Minimum Users',
+              'competition_minimum_users'.tr,
               '${competition.minimumUsersRequired}',
             ),
           if (competition.totalParticipants != null)
             _detailRow(
-              'Participants',
+              'competition_participants'.tr,
               '${competition.totalParticipants}',
             ),
-          _detailRow('Status', competition.status.label),
+          _detailRow('competition_status'.tr, competition.status.label),
         ],
       ),
     );
@@ -577,7 +576,7 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
     final descLong = description.length > descCollapseAt;
 
     return _sectionCard(
-      title: 'About',
+      title: 'competition_about'.tr,
       icon: Iconsax.document_text,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -595,7 +594,7 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
               GestureDetector(
                 onTap: () => setState(() => _descExpanded = !_descExpanded),
                 child: Text(
-                  _descExpanded ? 'Show less' : 'Read more',
+                  _descExpanded ? 'competition_show_less'.tr : 'competition_read_more'.tr,
                   style: theme.textTheme.labelMedium?.copyWith(
                     color: theme.colorScheme.primary,
                     fontWeight: FontWeight.w700,
@@ -630,7 +629,7 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
                   ),
                   const SizedBox(width: Spacing.sm),
                   Text(
-                    'Competition Rules',
+                    'competition_rules_header'.tr,
                     style: theme.textTheme.labelLarge?.copyWith(
                       fontWeight: FontWeight.w700,
                       color: theme.colorScheme.primary,
@@ -731,21 +730,21 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
 
   Widget _buildScheduleCard(CompetitionModel competition) {
     return _sectionCard(
-      title: 'Schedule',
+      title: 'competition_schedule'.tr,
       icon: Iconsax.calendar_1,
       child: Column(
         children: [
           _detailRow(
-            'Registration Start',
-            formatDateTime(competition.registrationStart) ?? 'TBA',
+            'competition_registration_start'.tr,
+            formatDateTime(competition.registrationStart) ?? 'competition_tba'.tr,
           ),
           _detailRow(
-            'Registration End',
-            formatDateTime(competition.registrationEnd) ?? 'TBA',
+            'competition_registration_end'.tr,
+            formatDateTime(competition.registrationEnd) ?? 'competition_tba'.tr,
           ),
           _detailRow(
-            'Voting End',
-            formatDateTime(competition.votingEnd) ?? 'TBA',
+            'competition_voting_end'.tr,
+            formatDateTime(competition.votingEnd) ?? 'competition_tba'.tr,
           ),
         ],
       ),
@@ -754,14 +753,14 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
 
   Widget _buildPrizesCard(CompetitionModel competition) {
     return _sectionCard(
-      title: 'Prize Distribution',
+      title: 'competition_prize_distribution'.tr,
       icon: Iconsax.medal_star,
       child: Column(
         children: competition.prizes.isEmpty
             ? [
-                const Align(
+                Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('Prize details are not available yet.'),
+                  child: Text('competition_no_prizes'.tr),
                 ),
               ]
             : competition.prizes
@@ -785,16 +784,16 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
         : competition.entries.take(3).toList(growable: false);
 
     return _sectionCard(
-      title: 'Leaderboard',
+      title: 'competition_leaderboard'.tr,
       icon: Iconsax.ranking,
       trailing: TextButton(
         onPressed: _openLeaderboard,
-        child: const Text('View All'),
+        child: Text('view_all'.tr),
       ),
       child: leaders.isEmpty
-          ? const Align(
+          ? Align(
               alignment: Alignment.centerLeft,
-              child: Text('Leaderboard will appear once entries are available.'),
+              child: Text('competition_leaderboard_empty'.tr),
             )
           : Column(
               children: leaders.take(3).map((entry) {
@@ -807,7 +806,7 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
                       const SizedBox(width: Spacing.md),
                       Expanded(
                         child: Text(
-                          entry.userName ?? 'Participant',
+                          entry.userName ?? 'competition_participant_default'.tr,
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium
@@ -832,12 +831,12 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
 
   Widget _buildWinnersCard(CompetitionModel competition) {
     return _sectionCard(
-      title: 'Winners',
+      title: 'competition_winners'.tr,
       icon: Iconsax.crown_1,
       child: competition.winners.isEmpty
-          ? const Align(
+          ? Align(
               alignment: Alignment.centerLeft,
-              child: Text('Winner details will be visible after completion.'),
+              child: Text('competition_winners_empty'.tr),
             )
           : Column(
               children: competition.winners
@@ -877,14 +876,14 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
               const SizedBox(width: Spacing.sm),
               Expanded(
                 child: Text(
-                  'Participant Posts',
+                  'competition_participant_posts'.tr,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w700,
                       ),
                 ),
               ),
               Text(
-                '${entries.length} entries',
+                '${entries.length} ${'competition_entries_label'.tr}',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Theme.of(context)
                           .colorScheme
@@ -999,15 +998,17 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
   }
 
   String _primaryActionLabel(CompetitionModel competition) {
-    if (competition.isCancelled) return 'Cancelled / Refunded';
-    if (competition.isCompleted) return 'View Winners';
-    if (competition.isVotingOngoing) return 'Voting Ongoing';
+    if (competition.isCancelled) return 'competition_action_cancelled'.tr;
+    if (competition.isCompleted) return 'competition_action_view_winners'.tr;
+    if (competition.isVotingOngoing) return 'competition_action_voting_ongoing'.tr;
     if (competition.isRegistrationNotStarted) {
-      return competition.isNotifyEnabled ? 'Reminder Enabled' : 'Notify Me';
+      return competition.isNotifyEnabled
+          ? 'competition_action_reminder_enabled'.tr
+          : 'competition_notify_me'.tr;
     }
-    if (competition.isJoined) return 'View My Entry';
-    if (competition.isRegistrationOpen) return 'Join Competition';
-    return 'Starts Soon';
+    if (competition.isJoined) return 'competition_action_view_my_entry'.tr;
+    if (competition.isRegistrationOpen) return 'competition_action_join'.tr;
+    return 'competition_starts_soon'.tr;
   }
 }
 
@@ -1193,14 +1194,14 @@ class _CompetitionEntryCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        entry.userName ?? 'Participant',
+                        entry.userName ?? 'competition_participant_default'.tr,
                         style: theme.textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.w700,
                         ),
                       ),
                       if (entry.rank != null)
                         Text(
-                          'Rank #${entry.rank}',
+                          '${'competition_rank_prefix'.tr}${entry.rank}',
                           style: theme.textTheme.labelSmall?.copyWith(
                             color: theme.colorScheme.primary,
                             fontWeight: FontWeight.w600,
