@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:snginepro/core/theme/design_tokens.dart';
 import 'package:snginepro/core/theme/widgets/frosted_glass_card.dart';
@@ -79,7 +80,7 @@ class CompetitionCard extends StatelessWidget {
               Expanded(
                 child: _MetricTile(
                   icon: Iconsax.ticket_discount,
-                  label: 'Entry Fee',
+                  label: 'competition_entry_fee'.tr,
                   value: formatMoney(
                     competition.entryFee,
                     competition.currencySymbol,
@@ -98,22 +99,21 @@ class CompetitionCard extends StatelessWidget {
           const SizedBox(height: Spacing.sm),
           _InfoRow(
             icon: Iconsax.gallery,
-            text: 'Allowed media: ${competition.allowedMediaType.label}',
+            text: 'entry_allowed_media'.trParams({'type': competition.allowedMediaType.label}),
           ),
           if (showCountdown) ...[
             const SizedBox(height: Spacing.md),
             CompetitionCountdownTimer(
               targetTime: competition.registrationEnd,
-              prefix: 'Registration ends in',
-              emptyLabel: 'Registration closing soon',
+              prefix: 'widget_registration_ends_in'.tr,
+              emptyLabel: 'widget_registration_closing_soon'.tr,
             ),
           ],
           if (showRegistrationStart) ...[
             const SizedBox(height: Spacing.md),
             _InfoRow(
               icon: Iconsax.calendar_1,
-              text:
-                  'Starts ${formatDateTime(competition.registrationStart) ?? 'TBA'}',
+              text: '${'widget_starts_prefix'.tr} ${formatDateTime(competition.registrationStart) ?? 'competition_tba'.tr}',
             ),
           ],
           if (secondaryChild != null) ...[
@@ -209,20 +209,20 @@ class PrizePoolWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return _MetricTile(
       icon: Iconsax.cup,
-      label: 'Prize Pool',
+      label: 'competition_prize_pool'.tr,
       value: formatMoney(amount, currencySymbol),
     );
   }
 }
 
 class CompetitionCountdownTimer extends StatefulWidget {
-  const CompetitionCountdownTimer({
+  CompetitionCountdownTimer({
     super.key,
     required this.targetTime,
     required this.prefix,
-    this.emptyLabel = 'Timer unavailable',
+    String? emptyLabel,
     this.onFinished,
-  });
+  }) : emptyLabel = emptyLabel ?? 'widget_timer_unavailable'.tr;
 
   final DateTime? targetTime;
   final String prefix;
@@ -323,19 +323,16 @@ class WinnerRankBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = switch (rank) {
-      1 => (
-          '1st Place Winner',
-          const [Color(0xFFFFD700), Color(0xFFB8860B)],
-        ),
-      2 => (
-          '2nd Place Winner',
-          const [Color(0xFFE5E7EB), Color(0xFF9CA3AF)],
-        ),
-      _ => (
-          '3rd Place Winner',
-          const [Color(0xFFCD7F32), Color(0xFF8B5A2B)],
-        ),
+    final colors = switch (rank) {
+      1 => const [Color(0xFFFFD700), Color(0xFFB8860B)],
+      2 => const [Color(0xFFE5E7EB), Color(0xFF9CA3AF)],
+      _ => const [Color(0xFFCD7F32), Color(0xFF8B5A2B)],
+    };
+
+    final label = switch (rank) {
+      1 => compact ? 'widget_rank_1st_compact'.tr : 'widget_rank_1st'.tr,
+      2 => compact ? 'widget_rank_2nd_compact'.tr : 'widget_rank_2nd'.tr,
+      _ => compact ? 'widget_rank_3rd_compact'.tr : 'widget_rank_3rd'.tr,
     };
 
     return ClipRRect(
@@ -348,14 +345,14 @@ class WinnerRankBadge extends StatelessWidget {
             vertical: compact ? 6 : 8,
           ),
           decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [style.$2[0], style.$2[1]]),
+            gradient: LinearGradient(colors: [colors[0], colors[1]]),
             borderRadius: BorderRadius.circular(Radii.pill),
             border: Border.all(color: Colors.white.withValues(alpha: 0.26)),
           ),
           child: Text(
-            compact ? '${rank}st Winner'.replaceFirst('3st', '3rd').replaceFirst('2st', '2nd') : style.$1,
+            label,
             style: TextStyle(
-              color: rank == 2 ? Colors.black87 : Colors.white,
+              color: rank == 2 ? Colors.black87 : Colors.white, // silver badge needs dark text
               fontSize: compact ? 11 : 12,
               fontWeight: FontWeight.w700,
             ),
@@ -563,7 +560,7 @@ class CompetitionRulesDialog extends StatelessWidget {
                 Icon(Icons.gavel_outlined, size: 28, color: theme.colorScheme.primary),
                 const SizedBox(width: Spacing.sm),
                 Text(
-                  'Competition Rules',
+                  'competition_rules_header'.tr,
                   style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.w700,
                   ),
@@ -586,14 +583,14 @@ class CompetitionRulesDialog extends StatelessWidget {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () => Navigator.of(context).pop(false),
-                    child: const Text('Cancel'),
+                    child: Text('cancel'.tr),
                   ),
                 ),
                 const SizedBox(width: Spacing.md),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () => Navigator.of(context).pop(true),
-                    child: const Text('I Agree'),
+                    child: Text('widget_i_agree'.tr),
                   ),
                 ),
               ],
@@ -650,7 +647,7 @@ class CompetitionSectionPlaceholder extends StatelessWidget {
                 const SizedBox(height: Spacing.lg),
                 ElevatedButton(
                   onPressed: onRetry,
-                  child: const Text('Retry'),
+                  child: Text('widget_retry'.tr),
                 ),
               ],
             ],
@@ -682,7 +679,7 @@ class CompetitionWinnerTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  winner.userName ?? 'Winner',
+                  winner.userName ?? 'widget_winner_default'.tr,
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.w700,
                       ),
@@ -725,19 +722,17 @@ class CompetitionHistoryTile extends StatelessWidget {
     return CompetitionCard(
       competition: item.competition,
       onTap: onTap,
-      primaryButtonLabel: item.statusLabel ?? 'View Details',
+      primaryButtonLabel: item.statusLabel ?? 'entry_view_details'.tr,
       onPrimaryTap: onTap ?? () {},
       secondaryChild: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (item.currentRank != null)
-            Text('Current Rank: #${item.currentRank}'),
+            Text('widget_current_rank'.trParams({'rank': '${item.currentRank}'})),
           if (item.prizeWon != null)
-            Text(
-              'Prize Won: ${formatMoney(item.prizeWon, item.competition.currencySymbol)}',
-            ),
+            Text('widget_prize_won'.trParams({'amount': formatMoney(item.prizeWon, item.competition.currencySymbol)})),
           if ((item.refundStatus ?? '').isNotEmpty)
-            Text('Refund: ${item.refundStatus}'),
+            Text('widget_refund'.trParams({'status': item.refundStatus!})),
         ],
       ),
     );

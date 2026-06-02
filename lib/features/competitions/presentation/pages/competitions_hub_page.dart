@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:snginepro/core/theme/design_tokens.dart';
@@ -161,7 +162,7 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
               : item;
         }).toList(growable: false);
       });
-      _showMessage('Competition reminder enabled.');
+      _showMessage('competition_reminder_enabled'.tr);
     } catch (error) {
       if (!mounted) return;
       _showMessage(error.toString(), isError: true);
@@ -223,14 +224,14 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
                     child: _buildTab(
                       state: _liveState,
                       competitions: _sorted(_filtered(_liveCompetitions)),
-                      emptyTitle: 'No live competitions',
-                      emptyMessage: 'Check back soon for the next paid challenge.',
-                      errorTitle: 'Unable to load live competitions',
+                      emptyTitle: 'hub_no_live_competitions'.tr,
+                      emptyMessage: 'hub_no_live_msg'.tr,
+                      errorTitle: 'hub_live_load_failed'.tr,
                       errorMessage: _liveError,
                       onRetry: _loadLiveCompetitions,
                       cardBuilder: (c) => _CompetitionHubCard(
                         competition: c,
-                        primaryLabel: c.isJoined ? 'View My Entry' : 'Join Now',
+                        primaryLabel: c.isJoined ? 'competition_action_view_my_entry'.tr : 'hub_join_now'.tr,
                         onTap: () => _openCompetitionDetails(c),
                         onPrimaryTap: () => _openCompetitionDetails(c),
                         showCountdown: true,
@@ -242,18 +243,18 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
                     child: _buildTab(
                       state: _upcomingState,
                       competitions: _sorted(_filtered(_upcomingCompetitions)),
-                      emptyTitle: 'No upcoming competitions',
-                      emptyMessage: 'New premium contests will appear here.',
-                      errorTitle: 'Unable to load upcoming competitions',
+                      emptyTitle: 'hub_no_upcoming_competitions'.tr,
+                      emptyMessage: 'hub_no_upcoming_msg'.tr,
+                      errorTitle: 'hub_upcoming_load_failed'.tr,
                       errorMessage: _upcomingError,
                       onRetry: _loadUpcomingCompetitions,
                       cardBuilder: (c) => _CompetitionHubCard(
                         competition: c,
                         primaryLabel: _notifyingCompetitionIds.contains(c.id)
-                            ? 'Please wait…'
+                            ? 'hub_please_wait'.tr
                             : c.isNotifyEnabled
-                                ? 'Reminder Set'
-                                : 'Notify Me',
+                                ? 'hub_reminder_set'.tr
+                                : 'competition_notify_me'.tr,
                         onTap: () => _openCompetitionDetails(c),
                         onPrimaryTap: () {
                           if (_notifyingCompetitionIds.contains(c.id) ||
@@ -269,14 +270,14 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
                     child: _buildTab(
                       state: _pastState,
                       competitions: _sorted(_filtered(_pastCompetitions)),
-                      emptyTitle: 'No past winners yet',
-                      emptyMessage: 'Completed competitions will appear here.',
-                      errorTitle: 'Unable to load past winners',
+                      emptyTitle: 'hub_no_past_winners'.tr,
+                      emptyMessage: 'hub_no_past_msg'.tr,
+                      errorTitle: 'hub_past_load_failed'.tr,
                       errorMessage: _pastError,
                       onRetry: _loadPastCompetitions,
                       cardBuilder: (c) => _CompetitionHubCard(
                         competition: c,
-                        primaryLabel: 'View Winners',
+                        primaryLabel: 'competition_action_view_winners'.tr,
                         onTap: () => _openCompetitionDetails(c),
                         onPrimaryTap: () => _openCompetitionDetails(c),
                         winnerPreview: c.winners.isNotEmpty ? c.winners : null,
@@ -307,7 +308,7 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
       foregroundColor: Colors.white,
       actions: [
         IconButton(
-          tooltip: 'My Competitions',
+          tooltip: 'hub_my_competitions_tooltip'.tr,
           onPressed: _openMyCompetitions,
           icon: const Icon(Icons.person_outline),
           color: Colors.white,
@@ -372,7 +373,7 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
                       const Icon(Iconsax.cup, size: 22, color: Colors.white),
                       const SizedBox(width: Spacing.sm),
                       Text(
-                        'Competitions',
+                        'hub_competitions_title'.tr,
                         style: theme.textTheme.headlineSmall?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.w800,
@@ -385,12 +386,12 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
                   Row(
                     children: [
                       _HeaderStatBadge(
-                        label: '$liveCount Live',
+                        label: '$liveCount ${'hub_live'.tr}',
                         icon: Iconsax.flash_1,
                       ),
                       const SizedBox(width: Spacing.sm),
                       _HeaderStatBadge(
-                        label: '$upcomingCount Upcoming',
+                        label: '$upcomingCount ${'hub_tab_upcoming'.tr}',
                         icon: Iconsax.calendar_1,
                       ),
                     ],
@@ -405,9 +406,9 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
           children: [
             Icon(Iconsax.cup, size: 18, color: Colors.white),
             const SizedBox(width: Spacing.sm),
-            const Text(
-              'Competitions',
-              style: TextStyle(
+            Text(
+              'hub_competitions_title'.tr,
+              style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
                 fontSize: 18,
@@ -437,10 +438,10 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
               fontWeight: FontWeight.w700,
             ),
             unselectedLabelStyle: theme.textTheme.labelLarge,
-            tabs: const [
-              Tab(text: 'Live Now'),
-              Tab(text: 'Upcoming'),
-              Tab(text: 'Past Winners'),
+            tabs: [
+              Tab(text: 'hub_tab_live_now'.tr),
+              Tab(text: 'hub_tab_upcoming'.tr),
+              Tab(text: 'hub_tab_past_winners'.tr),
             ],
           ),
         ),
@@ -480,9 +481,9 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
                 children: [
                   _buildCategoryChip(theme),
                   const SizedBox(width: Spacing.xs),
-                  _sortChip(_SortField.date, 'Date', theme),
+                  _sortChip(_SortField.date, 'hub_sort_date'.tr, theme),
                   const SizedBox(width: Spacing.xs),
-                  _sortChip(_SortField.price, 'Price', theme),
+                  _sortChip(_SortField.price, 'hub_sort_price'.tr, theme),
                 ],
               ),
             ),
@@ -512,7 +513,7 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
   Widget _buildCategoryChip(ThemeData theme) {
     final hasCategory = _selectedCategory != null;
     return FilterChip(
-      label: Text(hasCategory ? _selectedCategory! : 'Category'),
+      label: Text(hasCategory ? _selectedCategory! : 'competition_category'.tr),
       selected: hasCategory,
       showCheckmark: false,
       visualDensity: VisualDensity.compact,
@@ -557,7 +558,7 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
       case CompetitionListState.error:
         return CompetitionSectionPlaceholder(
           title: errorTitle,
-          message: errorMessage ?? 'Something went wrong.',
+          message: errorMessage ?? 'something_went_wrong'.tr,
           showRetry: true,
           onRetry: onRetry,
         );
@@ -722,7 +723,7 @@ class _CompetitionHubCard extends StatelessWidget {
                       top: Spacing.sm,
                       right: Spacing.sm,
                       child: _GlassChip(
-                        label: 'Joined',
+                        label: 'joined'.tr,
                         icon: Icons.check_circle_outline,
                       ),
                     ),
@@ -775,7 +776,7 @@ class _CompetitionHubCard extends StatelessWidget {
                           competition.entryFee,
                           competition.currencySymbol,
                         ),
-                        tooltip: 'Entry Fee',
+                        tooltip: 'competition_entry_fee'.tr,
                       ),
                       const SizedBox(width: Spacing.sm),
                       _StatChip(
@@ -784,7 +785,7 @@ class _CompetitionHubCard extends StatelessWidget {
                           competition.prizePool,
                           competition.currencySymbol,
                         ),
-                        tooltip: 'Prize Pool',
+                        tooltip: 'competition_prize_pool'.tr,
                         highlight: true,
                       ),
                       if (competition.totalParticipants != null) ...[
@@ -792,14 +793,14 @@ class _CompetitionHubCard extends StatelessWidget {
                         _StatChip(
                           icon: Iconsax.people,
                           label: '${competition.totalParticipants}',
-                          tooltip: 'Participants',
+                          tooltip: 'competition_participants'.tr,
                         ),
                       ],
                       const Spacer(),
                       _StatChip(
                         icon: Iconsax.gallery,
                         label: competition.allowedMediaType.label,
-                        tooltip: 'Allowed media',
+                        tooltip: 'hub_allowed_media_tooltip'.tr,
                       ),
                     ],
                   ),
@@ -809,16 +810,16 @@ class _CompetitionHubCard extends StatelessWidget {
                     const SizedBox(height: Spacing.sm),
                     CompetitionCountdownTimer(
                       targetTime: competition.registrationEnd,
-                      prefix: 'Closes in',
-                      emptyLabel: 'Closing soon',
+                      prefix: 'competition_closes_in'.tr,
+                      emptyLabel: 'competition_closing_soon'.tr,
                     ),
                   ] else if (showRegistrationStart &&
                       competition.registrationStart != null) ...[
                     const SizedBox(height: Spacing.sm),
                     CompetitionCountdownTimer(
                       targetTime: competition.registrationStart,
-                      prefix: 'Opens in',
-                      emptyLabel: 'Opening soon',
+                      prefix: 'competition_opens_in'.tr,
+                      emptyLabel: 'competition_opening_soon'.tr,
                     ),
                   ],
 
@@ -1048,7 +1049,7 @@ class _CategoryPickerSheet extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    'Filter by Category',
+                    'hub_filter_by_category'.tr,
                     style: theme.textTheme.titleMedium
                         ?.copyWith(fontWeight: FontWeight.w700),
                   ),
@@ -1081,7 +1082,7 @@ class _CategoryPickerSheet extends StatelessWidget {
                       Icons.apps_outlined,
                       color: theme.colorScheme.primary,
                     ),
-                    title: const Text('All Categories'),
+                    title: Text('hub_all_categories'.tr),
                     selected: selectedCategory == null,
                     selectedColor: theme.colorScheme.primary,
                     selectedTileColor:

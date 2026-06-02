@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:snginepro/core/theme/design_tokens.dart';
 import 'package:snginepro/features/competitions/data/models/competition_models.dart';
@@ -64,7 +65,7 @@ class _CompetitionLeaderboardPageState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget.competitionName} Leaderboard'),
+        title: Text('${widget.competitionName} ${'leaderboard_title_suffix'.tr}'),
       ),
       body: RefreshIndicator(
         onRefresh: _load,
@@ -73,13 +74,13 @@ class _CompetitionLeaderboardPageState
           CompetitionListState.loading => const Center(
               child: CircularProgressIndicator(),
             ),
-          CompetitionListState.empty => const CompetitionSectionPlaceholder(
-              title: 'No leaderboard yet',
-              message: 'Entries will appear here once users join.',
+          CompetitionListState.empty => CompetitionSectionPlaceholder(
+              title: 'leaderboard_empty_title'.tr,
+              message: 'leaderboard_empty_msg'.tr,
             ),
           CompetitionListState.error => CompetitionSectionPlaceholder(
-              title: 'Unable to load leaderboard',
-              message: _error ?? 'Something went wrong.',
+              title: 'leaderboard_load_failed'.tr,
+              message: _error ?? 'something_went_wrong'.tr,
               showRetry: true,
               onRetry: _load,
             ),
@@ -100,7 +101,7 @@ class _CompetitionLeaderboardPageState
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                entry.userName ?? 'Participant',
+                                entry.userName ?? 'competition_participant_default'.tr,
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall
@@ -114,7 +115,11 @@ class _CompetitionLeaderboardPageState
                                 ),
                               const SizedBox(height: Spacing.xs),
                               Text(
-                                'Likes: ${entry.likesCount ?? 0} • Comments: ${entry.commentsCount ?? 0} • Reactions: ${entry.reactionsCount ?? 0}',
+                                'leaderboard_stats'.trParams({
+                                  'likes': '${entry.likesCount ?? 0}',
+                                  'comments': '${entry.commentsCount ?? 0}',
+                                  'reactions': '${entry.reactionsCount ?? 0}',
+                                }),
                                 style: Theme.of(context).textTheme.bodySmall,
                               ),
                             ],
