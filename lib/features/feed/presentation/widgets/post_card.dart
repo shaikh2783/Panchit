@@ -3172,7 +3172,6 @@ class _PostCardState extends State<PostCard>
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              // عرض أيقونات التفاعلات الرئيسية
                               if (_currentPost
                                   .reactionBreakdown
                                   .isNotEmpty) ...[
@@ -3194,41 +3193,48 @@ class _PostCardState extends State<PostCard>
                     )
                   else
                     const Expanded(child: SizedBox()),
-                  const Spacer(),
-                  // عرض إحصائيات متقدمة - Reviews يظهر للجميع
-                  Text(
-                    'post_reviews'.trParams({
-                      'count': _currentPost.reviewsCountFormatted,
-                    }),
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.6),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  if (_currentPost.viewsCount > 0) ...[
-                    Text(
-                      'post_views'.trParams({
-                        'count': _currentPost.viewsCountFormatted,
-                      }),
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.6),
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Wrap(
+                        alignment: WrapAlignment.end,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: 10,
+                        runSpacing: 4,
+                        children: [
+                          Text(
+                            'post_reviews'.trParams({
+                              'count': _currentPost.reviewsCountFormatted,
+                            }),
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                            ),
+                          ),
+                          if (_currentPost.viewsCount > 0)
+                            Text(
+                              'post_views'.trParams({
+                                'count': _currentPost.viewsCountFormatted,
+                              }),
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                              ),
+                            ),
+                          Text(
+                            '${_currentPost.commentsCountFormatted} ${'comments'.tr}',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                            ),
+                          ),
+                          Text(
+                            'post_shares2'.trParams({
+                              'count': _currentPost.sharesCountFormatted,
+                            }),
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(width: 12),
-                  ],
-                  Text(
-                    '${_currentPost.commentsCountFormatted} ${'comments'.tr}',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.6),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Text(
-                    'post_shares2'.trParams({
-                      'count': _currentPost.sharesCountFormatted,
-                    }),
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.6),
                     ),
                   ),
                 ],

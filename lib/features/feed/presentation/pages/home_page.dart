@@ -27,6 +27,7 @@ import 'package:snginepro/features/friends/data/services/friends_api_service.dar
 import 'package:snginepro/core/network/api_client.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:snginepro/features/profile/presentation/pages/profile_page.dart';
+import 'package:video_player/video_player.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, this.onScrollDirectionChanged});
@@ -65,7 +66,7 @@ class _ReelsPreviewRail extends StatelessWidget {
     return '${m}:${s.toString().padLeft(2, '0')}';
   }
 
-  // Priority: video.thumbnail → photos[0] → ogImage → video.originalSource
+  // Priority: video.thumbnail → photos[0] → ogImage
   String _thumbFor(Post reel) {
     final vt = reel.video?.thumbnail ?? '';
     if (vt.isNotEmpty) return vt;
@@ -78,21 +79,25 @@ class _ReelsPreviewRail extends StatelessWidget {
     final og = reel.ogImage ?? '';
     if (og.isNotEmpty) return og;
 
-    // Last resort: use the video source itself (some APIs serve a thumbnail
-    // at the same path with a different extension / query param).
-    final vs = reel.video?.originalSource ?? '';
-    if (vs.isNotEmpty) return vs;
-
     return '';
   }
 
   // Returns a resolved URL. Skips mediaResolver for already-absolute URLs
   // to avoid double-base-URL bugs (e.g. https://host.com/https://host.com/…).
-  String? _resolveThumb(Post reel) {
-    final raw = _thumbFor(reel);
+  String? _resolveMediaUrl(String raw) {
     if (raw.isEmpty) return null;
     if (raw.startsWith('http://') || raw.startsWith('https://')) return raw;
     return mediaResolver(raw).toString();
+  }
+
+  String? _resolveThumb(Post reel) => _resolveMediaUrl(_thumbFor(reel));
+
+  String? _resolveVideoUrl(Post reel) {
+    final bestSource = reel.video?.bestSourceUri()?.toString() ?? '';
+    if (bestSource.isNotEmpty) return _resolveMediaUrl(bestSource);
+
+    final original = reel.video?.originalSource ?? '';
+    return _resolveMediaUrl(original);
   }
 
   @override
@@ -149,6 +154,7 @@ class _ReelsPreviewRail extends StatelessWidget {
             itemBuilder: (context, index) {
               final reel = reels[index];
               final thumbUrl = _resolveThumb(reel);
+              final videoUrl = _resolveVideoUrl(reel);
               final durationText = reel.videoDurationSeconds != null
                   ? _formatDuration(reel.videoDurationSeconds!)
                   : null;
@@ -172,23 +178,11 @@ class _ReelsPreviewRail extends StatelessWidget {
                     children: [
                       // Thumbnail
                       Positioned.fill(
-                        child: thumbUrl != null
-                            ? CachedNetworkImage(
-                                imageUrl: thumbUrl,
-                                fit: BoxFit.cover,
-                                // spinner only while actually loading
-                                placeholder: (_, __) => _ReelThumbPlaceholder(
-                                  isDark: isDark,
-                                  showSpinner: true,
-                                ),
-                                // play icon if the URL fails
-                                errorWidget: (_, __, ___) =>
-                                    _ReelThumbPlaceholder(
-                                  isDark: isDark,
-                                ),
-                              )
-                            // no URL at all → play icon, not a spinner
-                            : _ReelThumbPlaceholder(isDark: isDark),
+                        child: _ReelThumbnail(
+                          imageUrl: thumbUrl,
+                          videoUrl: videoUrl,
+                          isDark: isDark,
+                        ),
                       ),
                       // Overlay gradient
                       Positioned.fill(
@@ -251,6 +245,134 @@ class _ReelsPreviewRail extends StatelessWidget {
         ),
         const SizedBox(height: 8),
       ],
+    );
+  }
+}
+
+class _ReelThumbnail extends StatefulWidget {
+  const _ReelThumbnail({
+    required this.imageUrl,
+    required this.videoUrl,
+    required this.isDark,
+  });
+
+  final String? imageUrl;
+  final String? videoUrl;
+  final bool isDark;
+
+  @override
+  State<_ReelThumbnail> createState() => _ReelThumbnailState();
+}
+
+class _ReelThumbnailState extends State<_ReelThumbnail> {
+  VideoPlayerController? _videoController;
+  Future<void>? _initializeFuture;
+  bool _imageFailed = false;
+
+  bool get _shouldUseVideoFallback =>
+      _imageFailed || (widget.imageUrl == null || widget.imageUrl!.isEmpty);
+
+  @override
+  void initState() {
+    super.initState();
+    _setupVideoController();
+  }
+
+  @override
+  void didUpdateWidget(covariant _ReelThumbnail oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.videoUrl != widget.videoUrl) {
+      _disposeVideoController();
+      _setupVideoController();
+    }
+    if (oldWidget.imageUrl != widget.imageUrl) {
+      _imageFailed = false;
+    }
+  }
+
+  void _setupVideoController() {
+    final videoUrl = widget.videoUrl;
+    if (videoUrl == null || videoUrl.isEmpty) return;
+
+    final uri = Uri.tryParse(videoUrl);
+    if (uri == null) return;
+
+    final controller = VideoPlayerController.networkUrl(uri);
+    _videoController = controller;
+    _initializeFuture = controller.initialize().then((_) async {
+      await controller.setLooping(false);
+      await controller.setVolume(0);
+      await controller.pause();
+    }).catchError((_) {});
+  }
+
+  void _disposeVideoController() {
+    final controller = _videoController;
+    _videoController = null;
+    _initializeFuture = null;
+    controller?.dispose();
+  }
+
+  @override
+  void dispose() {
+    _disposeVideoController();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_shouldUseVideoFallback) {
+      return CachedNetworkImage(
+        imageUrl: widget.imageUrl!,
+        fit: BoxFit.cover,
+        placeholder: (_, __) => _ReelThumbPlaceholder(
+          isDark: widget.isDark,
+          showSpinner: true,
+        ),
+        errorWidget: (_, __, ___) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              setState(() {
+                _imageFailed = true;
+              });
+            }
+          });
+          return _buildVideoFallback();
+        },
+      );
+    }
+
+    return _buildVideoFallback();
+  }
+
+  Widget _buildVideoFallback() {
+    final controller = _videoController;
+    final initializeFuture = _initializeFuture;
+    if (controller == null || initializeFuture == null) {
+      return _ReelThumbPlaceholder(isDark: widget.isDark);
+    }
+
+    return FutureBuilder<void>(
+      future: initializeFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done ||
+            !controller.value.isInitialized) {
+          return _ReelThumbPlaceholder(
+            isDark: widget.isDark,
+            showSpinner: true,
+          );
+        }
+
+        return FittedBox(
+          fit: BoxFit.cover,
+          clipBehavior: Clip.hardEdge,
+          child: SizedBox(
+            width: controller.value.size.width,
+            height: controller.value.size.height,
+            child: VideoPlayer(controller),
+          ),
+        );
+      },
     );
   }
 }
@@ -611,8 +733,10 @@ class HomePageState extends State<HomePage> {
       final state = postsBloc.state;
 
       if (state is PostsLoadedState && state.hasMore && !state.isLoadingMore) {
-        postsBloc.add(LoadMorePostsEvent());
-      } else if (state is PostsLoadedState) {
+        postsBloc.add(LoadMorePostsEvent(
+          type: _selectedType,
+          includeAds: _selectedType == 'competition' ? '0' : '1',
+        ));
       }
     }
   }
@@ -681,7 +805,10 @@ class HomePageState extends State<HomePage> {
   Future<void> _handleRefresh() async {
 
     final postsBloc = context.read<PostsBloc>();
-    postsBloc.add(RefreshPostsEvent());
+    postsBloc.add(RefreshPostsEvent(
+      type: _selectedType,
+      includeAds: _selectedType == 'competition' ? '0' : '1',
+    ));
 
     // 📖 تحديث القصص
     final storiesBloc = context.read<StoriesBloc>();
@@ -707,11 +834,11 @@ class HomePageState extends State<HomePage> {
     setState(() {
       _selectedType = type;
     });
-    
+
     final postsBloc = context.read<PostsBloc>();
     postsBloc.add(LoadPostsEvent(
       type: type,
-      includeAds: '1',
+      includeAds: type == 'competition' ? '0' : '1',
     ));
   }
 

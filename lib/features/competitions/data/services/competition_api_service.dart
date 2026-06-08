@@ -197,6 +197,34 @@ class CompetitionApiService {
     );
   }
 
+  Future<CompetitionSubmitResponse> updateCompetitionEntry({
+    required int competitionId,
+    required int entryId,
+    required CompetitionSubmitRequest request,
+  }) async {
+    final response = await _client.post(
+      _idEndpoint(
+        configKey: 'competition_update_entry',
+        fallbackBase: '/data/competitions/$competitionId/update-entry',
+        id: competitionId,
+        suffix: '/update-entry',
+      ),
+      body: {
+        ...request.toJson(),
+        'entry_id': entryId,
+      },
+    );
+
+    final result = CompetitionSubmitResponse.fromJson(response);
+    if (!result.success) {
+      throw ApiException(
+        result.message ?? 'Failed to update competition entry',
+        details: response,
+      );
+    }
+    return result;
+  }
+
   Future<CompetitionSubmitResponse> submitCompetitionEntry({
     required int competitionId,
     required CompetitionSubmitRequest request,

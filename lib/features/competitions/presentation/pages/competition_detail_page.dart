@@ -7,6 +7,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:snginepro/core/config/app_config.dart';
 import 'package:snginepro/core/theme/design_tokens.dart';
+import 'package:snginepro/features/auth/application/auth_notifier.dart';
 import 'package:snginepro/features/competitions/data/models/competition_models.dart';
 import 'package:snginepro/features/competitions/data/services/competition_api_service.dart';
 import 'package:snginepro/features/competitions/presentation/pages/competition_entry_page.dart';
@@ -55,8 +56,19 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
       final winners = await api.getCompetitionWinners(widget.competitionId);
 
       if (!mounted) return;
+      final mergedEntries = <CompetitionEntryModel>[
+        ...details.entries,
+        ...entries.where(
+          (remoteEntry) => !details.entries.any(
+            (detailEntry) =>
+                detailEntry.id == remoteEntry.id ||
+                (detailEntry.postId != null &&
+                    detailEntry.postId == remoteEntry.postId),
+          ),
+        ),
+      ];
       setState(() {
-        _competition = details.copyWith(entries: entries, winners: winners);
+        _competition = details.copyWith(entries: mergedEntries, winners: winners);
         _isLoading = false;
       });
     } catch (error) {
@@ -204,6 +216,29 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
       if (mounted) {
         setState(() => _isCheckingWallet = false);
       }
+    }
+  }
+
+  int? get _currentUserId {
+    final auth = context.read<AuthNotifier?>();
+    return int.tryParse(auth?.currentUser?['user_id']?.toString() ?? '');
+  }
+
+  Future<void> _editEntry(
+    CompetitionEntryModel entry,
+    CompetitionModel competition,
+  ) async {
+    final updated = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (_) => CompetitionEntryPage(
+          competition: competition,
+          existingEntry: entry,
+        ),
+      ),
+    );
+    if (updated == true && mounted) {
+      _showMessage('competition_entry_updated'.tr);
+      _loadDetails();
     }
   }
 
@@ -802,7 +837,11 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
                   padding: const EdgeInsets.only(bottom: Spacing.sm),
                   child: Row(
                     children: [
-                      WinnerRankBadge(rank: rank, compact: true),
+                      WinnerRankBadge(
+                        rank: rank,
+                        compact: true,
+                        showLabel: competition.isCompleted,
+                      ),
                       const SizedBox(width: Spacing.md),
                       Expanded(
                         child: Text(
@@ -848,15 +887,23 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
   }
 
   Widget _buildParticipantsSection(CompetitionModel competition) {
-    final entries = competition.entries;
-    if (entries.isEmpty) return const SizedBox.shrink();
+    final currentUserId = _currentUserId;
+    final myEntries = currentUserId != null
+        ? competition.entries
+            .where((e) => e.userId == currentUserId)
+            .toList(growable: false)
+        : const <CompetitionEntryModel>[];
 
+    // Hide section entirely when user hasn't joined and no entry found
+    if (!competition.isJoined && myEntries.isEmpty) return const SizedBox.shrink();
+
+    final canEdit = competition.isRegistrationOpen;
     final mediaAsset = context.read<AppConfig>().mediaAsset;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Section header row
+        // Section header
         Padding(
           padding: const EdgeInsets.only(bottom: Spacing.md),
           child: Row(
@@ -874,37 +921,40 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
                 ),
               ),
               const SizedBox(width: Spacing.sm),
-              Expanded(
-                child: Text(
-                  'competition_participant_posts'.tr,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                ),
-              ),
               Text(
-                '${entries.length} ${'competition_entries_label'.tr}',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withValues(alpha: 0.55),
+                'competition_my_entry'.tr,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
                     ),
               ),
             ],
           ),
         ),
-        // Entry cards
-        ...entries.map(
-          (entry) => Padding(
-            padding: const EdgeInsets.only(bottom: Spacing.md),
-            child: _CompetitionEntryCard(
-              entry: entry,
-              mediaAsset: mediaAsset,
-              currencySymbol: competition.currencySymbol,
+        // Empty state when joined but entry not yet visible
+        if (myEntries.isEmpty)
+          Text(
+            'competition_no_entry_yet'.tr,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.55),
+                ),
+          )
+        else
+          ...myEntries.map(
+            (entry) => Padding(
+              padding: const EdgeInsets.only(bottom: Spacing.md),
+              child: _CompetitionEntryCard(
+                entry: entry,
+                mediaAsset: mediaAsset,
+                currencySymbol: competition.currencySymbol,
+                canEdit: canEdit,
+                onEdit: canEdit ? () => _editEntry(entry, competition) : null,
+                isCompleted: competition.isCompleted,
+              ),
             ),
           ),
-        ),
       ],
     );
   }
@@ -1127,11 +1177,17 @@ class _CompetitionEntryCard extends StatelessWidget {
     required this.entry,
     required this.mediaAsset,
     this.currencySymbol,
+    this.canEdit = false,
+    this.onEdit,
+    this.isCompleted = false,
   });
 
   final CompetitionEntryModel entry;
   final Uri Function(String) mediaAsset;
   final String? currencySymbol;
+  final bool canEdit;
+  final VoidCallback? onEdit;
+  final bool isCompleted;
 
   String? _resolveUrl(String? raw) {
     if (raw == null || raw.trim().isEmpty) return null;
@@ -1212,7 +1268,11 @@ class _CompetitionEntryCard extends StatelessWidget {
                 ),
                 // Rank badge for top 3
                 if (entry.rank != null && entry.rank! <= 3)
-                  WinnerRankBadge(rank: entry.rank!, compact: true),
+                  WinnerRankBadge(
+                    rank: entry.rank!,
+                    compact: true,
+                    showLabel: isCompleted,
+                  ),
               ],
             ),
           ),
@@ -1364,6 +1424,22 @@ class _CompetitionEntryCard extends StatelessWidget {
                       ),
                     ),
                   ),
+                if (canEdit && onEdit != null) ...[
+                  const SizedBox(width: Spacing.xs),
+                  TextButton.icon(
+                    onPressed: onEdit,
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
+                      minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    icon: const Icon(Icons.edit_outlined, size: 14),
+                    label: Text('edit'.tr),
+                  ),
+                ],
               ],
             ),
           ),

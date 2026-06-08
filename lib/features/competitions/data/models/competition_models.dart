@@ -222,31 +222,56 @@ class CompetitionEntryModel {
   final String? currencySymbol;
 
   factory CompetitionEntryModel.fromJson(Map<String, dynamic> json) {
+    final post = _map(json['post']);
+    final photos = post['photos'];
+    String? previewUrl;
+    if (photos is List && photos.isNotEmpty && photos.first is Map<String, dynamic>) {
+      previewUrl = _string((photos.first as Map<String, dynamic>)['source']);
+    }
+    previewUrl ??= _string(
+      json['preview_url'] ??
+          json['post_thumbnail'] ??
+          post['og_image'] ??
+          post['preview_url'] ??
+          post['image'],
+    );
+
     return CompetitionEntryModel(
-      id: _int(json['id'] ?? json['entry_id'] ?? json['post_id']),
-      userId: _nullableInt(json['user_id']),
-      userName: _string(json['user_name'] ?? json['full_name'] ?? json['name']),
-      userAvatar: _string(json['user_picture'] ?? json['picture']),
-      postId: _nullableInt(json['post_id']),
-      postText: _string(json['text'] ?? json['caption'] ?? json['message']),
-      previewUrl: _string(
-        json['preview_url'] ??
-            json['thumbnail'] ??
-            json['media_url'] ??
-            json['image'],
+      id: _int(json['id'] ?? json['entry_id'] ?? json['competition_entry_id']),
+      userId: _nullableInt(json['user_id'] ?? post['user_id']),
+      userName: _string(
+        json['user_name'] ??
+            post['post_author_name'] ??
+            post['user_name'] ??
+            post['page_title'] ??
+            post['group_title'],
       ),
-      mediaType: _string(json['media_type'] ?? json['type']),
-      likesCount: _nullableInt(json['likes_count'] ?? json['likes']),
-      commentsCount: _nullableInt(json['comments_count'] ?? json['comments']),
+      userAvatar: _string(
+        json['user_avatar'] ??
+            post['post_author_picture'] ??
+            post['user_picture'] ??
+            post['page_picture'] ??
+            post['group_picture'],
+      ),
+      postId: _nullableInt(json['post_id'] ?? post['post_id']),
+      postText: _string(json['post_text'] ?? post['text_plain'] ?? post['text']),
+      previewUrl: previewUrl,
+      mediaType: _string(json['media_type'] ?? post['post_type']),
+      likesCount: _nullableInt(
+        json['likes_count'] ?? json['post_likes'] ?? post['reactions_total_count'],
+      ),
+      commentsCount: _nullableInt(
+        json['comments_count'] ?? json['post_comments'] ?? post['comments'],
+      ),
       reactionsCount: _nullableInt(
-        json['reactions_count'] ?? json['reactions'] ?? json['votes'],
+        json['reactions_count'] ??
+            json['post_reactions'] ??
+            post['reactions_total_count'],
       ),
       totalScore: _double(json['total_score'] ?? json['score']),
-      rank: _nullableInt(json['rank'] ?? json['entry_rank']),
+      rank: _nullableInt(json['rank'] ?? json['winner_rank']),
       prizeAmount: _double(json['prize_amount']),
-      currencySymbol: _string(
-        json['currency_symbol'] ?? json['currency'] ?? json['symbol'],
-      ),
+      currencySymbol: _string(json['currency_symbol']),
     );
   }
 }
@@ -515,12 +540,14 @@ class CompetitionModel {
         .map(CompetitionEntryModel.fromJson)
         .toList(growable: false);
 
-    final entries = _extractList(
-      json,
-      const ['entries', 'participants', 'competition_entries'],
-    ).whereType<Map<String, dynamic>>()
-        .map(CompetitionEntryModel.fromJson)
-        .toList(growable: false);
+    final userEntry = _extractMap(json, const ['user_entry']);
+    final entries = <CompetitionEntryModel>[
+      if (userEntry.isNotEmpty) CompetitionEntryModel.fromJson(userEntry),
+      ..._extractList(
+        json,
+        const ['participants', 'competition_entries'],
+      ).whereType<Map<String, dynamic>>().map(CompetitionEntryModel.fromJson),
+    ];
 
     final winners = _extractList(
       json,
@@ -695,6 +722,25 @@ List<dynamic> _extractList(Map<String, dynamic> json, List<String> keys) {
     }
   }
   return const <dynamic>[];
+}
+
+Map<String, dynamic> _extractMap(Map<String, dynamic> json, List<String> keys) {
+  for (final key in keys) {
+    final value = json[key];
+    if (value is Map<String, dynamic>) {
+      return value;
+    }
+  }
+  final data = json['data'];
+  if (data is Map<String, dynamic>) {
+    for (final key in keys) {
+      final value = data[key];
+      if (value is Map<String, dynamic>) {
+        return value;
+      }
+    }
+  }
+  return const <String, dynamic>{};
 }
 
 Map<String, dynamic> _map(Object? value) {

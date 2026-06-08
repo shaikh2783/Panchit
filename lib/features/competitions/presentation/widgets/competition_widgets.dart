@@ -316,13 +316,43 @@ class WinnerRankBadge extends StatelessWidget {
     super.key,
     required this.rank,
     this.compact = false,
+    this.showLabel = true,
   });
 
   final int rank;
   final bool compact;
+  /// When false (voting not yet complete), shows a neutral "#rank" chip
+  /// instead of the gold/silver/bronze "1st/2nd/3rd" badge.
+  final bool showLabel;
 
   @override
   Widget build(BuildContext context) {
+    if (!showLabel) {
+      final theme = Theme.of(context);
+      return Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: compact ? 8 : 10,
+          vertical: compact ? 4 : 6,
+        ),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surfaceContainerHighest
+              .withValues(alpha: 0.6),
+          borderRadius: BorderRadius.circular(Radii.pill),
+          border: Border.all(
+            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
+          ),
+        ),
+        child: Text(
+          '#$rank',
+          style: TextStyle(
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
+            fontSize: compact ? 11 : 12,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      );
+    }
+
     final colors = switch (rank) {
       1 => const [Color(0xFFFFD700), Color(0xFFB8860B)],
       2 => const [Color(0xFFE5E7EB), Color(0xFF9CA3AF)],
@@ -352,7 +382,7 @@ class WinnerRankBadge extends StatelessWidget {
           child: Text(
             label,
             style: TextStyle(
-              color: rank == 2 ? Colors.black87 : Colors.white, // silver badge needs dark text
+              color: rank == 2 ? Colors.black87 : Colors.white,
               fontSize: compact ? 11 : 12,
               fontWeight: FontWeight.w700,
             ),
