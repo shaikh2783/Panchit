@@ -17,9 +17,11 @@ class CompetitionEntryPage extends StatefulWidget {
   const CompetitionEntryPage({
     super.key,
     required this.competition,
+    this.existingEntry,
   });
 
   final CompetitionModel competition;
+  final CompetitionEntryModel? existingEntry;
 
   @override
   State<CompetitionEntryPage> createState() => _CompetitionEntryPageState();
@@ -34,6 +36,15 @@ class _CompetitionEntryPageState extends State<CompetitionEntryPage> {
   double _uploadProgress = 0;
 
   CompetitionModel get competition => widget.competition;
+  bool get _isEditMode => widget.existingEntry != null;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.existingEntry != null) {
+      _textController.text = widget.existingEntry!.postText ?? '';
+    }
+  }
 
   @override
   void dispose() {
@@ -105,20 +116,19 @@ class _CompetitionEntryPageState extends State<CompetitionEntryPage> {
       return;
     }
 
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => GlassPopupDialog(
-        title: 'entry_confirm_title'.tr,
-        message:
-            '${formatMoney(competition.entryFee, competition.currencySymbol)} ${'entry_deduction_msg'.tr}\n\n${_buildSummaryText()}',
-        icon: Icons.verified,
-        secondaryLabel: 'cancel'.tr,
-        primaryLabel: 'entry_submit'.tr,
-      ),
-    );
-
-    if (confirmed != true || !mounted) {
-      return;
+    if (!_isEditMode) {
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (context) => GlassPopupDialog(
+          title: 'entry_confirm_title'.tr,
+          message:
+              '${formatMoney(competition.entryFee, competition.currencySymbol)} ${'entry_deduction_msg'.tr}\n\n${_buildSummaryText()}',
+          icon: Icons.verified,
+          secondaryLabel: 'cancel'.tr,
+          primaryLabel: 'entry_submit'.tr,
+        ),
+      );
+      if (confirmed != true || !mounted) return;
     }
 
     setState(() {
@@ -169,18 +179,25 @@ class _CompetitionEntryPageState extends State<CompetitionEntryPage> {
         mediaType: _selectedMediaTypeLabel(),
       );
 
-      final result = await competitionApi.submitCompetitionEntry(
-        competitionId: competition.id,
-        request: request,
-      );
+      if (_isEditMode) {
+        await competitionApi.updateCompetitionEntry(
+          competitionId: competition.id,
+          entryId: widget.existingEntry!.id,
+          request: request,
+        );
+      } else {
+        final result = await competitionApi.submitCompetitionEntry(
+          competitionId: competition.id,
+          request: request,
+        );
+        if (!mounted) return;
+        try {
+          context.read<WalletOverviewBloc>().add(const RefreshWalletOverview());
+        } catch (_) {}
+        _showMessage(result.message ?? 'competition_entry_submitted'.tr);
+      }
 
       if (!mounted) return;
-      try {
-        context.read<WalletOverviewBloc>().add(const RefreshWalletOverview());
-      } catch (_) {
-        // Wallet bloc is not always mounted in this route tree.
-      }
-      _showMessage(result.message ?? 'competition_entry_submitted'.tr);
       Navigator.of(context).pop(true);
     } catch (error) {
       if (!mounted) return;
@@ -284,7 +301,7 @@ class _CompetitionEntryPageState extends State<CompetitionEntryPage> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('entry_title'.tr),
+        title: Text(_isEditMode ? 'entry_edit_title'.tr : 'entry_title'.tr),
       ),
       body: ListView(
         padding: const EdgeInsets.all(Spacing.lg),
@@ -323,7 +340,11 @@ class _CompetitionEntryPageState extends State<CompetitionEntryPage> {
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
             ),
-            child: Text(_isSubmitting ? 'entry_submitting'.tr : 'entry_submit'.tr),
+            child: Text(
+              _isSubmitting
+                  ? (_isEditMode ? 'entry_updating'.tr : 'entry_submitting'.tr)
+                  : (_isEditMode ? 'entry_update'.tr : 'entry_submit'.tr),
+            ),
           ),
         ),
       ),
@@ -342,7 +363,7 @@ class _CompetitionEntryPageState extends State<CompetitionEntryPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'entry_create_title'.tr,
+              _isEditMode ? 'entry_edit_create_title'.tr : 'entry_create_title'.tr,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w700,
                   ),
