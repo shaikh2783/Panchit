@@ -2526,6 +2526,15 @@ const Map<String, String> hiIN = {
   'failed_update_comment': 'टिप्पणी अपडेट करने में विफल',
   'reply': 'उत्तर',
   'show_more_replies': 'और उत्तर दिखाएँ',
+  'show_more_replies_count': 'और जवाब दिखाएं (@count)',
+  'voice_recording_saved': 'वॉयस रिकॉर्डिंग सेव हो गई',
+  'failed_ai_response': 'AI जवाब प्राप्त करने में विफल',
+  'microphone_permission_settings': 'कृपया सेटिंग्स से माइक्रोफोन की अनुमति दें',
+  'time_just_now': 'अभी',
+  'time_minutes_short': '@count मि.',
+  'time_hours_short': '@count घं.',
+  'time_days_short': '@count दिन',
+  'ai_bot_help': 'AI बोट सहायता',
 
 // Auth - Login/Signup
   'welcome_back_user': 'वापसी पर स्वागत है, @name! 🎉',

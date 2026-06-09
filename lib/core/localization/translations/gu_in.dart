@@ -2264,6 +2264,15 @@ const Map<String, String> guIN = {
   'failed_update_comment': 'ટિપ્પણી અપડેટ કરવામાં નિષ્ફળ',
   'reply': 'જવાબ',
   'show_more_replies': 'વધુ જવાબો બતાવો',
+  'show_more_replies_count': 'વધુ જવાબો બતાવો (@count)',
+  'voice_recording_saved': 'અવાજ રેકોર્ડિંગ સાચવ્યું',
+  'failed_ai_response': 'AI જવાબ મેળવવામાં નિષ્ફળ',
+  'microphone_permission_settings': 'સેટિંગ્સ માંથી માઇક્રોફોન પરવાનગી આપો',
+  'time_just_now': 'હમણાં',
+  'time_minutes_short': '@count મિ.',
+  'time_hours_short': '@count ક.',
+  'time_days_short': '@count દ.',
+  'ai_bot_help': 'AI બૉટ સહાય',
 
 // Auth - Login/Signup
   'welcome_back_user': 'પાછા આવવા બદલ સ્વાગત છે, @name! 🎉',

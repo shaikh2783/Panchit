@@ -2410,6 +2410,15 @@ const Map<String, String> orIN = {
   'failed_update_comment': 'ମନ୍ତବ୍ୟ ଅପଡେଟ୍ କରିବାରେ ବିଫଳ',
   'reply': 'ଉତ୍ତର',
   'show_more_replies': 'ଅଧିକ ଉତ୍ତର ଦେଖାନ୍ତୁ',
+  'show_more_replies_count': 'ଅଧିକ ଉତ୍ତର ଦେଖାନ୍ତୁ (@count)',
+  'voice_recording_saved': 'ଭଏସ ରେକର୍ଡିଂ ସଂରକ୍ଷିତ ହୋଇଛି',
+  'failed_ai_response': 'AI ପ୍ରତିକ୍ରିୟା ପ୍ରାପ୍ତ କରିବାରେ ବିଫଳ ହୋଇଛି',
+  'microphone_permission_settings': 'ଦୟାକରି ସେଟିଂ ଆପ୍ ରୁ ମାଇକ୍ରୋଫୋନ୍ ଅନୁମତି ଦିଅନ୍ତୁ',
+  'time_just_now': 'ଏବେ',
+  'time_minutes_short': '@count ମି.',
+  'time_hours_short': '@count ଘ.',
+  'time_days_short': '@count ଦ.',
+  'ai_bot_help': 'AI ବଟ ସାହାଯ୍ୟ',
 
 // Auth - Login/Signup
   'welcome_back_user': 'ପୁନଃ ସ୍ୱାଗତ, @name! 🎉',

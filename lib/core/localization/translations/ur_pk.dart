@@ -2406,6 +2406,15 @@ const Map<String, String> urPK = {
   'failed_update_comment': 'تبصرہ اپ ڈیٹ کرنے میں ناکامی',
   'reply': 'جواب',
   'show_more_replies': 'مزید جوابات دکھائیں',
+  'show_more_replies_count': 'مزید جوابات دکھائیں (@count)',
+  'voice_recording_saved': 'آواز ریکارڈنگ محفوظ ہو گئی',
+  'failed_ai_response': 'AI جواب حاصل کرنے میں ناکامی',
+  'microphone_permission_settings': 'براہ کرم سیٹنگز سے مائیکروفون کی اجازت دیں',
+  'time_just_now': 'ابھی',
+  'time_minutes_short': '@count منٹ',
+  'time_hours_short': '@count گھنٹے',
+  'time_days_short': '@count دن',
+  'ai_bot_help': 'AI بوٹ مدد',
 
 // Auth - Login/Signup
   'welcome_back_user': 'واپسی پر خوش آمدید، @name! 🎉',

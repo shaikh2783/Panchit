@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,6 +13,8 @@ import 'package:snginepro/core/theme/theme_controller.dart';
 import 'package:snginepro/core/config/dynamic_app_config_provider.dart';
 import 'package:snginepro/core/config/colored_pattern_model.dart';
 import 'package:snginepro/features/auth/application/auth_notifier.dart';
+import 'package:snginepro/features/competitions/data/models/competition_models.dart';
+import 'package:snginepro/features/competitions/data/services/competition_api_service.dart';
 import 'package:snginepro/features/feed/application/bloc/posts_bloc.dart';
 import 'package:snginepro/features/feed/application/bloc/posts_events.dart';
 import 'package:snginepro/features/feed/data/datasources/posts_api_service.dart';
@@ -21,6 +22,8 @@ import 'package:snginepro/features/feed/data/models/create_post_request.dart';
 import 'package:snginepro/features/feed/data/models/post_type_config.dart';
 import 'package:snginepro/features/feed/data/models/upload_file_data.dart';
 import 'package:snginepro/features/feed/data/models/post.dart';
+import 'package:snginepro/features/wallet/application/bloc/wallet_overview_bloc.dart';
+import 'package:snginepro/features/wallet/application/bloc/wallet_overview_event.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 /// Professional create post page - supports dark mode
@@ -34,6 +37,7 @@ class CreatePostPageModern extends StatefulWidget {
     this.initialPostType,
     this.showPrivacySelector = true,
     this.initialPrivacy,
+    this.competition,
   });
 
   final String? handle; // 'me', 'page', 'group', 'event'
@@ -43,6 +47,7 @@ class CreatePostPageModern extends StatefulWidget {
   final PostTypeOption? initialPostType; // Initial post type (e.g., Reel)
   final bool showPrivacySelector; // Toggle privacy picker visibility
   final String? initialPrivacy; // Optional starting privacy value
+  final CompetitionModel? competition;
 
   @override
   State<CreatePostPageModern> createState() => _CreatePostPageModernState();
@@ -85,6 +90,27 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
 
   final ThemeController _themeController = Get.find();
 
+  bool get _isCompetitionEntryMode => widget.competition != null;
+
+  List<PostTypeOption> get _competitionAllowedPostTypes {
+    final competition = widget.competition;
+    if (competition == null) return const <PostTypeOption>[];
+    switch (competition.allowedMediaType) {
+      case CompetitionAllowedMediaType.imageOnly:
+        return const <PostTypeOption>[PostTypeOption.photos];
+      case CompetitionAllowedMediaType.videoOnly:
+        return const <PostTypeOption>[PostTypeOption.video];
+      case CompetitionAllowedMediaType.textOnly:
+        return const <PostTypeOption>[PostTypeOption.text];
+      case CompetitionAllowedMediaType.all:
+        return const <PostTypeOption>[
+          PostTypeOption.text,
+          PostTypeOption.photos,
+          PostTypeOption.video,
+        ];
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -92,7 +118,12 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
     // Set initial post type if provided
     if (widget.initialPostType != null) {
       _selectedType = widget.initialPostType!;
-    } else {
+    }
+    if (_isCompetitionEntryMode) {
+      final allowedTypes = _competitionAllowedPostTypes;
+      if (allowedTypes.isNotEmpty && !allowedTypes.contains(_selectedType)) {
+        _selectedType = allowedTypes.first;
+      }
     }
     // إضافة listeners للتحديث عند تغيير النص أو التركيز
     _textController.addListener(() => setState(() {}));
@@ -121,11 +152,6 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       if (configProvider.appConfig == null) {
         await configProvider.loadConfig(forceRefresh: false);
       }
-      
-      // التحقق من تفعيل الـ Feelings من الـ Provider
-      final features = configProvider.features;
-      final feelingsEnabled = features?.posts.feelings ?? false;
-      
       
       // جلب البيانات من الـ Provider مباشرة باستخدام الـ getters الجديدة
       final feelingsData = configProvider.feelings ?? [];
@@ -194,6 +220,17 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
   }
 
   Future<void> _pickImages() async {
+    if (_isCompetitionEntryMode &&
+        !(widget.competition?.allowedMediaType.allowsImages ?? false)) {
+      Get.snackbar(
+        'error'.tr,
+        'This competition only allows text or video entries.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.error,
+        colorText: Colors.white,
+      );
+      return;
+    }
     final picker = ImagePicker();
     final List<XFile> images = await picker.pickMultiImage();
     if (images.isNotEmpty) {
@@ -205,6 +242,17 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
   }
 
   Future<void> _pickVideo() async {
+    if (_isCompetitionEntryMode &&
+        !(widget.competition?.allowedMediaType.allowsVideo ?? false)) {
+      Get.snackbar(
+        'error'.tr,
+        'This competition only allows text or image entries.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.error,
+        colorText: Colors.white,
+      );
+      return;
+    }
     final picker = ImagePicker();
     final XFile? videoFile = await picker.pickVideo(
       source: ImageSource.gallery,
@@ -565,6 +613,103 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
     }
   }
 
+  bool _validateCompetitionEntryFlow() {
+    final competition = widget.competition;
+    if (competition == null) return true;
+
+    if (!competition.isRegistrationOpen) {
+      Get.snackbar(
+        'error'.tr,
+        'entry_registration_closed'.tr,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.error,
+        colorText: Colors.white,
+      );
+      return false;
+    }
+
+    if (_audio != null ||
+        _selectedType == PostTypeOption.audio ||
+        _selectedType == PostTypeOption.album ||
+        _selectedType == PostTypeOption.file ||
+        _selectedType == PostTypeOption.poll ||
+        _selectedType == PostTypeOption.offer ||
+        _selectedType == PostTypeOption.job ||
+        _selectedType == PostTypeOption.feeling ||
+        _selectedType == PostTypeOption.colored ||
+        _selectedType == PostTypeOption.reel) {
+      Get.snackbar(
+        'error'.tr,
+        'Competition entries currently support only text, photos, or video.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.error,
+        colorText: Colors.white,
+      );
+      return false;
+    }
+
+    switch (competition.allowedMediaType) {
+      case CompetitionAllowedMediaType.imageOnly:
+        if (_images.isEmpty || _video != null) {
+          Get.snackbar(
+            'error'.tr,
+            'entry_image_required'.tr,
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: AppColors.error,
+            colorText: Colors.white,
+          );
+          return false;
+        }
+        return true;
+      case CompetitionAllowedMediaType.videoOnly:
+        if (_video == null || _images.isNotEmpty) {
+          Get.snackbar(
+            'error'.tr,
+            'entry_video_required'.tr,
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: AppColors.error,
+            colorText: Colors.white,
+          );
+          return false;
+        }
+        return true;
+      case CompetitionAllowedMediaType.textOnly:
+        if (_textController.text.trim().isEmpty ||
+            _images.isNotEmpty ||
+            _video != null) {
+          Get.snackbar(
+            'error'.tr,
+            'entry_text_required'.tr,
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: AppColors.error,
+            colorText: Colors.white,
+          );
+          return false;
+        }
+        return true;
+      case CompetitionAllowedMediaType.all:
+        if (_images.isEmpty &&
+            _video == null &&
+            _textController.text.trim().isEmpty) {
+          Get.snackbar(
+            'error'.tr,
+            'entry_no_content'.tr,
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: AppColors.error,
+            colorText: Colors.white,
+          );
+          return false;
+        }
+        return true;
+    }
+  }
+
+  String _competitionMediaTypeLabel() {
+    if (_video != null) return 'video';
+    if (_images.isNotEmpty) return 'image';
+    return 'text';
+  }
+
   Future<void> _createPost() async {
     if (_textController.text.trim().isEmpty &&
         _images.isEmpty &&
@@ -580,10 +725,17 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       return;
     }
 
+    if (!_validateCompetitionEntryFlow()) {
+      return;
+    }
+
     setState(() => _isCreating = true);
 
     try {
       final apiService = context.read<PostsApiService>();
+      final competitionApi = _isCompetitionEntryMode
+          ? context.read<CompetitionApiService>()
+          : null;
 
       // Upload images if present
       List<UploadedFileData>? uploadedPhotos;
@@ -666,35 +818,45 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         audio: uploadedAudio,
       );
 
-      // Debug logging for group posts
-      final requestJson = request.toJson();
-
       // Create the post
       final postResponse = await apiService.createPostAdvanced(request);
+      if (!postResponse.isSuccess) {
+        throw Exception(postResponse.message ?? 'Failed to create post');
+      }
+
+      if (_isCompetitionEntryMode) {
+        final createdPostId = postResponse.postId ??
+            (() {
+              final rawPostId = postResponse.postData?['post_id'];
+              if (rawPostId is int) return rawPostId;
+              return int.tryParse(rawPostId?.toString() ?? '');
+            })();
+        if (createdPostId == null) {
+          throw Exception('Created post ID not found for competition entry.');
+        }
+        await competitionApi!.submitCompetitionEntry(
+          competitionId: widget.competition!.id,
+          request: CompetitionSubmitRequest(
+            postId: createdPostId,
+            mediaType: _competitionMediaTypeLabel(),
+            message: _textController.text.trim(),
+          ),
+        );
+        if (mounted) {
+          try {
+            context.read<WalletOverviewBloc>().add(const RefreshWalletOverview());
+          } catch (_) {}
+        }
+      }
 
       // Update list and go back to main page
       if (mounted) {
-        // Close page first and return success
-        Get.back(result: true);
-
-        // Show success message
-        Get.snackbar(
-          'success'.tr,
-          _uploadedVideo != null
-              ? 'post_published_video_processing'.tr
-              : 'post_successfully_created'.tr,
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: AppColors.success,
-          colorText: Colors.white,
-          duration: const Duration(seconds: 3),
-        );
-
         // Add new post immediately instead of full reload
         if (postResponse.isSuccess && postResponse.postData != null) {
           try {
             final newPost = Post.fromJson(postResponse.postData!);
             context.read<PostsBloc>().add(AddPostEvent(newPost));
-          } catch (e, stackTrace) {
+          } catch (e) {
             // In case of parsing failure, fall back to reload
             context.read<PostsBloc>().add(RefreshPostsEvent());
           }
@@ -702,11 +864,30 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           // If we didn't get post data, refresh the list
           context.read<PostsBloc>().add(RefreshPostsEvent());
         }
+
+        // Close page first and return success
+        Get.back(result: true);
+
+        // Show success message
+        Get.snackbar(
+          'success'.tr,
+          _isCompetitionEntryMode
+              ? 'competition_entry_submitted'.tr
+              : _uploadedVideo != null
+                  ? 'post_published_video_processing'.tr
+                  : 'post_successfully_created'.tr,
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: AppColors.success,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 3),
+        );
       }
     } catch (e) {
       Get.snackbar(
         'error'.tr,
-        'failed_to_create_post'.trParams({'error': e.toString()}),
+        _isCompetitionEntryMode
+            ? e.toString().replaceFirst('Exception: ', '')
+            : 'failed_to_create_post'.trParams({'error': e.toString()}),
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: AppColors.error,
         colorText: Colors.white,
@@ -729,9 +910,19 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
     final handle = widget.handle ?? 'me';
     final handleId = widget.handleId;
     final feeling = _buildFeelingData();
-    
-    
-    switch (_selectedType) {
+
+    var effectiveType = _selectedType;
+    if (_isCompetitionEntryMode) {
+      if (video != null) {
+        effectiveType = PostTypeOption.video;
+      } else if (photos != null && photos.isNotEmpty) {
+        effectiveType = PostTypeOption.photos;
+      } else {
+        effectiveType = PostTypeOption.text;
+      }
+    }
+
+    switch (effectiveType) {
       case PostTypeOption.photos:
         // Convert UploadedFileData to PhotoData with size and extension
         final photoData = photos?.map((file) {
@@ -958,7 +1149,9 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
 
   PreferredSizeWidget _buildAppBar(bool isDark) {
     String title = 'create_post_title'.tr;
-    if (widget.handle == 'me') {
+    if (_isCompetitionEntryMode) {
+      title = widget.competition!.title;
+    } else if (widget.handle == 'me') {
       title = 'post_as_user'.trParams({'name': widget.handleName ?? 'User'});
     } else if (widget.handle == 'page') {
       title = 'post_to_page'.trParams({'name': widget.handleName ?? ''});
@@ -1242,6 +1435,21 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           // Post types
           _buildPostTypeSelector(isDark),
 
+          if (_isCompetitionEntryMode) ...[
+            const SizedBox(height: 12),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                'Allowed entry type: ${widget.competition!.allowedMediaType.label}',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: isDark ? Colors.grey[400] : Colors.grey[600],
+                ),
+              ),
+            ),
+          ],
+
           const SizedBox(height: 16),
 
           // Text field
@@ -1463,6 +1671,9 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
   }
 
   Widget _buildPostTypeSelector(bool isDark) {
+    final types = _isCompetitionEntryMode
+        ? _competitionAllowedPostTypes
+        : PostTypeOption.values.take(8).toList();
     return Container(
       height: 110,
       margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -1487,7 +1698,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: ListView(
           scrollDirection: Axis.horizontal,
-          children: PostTypeOption.values.take(8).map((type) {
+            children: types.map((type) {
             final config = PostTypeConfig.getConfig(type);
             final isSelected = _selectedType == type;
 
@@ -1496,11 +1707,8 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
               margin: const EdgeInsets.only(right: 10),
               child: InkWell(
                 onTap: () {
-                  // Allow picking files even if initialPostType is set
-                  if (widget.initialPostType == null) {
-                    setState(() => _selectedType = type);
-                  }
-                  
+                  setState(() => _selectedType = type);
+
                   if (type == PostTypeOption.photos) {
                     _pickImages();
                   } else if (type == PostTypeOption.video) {
@@ -2677,6 +2885,16 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
   }
 
   Widget _buildAdditionalTools(bool isDark) {
+    final showPhotosTool = !_isCompetitionEntryMode ||
+        (widget.competition?.allowedMediaType.allowsImages ?? false);
+    final showVideoTool = !_isCompetitionEntryMode ||
+        (widget.competition?.allowedMediaType.allowsVideo ?? false);
+    if (_isCompetitionEntryMode &&
+        !showPhotosTool &&
+        !showVideoTool &&
+        _selectedFeelingAction == null) {
+      return const SizedBox.shrink();
+    }
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
@@ -2720,37 +2938,51 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  _buildToolButton(
-                    Icons.photo_library_rounded,
-                    'photos_button'.tr,
-                    const Color(0xFF667eea),
-                    const Color(0xFF764ba2),
-                    () => _pickImages(),
-                  ),
-                  const SizedBox(width: 12),
-                  _buildToolButton(
-                    Icons.color_lens_rounded,
-                    'colored_button'.tr,
-                    const Color(0xFFFF6B6B),
-                    const Color(0xFFFFE66D),
-                    () => _toggleColoredPatterns(),
-                  ),
-                  const SizedBox(width: 12),
-                  _buildToolButton(
-                    Icons.emoji_emotions_rounded,
-                    'feeling_button'.tr,
-                    const Color(0xFFf093fb),
-                    const Color(0xFFf5576c),
-                    _openFeelingPicker,
-                  ),
-                  const SizedBox(width: 12),
-                  _buildToolButton(
-                    Icons.location_on_rounded,
-                    'location_button'.tr,
-                    const Color(0xFFff9a9e),
-                    const Color(0xFFfecfef),
-                    () {},
-                  ),
+                  if (showPhotosTool) ...[
+                    _buildToolButton(
+                      Icons.photo_library_rounded,
+                      'photos_button'.tr,
+                      const Color(0xFF667eea),
+                      const Color(0xFF764ba2),
+                      () => _pickImages(),
+                    ),
+                    const SizedBox(width: 12),
+                  ],
+                  if (showVideoTool) ...[
+                    _buildToolButton(
+                      Icons.videocam_rounded,
+                      'post_type_video'.tr,
+                      const Color(0xFF4facfe),
+                      const Color(0xFF00f2fe),
+                      () => _pickVideo(),
+                    ),
+                    const SizedBox(width: 12),
+                  ],
+                  if (!_isCompetitionEntryMode) ...[
+                    _buildToolButton(
+                      Icons.color_lens_rounded,
+                      'colored_button'.tr,
+                      const Color(0xFFFF6B6B),
+                      const Color(0xFFFFE66D),
+                      () => _toggleColoredPatterns(),
+                    ),
+                    const SizedBox(width: 12),
+                    _buildToolButton(
+                      Icons.emoji_emotions_rounded,
+                      'feeling_button'.tr,
+                      const Color(0xFFf093fb),
+                      const Color(0xFFf5576c),
+                      _openFeelingPicker,
+                    ),
+                    const SizedBox(width: 12),
+                    _buildToolButton(
+                      Icons.location_on_rounded,
+                      'location_button'.tr,
+                      const Color(0xFFff9a9e),
+                      const Color(0xFFfecfef),
+                      () {},
+                    ),
+                  ],
       
             
                 ],

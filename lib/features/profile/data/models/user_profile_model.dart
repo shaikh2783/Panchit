@@ -123,6 +123,54 @@ class SocialLinks {
       vkontakte == null;
 }
 
+class Badge {
+  final String? name;
+  final String? label;
+  final String? icon;
+  final String? color;
+  final String? categoryName;
+  final String? categoryTag;
+  final int? competitionId;
+  final String? awardedAt;
+
+  Badge({
+    this.name,
+    this.label,
+    this.icon,
+    this.color,
+    this.categoryName,
+    this.categoryTag,
+    this.competitionId,
+    this.awardedAt,
+  });
+
+  factory Badge.fromJson(Map<String, dynamic> json) {
+    return Badge(
+      name: json['name'],
+      label: json['label'],
+      icon: json['icon'],
+      color: json['color'],
+      categoryName: json['category_name'],
+      categoryTag: json['category_tag'],
+      competitionId: json['competition_id'],
+      awardedAt: json['awarded_at'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'label': label,
+      'icon': icon,
+      'color': color,
+      'category_name': categoryName,
+      'category_tag': categoryTag,
+      'competition_id': competitionId,
+      'awarded_at': awardedAt,
+    };
+  }
+}
+
 class UserProfile {
   final String id;
   final String username;
@@ -146,6 +194,7 @@ class UserProfile {
   final EducationInfo education;
   final SocialLinks socialLinks;
   final List<String> achievementTags;
+  final List<Badge> badges;
 
   UserProfile({
     required this.id,
@@ -170,6 +219,7 @@ class UserProfile {
     required this.education,
     required this.socialLinks,
     this.achievementTags = const <String>[],
+    this.badges = const <Badge>[],
   });
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
@@ -222,6 +272,7 @@ class UserProfile {
             json['achievement_tags'] ??
             json['category_tags'],
       ),
+      badges: _parseBadges(profile['badges']),
     );
   }
 }
@@ -386,3 +437,20 @@ List<String> _parseTags(Object? value) {
 
   return const <String>[];
 }
+
+List<Badge> _parseBadges(Object? value) {
+  if (value is List) {
+    return value
+        .map((item) {
+          if (item is Map<String, dynamic>) {
+            return Badge.fromJson(item);
+          }
+          return null;
+        })
+        .whereType<Badge>()
+        .toList(growable: false);
+  }
+
+  return const <Badge>[];
+}
+
