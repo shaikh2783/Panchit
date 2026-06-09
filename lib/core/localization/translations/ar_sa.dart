@@ -2258,6 +2258,15 @@ const Map<String, String> arSA = {
   'failed_update_comment': 'فشل تحديث التعليق',
   'reply': 'رد',
   'show_more_replies': 'عرض المزيد من الردود',
+  'show_more_replies_count': 'عرض المزيد من الردود (@count)',
+  'voice_recording_saved': 'تم حفظ التسجيل الصوتي',
+  'failed_ai_response': 'فشل في الحصول على رد الذكاء الاصطناعي',
+  'microphone_permission_settings': 'يرجى منح إذن الميكروفون من الإعدادات',
+  'time_just_now': 'الآن',
+  'time_minutes_short': '@count د',
+  'time_hours_short': '@count س',
+  'time_days_short': '@count يوم',
+  'ai_bot_help': 'مساعدة بوت الذكاء الاصطناعي',
 
   // المصادقة - تسجيل الدخول/إنشاء حساب
   'welcome_back_user': 'مرحباً بعودتك، @name! 🎉',

@@ -2408,6 +2408,15 @@ const Map<String, String> taIN = {
   'failed_update_comment': 'கருத்தை புதுப்பிக்க முடியவில்லை',
   'reply': 'பதில்',
   'show_more_replies': 'மேலும் பதில்களை காட்டு',
+  'show_more_replies_count': 'மேலும் பதில்கள் காட்டு (@count)',
+  'voice_recording_saved': 'குரல் பதிவு சேமிக்கப்பட்டது',
+  'failed_ai_response': 'AI பதில் பெறுவதில் தோல்வி',
+  'microphone_permission_settings': 'அமைப்புகளில் இருந்து மைக்ரோஃபோன் அனுமதி வழங்கவும்',
+  'time_just_now': 'இப்போது',
+  'time_minutes_short': '@count நிமி.',
+  'time_hours_short': '@count மணி.',
+  'time_days_short': '@count நா.',
+  'ai_bot_help': 'AI போட் உதவி',
 
 // Auth - Login/Signup
   'welcome_back_user': 'மீண்டும் வருக, @name! 🎉',

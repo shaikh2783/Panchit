@@ -59,11 +59,26 @@ class CompetitionCard extends StatelessWidget {
                       ),
                     ),
                     if ((competition.category ?? '').isNotEmpty) ...[
-                      const SizedBox(height: Spacing.xs),
-                      Text(
-                        competition.category!,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
+                      const SizedBox(height: Spacing.sm),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: Spacing.md,
+                          vertical: Spacing.xs,
+                        ),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.primary.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                            width: 0.5,
+                          ),
+                        ),
+                        child: Text(
+                          competition.category ?? 'N/A',
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: theme.colorScheme.primary,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ],
@@ -859,7 +874,9 @@ String? formatDateTime(DateTime? value) {
   if (value == null) return null;
   final month = value.month.toString().padLeft(2, '0');
   final day = value.day.toString().padLeft(2, '0');
-  final hour = value.hour.toString().padLeft(2, '0');
+  final hour24 = value.hour;
+  final hour12 = hour24 % 12 == 0 ? 12 : hour24 % 12;
+  final amPm = hour24 < 12 ? 'AM' : 'PM';
   final minute = value.minute.toString().padLeft(2, '0');
-  return '${value.year}-$month-$day $hour:$minute';
+  return '${value.year}-$month-$day ${hour12.toString().padLeft(2, '0')}:$minute $amPm';
 }

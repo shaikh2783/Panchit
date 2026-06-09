@@ -26,7 +26,7 @@ import '../../../../core/providers/system_settings_provider.dart';
 import '../../../messenger/data/services/messenger_api_service.dart';
 import '../../../messenger/presentation/pages/chat_page.dart';
 
-import '../../data/models/user_profile_model.dart';
+import '../../data/models/user_profile_model.dart' as profile_models;
 import '../../data/models/profile_completion_model.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../reports/presentation/pages/report_content_page.dart';
@@ -56,7 +56,7 @@ class _ProfilePageState extends State<ProfilePage>
     with SingleTickerProviderStateMixin {
   late ProfileApiService _profileService;
   late UserProductsService _userProductsService;
-  UserProfileResponse? _profileData;
+  profile_models.UserProfileResponse? _profileData;
   ProfileCompletionData? _completionData;
   bool _isLoading = true;
   String? _error;
@@ -333,9 +333,9 @@ class _ProfilePageState extends State<ProfilePage>
 
   // Header
   Widget _buildHeader(
-      UserProfile profile,
-      ProfileRelationship relationship,
-      ProfileStats stats,
+      profile_models.UserProfile profile,
+      profile_models.ProfileRelationship relationship,
+      profile_models.ProfileStats stats,
       ) {
     final achievementTags = profile.achievementTags.isNotEmpty
         ? profile.achievementTags
@@ -502,6 +502,72 @@ class _ProfilePageState extends State<ProfilePage>
                                 .toList(growable: false),
                           ),
                         ],
+                        if (profile.badges.isNotEmpty) ...[
+                          const SizedBox(height: 10),
+                          SizedBox(
+                            height: 50,
+                            child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: profile.badges.take(4).length,
+                              separatorBuilder: (_, __) => const SizedBox(width: 8),
+                              itemBuilder: (context, index) {
+                                final badge = profile.badges[index];
+                                final badgeColor = (() {
+                                  final raw = badge.color?.trim();
+                                  if (raw == null || raw.isEmpty) return Colors.amber;
+                                  final normalized = raw.startsWith('#') ? raw.substring(1) : raw;
+                                  final value = int.tryParse('0xff$normalized');
+                                  return value != null ? Color(value) : Colors.amber;
+                                })();
+                                return GestureDetector(
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => _BadgeDetailDialog(badge: badge),
+                                    );
+                                  },
+                                  child: Container(
+                                    width: 48,
+                                    height: 48,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: badgeColor.withValues(alpha: 0.2),
+                                      border: Border.all(
+                                        color: badgeColor,
+                                        width: 1.5,
+                                      ),
+                                    ),
+                                    child: Center(
+                                      child: badge.icon != null && badge.icon!.isNotEmpty
+                                          ? ClipRRect(
+                                            borderRadius: BorderRadius.circular(24),
+                                            child: CachedNetworkImage(
+                                              imageUrl: badge.icon!,
+                                              fit: BoxFit.cover,
+                                              placeholder: (_, __) => Icon(
+                                                Iconsax.award,
+                                                color: badgeColor,
+                                                size: 24,
+                                              ),
+                                              errorWidget: (_, __, ___) => Icon(
+                                                Iconsax.award,
+                                                color: badgeColor,
+                                                size: 24,
+                                              ),
+                                            ),
+                                          )
+                                          : Icon(
+                                        Iconsax.award,
+                                        color: badgeColor,
+                                        size: 24,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -585,7 +651,7 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   // Actions
-  Widget _buildActionButtons(ProfileRelationship relationship) {
+  Widget _buildActionButtons(profile_models.ProfileRelationship relationship) {
     // Get system settings to check which features are enabled
     final systemSettings = context.watch<SystemSettingsProvider>();
     final friendsEnabled = systemSettings.isFriendsEnabled;
@@ -669,7 +735,7 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  Widget _buildFriendButton(ProfileRelationship relationship) {
+  Widget _buildFriendButton(profile_models.ProfileRelationship relationship) {
     final resolvedUserId =
         int.tryParse(_profileData?.profile.id ?? '') ?? widget.userId ?? 0;
     FriendshipStatus friendshipStatus;
@@ -700,7 +766,7 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  Widget _buildFollowButton(ProfileRelationship relationship) {
+  Widget _buildFollowButton(profile_models.ProfileRelationship relationship) {
     final isFollowing = relationship.isFollowing;
 
     return ElevatedButton.icon(
@@ -1173,7 +1239,7 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   // About
-  Widget _buildAboutTab(UserProfile profile) {
+  Widget _buildAboutTab(profile_models.UserProfile profile) {
     final achievementTags = profile.achievementTags.isNotEmpty
         ? profile.achievementTags
         : (_profileData?.achievementTags ?? const <String>[]);
@@ -1208,6 +1274,10 @@ class _ProfilePageState extends State<ProfilePage>
               ),
             ],
           ),
+          const SizedBox(height: 16),
+        ],
+        if (profile.badges.isNotEmpty) ...[
+          _buildBadgesSection(profile.badges),
           const SizedBox(height: 16),
         ],
         if ((profile.about ?? '').isNotEmpty) ...[
@@ -1410,8 +1480,59 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
+  Widget _buildBadgesSection(List<profile_models.Badge> badges) {
+    final cs = Theme.of(context).colorScheme;
+    return Card(
+      elevation: 0,
+      color: cs.surfaceContainerHighest,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Iconsax.award, size: 20, color: cs.primary),
+                const SizedBox(width: 8),
+                Text(
+                  'Badges',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const Divider(height: 24),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final crossAxisCount = constraints.maxWidth > 600 ? 3 : 2;
+                return GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    childAspectRatio: 0.85,
+                  ),
+                  itemCount: badges.length,
+                  itemBuilder: (context, index) {
+                    final badge = badges[index];
+                    return _BadgeCard(badge: badge);
+                  },
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   // Other tabs
-  Widget _buildPhotosTab(ProfileStats stats) {
+  Widget _buildPhotosTab(profile_models.ProfileStats stats) {
     final items = [
       _FriendMenuItem(
         title: 'profile_photos'.tr,
@@ -1470,7 +1591,7 @@ class _ProfilePageState extends State<ProfilePage>
     return _VideosTabContent(userId: userId, username: widget.username);
   }
 
-  Widget _buildProductsTab(UserProfile profile) {
+  Widget _buildProductsTab(profile_models.UserProfile profile) {
     return Column(
       children: [
         // Search Bar
@@ -1515,7 +1636,7 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  Widget _buildProductsList(UserProfile profile) {
+  Widget _buildProductsList(profile_models.UserProfile profile) {
     if (_isLoadingProducts && _userProducts.isEmpty) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -1705,14 +1826,14 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  Widget _buildFriendsTab(ProfileStats stats) {
+  Widget _buildFriendsTab(profile_models.ProfileStats stats) {
     final resolvedUserId =
         int.tryParse(_profileData?.profile.id ?? '') ?? widget.userId;
     return _FriendsRelationshipsTab(userId: resolvedUserId, stats: stats);
   }
 
 
-  Widget _buildMoreTab(UserProfile profile) {
+  Widget _buildMoreTab(profile_models.UserProfile profile) {
     final socialLinks = _profileData!.socialLinks;
     final hasLinks = socialLinks.values.any((v) => (v ?? '').isNotEmpty);
 
@@ -1869,7 +1990,7 @@ class _FriendMenuTile extends StatelessWidget {
 
 class _FriendsRelationshipsTab extends StatelessWidget {
   final int? userId;
-  final ProfileStats stats;
+  final profile_models.ProfileStats stats;
 
   const _FriendsRelationshipsTab({required this.userId, required this.stats});
 
@@ -3717,3 +3838,296 @@ class _VideoThumbnail extends StatelessWidget {
   }
 
 }
+
+// Badge Card Widget
+class _BadgeCard extends StatelessWidget {
+  final profile_models.Badge badge;
+
+  const _BadgeCard({required this.badge});
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final badgeColor = (() {
+      final raw = badge.color?.trim();
+      if (raw == null || raw.isEmpty) return cs.primary;
+      final normalized = raw.startsWith('#') ? raw.substring(1) : raw;
+      final value = int.tryParse('0xff$normalized');
+      return value != null ? Color(value) : cs.primary;
+    })();
+
+    return GestureDetector(
+      onTap: () {
+        // Show badge details in a dialog
+        showDialog(
+          context: context,
+          builder: (context) => _BadgeDetailDialog(badge: badge),
+        );
+      },
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                badgeColor.withValues(alpha: 0.1),
+                badgeColor.withValues(alpha: 0.05),
+              ],
+            ),
+            border: Border.all(
+              color: badgeColor.withValues(alpha: 0.3),
+              width: 1.5,
+            ),
+          ),
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Badge Icon/Circle
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: badgeColor.withValues(alpha: 0.2),
+                  border: Border.all(
+                    color: badgeColor,
+                    width: 2,
+                  ),
+                ),
+                child: Center(
+                  child: badge.icon != null && badge.icon!.isNotEmpty
+                      ? ClipRRect(
+                        borderRadius: BorderRadius.circular(30),
+                        child: CachedNetworkImage(
+                          imageUrl: badge.icon!,
+                          fit: BoxFit.cover,
+                          placeholder: (_, __) => Icon(
+                            Iconsax.award,
+                            color: badgeColor,
+                            size: 32,
+                          ),
+                          errorWidget: (_, __, ___) => Icon(
+                            Iconsax.award,
+                            color: badgeColor,
+                            size: 32,
+                          ),
+                        ),
+                      )
+                      : Icon(
+                    Iconsax.award,
+                    color: badgeColor,
+                    size: 32,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              // Badge Label
+              Text(
+                badge.label ?? 'Badge',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                  height: 1.2,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 4),
+              // Category
+              if (badge.categoryName != null && badge.categoryName!.isNotEmpty)
+                Expanded(
+                  child: Text(
+                    badge.categoryName!,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Colors.grey[600],
+                      height: 1.1,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Badge Detail Dialog
+class _BadgeDetailDialog extends StatelessWidget {
+  final profile_models.Badge badge;
+
+  const _BadgeDetailDialog({required this.badge});
+
+  @override
+  Widget build(BuildContext context) {
+    final badgeColor = (() {
+      final raw = badge.color?.trim();
+      if (raw == null || raw.isEmpty) return Theme.of(context).colorScheme.primary;
+      final normalized = raw.startsWith('#') ? raw.substring(1) : raw;
+      final value = int.tryParse('0xff$normalized');
+      return value != null ? Color(value) : Theme.of(context).colorScheme.primary;
+    })();
+
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Close Button
+              Align(
+                alignment: Alignment.topRight,
+                child: GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Icon(Iconsax.close_circle, size: 28),
+                ),
+              ),
+              const SizedBox(height: 16),
+              // Badge Icon
+              Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: badgeColor.withValues(alpha: 0.15),
+                  border: Border.all(
+                    color: badgeColor,
+                    width: 2,
+                  ),
+                ),
+                child: Center(
+                  child: badge.icon != null && badge.icon!.isNotEmpty
+                      ? ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: CachedNetworkImage(
+                          imageUrl: badge.icon!,
+                          fit: BoxFit.cover,
+                          placeholder: (_, __) => Icon(
+                            Iconsax.award,
+                            color: badgeColor,
+                            size: 48,
+                          ),
+                          errorWidget: (_, __, ___) => Icon(
+                            Iconsax.award,
+                            color: badgeColor,
+                            size: 48,
+                          ),
+                        ),
+                      )
+                      : Icon(
+                    Iconsax.award,
+                    color: badgeColor,
+                    size: 48,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              // Badge Name
+              Text(
+                badge.label ?? 'Badge',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 12),
+              // Category
+              if (badge.categoryName != null && badge.categoryName!.isNotEmpty)
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: badgeColor.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: badgeColor,
+                      width: 1,
+                    ),
+                  ),
+                  child: Text(
+                    badge.categoryName!,
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: badgeColor,
+                    ),
+                  ),
+                ),
+              if (badge.categoryName != null) const SizedBox(height: 16),
+              // Awarded Date
+              if (badge.awardedAt != null && badge.awardedAt!.isNotEmpty)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Iconsax.calendar, size: 16, color: Colors.grey[600]),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Awarded: ${badge.awardedAt!}',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ),
+              const SizedBox(height: 20),
+              // Close Button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: badgeColor,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
+                  child: const Text(
+                    'Close',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

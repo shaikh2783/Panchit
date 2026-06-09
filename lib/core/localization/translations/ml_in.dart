@@ -2534,6 +2534,15 @@ const Map<String, String> mlIN = {
   'failed_update_comment': 'അഭിപ്രായം അപ്ഡേറ്റ് ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു',
   'reply': 'മറുപടി',
   'show_more_replies': 'കൂടുതൽ മറുപടികൾ കാണിക്കുക',
+  'show_more_replies_count': 'കൂടുതൽ മറുപടികൾ കാണുക (@count)',
+  'voice_recording_saved': 'വോയ്സ് റെക്കോർഡിംഗ് സേവ് ചെയ്തു',
+  'failed_ai_response': 'AI പ്രതികരണം ലഭിക്കുന്നതിൽ പരാജയം',
+  'microphone_permission_settings': 'ക്രമീകരണത്തിൽ നിന്ന് മൈക്രോഫോൺ അനുമതി നൽകുക',
+  'time_just_now': 'ഇപ്പോൾ',
+  'time_minutes_short': '@count മി.',
+  'time_hours_short': '@count മ.',
+  'time_days_short': '@count ദി.',
+  'ai_bot_help': 'AI ബോട്ട് സഹായം',
 
 // Auth - Login/Signup
   'welcome_back_user': 'തിരികെ സ്വാഗതം, @name! 🎉',

@@ -2329,6 +2329,15 @@ const Map<String, String> bnIN = {
   'failed_update_comment': 'মন্তব্য আপডেট করতে ব্যর্থ',
   'reply': 'উত্তর',
   'show_more_replies': 'আরও উত্তর দেখান',
+  'show_more_replies_count': 'আরো উত্তর দেখান (@count)',
+  'voice_recording_saved': 'ভয়েস রেকর্ডিং সংরক্ষিত হয়েছে',
+  'failed_ai_response': 'AI প্রতিক্রিয়া পেতে ব্যর্থ হয়েছে',
+  'microphone_permission_settings': 'সেটিংস থেকে মাইক্রোফোন অনুমতি দিন',
+  'time_just_now': 'এখনই',
+  'time_minutes_short': '@count মি.',
+  'time_hours_short': '@count ঘ.',
+  'time_days_short': '@count দিন',
+  'ai_bot_help': 'AI বট সাহায্য',
 
 // Auth - Login/Signup
   'welcome_back_user': 'ফিরে আসায় স্বাগতম, @name! 🎉',

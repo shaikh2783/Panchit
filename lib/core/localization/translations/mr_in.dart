@@ -2604,6 +2604,15 @@ const Map<String, String> mrIN = {
   'टिप्पणी अद्यतनित करण्यात अयशस्वी',
   'reply': 'उत्तर',
   'show_more_replies': 'अधिक उत्तरे दाखवा',
+  'show_more_replies_count': 'अधिक उत्तरे दाखवा (@count)',
+  'voice_recording_saved': 'आवाज रेकॉर्डिंग जतन केली',
+  'failed_ai_response': 'AI प्रतिसाद मिळविण्यात अयशस्वी',
+  'microphone_permission_settings': 'कृपया सेटिंग्जमधून मायक्रोफोन परवानगी द्या',
+  'time_just_now': 'आत्ता',
+  'time_minutes_short': '@count मि.',
+  'time_hours_short': '@count त.',
+  'time_days_short': '@count दि.',
+  'ai_bot_help': 'AI बोट मदत',
 
 // Auth - Login/Signup
   'welcome_back_user':

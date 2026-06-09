@@ -196,9 +196,14 @@ class CompetitionEntryModel {
     this.postText,
     this.previewUrl,
     this.mediaType,
+    this.publishedAt,
+    this.privacy,
     this.likesCount,
     this.commentsCount,
     this.reactionsCount,
+    this.sharesCount,
+    this.viewsCount,
+    this.reviewsCount,
     this.totalScore,
     this.rank,
     this.prizeAmount,
@@ -213,9 +218,14 @@ class CompetitionEntryModel {
   final String? postText;
   final String? previewUrl;
   final String? mediaType;
+  final String? publishedAt;
+  final String? privacy;
   final int? likesCount;
   final int? commentsCount;
   final int? reactionsCount;
+  final int? sharesCount;
+  final int? viewsCount;
+  final int? reviewsCount;
   final double? totalScore;
   final int? rank;
   final double? prizeAmount;
@@ -257,8 +267,13 @@ class CompetitionEntryModel {
       postText: _string(json['post_text'] ?? post['text_plain'] ?? post['text']),
       previewUrl: previewUrl,
       mediaType: _string(json['media_type'] ?? post['post_type']),
+      publishedAt: _string(json['time'] ?? json['published_at'] ?? post['time']),
+      privacy: _string(json['privacy'] ?? post['privacy']),
       likesCount: _nullableInt(
-        json['likes_count'] ?? json['post_likes'] ?? post['reactions_total_count'],
+        json['likes_count'] ??
+            json['post_likes'] ??
+            post['reaction_like_count'] ??
+            post['reactions_total_count'],
       ),
       commentsCount: _nullableInt(
         json['comments_count'] ?? json['post_comments'] ?? post['comments'],
@@ -268,6 +283,9 @@ class CompetitionEntryModel {
             json['post_reactions'] ??
             post['reactions_total_count'],
       ),
+      sharesCount: _nullableInt(json['shares_count'] ?? json['post_shares'] ?? post['shares']),
+      viewsCount: _nullableInt(json['views_count'] ?? post['views']),
+      reviewsCount: _nullableInt(json['reviews_count'] ?? post['reviews_count']),
       totalScore: _double(json['total_score'] ?? json['score']),
       rank: _nullableInt(json['rank'] ?? json['winner_rank']),
       prizeAmount: _double(json['prize_amount']),
@@ -612,12 +630,14 @@ class CompetitionSubmitRequest {
     this.photos = const <Map<String, dynamic>>[],
     this.video,
     this.mediaType,
+    this.postId,
   });
 
   final String? message;
   final List<Map<String, dynamic>> photos;
   final Map<String, dynamic>? video;
   final String? mediaType;
+  final int? postId;
 
   Map<String, dynamic> toJson() {
     return {
@@ -625,6 +645,7 @@ class CompetitionSubmitRequest {
       if (photos.isNotEmpty) 'photos': photos,
       if (video != null) 'video': video,
       if ((mediaType ?? '').trim().isNotEmpty) 'media_type': mediaType,
+      if (postId != null) 'post_id': postId,
     };
   }
 }

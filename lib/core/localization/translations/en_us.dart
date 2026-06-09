@@ -2275,6 +2275,15 @@ const Map<String, String> enUS = {
   'failed_update_comment': 'Failed to update comment',
   'reply': 'Reply',
   'show_more_replies': 'Show more replies',
+  'show_more_replies_count': 'Show more replies (@count)',
+  'voice_recording_saved': 'Voice recording saved',
+  'failed_ai_response': 'Failed to get AI response',
+  'microphone_permission_settings': 'Please grant microphone permission from settings',
+  'time_just_now': 'Now',
+  'time_minutes_short': '@count m',
+  'time_hours_short': '@count h',
+  'time_days_short': '@count d',
+  'ai_bot_help': 'AI Bot Help',
 
   // Auth - Login/Signup
   'welcome_back_user': 'Welcome back, @name! 🎉',

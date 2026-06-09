@@ -6,13 +6,19 @@ import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:snginepro/core/config/app_config.dart';
+import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/core/theme/design_tokens.dart';
+import 'package:snginepro/core/utils/time_ago.dart';
 import 'package:snginepro/features/auth/application/auth_notifier.dart';
 import 'package:snginepro/features/competitions/data/models/competition_models.dart';
 import 'package:snginepro/features/competitions/data/services/competition_api_service.dart';
-import 'package:snginepro/features/competitions/presentation/pages/competition_entry_page.dart';
 import 'package:snginepro/features/competitions/presentation/pages/competition_leaderboard_page.dart';
 import 'package:snginepro/features/competitions/presentation/widgets/competition_widgets.dart';
+import 'package:snginepro/features/feed/data/models/post.dart';
+import 'package:snginepro/features/feed/data/models/post_type_config.dart';
+import 'package:snginepro/features/feed/data/services/post_management_api_service.dart';
+import 'package:snginepro/features/feed/presentation/pages/create_post_page_modern.dart';
+import 'package:snginepro/features/feed/presentation/pages/edit_post_page.dart';
 import 'package:snginepro/features/wallet/presentation/pages/wallet_page.dart';
 
 class CompetitionDetailPage extends StatefulWidget {
@@ -201,7 +207,17 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
 
       final submitted = await Navigator.of(context).push<bool>(
         MaterialPageRoute(
-          builder: (_) => CompetitionEntryPage(competition: competition),
+          builder: (_) => CreatePostPageModern(
+            competition: competition,
+            initialPostType: switch (competition.allowedMediaType) {
+              CompetitionAllowedMediaType.imageOnly => PostTypeOption.photos,
+              CompetitionAllowedMediaType.videoOnly => PostTypeOption.video,
+              CompetitionAllowedMediaType.textOnly => PostTypeOption.text,
+              CompetitionAllowedMediaType.all => PostTypeOption.text,
+            },
+            showPrivacySelector: false,
+            initialPrivacy: 'public',
+          ),
         ),
       );
 
@@ -224,21 +240,50 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
     return int.tryParse(auth?.currentUser?['user_id']?.toString() ?? '');
   }
 
-  Future<void> _editEntry(
-    CompetitionEntryModel entry,
-    CompetitionModel competition,
-  ) async {
-    final updated = await Navigator.of(context).push<bool>(
-      MaterialPageRoute(
-        builder: (_) => CompetitionEntryPage(
-          competition: competition,
-          existingEntry: entry,
+  Future<void> _editEntry(CompetitionEntryModel entry) async {
+    final postId = entry.postId;
+    if (postId == null) {
+      _showMessage('Unable to edit this entry right now.', isError: true);
+      return;
+    }
+
+    try {
+      final postService = PostManagementApiService(
+        Provider.of<ApiClient>(context, listen: false),
+      );
+      final details = await postService.getPostDetails(postId);
+      if (!mounted) return;
+
+      final data = details['data'];
+      Map<String, dynamic>? postJson;
+      if (data is Map<String, dynamic>) {
+        if (data['post'] is Map<String, dynamic>) {
+          postJson = Map<String, dynamic>.from(data['post'] as Map<String, dynamic>);
+        } else {
+          postJson = Map<String, dynamic>.from(data);
+        }
+      } else if (details['post'] is Map<String, dynamic>) {
+        postJson = Map<String, dynamic>.from(details['post'] as Map<String, dynamic>);
+      }
+
+      if (postJson == null || postJson.isEmpty) {
+        _showMessage('Unable to load entry post details.', isError: true);
+        return;
+      }
+
+      final post = Post.fromJson(postJson);
+      final updated = await Navigator.of(context).push<Post>(
+        MaterialPageRoute(
+          builder: (_) => EditPostPage(post: post),
         ),
-      ),
-    );
-    if (updated == true && mounted) {
-      _showMessage('competition_entry_updated'.tr);
-      _loadDetails();
+      );
+      if (updated != null && mounted) {
+        _showMessage('post_updated_successfully'.tr);
+        _loadDetails();
+      }
+    } catch (error) {
+      if (!mounted) return;
+      _showMessage(error.toString(), isError: true);
     }
   }
 
@@ -950,7 +995,7 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
                 mediaAsset: mediaAsset,
                 currencySymbol: competition.currencySymbol,
                 canEdit: canEdit,
-                onEdit: canEdit ? () => _editEntry(entry, competition) : null,
+                onEdit: canEdit ? () => _editEntry(entry) : null,
                 isCompleted: competition.isCompleted,
               ),
             ),
@@ -1195,6 +1240,103 @@ class _CompetitionEntryCard extends StatelessWidget {
     return mediaAsset(raw).toString();
   }
 
+  String _formatCount(int? value) {
+    final count = value ?? 0;
+    if (count >= 1000000) {
+      return '${(count / 1000000).toStringAsFixed(count % 1000000 == 0 ? 0 : 1)}M';
+    }
+    if (count >= 1000) {
+      return '${(count / 1000).toStringAsFixed(count % 1000 == 0 ? 0 : 1)}K';
+    }
+    return '$count';
+  }
+
+  IconData _privacyIcon(String? privacy) {
+    switch ((privacy ?? '').toLowerCase()) {
+      case 'friends':
+        return Iconsax.people;
+      case 'private':
+      case 'only_me':
+      case 'only me':
+        return Iconsax.lock;
+      default:
+        return Icons.public;
+    }
+  }
+
+  String _privacyLabel(String? privacy) {
+    switch ((privacy ?? '').toLowerCase()) {
+      case 'friends':
+        return 'friends'.tr;
+      case 'private':
+      case 'only_me':
+      case 'only me':
+        return 'only_me'.tr;
+      default:
+        return 'public'.tr;
+    }
+  }
+
+  Widget _buildMetaItem(
+    BuildContext context, {
+    required IconData icon,
+    required String text,
+  }) {
+    final theme = Theme.of(context);
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          icon,
+          size: 12,
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
+        ),
+        const SizedBox(width: 4),
+        Text(
+          text,
+          style: theme.textTheme.labelSmall?.copyWith(
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCountChip(
+    BuildContext context, {
+    required IconData icon,
+    required String text,
+    Color? iconColor,
+  }) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.45),
+        borderRadius: BorderRadius.circular(Radii.pill),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: 14,
+            color:
+                iconColor ?? theme.colorScheme.onSurface.withValues(alpha: 0.65),
+          ),
+          const SizedBox(width: 6),
+          Text(
+            text,
+            style: theme.textTheme.labelMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -1205,6 +1347,66 @@ class _CompetitionEntryCard extends StatelessWidget {
     final hasPreview = previewUrl != null;
     final hasText = (entry.postText ?? '').trim().isNotEmpty;
     final isVideo = (entry.mediaType ?? '').toLowerCase().contains('video');
+    final metaItems = <Widget>[
+      if ((entry.publishedAt ?? '').trim().isNotEmpty)
+        _buildMetaItem(
+          context,
+          icon: Iconsax.clock,
+          text: TimeAgo.formatFromString(entry.publishedAt),
+        ),
+      if ((entry.privacy ?? '').trim().isNotEmpty)
+        _buildMetaItem(
+          context,
+          icon: _privacyIcon(entry.privacy),
+          text: _privacyLabel(entry.privacy),
+        ),
+      if ((entry.mediaType ?? '').trim().isNotEmpty)
+        _buildMetaItem(
+          context,
+          icon: isVideo ? Iconsax.video_play : Iconsax.gallery,
+          text: isVideo ? 'video'.tr : 'image'.tr,
+        ),
+    ];
+    final countChips = <Widget>[
+      if ((entry.reactionsCount ?? 0) > 0)
+        _buildCountChip(
+          context,
+          icon: Icons.favorite_rounded,
+          iconColor: Colors.redAccent,
+          text: '${_formatCount(entry.reactionsCount)} ${'likes_label'.tr}',
+        ),
+      if ((entry.reviewsCount ?? 0) > 0)
+        _buildCountChip(
+          context,
+          icon: Iconsax.star,
+          iconColor: Colors.amber[700],
+          text: 'post_reviews'.trParams({
+            'count': _formatCount(entry.reviewsCount),
+          }),
+        ),
+      if ((entry.viewsCount ?? 0) > 0)
+        _buildCountChip(
+          context,
+          icon: Iconsax.eye,
+          text: 'post_views'.trParams({
+            'count': _formatCount(entry.viewsCount),
+          }),
+        ),
+      if ((entry.commentsCount ?? 0) > 0)
+        _buildCountChip(
+          context,
+          icon: Iconsax.message,
+          text: '${_formatCount(entry.commentsCount)} ${'comments'.tr}',
+        ),
+      if ((entry.sharesCount ?? 0) > 0)
+        _buildCountChip(
+          context,
+          icon: Iconsax.repeat,
+          text: 'post_shares2'.trParams({
+            'count': _formatCount(entry.sharesCount),
+          }),
+        ),
+    ];
 
     return Card(
       elevation: 0,
@@ -1255,14 +1457,23 @@ class _CompetitionEntryCard extends StatelessWidget {
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      if (entry.rank != null)
-                        Text(
-                          '${'competition_rank_prefix'.tr}${entry.rank}',
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            color: theme.colorScheme.primary,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                      const SizedBox(height: 2),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 4,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          if (entry.rank != null)
+                            Text(
+                              '${'competition_rank_prefix'.tr}${entry.rank}',
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                color: theme.colorScheme.primary,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ...metaItems,
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -1355,91 +1566,89 @@ class _CompetitionEntryCard extends StatelessWidget {
           // ── Footer stats ──────────────────────────────────────────────────
           Padding(
             padding: const EdgeInsets.all(Spacing.md),
-            child: Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (entry.reactionsCount != null) ...[
-                  Icon(
-                    Icons.favorite_rounded,
-                    size: 15,
-                    color: Colors.redAccent,
+                if (countChips.isNotEmpty)
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: countChips,
                   ),
-                  const SizedBox(width: 4),
-                  Text(
-                    '${entry.reactionsCount}',
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(width: Spacing.md),
-                ],
-                if (entry.commentsCount != null) ...[
-                  Icon(
-                    Iconsax.message,
-                    size: 15,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    '${entry.commentsCount}',
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color:
-                          theme.colorScheme.onSurface.withValues(alpha: 0.65),
-                    ),
-                  ),
-                  const SizedBox(width: Spacing.md),
-                ],
-                if (entry.totalScore != null) ...[
-                  Icon(
-                    Iconsax.star,
-                    size: 15,
-                    color: Colors.amber,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    entry.totalScore!.toStringAsFixed(0),
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: Colors.amber[700],
-                    ),
-                  ),
-                ],
-                const Spacer(),
-                if (entry.prizeAmount != null && entry.prizeAmount! > 0)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color:
-                          theme.colorScheme.primary.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(Radii.pill),
-                    ),
-                    child: Text(
-                      formatMoney(entry.prizeAmount, currencySymbol),
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: theme.colorScheme.primary,
-                        fontWeight: FontWeight.w700,
+                if (countChips.isNotEmpty &&
+                    (entry.totalScore != null ||
+                        (entry.prizeAmount != null && entry.prizeAmount! > 0) ||
+                        (canEdit && onEdit != null)))
+                  const SizedBox(height: Spacing.sm),
+                Row(
+                  children: [
+                    if (entry.totalScore != null)
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.amber.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(Radii.pill),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Iconsax.star,
+                              size: 14,
+                              color: Colors.amber,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              entry.totalScore!.toStringAsFixed(0),
+                              style: theme.textTheme.labelMedium?.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: Colors.amber[800],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ),
-                if (canEdit && onEdit != null) ...[
-                  const SizedBox(width: Spacing.xs),
-                  TextButton.icon(
-                    onPressed: onEdit,
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 4,
+                    const Spacer(),
+                    if (entry.prizeAmount != null && entry.prizeAmount! > 0)
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color:
+                              theme.colorScheme.primary.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(Radii.pill),
+                        ),
+                        child: Text(
+                          formatMoney(entry.prizeAmount, currencySymbol),
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: theme.colorScheme.primary,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
                       ),
-                      minimumSize: Size.zero,
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
-                    icon: const Icon(Icons.edit_outlined, size: 14),
-                    label: Text('edit'.tr),
-                  ),
-                ],
+                    if (canEdit && onEdit != null) ...[
+                      const SizedBox(width: Spacing.xs),
+                      TextButton.icon(
+                        onPressed: onEdit,
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
+                          minimumSize: Size.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        icon: const Icon(Icons.edit_outlined, size: 14),
+                        label: Text('edit'.tr),
+                      ),
+                    ],
+                  ],
+                ),
               ],
             ),
           ),

@@ -2545,6 +2545,15 @@ const Map<String, String> knIN = {
   'failed_update_comment': 'ಟಿಪ್ಪಣಿ ಅಪ್ಡೇಟ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
   'reply': 'ಉತ್ತರ',
   'show_more_replies': 'ಇನ್ನಷ್ಟು ಉತ್ತರಗಳನ್ನು ತೋರಿಸಿ',
+  'show_more_replies_count': 'ಹೆಚ್ಚಿನ ಉತ್ತರಗಳನ್ನು ತೋರಿಸಿ (@count)',
+  'voice_recording_saved': 'ಧ್ವನಿ ರೆಕಾರ್ಡಿಂಗ್ ಉಳಿಸಲಾಗಿದೆ',
+  'failed_ai_response': 'AI ಪ್ರತಿಕ್ರಿಯೆ ಪಡೆಯಲು ವಿಫಲವಾಯಿತು',
+  'microphone_permission_settings': 'ದಯವಿಟ್ಟು ಸೆಟ್ಟಿಂಗ್‌ಗಳಿಂದ ಮೈಕ್ರೋಫೋನ್ ಅನುಮತಿ ನೀಡಿ',
+  'time_just_now': 'ಈಗ',
+  'time_minutes_short': '@count ನಿ.',
+  'time_hours_short': '@count ಗಂ.',
+  'time_days_short': '@count ದಿ.',
+  'ai_bot_help': 'AI ಬಾಟ್ ಸಹಾಯ',
 
 // Auth - Login/Signup
   'welcome_back_user': 'ಮತ್ತೆ ಸ್ವಾಗತ, @name! 🎉',
