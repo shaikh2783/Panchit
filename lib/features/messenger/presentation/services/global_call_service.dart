@@ -44,8 +44,7 @@ class GlobalCallService extends GetxService {
 
     
     _pollTimer = Timer.periodic(const Duration(seconds: 3), (_) async {
-      //TODO comment code
-      // await _checkForIncomingCalls();
+       await _checkForIncomingCalls();
     });
   }
 
