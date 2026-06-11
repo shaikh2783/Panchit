@@ -1459,7 +1459,7 @@ class HomePageState extends State<HomePage> {
 
     const filterOptions = [
       (label: 'Home',    value: 'discover',    icon: Icons.home_rounded),
-      (label: 'competition',     value: 'competition', icon: Iconsax.cup),
+      (label: 'Competition',     value: 'competition', icon: Iconsax.cup),
       (label: 'Popular',     value: 'popular',     icon: Icons.trending_up_rounded),
       (label: 'For You',    value: 'newsfeed',    icon: Icons.explore_outlined),
     ];

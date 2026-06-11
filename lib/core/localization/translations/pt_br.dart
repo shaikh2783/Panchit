@@ -1938,6 +1938,9 @@ const Map<String, String> ptBR = {
   'leaderboard_empty_msg': 'As inscrições aparecerão aqui assim que os usuários participarem.',
   'leaderboard_load_failed': 'Não foi possível carregar a classificação',
   'leaderboard_stats': 'Curtidas: @likes • Comentários: @comments • Reações: @reactions',
+  'leaderboard_voting_ends_on': 'Votação termina: @date',
+  'leaderboard_voting_ended_on': 'Votação encerrada: @date',
+  'leaderboard_winners_after_voting': 'Os vencedores serão anunciados após o encerramento da votação',
 
   // Competition Widgets
   'widget_registration_ends_in': 'Inscrições encerram em',

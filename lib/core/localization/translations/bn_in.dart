@@ -3021,6 +3021,9 @@ const Map<String, String> bnIN = {
   "leaderboard_empty_msg": "ব্যবহারকারীরা যোগ দিলে এখানে এন্ট্রি দেখা যাবে।",
   "leaderboard_load_failed": "লিডারবোর্ড লোড করা সম্ভব হয়নি",
   "leaderboard_stats": "লাইক: @likes • মন্তব্য: @comments • প্রতিক্রিয়া: @reactions",
+  "leaderboard_voting_ends_on": "ভোটদান শেষ হবে: @date",
+  "leaderboard_voting_ended_on": "ভোটদান শেষ হয়েছে: @date",
+  "leaderboard_winners_after_voting": "ভোটদান শেষ হওয়ার পরে বিজয়ীদের ঘোষণা করা হবে",
 
   // Competition Widgets
   "widget_registration_ends_in": "নিবন্ধন শেষ হচ্ছে",

@@ -14,11 +14,13 @@ class CompetitionLeaderboardPage extends StatefulWidget {
     required this.competitionId,
     required this.competitionName,
     this.initialEntries = const <CompetitionEntryModel>[],
+    this.votingEnd,
   });
 
   final int competitionId;
   final String competitionName;
   final List<CompetitionEntryModel> initialEntries;
+  final DateTime? votingEnd;
 
   @override
   State<CompetitionLeaderboardPage> createState() =>
@@ -86,22 +88,108 @@ class _CompetitionLeaderboardPageState
               showRetry: true,
               onRetry: _load,
             ),
-          CompetitionListState.success => ListView.separated(
-              padding: const EdgeInsets.all(Spacing.lg),
-              itemBuilder: (context, index) {
-                final entry = _entries[index];
-                final rank = entry.rank ?? index + 1;
-                final mediaAsset = context.read<AppConfig>().mediaAsset;
-                return _LeaderboardEntryCard(
-                  entry: entry,
-                  rank: rank,
-                  mediaAsset: mediaAsset,
-                );
-              },
-              separatorBuilder: (_, __) => const SizedBox(height: Spacing.sm),
-              itemCount: _entries.length,
+          CompetitionListState.success => Column(
+              children: [
+                if (widget.votingEnd != null)
+                  _VotingEndBanner(votingEnd: widget.votingEnd!),
+                Expanded(
+                  child: ListView.separated(
+                    padding: const EdgeInsets.all(Spacing.lg),
+                    itemBuilder: (context, index) {
+                      final entry = _entries[index];
+                      final rank = entry.rank ?? index + 1;
+                      final mediaAsset = context.read<AppConfig>().mediaAsset;
+                      final votingEnd = widget.votingEnd;
+                      final isVotingComplete =
+                          votingEnd != null && DateTime.now().isAfter(votingEnd);
+                      return _LeaderboardEntryCard(
+                        entry: entry,
+                        rank: rank,
+                        mediaAsset: mediaAsset,
+                        isVotingComplete: isVotingComplete,
+                      );
+                    },
+                    separatorBuilder: (_, __) => const SizedBox(height: Spacing.sm),
+                    itemCount: _entries.length,
+                  ),
+                ),
+              ],
             ),
         },
+      ),
+    );
+  }
+}
+
+class _VotingEndBanner extends StatelessWidget {
+  const _VotingEndBanner({required this.votingEnd});
+
+  final DateTime votingEnd;
+
+  String _formatDate(DateTime d) =>
+      '${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}';
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isEnded = DateTime.now().isAfter(votingEnd);
+    final dateStr = _formatDate(votingEnd);
+
+    final Color bgColor;
+    final Color borderColor;
+    final Color iconColor;
+    final IconData icon;
+    final String titleKey;
+
+    if (isEnded) {
+      bgColor = theme.colorScheme.primary.withValues(alpha: 0.08);
+      borderColor = theme.colorScheme.primary.withValues(alpha: 0.25);
+      iconColor = theme.colorScheme.primary;
+      icon = Icons.emoji_events_outlined;
+      titleKey = 'leaderboard_voting_ended_on';
+    } else {
+      bgColor = const Color(0xFFF59E0B).withValues(alpha: 0.10);
+      borderColor = const Color(0xFFF59E0B).withValues(alpha: 0.35);
+      iconColor = const Color(0xFFD97706);
+      icon = Icons.how_to_vote_outlined;
+      titleKey = 'leaderboard_voting_ends_on';
+    }
+
+    return Container(
+      margin: const EdgeInsets.fromLTRB(Spacing.lg, Spacing.lg, Spacing.lg, 0),
+      padding: const EdgeInsets.all(Spacing.md),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(Radii.large),
+        border: Border.all(color: borderColor),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, size: 20, color: iconColor),
+          const SizedBox(width: Spacing.sm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  titleKey.trParams({'date': dateStr}),
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: iconColor,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  'leaderboard_winners_after_voting'.tr,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -112,11 +200,13 @@ class _LeaderboardEntryCard extends StatelessWidget {
     required this.entry,
     required this.rank,
     required this.mediaAsset,
+    this.isVotingComplete = false,
   });
 
   final CompetitionEntryModel entry;
   final int rank;
   final Uri Function(String) mediaAsset;
+  final bool isVotingComplete;
 
   String? _resolveUrl(String? raw) {
     if (raw == null || raw.trim().isEmpty) return null;
@@ -147,7 +237,11 @@ class _LeaderboardEntryCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          WinnerRankBadge(rank: rank, compact: true),
+          WinnerRankBadge(
+            rank: rank,
+            compact: true,
+            showLabel: isVotingComplete && rank <= 3,
+          ),
           const SizedBox(width: Spacing.md),
           CircleAvatar(
             radius: 20,

@@ -1938,6 +1938,9 @@ const Map<String, String> ruRU = {
   'leaderboard_empty_msg': 'Записи появятся здесь, как только пользователи присоединятся.',
   'leaderboard_load_failed': 'Не удалось загрузить таблицу лидеров',
   'leaderboard_stats': 'Лайки: @likes • Комментарии: @comments • Реакции: @reactions',
+  'leaderboard_voting_ends_on': 'Голосование заканчивается: @date',
+  'leaderboard_voting_ended_on': 'Голосование завершено: @date',
+  'leaderboard_winners_after_voting': 'Победители будут объявлены после окончания голосования',
 
   // Competition Widgets
   'widget_registration_ends_in': 'Регистрация заканчивается через',

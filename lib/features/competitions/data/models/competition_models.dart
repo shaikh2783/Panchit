@@ -195,6 +195,7 @@ class CompetitionEntryModel {
     this.postId,
     this.postText,
     this.previewUrl,
+    this.videoUrl,
     this.mediaType,
     this.publishedAt,
     this.privacy,
@@ -217,6 +218,7 @@ class CompetitionEntryModel {
   final int? postId;
   final String? postText;
   final String? previewUrl;
+  final String? videoUrl;
   final String? mediaType;
   final String? publishedAt;
   final String? privacy;
@@ -233,6 +235,7 @@ class CompetitionEntryModel {
 
   factory CompetitionEntryModel.fromJson(Map<String, dynamic> json) {
     final post = _map(json['post']);
+    final video = _map(post['video'] ?? post['reel']);
     final photos = post['photos'];
     String? previewUrl;
     if (photos is List && photos.isNotEmpty && photos.first is Map<String, dynamic>) {
@@ -241,9 +244,26 @@ class CompetitionEntryModel {
     previewUrl ??= _string(
       json['preview_url'] ??
           json['post_thumbnail'] ??
+          json['video_thumbnail'] ??
+          post['video_thumbnail'] ??
           post['og_image'] ??
+          video['thumbnail'] ??
+          video['thumb'] ??
           post['preview_url'] ??
           post['image'],
+    );
+    final videoUrl = _string(
+      json['video_url'] ??
+          json['video_source'] ??
+          post['video_url'] ??
+          post['video_source'] ??
+          video['source'] ??
+          video['url'] ??
+          video['source_1080p'] ??
+          video['source_720p'] ??
+          video['source_480p'] ??
+          video['source_360p'] ??
+          video['source_240p'],
     );
 
     return CompetitionEntryModel(
@@ -266,6 +286,7 @@ class CompetitionEntryModel {
       postId: _nullableInt(json['post_id'] ?? post['post_id']),
       postText: _string(json['post_text'] ?? post['text_plain'] ?? post['text']),
       previewUrl: previewUrl,
+      videoUrl: videoUrl,
       mediaType: _string(json['media_type'] ?? post['post_type']),
       publishedAt: _string(json['time'] ?? json['published_at'] ?? post['time']),
       privacy: _string(json['privacy'] ?? post['privacy']),

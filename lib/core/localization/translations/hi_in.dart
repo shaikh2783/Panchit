@@ -3064,6 +3064,9 @@ const Map<String, String> hiIN = {
   "leaderboard_empty_msg": "उपयोगकर्ताओं के जुड़ने के बाद यहाँ प्रविष्टियाँ दिखेंगी।",
   "leaderboard_load_failed": "लीडरबोर्ड लोड नहीं हो सका",
   "leaderboard_stats": "लाइक्स: @likes • टिप्पणियाँ: @comments • प्रतिक्रियाएँ: @reactions",
+  "leaderboard_voting_ends_on": "मतदान समाप्त: @date",
+  "leaderboard_voting_ended_on": "मतदान समाप्त हो गया: @date",
+  "leaderboard_winners_after_voting": "मतदान समाप्त होने के बाद विजेताओं की घोषणा की जाएगी",
 
   // Competition Widgets
   "widget_registration_ends_in": "पंजीकरण समाप्त होगा",

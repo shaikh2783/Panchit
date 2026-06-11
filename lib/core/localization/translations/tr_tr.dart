@@ -1938,6 +1938,9 @@ const Map<String, String> trTR = {
   'leaderboard_empty_msg': 'Kullanıcılar katıldıkça girişler burada görünecektir.',
   'leaderboard_load_failed': 'Liderlik tablosu yüklenemedi',
   'leaderboard_stats': 'Beğeniler: @likes • Yorumlar: @comments • Tepkiler: @reactions',
+  'leaderboard_voting_ends_on': 'Oylama bitiyor: @date',
+  'leaderboard_voting_ended_on': 'Oylama tamamlandı: @date',
+  'leaderboard_winners_after_voting': 'Kazananlar oylama bittikten sonra açıklanacak',
 
   // Competition Widgets
   'widget_registration_ends_in': 'Kayıt sona eriyor',

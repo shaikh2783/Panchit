@@ -19,6 +19,7 @@ import 'package:snginepro/features/feed/data/models/post_type_config.dart';
 import 'package:snginepro/features/feed/data/services/post_management_api_service.dart';
 import 'package:snginepro/features/feed/presentation/pages/create_post_page_modern.dart';
 import 'package:snginepro/features/feed/presentation/pages/edit_post_page.dart';
+import 'package:snginepro/features/feed/presentation/widgets/adaptive_video_player.dart';
 import 'package:snginepro/features/wallet/presentation/pages/wallet_page.dart';
 
 class CompetitionDetailPage extends StatefulWidget {
@@ -258,7 +259,10 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
       Map<String, dynamic>? postJson;
       if (data is Map<String, dynamic>) {
         if (data['post'] is Map<String, dynamic>) {
-          postJson = Map<String, dynamic>.from(data['post'] as Map<String, dynamic>);
+          postJson = <String, dynamic>{
+            ...Map<String, dynamic>.from(data),
+            ...Map<String, dynamic>.from(data['post'] as Map<String, dynamic>),
+          };
         } else {
           postJson = Map<String, dynamic>.from(data);
         }
@@ -298,6 +302,7 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
           initialEntries: competition.leaders.isNotEmpty
               ? competition.leaders
               : competition.entries,
+          votingEnd: competition.votingEnd,
         ),
       ),
     );
@@ -1277,6 +1282,40 @@ class _CompetitionEntryCard extends StatelessWidget {
     }
   }
 
+  DateTime? _parsePublishedAt(String? value) {
+    if (value == null || value.trim().isEmpty) return null;
+    try {
+      if (value.contains('T')) {
+        return DateTime.parse(value);
+      }
+      if (value.contains(' ')) {
+        return DateTime.parse('${value.replaceFirst(' ', 'T')}Z');
+      }
+      return DateTime.parse(value);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  String _formatPublishedAt(BuildContext context, String? value) {
+    if (value == null || value.trim().isEmpty) return '';
+    final formatted = TimeAgo.formatFromString(value);
+    final looksLikeTranslationKey =
+        RegExp(r'^[a-z0-9_]+$').hasMatch(formatted) ||
+        formatted.contains('_ago_');
+    if (!looksLikeTranslationKey) {
+      return formatted;
+    }
+    final parsed = _parsePublishedAt(value)?.toLocal();
+    if (parsed == null) return formatted;
+    final localizations = MaterialLocalizations.of(context);
+    final formattedTime = localizations.formatTimeOfDay(
+      TimeOfDay.fromDateTime(parsed),
+      alwaysUse24HourFormat: MediaQuery.of(context).alwaysUse24HourFormat,
+    );
+    return '${localizations.formatShortDate(parsed)} $formattedTime';
+  }
+
   Widget _buildMetaItem(
     BuildContext context, {
     required IconData icon,
@@ -1344,15 +1383,26 @@ class _CompetitionEntryCard extends StatelessWidget {
 
     final avatarUrl = _resolveUrl(entry.userAvatar);
     final previewUrl = _resolveUrl(entry.previewUrl);
-    final hasPreview = previewUrl != null;
     final hasText = (entry.postText ?? '').trim().isNotEmpty;
     final isVideo = (entry.mediaType ?? '').toLowerCase().contains('video');
+    final resolvedVideoUrl = _resolveUrl(entry.videoUrl);
+    final hasPreview = previewUrl != null;
+    final hasVideo = isVideo && resolvedVideoUrl != null;
+    final postVideo = hasVideo
+        ? PostVideo(
+            originalSource: resolvedVideoUrl,
+            availableSources: const {},
+            thumbnail: previewUrl ?? '',
+            categoryName: '',
+            viewCount: entry.viewsCount ?? 0,
+          )
+        : null;
     final metaItems = <Widget>[
       if ((entry.publishedAt ?? '').trim().isNotEmpty)
         _buildMetaItem(
           context,
           icon: Iconsax.clock,
-          text: TimeAgo.formatFromString(entry.publishedAt),
+          text: _formatPublishedAt(context, entry.publishedAt),
         ),
       if ((entry.privacy ?? '').trim().isNotEmpty)
         _buildMetaItem(
@@ -1506,7 +1556,23 @@ class _CompetitionEntryCard extends StatelessWidget {
             ),
 
           // ── Media preview ─────────────────────────────────────────────────
-          if (hasPreview)
+          if (hasVideo && postVideo != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: Spacing.md),
+              child: ClipRRect(
+                borderRadius: entry.rank != null && entry.rank! <= 3
+                    ? BorderRadius.zero
+                    : BorderRadius.circular(Radii.large),
+                child: AdaptiveVideoPlayer(
+                  isFullscreen: false,
+                  startMuted: true,
+                  autoplayWhenVisible: false,
+                  video: postVideo,
+                  mediaResolver: mediaAsset,
+                ),
+              ),
+            )
+          else if (hasPreview)
             ClipRRect(
               borderRadius: entry.rank != null && entry.rank! <= 3
                   ? BorderRadius.zero

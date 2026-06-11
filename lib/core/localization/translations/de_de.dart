@@ -1938,6 +1938,9 @@ const Map<String, String> deDE = {
   'leaderboard_empty_msg': 'Einträge erscheinen hier, sobald Nutzer beitreten.',
   'leaderboard_load_failed': 'Bestenliste konnte nicht geladen werden',
   'leaderboard_stats': 'Likes: @likes • Kommentare: @comments • Reaktionen: @reactions',
+  'leaderboard_voting_ends_on': 'Abstimmung endet: @date',
+  'leaderboard_voting_ended_on': 'Abstimmung beendet: @date',
+  'leaderboard_winners_after_voting': 'Gewinner werden nach Ende der Abstimmung bekannt gegeben',
 
   // Competition Widgets
   'widget_registration_ends_in': 'Anmeldung endet in',

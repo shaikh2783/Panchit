@@ -1938,6 +1938,9 @@ const Map<String, String> esES = {
   'leaderboard_empty_msg': 'Las entradas aparecerán aquí una vez que los usuarios se unan.',
   'leaderboard_load_failed': 'No se pudo cargar la clasificación',
   'leaderboard_stats': 'Me gusta: @likes • Comentarios: @comments • Reacciones: @reactions',
+  'leaderboard_voting_ends_on': 'La votación termina: @date',
+  'leaderboard_voting_ended_on': 'Votación terminada: @date',
+  'leaderboard_winners_after_voting': 'Los ganadores se anunciarán tras finalizar la votación',
 
   // Competition Widgets
   'widget_registration_ends_in': 'El registro termina en',

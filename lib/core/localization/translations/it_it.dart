@@ -1938,6 +1938,9 @@ const Map<String, String> itIT = {
   'leaderboard_empty_msg': 'Le voci appariranno qui una volta che gli utenti si uniranno.',
   'leaderboard_load_failed': 'Impossibile caricare la classifica',
   'leaderboard_stats': 'Mi piace: @likes • Commenti: @comments • Reazioni: @reactions',
+  'leaderboard_voting_ends_on': 'Votazione termina: @date',
+  'leaderboard_voting_ended_on': 'Votazione terminata: @date',
+  'leaderboard_winners_after_voting': 'I vincitori saranno annunciati al termine della votazione',
 
   // Competition Widgets
   'widget_registration_ends_in': 'La registrazione termina tra',

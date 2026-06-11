@@ -1938,6 +1938,9 @@ const Map<String, String> nlNL = {
   'leaderboard_empty_msg': 'Inzendingen verschijnen hier zodra gebruikers deelnemen.',
   'leaderboard_load_failed': 'Kan het klassement niet laden',
   'leaderboard_stats': 'Likes: @likes • Reacties: @comments • Emoties: @reactions',
+  'leaderboard_voting_ends_on': 'Stemming eindigt: @date',
+  'leaderboard_voting_ended_on': 'Stemming beëindigd: @date',
+  'leaderboard_winners_after_voting': 'Winnaars worden bekendgemaakt na het einde van de stemming',
 
   // Competition Widgets
   'widget_registration_ends_in': 'Registratie eindigt over',

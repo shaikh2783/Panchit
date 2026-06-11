@@ -3146,6 +3146,9 @@ const Map<String, String> mlIN = {
   "leaderboard_empty_msg": "ഉപയോക്താക്കൾ ചേരുമ്പോൾ എൻട്രികൾ ഇവിടെ ദൃശ്യമാകും.",
   "leaderboard_load_failed": "ലീഡർബോർഡ് ലോഡ് ചെയ്യാൻ കഴിഞ്ഞില്ല",
   "leaderboard_stats": "ലൈക്കുകൾ: @likes • കമന്റുകൾ: @comments • പ്രതികരണങ്ങൾ: @reactions",
+  "leaderboard_voting_ends_on": "വോട്ടിംഗ് അവസാനിക്കുന്നു: @date",
+  "leaderboard_voting_ended_on": "വോട്ടിംഗ് അവസാനിച്ചു: @date",
+  "leaderboard_winners_after_voting": "വോട്ടിംഗ് അവസാനിച്ചതിന് ശേഷം വിജയികളെ പ്രഖ്യാപിക്കും",
 
   // Competition Widgets
   "widget_registration_ends_in": "രജിസ്‌ട്രേഷൻ അവസാനിക്കുന്നു",

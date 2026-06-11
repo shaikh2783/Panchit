@@ -159,6 +159,9 @@ const Map<String, String> ptPT = {
   'leaderboard_empty_msg': 'As inscrições aparecerão aqui assim que os utilizadores participarem.',
   'leaderboard_load_failed': 'Não foi possível carregar a classificação',
   'leaderboard_stats': 'Gostos: @likes • Comentários: @comments • Reações: @reactions',
+  'leaderboard_voting_ends_on': 'Votação termina: @date',
+  'leaderboard_voting_ended_on': 'Votação encerrada: @date',
+  'leaderboard_winners_after_voting': 'Os vencedores serão anunciados após o encerramento da votação',
 
   // Competition Widgets
   'widget_registration_ends_in': 'As inscrições terminam em',

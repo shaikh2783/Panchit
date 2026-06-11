@@ -1934,6 +1934,9 @@ const Map<String, String> frFR = {
   'leaderboard_empty_msg': 'Les entrées apparaîtront ici une fois que les utilisateurs auront rejoint.',
   'leaderboard_load_failed': 'Impossible de charger le classement',
   'leaderboard_stats': 'J\'aime : @likes • Commentaires : @comments • Réactions : @reactions',
+  'leaderboard_voting_ends_on': 'Vote se termine : @date',
+  'leaderboard_voting_ended_on': 'Vote terminé : @date',
+  'leaderboard_winners_after_voting': 'Les gagnants seront annoncés après la fin du vote',
 
   // Competition Widgets
   'widget_registration_ends_in': 'L\'inscription se termine dans',

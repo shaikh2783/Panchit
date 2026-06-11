@@ -368,7 +368,7 @@ class Post {
         // 👤 Handle anonymous posts - show "anonymous_user" key for translation
         authorName: isAnonymous ? 'anonymous_user' : _authorName(json),
         publishedAt: _string(json['time']) ?? '',
-        text: _string(json['text']) ?? _string(json['text']) ?? '',
+        text: _string(json['text']) ?? _string(json['text_plain']) ?? _string(json['post_text']) ?? '',
         postType: _string(json['post_type']) ?? '',
         // 👤 Handle anonymous posts - hide avatar
         authorAvatarUrl: isAnonymous ? null : _authorAvatar(json),

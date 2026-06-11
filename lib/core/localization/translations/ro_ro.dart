@@ -1938,6 +1938,9 @@ const Map<String, String> roRO = {
   'leaderboard_empty_msg': 'Înscrierile vor apărea aici odată ce utilizatorii participă.',
   'leaderboard_load_failed': 'Nu s-a putut încărca clasamentul',
   'leaderboard_stats': 'Aprecieri: @likes • Comentarii: @comments • Reacții: @reactions',
+  'leaderboard_voting_ends_on': 'Votul se încheie: @date',
+  'leaderboard_voting_ended_on': 'Votul s-a încheiat: @date',
+  'leaderboard_winners_after_voting': 'Câștigătorii vor fi anunțați după încheierea votului',
 
   // Competition Widgets
   'widget_registration_ends_in': 'Înregistrarea se încheie în',

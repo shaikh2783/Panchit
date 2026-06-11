@@ -1938,6 +1938,9 @@ const Map<String, String> elGR = {
   'leaderboard_empty_msg': 'Οι συμμετοχές θα εμφανιστούν εδώ μόλις εγγραφούν χρήστες.',
   'leaderboard_load_failed': 'Αδύνατη η φόρτωση της κατάταξης',
   'leaderboard_stats': 'Μου αρέσει: @likes • Σχόλια: @comments • Αντιδράσεις: @reactions',
+  'leaderboard_voting_ends_on': 'Η ψηφοφορία τελειώνει: @date',
+  'leaderboard_voting_ended_on': 'Η ψηφοφορία έληξε: @date',
+  'leaderboard_winners_after_voting': 'Οι νικητές θα ανακοινωθούν μετά τη λήξη της ψηφοφορίας',
 
   // Competition Widgets
   'widget_registration_ends_in': 'Η εγγραφή λήγει σε',

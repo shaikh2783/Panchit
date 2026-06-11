@@ -2921,6 +2921,9 @@ const Map<String, String> urPK = {
   "leaderboard_empty_msg": "صارفین کے شامل ہونے کے بعد اندراجات یہاں ظاہر ہوں گے۔",
   "leaderboard_load_failed": "لیڈر بورڈ لوڈ کرنے میں ناکامی",
   "leaderboard_stats": "لائکس: @likes • تبصرے: @comments • ردعمل: @reactions",
+  "leaderboard_voting_ends_on": "ووٹنگ ختم ہوتی ہے: @date",
+  "leaderboard_voting_ended_on": "ووٹنگ ختم ہوئی: @date",
+  "leaderboard_winners_after_voting": "ووٹنگ ختم ہونے کے بعد فاتحین کا اعلان کیا جائے گا",
 
   // Competition Widgets
   "widget_registration_ends_in": "رجسٹریشن ختم ہونے میں",

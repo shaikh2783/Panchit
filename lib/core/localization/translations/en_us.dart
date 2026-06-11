@@ -2944,6 +2944,9 @@ const Map<String, String> enUS = {
   'leaderboard_empty_msg': 'Entries will appear here once users join.',
   'leaderboard_load_failed': 'Unable to load leaderboard',
   'leaderboard_stats': 'Likes: @likes • Comments: @comments • Reactions: @reactions',
+  'leaderboard_voting_ends_on': 'Voting ends: @date',
+  'leaderboard_voting_ended_on': 'Voting ended: @date',
+  'leaderboard_winners_after_voting': 'Winners will be announced after voting ends',
 
   // Competition Widgets
   'widget_registration_ends_in': 'Registration ends in',
