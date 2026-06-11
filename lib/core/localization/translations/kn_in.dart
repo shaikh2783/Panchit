@@ -3147,6 +3147,9 @@ const Map<String, String> knIN = {
   "leaderboard_empty_msg": "ಬಳಕೆದಾರರು ಸೇರಿದ ನಂತರ ನಮೂದುಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.",
   "leaderboard_load_failed": "ಲೀಡರ್‌ಬೋರ್ಡ್ ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ",
   "leaderboard_stats": "ಇಷ್ಟಗಳು: @likes • ಕಾಮೆಂಟ್‌ಗಳು: @comments • ಪ್ರತಿಕ್ರಿಯೆಗಳು: @reactions",
+  "leaderboard_voting_ends_on": "ಮತದಾನ ಮುಗಿಯುತ್ತದೆ: @date",
+  "leaderboard_voting_ended_on": "ಮತದಾನ ಮುಗಿದಿದೆ: @date",
+  "leaderboard_winners_after_voting": "ಮತದಾನ ಮುಗಿದ ನಂತರ ವಿಜೇತರನ್ನು ಘೋಷಿಸಲಾಗುವುದು",
 
   // Competition Widgets
   "widget_registration_ends_in": "ನೋಂದಣಿ ಮುಕ್ತಾಯವಾಗಲಿದೆ",

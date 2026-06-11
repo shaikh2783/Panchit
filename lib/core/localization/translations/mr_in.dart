@@ -3238,6 +3238,9 @@ const Map<String, String> mrIN = {
   "leaderboard_empty_msg": "वापरकर्ते सामील झाल्यावर नोंदी येथे दिसतील.",
   "leaderboard_load_failed": "लीडरबोर्ड लोड करण्यात अयशस्वी",
   "leaderboard_stats": "लाइक्स: @likes • टिप्पण्या: @comments • प्रतिक्रिया: @reactions",
+  "leaderboard_voting_ends_on": "मतदान संपणार: @date",
+  "leaderboard_voting_ended_on": "मतदान संपले: @date",
+  "leaderboard_winners_after_voting": "मतदान संपल्यानंतर विजेत्यांची घोषणा केली जाईल",
 
   // Competition Widgets
   "widget_registration_ends_in": "नोंदणी संपण्यास वेळ",

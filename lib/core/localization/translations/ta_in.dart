@@ -2921,6 +2921,9 @@ const Map<String, String> taIN = {
   "leaderboard_empty_msg": "பயனர்கள் சேர்ந்தவுடன் உள்ளீடுகள் இங்கே தோன்றும்.",
   "leaderboard_load_failed": "தரவரிசைப் பட்டியலை ஏற்ற முடியவில்லை",
   "leaderboard_stats": "லைக்குகள்: @likes • கருத்துகள்: @comments • எதிர்வினைகள்: @reactions",
+  "leaderboard_voting_ends_on": "வாக்களிப்பு முடிவடையும்: @date",
+  "leaderboard_voting_ended_on": "வாக்களிப்பு முடிந்தது: @date",
+  "leaderboard_winners_after_voting": "வாக்களிப்பு முடிந்த பிறகு வெற்றியாளர்கள் அறிவிக்கப்படுவார்கள்",
 
   // Competition Widgets
   "widget_registration_ends_in": "பதிவு முடிவடைகிறது",

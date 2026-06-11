@@ -992,9 +992,7 @@ class _PostCardState extends State<PostCard>
     }
   }
 
-  /// التعامل مع إجراءات المنشور
   Future<void> _handlePostAction(PostAction action) async {
-    // معالجة خاصة لتعديل المنشور
     if (action == PostAction.editPost) {
       await Navigator.push(
         context,
@@ -1006,8 +1004,6 @@ class _PostCardState extends State<PostCard>
                 _currentPost = updatedPost;
               });
               widget.onPostUpdated?.call(updatedPost);
-
-              // تحديث PostsBloc للتأكد من تحديث جميع الواجهات
               if (mounted) {
                 context.read<PostsBloc>().add(UpdatePostEvent(updatedPost));
               }
@@ -1017,8 +1013,6 @@ class _PostCardState extends State<PostCard>
       );
       return;
     }
-
-    // معالجة خاصة لتعليم المنشور كـ للبالغين
     if (action == PostAction.markAsAdult ||
         action == PostAction.unmarkAsAdult) {
       await _handleAdultContentAction(action);
@@ -1980,7 +1974,7 @@ class _PostCardState extends State<PostCard>
                           alignment: Alignment.centerLeft,
                           child: CompetitionEntryBadge(
                             label: _currentPost.competitionBadgeText ??
-                                '${_currentPost.competitionName ?? 'Competition'} Entry',
+                                (_currentPost.competitionName ?? 'Competition'),
                             onTap: _openCompetitionDetails,
                           ),
                         ),

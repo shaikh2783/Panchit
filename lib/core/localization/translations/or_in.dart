@@ -2991,6 +2991,9 @@ const Map<String, String> orIN = {
   "leaderboard_empty_msg": "ବ୍ୟବହାରକାରୀ ଯୋଗ ଦେଲେ ଏଠାରେ ଏଣ୍ଟ୍ରି ଦେଖାଯିବ।",
   "leaderboard_load_failed": "ଲିଡରବୋର୍ଡ ଲୋଡ ହୋଇ ପାରିଲା ନାହିଁ",
   "leaderboard_stats": "ଲାଇକ: @likes • ମନ୍ତବ୍ୟ: @comments • ପ୍ରତିକ୍ରିୟା: @reactions",
+  "leaderboard_voting_ends_on": "ଭୋଟ ଦେବା ଶେଷ ହେବ: @date",
+  "leaderboard_voting_ended_on": "ଭୋଟ ଦେବା ଶେଷ: @date",
+  "leaderboard_winners_after_voting": "ଭୋଟ ଦେବା ଶେଷ ହେବା ପରେ ବିଜୟୀଙ୍କ ଘୋଷଣା ହେବ",
 
   // Competition Widgets
   "widget_registration_ends_in": "ପଞ୍ଜିକରଣ ସମାପ୍ତ ହେବ",

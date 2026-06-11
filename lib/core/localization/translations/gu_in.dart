@@ -2915,6 +2915,9 @@ const Map<String, String> guIN = {
   "leaderboard_empty_msg": "વપરાશકર્તાઓ જોડાય પછી અહીં એન્ટ્રીઓ દેખાશે.",
   "leaderboard_load_failed": "લીડરબોર્ડ લોડ કરવામાં અસમર્થ",
   "leaderboard_stats": "લાઇક્સ: @likes • કોમેન્ટ્સ: @comments • પ્રતિક્રિયાઓ: @reactions",
+  "leaderboard_voting_ends_on": "મતદાન સમાપ્ત: @date",
+  "leaderboard_voting_ended_on": "મતદાન સમાપ્ત થઈ ગયું: @date",
+  "leaderboard_winners_after_voting": "મતદાન સમાપ્ત થયા પછી વિજેતાઓની જાહેરાત કરવામાં આવશે",
 
   // Competition Widgets
   "widget_registration_ends_in": "નોંધણી સમાપ્ત થાય છે",

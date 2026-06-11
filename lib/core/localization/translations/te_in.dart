@@ -2958,6 +2958,9 @@ const Map<String, String> teIN = {
   "leaderboard_empty_msg": "వినియోగదారులు చేరిన తర్వాత ఎంట్రీలు ఇక్కడ కనిపిస్తాయి.",
   "leaderboard_load_failed": "లీడర్‌బోర్డ్ లోడ్ చేయడం సాధ్యం కాలేదు",
   "leaderboard_stats": "లైక్‌లు: @likes • వ్యాఖ్యలు: @comments • రియాక్షన్‌లు: @reactions",
+  "leaderboard_voting_ends_on": "ఓటింగ్ ముగుస్తుంది: @date",
+  "leaderboard_voting_ended_on": "ఓటింగ్ ముగిసింది: @date",
+  "leaderboard_winners_after_voting": "ఓటింగ్ ముగిసిన తర్వాత విజేతలు ప్రకటించబడతారు",
 
   // Competition Widgets
   "widget_registration_ends_in": "నమోదు ముగుస్తోంది",

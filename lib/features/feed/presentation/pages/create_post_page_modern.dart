@@ -14,7 +14,6 @@ import 'package:snginepro/core/config/dynamic_app_config_provider.dart';
 import 'package:snginepro/core/config/colored_pattern_model.dart';
 import 'package:snginepro/features/auth/application/auth_notifier.dart';
 import 'package:snginepro/features/competitions/data/models/competition_models.dart';
-import 'package:snginepro/features/competitions/data/services/competition_api_service.dart';
 import 'package:snginepro/features/feed/application/bloc/posts_bloc.dart';
 import 'package:snginepro/features/feed/application/bloc/posts_events.dart';
 import 'package:snginepro/features/feed/data/datasources/posts_api_service.dart';
@@ -704,12 +703,6 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
     }
   }
 
-  String _competitionMediaTypeLabel() {
-    if (_video != null) return 'video';
-    if (_images.isNotEmpty) return 'image';
-    return 'text';
-  }
-
   Future<void> _createPost() async {
     if (_textController.text.trim().isEmpty &&
         _images.isEmpty &&
@@ -733,9 +726,6 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
 
     try {
       final apiService = context.read<PostsApiService>();
-      final competitionApi = _isCompetitionEntryMode
-          ? context.read<CompetitionApiService>()
-          : null;
 
       // Upload images if present
       List<UploadedFileData>? uploadedPhotos;
@@ -824,29 +814,10 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         throw Exception(postResponse.message ?? 'Failed to create post');
       }
 
-      if (_isCompetitionEntryMode) {
-        final createdPostId = postResponse.postId ??
-            (() {
-              final rawPostId = postResponse.postData?['post_id'];
-              if (rawPostId is int) return rawPostId;
-              return int.tryParse(rawPostId?.toString() ?? '');
-            })();
-        if (createdPostId == null) {
-          throw Exception('Created post ID not found for competition entry.');
-        }
-        await competitionApi!.submitCompetitionEntry(
-          competitionId: widget.competition!.id,
-          request: CompetitionSubmitRequest(
-            postId: createdPostId,
-            mediaType: _competitionMediaTypeLabel(),
-            message: _textController.text.trim(),
-          ),
-        );
-        if (mounted) {
-          try {
-            context.read<WalletOverviewBloc>().add(const RefreshWalletOverview());
-          } catch (_) {}
-        }
+      if (_isCompetitionEntryMode && mounted) {
+        try {
+          context.read<WalletOverviewBloc>().add(const RefreshWalletOverview());
+        } catch (_) {}
       }
 
       // Update list and go back to main page
@@ -910,6 +881,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
     final handle = widget.handle ?? 'me';
     final handleId = widget.handleId;
     final feeling = _buildFeelingData();
+    final competitionId = _isCompetitionEntryMode ? widget.competition?.id : null;
 
     var effectiveType = _selectedType;
     if (_isCompetitionEntryMode) {
@@ -940,6 +912,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           pageId: handle == 'page' && handleId != null ? handleId.toString() : null,
           groupId: handle == 'group' && handleId != null ? handleId.toString() : null,
           eventId: handle == 'event' && handleId != null ? handleId.toString() : null,
+          competitionId: competitionId,
           privacy: _privacy,
           message: _textController.text,
           photos: photoData,
@@ -976,6 +949,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           pageId: handle == 'page' && handleId != null ? handleId.toString() : null,
           groupId: handle == 'group' && handleId != null ? handleId.toString() : null,
           eventId: handle == 'event' && handleId != null ? handleId.toString() : null,
+          competitionId: competitionId,
           privacy: _privacy,
           message: _textController.text,
           video: videoData,
@@ -1010,6 +984,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           pageId: handle == 'page' && handleId != null ? handleId.toString() : null,
           groupId: handle == 'group' && handleId != null ? handleId.toString() : null,
           eventId: handle == 'event' && handleId != null ? handleId.toString() : null,
+          competitionId: competitionId,
           privacy: _privacy,
           message: _textController.text,
           reel: reelData,
@@ -1025,6 +1000,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           pageId: handle == 'page' && handleId != null ? handleId.toString() : null,
           groupId: handle == 'group' && handleId != null ? handleId.toString() : null,
           eventId: handle == 'event' && handleId != null ? handleId.toString() : null,
+          competitionId: competitionId,
           privacy: _privacy,
           message: _textController.text,
           audio: audio != null ? AudioData(source: audio.source) : null,
@@ -1043,6 +1019,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           pageId: handle == 'page' && handleId != null ? handleId.toString() : null,
           groupId: handle == 'group' && handleId != null ? handleId.toString() : null,
           eventId: handle == 'event' && handleId != null ? handleId.toString() : null,
+          competitionId: competitionId,
           privacy: _privacy,
           message: _textController.text,
           pollOptions: _pollOptions
@@ -1064,6 +1041,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           pageId: handle == 'page' && handleId != null ? handleId.toString() : null,
           groupId: handle == 'group' && handleId != null ? handleId.toString() : null,
           eventId: handle == 'event' && handleId != null ? handleId.toString() : null,
+          competitionId: competitionId,
           privacy: _privacy,
           message: _textController.text,
           coloredPattern: _selectedColoredPattern?.id,
@@ -1081,6 +1059,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           pageId: handle == 'page' && handleId != null ? handleId.toString() : null,
           groupId: handle == 'group' && handleId != null ? handleId.toString() : null,
           eventId: handle == 'event' && handleId != null ? handleId.toString() : null,
+          competitionId: competitionId,
           privacy: _privacy,
           message: _textController.text,
           // Don't include coloredPattern for regular text posts

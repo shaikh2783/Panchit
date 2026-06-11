@@ -2932,6 +2932,9 @@ const Map<String, String> arSA = {
   "leaderboard_empty_msg": "ستظهر الإدخالات هنا بمجرد انضمام المستخدمين.",
   "leaderboard_load_failed": "تعذّر تحميل لوحة المتصدرين",
   "leaderboard_stats": "الإعجابات: @likes • التعليقات: @comments • التفاعلات: @reactions",
+  "leaderboard_voting_ends_on": "التصويت ينتهي: @date",
+  "leaderboard_voting_ended_on": "انتهى التصويت: @date",
+  "leaderboard_winners_after_voting": "سيتم الإعلان عن الفائزين بعد انتهاء التصويت",
 
   // Competition Widgets
   "widget_registration_ends_in": "ينتهي التسجيل خلال",

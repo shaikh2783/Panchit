@@ -420,42 +420,73 @@ class CompetitionEntryBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(Radii.pill),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.9),
-                  const Color(0xFF8B5CF6),
-                ],
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final backgroundA = theme.colorScheme.primary.withValues(
+      alpha: isDark ? 0.18 : 0.12,
+    );
+    final backgroundB = theme.colorScheme.secondary.withValues(
+      alpha: isDark ? 0.14 : 0.10,
+    );
+    final borderColor = theme.colorScheme.primary.withValues(
+      alpha: isDark ? 0.30 : 0.26,
+    );
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(Radii.pill),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            onTap: onTap,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [backgroundA, backgroundB],
+                ),
+                borderRadius: BorderRadius.circular(Radii.pill),
+                border: Border.all(color: borderColor),
               ),
-              borderRadius: BorderRadius.circular(Radii.pill),
-              border: Border.all(color: Colors.white.withValues(alpha: 0.22)),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Iconsax.cup, size: 14, color: Colors.white),
-                const SizedBox(width: 6),
-                Flexible(
-                  child: Text(
-                    label,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 22,
+                    height: 22,
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primary.withValues(alpha: 0.16),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Iconsax.cup,
+                      size: 14,
+                      color: theme.colorScheme.primary,
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Text(
+                      label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        fontWeight: FontWeight.w800,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Icon(
+                    Iconsax.arrow_right_3,
+                    size: 14,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
