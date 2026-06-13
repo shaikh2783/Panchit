@@ -20,7 +20,9 @@ import 'package:snginepro/features/feed/data/services/post_management_api_servic
 import 'package:snginepro/features/feed/presentation/pages/create_post_page_modern.dart';
 import 'package:snginepro/features/feed/presentation/pages/edit_post_page.dart';
 import 'package:snginepro/features/feed/presentation/widgets/adaptive_video_player.dart';
-import 'package:snginepro/features/wallet/presentation/pages/wallet_page.dart';
+import 'package:snginepro/features/wallet/data/models/wallet_summary.dart';
+import 'package:snginepro/features/wallet/domain/wallet_repository.dart';
+import 'package:snginepro/features/wallet/presentation/pages/wallet_recharge_page.dart';
 
 class CompetitionDetailPage extends StatefulWidget {
   const CompetitionDetailPage({
@@ -142,7 +144,13 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
     if (rules.isNotEmpty) {
       final agreed = await showDialog<bool>(
         context: context,
-        builder: (context) => CompetitionRulesDialog(rules: rules),
+        builder: (context) => CompetitionRulesDialog(
+          rules: rules,
+          entryFeeLabel: formatMoney(
+            competition.entryFee,
+            competition.currencySymbol,
+          ),
+        ),
       );
       if (agreed != true || !mounted) return;
     }
@@ -166,6 +174,73 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
     }
   }
 
+  void _applyPaymentState(
+    CompetitionPaymentResponse payment,
+    CompetitionModel competition,
+  ) {
+    if (!mounted) return;
+    final resolvedStatus = payment.paymentStatus ?? 'completed';
+    setState(() {
+      final current = _competition;
+      if (current == null || current.id != competition.id) return;
+      _competition = current.copyWith(
+        isPaymentCompleted: true,
+        paymentStatus: resolvedStatus,
+        paymentId: payment.paymentId,
+        paymentReference: payment.paymentReference,
+        paymentPaidAt: payment.paidAt,
+        paidAmount: payment.paidAmount ?? current.entryFee,
+        walletBalanceAfterPayment: payment.walletBalance,
+      );
+    });
+  }
+
+  Future<bool> _completeWalletPaymentBeforeUpload(
+    CompetitionModel competition,
+    WalletSummary initialSummary,
+  ) async {
+    final entryFee = competition.entryFee ?? 0;
+    if (entryFee <= 0 || competition.isPaymentCompleted) return true;
+
+    final walletRepository = context.read<WalletRepository>();
+    var summary = initialSummary;
+
+    while (mounted) {
+      final result = await showDialog<Object?>(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => _CompetitionWalletPaymentDialog(
+          competition: competition,
+          summary: summary,
+        ),
+      );
+
+      if (!mounted) return false;
+
+      if (result is CompetitionPaymentResponse) {
+        _applyPaymentState(result, competition);
+        _showMessage(result.message ?? 'Competition entry fee paid successfully.');
+        return true;
+      }
+
+      if (result == 'recharge') {
+        final rechargeResult = await Navigator.of(context).push<dynamic>(
+          MaterialPageRoute(
+            builder: (_) => WalletRechargePage(summary: summary),
+          ),
+        );
+        if (!mounted || rechargeResult == null) return false;
+        summary = await walletRepository.fetchSummary();
+        if (!mounted) return false;
+        continue;
+      }
+
+      return false;
+    }
+
+    return false;
+  }
+
   Future<void> _startJoinFlow() async {
     final competition = _competition;
     if (competition == null || _isCheckingWallet) return;
@@ -183,27 +258,15 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
         return;
       }
 
-      final wallet = await api.checkWalletBalance();
-      final entryFee = competition.entryFee ?? 0;
-      if (!mounted) return;
+      if (competition.requiresPayment) {
+        final walletSummary = await context.read<WalletRepository>().fetchSummary();
+        if (!mounted) return;
 
-      if (wallet.balance < entryFee) {
-        final shouldAddMoney = await showDialog<bool>(
-          context: context,
-          builder: (context) => GlassPopupDialog(
-            title: 'competition_insufficient_balance_title'.tr,
-            message: 'competition_insufficient_balance_msg'.tr,
-            primaryLabel: 'add_money'.tr,
-            secondaryLabel: 'cancel'.tr,
-            icon: Icons.account_balance_wallet_outlined,
-          ),
+        final paymentCompleted = await _completeWalletPaymentBeforeUpload(
+          competition,
+          walletSummary,
         );
-        if (shouldAddMoney == true && mounted) {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const WalletPage()),
-          );
-        }
-        return;
+        if (!paymentCompleted || !mounted) return;
       }
 
       final submitted = await Navigator.of(context).push<bool>(
@@ -1109,6 +1172,327 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
     if (competition.isJoined) return 'competition_action_view_my_entry'.tr;
     if (competition.isRegistrationOpen) return 'competition_action_join'.tr;
     return 'competition_starts_soon'.tr;
+  }
+}
+
+class _CompetitionWalletPaymentDialog extends StatefulWidget {
+  const _CompetitionWalletPaymentDialog({
+    required this.competition,
+    required this.summary,
+  });
+
+  final CompetitionModel competition;
+  final WalletSummary summary;
+
+  @override
+  State<_CompetitionWalletPaymentDialog> createState() =>
+      _CompetitionWalletPaymentDialogState();
+}
+
+class _CompetitionWalletPaymentDialogState
+    extends State<_CompetitionWalletPaymentDialog> {
+  bool _isProcessing = false;
+  String? _errorMessage;
+
+  Future<void> _onPayPressed() async {
+    setState(() {
+      _isProcessing = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final api = context.read<CompetitionApiService>();
+      final payment = await api.payCompetitionWithWallet(widget.competition.id);
+      if (!mounted) return;
+      Navigator.of(context).pop(payment);
+    } catch (error) {
+      if (!mounted) return;
+      final message = error.toString();
+      final normalized = message.toLowerCase();
+      if (normalized.contains('already paid') ||
+          normalized.contains('already completed') ||
+          normalized.contains('payment completed')) {
+        Navigator.of(context).pop(
+          CompetitionPaymentResponse(
+            success: true,
+            message: message,
+            paymentStatus: 'completed',
+          ),
+        );
+        return;
+      }
+      setState(() {
+        _isProcessing = false;
+        _errorMessage = message.replaceFirst('Exception: ', '');
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final mq = MediaQuery.of(context);
+    final screenWidth = mq.size.width;
+    final screenHeight = mq.size.height;
+    final isSmall = screenWidth < 360;
+
+    final dialogPadding = isSmall ? Spacing.md : Spacing.lg;
+    final headerIconSize = isSmall ? 36.0 : 44.0;
+    final tileIconBoxSize = isSmall ? 32.0 : 38.0;
+    final tileIconSize = isSmall ? 15.0 : 18.0;
+
+    final wallet = widget.summary.wallet;
+    final currencySymbol = wallet.currencySymbol.isNotEmpty
+        ? wallet.currencySymbol
+        : (widget.competition.currencySymbol ?? wallet.currency);
+    final balance = wallet.balance;
+    final entryFee = widget.competition.entryFee ?? 0;
+    final remaining = balance - entryFee;
+    final hasEnoughBalance = balance >= entryFee;
+
+    Widget buildAmountTile({
+      required IconData icon,
+      required String label,
+      required String value,
+      Color? iconColor,
+      Color? valueColor,
+    }) {
+      return Container(
+        padding: EdgeInsets.all(isSmall ? Spacing.sm : Spacing.md),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+          borderRadius: BorderRadius.circular(Radii.large),
+          border: Border.all(
+            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: tileIconBoxSize,
+              height: tileIconBoxSize,
+              decoration: BoxDecoration(
+                color: (iconColor ?? theme.colorScheme.primary).withValues(alpha: 0.12),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon,
+                size: tileIconSize,
+                color: iconColor ?? theme.colorScheme.primary,
+              ),
+            ),
+            SizedBox(width: isSmall ? Spacing.xs : Spacing.sm),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    label,
+                    style: (isSmall
+                            ? theme.textTheme.labelSmall
+                            : theme.textTheme.labelMedium)
+                        ?.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    value,
+                    style: (isSmall
+                            ? theme.textTheme.titleSmall
+                            : theme.textTheme.titleMedium)
+                        ?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: valueColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: EdgeInsets.symmetric(
+        horizontal: isSmall ? 12 : 24,
+        vertical: 24,
+      ),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: 420,
+          maxHeight: screenHeight * 0.85,
+        ),
+        child: Card(
+          margin: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Radii.xLarge),
+          ),
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(dialogPadding),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: headerIconSize,
+                      height: headerIconSize,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.primary.withValues(alpha: 0.12),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.account_balance_wallet_outlined,
+                        size: isSmall ? 18 : 22,
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
+                    SizedBox(width: isSmall ? Spacing.sm : Spacing.md),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'competition_payment_title'.tr,
+                            style: (isSmall
+                                    ? theme.textTheme.titleMedium
+                                    : theme.textTheme.titleLarge)
+                                ?.copyWith(fontWeight: FontWeight.w800),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            widget.competition.title,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: isSmall ? Spacing.sm : Spacing.md),
+                Text(
+                  hasEnoughBalance
+                      ? 'competition_payment_review_msg'.tr
+                      : 'competition_payment_low_balance_msg'.tr,
+                  style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+                ),
+                SizedBox(height: isSmall ? Spacing.md : Spacing.lg),
+                buildAmountTile(
+                  icon: Iconsax.wallet_money,
+                  label: 'competition_current_balance'.tr,
+                  value: formatMoney(balance, currencySymbol),
+                ),
+                SizedBox(height: isSmall ? Spacing.xs : Spacing.sm),
+                buildAmountTile(
+                  icon: Iconsax.ticket_discount,
+                  label: 'competition_entry_fee'.tr,
+                  value: formatMoney(entryFee, currencySymbol),
+                  iconColor: Colors.amber[800],
+                  valueColor: Colors.amber[900],
+                ),
+                SizedBox(height: isSmall ? Spacing.xs : Spacing.sm),
+                buildAmountTile(
+                  icon: remaining >= 0
+                      ? Iconsax.tick_circle
+                      : Iconsax.info_circle,
+                  label: remaining >= 0
+                      ? 'competition_balance_after_payment'.tr
+                      : 'competition_balance_shortfall'.tr,
+                  value: formatMoney(remaining.abs(), currencySymbol),
+                  iconColor: remaining >= 0
+                      ? Colors.green[700]
+                      : theme.colorScheme.error,
+                  valueColor: remaining >= 0
+                      ? Colors.green[700]
+                      : theme.colorScheme.error,
+                ),
+                if (!hasEnoughBalance) ...[
+                  SizedBox(height: isSmall ? Spacing.sm : Spacing.md),
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(isSmall ? Spacing.sm : Spacing.md),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.errorContainer.withValues(alpha: 0.45),
+                      borderRadius: BorderRadius.circular(Radii.large),
+                    ),
+                    child: Text(
+                      'competition_insufficient_balance_msg'.tr,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onErrorContainer,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+                if (_errorMessage != null) ...[
+                  SizedBox(height: isSmall ? Spacing.sm : Spacing.md),
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(isSmall ? Spacing.sm : Spacing.md),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.errorContainer.withValues(alpha: 0.45),
+                      borderRadius: BorderRadius.circular(Radii.large),
+                    ),
+                    child: Text(
+                      _errorMessage!,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onErrorContainer,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+                SizedBox(height: isSmall ? Spacing.md : Spacing.lg),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: _isProcessing
+                            ? null
+                            : () => Navigator.of(context).pop(null),
+                        child: Text('cancel'.tr),
+                      ),
+                    ),
+                    SizedBox(width: isSmall ? Spacing.sm : Spacing.md),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: _isProcessing
+                            ? null
+                            : hasEnoughBalance
+                                ? _onPayPressed
+                                : () => Navigator.of(context).pop('recharge'),
+                        child: _isProcessing
+                            ? const SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              )
+                            : Text(
+                                hasEnoughBalance
+                                    ? 'competition_pay_from_wallet'.tr
+                                    : 'competition_recharge_wallet'.tr,
+                              ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 

@@ -11,11 +11,11 @@ class AppSettings {
   /// معرف العميل - وضع الاختبار (Sandbox)
   /// احصل عليه من: https://developer.paypal.com/dashboard/applications/sandbox
   static const String paypalSandboxClientId =
-      'AQZ9cJfUrNDIeaN01OBTx-SsfFGQdHLdsW27phb2lHUx630547ZGhVOBXUQk8JgPvn571rre7cr1NE-m';
+      'AWYoJZpCtdr2IFQuay7pNTN9jmZkEqfYskyFWR3KT7WkdT3GwCX6Z5O87tn2-YgqemtnKGjbq1k5vius';
 
   /// المفتاح السري - وضع الاختبار (Sandbox)
   static const String paypalSandboxSecretKey =
-      '';
+      'ENJ-xbUpPfxPs5rdXRlkxpuy8r9xewamKuzbL2FkwLlm_vFur6G1O96RGCbPcfbpHx3AzG0Iec75L7NX';
 
   /// معرف العميل - الوضع الحقيقي (Production)
   /// احصل عليه من: https://developer.paypal.com/dashboard/applications/live

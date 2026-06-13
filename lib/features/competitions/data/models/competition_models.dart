@@ -439,6 +439,13 @@ class CompetitionModel {
     this.isJoined = false,
     this.isNotifyEnabled = false,
     this.isCancelled = false,
+    this.isPaymentCompleted = false,
+    this.paymentStatus,
+    this.paymentId,
+    this.paymentReference,
+    this.paymentPaidAt,
+    this.paidAmount,
+    this.walletBalanceAfterPayment,
     this.prizes = const <CompetitionPrizeModel>[],
     this.leaders = const <CompetitionEntryModel>[],
     this.entries = const <CompetitionEntryModel>[],
@@ -464,6 +471,13 @@ class CompetitionModel {
   final bool isJoined;
   final bool isNotifyEnabled;
   final bool isCancelled;
+  final bool isPaymentCompleted;
+  final String? paymentStatus;
+  final int? paymentId;
+  final String? paymentReference;
+  final DateTime? paymentPaidAt;
+  final double? paidAmount;
+  final double? walletBalanceAfterPayment;
   final List<CompetitionPrizeModel> prizes;
   final List<CompetitionEntryModel> leaders;
   final List<CompetitionEntryModel> entries;
@@ -493,6 +507,7 @@ class CompetitionModel {
       status == CompetitionStatus.registrationOpen;
 
   bool get hasPastWinners => winners.isNotEmpty;
+  bool get requiresPayment => (entryFee ?? 0) > 0 && !isPaymentCompleted;
 
   Duration? get timeUntilRegistrationEnd {
     final end = registrationEnd;
@@ -528,6 +543,13 @@ class CompetitionModel {
     bool? isJoined,
     bool? isNotifyEnabled,
     bool? isCancelled,
+    bool? isPaymentCompleted,
+    String? paymentStatus,
+    int? paymentId,
+    String? paymentReference,
+    DateTime? paymentPaidAt,
+    double? paidAmount,
+    double? walletBalanceAfterPayment,
     List<CompetitionPrizeModel>? prizes,
     List<CompetitionEntryModel>? leaders,
     List<CompetitionEntryModel>? entries,
@@ -553,6 +575,14 @@ class CompetitionModel {
       isJoined: isJoined ?? this.isJoined,
       isNotifyEnabled: isNotifyEnabled ?? this.isNotifyEnabled,
       isCancelled: isCancelled ?? this.isCancelled,
+      isPaymentCompleted: isPaymentCompleted ?? this.isPaymentCompleted,
+      paymentStatus: paymentStatus ?? this.paymentStatus,
+      paymentId: paymentId ?? this.paymentId,
+      paymentReference: paymentReference ?? this.paymentReference,
+      paymentPaidAt: paymentPaidAt ?? this.paymentPaidAt,
+      paidAmount: paidAmount ?? this.paidAmount,
+      walletBalanceAfterPayment:
+          walletBalanceAfterPayment ?? this.walletBalanceAfterPayment,
       prizes: prizes ?? this.prizes,
       leaders: leaders ?? this.leaders,
       entries: entries ?? this.entries,
@@ -594,6 +624,10 @@ class CompetitionModel {
     ).whereType<Map<String, dynamic>>()
         .map(CompetitionWinnerModel.fromJson)
         .toList(growable: false);
+    final payment = _extractMap(
+      json,
+      const ['entry_payment', 'payment', 'user_payment', 'wallet_payment'],
+    );
 
     return CompetitionModel(
       id: _int(json['id'] ?? json['competition_id']),
@@ -637,6 +671,54 @@ class CompetitionModel {
       ),
       isCancelled: _bool(json['is_cancelled']) ||
           _competitionStatus(json['status']) == CompetitionStatus.cancelled,
+      isPaymentCompleted: _bool(
+        json['is_payment_completed'] ??
+            json['payment_completed'] ??
+            json['entry_fee_paid'] ??
+            json['has_paid_entry_fee'] ??
+            payment['is_payment_completed'] ??
+            payment['payment_completed'] ??
+            payment['is_paid'] ??
+            payment['paid'],
+      ),
+      paymentStatus: _string(
+        json['payment_status'] ??
+            json['entry_payment_status'] ??
+            payment['status'] ??
+            payment['payment_status'],
+      ),
+      paymentId: _nullableInt(
+        json['payment_id'] ??
+            json['entry_payment_id'] ??
+            payment['payment_id'] ??
+            payment['id'],
+      ),
+      paymentReference: _string(
+        json['payment_reference'] ??
+            json['payment_txn_id'] ??
+            payment['payment_reference'] ??
+            payment['reference'] ??
+            payment['transaction_id'],
+      ),
+      paymentPaidAt: _dateTime(
+        json['payment_paid_at'] ??
+            json['paid_at'] ??
+            payment['paid_at'] ??
+            payment['payment_paid_at'] ??
+            payment['created_at'],
+      ),
+      paidAmount: _double(
+        json['paid_amount'] ??
+            json['entry_fee_paid_amount'] ??
+            payment['amount'] ??
+            payment['paid_amount'],
+      ),
+      walletBalanceAfterPayment: _double(
+        json['wallet_balance_after_payment'] ??
+            json['wallet_balance'] ??
+            payment['wallet_balance_after_payment'] ??
+            payment['wallet_balance'],
+      ),
       prizes: prizes,
       leaders: leaders,
       entries: entries,
@@ -695,6 +777,62 @@ class CompetitionSubmitResponse {
       postId: _nullableInt(data['post_id'] ?? json['post_id']),
       walletBalance: _double(
         data['wallet_balance'] ?? json['wallet_balance'],
+      ),
+    );
+  }
+}
+
+class CompetitionPaymentResponse {
+  const CompetitionPaymentResponse({
+    required this.success,
+    this.message,
+    this.paymentId,
+    this.paymentStatus,
+    this.paymentReference,
+    this.paidAt,
+    this.paidAmount,
+    this.walletBalance,
+  });
+
+  final bool success;
+  final String? message;
+  final int? paymentId;
+  final String? paymentStatus;
+  final String? paymentReference;
+  final DateTime? paidAt;
+  final double? paidAmount;
+  final double? walletBalance;
+
+  factory CompetitionPaymentResponse.fromJson(Map<String, dynamic> json) {
+    final data = _map(json['data']);
+    return CompetitionPaymentResponse(
+      success: _bool(json['success']) || json['status'] == 'success',
+      message: _string(json['message']),
+      paymentId: _nullableInt(
+        data['payment_id'] ?? data['id'] ?? json['payment_id'],
+      ),
+      paymentStatus: _string(
+        data['payment_status'] ?? data['status'] ?? json['payment_status'],
+      ),
+      paymentReference: _string(
+        data['payment_reference'] ??
+            data['reference'] ??
+            data['transaction_id'] ??
+            json['payment_reference'],
+      ),
+      paidAt: _dateTime(
+        data['paid_at'] ??
+            data['payment_paid_at'] ??
+            data['created_at'] ??
+            json['paid_at'],
+      ),
+      paidAmount: _double(
+        data['paid_amount'] ?? data['amount'] ?? json['paid_amount'],
+      ),
+      walletBalance: _double(
+        data['wallet_balance'] ??
+            data['wallet_balance_after_payment'] ??
+            json['wallet_balance'],
       ),
     );
   }

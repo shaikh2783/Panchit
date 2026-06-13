@@ -187,6 +187,33 @@ class CompetitionApiService {
     });
   }
 
+  Future<CompetitionPaymentResponse> payCompetitionWithWallet(
+    int competitionId,
+  ) async {
+    final response = await _client.post(
+      _idEndpoint(
+        configKey: 'competition_pay_from_wallet',
+        fallbackBase: '/data/competitions/$competitionId/pay-from-wallet',
+        id: competitionId,
+        suffix: '/pay-from-wallet',
+      ),
+      body: {
+        'competition_id': competitionId,
+        'payment_method': 'wallet',
+        'source': 'wallet',
+      },
+    );
+
+    final result = CompetitionPaymentResponse.fromJson(response);
+    if (!result.success) {
+      throw ApiException(
+        result.message ?? 'Failed to pay competition entry fee',
+        details: response,
+      );
+    }
+    return result;
+  }
+
   Future<CompetitionSubmitResponse> joinCompetition({
     required int competitionId,
     required CompetitionSubmitRequest request,
