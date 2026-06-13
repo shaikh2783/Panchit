@@ -152,6 +152,9 @@ class WalletActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FilledButton.tonalIcon(
       onPressed: onTap,
+      style: FilledButton.styleFrom(
+        minimumSize: const Size(double.infinity, 44),
+      ),
       icon: Icon(icon, size: 18),
       label: Text(label),
     );

@@ -57,7 +57,16 @@ class _WalletRechargeViewState extends State<_WalletRechargeView> {
         ? wallet.currencySymbol
         : wallet.currency;
   }
+  String _friendlyPayPalError(dynamic error) {
+    final raw = error.toString();
 
+    if (raw.contains('CURRENCY_NOT_ALLOWED') ||
+        raw.toLowerCase().contains('currency is not supported')) {
+      return 'Selected currency is not supported by PayPal. Please use another payment method.';
+    }
+
+    return raw;
+  }
   void _submitRecharge() {
     if (!_formKey.currentState!.validate()) {
       return;
@@ -72,61 +81,73 @@ class _WalletRechargeViewState extends State<_WalletRechargeView> {
 
     final amount = double.tryParse(_amountController.text.trim()) ?? 0;
     final note = _noteController.text.trim();
+    final selectedMethod = _selectedMethod!.toLowerCase().trim();
 
-    // Check if PayPal is selected
-    if (_selectedMethod?.toLowerCase() == 'paypal') {
+    if (selectedMethod.contains('paypal')) {
       _processPayPalPayment(amount, note);
-    } else {
-      // Direct recharge for other methods
-      final reference = _referenceController.text.trim();
-      context.read<WalletActionCubit>().recharge(
-        amount: amount,
-        method: _selectedMethod,
-        reference: reference.isEmpty ? null : reference,
-        note: note.isEmpty ? null : note,
-      );
+      return;
     }
+
+    final reference = _referenceController.text.trim();
+
+    context.read<WalletActionCubit>().recharge(
+      amount: amount,
+      method: _selectedMethod,
+      reference: reference.isEmpty ? null : reference,
+      note: note.isEmpty ? null : note,
+    );
   }
 
   void _processPayPalPayment(double amount, String note) {
-    final currency = widget.summary.wallet.currency.isNotEmpty
-        ? widget.summary.wallet.currency
+    final walletCurrency = widget.summary.wallet.currency.isNotEmpty
+        ? widget.summary.wallet.currency.toUpperCase().trim()
         : 'USD';
+
+    if (walletCurrency == 'INR') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'PayPal does not support INR for this payment flow. Please use Bank/Skrill, or configure backend currency conversion.',
+          ),
+        ),
+      );
+      return;
+    }
 
     PayPalPaymentHandler.processPayment(
       context: context,
       amount: amount,
-      currency: currency,
-      description: 'Wallet Recharge - ${amount.toStringAsFixed(2)} $currency',
+      currency: walletCurrency,
+      description:
+      'Wallet Recharge - ${amount.toStringAsFixed(2)} $walletCurrency',
       onSuccess: (params) {
-        // Extract transaction ID from PayPal response
         final transactionId = PayPalPaymentHandler.extractTransactionId(params);
         final payerId = PayPalPaymentHandler.extractPayerId(params);
 
-        // Call recharge API with PayPal transaction details
         context.read<WalletActionCubit>().recharge(
           amount: amount,
           method: 'paypal',
           reference: transactionId.isNotEmpty ? transactionId : payerId,
-          note: note.isEmpty ? 'PayPal Payment' : '$note - PayPal Payment',
+          note: note.isEmpty
+              ? 'PayPal Payment - $walletCurrency'
+              : '$note - PayPal Payment - $walletCurrency',
         );
 
-        Navigator.of(context).pop();
+        // Do not pop here.
+        // BlocConsumer listener will pop after recharge API success.
       },
       onError: (error) {
-        Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('PayPal payment failed: $error'),
+            content: Text('PayPal payment failed: ${_friendlyPayPalError(error)}'),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
       },
       onCancel: () {
-        Navigator.of(context).pop();
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Payment cancelled')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Payment cancelled')),
+        );
       },
     );
   }

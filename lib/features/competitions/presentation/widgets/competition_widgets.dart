@@ -610,9 +610,11 @@ class CompetitionRulesDialog extends StatelessWidget {
   const CompetitionRulesDialog({
     super.key,
     required this.rules,
+    this.entryFeeLabel,
   });
 
   final String rules;
+  final String? entryFeeLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -644,6 +646,55 @@ class CompetitionRulesDialog extends StatelessWidget {
               ],
             ),
             const SizedBox(height: Spacing.md),
+            if ((entryFeeLabel ?? '').trim().isNotEmpty) ...[
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: Spacing.md,
+                  vertical: Spacing.sm,
+                ),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(Radii.large),
+                  border: Border.all(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.18),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Iconsax.ticket_discount,
+                      size: 18,
+                      color: theme.colorScheme.primary,
+                    ),
+                    const SizedBox(width: Spacing.sm),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'competition_entry_fee'.tr,
+                            style: theme.textTheme.labelMedium?.copyWith(
+                              color: theme.colorScheme.primary,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            entryFeeLabel!,
+                            style: theme.textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: Spacing.md),
+            ],
             ConstrainedBox(
               constraints: const BoxConstraints(maxHeight: 300),
               child: SingleChildScrollView(

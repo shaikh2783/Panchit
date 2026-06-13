@@ -61,44 +61,6 @@ class _WalletView extends StatefulWidget {
 }
 
 class _WalletViewState extends State<_WalletView> {
-  late final ScrollController _transactionsController;
-  late final ScrollController _paymentsController;
-
-  @override
-  void initState() {
-    super.initState();
-    _transactionsController = ScrollController()
-      ..addListener(_onTransactionsScroll);
-    _paymentsController = ScrollController()..addListener(_onPaymentsScroll);
-  }
-
-  @override
-  void dispose() {
-    _transactionsController
-      ..removeListener(_onTransactionsScroll)
-      ..dispose();
-    _paymentsController
-      ..removeListener(_onPaymentsScroll)
-      ..dispose();
-    super.dispose();
-  }
-
-  void _onTransactionsScroll() {
-    if (!_transactionsController.hasClients) return;
-    if (_transactionsController.position.extentAfter < 240) {
-      context.read<WalletTransactionsBloc>().add(
-        const LoadMoreWalletTransactions(),
-      );
-    }
-  }
-
-  void _onPaymentsScroll() {
-    if (!_paymentsController.hasClients) return;
-    if (_paymentsController.position.extentAfter < 240) {
-      context.read<WalletPaymentsBloc>().add(const LoadMoreWalletPayments());
-    }
-  }
-
   void _handleRefreshTap() {
     HapticFeedback.lightImpact();
     _refreshOverview();
@@ -125,6 +87,24 @@ class _WalletViewState extends State<_WalletView> {
     await Future<void>.delayed(const Duration(milliseconds: 400));
   }
 
+  bool _onTransactionsScroll(ScrollNotification notification) {
+    if (notification is ScrollUpdateNotification &&
+        notification.metrics.extentAfter < 240) {
+      context.read<WalletTransactionsBloc>().add(
+        const LoadMoreWalletTransactions(),
+      );
+    }
+    return false;
+  }
+
+  bool _onPaymentsScroll(ScrollNotification notification) {
+    if (notification is ScrollUpdateNotification &&
+        notification.metrics.extentAfter < 240) {
+      context.read<WalletPaymentsBloc>().add(const LoadMoreWalletPayments());
+    }
+    return false;
+  }
+
   Future<void> _openActionSheet(
     WalletSummary summary,
     WalletActionType action,
@@ -141,17 +121,13 @@ class _WalletViewState extends State<_WalletView> {
       },
     );
 
-    if (!mounted || result == null) {
-      return;
-    }
+    if (!mounted || result == null) return;
 
     if (result.success) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            result.message.isEmpty
-                ? 'operation_successful'.tr
-                : result.message,
+            result.message.isEmpty ? 'operation_successful'.tr : result.message,
           ),
         ),
       );
@@ -172,6 +148,7 @@ class _WalletViewState extends State<_WalletView> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -185,77 +162,126 @@ class _WalletViewState extends State<_WalletView> {
             ),
           ],
         ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            BlocBuilder<WalletOverviewBloc, WalletOverviewState>(
-              builder: (context, state) {
-                if (state.isLoading && state.summary == null) {
-                  return const Padding(
-                    padding: EdgeInsets.all(Spacing.lg),
-                    child: WalletSummarySkeleton(),
-                  );
-                }
-
-                if (state.errorMessage != null && state.summary == null) {
+        body: NestedScrollView(
+          physics: const ClampingScrollPhysics(),
+          headerSliverBuilder: (context, innerBoxIsScrolled) => [
+            SliverToBoxAdapter(
+              child: BlocBuilder<WalletOverviewBloc, WalletOverviewState>(
+                builder: (context, state) {
+                  if (state.isLoading && state.summary == null) {
+                    return const Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        Spacing.lg,
+                        Spacing.lg,
+                        Spacing.lg,
+                        Spacing.sm,
+                      ),
+                      child: WalletSummarySkeleton(),
+                    );
+                  }
+                  if (state.errorMessage != null && state.summary == null) {
+                    return Padding(
+                      padding: const EdgeInsets.all(Spacing.lg),
+                      child: WalletErrorView(
+                        message: 'failed_to_load'.tr,
+                        errorDetails: state.errorMessage!,
+                        onRetry: _refreshOverview,
+                      ),
+                    );
+                  }
+                  final summary = state.summary;
+                  if (summary == null) return const SizedBox.shrink();
                   return Padding(
-                    padding: const EdgeInsets.all(Spacing.lg),
-                    child: WalletErrorView(
-                      message: 'failed_to_load'.tr,
-                      errorDetails: state.errorMessage!,
-                      onRetry: _refreshOverview,
+                    padding: const EdgeInsets.fromLTRB(
+                      Spacing.lg,
+                      Spacing.lg,
+                      Spacing.lg,
+                      Spacing.sm,
+                    ),
+                    child: WalletSummaryCard(
+                      summary: summary,
+                      isRefreshing: state.isLoading,
+                      errorMessage: state.errorMessage,
+                      onAction: (action) => _openActionSheet(summary, action),
+                      onRefresh: _refreshOverview,
                     ),
                   );
-                }
-
-                final summary = state.summary;
-                if (summary == null) {
-                  return const SizedBox.shrink();
-                }
-
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    Spacing.lg,
-                    Spacing.lg,
-                    Spacing.lg,
-                    Spacing.sm,
-                  ),
-                  child: WalletSummaryCard(
-                    summary: summary,
-                    isRefreshing: state.isLoading,
-                    errorMessage: state.errorMessage,
-                    onAction: (action) => _openActionSheet(summary, action),
-                    onRefresh: _refreshOverview,
-                  ),
-                );
-              },
+                },
+              ),
             ),
-            const Divider(height: 1),
-            TabBar(
-              labelPadding: const EdgeInsets.symmetric(vertical: Spacing.sm),
-              tabs: [
-                Tab(text: 'transactions'.tr),
-                Tab(text: 'payments'.tr),
-              ],
-            ),
-            const Divider(height: 1),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  WalletTransactionsTab(
-                    controller: _transactionsController,
-                    onRefresh: _refreshTransactions,
+            SliverPersistentHeader(
+              pinned: true,
+              delegate: _WalletTabHeaderDelegate(
+                tabBar: TabBar(
+                  labelPadding: const EdgeInsets.symmetric(
+                    vertical: Spacing.sm,
                   ),
-                  WalletPaymentsTab(
-                    controller: _paymentsController,
-                    onRefresh: _refreshPayments,
-                  ),
-                ],
+                  tabs: [
+                    Tab(text: 'transactions'.tr),
+                    Tab(text: 'payments'.tr),
+                  ],
+                ),
+                backgroundColor: theme.scaffoldBackgroundColor,
+                dividerColor: theme.dividerColor,
               ),
             ),
           ],
+          body: TabBarView(
+            children: [
+              NotificationListener<ScrollNotification>(
+                onNotification: _onTransactionsScroll,
+                child: WalletTransactionsTab(onRefresh: _refreshTransactions),
+              ),
+              NotificationListener<ScrollNotification>(
+                onNotification: _onPaymentsScroll,
+                child: WalletPaymentsTab(onRefresh: _refreshPayments),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
+}
+
+class _WalletTabHeaderDelegate extends SliverPersistentHeaderDelegate {
+  _WalletTabHeaderDelegate({
+    required this.tabBar,
+    required this.backgroundColor,
+    required this.dividerColor,
+  });
+
+  final TabBar tabBar;
+  final Color backgroundColor;
+  final Color dividerColor;
+
+  @override
+  double get minExtent => tabBar.preferredSize.height + 1;
+
+  @override
+  double get maxExtent => tabBar.preferredSize.height + 1;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return ColoredBox(
+      color: backgroundColor,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          tabBar,
+          Divider(height: 1, color: dividerColor),
+        ],
+      ),
+    );
+  }
+
+  @override
+  bool shouldRebuild(_WalletTabHeaderDelegate old) =>
+      old.tabBar != tabBar ||
+      old.backgroundColor != backgroundColor ||
+      old.dividerColor != dividerColor;
 }
