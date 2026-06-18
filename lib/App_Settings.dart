@@ -5,39 +5,6 @@ class AppSettings {
 
   /// اسم التطبيق
   static const String appName = 'Panchit';
-  // ==================== إعدادات PayPal ====================
-  // احصل على بيانات الاعتماد من: https://developer.paypal.com/
-
-  /// معرف العميل - وضع الاختبار (Sandbox)
-  /// احصل عليه من: https://developer.paypal.com/dashboard/applications/sandbox
-  static const String paypalSandboxClientId =
-      'AWYoJZpCtdr2IFQuay7pNTN9jmZkEqfYskyFWR3KT7WkdT3GwCX6Z5O87tn2-YgqemtnKGjbq1k5vius';
-
-  /// المفتاح السري - وضع الاختبار (Sandbox)
-  static const String paypalSandboxSecretKey =
-      'ENJ-xbUpPfxPs5rdXRlkxpuy8r9xewamKuzbL2FkwLlm_vFur6G1O96RGCbPcfbpHx3AzG0Iec75L7NX';
-
-  /// معرف العميل - الوضع الحقيقي (Production)
-  /// احصل عليه من: https://developer.paypal.com/dashboard/applications/live
-  static const String paypalProductionClientId = 'YOUR_PRODUCTION_CLIENT_ID';
-
-  /// المفتاح السري - الوضع الحقيقي (Production)
-  static const String paypalProductionSecretKey = 'YOUR_PRODUCTION_SECRET_KEY';
-
-  /// استخدام وضع الاختبار؟ (true = Sandbox, false = Production)
-  static const bool paypalUseSandbox = true;
-
-  /// اسم البيئة الحالية
-  static String get paypalEnvironment =>
-      paypalUseSandbox ? 'Sandbox' : 'Production';
-
-  /// التحقق من صحة إعدادات PayPal قبل المعالجة
-  static String? validatePayPalConfig() {
-    if (!isPayPalConfigured) {
-      return 'بيانات PayPal غير مكتملة. يرجى تحديث الإعدادات في app_config.dart';
-    }
-    return null;
-  }
 
   // ==================== إعدادات Agora (البث المباشر) ====================
   // احصل على App ID من: https://console.agora.io/
@@ -441,32 +408,6 @@ class AppSettings {
   /// إظهار سجلات التطبيق (Logs)
   static const bool showLogs = true;
 
-  /// التحقق من اكتمال إعدادات PayPal
-  static bool get isPayPalConfigured {
-    if (paypalUseSandbox) {
-      return paypalSandboxClientId.isNotEmpty &&
-          paypalSandboxClientId != 'YOUR_SANDBOX_CLIENT_ID' &&
-          paypalSandboxSecretKey.isNotEmpty &&
-          paypalSandboxSecretKey != 'YOUR_SANDBOX_SECRET_KEY';
-    } else {
-      return paypalProductionClientId.isNotEmpty &&
-          paypalProductionClientId != 'YOUR_PRODUCTION_CLIENT_ID' &&
-          paypalProductionSecretKey.isNotEmpty &&
-          paypalProductionSecretKey != 'YOUR_PRODUCTION_SECRET_KEY';
-    }
-  }
-
-  /// الحصول على معرف عميل PayPal الحالي
-  static String get paypalClientId {
-    return paypalUseSandbox ? paypalSandboxClientId : paypalProductionClientId;
-  }
-
-  /// الحصول على مفتاح PayPal السري الحالي
-  static String get paypalSecretKey {
-    return paypalUseSandbox
-        ? paypalSandboxSecretKey
-        : paypalProductionSecretKey;
-  }
 
   /// التحقق من اكتمال إعدادات Agora
   static bool get isAgoraConfigured {

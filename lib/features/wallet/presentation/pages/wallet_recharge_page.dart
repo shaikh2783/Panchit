@@ -4,12 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import 'package:snginepro/core/theme/design_tokens.dart';
 import 'package:snginepro/features/wallet/application/bloc/wallet_action_cubit.dart';
 import 'package:snginepro/features/wallet/data/models/wallet_summary.dart';
 import 'package:snginepro/features/wallet/domain/wallet_repository.dart';
-import 'package:snginepro/features/wallet/presentation/widgets/paypal_payment_handler.dart';
 import 'package:snginepro/features/wallet/presentation/widgets/wallet_shared_widgets.dart';
 
 class WalletRechargePage extends StatelessWidget {
@@ -39,17 +39,33 @@ class _WalletRechargeView extends StatefulWidget {
 class _WalletRechargeViewState extends State<_WalletRechargeView> {
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
-  final _referenceController = TextEditingController();
   final _noteController = TextEditingController();
-  String? _selectedMethod;
+
+  // ── Razorpay ─────────────────────────────────────────────────────────────
+  late final Razorpay _razorpay;
+  bool _isRazorpayLoading = false;
+  double? _pendingRazorpayAmount;
+  String? _pendingRazorpayNote;
+  // ─────────────────────────────────────────────────────────────────────────
+
+  @override
+  void initState() {
+    super.initState();
+    _razorpay = Razorpay();
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handleRazorpaySuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handleRazorpayError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+  }
 
   @override
   void dispose() {
     _amountController.dispose();
-    _referenceController.dispose();
     _noteController.dispose();
+    _razorpay.clear();
     super.dispose();
   }
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
 
   String get _currencySymbol {
     final wallet = widget.summary.wallet;
@@ -57,105 +73,127 @@ class _WalletRechargeViewState extends State<_WalletRechargeView> {
         ? wallet.currencySymbol
         : wallet.currency;
   }
-  String _friendlyPayPalError(dynamic error) {
-    final raw = error.toString();
 
-    if (raw.contains('CURRENCY_NOT_ALLOWED') ||
-        raw.toLowerCase().contains('currency is not supported')) {
-      return 'Selected currency is not supported by PayPal. Please use another payment method.';
-    }
 
-    return raw;
-  }
-  void _submitRecharge() {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
+  // ── Razorpay callbacks ────────────────────────────────────────────────────
 
-    if (_selectedMethod == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a payment method')),
+  void _handleRazorpaySuccess(PaymentSuccessResponse response) async {
+    if (!mounted) return;
+    final orderId = response.orderId ?? '';
+    final paymentId = response.paymentId ?? '';
+    final signature = response.signature ?? '';
+
+    try {
+      final repo = Provider.of<WalletRepository>(context, listen: false);
+      final result = await repo.verifyRazorpayPayment(
+        orderId: orderId,
+        paymentId: paymentId,
+        signature: signature,
+        amount: _pendingRazorpayAmount ?? 0,
+        note: _pendingRazorpayNote,
       );
-      return;
-    }
-
-    final amount = double.tryParse(_amountController.text.trim()) ?? 0;
-    final note = _noteController.text.trim();
-    final selectedMethod = _selectedMethod!.toLowerCase().trim();
-
-    if (selectedMethod.contains('paypal')) {
-      _processPayPalPayment(amount, note);
-      return;
-    }
-
-    final reference = _referenceController.text.trim();
-
-    context.read<WalletActionCubit>().recharge(
-      amount: amount,
-      method: _selectedMethod,
-      reference: reference.isEmpty ? null : reference,
-      note: note.isEmpty ? null : note,
-    );
-  }
-
-  void _processPayPalPayment(double amount, String note) {
-    final walletCurrency = widget.summary.wallet.currency.isNotEmpty
-        ? widget.summary.wallet.currency.toUpperCase().trim()
-        : 'USD';
-
-    if (walletCurrency == 'INR') {
+      if (!mounted) return;
+      HapticFeedback.mediumImpact();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(
-            'PayPal does not support INR for this payment flow. Please use Bank/Skrill, or configure backend currency conversion.',
+            result.message.isNotEmpty
+                ? result.message
+                : 'Wallet recharged successfully',
           ),
         ),
       );
-      return;
+      Navigator.of(context).pop(result);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isRazorpayLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Payment verification failed: $e'),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
     }
+  }
 
-    PayPalPaymentHandler.processPayment(
-      context: context,
-      amount: amount,
-      currency: walletCurrency,
-      description:
-      'Wallet Recharge - ${amount.toStringAsFixed(2)} $walletCurrency',
-      onSuccess: (params) {
-        final transactionId = PayPalPaymentHandler.extractTransactionId(params);
-        final payerId = PayPalPaymentHandler.extractPayerId(params);
-
-        context.read<WalletActionCubit>().recharge(
-          amount: amount,
-          method: 'paypal',
-          reference: transactionId.isNotEmpty ? transactionId : payerId,
-          note: note.isEmpty
-              ? 'PayPal Payment - $walletCurrency'
-              : '$note - PayPal Payment - $walletCurrency',
-        );
-
-        // Do not pop here.
-        // BlocConsumer listener will pop after recharge API success.
-      },
-      onError: (error) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('PayPal payment failed: ${_friendlyPayPalError(error)}'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
-      },
-      onCancel: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Payment cancelled')),
-        );
-      },
+  void _handleRazorpayError(PaymentFailureResponse response) {
+    if (!mounted) return;
+    setState(() => _isRazorpayLoading = false);
+    final msg = response.message ?? 'Payment failed or cancelled';
+    // Code 0 means user cancelled — show a neutral message
+    final isCancel = (response.code ?? -1) == Razorpay.PAYMENT_CANCELLED;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(isCancel ? 'Payment cancelled' : msg),
+        backgroundColor: isCancel ? null : Theme.of(context).colorScheme.error,
+      ),
     );
   }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    if (!mounted) return;
+    setState(() => _isRazorpayLoading = false);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'External wallet selected: ${response.walletName ?? "unknown"}',
+        ),
+      ),
+    );
+  }
+
+  // ── Razorpay order + checkout ─────────────────────────────────────────────
+
+  Future<void> _startRazorpayRecharge(double amount, String note) async {
+    setState(() {
+      _isRazorpayLoading = true;
+      _pendingRazorpayAmount = amount;
+      _pendingRazorpayNote = note.isEmpty ? null : note;
+    });
+    try {
+      final repo = Provider.of<WalletRepository>(context, listen: false);
+      final order = await repo.createRazorpayOrder(
+        amount: amount,
+        note: _pendingRazorpayNote,
+      );
+      final options = <String, dynamic>{
+        'key': order.keyId,
+        'amount': order.amount,
+        'currency': order.currency,
+        'order_id': order.orderId,
+        'name': order.name,
+        'description': order.description,
+        'prefill': <String, String>{'contact': '', 'email': ''},
+      };
+      _razorpay.open(options);
+      // _isRazorpayLoading stays true until a callback fires
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isRazorpayLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to create payment order: $e'),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
+    }
+  }
+
+  // ── Submit dispatcher ─────────────────────────────────────────────────────
+
+  void _submitRecharge() {
+    if (!_formKey.currentState!.validate()) return;
+
+    final amount = double.tryParse(_amountController.text.trim()) ?? 0;
+    final note = _noteController.text.trim();
+    _startRazorpayRecharge(amount, note);
+  }
+
+  // ── Build ─────────────────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final availableMethods = widget.summary.wallet.paymentMethods;
 
     return Scaffold(
       appBar: AppBar(
@@ -196,16 +234,17 @@ class _WalletRechargeViewState extends State<_WalletRechargeView> {
           }
         },
         builder: (context, state) {
-          final isProcessing =
+          final isBlocProcessing =
               state.status == WalletActionStatus.inProgress &&
               state.lastAction == WalletActionType.recharge;
+          final isProcessing = isBlocProcessing || _isRazorpayLoading;
 
           return Form(
             key: _formKey,
             child: ListView(
               padding: const EdgeInsets.all(Spacing.lg),
               children: [
-                // Current Balance Card
+                // ── Current Balance Card ──────────────────────────────────
                 Card(
                   elevation: 2,
                   shape: RoundedRectangleBorder(
@@ -236,12 +275,11 @@ class _WalletRechargeViewState extends State<_WalletRechargeView> {
                 ),
                 const SizedBox(height: Spacing.xl),
 
-                // Amount Input
+                // ── Amount ───────────────────────────────────────────────
                 Text(
                   'Recharge Amount',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: theme.textTheme.titleMedium
+                      ?.copyWith(fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: Spacing.sm),
                 TextFormField(
@@ -268,72 +306,14 @@ class _WalletRechargeViewState extends State<_WalletRechargeView> {
                 ),
                 const SizedBox(height: Spacing.xl),
 
-                // Payment Methods Section
-                Text(
-                  'Select Payment Method',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: Spacing.sm),
-                if (availableMethods.isEmpty)
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(Spacing.lg),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Iconsax.info_circle,
-                            color: theme.colorScheme.error,
-                          ),
-                          const SizedBox(width: Spacing.md),
-                          Expanded(
-                            child: Text(
-                              'No payment methods available',
-                              style: theme.textTheme.bodyMedium,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                else
-                  ...availableMethods.map(
-                    (method) => Padding(
-                      padding: const EdgeInsets.only(bottom: Spacing.sm),
-                      child: _PaymentMethodCard(
-                        method: method,
-                        isSelected: _selectedMethod == method,
-                        onTap: isProcessing
-                            ? null
-                            : () {
-                                setState(() {
-                                  _selectedMethod = method;
-                                });
-                              },
-                      ),
-                    ),
-                  ),
-                const SizedBox(height: Spacing.lg),
-
-                // Optional Fields
+                // ── Note (optional) ───────────────────────────────────────
                 Text(
                   'Additional Information (Optional)',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: theme.textTheme.titleMedium
+                      ?.copyWith(fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: Spacing.sm),
-                TextFormField(
-                  controller: _referenceController,
-                  enabled: !isProcessing,
-                  decoration: const InputDecoration(
-                    labelText: 'Transaction Reference',
-                    hintText: 'Order ID or transaction number',
-                    prefixIcon: Icon(Iconsax.document_text),
-                  ),
-                ),
-                const SizedBox(height: Spacing.md),
+
                 TextFormField(
                   controller: _noteController,
                   enabled: !isProcessing,
@@ -347,7 +327,7 @@ class _WalletRechargeViewState extends State<_WalletRechargeView> {
                 ),
                 const SizedBox(height: Spacing.xl),
 
-                // Error Message
+                // ── Inline error ──────────────────────────────────────────
                 if (state.status == WalletActionStatus.failure &&
                     state.errorMessage != null)
                   Padding(
@@ -358,7 +338,7 @@ class _WalletRechargeViewState extends State<_WalletRechargeView> {
                     ),
                   ),
 
-                // Submit Button
+                // ── Submit button ─────────────────────────────────────────
                 FilledButton(
                   onPressed: isProcessing ? null : _submitRecharge,
                   style: FilledButton.styleFrom(
@@ -399,107 +379,6 @@ class _WalletRechargeViewState extends State<_WalletRechargeView> {
             ),
           );
         },
-      ),
-    );
-  }
-}
-
-class _PaymentMethodCard extends StatelessWidget {
-  const _PaymentMethodCard({
-    required this.method,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  final String method;
-  final bool isSelected;
-  final VoidCallback? onTap;
-
-  IconData _getIconForMethod(String method) {
-    final lower = method.toLowerCase();
-    if (lower.contains('paypal')) return Iconsax.wallet;
-    if (lower.contains('stripe')) return Iconsax.card;
-    if (lower.contains('bank')) return Iconsax.bank;
-    if (lower.contains('credit') || lower.contains('card')) {
-      return Iconsax.card;
-    }
-    return Iconsax.wallet_money;
-  }
-
-  String _formatMethodName(String method) {
-    if (method.isEmpty) return method;
-    return method
-        .split('_')
-        .map((part) {
-          if (part.isEmpty) return part;
-          return part[0].toUpperCase() + part.substring(1);
-        })
-        .join(' ');
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final icon = _getIconForMethod(method);
-    final displayName = _formatMethodName(method);
-
-    return Card(
-      elevation: isSelected ? 4 : 1,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(Radii.large),
-        side: BorderSide(
-          color: isSelected
-              ? theme.colorScheme.primary
-              : theme.dividerColor.withOpacity(0.2),
-          width: isSelected ? 2 : 1,
-        ),
-      ),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(Radii.large),
-        child: Padding(
-          padding: const EdgeInsets.all(Spacing.md),
-          child: Row(
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color:
-                      (isSelected
-                              ? theme.colorScheme.primary
-                              : theme.colorScheme.surfaceVariant)
-                          .withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(Radii.medium),
-                ),
-                child: Icon(
-                  icon,
-                  color: isSelected
-                      ? theme.colorScheme.primary
-                      : theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-              const SizedBox(width: Spacing.md),
-              Expanded(
-                child: Text(
-                  displayName,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
-                    color: isSelected
-                        ? theme.colorScheme.primary
-                        : theme.textTheme.titleMedium?.color,
-                  ),
-                ),
-              ),
-              if (isSelected)
-                Icon(
-                  Iconsax.tick_circle,
-                  color: theme.colorScheme.primary,
-                  size: 24,
-                ),
-            ],
-          ),
-        ),
       ),
     );
   }

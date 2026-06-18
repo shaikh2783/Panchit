@@ -361,6 +361,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.7"
+  eventify:
+    dependency: transitive
+    description:
+      name: eventify
+      sha256: b829429f08586cc2001c628e7499e3e3c2493a1d895fd73b00ecb23351aa5a66
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   fake_async:
     dependency: transitive
     description:
@@ -590,14 +598,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.7"
-  flutter_paypal_payment:
-    dependency: "direct main"
-    description:
-      name: flutter_paypal_payment
-      sha256: "1d580f6f4fcf97d5573d92082e7a417b4f887ad3ad0f11e3573f3e1b289fb3e5"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.8"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -1248,6 +1248,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
+  razorpay_flutter:
+    dependency: "direct main"
+    description:
+      name: razorpay_flutter
+      sha256: a9026acf004df802128be6996a9397f5e9c20f32dd12ab215fd1659e0233c9f0
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.5"
   record:
     dependency: "direct main"
     description:

@@ -2,12 +2,28 @@ import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/core/network/api_exception.dart';
 import 'package:snginepro/main.dart' show configCfgP;
 
+import '../models/razorpay_order_response.dart';
 import '../models/wallet_action_result.dart';
 import '../models/wallet_paginated.dart';
 import '../models/wallet_package.dart';
 import '../models/wallet_payment.dart';
 import '../models/wallet_summary.dart';
 import '../models/wallet_transaction.dart';
+
+// Fallback paths used when a key is absent from the encrypted license.
+// These must match what the PHP backend exposes.
+const _kFallbackPaths = <String, String>{
+  'wallet_razorpay_order': 'wallet/razorpay-order',
+  'wallet_razorpay_verify': 'wallet/razorpay-verify',
+};
+
+String _ep(String key) {
+  final v = configCfgP(key);
+  if (v.isNotEmpty) return v;
+  final fallback = _kFallbackPaths[key];
+  if (fallback != null && fallback.isNotEmpty) return fallback;
+  throw ApiException('Endpoint "$key" not configured in license and no fallback available');
+}
 
 class WalletApiService {
   WalletApiService(this._client);
@@ -127,6 +143,43 @@ class WalletApiService {
         .whereType<Map<String, dynamic>>()
         .map(WalletPackage.fromJson)
         .toList(growable: false);
+  }
+
+  Future<RazorpayOrderResponse> createRazorpayOrder({
+    required double amount,
+    String? note,
+  }) async {
+    final body = <String, dynamic>{'amount': amount};
+    if (note != null && note.isNotEmpty) body['note'] = note;
+    final response = await _client.post(
+      _ep('wallet_razorpay_order'),
+      body: body,
+    );
+    final data = response['data'];
+    return RazorpayOrderResponse.fromJson(
+      data is Map<String, dynamic> ? data : response,
+    );
+  }
+
+  Future<WalletActionResult> verifyRazorpayPayment({
+    required String orderId,
+    required String paymentId,
+    required String signature,
+    required double amount,
+    String? note,
+  }) async {
+    final body = <String, dynamic>{
+      'razorpay_order_id': orderId,
+      'razorpay_payment_id': paymentId,
+      'razorpay_signature': signature,
+      'amount': amount,
+    };
+    if (note != null && note.isNotEmpty) body['note'] = note;
+    final response = await _client.post(
+      _ep('wallet_razorpay_verify'),
+      body: body,
+    );
+    return WalletActionResult.fromResponse(response);
   }
 
   Future<WalletActionResult> purchasePackage({required int packageId}) async {
