@@ -20,7 +20,6 @@ class _MonetizationPaymentsPageState extends State<MonetizationPaymentsPage> {
 
   final _amountController = TextEditingController();
   final _transferToController = TextEditingController();
-  String _selectedPaymentMethod = 'paypal';
   bool _isSubmitting = false;
 
   @override
@@ -133,14 +132,14 @@ class _MonetizationPaymentsPageState extends State<MonetizationPaymentsPage> {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        const Color(0xFF6C63FF).withOpacity(0.9),
+                        const Color(0xFF6C63FF).withValues(alpha: 0.9),
                         const Color(0xFF8E7FFF),
                       ],
                     ),
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFF6C63FF).withOpacity(0.3),
+                        color: const Color(0xFF6C63FF).withValues(alpha: 0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
                       ),
@@ -207,7 +206,7 @@ class _MonetizationPaymentsPageState extends State<MonetizationPaymentsPage> {
             ),
             const SizedBox(height: 16),
 
-            // Payment Method Selection
+            // Payment Method — Razorpay only
             Text(
               'payment_method'.tr,
               style: Theme.of(
@@ -215,33 +214,40 @@ class _MonetizationPaymentsPageState extends State<MonetizationPaymentsPage> {
               ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: ['paypal', 'skrill'].map((method) {
-                final label = method.replaceFirst(
-                  method[0],
-                  method[0].toUpperCase(),
-                );
-                return FilterChip(
-                  label: Text(label),
-                  selected: _selectedPaymentMethod == method,
-                  onSelected: (selected) {
-                    if (selected) {
-                      setState(() => _selectedPaymentMethod = method);
-                    }
-                  },
-                );
-              }).toList(),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: const Color(0xFF6C63FF).withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: const Color(0xFF6C63FF).withValues(alpha: 0.5),
+                  width: 1.5,
+                ),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.flash_on, color: Color(0xFF6C63FF), size: 20),
+                  const SizedBox(width: 8),
+                  const Text(
+                    'Razorpay',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF6C63FF),
+                    ),
+                  ),
+                  const Spacer(),
+                  const Icon(Icons.check_circle, color: Color(0xFF6C63FF), size: 18),
+                ],
+              ),
             ),
             const SizedBox(height: 16),
 
-            // Transfer To Field
+            // Transfer To Field (UPI ID / Bank account for Razorpay payout)
             TextField(
               controller: _transferToController,
               decoration: InputDecoration(
                 labelText: 'transfer_to'.tr,
-                hintText: 'transfer_to_hint'.tr,
+                hintText: 'UPI ID or Bank Account / IFSC',
                 prefixIcon: const Icon(Icons.account_box),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -446,9 +452,9 @@ class _MonetizationPaymentsPageState extends State<MonetizationPaymentsPage> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
-        color: backgroundColor.withOpacity(0.2),
+        color: backgroundColor.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: backgroundColor.withOpacity(0.5)),
+        border: Border.all(color: backgroundColor.withValues(alpha: 0.5)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

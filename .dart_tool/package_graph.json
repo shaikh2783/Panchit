@@ -24,7 +24,6 @@
         "flutter_bloc",
         "flutter_html",
         "flutter_markdown",
-        "flutter_paypal_payment",
         "flutter_staggered_animations",
         "flutter_svg",
         "flutter_widget_from_html",
@@ -45,6 +44,7 @@
         "pointycastle",
         "provider",
         "qr_flutter",
+        "razorpay_flutter",
         "record",
         "share_plus",
         "shared_preferences",
@@ -288,12 +288,11 @@
       ]
     },
     {
-      "name": "flutter_paypal_payment",
-      "version": "1.0.8",
+      "name": "razorpay_flutter",
+      "version": "1.4.5",
       "dependencies": [
-        "dio",
-        "flutter",
-        "flutter_inappwebview"
+        "eventify",
+        "flutter"
       ]
     },
     {
@@ -1133,6 +1132,11 @@
       "dependencies": [
         "typed_data"
       ]
+    },
+    {
+      "name": "eventify",
+      "version": "1.0.1",
+      "dependencies": []
     },
     {
       "name": "iris_method_channel",

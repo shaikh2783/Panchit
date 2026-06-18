@@ -14,3 +14,16 @@
 -dontwarn com.google.android.play.core.tasks.OnFailureListener
 -dontwarn com.google.android.play.core.tasks.OnSuccessListener
 -dontwarn com.google.android.play.core.tasks.Task
+
+# Razorpay
+-keep class com.razorpay.** { *; }
+-dontwarn com.razorpay.**
+-keepattributes *Annotation*
+-keepattributes JavascriptInterface
+-keepclassmembers class * {
+    @android.webkit.JavascriptInterface <methods>;
+}
+-keepclasseswithmembers class * {
+    public void onPayment*(...);
+}
+-optimizations !method/inlining/*

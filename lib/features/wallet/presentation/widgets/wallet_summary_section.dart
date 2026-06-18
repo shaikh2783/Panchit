@@ -15,6 +15,10 @@ class _ChipData {
   final String? trailing;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// WalletSummaryCard
+// ─────────────────────────────────────────────────────────────────────────────
+
 class WalletSummaryCard extends StatelessWidget {
   const WalletSummaryCard({
     super.key,
@@ -36,8 +40,7 @@ class WalletSummaryCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final screenWidth = MediaQuery.sizeOf(context).width;
-    final chipCols = screenWidth >= 600 ? 4 : screenWidth >= 360 ? 3 : 2;
-    final actionCols = screenWidth >= 600 ? 4 : 2;
+    final isWide = screenWidth >= 600;
 
     final currencySymbol = summary.wallet.currencySymbol.isNotEmpty
         ? summary.wallet.currencySymbol
@@ -53,102 +56,93 @@ class WalletSummaryCard extends StatelessWidget {
 
     return Card(
       elevation: 0,
+      clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Radii.xLarge),
         side: BorderSide(
-          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+          color: colorScheme.outlineVariant.withValues(alpha: 0.35),
         ),
       ),
-      color: colorScheme.surfaceContainerLow,
-      child: Padding(
-        padding: const EdgeInsets.all(Spacing.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // ── Gradient balance header ─────────────────────────────────────
+          _BalanceHeader(
+            currencySymbol: currencySymbol,
+            balance: summary.wallet.balance,
+            updatedText: updatedText,
+            isRefreshing: isRefreshing,
+            onRefresh: onRefresh,
+            colorScheme: colorScheme,
+            theme: theme,
+          ),
+
+          // ── Stats chips + actions ────────────────────────────────────────
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              Spacing.lg,
+              Spacing.lg,
+              Spacing.lg,
+              Spacing.md,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                if (chips.isNotEmpty) ...[
+                  _ChipGrid(
+                    chips: chips,
+                    columns: isWide ? 4 : (screenWidth >= 360 ? 3 : 2),
+                  ),
+                  const SizedBox(height: Spacing.md),
+                ],
+                if (summary.wallet.paymentMethods.isNotEmpty) ...[
+                  Row(
                     children: [
-                      Text(
-                        'wallet_current_balance_label'.tr,
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          color: colorScheme.onSurfaceVariant,
-                        ),
+                      Icon(
+                        Iconsax.card,
+                        size: 14,
+                        color: colorScheme.onSurfaceVariant,
                       ),
-                      const SizedBox(height: Spacing.xs),
-                      FittedBox(
-                        fit: BoxFit.scaleDown,
-                        alignment: Alignment.centerLeft,
+                      const SizedBox(width: Spacing.xs),
+                      Expanded(
                         child: Text(
-                          '$currencySymbol${summary.wallet.balance.toStringAsFixed(2)}',
-                          style: theme.textTheme.headlineLarge?.copyWith(
-                            fontWeight: FontWeight.w800,
-                            color: colorScheme.onSurface,
-                            letterSpacing: -0.5,
-                          ),
-                        ),
-                      ),
-                      if (updatedText != null) ...[
-                        const SizedBox(height: 2),
-                        Text(
-                          updatedText,
+                          'wallet_payment_methods'.trParams({
+                            'methods':
+                                summary.wallet.paymentMethods.join(', '),
+                          }),
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: colorScheme.onSurfaceVariant,
                           ),
                         ),
-                      ],
+                      ),
                     ],
                   ),
-                ),
-                IconButton(
-                  tooltip: 'wallet_refresh_balance'.tr,
-                  onPressed: onRefresh,
-                  icon: isRefreshing
-                      ? SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: colorScheme.primary,
-                          ),
-                        )
-                      : const Icon(Iconsax.refresh),
-                ),
+                  const SizedBox(height: Spacing.md),
+                ],
+                if (actions.isNotEmpty) ...[
+                  Divider(
+                    height: 1,
+                    color: colorScheme.outlineVariant.withValues(alpha: 0.4),
+                  ),
+                  const SizedBox(height: Spacing.md),
+                  _ActionRow(
+                    actions: actions,
+                    columns: isWide ? 4 : 2,
+                  ),
+                ],
+                if (errorMessage != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: Spacing.md),
+                    child: WalletInlineMessage(
+                      message: errorMessage!,
+                      isError: true,
+                      onRetry: onRefresh,
+                    ),
+                  ),
               ],
             ),
-            if (chips.isNotEmpty) ...[
-              const SizedBox(height: Spacing.md),
-              _ChipGrid(chips: chips, columns: chipCols),
-            ],
-            if (summary.wallet.paymentMethods.isNotEmpty) ...[
-              const SizedBox(height: Spacing.sm),
-              Text(
-                'wallet_payment_methods'.trParams(
-                  {'methods': summary.wallet.paymentMethods.join(', ')},
-                ),
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ],
-            if (actions.isNotEmpty) ...[
-              const SizedBox(height: Spacing.lg),
-              _ActionGrid(actions: actions, columns: actionCols),
-            ],
-            if (errorMessage != null)
-              Padding(
-                padding: const EdgeInsets.only(top: Spacing.md),
-                child: WalletInlineMessage(
-                  message: errorMessage!,
-                  isError: true,
-                  onRetry: onRefresh,
-                ),
-              ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -192,9 +186,10 @@ class WalletSummaryCard extends StatelessWidget {
   List<Widget> _buildActions(BuildContext context) {
     final actions = <Widget>[];
     if (summary.wallet.enabled) {
-      actions.add(WalletActionButton(
+      actions.add(_ActionTile(
         icon: Iconsax.wallet_add,
         label: 'wallet_action_recharge'.tr,
+        isPrimary: true,
         onTap: () async {
           final result = await Navigator.of(context).push<dynamic>(
             MaterialPageRoute(
@@ -206,14 +201,14 @@ class WalletSummaryCard extends StatelessWidget {
       ));
     }
     if (summary.wallet.transferEnabled) {
-      actions.add(WalletActionButton(
+      actions.add(_ActionTile(
         icon: Iconsax.send_2,
         label: 'wallet_action_transfer'.tr,
         onTap: () => onAction(WalletActionType.transfer),
       ));
     }
     if (summary.tips.enabled) {
-      actions.add(WalletActionButton(
+      actions.add(_ActionTile(
         icon: Iconsax.money_send,
         label: 'wallet_action_send_tip'.tr,
         onTap: () => onAction(WalletActionType.tip),
@@ -223,7 +218,7 @@ class WalletSummaryCard extends StatelessWidget {
       (s) => s.enabled,
     );
     if (summary.wallet.withdrawalEnabled && hasWithdrawalOption) {
-      actions.add(WalletActionButton(
+      actions.add(_ActionTile(
         icon: Iconsax.wallet_money,
         label: 'wallet_action_withdraw'.tr,
         onTap: () => onAction(WalletActionType.withdraw),
@@ -240,6 +235,153 @@ class WalletSummaryCard extends StatelessWidget {
     }).join(' ');
   }
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// _BalanceHeader  — gradient top section of the card
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _BalanceHeader extends StatelessWidget {
+  const _BalanceHeader({
+    required this.currencySymbol,
+    required this.balance,
+    required this.isRefreshing,
+    required this.onRefresh,
+    required this.colorScheme,
+    required this.theme,
+    this.updatedText,
+  });
+
+  final String currencySymbol;
+  final double balance;
+  final bool isRefreshing;
+  final VoidCallback onRefresh;
+  final ColorScheme colorScheme;
+  final ThemeData theme;
+  final String? updatedText;
+
+  @override
+  Widget build(BuildContext context) {
+    final onPrimary = colorScheme.onPrimary;
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            colorScheme.primary,
+            Color.lerp(colorScheme.primary, colorScheme.tertiary, 0.45)!,
+          ],
+        ),
+      ),
+      padding: const EdgeInsets.fromLTRB(
+        Spacing.lg,
+        Spacing.xl,
+        Spacing.sm,
+        Spacing.xl,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'wallet_current_balance_label'.tr,
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: onPrimary.withValues(alpha: 0.8),
+                    letterSpacing: 0.5,
+                  ),
+                ),
+                const SizedBox(height: Spacing.xs),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    '$currencySymbol${balance.toStringAsFixed(2)}',
+                    style: theme.textTheme.displaySmall?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: onPrimary,
+                      letterSpacing: -1,
+                    ),
+                  ),
+                ),
+                if (updatedText != null) ...[
+                  const SizedBox(height: Spacing.xs),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Iconsax.clock,
+                        size: 11,
+                        color: onPrimary.withValues(alpha: 0.65),
+                      ),
+                      const SizedBox(width: 3),
+                      Text(
+                        updatedText!,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: onPrimary.withValues(alpha: 0.65),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ],
+            ),
+          ),
+          _RefreshButton(
+            isRefreshing: isRefreshing,
+            onRefresh: onRefresh,
+            color: onPrimary,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// _RefreshButton
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _RefreshButton extends StatelessWidget {
+  const _RefreshButton({
+    required this.isRefreshing,
+    required this.onRefresh,
+    required this.color,
+  });
+
+  final bool isRefreshing;
+  final VoidCallback onRefresh;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      tooltip: 'wallet_refresh_balance'.tr,
+      onPressed: isRefreshing ? null : onRefresh,
+      style: IconButton.styleFrom(
+        foregroundColor: color,
+        backgroundColor: color.withValues(alpha: 0.12),
+      ),
+      icon: isRefreshing
+          ? SizedBox(
+              width: 18,
+              height: 18,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: color,
+              ),
+            )
+          : const Icon(Iconsax.refresh, size: 20),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// _ChipGrid
+// ─────────────────────────────────────────────────────────────────────────────
 
 class _ChipGrid extends StatelessWidget {
   const _ChipGrid({required this.chips, required this.columns});
@@ -282,8 +424,12 @@ class _ChipGrid extends StatelessWidget {
   }
 }
 
-class _ActionGrid extends StatelessWidget {
-  const _ActionGrid({required this.actions, required this.columns});
+// ─────────────────────────────────────────────────────────────────────────────
+// _ActionRow — evenly-spaced icon + label tiles
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _ActionRow extends StatelessWidget {
+  const _ActionRow({required this.actions, required this.columns});
 
   final List<Widget> actions;
   final int columns;
@@ -316,31 +462,205 @@ class _ActionGrid extends StatelessWidget {
   }
 }
 
-class WalletSummarySkeleton extends StatelessWidget {
-  const WalletSummarySkeleton({super.key});
+// ─────────────────────────────────────────────────────────────────────────────
+// _ActionTile — tappable column with icon + label
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _ActionTile extends StatelessWidget {
+  const _ActionTile({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    this.isPrimary = false,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  final bool isPrimary;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(Radii.xLarge),
-        side: BorderSide(
-          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
-        ),
-      ),
-      color: colorScheme.surfaceContainerLow,
-      child: const Padding(
-        padding: EdgeInsets.all(Spacing.lg),
-        child: SizedBox(
-          height: 72,
-          child: Center(child: CircularProgressIndicator()),
+    final theme = Theme.of(context);
+
+    final bgColor = isPrimary
+        ? colorScheme.primaryContainer
+        : colorScheme.surfaceContainerHighest.withValues(alpha: 0.6);
+    final fgColor = isPrimary
+        ? colorScheme.onPrimaryContainer
+        : colorScheme.onSurfaceVariant;
+
+    return Material(
+      color: bgColor,
+      borderRadius: BorderRadius.circular(Radii.large),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(Radii.large),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: Spacing.sm,
+            vertical: Spacing.md,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: fgColor, size: 22),
+              const SizedBox(height: Spacing.xs),
+              Text(
+                label,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: fgColor,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// WalletSummarySkeleton — shimmer loading placeholder
+// ─────────────────────────────────────────────────────────────────────────────
+
+class WalletSummarySkeleton extends StatefulWidget {
+  const WalletSummarySkeleton({super.key});
+
+  @override
+  State<WalletSummarySkeleton> createState() => _WalletSummarySkeletonState();
+}
+
+class _WalletSummarySkeletonState extends State<WalletSummarySkeleton>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+  late final Animation<double> _anim;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    )..repeat(reverse: true);
+    _anim = CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut);
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return AnimatedBuilder(
+      animation: _anim,
+      builder: (context, _) {
+        final shimmerOpacity = 0.06 + _anim.value * 0.1;
+        final baseColor =
+            colorScheme.onSurface.withValues(alpha: shimmerOpacity);
+
+        return Card(
+          elevation: 0,
+          clipBehavior: Clip.antiAlias,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Radii.xLarge),
+            side: BorderSide(
+              color: colorScheme.outlineVariant.withValues(alpha: 0.35),
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // header placeholder
+              Container(
+                height: 120,
+                decoration: BoxDecoration(
+                  color: colorScheme.primary.withValues(alpha: 0.15 + _anim.value * 0.08),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(Spacing.lg),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        _Bone(width: 80, height: 12, color: baseColor),
+                        const SizedBox(width: Spacing.sm),
+                        _Bone(width: 60, height: 12, color: baseColor),
+                        const SizedBox(width: Spacing.sm),
+                        _Bone(width: 70, height: 12, color: baseColor),
+                      ],
+                    ),
+                    const SizedBox(height: Spacing.md),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _Bone(
+                            height: 44,
+                            color: baseColor,
+                            radius: Radii.large,
+                          ),
+                        ),
+                        const SizedBox(width: Spacing.sm),
+                        Expanded(
+                          child: _Bone(
+                            height: 44,
+                            color: baseColor,
+                            radius: Radii.large,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _Bone extends StatelessWidget {
+  const _Bone({
+    required this.color,
+    this.width,
+    required this.height,
+    this.radius = Radii.pill,
+  });
+
+  final Color color;
+  final double? width;
+  final double height;
+  final double radius;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(radius),
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// WalletMetricChip
+// ─────────────────────────────────────────────────────────────────────────────
 
 class WalletMetricChip extends StatelessWidget {
   const WalletMetricChip({
