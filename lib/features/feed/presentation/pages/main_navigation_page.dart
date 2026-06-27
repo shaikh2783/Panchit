@@ -56,8 +56,25 @@ class _MainNavigationPageState extends State<MainNavigationPage>
       vsync: this,
     );
 
-    // Initialize items list
-    // (items are const and initialized above)
+    // Build pages once — IndexedStack keeps all alive, preventing repeated initState
+    // and the redundant API calls those would trigger.
+    _pages = [
+      HomePage(
+        key: _homePageKey,
+        onScrollDirectionChanged: (isScrollingDown) {
+          if (_currentIndex != 0) return;
+          final shouldShow = !isScrollingDown;
+          if (shouldShow != _showNavBar) {
+            setState(() => _showNavBar = shouldShow);
+          }
+        },
+      ),
+      const FriendRequestsPage(),
+      const CompetitionsHubPage(),
+      const ReelsPage(),
+      const NotificationsPage(),
+      MenuPage(onNavigateToTab: (index) => setState(() => _currentIndex = index)),
+    ];
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeFriendsService();
@@ -112,23 +129,8 @@ class _MainNavigationPageState extends State<MainNavigationPage>
   }
 
   // 🔄 Migration: Using Bloc pages for specific features while keeping Provider for others
-  List<Widget> get _pages => [
-    HomePage(
-      key: _homePageKey,
-      onScrollDirectionChanged: (isScrollingDown) {
-        if (_currentIndex != 0) return;
-        final shouldShow = !isScrollingDown;
-        if (shouldShow != _showNavBar) {
-          setState(() => _showNavBar = shouldShow);
-        }
-      },
-    ),
-    const FriendRequestsPage(),
-    const CompetitionsHubPage(),
-    const ReelsPage(),
-    const NotificationsPage(),
-    MenuPage(onNavigateToTab: (index) => setState(() => _currentIndex = index)),
-  ];
+  // Field (not getter) so page widgets are created once and kept alive by IndexedStack.
+  late final List<Widget> _pages;
 
   final List<_NavItem> _items = const [
     _NavItem(icon: Iconsax.message, activeIcon: Iconsax.message, label: 'Home'),
@@ -230,7 +232,6 @@ class _MainNavigationPageState extends State<MainNavigationPage>
                         MediaQuery.of(context).padding.bottom,
             ),
             child: IndexedStack(
-              key: ValueKey(_currentIndex),
               index: _currentIndex,
               children: _pages,
             ),

@@ -37,6 +37,8 @@ import '../../../friends/data/services/friends_api_service.dart';
 import '../widgets/profile_completion_card.dart';
 import 'profile_edit_page.dart';
 import 'package:snginepro/features/competitions/presentation/widgets/competition_widgets.dart';
+import 'package:snginepro/features/competitions/presentation/pages/competition_detail_page.dart';
+import 'package:snginepro/features/competitions/presentation/pages/competitions_hub_page.dart';
 
 class ProfilePage extends StatefulWidget {
   final String? username;
@@ -331,6 +333,62 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
+  /// Returns the competition tag widgets for the profile header:
+  /// - Running competition: competition name pill only (no rank)
+  /// - Finished competition: rank badge only (no name, no category chip)
+  List<Widget> _buildCompetitionTagWidgets(
+    profile_models.UserProfile profile,
+    List<String> achievementTags,
+  ) {
+    final theme = Theme.of(context);
+    final tags = <Widget>[];
+
+    // --- Finished competitions: show rank only, tap → CompetitionDetailPage ---
+    for (final badge in profile.badges) {
+      if (badge.competitionId == null) continue;
+      final rank = badge.effectiveRank;
+      if (rank != null && rank <= 3) {
+        tags.add(
+          GestureDetector(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => CompetitionDetailPage(
+                  competitionId: badge.competitionId!,
+                ),
+              ),
+            ),
+            child: WinnerRankBadge(rank: rank, compact: true),
+          ),
+        );
+      }
+    }
+
+    // --- Running competitions: show name only, tap → CompetitionsHubPage ---
+    for (final tag in achievementTags.take(3)) {
+      if (tag.trim().isEmpty) continue;
+      tags.add(
+        _CompetitionNameChip(
+          label: tag.trim(),
+          color: Colors.white,
+          backgroundColor: theme.colorScheme.primary,
+          icon: Iconsax.cup,
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const CompetitionsHubPage()),
+          ),
+        ),
+      );
+    }
+
+    if (tags.isEmpty) return const [];
+
+    return [
+      const SizedBox(height: 10),
+      Wrap(spacing: 8, runSpacing: 8, children: tags),
+    ];
+  }
+
   // Header
   Widget _buildHeader(
       profile_models.UserProfile profile,
@@ -491,17 +549,10 @@ class _ProfilePageState extends State<ProfilePage>
                             fontSize: 14,
                           ),
                         ),
-                        if (achievementTags.isNotEmpty) ...[
-                          const SizedBox(height: 10),
-                          Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: achievementTags
-                                .take(3)
-                                .map((tag) => ProfileAchievementTag(label: tag))
-                                .toList(growable: false),
-                          ),
-                        ],
+                        ..._buildCompetitionTagWidgets(
+                          profile,
+                          achievementTags,
+                        ),
                         if (profile.badges.isNotEmpty) ...[
                           const SizedBox(height: 10),
                           SizedBox(
@@ -4113,6 +4164,60 @@ class _BadgeDetailDialog extends StatelessWidget {
     );
   }
 }
+
+/// Pill chip for active competition name or winner label.
+class _CompetitionNameChip extends StatelessWidget {
+  const _CompetitionNameChip({
+    required this.label,
+    required this.color,
+    required this.backgroundColor,
+    this.icon,
+    this.onTap,
+  });
+
+  final String label;
+  final Color color;
+  final Color backgroundColor;
+  final IconData? icon;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: backgroundColor.withValues(alpha: 0.20),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: backgroundColor.withValues(alpha: 0.55)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (icon != null) ...[
+            Icon(icon, size: 12, color: color),
+            const SizedBox(width: 5),
+          ],
+          Flexible(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: color,
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ],
+      ),
+      ),
+    );
+  }
+}
+
 
 
 

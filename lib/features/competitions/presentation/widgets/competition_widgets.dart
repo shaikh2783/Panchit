@@ -413,10 +413,23 @@ class CompetitionEntryBadge extends StatelessWidget {
     super.key,
     required this.label,
     this.onTap,
+    this.status,
   });
 
   final String label;
   final VoidCallback? onTap;
+  final String? status;
+
+  Color _dotColor(ThemeData theme) {
+    final s = (status ?? '').toLowerCase();
+    if (s.contains('live') ||
+        s.contains('registration_open') ||
+        s.contains('open')) {
+      return const Color(0xFF14B8A6);
+    }
+    if (s.contains('voting')) return const Color(0xFFF59E0B);
+    return theme.colorScheme.outline;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -431,6 +444,8 @@ class CompetitionEntryBadge extends StatelessWidget {
     final borderColor = theme.colorScheme.primary.withValues(
       alpha: isDark ? 0.30 : 0.26,
     );
+    final showDot = status != null && status!.isNotEmpty;
+    final dotColor = _dotColor(theme);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(Radii.pill),
@@ -441,7 +456,7 @@ class CompetitionEntryBadge extends StatelessWidget {
           child: InkWell(
             onTap: onTap,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
@@ -454,36 +469,55 @@ class CompetitionEntryBadge extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  if (showDot) ...[
+                    Container(
+                      width: 7,
+                      height: 7,
+                      decoration: BoxDecoration(
+                        color: dotColor,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: dotColor.withValues(alpha: 0.55),
+                            blurRadius: 4,
+                            spreadRadius: 1,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                  ],
                   Container(
-                    width: 22,
-                    height: 22,
+                    width: 20,
+                    height: 20,
                     decoration: BoxDecoration(
                       color: theme.colorScheme.primary.withValues(alpha: 0.16),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
                       Iconsax.cup,
-                      size: 14,
+                      size: 12,
                       color: theme.colorScheme.primary,
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 7),
                   Flexible(
                     child: Text(
                       label,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.labelMedium?.copyWith(
-                        fontWeight: FontWeight.w800,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
                         color: theme.colorScheme.onSurface,
+                        letterSpacing: 0.1,
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 6),
                   Icon(
                     Iconsax.arrow_right_3,
-                    size: 14,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
+                    size: 12,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.50),
                   ),
                 ],
               ),

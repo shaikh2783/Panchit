@@ -2977,6 +2977,7 @@ const Map<String, String> enUS = {
   'widget_registration_ends_in': 'Registration ends in',
   'widget_registration_closing_soon': 'Registration closing soon',
   'widget_starts_prefix': 'Starts',
+  'competition_winner_label': 'Competition Winner',
   'widget_rank_1st': '1st Place Winner',
   'widget_rank_2nd': '2nd Place Winner',
   'widget_rank_3rd': '3rd Place Winner',

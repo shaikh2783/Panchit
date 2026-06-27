@@ -132,6 +132,7 @@ class Badge {
   final String? categoryTag;
   final int? competitionId;
   final String? awardedAt;
+  final int? rank;
 
   Badge({
     this.name,
@@ -142,9 +143,17 @@ class Badge {
     this.categoryTag,
     this.competitionId,
     this.awardedAt,
+    this.rank,
   });
 
   factory Badge.fromJson(Map<String, dynamic> json) {
+    final rawRank = json['rank'] ?? json['winner_rank'] ?? json['position'];
+    int? parsedRank;
+    if (rawRank is int) {
+      parsedRank = rawRank;
+    } else if (rawRank != null) {
+      parsedRank = int.tryParse(rawRank.toString());
+    }
     return Badge(
       name: json['name'],
       label: json['label'],
@@ -154,7 +163,17 @@ class Badge {
       categoryTag: json['category_tag'],
       competitionId: json['competition_id'],
       awardedAt: json['awarded_at'],
+      rank: parsedRank,
     );
+  }
+
+  int? get effectiveRank {
+    if (rank != null) return rank;
+    final l = (label ?? '').toLowerCase();
+    if (l.contains('1st') || l.contains('first')) return 1;
+    if (l.contains('2nd') || l.contains('second')) return 2;
+    if (l.contains('3rd') || l.contains('third')) return 3;
+    return null;
   }
 
   Map<String, dynamic> toJson() {
@@ -167,6 +186,7 @@ class Badge {
       'category_tag': categoryTag,
       'competition_id': competitionId,
       'awarded_at': awardedAt,
+      'rank': rank,
     };
   }
 }
