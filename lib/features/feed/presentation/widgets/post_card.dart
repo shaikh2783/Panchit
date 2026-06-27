@@ -189,6 +189,97 @@ class _PostCardState extends State<PostCard>
     );
   }
 
+  Widget _buildCompetitionWinnerBanner(BuildContext context, ThemeData theme) {
+    final name = _currentPost.competitionBadgeText ??
+        _currentPost.competitionName;
+    final rank = _winnerRank;
+
+    return GestureDetector(
+      onTap: _openCompetitionDetails,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: [
+              const Color(0xFFFFD700).withValues(alpha: 0.18),
+              const Color(0xFFB8860B).withValues(alpha: 0.07),
+            ],
+          ),
+          border: Border(
+            bottom: BorderSide(
+              color: const Color(0xFFFFD700).withValues(alpha: 0.30),
+            ),
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Color(0xFFFFD700), Color(0xFFB8860B)],
+                ),
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFFFFD700).withValues(alpha: 0.45),
+                    blurRadius: 6,
+                    spreadRadius: 1,
+                  ),
+                ],
+              ),
+              child: const Icon(Iconsax.cup, size: 15, color: Colors.white),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'competition_winner_label'.tr,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: const Color(0xFFB8860B),
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.2,
+                    ),
+                  ),
+                  if (name != null) ...[
+                    const SizedBox(height: 1),
+                    Text(
+                      name,
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            if (rank != null) ...[
+              const SizedBox(width: 8),
+              WinnerRankBadge(rank: rank, compact: true),
+            ],
+            const SizedBox(width: 6),
+            Icon(
+              Iconsax.arrow_right_3,
+              size: 14,
+              color: const Color(0xFFB8860B).withValues(alpha: 0.55),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   void didUpdateWidget(covariant PostCard oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -1963,25 +2054,19 @@ class _PostCardState extends State<PostCard>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            if (_showActiveCompetitionBadge || _isCompetitionWinner)
+            if (_isCompetitionWinner)
+              _buildCompetitionWinnerBanner(context, theme)
+            else if (_showActiveCompetitionBadge)
               Padding(
                 padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
-                child: Row(
-                  children: [
-                    if (_showActiveCompetitionBadge)
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: CompetitionEntryBadge(
-                            label: _currentPost.competitionBadgeText ??
-                                (_currentPost.competitionName ?? 'Competition'),
-                            onTap: _openCompetitionDetails,
-                          ),
-                        ),
-                      ),
-                    if (_isCompetitionWinner && _winnerRank != null)
-                      WinnerRankBadge(rank: _winnerRank!, compact: true),
-                  ],
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: CompetitionEntryBadge(
+                    label: _currentPost.competitionBadgeText ??
+                        (_currentPost.competitionName ?? 'Competition'),
+                    onTap: _openCompetitionDetails,
+                    status: _currentPost.competitionStatus,
+                  ),
                 ),
               ),
           Padding(
@@ -2853,6 +2938,7 @@ class _PostCardState extends State<PostCard>
                                                   MaterialPageRoute(
                                                     builder: (_) => PostDetailPage(
                                                       postId: _currentPost.id,
+                                                      initialPost: _currentPost,
                                                     ),
                                                   ),
                                                 );

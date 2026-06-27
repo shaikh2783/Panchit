@@ -7,6 +7,7 @@ import 'package:snginepro/core/theme/widgets/elevated_card.dart';
 import 'package:snginepro/features/competitions/data/models/competition_models.dart';
 import 'package:snginepro/features/competitions/data/services/competition_api_service.dart';
 import 'package:snginepro/features/competitions/presentation/widgets/competition_widgets.dart';
+import 'package:snginepro/features/profile/presentation/pages/profile_page.dart';
 
 class CompetitionLeaderboardPage extends StatefulWidget {
   const CompetitionLeaderboardPage({
@@ -107,6 +108,15 @@ class _CompetitionLeaderboardPageState
                         rank: rank,
                         mediaAsset: mediaAsset,
                         isVotingComplete: isVotingComplete,
+                        onTap: entry.userId != null
+                            ? () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                        ProfilePage(userId: entry.userId),
+                                  ),
+                                )
+                            : null,
                       );
                     },
                     separatorBuilder: (_, __) => const SizedBox(height: Spacing.sm),
@@ -201,12 +211,14 @@ class _LeaderboardEntryCard extends StatelessWidget {
     required this.rank,
     required this.mediaAsset,
     this.isVotingComplete = false,
+    this.onTap,
   });
 
   final CompetitionEntryModel entry;
   final int rank;
   final Uri Function(String) mediaAsset;
   final bool isVotingComplete;
+  final VoidCallback? onTap;
 
   String? _resolveUrl(String? raw) {
     if (raw == null || raw.trim().isEmpty) return null;
@@ -320,7 +332,15 @@ class _LeaderboardEntryCard extends StatelessWidget {
       ),
     );
 
-    if (!isTopRank) return card;
+    final tappableCard = onTap != null
+        ? InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(Radii.large),
+            child: card,
+          )
+        : card;
+
+    if (!isTopRank) return tappableCard;
 
     return Container(
       decoration: BoxDecoration(
@@ -329,7 +349,7 @@ class _LeaderboardEntryCard extends StatelessWidget {
           color: theme.colorScheme.primary.withValues(alpha: 0.24),
         ),
       ),
-      child: card,
+      child: tappableCard,
     );
   }
 }
