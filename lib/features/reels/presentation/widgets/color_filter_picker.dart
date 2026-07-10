@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 const List<double> kDefaultFilter = [
   1, 0, 0, 0, 0,
@@ -201,7 +202,7 @@ class _ColorFilterPickerState extends State<ColorFilterPicker> {
     return Row(
       children: [
         Text(
-          'Filters',
+          'filters'.tr,
           style: TextStyle(
             color: isDark ? Colors.white : Colors.black,
             fontSize: 15,
@@ -241,7 +242,7 @@ class _ColorFilterPickerState extends State<ColorFilterPicker> {
         ),
         const Spacer(),
         Text(
-          'Tap to apply',
+          'tap_to_apply'.tr,
           style: TextStyle(
             color: isDark ? Colors.white54 : Colors.black45,
             fontSize: 11,

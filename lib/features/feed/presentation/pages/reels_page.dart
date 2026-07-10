@@ -110,7 +110,7 @@ class _ReelsPageState extends State<ReelsPage> {
             child: _ReelsMessage(
               icon: Iconsax.warning_2,
               message: state.message,
-              actionLabel: 'Try Again',
+              actionLabel: 'try_again'.tr,
               onAction: () => context.read<ReelsBloc>().add(LoadReelsEvent(source: state.source)),
             ),
           );
@@ -226,7 +226,7 @@ class _ReelsTopOverlay extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      'Reels',
+                      'reels'.tr,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: Colors.white,
                         fontSize: 18,
@@ -872,7 +872,7 @@ class _CaptionAndOwnerState extends State<_CaptionAndOwner> {
           ),
         )
             : Text(
-          _isFollowing ? 'following'.tr : 'Follow',
+          _isFollowing ? 'following'.tr : 'follow'.tr,
           style: const TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w800,
@@ -903,7 +903,8 @@ class _CaptionAndOwnerState extends State<_CaptionAndOwner> {
   }
 
   Widget _buildSoundPill(Post post) {
-    final soundText = post.soundTitle ?? 'Original audio • ${post.authorName}';
+    final soundText = post.soundTitle ??
+        'original_audio_by'.trParams({'name': post.authorName});
 
     return GestureDetector(
       onTap: post.soundUrl != null ? () => showUseSoundSheet(context, post) : null,
@@ -1070,7 +1071,7 @@ class _ActionsRailState extends State<_ActionsRail> {
           _currentPost = widget.post;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Error occurred while adding reaction')),
+          SnackBar(content: Text('reaction_failed'.tr)),
         );
       }
     }
@@ -1108,7 +1109,7 @@ class _ActionsRailState extends State<_ActionsRail> {
           _currentPost = widget.post;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Error occurred while adding reaction')),
+          SnackBar(content: Text('reaction_failed'.tr)),
         );
       }
     }

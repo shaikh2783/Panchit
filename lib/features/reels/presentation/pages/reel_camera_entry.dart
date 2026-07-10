@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:snginepro/features/reels/data/services/music_api_service.dart';
@@ -56,8 +57,8 @@ class _ReelEntrySheet extends StatelessWidget {
             _option(
               context,
               icon: Icons.videocam_rounded,
-              label: 'Record Video',
-              subtitle: 'Use camera with music & filters',
+              label: 'record_video'.tr,
+              subtitle: 'use_camera_music_filters'.tr,
               onTap: () {
                 Navigator.of(context).pop();
                 Navigator.of(parentContext).push(MaterialPageRoute(
@@ -71,8 +72,8 @@ class _ReelEntrySheet extends StatelessWidget {
             _option(
               context,
               icon: Icons.photo_library_rounded,
-              label: 'Upload from Gallery',
-              subtitle: 'Choose a video from your library',
+              label: 'upload_from_gallery'.tr,
+              subtitle: 'choose_video_from_library'.tr,
               onTap: () async {
                 Navigator.of(context).pop();
                 await _pickFromGallery(parentContext);
@@ -117,7 +118,7 @@ class _ReelEntrySheet extends StatelessWidget {
     } catch (e) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to pick video: $e')),
+        SnackBar(content: Text('${'failed_to_pick_video'.tr}: $e')),
       );
     }
   }

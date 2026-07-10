@@ -132,9 +132,9 @@ class _ReelEditScreenState extends State<ReelEditScreen> {
                               color: const Color(0xFFE1306C),
                               borderRadius: BorderRadius.circular(20),
                             ),
-                            child: const Text(
-                              'Next',
-                              style: TextStyle(
+                            child: Text(
+                              'next'.tr,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600,
                                 fontSize: 15,
@@ -170,7 +170,7 @@ class _ReelEditScreenState extends State<ReelEditScreen> {
                             color: Color(0xFFE1306C), size: 15),
                         const SizedBox(width: 6),
                         Text(
-                          widget.selectedMusic!.music?.title ?? 'Sound',
+                          widget.selectedMusic!.music?.title ?? 'sound'.tr,
                           style: const TextStyle(
                               color: Colors.white, fontSize: 13),
                           maxLines: 1,

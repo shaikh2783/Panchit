@@ -128,8 +128,8 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          title: const Text('Discard reel?'),
-          content: const Text('Your caption will be lost if you leave now.'),
+          title: Text('discard_reel_question'.tr),
+          content: Text('discard_caption_warning'.tr),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext, false),
@@ -137,9 +137,9 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
             ),
             TextButton(
               onPressed: () => Navigator.pop(dialogContext, true),
-              child: const Text(
-                'Discard',
-                style: TextStyle(color: Colors.red),
+              child: Text(
+                'discard'.tr,
+                style: const TextStyle(color: Colors.red),
               ),
             ),
           ],
@@ -266,7 +266,7 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
           ),
           Expanded(
             child: Text(
-              'New reel',
+              'new_reel'.tr,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: isDark ? Colors.white : Colors.black,
@@ -292,7 +292,7 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
                 ),
               ),
               child: Text(
-                _error != null ? 'retry'.tr : 'Share',
+                _error != null ? 'retry'.tr : 'share'.tr,
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -312,7 +312,7 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
     return Column(
       children: [
         Text(
-          'Preview',
+          'preview'.tr,
           style: TextStyle(
             color: isDark ? Colors.white : Colors.black,
             fontSize: 15,
@@ -495,8 +495,8 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildSectionTitle(
-            title: 'Caption',
-            subtitle: 'Write something for your reel',
+            title: 'caption'.tr,
+            subtitle: 'write_something_for_reel'.tr,
             isDark: isDark,
           ),
           const SizedBox(height: 14),
@@ -522,7 +522,7 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
                   maxLength: _captionMaxLength,
                   textAlign: TextAlign.start,
                   decoration: InputDecoration(
-                    hintText: 'Write a caption...',
+                    hintText: 'write_a_caption'.tr,
                     hintStyle: TextStyle(
                       color: isDark ? Colors.grey[600] : Colors.grey[500],
                       fontSize: 14,
@@ -557,10 +557,10 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
           _buildMediaRow(
             isDark: isDark,
             icon: Icons.image_outlined,
-            title: 'Cover',
+            title: 'cover'.tr,
             subtitle: widget.thumbnailPath != null
-                ? 'Custom cover selected'
-                : 'Default video cover',
+                ? 'custom_cover_selected'.tr
+                : 'default_video_cover'.tr,
             trailing: _buildThumbnailPreview(isDark),
             onTap: _isPublishing ? null : () {},
           ),
@@ -568,8 +568,8 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
           _buildMediaRow(
             isDark: isDark,
             icon: Icons.music_note_outlined,
-            title: 'Music',
-            subtitle: widget.selectedMusic?.music?.title ?? 'Original audio',
+            title: 'music'.tr,
+            subtitle: widget.selectedMusic?.music?.title ?? 'original_audio'.tr,
             onTap: _isPublishing ? null : () {},
           ),
           if (widget.filterName != null && widget.filterName!.trim().isNotEmpty) ...[
@@ -577,7 +577,7 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
             _buildMediaRow(
               isDark: isDark,
               icon: Icons.auto_awesome_outlined,
-              title: 'Filter',
+              title: 'filter'.tr,
               subtitle: widget.filterName!,
               onTap: null,
             ),
@@ -619,7 +619,7 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
           _buildSwitchRow(
             isDark: isDark,
             icon: Icons.chat_bubble_outline,
-            title: 'Allow comments',
+            title: 'allow_comments'.tr,
             value: _allowComments,
             onChanged: _isPublishing
                 ? null
@@ -633,7 +633,7 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
           _buildSwitchRow(
             isDark: isDark,
             icon: Icons.grid_on_outlined,
-            title: 'Share to feed',
+            title: 'share_to_feed'.tr,
             value: _shareToFeed,
             onChanged: _isPublishing
                 ? null

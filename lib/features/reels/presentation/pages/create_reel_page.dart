@@ -121,7 +121,7 @@ class _CreateReelPageState extends State<CreateReelPage> {
     final granted = await _ensureCameraPermissions();
     if (!mounted) return;
     if (!granted) {
-      _showErrorSnackBar('Camera and microphone permissions are required.');
+      _showErrorSnackBar('camera_mic_permission_required'.tr);
       return;
     }
 
@@ -226,7 +226,7 @@ class _CreateReelPageState extends State<CreateReelPage> {
   Future<void> _submitReel() async {
     final videoFile = _videoFile;
     if (videoFile == null) {
-      _showErrorSnackBar('Please add a video for your reel.');
+      _showErrorSnackBar('please_add_reel_video'.tr);
       return;
     }
 
@@ -234,7 +234,7 @@ class _CreateReelPageState extends State<CreateReelPage> {
     try {
       final auth = context.read<AuthNotifier>();
       if (!auth.isAuthenticated || auth.authToken == null) {
-        throw Exception('You must be logged in to create a reel.');
+        throw Exception('must_be_logged_in_create_reel'.tr);
       }
 
       final apiClient = Get.find<ApiClient>();
@@ -257,12 +257,12 @@ class _CreateReelPageState extends State<CreateReelPage> {
       if (mounted) {
         HapticFeedback.heavyImpact();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Reel published')),
+          SnackBar(content: Text('reel_published_success'.tr)),
         );
         Navigator.pop(context, true);
       }
     } catch (e) {
-      if (mounted) _showErrorSnackBar('Failed to create reel: $e');
+      if (mounted) _showErrorSnackBar('${'failed_to_create_reel'.tr}: $e');
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
     }
@@ -293,7 +293,7 @@ class _CreateReelPageState extends State<CreateReelPage> {
 
     final response = await postsService.createPostAdvanced(request);
     if (!response.isSuccess) {
-      throw Exception(response.message ?? 'Failed to create reel');
+      throw Exception(response.message ?? 'failed_to_create_reel'.tr);
     }
   }
 
@@ -321,7 +321,7 @@ class _CreateReelPageState extends State<CreateReelPage> {
 
   void _showComingSoon(String feature) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('$feature coming soon')),
+      SnackBar(content: Text('feature_coming_soon'.trParams({'feature': feature}))),
     );
   }
 
@@ -335,7 +335,7 @@ class _CreateReelPageState extends State<CreateReelPage> {
         elevation: 0,
         backgroundColor: Colors.transparent,
         title: Text(
-          'Create Reel',
+          'create_reel'.tr,
           style: theme.textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
           ),
@@ -358,18 +358,18 @@ class _CreateReelPageState extends State<CreateReelPage> {
                 _buildCustomizationTile(
                   theme,
                   icon: Iconsax.music,
-                  label: _selectedSoundTitle ?? 'Add sound',
+                  label: _selectedSoundTitle ?? 'add_sound'.tr,
                   // TODO(reels): open the sound library (showMusicSheet) and
                   // set _selectedSoundId / _selectedSoundTitle.
-                  onTap: () => _showComingSoon('Sound library'),
+                  onTap: () => _showComingSoon('sound_library'.tr),
                 ),
                 const SizedBox(height: 12),
                 _buildCustomizationTile(
                   theme,
                   icon: Iconsax.magicpen,
-                  label: _selectedEffectId ?? 'Add effect',
+                  label: _selectedEffectId ?? 'add_effect'.tr,
                   // TODO(reels): effect picker; set _selectedEffectId.
-                  onTap: () => _showComingSoon('Effects'),
+                  onTap: () => _showComingSoon('effects'.tr),
                 ),
                 const SizedBox(height: 16),
                 _buildCaptionField(theme),
@@ -519,7 +519,7 @@ class _CreateReelPageState extends State<CreateReelPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Recording length',
+          'recording_length'.tr,
           style: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
           ),
@@ -584,7 +584,7 @@ class _CreateReelPageState extends State<CreateReelPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Caption',
+          'caption'.tr,
           style: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
           ),
@@ -595,7 +595,7 @@ class _CreateReelPageState extends State<CreateReelPage> {
           maxLines: 3,
           maxLength: 500,
           decoration: InputDecoration(
-            hintText: 'Write a caption...',
+            hintText: 'write_a_caption'.tr,
             filled: true,
             fillColor: theme.colorScheme.surface,
             border: OutlineInputBorder(
@@ -660,9 +660,9 @@ class _CreateReelPageState extends State<CreateReelPage> {
                     valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                   ),
                 )
-              : const Text(
-                  'Post Reel',
-                  style: TextStyle(
+              : Text(
+                  'publish_reel'.tr,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:snginepro/features/feed/data/models/post.dart';
 import 'package:snginepro/features/feed/presentation/widgets/video_reels_player.dart';
@@ -30,7 +31,8 @@ class _ReelSoundScreenState extends State<ReelSoundScreen> {
   String? _error;
   List<Post> _reels = const [];
 
-  String get _soundTitle => widget.sourcePost.soundTitle ?? 'Original audio';
+  String get _soundTitle =>
+      widget.sourcePost.soundTitle ?? 'original_audio'.tr;
 
   @override
   void initState() {
@@ -59,7 +61,7 @@ class _ReelSoundScreenState extends State<ReelSoundScreen> {
     } catch (_) {
       if (!mounted) return;
       setState(() {
-        _error = 'Could not load reels for this sound.';
+        _error = 'could_not_load_sound_reels'.tr;
         _isLoading = false;
       });
     }
@@ -114,11 +116,11 @@ class _ReelSoundScreenState extends State<ReelSoundScreen> {
             onPressed: () => Navigator.of(context).pop(),
             icon: const Icon(Icons.arrow_back, color: Colors.white),
           ),
-          const Expanded(
+          Expanded(
             child: Text(
-              'Sound',
+              'sound'.tr,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 17,
                 fontWeight: FontWeight.w700,
@@ -179,7 +181,7 @@ class _ReelSoundScreenState extends State<ReelSoundScreen> {
           ),
           const SizedBox(height: 6),
           Text(
-            'Original audio • ${post.authorName}',
+            'original_audio_by'.trParams({'name': post.authorName}),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(color: Colors.white54, fontSize: 13),
@@ -187,7 +189,9 @@ class _ReelSoundScreenState extends State<ReelSoundScreen> {
           if (!_isLoading && _error == null) ...[
             const SizedBox(height: 6),
             Text(
-              '${_reels.length} ${_reels.length == 1 ? 'reel' : 'reels'}',
+              _reels.length == 1
+                  ? 'one_reel_count'.trParams({'count': '1'})
+                  : 'reels_count'.trParams({'count': '${_reels.length}'}),
               style: const TextStyle(
                 color: Colors.white38,
                 fontSize: 12,
@@ -202,9 +206,10 @@ class _ReelSoundScreenState extends State<ReelSoundScreen> {
               onPressed:
                   widget.sourcePost.soundUrl != null ? _useThisSound : null,
               icon: const Icon(Icons.videocam),
-              label: const Text(
-                'Use this sound',
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+              label: Text(
+                'use_this_sound'.tr,
+                style:
+                    const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
               ),
               style: ElevatedButton.styleFrom(
                 elevation: 0,
@@ -224,11 +229,11 @@ class _ReelSoundScreenState extends State<ReelSoundScreen> {
   }
 
   Widget _buildSectionTitle() {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Text(
-        'Reels using this sound',
-        style: TextStyle(
+        'reels_using_this_sound'.tr,
+        style: const TextStyle(
           color: Colors.white,
           fontSize: 15,
           fontWeight: FontWeight.w700,
@@ -249,7 +254,7 @@ class _ReelSoundScreenState extends State<ReelSoundScreen> {
       return _buildMessage(
         icon: Iconsax.warning_2,
         message: _error ?? '',
-        actionLabel: 'Try Again',
+        actionLabel: 'try_again'.tr,
         onAction: _loadReels,
       );
     }
@@ -257,7 +262,7 @@ class _ReelSoundScreenState extends State<ReelSoundScreen> {
     if (_reels.isEmpty) {
       return _buildMessage(
         icon: Iconsax.video,
-        message: 'No reels using this sound yet',
+        message: 'no_reels_using_sound'.tr,
       );
     }
 
@@ -454,10 +459,10 @@ class _ReelSoundViewerPage extends StatelessWidget {
               enableCaching: true,
             )
           else
-            const Center(
+            Center(
               child: Text(
-                'Video unavailable',
-                style: TextStyle(color: Colors.white54),
+                'video_unavailable'.tr,
+                style: const TextStyle(color: Colors.white54),
               ),
             ),
           SafeArea(

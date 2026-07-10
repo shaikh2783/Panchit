@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:snginepro/features/reels/data/models/music_model.dart';
 import 'package:snginepro/features/reels/presentation/widgets/wave_slider.dart';
 
@@ -77,7 +78,7 @@ class _SelectedMusicSheetState extends State<SelectedMusicSheet> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        music?.title ?? 'Selected Sound',
+                        music?.title ?? 'selected_music'.tr,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -105,8 +106,8 @@ class _SelectedMusicSheetState extends State<SelectedMusicSheet> {
                       color: const Color(0xFFE1306C),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: const Text('Done',
-                        style: TextStyle(
+                    child: Text('done'.tr,
+                        style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w600,
                             fontSize: 14)),
@@ -116,11 +117,11 @@ class _SelectedMusicSheetState extends State<SelectedMusicSheet> {
             ),
           ),
           const SizedBox(height: 12),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              'Drag to choose which part of the song plays',
-              style: TextStyle(color: Colors.white54, fontSize: 12),
+              'drag_choose_song_part'.tr,
+              style: const TextStyle(color: Colors.white54, fontSize: 12),
             ),
           ),
           const SizedBox(height: 16),

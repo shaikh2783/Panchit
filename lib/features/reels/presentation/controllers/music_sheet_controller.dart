@@ -25,7 +25,8 @@ class MusicSheetController extends GetxController {
   final TextEditingController searchCtrl = TextEditingController();
   final PageController pageController = PageController();
 
-  final List<String> tabs = ['Explore', 'Categories', 'Saved'];
+  // Localization keys — translated at the display site with .tr
+  final List<String> tabs = ['explore', 'categories', 'saved'];
 
   @override
   void onInit() {

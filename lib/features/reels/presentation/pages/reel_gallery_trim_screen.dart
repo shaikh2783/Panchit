@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_new/return_code.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:snginepro/features/reels/data/models/music_model.dart';
 import 'package:snginepro/features/reels/presentation/pages/reel_edit_screen.dart';
@@ -244,7 +245,7 @@ class _ReelGalleryTrimScreenState extends State<ReelGalleryTrimScreen> {
 
     final output = File(outputPath);
     if (!success || !await output.exists() || await output.length() == 0) {
-      throw Exception('Could not prepare the selected clip. Please try again.');
+      throw Exception('could_not_prepare_clip'.tr);
     }
 
     return outputPath;
@@ -314,8 +315,8 @@ class _ReelGalleryTrimScreenState extends State<ReelGalleryTrimScreen> {
     if (_initFailed) {
       return _buildMessageState(
         icon: Icons.video_file_outlined,
-        title: 'Could not load this video',
-        subtitle: 'Please choose another video from your gallery.',
+        title: 'could_not_load_video'.tr,
+        subtitle: 'choose_another_video'.tr,
       );
     }
 
@@ -448,8 +449,8 @@ class _ReelGalleryTrimScreenState extends State<ReelGalleryTrimScreen> {
 
   Widget _buildDurationChip() {
     final text = _isInitialized
-        ? '${_formatSec(_selectedSpanSec)} selected'
-        : 'Select clip';
+        ? 'duration_selected'.trParams({'duration': _formatSec(_selectedSpanSec)})
+        : 'select_clip'.tr;
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(24),
@@ -515,9 +516,9 @@ class _ReelGalleryTrimScreenState extends State<ReelGalleryTrimScreen> {
             ],
           ),
           alignment: Alignment.center,
-          child: const Text(
-            'Next',
-            style: TextStyle(
+          child: Text(
+            'next'.tr,
+            style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w800,
               fontSize: 14,
@@ -622,10 +623,10 @@ class _ReelGalleryTrimScreenState extends State<ReelGalleryTrimScreen> {
   Widget _buildTrimHeader() {
     return Row(
       children: [
-        const Expanded(
+        Expanded(
           child: Text(
-            'Select clip duration',
-            style: TextStyle(
+            'select_clip_duration'.tr,
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.w800,
@@ -641,9 +642,9 @@ class _ReelGalleryTrimScreenState extends State<ReelGalleryTrimScreen> {
               color: _accent.withOpacity(0.26),
             ),
           ),
-          child: const Text(
-            'Max 30 sec',
-            style: TextStyle(
+          child: Text(
+            'max_30_sec'.tr,
+            style: const TextStyle(
               color: _accent,
               fontSize: 11,
               fontWeight: FontWeight.w800,
@@ -664,7 +665,7 @@ class _ReelGalleryTrimScreenState extends State<ReelGalleryTrimScreen> {
         _durationChip(seconds: 30),
         const Spacer(),
         Text(
-          '${_formatSec(_videoDurationSec)} total',
+          'duration_total'.trParams({'duration': _formatSec(_videoDurationSec)}),
           style: TextStyle(
             color: Colors.white.withOpacity(0.42),
             fontSize: 11,
@@ -741,18 +742,18 @@ class _ReelGalleryTrimScreenState extends State<ReelGalleryTrimScreen> {
     return Row(
       children: [
         _timeLabel(
-          label: 'Start',
+          label: 'start'.tr,
           value: _formatSec(_range.start),
         ),
         const Spacer(),
         _timeLabel(
-          label: 'Duration',
+          label: 'duration'.tr,
           value: _formatSec(_selectedSpanSec),
           highlight: true,
         ),
         const Spacer(),
         _timeLabel(
-          label: 'End',
+          label: 'end'.tr,
           value: _formatSec(_range.end),
           alignEnd: true,
         ),
@@ -802,7 +803,7 @@ class _ReelGalleryTrimScreenState extends State<ReelGalleryTrimScreen> {
         const SizedBox(width: 7),
         Expanded(
           child: Text(
-            'Drag the handles to choose the best part of your video.',
+            'trim_drag_hint'.tr,
             style: TextStyle(
               color: Colors.white.withOpacity(0.42),
               fontSize: 12,
@@ -829,10 +830,10 @@ class _ReelGalleryTrimScreenState extends State<ReelGalleryTrimScreen> {
                 color: Colors.white.withOpacity(0.10),
               ),
             ),
-            child: const Column(
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(
+                const SizedBox(
                   width: 34,
                   height: 34,
                   child: CircularProgressIndicator(
@@ -840,21 +841,21 @@ class _ReelGalleryTrimScreenState extends State<ReelGalleryTrimScreen> {
                     strokeWidth: 3,
                   ),
                 ),
-                SizedBox(height: 18),
+                const SizedBox(height: 18),
                 Text(
-                  'Preparing your reel...',
+                  'preparing_your_reel'.tr,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
-                SizedBox(height: 7),
+                const SizedBox(height: 7),
                 Text(
-                  'Please keep this screen open',
+                  'keep_screen_open'.tr,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white54,
                     fontSize: 12,
                     height: 1.3,

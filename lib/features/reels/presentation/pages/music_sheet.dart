@@ -56,7 +56,7 @@ class _MusicSheetBody extends StatelessWidget {
                         style: const TextStyle(color: Colors.white),
                         cursorColor: const Color(0xFFE1306C),
                         decoration: InputDecoration(
-                          hintText: 'Search sounds...',
+                          hintText: 'search_sounds'.tr,
                           hintStyle: const TextStyle(color: Colors.white38),
                           filled: true,
                           fillColor: Colors.white10,
@@ -75,17 +75,17 @@ class _MusicSheetBody extends StatelessWidget {
                     const SizedBox(width: 10),
                     GestureDetector(
                       onTap: controller.onCancelSearch,
-                      child: const Text('Cancel',
-                          style: TextStyle(color: Color(0xFFE1306C))),
+                      child: Text('cancel'.tr,
+                          style: const TextStyle(color: Color(0xFFE1306C))),
                     ),
                   ],
                 );
               }
               return Row(
                 children: [
-                  const Expanded(
-                    child: Text('Sounds',
-                        style: TextStyle(
+                  Expanded(
+                    child: Text('sounds'.tr,
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.w600)),
@@ -123,7 +123,7 @@ class _MusicSheetBody extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
-                        controller.tabs[i],
+                        controller.tabs[i].tr,
                         style: TextStyle(
                           color: selected ? Colors.white : Colors.white54,
                           fontSize: 13,
@@ -153,9 +153,9 @@ class _MusicSheetBody extends StatelessWidget {
                 if (controller.searchList.isEmpty &&
                     controller.searchCtrl.text.isNotEmpty &&
                     !controller.isLoading.value) {
-                  return const Center(
-                    child: Text('No results',
-                        style: TextStyle(color: Colors.white54)),
+                  return Center(
+                    child: Text('no_results'.tr,
+                        style: const TextStyle(color: Colors.white54)),
                   );
                 }
                 return _MusicList(
@@ -193,8 +193,9 @@ class _MusicList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (items.isEmpty) {
-      return const Center(
-        child: Text('No sounds yet', style: TextStyle(color: Colors.white54)),
+      return Center(
+        child: Text('no_sounds_yet'.tr,
+            style: const TextStyle(color: Colors.white54)),
       );
     }
     return ListView.builder(
@@ -232,7 +233,7 @@ class _MusicTile extends StatelessWidget {
             : _imagePlaceholder(),
       ),
       title: Text(
-        music.title ?? 'Unknown',
+        music.title ?? 'unknown'.tr,
         style: const TextStyle(
             color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),
         maxLines: 1,
@@ -298,8 +299,9 @@ class _CategoriesGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       if (controller.categoryList.isEmpty) {
-        return const Center(
-          child: Text('No categories', style: TextStyle(color: Colors.white54)),
+        return Center(
+          child: Text('no_categories'.tr,
+              style: const TextStyle(color: Colors.white54)),
         );
       }
       return GridView.builder(

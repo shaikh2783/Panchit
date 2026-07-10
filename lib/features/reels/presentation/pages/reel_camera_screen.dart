@@ -81,11 +81,11 @@ class ReelCameraScreen extends StatelessWidget {
                   const SizedBox(width: 8),
                   // TODO(reels): effect rendering pipeline.
                   _iconButton(Icons.auto_awesome,
-                      () => _showComingSoon(context, 'Effects')),
+                      () => _showComingSoon(context, 'effects'.tr)),
                   const SizedBox(width: 8),
                   // TODO(reels): self-timer countdown before recording.
                   _iconButton(Icons.timer_outlined,
-                      () => _showComingSoon(context, 'Timer')),
+                      () => _showComingSoon(context, 'timer'.tr)),
                 ],
               ),
             ),
@@ -113,7 +113,7 @@ class ReelCameraScreen extends StatelessWidget {
                             color: Color(0xFFE1306C), size: 16),
                         const SizedBox(width: 6),
                         Text(
-                          ctrl.selectedMusic!.music?.title ?? 'Sound',
+                          ctrl.selectedMusic!.music?.title ?? 'sound'.tr,
                           style: const TextStyle(
                               color: Colors.white, fontSize: 13),
                         ),
@@ -329,7 +329,9 @@ class ReelCameraScreen extends StatelessWidget {
 
   void _showComingSoon(BuildContext context, String feature) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('$feature coming soon')),
+      SnackBar(
+        content: Text('feature_coming_soon'.trParams({'feature': feature})),
+      ),
     );
   }
 
