@@ -70,6 +70,13 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/share_plus-12.0.1" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/package_info_plus-9.0.0" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/sign_in_with_apple-7.0.1" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/camera-0.11.4" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/video_thumbnail-0.5.6" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/camera_avfoundation-0.9.23+2" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/camera_web-0.3.5+3" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/audio_waveforms-2.0.2" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/camera_android_camerax-0.6.30" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/ffmpeg_kit_flutter_new-3.2.0" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

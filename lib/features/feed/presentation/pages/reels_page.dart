@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -15,18 +17,22 @@ import 'package:snginepro/core/models/reaction_model.dart';
 import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/features/comments/presentation/pages/comments_bottom_sheet.dart';
 import 'package:snginepro/features/feed/presentation/widgets/reaction_users_bottom_sheet.dart';
-import 'package:snginepro/features/feed/presentation/pages/create_reel_page.dart';
 import 'package:snginepro/features/feed/presentation/widgets/share_post_dialog.dart';
+import 'package:snginepro/features/reels/presentation/pages/reel_camera_entry.dart';
+import 'package:snginepro/features/reels/presentation/pages/reel_sound_screen.dart';
+import 'package:snginepro/features/reels/presentation/widgets/use_sound_sheet.dart';
 import 'package:snginepro/features/feed/presentation/widgets/post_menu_bottom_sheet.dart';
 import 'package:snginepro/features/auth/application/auth_notifier.dart';
 import 'package:snginepro/features/friends/data/services/friends_api_service.dart';
 import 'package:snginepro/features/friends/data/models/friendship_model.dart';
-import 'package:provider/provider.dart';
 import 'package:snginepro/features/feed/data/services/post_management_api_service.dart';
 import 'package:snginepro/features/profile/presentation/pages/profile_page.dart';
 
 typedef MediaPathResolver = Uri Function(String);
-
+const Color _kReelAccent = Color(0xFFE1306C);
+const Color _kReelBlack = Colors.black;
+const Color _kReelSurface = Color(0xFF111113);
+const double _kRightRailWidth = 82;
 class ReelsPage extends StatefulWidget {
   const ReelsPage({super.key, this.initialIndex = 0});
 
@@ -38,13 +44,14 @@ class ReelsPage extends StatefulWidget {
 
 class _ReelsPageState extends State<ReelsPage> {
   late final PageController _pageController;
-  int _currentPage = 0;
+  late int _currentPage;
+  final Set<int> _reportedViewIds = {};
 
   @override
   void initState() {
     super.initState();
+    _currentPage = widget.initialIndex;
     _pageController = PageController(initialPage: widget.initialIndex);
-    _pageController.addListener(_onPageScroll);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ReelsBloc>().add(LoadReelsEvent());
     });
@@ -52,21 +59,31 @@ class _ReelsPageState extends State<ReelsPage> {
 
   @override
   void dispose() {
-    _pageController.removeListener(_onPageScroll);
     _pageController.dispose();
     super.dispose();
   }
-
-  void _onPageScroll() {
-    // Only update if page has actually changed
-    if (_pageController.hasClients) {
-      final page = _pageController.page?.round() ?? 0;
-      if (page != _currentPage) {
-        setState(() {
-          _currentPage = page;
-        });
-      }
+  void _handlePageChanged(
+      int index,
+      List<Post> reels,
+      bool hasMore,
+      bool isLoadingMore,
+      ) {
+    if (_currentPage != index) {
+      setState(() {
+        _currentPage = index;
+      });
     }
+
+    _maybeLoadMore(index, reels, hasMore, isLoadingMore);
+  }
+
+  /// Fire-and-forget view event (contract §6): reported once per reel per
+  /// session, and any failure is swallowed — it must never affect the UI.
+  Future<void> _reportReelView(Post post) async {
+    if (!_reportedViewIds.add(post.id)) return;
+    try {
+      await context.read<ReelsManagementApiService>().recordView(post.id);
+    } catch (_) {}
   }
 
   void _maybeLoadMore(int index, List<Post> reels, bool hasMore, bool isLoadingMore) {
@@ -123,11 +140,18 @@ class _ReelsPageState extends State<ReelsPage> {
                   controller: _pageController,
                   scrollDirection: Axis.vertical,
                   itemCount: reels.length,
-                  onPageChanged: (i) => _maybeLoadMore(i, reels, hasMore, isLoadingMore),
+                  onPageChanged: (index) => _handlePageChanged(
+                    index,
+                    reels,
+                    hasMore,
+                    isLoadingMore,
+                  ),
                   itemBuilder: (context, i) => _ReelView(
                     key: ValueKey(reels[i].id),
                     post: reels[i],
                     mediaResolver: mediaResolver,
+                    isActive: i == _currentPage,
+                    onDwell: () => _reportReelView(reels[i]),
                   ),
                 ),
               ),
@@ -151,46 +175,119 @@ class _ReelsPageState extends State<ReelsPage> {
 
 class _DarkScaffold extends StatelessWidget {
   const _DarkScaffold({required this.child});
+
   final Widget child;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: const Text(
-          'Reels',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const CreateReelPage(),
-                ),
-              ).then((result) {
-                if (result == true) {
-                  context.read<ReelsBloc>().add(RefreshReelsEvent());
-                }
-              });
-            },
-            icon: const Icon(
-              Iconsax.video_add,
-              color: Color(0xFFE1306C),
-              size: 28,
-            ),
-          ),
+      backgroundColor: _kReelBlack,
+      body: Stack(
+        children: [
+          Positioned.fill(child: child),
+          const _ReelsTopOverlay(),
         ],
       ),
-      body: child,
+    );
+  }
+}
+
+class _ReelsTopOverlay extends StatelessWidget {
+  const _ReelsTopOverlay();
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: 0,
+      left: 0,
+      right: 0,
+      child: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 10),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.28),
+                  borderRadius: BorderRadius.circular(22),
+                  border: Border.all(
+                    color: Colors.white.withOpacity(0.10),
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Iconsax.video_play,
+                      color: Colors.white,
+                      size: 18,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Reels',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.2,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Spacer(),
+              _TopCircleButton(
+                icon: Iconsax.video_add,
+                onTap: () async {
+                  await showReelCameraEntry(context);
+                  if (context.mounted) {
+                    context.read<ReelsBloc>().add(RefreshReelsEvent());
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _TopCircleButton extends StatelessWidget {
+  const _TopCircleButton({
+    required this.icon,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.black.withOpacity(0.28),
+      shape: const CircleBorder(),
+      child: InkWell(
+        onTap: onTap,
+        customBorder: const CircleBorder(),
+        child: Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: Colors.white.withOpacity(0.12),
+            ),
+          ),
+          child: Icon(
+            icon,
+            color: _kReelAccent,
+            size: 24,
+          ),
+        ),
+      ),
     );
   }
 }
@@ -202,6 +299,7 @@ class _ReelsMessage extends StatelessWidget {
     this.onAction,
     this.actionLabel,
   });
+
   final IconData? icon;
   final String message;
   final VoidCallback? onAction;
@@ -212,104 +310,67 @@ class _ReelsMessage extends StatelessWidget {
     return Center(
       child: Container(
         margin: const EdgeInsets.all(28),
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.fromLTRB(22, 24, 22, 22),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Colors.grey.withOpacity(0.1),
-              Colors.grey.withOpacity(0.05),
-            ],
-          ),
-          borderRadius: BorderRadius.circular(20),
+          color: _kReelSurface.withOpacity(0.92),
+          borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: Colors.white.withOpacity(0.1),
-            width: 1,
+            color: Colors.white.withOpacity(0.10),
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.3),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
-            ),
-          ],
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             if (icon != null) ...[
               Container(
-                padding: const EdgeInsets.all(16),
+                width: 62,
+                height: 62,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.white.withOpacity(0.2),
-                      Colors.white.withOpacity(0.1),
-                    ],
-                  ),
                   shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.white.withOpacity(0.1),
-                      blurRadius: 8,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
+                  color: _kReelAccent.withOpacity(0.16),
+                  border: Border.all(
+                    color: _kReelAccent.withOpacity(0.28),
+                  ),
                 ),
                 child: Icon(
-                  icon, 
-                  color: Colors.white, 
-                  size: 32,
+                  icon,
+                  color: _kReelAccent,
+                  size: 30,
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 18),
             ],
             Text(
               message,
               textAlign: TextAlign.center,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyLarge
-                  ?.copyWith(
-                    color: Colors.white, 
-                    height: 1.5,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                color: Colors.white.withOpacity(0.92),
+                height: 1.45,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+              ),
             ),
             if (onAction != null && actionLabel != null) ...[
               const SizedBox(height: 20),
-              Container(
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Colors.white, Color(0xFFF0F0F0)],
+              ElevatedButton(
+                onPressed: onAction,
+                style: ElevatedButton.styleFrom(
+                  elevation: 0,
+                  backgroundColor: _kReelAccent,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
                   ),
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.white.withOpacity(0.3),
-                      blurRadius: 8,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(22),
+                  ),
                 ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: onAction,
-                    borderRadius: BorderRadius.circular(12),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                      child: Text(
-                        actionLabel!,
-                        style: const TextStyle(
-                          color: Colors.black87,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
+                child: Text(
+                  actionLabel!,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
@@ -326,9 +387,13 @@ class _ReelView extends StatefulWidget {
     super.key,
     required this.post,
     required this.mediaResolver,
+    required this.isActive,
+    required this.onDwell,
   });
   final Post post;
   final MediaPathResolver mediaResolver;
+  final bool isActive;
+  final VoidCallback onDwell;
 
   @override
   State<_ReelView> createState() => _ReelViewState();
@@ -339,6 +404,9 @@ class _ReelViewState extends State<_ReelView>
   bool _uiVisible = true;
   final GlobalKey<_ActionsRailState> _actionsKey = GlobalKey<_ActionsRailState>();
   late final AnimationController _discCtrl;
+  Timer? _dwellTimer;
+  bool _showDoubleTapHeart = false;
+  Timer? _heartTimer;
 
   @override
   void initState() {
@@ -346,10 +414,43 @@ class _ReelViewState extends State<_ReelView>
     _discCtrl =
         AnimationController(vsync: this, duration: const Duration(seconds: 5))
           ..repeat();
+    if (widget.isActive) _startDwellTimer();
   }
 
   @override
+  void didUpdateWidget(covariant _ReelView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isActive && !oldWidget.isActive) {
+      _startDwellTimer();
+    } else if (!widget.isActive && oldWidget.isActive) {
+      _dwellTimer?.cancel();
+    }
+  }
+
+  // View counts only after ~3s of dwell, so fast flicks don't report.
+  void _startDwellTimer() {
+    _dwellTimer?.cancel();
+    _dwellTimer = Timer(const Duration(seconds: 3), widget.onDwell);
+  }
+  void _handleDoubleTap() {
+    _actionsKey.currentState?.triggerReactionToggle();
+
+    setState(() {
+      _showDoubleTapHeart = true;
+    });
+
+    _heartTimer?.cancel();
+    _heartTimer = Timer(const Duration(milliseconds: 650), () {
+      if (!mounted) return;
+      setState(() {
+        _showDoubleTapHeart = false;
+      });
+    });
+  }
+  @override
   void dispose() {
+    _dwellTimer?.cancel();
+    _heartTimer?.cancel();
     _discCtrl.dispose();
     super.dispose();
   }
@@ -360,22 +461,20 @@ class _ReelViewState extends State<_ReelView>
   Widget build(BuildContext context) {
     final p = widget.post;
     final mediaResolver = widget.mediaResolver;
+    final bottomInset = MediaQuery.of(context).padding.bottom;
 
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: _toggleUI,
-      onDoubleTap: () {
-        // Use the same reaction flow as the actions rail
-        _actionsKey.currentState?.triggerReactionToggle();
-      },
+      onDoubleTap: _handleDoubleTap,
       child: Stack(
         fit: StackFit.expand,
         children: [
-          // Video
           if (p.video != null)
             VideoReelsPlayer(
               video: p.video!,
               mediaResolver: mediaResolver,
-              autoplay: true,
+              autoplay: widget.isActive,
               muted: false,
               loop: true,
               enableCaching: true,
@@ -383,55 +482,87 @@ class _ReelViewState extends State<_ReelView>
           else
             Container(color: Colors.black),
 
-          // Cinematic gradient
           const _GlassGradients(),
 
-          // Top glass bar
-          if(false)
-          AnimatedPositioned(
-            duration: const Duration(milliseconds: 200),
-            top: _uiVisible ? MediaQuery.of(context).padding.top + 8 : -72,
-            left: 12,
-            right: 12,
-            child: const _TopGlassBar(),
-          ),
-
-          // Bottom: caption + profile pill + hashtags
-          AnimatedOpacity(
-            duration: const Duration(milliseconds: 200),
-            opacity: _uiVisible ? 1 : 0,
-            child: Align(
-              alignment: Alignment.bottomLeft,
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(
-                  14,
-                  0,
-                  88,
-                  18 + MediaQuery.of(context).padding.bottom,
+          IgnorePointer(
+            child: AnimatedOpacity(
+              opacity: _showDoubleTapHeart ? 1 : 0,
+              duration: const Duration(milliseconds: 120),
+              child: AnimatedScale(
+                scale: _showDoubleTapHeart ? 1 : 0.65,
+                duration: const Duration(milliseconds: 220),
+                curve: Curves.easeOutBack,
+                child: const Center(
+                  child: Icon(
+                    Icons.favorite,
+                    color: Colors.white,
+                    size: 108,
+                    shadows: [
+                      Shadow(
+                        color: Colors.black54,
+                        blurRadius: 20,
+                      ),
+                    ],
+                  ),
                 ),
-                child: _CaptionAndOwner(post: p, mediaResolver: mediaResolver),
               ),
             ),
           ),
 
-          // Right rail actions
-          AnimatedOpacity(
-            duration: const Duration(milliseconds: 200),
-            opacity: _uiVisible ? 1 : 0,
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(
-                  0,
-                  0,
-                  12,
-                  18 + MediaQuery.of(context).padding.bottom,
+          // IgnorePointer so hidden overlays don't keep receiving taps.
+          IgnorePointer(
+            ignoring: !_uiVisible,
+            child: AnimatedOpacity(
+              duration: const Duration(milliseconds: 180),
+              opacity: _uiVisible ? 1 : 0,
+              child: Align(
+                alignment: Alignment.bottomLeft,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    16,
+                    0,
+                    _kRightRailWidth + 14,
+                    22 + bottomInset,
+                  ),
+                  child: AnimatedSlide(
+                    duration: const Duration(milliseconds: 220),
+                    curve: Curves.easeOut,
+                    offset: _uiVisible ? Offset.zero : const Offset(0, 0.08),
+                    child: _CaptionAndOwner(
+                      post: p,
+                      mediaResolver: mediaResolver,
+                    ),
+                  ),
                 ),
-                child: _ActionsRail(
-                  key: _actionsKey,
-                  post: p,
-                  discController: _discCtrl,
-                  mediaResolver: mediaResolver,
+              ),
+            ),
+          ),
+
+          IgnorePointer(
+            ignoring: !_uiVisible,
+            child: AnimatedOpacity(
+              duration: const Duration(milliseconds: 180),
+              opacity: _uiVisible ? 1 : 0,
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    0,
+                    0,
+                    12,
+                    22 + bottomInset,
+                  ),
+                  child: AnimatedSlide(
+                    duration: const Duration(milliseconds: 220),
+                    curve: Curves.easeOut,
+                    offset: _uiVisible ? Offset.zero : const Offset(0, 0.08),
+                    child: _ActionsRail(
+                      key: _actionsKey,
+                      post: p,
+                      discController: _discCtrl,
+                      mediaResolver: mediaResolver,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -448,139 +579,42 @@ class _GlassGradients extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IgnorePointer(
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            stops: const [0, .18, .6, 1],
-            colors: [
-              Colors.black.withOpacity(.55),
-              Colors.transparent,
-              Colors.transparent,
-              Colors.black.withOpacity(.75),
-            ],
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: const [0, 0.20, 0.58, 1],
+                  colors: [
+                    Colors.black.withOpacity(0.58),
+                    Colors.transparent,
+                    Colors.transparent,
+                    Colors.black.withOpacity(0.86),
+                  ],
+                ),
+              ),
+            ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _TopGlassBar extends StatelessWidget {
-  const _TopGlassBar();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Colors.black.withOpacity(0.4),
-            Colors.black.withOpacity(0.2),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: Colors.white.withOpacity(0.15),
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerRight,
+                  end: Alignment.centerLeft,
+                  stops: const [0, 0.22, 0.55],
+                  colors: [
+                    Colors.black.withOpacity(0.22),
+                    Colors.transparent,
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
           ),
         ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.white.withOpacity(0.2),
-                      Colors.white.withOpacity(0.1),
-                    ],
-                  ),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Iconsax.video_play, 
-                  color: Colors.white, 
-                  size: 16,
-                ),
-              ),
-              const SizedBox(width: 12),
-              const Text(
-                'Reels',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 16,
-                  letterSpacing: 0.5,
-                ),
-              ),
-              const Spacer(),
-              _buildGlassButton(
-                icon: Iconsax.search_normal_1,
-                onTap: () {},
-                tooltip: 'Search',
-              ),
-              const SizedBox(width: 8),
-              _buildGlassButton(
-                icon: Iconsax.setting_2,
-                onTap: () {},
-                tooltip: 'Settings',
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildGlassButton({
-    required IconData icon,
-    required VoidCallback onTap,
-    required String tooltip,
-  }) {
-    return Tooltip(
-      message: tooltip,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(12),
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Colors.white.withOpacity(0.15),
-                  Colors.white.withOpacity(0.05),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: Colors.white.withOpacity(0.1),
-                width: 0.5,
-              ),
-            ),
-            child: Icon(
-              icon,
-              color: Colors.white,
-              size: 18,
-            ),
-          ),
-        ),
       ),
     );
   }
@@ -700,238 +734,232 @@ class _CaptionAndOwnerState extends State<_CaptionAndOwner> {
   @override
   Widget build(BuildContext context) {
     final post = widget.post;
-    final avatar = (post.authorAvatarUrl != null && post.authorAvatarUrl!.isNotEmpty)
-        ? CachedNetworkImageProvider(widget.mediaResolver(post.authorAvatarUrl!).toString())
+    final avatar = post.authorAvatarUrl != null && post.authorAvatarUrl!.isNotEmpty
+        ? CachedNetworkImageProvider(
+      widget.mediaResolver(post.authorAvatarUrl!).toString(),
+    )
         : null;
+
     final canFollow = post.authorType == 'user' && !_isOwner && _authorId != null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        // Enhanced owner pill + follow
-        InkWell(
-          onTap: (widget.post.authorType == 'user' && _authorId != null)
-              ? _goToProfile
-              : null,
-          borderRadius: BorderRadius.circular(16),
-          child: Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Colors.black.withOpacity(0.6),
-                  Colors.black.withOpacity(0.4),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: Colors.white.withOpacity(0.15),
-                width: 1,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.4),
-                  blurRadius: 12,
-                  offset: const Offset(0, 6),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Stack(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: LinearGradient(
-                          colors: [
-                            Colors.white.withOpacity(0.3),
-                            Colors.white.withOpacity(0.1),
-                          ],
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.white.withOpacity(0.2),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: CircleAvatar(
-                        radius: 16,
-                        backgroundColor: Colors.transparent,
-                        backgroundImage: avatar,
-                        child: avatar == null
-                            ? const Icon(Iconsax.user, color: Colors.white, size: 18)
-                            : null,
-                      ),
-                    ),
-                    // مؤشر حالة الاتصال للمستخدمين فقط
-                    if (post.authorType == 'user' && post.authorIsOnline)
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                          width: 10,
-                          height: 10,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.green,
-                            border: Border.all(
-                              color: Colors.white,
-                              width: 2,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.3),
-                                offset: const Offset(0, 1),
-                                blurRadius: 2,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  post.authorName,
-                  style: const TextStyle(
-                    color: Colors.white, 
-                    fontWeight: FontWeight.w700,
-                    fontSize: 15,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                if (canFollow)
-                  SizedBox(
-                    height: 34,
-                    child: ElevatedButton(
-                      onPressed: _isLoadingFollow ? null : _toggleFollow,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: _isFollowing ? Colors.white : const Color(0xFFE1306C),
-                        foregroundColor: _isFollowing ? Colors.black87 : Colors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18),
-                        ),
-                      ),
-                      child: _isLoadingFollow
-                          ? const SizedBox(
-                              width: 16,
-                              height: 16,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                          : Text(
-                              _isFollowing ? 'following'.tr : 'Follow',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 13,
-                              ),
-                            ),
-                    ),
-                  ),
-              ],
-            ),
-          ),
+        _buildAuthorRow(
+          post: post,
+          avatar: avatar,
+          canFollow: canFollow,
         ),
-        const SizedBox(height: 12),
-        if (post.text.isNotEmpty)
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Colors.black.withOpacity(0.4),
-                  Colors.black.withOpacity(0.2),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: Colors.white.withOpacity(0.1),
-                width: 0.5,
-              ),
-            ),
-            child: Text(
-              post.text,
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: Colors.white.withOpacity(0.95),
-                height: 1.4,
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ),
-        const SizedBox(height: 12),
-        // Enhanced music line
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Colors.black.withOpacity(0.3),
-                Colors.black.withOpacity(0.1),
-              ],
-            ),
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: Colors.white.withOpacity(0.08),
-              width: 0.5,
-            ),
-          ),
-          child: Row(
+        if (post.text.trim().isNotEmpty) ...[
+          const SizedBox(height: 10),
+          _buildCaption(post.text),
+        ],
+        const SizedBox(height: 10),
+        _buildSoundPill(post),
+      ],
+    );
+  }
+
+  Widget _buildAuthorRow({
+    required Post post,
+    required ImageProvider? avatar,
+    required bool canFollow,
+  }) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        InkWell(
+          onTap: post.authorType == 'user' && _authorId != null ? _goToProfile : null,
+          customBorder: const CircleBorder(),
+          child: Stack(
             children: [
               Container(
-                padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.white.withOpacity(0.2),
-                      Colors.white.withOpacity(0.1),
-                    ],
-                  ),
                   shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Iconsax.music, 
-                  color: Colors.white70, 
-                  size: 14,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Flexible(
-                child: Text(
-                  'Original audio • ${post.authorName}',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Colors.white70, 
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+                  border: Border.all(
+                    color: Colors.white.withOpacity(0.85),
+                    width: 1.6,
                   ),
                 ),
+                child: CircleAvatar(
+                  radius: 18,
+                  backgroundColor: Colors.white24,
+                  backgroundImage: avatar,
+                  child: avatar == null
+                      ? const Icon(
+                    Iconsax.user,
+                    color: Colors.white,
+                    size: 18,
+                  )
+                      : null,
+                ),
               ),
+              if (post.authorType == 'user' && post.authorIsOnline)
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: Container(
+                    width: 10,
+                    height: 10,
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 1.8,
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
         ),
+        const SizedBox(width: 10),
+        Flexible(
+          child: InkWell(
+            onTap: post.authorType == 'user' && _authorId != null ? _goToProfile : null,
+            child: Text(
+              post.authorName,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 15,
+                fontWeight: FontWeight.w800,
+                shadows: [
+                  Shadow(
+                    color: Colors.black54,
+                    blurRadius: 8,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        if (canFollow) ...[
+          const SizedBox(width: 10),
+          _buildFollowButton(),
+        ],
       ],
+    );
+  }
+
+  Widget _buildFollowButton() {
+    return SizedBox(
+      height: 30,
+      child: ElevatedButton(
+        onPressed: _isLoadingFollow ? null : _toggleFollow,
+        style: ElevatedButton.styleFrom(
+          elevation: 0,
+          backgroundColor: _isFollowing ? Colors.white : _kReelAccent,
+          disabledBackgroundColor: Colors.white24,
+          foregroundColor: _isFollowing ? Colors.black87 : Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 13),
+          minimumSize: Size.zero,
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+          ),
+        ),
+        child: _isLoadingFollow
+            ? SizedBox(
+          width: 14,
+          height: 14,
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            color: _isFollowing ? Colors.black87 : Colors.white,
+          ),
+        )
+            : Text(
+          _isFollowing ? 'following'.tr : 'Follow',
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCaption(String text) {
+    return Text(
+      text,
+      maxLines: 3,
+      overflow: TextOverflow.ellipsis,
+      style: TextStyle(
+        color: Colors.white.withOpacity(0.96),
+        fontSize: 14,
+        fontWeight: FontWeight.w500,
+        height: 1.35,
+        shadows: const [
+          Shadow(
+            color: Colors.black87,
+            blurRadius: 10,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSoundPill(Post post) {
+    final soundText = post.soundTitle ?? 'Original audio • ${post.authorName}';
+
+    return GestureDetector(
+      onTap: post.soundUrl != null ? () => showUseSoundSheet(context, post) : null,
+      child: Container(
+        constraints: const BoxConstraints(maxWidth: 280),
+        padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.34),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(
+            color: Colors.white.withOpacity(0.08),
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(
+              Iconsax.music,
+              color: Colors.white,
+              size: 14,
+            ),
+            const SizedBox(width: 7),
+            Flexible(
+              child: Text(
+                soundText,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.88),
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            if (post.soundUrl != null) ...[
+              const SizedBox(width: 6),
+              Icon(
+                Iconsax.arrow_right_3,
+                color: Colors.white.withOpacity(0.62),
+                size: 12,
+              ),
+            ],
+          ],
+        ),
+      ),
     );
   }
 }
 
 class _ActionsRail extends StatefulWidget {
   const _ActionsRail({
-    Key? key,
+    super.key,
     required this.post,
     required this.discController,
     required this.mediaResolver,
-  }) : super(key: key);
+  });
 
   final Post post;
   final AnimationController discController;
@@ -955,7 +983,7 @@ class _ActionsRailState extends State<_ActionsRail> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _reelsService = ReelsManagementApiService(context.read<ApiClient>());
+    _reelsService = context.read<ReelsManagementApiService>();
   }
 
   @override
@@ -1206,6 +1234,8 @@ class _ActionsRailState extends State<_ActionsRail> {
         action: action.value,
       );
 
+      if (!mounted) return;
+
       // تحديث الحالة حسب النوع
       setState(() {
         switch (action) {
@@ -1248,172 +1278,229 @@ class _ActionsRailState extends State<_ActionsRail> {
       }
     }
   }
-
   @override
   Widget build(BuildContext context) {
     final hasReaction = _currentPost.myReaction != null;
-    final reactionModel = hasReaction 
+    final reactionModel = hasReaction
         ? ReactionsService.instance.getReactionByName(_currentPost.myReaction!)
         : null;
 
-    Widget btn(IconData i, {String? label, Color? activeColor, bool active = false, VoidCallback? onTap, VoidCallback? onLongPress}) {
-      final c = active ? (activeColor ?? Colors.red) : Colors.white;
-      return InkWell(
-        onTap: onTap,
-        onLongPress: onLongPress,
-        customBorder: const CircleBorder(),
-        child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 8),
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(14),
+    final avatar = _currentPost.authorAvatarUrl != null &&
+        _currentPost.authorAvatarUrl!.isNotEmpty
+        ? CachedNetworkImageProvider(
+      widget.mediaResolver(_currentPost.authorAvatarUrl!).toString(),
+    )
+        : null;
+
+    return SizedBox(
+      width: 64,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _ReelRailButton(
+            icon: Iconsax.heart,
+            label: _currentPost.reactionsCountFormatted,
+            active: hasReaction,
+            activeColor: reactionModel?.colorValue ?? Colors.red,
+            reactionType: _currentPost.myReaction,
+            onTap: _handleReaction,
+            onLongPress: _showReactionsPicker,
+            onLabelTap:
+            _currentPost.reactionsCount > 0 ? _showReactionUsers : null,
+          ),
+          _ReelRailButton(
+            icon: Iconsax.message,
+            label: _currentPost.commentsCountFormatted,
+            onTap: _showComments,
+          ),
+          _ReelRailButton(
+            icon: Iconsax.send_2,
+            label: _currentPost.sharesCountFormatted,
+            onTap: _showShareDialog,
+          ),
+          _ReelRailButton(
+            icon: Iconsax.more,
+            onTap: _showMenu,
+          ),
+          const SizedBox(height: 10),
+          _MusicDisc(
+            avatar: avatar,
+            controller: widget.discController,
+            // Only tappable when the reel has a reusable sound.
+            onTap: _currentPost.soundUrl != null ? _openSoundScreen : null,
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _openSoundScreen() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (_) => ReelSoundScreen(
+        sourcePost: _currentPost,
+        mediaResolver: widget.mediaResolver,
+      ),
+    ));
+  }
+  @override
+  void dispose() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+    super.dispose();
+  }
+
+}
+class _ReelRailButton extends StatelessWidget {
+  const _ReelRailButton({
+    required this.icon,
+    this.label,
+    this.active = false,
+    this.activeColor,
+    this.reactionType,
+    this.onTap,
+    this.onLongPress,
+    this.onLabelTap,
+  });
+
+  final IconData icon;
+  final String? label;
+  final bool active;
+  final Color? activeColor;
+  final String? reactionType;
+  final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
+  final VoidCallback? onLabelTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = active ? (activeColor ?? Colors.red) : Colors.white;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Column(
+        children: [
+          Material(
+            color: Colors.transparent,
+            shape: const CircleBorder(),
+            child: InkWell(
+              onTap: onTap,
+              onLongPress: onLongPress,
+              customBorder: const CircleBorder(),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 160),
+                width: 48,
+                height: 48,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: active 
-                      ? [
-                          (activeColor ?? Colors.red).withOpacity(0.3),
-                          (activeColor ?? Colors.red).withOpacity(0.1),
-                        ]
-                      : [
-                          Colors.black.withOpacity(0.5),
-                          Colors.black.withOpacity(0.3),
-                        ],
-                  ),
+                  color: active
+                      ? color.withOpacity(0.18)
+                      : Colors.black.withOpacity(0.30),
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: active 
-                      ? (activeColor ?? Colors.red).withOpacity(0.4)
-                      : Colors.white.withOpacity(0.15),
-                    width: 1.5,
+                    color: active
+                        ? color.withOpacity(0.38)
+                        : Colors.white.withOpacity(0.10),
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: active 
-                        ? (activeColor ?? Colors.red).withOpacity(0.3)
-                        : Colors.black.withOpacity(0.4),
-                      blurRadius: active ? 12 : 8,
+                      color: Colors.black.withOpacity(0.28),
+                      blurRadius: 10,
                       offset: const Offset(0, 4),
                     ),
                   ],
                 ),
-                child: reactionModel != null && active
-                    ? _ReactionIcon(type: _currentPost.myReaction!, size: 28)
-                    : Icon(i, color: c, size: 28),
-              ),
-              if (label != null) ...[
-                const SizedBox(height: 8),
-                GestureDetector(
-                  onTap: _currentPost.reactionsCount > 0 ? _showReactionUsers : null,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.black.withOpacity(0.4),
-                          Colors.black.withOpacity(0.2),
-                        ],
-                      ),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: Colors.white.withOpacity(0.1),
-                        width: 0.5,
-                      ),
-                    ),
-                    child: Text(
-                      label,
-                      style: const TextStyle(
-                        color: Colors.white, 
-                        fontSize: 12, 
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                child: Center(
+                  child: active && reactionType != null
+                      ? _ReactionIcon(type: reactionType!, size: 27)
+                      : Icon(
+                    icon,
+                    color: color,
+                    size: 25,
                   ),
                 ),
-              ]
-            ],
+              ),
+            ),
           ),
-        ),
-      );
-    }
-
-    final avatar = (_currentPost.authorAvatarUrl != null &&
-            _currentPost.authorAvatarUrl!.isNotEmpty)
-        ? CachedNetworkImageProvider(
-            widget.mediaResolver(_currentPost.authorAvatarUrl!).toString())
-        : null;
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        btn(
-          Iconsax.heart,
-          label: _currentPost.reactionsCountFormatted,
-          active: hasReaction,
-          activeColor: reactionModel?.colorValue ?? Colors.red,
-          onTap: _handleReaction,
-          onLongPress: _showReactionsPicker,
-        ),
-        btn(Iconsax.message, label: _currentPost.commentsCountFormatted, onTap: _showComments),
-        btn(Iconsax.send_2, label: _currentPost.sharesCountFormatted, onTap: _showShareDialog),
-        btn(Iconsax.more, onTap: _showMenu),
-        const SizedBox(height: 8),
-        // spinning music disc
-        RotationTransition(
-          turns: widget.discController,
-          child: Container(
-            width: 48,
-            height: 48,
-            padding: const EdgeInsets.all(3),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Colors.purple.withOpacity(0.3),
-                  Colors.blue.withOpacity(0.2),
-                  Colors.black.withOpacity(0.4),
-                ],
-              ),
-              border: Border.all(
-                color: Colors.white.withOpacity(0.2),
-                width: 1.5,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.purple.withOpacity(0.2),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
+          if (label != null) ...[
+            const SizedBox(height: 5),
+            GestureDetector(
+              onTap: onLabelTap,
+              child: Text(
+                label!,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w800,
+                  shadows: [
+                    Shadow(
+                      color: Colors.black87,
+                      blurRadius: 8,
+                    ),
+                  ],
                 ),
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// Rotating sound disc at the bottom of the action rail. Tappable only when
+/// the reel has a reusable sound (opens [ReelSoundScreen]).
+class _MusicDisc extends StatelessWidget {
+  const _MusicDisc({
+    required this.avatar,
+    required this.controller,
+    this.onTap,
+  });
+
+  final ImageProvider? avatar;
+  final AnimationController controller;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: RotationTransition(
+        turns: controller,
+        child: Container(
+          width: 46,
+          height: 46,
+          padding: const EdgeInsets.all(3),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: const LinearGradient(
+              colors: [
+                Color(0xFFE1306C),
+                Color(0xFF8B5CF6),
+                Color(0xFF111111),
               ],
             ),
-            child: Container(
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.35),
+                blurRadius: 12,
+                offset: const Offset(0, 5),
               ),
-              child: CircleAvatar(
-                backgroundColor: Colors.grey.withOpacity(0.2),
-                backgroundImage: avatar,
-                child: avatar == null
-                    ? Icon(
-                        Iconsax.music,
-                        color: Colors.white.withOpacity(0.9),
-                        size: 18,
-                      )
-                    : null,
-              ),
-            ),
+            ],
+          ),
+          child: CircleAvatar(
+            backgroundColor: Colors.black,
+            backgroundImage: avatar,
+            child: avatar == null
+                ? const Icon(
+                    Iconsax.music,
+                    color: Colors.white,
+                    size: 17,
+                  )
+                : null,
           ),
         ),
-      ],
+      ),
     );
   }
 }
@@ -1489,14 +1576,22 @@ class _ReactionPickerState extends State<_ReactionPicker>
     final reactions = ReactionsService.instance.getReactions();
 
     return Material(
-      elevation: 8,
-      borderRadius: BorderRadius.circular(30),
+      color: Colors.transparent,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.8),
+          color: _kReelSurface.withOpacity(0.94),
           borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: Colors.white.withOpacity(0.1)),
+          border: Border.all(
+            color: Colors.white.withOpacity(0.12),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.35),
+              blurRadius: 18,
+              offset: const Offset(0, 8),
+            ),
+          ],
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,

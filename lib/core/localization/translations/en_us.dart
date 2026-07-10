@@ -2240,6 +2240,12 @@ const Map<String, String> enUS = {
   'select_video': 'Select Video',
   'uploading_video': 'Uploading video...',
   'add_reel_description': 'Add reel description...',
+  'preparing_sound': 'Preparing sound...',
+  'uploading_sound': 'Uploading sound...',
+  'publishing_reel': 'Publishing...',
+  'selected_music': 'Selected music',
+  'use_this_sound': 'Use this sound',
+  'sound_download_failed': 'Could not load this sound. Please try again.',
 
   // Comments Section
   'error_loading_comments': 'Error loading comments',

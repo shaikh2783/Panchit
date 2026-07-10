@@ -55,6 +55,10 @@ import 'package:snginepro/features/profile/data/services/profile_api_service.dar
 import 'package:snginepro/features/reels/application/reels_notifier.dart';
 import 'package:snginepro/features/reels/application/bloc/reels_bloc.dart';
 import 'package:snginepro/features/reels/data/datasources/reels_api_service.dart';
+import 'package:snginepro/features/reels/data/services/audio_extraction_service.dart';
+import 'package:snginepro/features/reels/data/services/music_api_service.dart';
+import 'package:snginepro/features/reels/data/services/reel_upload_service.dart';
+import 'package:snginepro/features/reels/data/services/reels_management_api_service.dart';
 import 'package:snginepro/features/reels/domain/reels_repository.dart';
 // Groups module removed; strip group-related imports
 import 'package:snginepro/features/events/application/bloc/events_bloc.dart';
@@ -166,6 +170,16 @@ class App extends StatelessWidget {
         ),
         Provider<ReelsRepository>(
           create: (context) => ReelsRepository(context.read<ReelsApiService>()),
+        ),
+        Provider<MusicApiService>(
+          create: (context) => MusicApiService(context.read<ApiClient>()),
+        ),
+        Provider<ReelsManagementApiService>(
+          create: (context) =>
+              ReelsManagementApiService(context.read<ApiClient>()),
+        ),
+        Provider<AudioExtractionService>(
+          create: (_) => AudioExtractionService(),
         ),
 
         // Events Service
@@ -333,6 +347,22 @@ class App extends StatelessWidget {
         ),
         ChangeNotifierProvider<ReelsNotifier>(
           create: (context) => ReelsNotifier(context.read<ReelsRepository>()),
+        ),
+        Provider<ReelUploadService>(
+          create: (context) {
+            final auth = context.read<AuthNotifier>();
+            return ReelUploadService(
+              postsService: context.read<PostsApiService>(),
+              musicService: context.read<MusicApiService>(),
+              audioExtractor: context.read<AudioExtractionService>(),
+              usernameProvider: () {
+                final user = auth.currentUser;
+                final username =
+                    user?['user_name'] ?? user?['username'] ?? user?['first_name'];
+                return username?.toString();
+              },
+            );
+          },
         ),
 
         // Dynamic App Config Provider
