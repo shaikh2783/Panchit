@@ -5,39 +5,6 @@ class AppSettings {
 
   /// اسم التطبيق
   static const String appName = 'Panchit';
-  // ==================== إعدادات PayPal ====================
-  // احصل على بيانات الاعتماد من: https://developer.paypal.com/
-
-  /// معرف العميل - وضع الاختبار (Sandbox)
-  /// احصل عليه من: https://developer.paypal.com/dashboard/applications/sandbox
-  static const String paypalSandboxClientId =
-      'AQZ9cJfUrNDIeaN01OBTx-SsfFGQdHLdsW27phb2lHUx630547ZGhVOBXUQk8JgPvn571rre7cr1NE-m';
-
-  /// المفتاح السري - وضع الاختبار (Sandbox)
-  static const String paypalSandboxSecretKey =
-      '';
-
-  /// معرف العميل - الوضع الحقيقي (Production)
-  /// احصل عليه من: https://developer.paypal.com/dashboard/applications/live
-  static const String paypalProductionClientId = 'YOUR_PRODUCTION_CLIENT_ID';
-
-  /// المفتاح السري - الوضع الحقيقي (Production)
-  static const String paypalProductionSecretKey = 'YOUR_PRODUCTION_SECRET_KEY';
-
-  /// استخدام وضع الاختبار؟ (true = Sandbox, false = Production)
-  static const bool paypalUseSandbox = true;
-
-  /// اسم البيئة الحالية
-  static String get paypalEnvironment =>
-      paypalUseSandbox ? 'Sandbox' : 'Production';
-
-  /// التحقق من صحة إعدادات PayPal قبل المعالجة
-  static String? validatePayPalConfig() {
-    if (!isPayPalConfigured) {
-      return 'بيانات PayPal غير مكتملة. يرجى تحديث الإعدادات في app_config.dart';
-    }
-    return null;
-  }
 
   // ==================== إعدادات Agora (البث المباشر) ====================
   // احصل على App ID من: https://console.agora.io/
@@ -70,7 +37,7 @@ class AppSettings {
 
   /// App ID الخاص بـ OneSignal
   /// احصل عليه من: https://app.onesignal.com/ > Settings > Keys & IDs
-  static const String oneSignalAppId = '0dc8d96f-0113-4a2b-ab63-e0cd64d751c7';
+  static const String oneSignalAppId = '4f06c127-3bc9-48be-b08e-fce0f8907d65';
 
   // ==================== إعدادات AdMob (الإعلانات) ====================
   // احصل على App IDs و Ad Unit IDs من: https://apps.admob.com/
@@ -112,7 +79,8 @@ class AppSettings {
 
   /// Reversed Client ID لـ iOS (من GoogleService-Info.plist)
   /// مثال: "com.googleusercontent.apps.123456789-abc123def456"
-  static const String googleReversedClientIdIOS = 'YOUR_REVERSED_CLIENT_ID';
+  static const String googleReversedClientIdIOS =
+      'com.googleusercontent.apps.655828953502-f2sds4bbkom2cbslkctolp3dh6r3uaco';
 
   // ==================== إعدادات الذكاء الاصطناعي (AI) ====================
 
@@ -121,7 +89,7 @@ class AppSettings {
 
   /// مفتاح API للذكاء الاصطناعي (OpenAI, Gemini, إلخ)
   /// احصل عليه من: https://platform.openai.com/api-keys
-  static const String aiApiKey = 'YOUR_OPENAI_API_KEY';
+  static const String aiApiKey = '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';
 
   /// نموذج الذكاء الاصطناعي المستخدم
   /// أمثلة: 'gpt-4', 'gpt-3.5-turbo', 'gemini-pro'
@@ -440,32 +408,6 @@ class AppSettings {
   /// إظهار سجلات التطبيق (Logs)
   static const bool showLogs = true;
 
-  /// التحقق من اكتمال إعدادات PayPal
-  static bool get isPayPalConfigured {
-    if (paypalUseSandbox) {
-      return paypalSandboxClientId.isNotEmpty &&
-          paypalSandboxClientId != 'YOUR_SANDBOX_CLIENT_ID' &&
-          paypalSandboxSecretKey.isNotEmpty &&
-          paypalSandboxSecretKey != 'YOUR_SANDBOX_SECRET_KEY';
-    } else {
-      return paypalProductionClientId.isNotEmpty &&
-          paypalProductionClientId != 'YOUR_PRODUCTION_CLIENT_ID' &&
-          paypalProductionSecretKey.isNotEmpty &&
-          paypalProductionSecretKey != 'YOUR_PRODUCTION_SECRET_KEY';
-    }
-  }
-
-  /// الحصول على معرف عميل PayPal الحالي
-  static String get paypalClientId {
-    return paypalUseSandbox ? paypalSandboxClientId : paypalProductionClientId;
-  }
-
-  /// الحصول على مفتاح PayPal السري الحالي
-  static String get paypalSecretKey {
-    return paypalUseSandbox
-        ? paypalSandboxSecretKey
-        : paypalProductionSecretKey;
-  }
 
   /// التحقق من اكتمال إعدادات Agora
   static bool get isAgoraConfigured {
@@ -475,7 +417,7 @@ class AppSettings {
   /// التحقق من اكتمال إعدادات OneSignal
   static bool get isOneSignalConfigured {
     return oneSignalAppId.isNotEmpty &&
-        oneSignalAppId != 'YOUR_ONESIGNAL_APP_ID';
+        oneSignalAppId != '4f06c127-3bc9-48be-b08e-fce0f8907d65';
   }
 
   /// التحقق من صحة المبلغ للشحن

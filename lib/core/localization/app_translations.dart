@@ -10,18 +10,7 @@ import 'package:snginepro/core/localization/translations/ta_in.dart';
 import 'package:snginepro/core/localization/translations/te_in.dart';
 import 'package:snginepro/core/localization/translations/ur_pk.dart';
 import 'translations/ar_sa.dart';
-import 'translations/de_de.dart';
-import 'translations/el_gr.dart';
 import 'translations/en_us.dart';
-import 'translations/es_es.dart';
-import 'translations/fr_fr.dart';
-import 'translations/it_it.dart';
-import 'translations/nl_nl.dart';
-import 'translations/pt_br.dart';
-import 'translations/pt_pt.dart';
-import 'translations/ro_ro.dart';
-import 'translations/ru_ru.dart';
-import 'translations/tr_tr.dart';
 
 class AppTranslations extends Translations {
   @override
@@ -43,18 +32,5 @@ class AppTranslations extends Translations {
 
     // Urdu
     'ur_PK': urPK,
-
-    // European languages
-    'fr_FR': frFR,
-    'es_ES': esES,
-    'pt_PT': ptPT,
-    'pt_BR': ptBR,
-    'de_DE': deDE,
-    'tr_TR': trTR,
-    'nl_NL': nlNL,
-    'it_IT': itIT,
-    'ru_RU': ruRU,
-    'ro_RO': roRO,
-    'el_GR': elGR,
   };
 }

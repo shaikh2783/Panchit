@@ -30,19 +30,27 @@ class WalletTransaction extends Equatable {
   final Map<String, dynamic>? metadata;
 
   factory WalletTransaction.fromJson(Map<String, dynamic> json) {
+    final type = _toString(json['type']);
+    final direction = _toString(json['direction']);
+    final metadata = _parseMetadata(json['metadata']);
     return WalletTransaction(
       id: _toInt(json['transaction_id'] ?? json['id']),
       amount: _toDouble(json['amount'], fallback: 0),
       amountFormatted: _toString(json['amount_formatted']),
-      type: _toString(json['type']),
-      direction: _toString(json['direction']),
-      label: _toString(json['label']),
+      type: type,
+      direction: direction,
+      label: _resolveLabel(
+        rawLabel: _toString(json['label']),
+        type: type,
+        direction: direction,
+        metadata: metadata,
+      ),
       date: _toString(json['date']),
       timestamp: _toInt(json['timestamp']),
       nodeType: _nullableString(json['node_type']),
       nodeId: _nullableInt(json['node_id']),
       relatedUser: _parseRelatedUser(json['related_user']),
-      metadata: _parseMetadata(json['metadata']),
+      metadata: metadata,
     );
   }
 
@@ -88,6 +96,36 @@ class WalletTransaction extends Equatable {
       return value;
     }
     return null;
+  }
+
+  static String _resolveLabel({
+    required String rawLabel,
+    required String type,
+    required String direction,
+    required Map<String, dynamic>? metadata,
+  }) {
+    if (rawLabel.trim().isNotEmpty) {
+      return rawLabel;
+    }
+
+    final normalizedType = type.toLowerCase();
+    final normalizedDirection = direction.toLowerCase();
+    if (normalizedType.contains('competition') &&
+        normalizedType.contains('refund')) {
+      return 'Competition Refund';
+    }
+    if (normalizedType.contains('competition') &&
+        (normalizedType.contains('prize') || normalizedDirection == 'credit')) {
+      return 'Competition Prize Won';
+    }
+    if (normalizedType.contains('competition') ||
+        metadata?['competition_id'] != null ||
+        metadata?['competition_name'] != null) {
+      return normalizedDirection == 'credit'
+          ? 'Competition Prize Won'
+          : 'Competition Entry Fee Deducted';
+    }
+    return rawLabel;
   }
 
   @override

@@ -18,12 +18,16 @@ class ApiClient {
 
   void _log(String msg) {
     if (!kDebugMode) return;
-    debugPrint(msg);
+    // debugPrint splits at 1024 chars by default; use a custom chunked print
+    // to show the full response without truncation.
+    const chunkSize = 800;
+    for (var i = 0; i < msg.length; i += chunkSize) {
+      debugPrint(msg.substring(i, i + chunkSize > msg.length ? msg.length : i + chunkSize));
+    }
   }
 
-  String _truncate(String s, [int max = 1200]) {
-    if (s.length <= max) return s;
-    return '${s.substring(0, max)}...';
+  String _truncate(String s, [int max = 999999]) {
+    return s;
   }
   final AppConfig _config;
   final http.Client _httpClient;
@@ -32,6 +36,8 @@ class ApiClient {
   void updateAuthToken(String? token) {
     _authToken = token;
   }
+
+  bool get hasAuthToken => _authToken != null && _authToken!.isNotEmpty;
 
   Future<Map<String, dynamic>> post(
     String relativePath, {
