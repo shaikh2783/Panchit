@@ -2872,7 +2872,6 @@ const Map<String, String> arSA = {
   'tap_to_apply': 'اضغط للتطبيق',
   'drag_choose_song_part': 'اسحب لاختيار الجزء الذي يتم تشغيله من الأغنية',
   'categories': 'الفئات',
-  "choose_another":"اختر خيارًا آخر",
 
   // Competition Detail Page
   "competition_details": "تفاصيل المسابقة",
