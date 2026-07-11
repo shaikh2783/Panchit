@@ -3148,5 +3148,8 @@ const Map<String, String> knIN = {
   "widget_current_rank": "ಪ್ರಸ್ತುತ ಶ್ರೇಣಿ: #@rank",
   "widget_prize_won": "ಗೆದ್ದ ಬಹುಮಾನ: @amount",
   "widget_refund": "ಮರುಪಾವತಿ: @status",
-  "widget_timer_unavailable": "ಟೈಮರ್ ಲಭ್ಯವಿಲ್ಲ"
+  "widget_timer_unavailable": "ಟೈಮರ್ ಲಭ್ಯವಿಲ್ಲ",
+  "hub_no_filtered_competitions": "\"@category\" ಸ್ಪರ್ಧೆಗಳಿಲ್ಲ",
+  "hub_no_filtered_msg": "ಈ ವಿಭಾಗಕ್ಕೆ ಯಾವುದೇ ಸ್ಪರ್ಧೆಗಳು ಹೊಂದಿಕೆಯಾಗುತ್ತಿಲ್ಲ. ಬೇರೆ ಫಿಲ್ಟರ್ ಪ್ರಯತ್ನಿಸಿ.",
+  "hub_clear_filter": "ಫಿಲ್ಟರ್ ತೆರವುಗೊಳಿಸಿ"
 };

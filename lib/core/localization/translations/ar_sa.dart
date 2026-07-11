@@ -2934,6 +2934,12 @@ const Map<String, String> arSA = {
   "widget_prize_won": "الجائزة المُحرزة: @amount",
   "widget_refund": "الاسترداد: @status",
   "widget_timer_unavailable": "المؤقت غير متاح",
+
+  // Hub Filter
+  "hub_no_filtered_competitions": "لا توجد مسابقات \"@category\"",
+  "hub_no_filtered_msg": "لا توجد مسابقات تطابق هذه الفئة. جرّب فلتراً مختلفاً.",
+  "hub_clear_filter": "مسح الفلتر"
+  "widget_timer_unavailable": "المؤقت غير متاح",
   // Reels module
   'use_camera_music_filters': 'استخدم الكاميرا مع الموسيقى والفلاتر',
   'upload_from_gallery': 'رفع من المعرض',

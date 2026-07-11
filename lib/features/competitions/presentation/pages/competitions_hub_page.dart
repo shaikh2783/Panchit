@@ -229,6 +229,17 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
                       errorTitle: 'hub_live_load_failed'.tr,
                       errorMessage: _liveError,
                       onRetry: _loadLiveCompetitions,
+                      emptyIcon: Iconsax.flash_1,
+                      emptyAccentColor: const Color(0xFF14B8A6),
+                      filteredEmptyTitle: _selectedCategory != null
+                          ? 'hub_no_filtered_competitions'.trParams({'category': _selectedCategory!})
+                          : null,
+                      filteredEmptyMessage: _selectedCategory != null
+                          ? 'hub_no_filtered_msg'.tr
+                          : null,
+                      onClearFilter: _selectedCategory != null
+                          ? () => setState(() => _selectedCategory = null)
+                          : null,
                       cardBuilder: (c) => _CompetitionHubCard(
                         competition: c,
                         primaryLabel: c.isJoined ? 'competition_action_view_my_entry'.tr : 'hub_join_now'.tr,
@@ -248,6 +259,17 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
                       errorTitle: 'hub_upcoming_load_failed'.tr,
                       errorMessage: _upcomingError,
                       onRetry: _loadUpcomingCompetitions,
+                      emptyIcon: Iconsax.calendar_1,
+                      emptyAccentColor: const Color(0xFF6366F1),
+                      filteredEmptyTitle: _selectedCategory != null
+                          ? 'hub_no_filtered_competitions'.trParams({'category': _selectedCategory!})
+                          : null,
+                      filteredEmptyMessage: _selectedCategory != null
+                          ? 'hub_no_filtered_msg'.tr
+                          : null,
+                      onClearFilter: _selectedCategory != null
+                          ? () => setState(() => _selectedCategory = null)
+                          : null,
                       cardBuilder: (c) => _CompetitionHubCard(
                         competition: c,
                         primaryLabel: _notifyingCompetitionIds.contains(c.id)
@@ -275,6 +297,17 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
                       errorTitle: 'hub_past_load_failed'.tr,
                       errorMessage: _pastError,
                       onRetry: _loadPastCompetitions,
+                      emptyIcon: Iconsax.crown_1,
+                      emptyAccentColor: const Color(0xFFF59E0B),
+                      filteredEmptyTitle: _selectedCategory != null
+                          ? 'hub_no_filtered_competitions'.trParams({'category': _selectedCategory!})
+                          : null,
+                      filteredEmptyMessage: _selectedCategory != null
+                          ? 'hub_no_filtered_msg'.tr
+                          : null,
+                      onClearFilter: _selectedCategory != null
+                          ? () => setState(() => _selectedCategory = null)
+                          : null,
                       cardBuilder: (c) => _CompetitionHubCard(
                         competition: c,
                         primaryLabel: 'competition_action_view_winners'.tr,
@@ -545,15 +578,22 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
     required String? errorMessage,
     required Future<void> Function() onRetry,
     required Widget Function(CompetitionModel) cardBuilder,
+    IconData emptyIcon = Iconsax.cup,
+    Color? emptyAccentColor,
+    String? filteredEmptyTitle,
+    String? filteredEmptyMessage,
+    VoidCallback? onClearFilter,
   }) {
     switch (state) {
       case CompetitionListState.initial:
       case CompetitionListState.loading:
         return const Center(child: CircularProgressIndicator());
       case CompetitionListState.empty:
-        return CompetitionSectionPlaceholder(
+        return _CompetitionsEmptyState(
           title: emptyTitle,
           message: emptyMessage,
+          icon: emptyIcon,
+          accentColor: emptyAccentColor,
         );
       case CompetitionListState.error:
         return CompetitionSectionPlaceholder(
@@ -563,6 +603,16 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
           onRetry: onRetry,
         );
       case CompetitionListState.success:
+        if (competitions.isEmpty) {
+          return _CompetitionsEmptyState(
+            title: filteredEmptyTitle ?? emptyTitle,
+            message: filteredEmptyMessage ?? emptyMessage,
+            icon: emptyIcon,
+            accentColor: emptyAccentColor,
+            actionLabel: onClearFilter != null ? 'hub_clear_filter'.tr : null,
+            onAction: onClearFilter,
+          );
+        }
         return ListView.separated(
           padding: const EdgeInsets.fromLTRB(
             Spacing.lg,
@@ -877,6 +927,155 @@ class _CompetitionHubCard extends StatelessWidget {
           Iconsax.cup,
           size: 48,
           color: Colors.white.withValues(alpha: 0.3),
+        ),
+      ),
+    );
+  }
+}
+
+// ── Empty state ───────────────────────────────────────────────────────────────
+
+class _CompetitionsEmptyState extends StatelessWidget {
+  const _CompetitionsEmptyState({
+    required this.title,
+    required this.message,
+    required this.icon,
+    this.accentColor,
+    this.actionLabel,
+    this.onAction,
+  });
+
+  final String title;
+  final String message;
+  final IconData icon;
+  final Color? accentColor;
+  final String? actionLabel;
+  final VoidCallback? onAction;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final color = accentColor ?? theme.colorScheme.primary;
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(
+          horizontal: Spacing.xxxl,
+          vertical: Spacing.xl,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Layered circles with icon
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  width: 128,
+                  height: 128,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: color.withValues(alpha: isDark ? 0.08 : 0.06),
+                  ),
+                ),
+                Container(
+                  width: 96,
+                  height: 96,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: color.withValues(alpha: isDark ? 0.13 : 0.10),
+                  ),
+                ),
+                Container(
+                  width: 68,
+                  height: 68,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        color,
+                        color.withValues(alpha: 0.75),
+                      ],
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: color.withValues(alpha: 0.35),
+                        blurRadius: 24,
+                        spreadRadius: 2,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  child: Icon(icon, size: 32, color: Colors.white),
+                ),
+              ],
+            ),
+            const SizedBox(height: Spacing.xl),
+
+            // Title
+            Text(
+              title,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w800,
+                letterSpacing: -0.3,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: Spacing.sm),
+
+            // Message
+            Text(
+              message,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
+                height: 1.6,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: Spacing.xl),
+
+            // Decorative divider dots
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(3, (i) {
+                return Container(
+                  width: i == 1 ? 20 : 6,
+                  height: 6,
+                  margin: const EdgeInsets.symmetric(horizontal: 3),
+                  decoration: BoxDecoration(
+                    color: i == 1
+                        ? color.withValues(alpha: 0.7)
+                        : color.withValues(alpha: 0.25),
+                    borderRadius: BorderRadius.circular(Radii.pill),
+                  ),
+                );
+              }),
+            ),
+
+            // Clear-filter action button
+            if (actionLabel != null && onAction != null) ...[
+              const SizedBox(height: Spacing.lg),
+              OutlinedButton.icon(
+                onPressed: onAction,
+                icon: const Icon(Icons.filter_alt_off_outlined, size: 18),
+                label: Text(actionLabel!),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: color,
+                  side: BorderSide(color: color.withValues(alpha: 0.6)),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: Spacing.lg,
+                    vertical: Spacing.sm,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(Radii.pill),
+                  ),
+                ),
+              ),
+            ],
+          ],
         ),
       ),
     );

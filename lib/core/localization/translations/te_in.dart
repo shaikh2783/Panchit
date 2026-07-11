@@ -2960,6 +2960,9 @@ const Map<String, String> teIN = {
   "widget_prize_won": "గెలిచిన బహుమతి: @amount",
   "widget_refund": "వాపసు: @status",
   "widget_timer_unavailable": "టైమర్ అందుబాటులో లేదు",
+  "hub_no_filtered_competitions": "\"@category\" పోటీలు లేవు",
+  "hub_no_filtered_msg": "ఈ వర్గానికి సరిపోయే పోటీలేవీ లేవు. వేరే ఫిల్టర్ ప్రయత్నించండి.",
+  "hub_clear_filter": "ఫిల్టర్ తొలగించు",
   // Reels module
   'use_camera_music_filters': 'మ్యూజిక్ మరియు ఫిల్టర్లతో కెమెరాను ఉపయోగించండి',
   'upload_from_gallery': 'గ్యాలరీ నుండి అప్‌లోడ్ చేయండి',

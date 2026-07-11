@@ -3023,6 +3023,12 @@ const Map<String, String> bnIN = {
   "widget_prize_won": "জিতে নেওয়া পুরস্কার: @amount",
   "widget_refund": "ফেরত: @status",
   "widget_timer_unavailable": "টাইমার অনুপলব্ধ",
+
+  // Hub Filter
+  "hub_no_filtered_competitions": "কোনো \"@category\" প্রতিযোগিতা নেই",
+  "hub_no_filtered_msg": "এই বিভাগের সাথে কোনো প্রতিযোগিতা মেলে না। ভিন্ন ফিল্টার ব্যবহার করুন।",
+  "hub_clear_filter": "ফিল্টার সাফ করুন"
+  "widget_timer_unavailable": "টাইমার অনুপলব্ধ",
   // Reels module
   'use_camera_music_filters': 'মিউজিক ও ফিল্টারসহ ক্যামেরা ব্যবহার করুন',
   'upload_from_gallery': 'গ্যালারি থেকে আপলোড করুন',

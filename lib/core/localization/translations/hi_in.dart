@@ -3125,4 +3125,9 @@ const Map<String, String> hiIN = {
   "widget_prize_won": "जीता गया पुरस्कार: @amount",
   "widget_refund": "वापसी: @status",
   "widget_timer_unavailable": "टाइमर उपलब्ध नहीं है",
+
+  // Hub Filter
+  "hub_no_filtered_competitions": "कोई \"@category\" प्रतियोगिता नहीं",
+  "hub_no_filtered_msg": "इस श्रेणी से कोई प्रतियोगिता मेल नहीं खाती। कोई अलग फ़िल्टर आज़माएं।",
+  "hub_clear_filter": "फ़िल्टर हटाएं",
 };

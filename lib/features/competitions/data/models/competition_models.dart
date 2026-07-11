@@ -535,7 +535,7 @@ class CompetitionModel {
             json['title'] ?? json['competition_name'] ?? json['name'],
           ) ??
           'Competition',
-      category: _string(json['category'] ?? json['competition_category']),
+      category: _string(json['category_name'] ?? json['competition_category']),
       description: _string(json['description']),
       rules: _string(json['rules']),
       bannerUrl: _string(

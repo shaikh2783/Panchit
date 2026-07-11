@@ -2983,4 +2983,7 @@ const Map<String, String> urPK = {
   'tap_to_apply': 'لاگو کرنے کے لیے ٹیپ کریں',
   'drag_choose_song_part': 'گانے کا کون سا حصہ چلے، منتخب کرنے کے لیے کھینچیں',
   'categories': 'زمرہ جات',
+  "hub_no_filtered_competitions": "\"@category\" مقابلے نہیں ہیں",
+  "hub_no_filtered_msg": "اس زمرے سے کوئی مقابلہ میل نہیں کھاتا۔ کوئی اور فلٹر آزمائیں۔",
+  "hub_clear_filter": "فلٹر صاف کریں",
 };

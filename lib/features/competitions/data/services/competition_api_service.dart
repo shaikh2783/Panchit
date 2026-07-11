@@ -50,6 +50,7 @@ class CompetitionApiService {
         details: response,
       );
     }
+    print("response details $item");
 
     return CompetitionModel.fromJson(item);
   }

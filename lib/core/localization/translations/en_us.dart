@@ -3013,4 +3013,9 @@ const Map<String, String> enUS = {
   'tap_to_apply': 'Tap to apply',
   'drag_choose_song_part': 'Drag to choose which part of the song plays',
   'categories': 'Categories',
+
+  // Category filter empty state
+  'hub_no_filtered_competitions': 'No "@category" competitions',
+  'hub_no_filtered_msg': 'No competitions match this category. Try a different filter.',
+  'hub_clear_filter': 'Clear Filter',
 };
