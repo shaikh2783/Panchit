@@ -10,10 +10,19 @@ class ReelEditController extends GetxController {
   ReelEditController({
     required this.videoPath,
     required this.selectedMusic,
+    this.audioMerged = false,
   });
 
   final String videoPath;
   final SelectedMusic? selectedMusic;
+
+  /// True when the music is already burned into [videoPath]; the video then
+  /// plays its own audio and the side music player stays off.
+  final bool audioMerged;
+
+  /// The side music player only runs while the music is NOT in the file yet
+  /// (gallery flow) — otherwise it would double the audio.
+  bool get _needsMusicOverlay => selectedMusic != null && !audioMerged;
 
   VideoPlayerController? videoPlayerCtrl;
   PlayerController? musicPlayerCtrl;
@@ -27,7 +36,7 @@ class ReelEditController extends GetxController {
   void onInit() {
     super.onInit();
     _initVideo();
-    if (selectedMusic != null) _initMusic();
+    if (_needsMusicOverlay) _initMusic();
   }
 
   @override
@@ -42,8 +51,8 @@ class ReelEditController extends GetxController {
     videoPlayerCtrl = VideoPlayerController.file(File(videoPath));
     await videoPlayerCtrl!.initialize();
     videoPlayerCtrl!.setLooping(true);
-    // Mute video if music is attached
-    if (selectedMusic != null) {
+    // Mute video only while a separate music preview carries the audio.
+    if (_needsMusicOverlay) {
       videoPlayerCtrl!.setVolume(0);
     }
     isVideoReady.value = true;
@@ -53,8 +62,11 @@ class ReelEditController extends GetxController {
   Future<void> _initMusic() async {
     if (selectedMusic == null) return;
     musicPlayerCtrl = PlayerController();
-    await musicPlayerCtrl!
-        .preparePlayer(path: selectedMusic!.downloadedURL);
+    await musicPlayerCtrl!.preparePlayer(
+      path: selectedMusic!.downloadedURL,
+      volume: 1.0,
+      shouldExtractWaveform: false,
+    );
     await musicPlayerCtrl!.seekTo(selectedMusic!.audioStartMS);
     musicPlayerCtrl!.setFinishMode(finishMode: FinishMode.loop);
     await musicPlayerCtrl!.startPlayer();
@@ -63,7 +75,7 @@ class ReelEditController extends GetxController {
   Future<void> play() async {
     await videoPlayerCtrl?.play();
     isPlaying.value = true;
-    if (selectedMusic != null) {
+    if (_needsMusicOverlay) {
       await musicPlayerCtrl?.seekTo(selectedMusic!.audioStartMS);
       await musicPlayerCtrl?.startPlayer();
     }

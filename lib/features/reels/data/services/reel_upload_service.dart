@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:snginepro/features/feed/data/datasources/posts_api_service.dart';
 import 'package:snginepro/features/feed/data/models/create_post_request.dart';
 import 'package:snginepro/features/feed/data/models/upload_file_data.dart';
@@ -56,6 +57,10 @@ class ReelUploadService {
   int? _originalSoundStartMs;
   bool _originalSoundAttempted = false;
 
+  void _log(String msg) {
+    if (kDebugMode) debugPrint('🎬 [ReelPublish] $msg');
+  }
+
   Future<CreatePostResponse> publishReel({
     required String videoPath,
     required String message,
@@ -67,19 +72,37 @@ class ReelUploadService {
       _resetState(videoPath);
     }
 
+    _log('▶︎ publishReel started');
+    _log('  video: $videoPath');
+    _log(
+      '  selectedMusic: ${selectedMusic == null ? 'none (will derive original sound from video)' : 'id=${selectedMusic.music?.id} title="${selectedMusic.music?.title}" startMs=${selectedMusic.audioStartMS}'}',
+    );
+
     // 1. Sound: selected library sound wins; otherwise derive an original
     //    sound once per video. Derivation failure is non-fatal — the reel is
     //    published without a sound, matching the reference app's behavior.
     int? soundId = selectedMusic?.music?.id;
     int? soundStartMs = selectedMusic != null ? selectedMusic.audioStartMS : null;
 
+    if (selectedMusic != null && soundId == null) {
+      // "Use this sound" can hand over a music object without an id when the
+      // feed post carried sound_url but no sound_id (gaps doc §1). The reel
+      // still publishes (audio is merged client-side) but won't reference
+      // the sound.
+      _log('⚠️ Selected music has NO id — sound_id will not be sent and '
+          'original-sound derivation is skipped.');
+    }
+
     if (selectedMusic == null) {
       if (!_originalSoundAttempted) {
         _originalSoundAttempted = true;
         try {
+          _log('Stage 1a: extracting audio track from video…');
           onProgress?.call(ReelUploadStage.extractingSound, 0);
           final extracted = await _audioExtractor.extractAudio(videoPath);
           if (extracted != null) {
+            _log('Stage 1b: uploading extracted sound '
+                '(${await extracted.file.length()} bytes)…');
             onProgress?.call(ReelUploadStage.uploadingSound, 0);
             final username = _usernameProvider() ?? 'Unknown';
             final music = await _withRetry(() => _musicService.uploadUserMusic(
@@ -91,18 +114,38 @@ class ReelUploadService {
                 ));
             _originalSoundId = music?.id;
             _originalSoundStartMs = 0;
+            if (_originalSoundId == null) {
+              _log('⚠️ Sound upload returned no id — reel will be published '
+                  'WITHOUT a sound.');
+            } else {
+              _log('Original sound ready: sound_id=$_originalSoundId');
+            }
+          } else {
+            _log('⚠️ No audio extracted (no track or ffmpeg failure) — reel '
+                'will be published WITHOUT a sound.');
           }
-        } catch (_) {
-          // Non-fatal: continue publishing without a sound.
+        } catch (e) {
+          // Non-fatal: continue publishing without a sound, but allow the
+          // next explicit retry to attempt the sound again.
+          _originalSoundAttempted = false;
+          _log('⚠️ Original-sound derivation FAILED (non-fatal, reel will be '
+              'published without sound): $e');
         }
+      } else {
+        _log('Original sound already attempted for this video: '
+            'sound_id=$_originalSoundId');
       }
       soundId = _originalSoundId;
       soundStartMs = _originalSoundStartMs;
     }
 
+    _log('Sound resolution complete: sound_id=$soundId, '
+        'sound_start_ms=$soundStartMs');
+
     // 2. Video upload (skipped when already uploaded by a previous attempt).
     if (_uploadedVideo == null) {
       try {
+        _log('Stage 2: uploading video…');
         final uploaded = await _withRetry(
           () => _postsService.uploadFile(
             File(videoPath),
@@ -118,9 +161,13 @@ class ReelUploadService {
           throw Exception('Video upload returned no data');
         }
         _uploadedVideo = uploaded;
+        _log('Video uploaded: source=${uploaded.source} thumb=${uploaded.thumb}');
       } catch (e) {
+        _log('❌ Video upload FAILED: $e');
         throw ReelUploadException(ReelUploadStage.uploadingVideo, e);
       }
+    } else {
+      _log('Stage 2: video already uploaded on a previous attempt — skipping.');
     }
 
     // 3. Create the post.
@@ -138,6 +185,8 @@ class ReelUploadService {
       },
       reelThumbnail: thumbPath,
     );
+    _log('Stage 3: creating reel post, reel payload: '
+        '${request.toJson()['reel']}');
 
     try {
       final response =
@@ -145,12 +194,15 @@ class ReelUploadService {
       if (!response.isSuccess) {
         throw Exception(response.message ?? 'Failed to create reel');
       }
+      _log('✅ Reel published: post_id=${response.postId} '
+          '(sound_id=${soundId ?? 'NONE'})');
       onProgress?.call(ReelUploadStage.done, 1);
       _resetState(null);
       return response;
     } on ReelUploadException {
       rethrow;
     } catch (e) {
+      _log('❌ Reel post creation FAILED: $e');
       throw ReelUploadException(ReelUploadStage.publishing, e);
     }
   }
@@ -177,9 +229,10 @@ class ReelUploadService {
     while (true) {
       try {
         return await op();
-      } catch (_) {
+      } catch (e) {
         attempt++;
         if (attempt > retries) rethrow;
+        _log('Attempt $attempt failed ($e) — retrying…');
         await Future.delayed(Duration(seconds: attempt == 1 ? 1 : 3));
       }
     }

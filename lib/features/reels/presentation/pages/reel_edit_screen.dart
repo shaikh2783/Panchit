@@ -11,11 +11,16 @@ class ReelEditScreen extends StatefulWidget {
   final String? thumbnailPath;
   final SelectedMusic? selectedMusic;
 
+  /// True when [selectedMusic] is already burned into [videoPath] (camera
+  /// flow) — the video plays its own audio and no side music player runs.
+  final bool audioMerged;
+
   const ReelEditScreen({
     super.key,
     required this.videoPath,
     this.thumbnailPath,
     this.selectedMusic,
+    this.audioMerged = false,
   });
 
   @override
@@ -36,6 +41,7 @@ class _ReelEditScreenState extends State<ReelEditScreen> {
       ReelEditController(
         videoPath: widget.videoPath,
         selectedMusic: widget.selectedMusic,
+        audioMerged: widget.audioMerged,
       ),
       tag: _controllerTag,
     );

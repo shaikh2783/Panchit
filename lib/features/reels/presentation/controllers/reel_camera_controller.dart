@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:snginepro/features/reels/data/models/music_model.dart';
 import 'package:snginepro/features/reels/data/services/music_api_service.dart';
@@ -155,14 +156,34 @@ class ReelCameraController extends GetxController {
     }
   }
 
+  void _log(String msg) {
+    if (kDebugMode) debugPrint('🎥 [ReelCamera] $msg');
+  }
+
   Future<void> _prepareMusicPlayer(SelectedMusic music) async {
     _musicPlayer?.release();
     _musicPlayer?.dispose();
     _musicPlayer = PlayerController();
-    await _musicPlayer!.preparePlayer(path: music.downloadedURL);
-    _musicDurationMs = await _musicPlayer!.getDuration(DurationType.max);
-    await _musicPlayer!.seekTo(music.audioStartMS);
-    _musicPlayer!.setFinishMode(finishMode: FinishMode.pause);
+    try {
+      // No waveform is rendered on the camera screen; skipping extraction
+      // makes prepare instant and avoids extraction failures blocking
+      // playback of cache-manager files.
+      await _musicPlayer!.preparePlayer(
+        path: music.downloadedURL,
+        volume: 1.0,
+        shouldExtractWaveform: false,
+      );
+      _musicDurationMs = await _musicPlayer!.getDuration(DurationType.max);
+      await _musicPlayer!.seekTo(music.audioStartMS);
+      _musicPlayer!.setFinishMode(finishMode: FinishMode.pause);
+      _log('Music player ready: "${music.music?.title}" '
+          '(${_musicDurationMs}ms, start at ${music.audioStartMS}ms)');
+    } catch (e) {
+      _log('❌ Music player prepare FAILED for "${music.downloadedURL}": $e');
+      _musicPlayer?.dispose();
+      _musicPlayer = null;
+      _musicDurationMs = null;
+    }
   }
 
   Future<void> startRecording() async {
@@ -179,9 +200,20 @@ class ReelCameraController extends GetxController {
       ..reset()
       ..start();
 
-    if (selectedMusic != null && _musicPlayer != null) {
-      await _musicPlayer!.seekTo(selectedMusic!.audioStartMS);
-      await _musicPlayer!.startPlayer();
+    if (selectedMusic != null) {
+      if (_musicPlayer == null) {
+        // Prepare failed earlier (or is still in flight) — retry once so the
+        // user still hears the track while recording.
+        _log('Music player not ready at record start — re-preparing…');
+        await _prepareMusicPlayer(selectedMusic!);
+      }
+      try {
+        await _musicPlayer?.seekTo(selectedMusic!.audioStartMS);
+        await _musicPlayer?.startPlayer();
+        _log('Music playback started with recording.');
+      } catch (e) {
+        _log('❌ Could not start music playback: $e');
+      }
     }
 
     _progressTimer = Timer.periodic(const Duration(milliseconds: 100), (_) {

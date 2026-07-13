@@ -913,7 +913,7 @@ packages:
     source: hosted
     version: "4.9.0"
   just_audio:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: just_audio
       sha256: f978d5b4ccea08f267dae0232ec5405c1b05d3f3cd63f82097ea46c015d5c09e
@@ -1052,10 +1052,10 @@ packages:
     dependency: "direct main"
     description:
       name: onesignal_flutter
-      sha256: b5bb43bf496ddb5e3975ba54c6477cc2d1fcd18fb3698f195d2e0bfd376ddafd
+      sha256: "9ee3ca02dcc93877623100496aa9cd9f84974f3a87b440b8e8eaa58097e3b5c6"
       url: "https://pub.dev"
     source: hosted
-    version: "5.3.4"
+    version: "5.6.4"
   package_info_plus:
     dependency: "direct main"
     description:

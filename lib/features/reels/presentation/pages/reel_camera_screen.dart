@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:snginepro/features/reels/data/models/music_model.dart';
 import 'package:snginepro/features/reels/data/services/music_api_service.dart';
+import 'package:snginepro/features/reels/data/services/reel_audio_merge_service.dart';
 import 'package:snginepro/features/reels/presentation/controllers/music_sheet_controller.dart';
 import 'package:snginepro/features/reels/presentation/controllers/reel_camera_controller.dart';
 import 'package:snginepro/features/reels/presentation/pages/music_sheet.dart';
@@ -284,18 +285,68 @@ class ReelCameraScreen extends StatelessWidget {
 
   /// Routes the finished recording: pops with the file path when
   /// [popOnFinish] is set (CreateReelPage flow), otherwise continues to the
-  /// edit step (default entry flow).
+  /// edit step (default entry flow). When music is selected it is burned
+  /// into the clip first so every downstream step works on the final video.
   Future<void> _finishRecording(
     BuildContext context,
     ReelCameraController ctrl,
     String videoPath,
   ) async {
+    final music = ctrl.selectedMusic;
+    var finalPath = videoPath;
+    var audioMerged = false;
+
+    if (music != null) {
+      final merged = await _mergeMusic(context, videoPath, music);
+      if (merged != null) {
+        finalPath = merged;
+        audioMerged = true;
+      }
+    }
+    if (!context.mounted) return;
+
     if (popOnFinish) {
       Get.delete<ReelCameraController>();
-      Navigator.of(context).pop(videoPath);
+      Navigator.of(context).pop(finalPath);
       return;
     }
-    await _goToEdit(context, ctrl, videoPath);
+    await _goToEdit(context, ctrl, finalPath, audioMerged: audioMerged);
+  }
+
+  /// Burns the selected music into the recording behind a blocking progress
+  /// dialog. Returns null on failure — the caller keeps the original clip
+  /// and the reel still references the sound via `sound_id` at publish.
+  Future<String?> _mergeMusic(
+    BuildContext context,
+    String videoPath,
+    SelectedMusic music,
+  ) async {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(
+        child: CircularProgressIndicator(color: Color(0xFFE1306C)),
+      ),
+    );
+
+    String? merged;
+    try {
+      merged = await ReelAudioMergeService.mergeMusicIntoVideo(
+        videoPath: videoPath,
+        music: music,
+      );
+    } finally {
+      if (context.mounted) {
+        Navigator.of(context, rootNavigator: true).pop();
+      }
+    }
+
+    if (merged == null && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('sound_merge_failed'.tr)),
+      );
+    }
+    return merged;
   }
 
   Widget _durationSelector(ReelCameraController ctrl) {
@@ -338,8 +389,11 @@ class ReelCameraScreen extends StatelessWidget {
   Future<void> _goToEdit(
     BuildContext context,
     ReelCameraController ctrl,
-    String videoPath,
-  ) async {
+    String videoPath, {
+    bool audioMerged = false,
+  }) async {
+    final selectedMusic = ctrl.selectedMusic;
+
     // Generate thumbnail
     final thumb = await vt.VideoThumbnail.thumbnailFile(
       video: videoPath,
@@ -355,7 +409,8 @@ class ReelCameraScreen extends StatelessWidget {
       builder: (_) => ReelEditScreen(
         videoPath: videoPath,
         thumbnailPath: thumb,
-        selectedMusic: ctrl.selectedMusic,
+        selectedMusic: selectedMusic,
+        audioMerged: audioMerged,
       ),
     ));
   }

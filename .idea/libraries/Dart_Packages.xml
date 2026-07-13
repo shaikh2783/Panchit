@@ -929,7 +929,7 @@
         <entry key="onesignal_flutter">
           <value>
             <list>
-              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/onesignal_flutter-5.3.4/lib" />
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/onesignal_flutter-5.6.4/lib" />
             </list>
           </value>
         </entry>
@@ -1744,7 +1744,7 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/mime-2.0.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/nested-1.0.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/octo_image-2.1.0/lib" />
-      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/onesignal_flutter-5.3.4/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/onesignal_flutter-5.6.4/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/package_info_plus-9.0.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/package_info_plus_platform_interface-3.2.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/path-1.9.1/lib" />

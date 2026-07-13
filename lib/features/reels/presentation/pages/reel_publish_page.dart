@@ -164,7 +164,7 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
 
     setState(() {
       _isPublishing = true;
-      _error = null;
+  _error = null;
       _stage = null;
       _stageProgress = 0;
     });

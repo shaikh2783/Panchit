@@ -1,17 +1,26 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:provider/provider.dart';
 import 'package:snginepro/features/feed/data/models/post.dart';
 import 'package:snginepro/features/feed/presentation/widgets/video_reels_player.dart';
+import 'package:snginepro/features/reels/data/datasources/reels_api_service.dart';
 import 'package:snginepro/features/reels/presentation/widgets/use_sound_sheet.dart';
 
 const Color _kAccent = Color(0xFFE1306C);
 const Color _kSurface = Color(0xFF111113);
+const Color _kCard = Color(0xFF1A1A1E);
+
+/// Load state of the audio-only preview player.
+enum _PreviewStatus { none, loading, ready, error }
 
 /// Sound detail screen opened from the rotating music disc on a reel:
-/// shows the sound's info, the reels using it, and a "Use this sound"
-/// action that reuses the existing [showUseSoundSheet] flow.
+/// shows the sound's info with an audio-only preview player, the reels
+/// using it, and a "Use this sound" action that reuses the existing
+/// [showUseSoundSheet] flow.
 class ReelSoundScreen extends StatefulWidget {
   final Post sourcePost;
   final MediaPathResolver mediaResolver;
@@ -31,13 +40,38 @@ class _ReelSoundScreenState extends State<ReelSoundScreen> {
   String? _error;
   List<Post> _reels = const [];
 
+  /// Server-reported total posts using this sound (§20 `sound.post_count`);
+  /// falls back to the loaded list length when the endpoint isn't live yet.
+  int? _soundPostCount;
+
+  AudioPlayer? _player;
+  _PreviewStatus _previewStatus = _PreviewStatus.none;
+
+  /// Set while the user drags the seek bar so the thumb follows the finger
+  /// instead of the position stream.
+  double? _dragPositionSec;
+
   String get _soundTitle =>
       widget.sourcePost.soundTitle ?? 'original_audio'.tr;
+
+  /// Reel video thumbnail used as the sound artwork (header + player card).
+  String? get _thumbnailUrl {
+    final thumbnail = widget.sourcePost.video?.thumbnail;
+    if (thumbnail == null || thumbnail.isEmpty) return null;
+    return widget.mediaResolver(thumbnail).toString();
+  }
 
   @override
   void initState() {
     super.initState();
     _loadReels();
+    _initPreviewPlayer();
+  }
+
+  @override
+  void dispose() {
+    _player?.dispose();
+    super.dispose();
   }
 
   Future<void> _loadReels() async {
@@ -46,33 +80,101 @@ class _ReelSoundScreenState extends State<ReelSoundScreen> {
       _error = null;
     });
 
-    try {
-      // TODO(reels): replace with the API result once the backend exposes a
-      // reels-by-sound endpoint (none exists in docs/reels_backend_api.md
-      // yet, e.g. GET /api/reels?sound_id=...). Until then the grid shows
-      // the source reel only.
-      final reels = [widget.sourcePost];
+    var reels = <Post>[widget.sourcePost];
+    int? postCount;
 
+    // Reels-by-sound per docs/reels_backend_api.md §20. The endpoint is not
+    // implemented server-side yet (docs/reels_backend_gaps.md gap 2), and
+    // some posts carry sound_url without sound_id — in both cases the grid
+    // degrades to the source reel only, as before.
+    final soundId = widget.sourcePost.soundId;
+    if (soundId != null) {
+      try {
+        final result = await context
+            .read<ReelsApiService>()
+            .fetchReelsBySound(soundId: soundId);
+        if (result.reels.isNotEmpty) {
+          reels = result.reels;
+        }
+        postCount = result.sound?.postCount;
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('🎵 [SoundScreen] reels_by_sound unavailable '
+              '(gap 2), showing source reel only: $e');
+        }
+      }
+    }
+
+    if (!mounted) return;
+    setState(() {
+      _reels = reels;
+      _soundPostCount = postCount;
+      _isLoading = false;
+    });
+  }
+
+  // ─── Audio preview ────────────────────────────────────────────────────
+
+  Future<void> _initPreviewPlayer() async {
+    final url = widget.sourcePost.soundUrl;
+    if (url == null || url.isEmpty) return;
+
+    await _player?.dispose();
+    final player = AudioPlayer();
+    _player = player;
+    setState(() => _previewStatus = _PreviewStatus.loading);
+
+    try {
+      await player.setUrl(url);
       if (!mounted) return;
-      setState(() {
-        _reels = reels;
-        _isLoading = false;
-      });
+      setState(() => _previewStatus = _PreviewStatus.ready);
     } catch (_) {
-      if (!mounted) return;
-      setState(() {
-        _error = 'could_not_load_sound_reels'.tr;
-        _isLoading = false;
-      });
+      if (!mounted || !identical(_player, player)) return;
+      setState(() => _previewStatus = _PreviewStatus.error);
     }
   }
 
+  Future<void> _togglePreview() async {
+    final player = _player;
+    if (player == null || _previewStatus != _PreviewStatus.ready) return;
+
+    if (player.processingState == ProcessingState.completed) {
+      await _replayPreview();
+      return;
+    }
+    if (player.playing) {
+      await player.pause();
+    } else {
+      await player.play();
+    }
+  }
+
+  Future<void> _replayPreview() async {
+    final player = _player;
+    if (player == null || _previewStatus != _PreviewStatus.ready) return;
+    await player.seek(Duration.zero);
+    await player.play();
+  }
+
+  /// Stops preview audio before navigating anywhere or handing playback
+  /// over to a video surface.
+  Future<void> _pausePreview() async {
+    final player = _player;
+    if (player != null && player.playing) {
+      await player.pause();
+    }
+  }
+
+  // ─── Actions ──────────────────────────────────────────────────────────
+
   void _useThisSound() {
     if (widget.sourcePost.soundUrl == null) return;
+    _pausePreview();
     showUseSoundSheet(context, widget.sourcePost);
   }
 
   void _openReel(Post post) {
+    _pausePreview();
     Navigator.of(context).push(MaterialPageRoute(
       builder: (_) => _ReelSoundViewerPage(
         post: post,
@@ -80,6 +182,13 @@ class _ReelSoundScreenState extends State<ReelSoundScreen> {
       ),
     ));
   }
+
+  void _goBack() {
+    _pausePreview();
+    Navigator.of(context).pop();
+  }
+
+  // ─── Build ────────────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +203,13 @@ class _ReelSoundScreenState extends State<ReelSoundScreen> {
                 padding: const EdgeInsets.only(bottom: 24),
                 children: [
                   _buildHeader(),
-                  const SizedBox(height: 8),
+                  if (_previewStatus != _PreviewStatus.none) ...[
+                    const SizedBox(height: 16),
+                    _buildPreviewCard(),
+                  ],
+                  const SizedBox(height: 18),
+                  _buildUseSoundButton(),
+                  const SizedBox(height: 22),
                   _buildSectionTitle(),
                   const SizedBox(height: 10),
                   _buildBody(),
@@ -113,7 +228,7 @@ class _ReelSoundScreenState extends State<ReelSoundScreen> {
       child: Row(
         children: [
           IconButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: _goBack,
             icon: const Icon(Icons.arrow_back, color: Colors.white),
           ),
           Expanded(
@@ -136,37 +251,12 @@ class _ReelSoundScreenState extends State<ReelSoundScreen> {
 
   Widget _buildHeader() {
     final post = widget.sourcePost;
-    final avatarUrl = post.authorAvatarUrl;
-    final artwork = avatarUrl != null && avatarUrl.isNotEmpty
-        ? CachedNetworkImageProvider(
-            widget.mediaResolver(avatarUrl).toString())
-        : null;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 4),
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
       child: Column(
         children: [
-          Container(
-            width: 96,
-            height: 96,
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                colors: [
-                  _kAccent,
-                  _kAccent.withOpacity(0.35),
-                ],
-              ),
-            ),
-            child: CircleAvatar(
-              backgroundColor: _kSurface,
-              backgroundImage: artwork,
-              child: artwork == null
-                  ? const Icon(Iconsax.music, color: Colors.white, size: 34)
-                  : null,
-            ),
-          ),
+          _SoundArtwork(thumbnailUrl: _thumbnailUrl, size: 108),
           const SizedBox(height: 14),
           Text(
             _soundTitle,
@@ -188,42 +278,237 @@ class _ReelSoundScreenState extends State<ReelSoundScreen> {
           ),
           if (!_isLoading && _error == null) ...[
             const SizedBox(height: 6),
-            Text(
-              _reels.length == 1
-                  ? 'one_reel_count'.trParams({'count': '1'})
-                  : 'reels_count'.trParams({'count': '${_reels.length}'}),
-              style: const TextStyle(
-                color: Colors.white38,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
-          const SizedBox(height: 18),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              onPressed:
-                  widget.sourcePost.soundUrl != null ? _useThisSound : null,
-              icon: const Icon(Icons.videocam),
-              label: Text(
-                'use_this_sound'.tr,
-                style:
-                    const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
-              ),
-              style: ElevatedButton.styleFrom(
-                elevation: 0,
-                backgroundColor: _kAccent,
-                foregroundColor: Colors.white,
-                disabledBackgroundColor: Colors.white12,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
+            Builder(builder: (context) {
+              final count = _soundPostCount ?? _reels.length;
+              return Text(
+                count == 1
+                    ? 'one_reel_count'.trParams({'count': '1'})
+                    : 'reels_count'.trParams({'count': '$count'}),
+                style: const TextStyle(
+                  color: Colors.white38,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
                 ),
+              );
+            }),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPreviewCard() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(14, 12, 14, 8),
+        decoration: BoxDecoration(
+          color: _kCard,
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: Colors.white.withOpacity(0.06)),
+        ),
+        child: _previewStatus == _PreviewStatus.error
+            ? _buildPreviewError()
+            : _buildPreviewPlayer(),
+      ),
+    );
+  }
+
+  Widget _buildPreviewError() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        children: [
+          const Icon(Iconsax.warning_2, color: Colors.white38, size: 20),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              'sound_preview_failed'.tr,
+              style: const TextStyle(color: Colors.white70, fontSize: 13),
+            ),
+          ),
+          TextButton(
+            onPressed: _initPreviewPlayer,
+            child: Text(
+              'try_again'.tr,
+              style: const TextStyle(
+                color: _kAccent,
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildPreviewPlayer() {
+    final player = _player;
+    final isLoading = _previewStatus == _PreviewStatus.loading;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          children: [
+            // Play / pause / replay-on-complete
+            StreamBuilder<PlayerState>(
+              stream: player?.playerStateStream,
+              builder: (context, snapshot) {
+                final state = snapshot.data;
+                final isPlaying = state?.playing ?? false;
+                final isCompleted =
+                    state?.processingState == ProcessingState.completed;
+
+                return _RoundIconButton(
+                  size: 46,
+                  color: _kAccent,
+                  onTap: isLoading ? null : _togglePreview,
+                  child: isLoading
+                      ? const Padding(
+                          padding: EdgeInsets.all(13),
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
+                      : Icon(
+                          isCompleted
+                              ? Icons.replay
+                              : isPlaying
+                                  ? Icons.pause
+                                  : Icons.play_arrow,
+                          color: Colors.white,
+                          size: 26,
+                        ),
+                );
+              },
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                _soundTitle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            _RoundIconButton(
+              size: 36,
+              color: Colors.white12,
+              onTap: isLoading ? null : _replayPreview,
+              child: const Icon(Icons.replay, color: Colors.white70, size: 18),
+            ),
+          ],
+        ),
+        const SizedBox(height: 2),
+        _buildSeekBar(),
+      ],
+    );
+  }
+
+  Widget _buildSeekBar() {
+    final player = _player;
+    if (player == null) return const SizedBox.shrink();
+
+    return StreamBuilder<Duration?>(
+      stream: player.durationStream,
+      builder: (context, durationSnapshot) {
+        final duration = durationSnapshot.data ?? Duration.zero;
+
+        return StreamBuilder<Duration>(
+          stream: player.positionStream,
+          builder: (context, positionSnapshot) {
+            final position = positionSnapshot.data ?? Duration.zero;
+            final maxSec =
+                duration.inMilliseconds > 0 ? duration.inMilliseconds / 1000 : 1.0;
+            final positionSec = _dragPositionSec ??
+                (position.inMilliseconds / 1000).clamp(0.0, maxSec);
+
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SliderTheme(
+                  data: SliderTheme.of(context).copyWith(
+                    trackHeight: 3,
+                    thumbShape: const RoundSliderThumbShape(
+                        enabledThumbRadius: 6),
+                    overlayShape:
+                        const RoundSliderOverlayShape(overlayRadius: 14),
+                  ),
+                  child: Slider(
+                    value: positionSec.clamp(0.0, maxSec).toDouble(),
+                    max: maxSec,
+                    activeColor: _kAccent,
+                    inactiveColor: Colors.white12,
+                    onChangeStart: (value) =>
+                        setState(() => _dragPositionSec = value),
+                    onChanged: (value) =>
+                        setState(() => _dragPositionSec = value),
+                    onChangeEnd: (value) async {
+                      await player.seek(
+                          Duration(milliseconds: (value * 1000).round()));
+                      if (mounted) setState(() => _dragPositionSec = null);
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        _formatDuration(
+                            Duration(seconds: positionSec.round())),
+                        style: const TextStyle(
+                            color: Colors.white38, fontSize: 11),
+                      ),
+                      Text(
+                        _formatDuration(duration),
+                        style: const TextStyle(
+                            color: Colors.white38, fontSize: 11),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildUseSoundButton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: SizedBox(
+        width: double.infinity,
+        child: ElevatedButton.icon(
+          onPressed: widget.sourcePost.soundUrl != null ? _useThisSound : null,
+          icon: const Icon(Icons.videocam),
+          label: Text(
+            'use_this_sound'.tr,
+            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+          ),
+          style: ElevatedButton.styleFrom(
+            elevation: 0,
+            backgroundColor: _kAccent,
+            foregroundColor: Colors.white,
+            disabledBackgroundColor: Colors.white12,
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -330,6 +615,94 @@ class _ReelSoundScreenState extends State<ReelSoundScreen> {
             ),
           ],
         ],
+      ),
+    );
+  }
+
+  String _formatDuration(Duration duration) {
+    final minutes = duration.inMinutes;
+    final seconds = duration.inSeconds % 60;
+    return '$minutes:${seconds.toString().padLeft(2, '0')}';
+  }
+}
+
+/// Header artwork: the source reel's video thumbnail inside a gradient ring,
+/// falling back to a music note when no thumbnail is available.
+class _SoundArtwork extends StatelessWidget {
+  const _SoundArtwork({required this.thumbnailUrl, required this.size});
+
+  final String? thumbnailUrl;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final url = thumbnailUrl;
+
+    return Container(
+      width: size,
+      height: size,
+      padding: const EdgeInsets.all(3),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(size * 0.22),
+        gradient: LinearGradient(
+          colors: [_kAccent, _kAccent.withOpacity(0.35)],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.4),
+            blurRadius: 18,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(size * 0.19),
+        child: url != null
+            ? CachedNetworkImage(
+                imageUrl: url,
+                fit: BoxFit.cover,
+                errorWidget: (_, __, ___) => const _ArtworkPlaceholder(),
+              )
+            : const _ArtworkPlaceholder(),
+      ),
+    );
+  }
+}
+
+class _ArtworkPlaceholder extends StatelessWidget {
+  const _ArtworkPlaceholder();
+
+  @override
+  Widget build(BuildContext context) {
+    return const ColoredBox(
+      color: _kSurface,
+      child: Icon(Iconsax.music, color: Colors.white, size: 34),
+    );
+  }
+}
+
+class _RoundIconButton extends StatelessWidget {
+  const _RoundIconButton({
+    required this.size,
+    required this.color,
+    required this.child,
+    this.onTap,
+  });
+
+  final double size;
+  final Color color;
+  final Widget child;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: color,
+      shape: const CircleBorder(),
+      child: InkWell(
+        onTap: onTap,
+        customBorder: const CircleBorder(),
+        child: SizedBox(width: size, height: size, child: Center(child: child)),
       ),
     );
   }

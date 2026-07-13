@@ -2257,6 +2257,9 @@ const Map<String, String> enUS = {
   'selected_music': 'Selected music',
   'use_this_sound': 'Use this sound',
   'sound_download_failed': 'Could not load this sound. Please try again.',
+  'sound_merge_failed':
+      'Could not add the sound to the video — continuing without it.',
+  'sound_preview_failed': 'Could not load the sound preview.',
 
   // Comments Section
   'error_loading_comments': 'Error loading comments',

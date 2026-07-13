@@ -1286,11 +1286,13 @@ class _ActionsRailState extends State<_ActionsRail> {
         ? ReactionsService.instance.getReactionByName(_currentPost.myReaction!)
         : null;
 
-    final avatar = _currentPost.authorAvatarUrl != null &&
-        _currentPost.authorAvatarUrl!.isNotEmpty
+    // The disc shows the reel's own thumbnail (like the sound artwork on
+    // the sound screen), not the author avatar.
+    final thumbnail = _currentPost.video?.thumbnail;
+    final discArtwork = thumbnail != null && thumbnail.isNotEmpty
         ? CachedNetworkImageProvider(
-      widget.mediaResolver(_currentPost.authorAvatarUrl!).toString(),
-    )
+            widget.mediaResolver(thumbnail).toString(),
+          )
         : null;
 
     return SizedBox(
@@ -1325,7 +1327,7 @@ class _ActionsRailState extends State<_ActionsRail> {
           ),
           const SizedBox(height: 10),
           _MusicDisc(
-            avatar: avatar,
+            artwork: discArtwork,
             controller: widget.discController,
             // Only tappable when the reel has a reusable sound.
             onTap: _currentPost.soundUrl != null ? _openSoundScreen : null,
@@ -1449,16 +1451,17 @@ class _ReelRailButton extends StatelessWidget {
   }
 }
 
-/// Rotating sound disc at the bottom of the action rail. Tappable only when
-/// the reel has a reusable sound (opens [ReelSoundScreen]).
+/// Rotating sound disc at the bottom of the action rail, showing the reel's
+/// video thumbnail as artwork. Tappable only when the reel has a reusable
+/// sound (opens [ReelSoundScreen]).
 class _MusicDisc extends StatelessWidget {
   const _MusicDisc({
-    required this.avatar,
+    required this.artwork,
     required this.controller,
     this.onTap,
   });
 
-  final ImageProvider? avatar;
+  final ImageProvider? artwork;
   final AnimationController controller;
   final VoidCallback? onTap;
 
@@ -1491,8 +1494,8 @@ class _MusicDisc extends StatelessWidget {
           ),
           child: CircleAvatar(
             backgroundColor: Colors.black,
-            backgroundImage: avatar,
-            child: avatar == null
+            backgroundImage: artwork,
+            child: artwork == null
                 ? const Icon(
                     Iconsax.music,
                     color: Colors.white,
