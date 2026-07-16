@@ -53,10 +53,14 @@ class _ReelEditScreenState extends State<ReelEditScreen> {
     super.dispose();
   }
 
-  void _onNext() {
-    // Pauses video and, if attached, the music preview.
-    _ctrl.pause();
-    Navigator.of(context).push(MaterialPageRoute(
+  Future<void> _onNext() async {
+    // Release (not just pause) the preview player: the publish page runs its
+    // own player on the same clip, and two live ExoPlayers on a high-bitrate
+    // camera recording exhaust the Java heap.
+    await _ctrl.releaseVideo();
+    if (!mounted) return;
+
+    await Navigator.of(context).push(MaterialPageRoute(
       builder: (_) => ReelPublishPage(
         videoPath: widget.videoPath,
         thumbnailPath: widget.thumbnailPath,
@@ -68,6 +72,11 @@ class _ReelEditScreenState extends State<ReelEditScreen> {
         filterName: _ctrl.activeFilterName.value,
       ),
     ));
+
+    // Back from publish (publish success pops this route too, in which case
+    // we're unmounted and must not touch the deleted controller).
+    if (!mounted) return;
+    _ctrl.resumeVideo();
   }
 
   @override

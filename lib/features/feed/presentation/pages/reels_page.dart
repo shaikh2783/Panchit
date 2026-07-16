@@ -1288,11 +1288,10 @@ class _ActionsRailState extends State<_ActionsRail> {
 
     // The disc shows the reel's own thumbnail (like the sound artwork on
     // the sound screen), not the author avatar.
-    final thumbnail = _currentPost.video?.thumbnail;
-    final discArtwork = thumbnail != null && thumbnail.isNotEmpty
-        ? CachedNetworkImageProvider(
-            widget.mediaResolver(thumbnail).toString(),
-          )
+    final thumbnailPath = _currentPost.video?.thumbnail.trim();
+    final thumbnailUrl =
+    thumbnailPath != null && thumbnailPath.isNotEmpty
+        ? widget.mediaResolver(thumbnailPath).toString()
         : null;
 
     return SizedBox(
@@ -1327,9 +1326,8 @@ class _ActionsRailState extends State<_ActionsRail> {
           ),
           const SizedBox(height: 10),
           _MusicDisc(
-            artwork: discArtwork,
+            imageUrl: thumbnailUrl,
             controller: widget.discController,
-            // Only tappable when the reel has a reusable sound.
             onTap: _currentPost.soundUrl != null ? _openSoundScreen : null,
           ),
         ],
@@ -1456,12 +1454,12 @@ class _ReelRailButton extends StatelessWidget {
 /// sound (opens [ReelSoundScreen]).
 class _MusicDisc extends StatelessWidget {
   const _MusicDisc({
-    required this.artwork,
+    required this.imageUrl,
     required this.controller,
     this.onTap,
   });
 
-  final ImageProvider? artwork;
+  final String? imageUrl;
   final AnimationController controller;
   final VoidCallback? onTap;
 
@@ -1492,18 +1490,42 @@ class _MusicDisc extends StatelessWidget {
               ),
             ],
           ),
-          child: CircleAvatar(
-            backgroundColor: Colors.black,
-            backgroundImage: artwork,
-            child: artwork == null
-                ? const Icon(
-                    Iconsax.music,
+          child: ClipOval(
+            child: imageUrl == null
+                ? _buildFallback()
+                : CachedNetworkImage(
+              imageUrl: imageUrl!,
+              width: 40,
+              height: 40,
+              fit: BoxFit.cover,
+              placeholder: (_, __) => Container(
+                color: Colors.black,
+                alignment: Alignment.center,
+                child: const SizedBox(
+                  width: 14,
+                  height: 14,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 1.5,
                     color: Colors.white,
-                    size: 17,
-                  )
-                : null,
+                  ),
+                ),
+              ),
+              errorWidget: (_, __, ___) => _buildFallback(),
+            ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildFallback() {
+    return Container(
+      color: Colors.black,
+      alignment: Alignment.center,
+      child: const Icon(
+        Iconsax.music,
+        color: Colors.white,
+        size: 17,
       ),
     );
   }

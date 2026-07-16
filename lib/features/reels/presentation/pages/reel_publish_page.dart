@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:math' as math;
 
-import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -38,7 +37,7 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
   final TextEditingController _descriptionController = TextEditingController();
   final ThemeController _themeController = Get.find();
 
-  CachedVideoPlayerPlus? _videoController;
+  VideoPlayerController? _videoController;
 
   bool _isPublishing = false;
   bool _isPreviewLoading = true;
@@ -54,7 +53,7 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
 
   bool get _isPreviewReady {
     final videoController = _videoController;
-    return videoController != null && videoController.isInitialized;
+    return videoController != null && videoController.value.isInitialized;
   }
 
   bool get _canPublish => !_isPublishing && _isPreviewReady;
@@ -67,6 +66,8 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
         return 'uploading_sound'.tr;
       case ReelUploadStage.uploadingVideo:
         return '${'uploading_video'.tr} ${(_stageProgress * 100).toInt()}%';
+      case ReelUploadStage.uploadingThumbnail:
+        return 'uploading_cover'.tr;
       case ReelUploadStage.publishing:
         return 'publishing_reel'.tr;
       default:
@@ -82,7 +83,7 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
 
   Future<void> _initPreview() async {
     try {
-      final previewController = CachedVideoPlayerPlus.file(
+      final previewController = VideoPlayerController.file(
         File(widget.videoPath),
       );
 
@@ -93,8 +94,8 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
         return;
       }
 
-      previewController.controller.setLooping(true);
-      previewController.controller.play();
+      previewController.setLooping(true);
+      previewController.play();
 
       setState(() {
         _videoController = previewController;
@@ -174,6 +175,7 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
         videoPath: widget.videoPath,
         message: _descriptionController.text.trim(),
         selectedMusic: widget.selectedMusic,
+        thumbnailPath: widget.thumbnailPath,
         onProgress: (stage, progress) {
           if (!mounted) return;
 
@@ -357,7 +359,7 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
   Widget _buildVideoPreview(bool isDark) {
     final videoController = _videoController;
 
-    if (videoController != null && videoController.isInitialized) {
+    if (videoController != null && videoController.value.isInitialized) {
       return ColorFiltered(
         colorFilter: ColorFilter.matrix(
           widget.filterMatrix ?? kDefaultFilter,
@@ -365,9 +367,9 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
         child: FittedBox(
           fit: BoxFit.cover,
           child: SizedBox(
-            width: videoController.controller.value.size.width,
-            height: videoController.controller.value.size.height,
-            child: VideoPlayer(videoController.controller),
+            width: videoController.value.size.width,
+            height: videoController.value.size.height,
+            child: VideoPlayer(videoController),
           ),
         ),
       );

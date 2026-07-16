@@ -2253,6 +2253,7 @@ const Map<String, String> enUS = {
   'add_reel_description': 'Add reel description...',
   'preparing_sound': 'Preparing sound...',
   'uploading_sound': 'Uploading sound...',
+  'uploading_cover': 'Uploading cover...',
   'publishing_reel': 'Publishing...',
   'selected_music': 'Selected music',
   'use_this_sound': 'Use this sound',

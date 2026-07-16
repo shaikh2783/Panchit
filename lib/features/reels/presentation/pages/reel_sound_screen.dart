@@ -12,7 +12,6 @@ import 'package:snginepro/features/reels/presentation/widgets/use_sound_sheet.da
 
 const Color _kAccent = Color(0xFFE1306C);
 const Color _kSurface = Color(0xFF111113);
-const Color _kCard = Color(0xFF1A1A1E);
 
 /// Load state of the audio-only preview player.
 enum _PreviewStatus { none, loading, ready, error }
@@ -200,22 +199,24 @@ class _ReelSoundScreenState extends State<ReelSoundScreen> {
             _buildTopBar(),
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.only(bottom: 24),
+                padding: const EdgeInsets.only(bottom: 16),
                 children: [
                   _buildHeader(),
-                  if (_previewStatus != _PreviewStatus.none) ...[
-                    const SizedBox(height: 16),
-                    _buildPreviewCard(),
-                  ],
-                  const SizedBox(height: 18),
-                  _buildUseSoundButton(),
-                  const SizedBox(height: 22),
-                  _buildSectionTitle(),
-                  const SizedBox(height: 10),
+                  if (_previewStatus == _PreviewStatus.error)
+                    _buildPreviewError(),
+                  if (_previewStatus == _PreviewStatus.ready ||
+                      _previewStatus == _PreviewStatus.loading)
+                    _buildSeekBar(),
+                  const SizedBox(height: 14),
+                  const Divider(color: Colors.white12, height: 1),
+                  const SizedBox(height: 2),
                   _buildBody(),
                 ],
               ),
             ),
+            // Pinned CTA, Instagram/TikTok style: always reachable while the
+            // grid scrolls behind it.
+            _buildUseSoundBar(),
           ],
         ),
       ),
@@ -251,75 +252,126 @@ class _ReelSoundScreenState extends State<ReelSoundScreen> {
 
   Widget _buildHeader() {
     final post = widget.sourcePost;
+    final count = _soundPostCount ?? _reels.length;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
-      child: Column(
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _SoundArtwork(thumbnailUrl: _thumbnailUrl, size: 108),
-          const SizedBox(height: 14),
-          Text(
-            _soundTitle,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.w800,
+          _buildArtworkPlayer(),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _soundTitle,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    height: 1.25,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  'original_audio_by'.trParams({'name': post.authorName}),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                if (!_isLoading && _error == null) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    count == 1
+                        ? 'one_reel_count'.trParams({'count': '1'})
+                        : 'reels_count'.trParams({'count': '$count'}),
+                    style: const TextStyle(
+                      color: Colors.white54,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ],
             ),
           ),
-          const SizedBox(height: 6),
-          Text(
-            'original_audio_by'.trParams({'name': post.authorName}),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(color: Colors.white54, fontSize: 13),
-          ),
-          if (!_isLoading && _error == null) ...[
-            const SizedBox(height: 6),
-            Builder(builder: (context) {
-              final count = _soundPostCount ?? _reels.length;
-              return Text(
-                count == 1
-                    ? 'one_reel_count'.trParams({'count': '1'})
-                    : 'reels_count'.trParams({'count': '$count'}),
-                style: const TextStyle(
-                  color: Colors.white38,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                ),
-              );
-            }),
-          ],
         ],
       ),
     );
   }
 
-  Widget _buildPreviewCard() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(14, 12, 14, 8),
-        decoration: BoxDecoration(
-          color: _kCard,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: Colors.white.withOpacity(0.06)),
-        ),
-        child: _previewStatus == _PreviewStatus.error
-            ? _buildPreviewError()
-            : _buildPreviewPlayer(),
+  /// Artwork doubles as the preview control (Instagram-style): tapping it
+  /// plays/pauses the sound, with a play/pause glyph overlaid on the cover.
+  Widget _buildArtworkPlayer() {
+    final isLoading = _previewStatus == _PreviewStatus.loading;
+    final hasPreview = _previewStatus == _PreviewStatus.ready || isLoading;
+
+    return GestureDetector(
+      onTap: hasPreview ? _togglePreview : null,
+      child: Stack(
+        children: [
+          _SoundArtwork(thumbnailUrl: _thumbnailUrl, size: 96),
+          if (hasPreview)
+            Positioned.fill(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: Colors.black26,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Center(
+                  child: isLoading
+                      ? const SizedBox(
+                          width: 22,
+                          height: 22,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
+                      : StreamBuilder<PlayerState>(
+                          stream: _player?.playerStateStream,
+                          builder: (context, snapshot) {
+                            final state = snapshot.data;
+                            final isPlaying = state?.playing ?? false;
+                            final isCompleted = state?.processingState ==
+                                ProcessingState.completed;
+                            return Icon(
+                              isCompleted
+                                  ? Icons.replay
+                                  : isPlaying
+                                      ? Icons.pause_rounded
+                                      : Icons.play_arrow_rounded,
+                              color: Colors.white,
+                              size: 34,
+                              shadows: const [
+                                Shadow(color: Colors.black54, blurRadius: 10),
+                              ],
+                            );
+                          },
+                        ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
 
   Widget _buildPreviewError() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
       child: Row(
         children: [
-          const Icon(Iconsax.warning_2, color: Colors.white38, size: 20),
+          const Icon(Iconsax.warning_2, color: Colors.white38, size: 18),
           const SizedBox(width: 10),
           Expanded(
             child: Text(
@@ -343,77 +395,8 @@ class _ReelSoundScreenState extends State<ReelSoundScreen> {
     );
   }
 
-  Widget _buildPreviewPlayer() {
-    final player = _player;
-    final isLoading = _previewStatus == _PreviewStatus.loading;
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Row(
-          children: [
-            // Play / pause / replay-on-complete
-            StreamBuilder<PlayerState>(
-              stream: player?.playerStateStream,
-              builder: (context, snapshot) {
-                final state = snapshot.data;
-                final isPlaying = state?.playing ?? false;
-                final isCompleted =
-                    state?.processingState == ProcessingState.completed;
-
-                return _RoundIconButton(
-                  size: 46,
-                  color: _kAccent,
-                  onTap: isLoading ? null : _togglePreview,
-                  child: isLoading
-                      ? const Padding(
-                          padding: EdgeInsets.all(13),
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white),
-                          ),
-                        )
-                      : Icon(
-                          isCompleted
-                              ? Icons.replay
-                              : isPlaying
-                                  ? Icons.pause
-                                  : Icons.play_arrow,
-                          color: Colors.white,
-                          size: 26,
-                        ),
-                );
-              },
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                _soundTitle,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            const SizedBox(width: 8),
-            _RoundIconButton(
-              size: 36,
-              color: Colors.white12,
-              onTap: isLoading ? null : _replayPreview,
-              child: const Icon(Icons.replay, color: Colors.white70, size: 18),
-            ),
-          ],
-        ),
-        const SizedBox(height: 2),
-        _buildSeekBar(),
-      ],
-    );
-  }
-
+  /// Slim scrubber under the header — position/duration on the sides of a
+  /// thin draggable track.
   Widget _buildSeekBar() {
     final player = _player;
     if (player == null) return const SizedBox.shrink();
@@ -432,53 +415,50 @@ class _ReelSoundScreenState extends State<ReelSoundScreen> {
             final positionSec = _dragPositionSec ??
                 (position.inMilliseconds / 1000).clamp(0.0, maxSec);
 
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SliderTheme(
-                  data: SliderTheme.of(context).copyWith(
-                    trackHeight: 3,
-                    thumbShape: const RoundSliderThumbShape(
-                        enabledThumbRadius: 6),
-                    overlayShape:
-                        const RoundSliderOverlayShape(overlayRadius: 14),
+            return Padding(
+              padding: const EdgeInsets.fromLTRB(10, 6, 10, 0),
+              child: Row(
+                children: [
+                  Text(
+                    _formatDuration(Duration(seconds: positionSec.round())),
+                    style:
+                        const TextStyle(color: Colors.white38, fontSize: 11),
                   ),
-                  child: Slider(
-                    value: positionSec.clamp(0.0, maxSec).toDouble(),
-                    max: maxSec,
-                    activeColor: _kAccent,
-                    inactiveColor: Colors.white12,
-                    onChangeStart: (value) =>
-                        setState(() => _dragPositionSec = value),
-                    onChanged: (value) =>
-                        setState(() => _dragPositionSec = value),
-                    onChangeEnd: (value) async {
-                      await player.seek(
-                          Duration(milliseconds: (value * 1000).round()));
-                      if (mounted) setState(() => _dragPositionSec = null);
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        _formatDuration(
-                            Duration(seconds: positionSec.round())),
-                        style: const TextStyle(
-                            color: Colors.white38, fontSize: 11),
+                  Expanded(
+                    child: SliderTheme(
+                      data: SliderTheme.of(context).copyWith(
+                        trackHeight: 2,
+                        thumbShape: const RoundSliderThumbShape(
+                            enabledThumbRadius: 5),
+                        overlayShape:
+                            const RoundSliderOverlayShape(overlayRadius: 12),
                       ),
-                      Text(
-                        _formatDuration(duration),
-                        style: const TextStyle(
-                            color: Colors.white38, fontSize: 11),
+                      child: Slider(
+                        value: positionSec.clamp(0.0, maxSec).toDouble(),
+                        max: maxSec,
+                        activeColor: Colors.white,
+                        inactiveColor: Colors.white24,
+                        onChangeStart: (value) =>
+                            setState(() => _dragPositionSec = value),
+                        onChanged: (value) =>
+                            setState(() => _dragPositionSec = value),
+                        onChangeEnd: (value) async {
+                          await player.seek(
+                              Duration(milliseconds: (value * 1000).round()));
+                          if (mounted) {
+                            setState(() => _dragPositionSec = null);
+                          }
+                        },
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ],
+                  Text(
+                    _formatDuration(duration),
+                    style:
+                        const TextStyle(color: Colors.white38, fontSize: 11),
+                  ),
+                ],
+              ),
             );
           },
         );
@@ -486,14 +466,20 @@ class _ReelSoundScreenState extends State<ReelSoundScreen> {
     );
   }
 
-  Widget _buildUseSoundButton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+  /// Bottom-pinned "Use audio" bar above the safe area, separated from the
+  /// scrolling grid by a hairline.
+  Widget _buildUseSoundBar() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
+      decoration: const BoxDecoration(
+        color: Colors.black,
+        border: Border(top: BorderSide(color: Colors.white12)),
+      ),
       child: SizedBox(
         width: double.infinity,
         child: ElevatedButton.icon(
           onPressed: widget.sourcePost.soundUrl != null ? _useThisSound : null,
-          icon: const Icon(Icons.videocam),
+          icon: const Icon(Icons.videocam_outlined, size: 20),
           label: Text(
             'use_this_sound'.tr,
             style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
@@ -503,25 +489,12 @@ class _ReelSoundScreenState extends State<ReelSoundScreen> {
             backgroundColor: _kAccent,
             foregroundColor: Colors.white,
             disabledBackgroundColor: Colors.white12,
-            padding: const EdgeInsets.symmetric(vertical: 14),
+            disabledForegroundColor: Colors.white38,
+            padding: const EdgeInsets.symmetric(vertical: 13),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(10),
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSectionTitle() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Text(
-        'reels_using_this_sound'.tr,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 15,
-          fontWeight: FontWeight.w700,
         ),
       ),
     );
@@ -626,8 +599,8 @@ class _ReelSoundScreenState extends State<ReelSoundScreen> {
   }
 }
 
-/// Header artwork: the source reel's video thumbnail inside a gradient ring,
-/// falling back to a music note when no thumbnail is available.
+/// Header artwork: the source reel's video thumbnail as a plain rounded
+/// square (Instagram audio-page style), falling back to a music note.
 class _SoundArtwork extends StatelessWidget {
   const _SoundArtwork({required this.thumbnailUrl, required this.size});
 
@@ -641,22 +614,12 @@ class _SoundArtwork extends StatelessWidget {
     return Container(
       width: size,
       height: size,
-      padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(size * 0.22),
-        gradient: LinearGradient(
-          colors: [_kAccent, _kAccent.withOpacity(0.35)],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.4),
-            blurRadius: 18,
-            offset: const Offset(0, 8),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Colors.white12),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(size * 0.19),
+        borderRadius: BorderRadius.circular(10),
         child: url != null
             ? CachedNetworkImage(
                 imageUrl: url,
@@ -677,33 +640,6 @@ class _ArtworkPlaceholder extends StatelessWidget {
     return const ColoredBox(
       color: _kSurface,
       child: Icon(Iconsax.music, color: Colors.white, size: 34),
-    );
-  }
-}
-
-class _RoundIconButton extends StatelessWidget {
-  const _RoundIconButton({
-    required this.size,
-    required this.color,
-    required this.child,
-    this.onTap,
-  });
-
-  final double size;
-  final Color color;
-  final Widget child;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: color,
-      shape: const CircleBorder(),
-      child: InkWell(
-        onTap: onTap,
-        customBorder: const CircleBorder(),
-        child: SizedBox(width: size, height: size, child: Center(child: child)),
-      ),
     );
   }
 }

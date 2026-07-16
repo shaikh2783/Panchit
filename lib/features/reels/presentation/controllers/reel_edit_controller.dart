@@ -72,6 +72,24 @@ class ReelEditController extends GetxController {
     await musicPlayerCtrl!.startPlayer();
   }
 
+  /// Fully releases the video player (not just pause): ExoPlayer keeps the
+  /// whole buffered clip in the Java heap, and holding it while a screen on
+  /// top runs its own player OOMs on high-bitrate camera recordings.
+  /// [resumeVideo] re-creates it when this screen becomes visible again.
+  Future<void> releaseVideo() async {
+    isVideoReady.value = false;
+    isPlaying.value = false;
+    await musicPlayerCtrl?.pausePlayer();
+    final controller = videoPlayerCtrl;
+    videoPlayerCtrl = null;
+    await controller?.dispose();
+  }
+
+  Future<void> resumeVideo() async {
+    if (videoPlayerCtrl != null) return;
+    await _initVideo();
+  }
+
   Future<void> play() async {
     await videoPlayerCtrl?.play();
     isPlaying.value = true;

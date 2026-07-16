@@ -8,11 +8,13 @@ import 'package:snginepro/features/feed/data/models/upload_file_data.dart';
 import 'package:snginepro/features/reels/data/models/music_model.dart';
 import 'package:snginepro/features/reels/data/services/audio_extraction_service.dart';
 import 'package:snginepro/features/reels/data/services/music_api_service.dart';
+import 'package:video_thumbnail/video_thumbnail.dart' as vt;
 
 enum ReelUploadStage {
   extractingSound,
   uploadingSound,
   uploadingVideo,
+  uploadingThumbnail,
   publishing,
   done,
 }
@@ -29,8 +31,8 @@ class ReelUploadException implements Exception {
 
 /// Orchestrates the full reel publish pipeline against the backend contract
 /// (docs/reels_backend_api.md): optional original-sound derivation, video
-/// upload, then post creation. Sound merging is server-side — only
-/// `sound_id` / `sound_start_ms` are sent.
+/// upload, optional cover upload, then post creation. Sound merging is
+/// server-side — only `sound_id` / `sound_start_ms` are sent.
 ///
 /// Intermediate results are cached per video path so a retry after a failure
 /// resumes at the failed stage instead of re-uploading earlier artifacts.
@@ -56,6 +58,8 @@ class ReelUploadService {
   int? _originalSoundId;
   int? _originalSoundStartMs;
   bool _originalSoundAttempted = false;
+  String? _customThumbSource;
+  bool _customThumbAttempted = false;
 
   void _log(String msg) {
     if (kDebugMode) debugPrint('🎬 [ReelPublish] $msg');
@@ -66,6 +70,7 @@ class ReelUploadService {
     required String message,
     String privacy = 'public',
     SelectedMusic? selectedMusic,
+    String? thumbnailPath,
     void Function(ReelUploadStage stage, double progress)? onProgress,
   }) async {
     if (_stateVideoPath != videoPath) {
@@ -170,9 +175,49 @@ class ReelUploadService {
       _log('Stage 2: video already uploaded on a previous attempt — skipping.');
     }
 
-    // 3. Create the post.
+    // 3. Thumbnail: a user-picked cover wins over the server's auto-generated
+    //    thumb; when the server returned no thumb either, one is generated
+    //    from the video locally. Failure is non-fatal — the reel publishes
+    //    with whatever thumb is available (a retry attempts the cover again).
+    final serverThumb = _relativeThumbPath(_uploadedVideo!.thumb);
+    if (!_customThumbAttempted &&
+        (thumbnailPath != null || serverThumb == null)) {
+      _customThumbAttempted = true;
+      try {
+        onProgress?.call(ReelUploadStage.uploadingThumbnail, 0);
+        final thumbFile = await _resolveThumbFile(thumbnailPath, videoPath);
+        if (thumbFile != null) {
+          _log('Stage 3a: uploading cover image '
+              '(${await thumbFile.length()} bytes)…');
+          final uploadedThumb = await _withRetry(
+            () => _postsService.uploadFile(
+              thumbFile,
+              type: FileUploadType.photo,
+            ),
+          );
+          _customThumbSource = uploadedThumb?.source;
+          if (_customThumbSource == null) {
+            _log('⚠️ Cover upload returned no source — falling back to the '
+                'server video thumb.');
+          } else {
+            _log('Cover ready: thumb=$_customThumbSource');
+          }
+        } else {
+          _log('⚠️ No cover file available (missing path and local '
+              'generation failed) — falling back to the server video thumb.');
+        }
+      } catch (e) {
+        _customThumbAttempted = false;
+        _log('⚠️ Cover upload FAILED (non-fatal, using server video '
+            'thumb): $e');
+      }
+    } else if (_customThumbSource != null) {
+      _log('Cover already uploaded on a previous attempt — skipping.');
+    }
+    final thumbPath = _customThumbSource ?? serverThumb;
+
+    // 4. Create the post.
     onProgress?.call(ReelUploadStage.publishing, 0);
-    final thumbPath = _relativeThumbPath(_uploadedVideo!.thumb);
     final request = CreatePostRequest(
       handle: 'me',
       privacy: privacy,
@@ -185,7 +230,7 @@ class ReelUploadService {
       },
       reelThumbnail: thumbPath,
     );
-    _log('Stage 3: creating reel post, reel payload: '
+    _log('Stage 4: creating reel post, reel payload: '
         '${request.toJson()['reel']}');
 
     try {
@@ -213,6 +258,34 @@ class ReelUploadService {
     _originalSoundId = null;
     _originalSoundStartMs = null;
     _originalSoundAttempted = false;
+    _customThumbSource = null;
+    _customThumbAttempted = false;
+  }
+
+  /// The user-picked cover when it still exists on disk; otherwise a frame
+  /// extracted from the video. Returns null when neither is available.
+  Future<File?> _resolveThumbFile(
+    String? thumbnailPath,
+    String videoPath,
+  ) async {
+    if (thumbnailPath != null && thumbnailPath.trim().isNotEmpty) {
+      final file = File(thumbnailPath);
+      if (await file.exists()) return file;
+      _log('⚠️ Cover file missing on disk: $thumbnailPath — generating one '
+          'from the video instead.');
+    }
+
+    try {
+      final generated = await vt.VideoThumbnail.thumbnailFile(
+        video: videoPath,
+        imageFormat: vt.ImageFormat.JPEG,
+        quality: 75,
+      );
+      return generated == null ? null : File(generated);
+    } catch (e) {
+      _log('⚠️ Local thumbnail generation failed: $e');
+      return null;
+    }
   }
 
   /// Thumbnail is stored relative to `/content/uploads/` per the contract.
