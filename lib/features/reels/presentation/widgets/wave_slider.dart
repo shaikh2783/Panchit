@@ -53,7 +53,10 @@ class WaveSliderController {
   }
 
   void seekTo(int ms) {
-    audioStartMS = ms.clamp(0, (totalDurationMs ?? 0) - videoDurationMs);
+    // Songs shorter than the reel duration would make the upper bound
+    // negative, and clamp throws when max < min.
+    final maxStartMs = (totalDurationMs ?? 0) - videoDurationMs;
+    audioStartMS = maxStartMs > 0 ? ms.clamp(0, maxStartMs) : 0;
     _startNotifier.value = audioStartMS;
     if (isPlaying) {
       pause().then((_) => _play());
@@ -113,8 +116,7 @@ class _WaveSliderState extends State<WaveSlider> {
               },
               onHorizontalDragUpdate: (d) {
                 final dx = d.localPosition.dx - _dragStart;
-                final screenWidth =
-                    MediaQuery.of(context).size.width - 48;
+                final screenWidth = MediaQuery.of(context).size.width - 48;
                 final deltaMs = (dx / screenWidth * totalMs).toInt();
                 ctrl.seekTo(_dragStartMs + deltaMs);
               },
@@ -139,7 +141,11 @@ class _WaveSliderState extends State<WaveSlider> {
                       ),
                     ),
                     // Wave bars
-                    _WaveBars(totalMs: totalMs, videoMs: videoMs, startMs: startMs),
+                    _WaveBars(
+                      totalMs: totalMs,
+                      videoMs: videoMs,
+                      startMs: startMs,
+                    ),
                     // Drag handle line
                     Center(
                       child: Container(
@@ -218,9 +224,7 @@ class _WaveBars extends StatelessWidget {
               height: h,
               margin: const EdgeInsets.symmetric(horizontal: 1),
               decoration: BoxDecoration(
-                color: inWindow
-                    ? const Color(0xFFE1306C)
-                    : Colors.white24,
+                color: inWindow ? const Color(0xFFE1306C) : Colors.white24,
                 borderRadius: BorderRadius.circular(1),
               ),
             ),

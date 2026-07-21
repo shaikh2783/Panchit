@@ -7,7 +7,14 @@ import 'package:snginepro/features/reels/data/models/music_model.dart';
 import 'package:snginepro/features/reels/data/services/music_api_service.dart';
 
 class MusicSheetController extends GetxController {
-  MusicSheetController({required this.musicService, required this.videoDurationSec});
+  MusicSheetController({
+    required this.musicService,
+    required this.videoDurationSec,
+  }) {
+    // The sheet creates this controller directly (no Get.put), so onInit()
+    // never fires — start the initial load here.
+    _loadAll();
+  }
 
   final MusicApiService musicService;
   final int videoDurationSec;
@@ -36,13 +43,31 @@ class MusicSheetController extends GetxController {
 
   @override
   void onClose() {
-    _debounceTimer?.cancel();
-    searchCtrl.dispose();
-    pageController.dispose();
+    _cleanup();
     super.onClose();
   }
 
+  @override
+  void dispose() {
+    // Callers that construct this controller manually call dispose()
+    // directly, which bypasses onClose().
+    _cleanup();
+    super.dispose();
+  }
+
+  bool _cleanedUp = false;
+  void _cleanup() {
+    if (_cleanedUp) return;
+    _cleanedUp = true;
+    _debounceTimer?.cancel();
+    searchCtrl.dispose();
+    pageController.dispose();
+  }
+
+  bool _loadStarted = false;
   void _loadAll() {
+    if (_loadStarted) return;
+    _loadStarted = true;
     fetchExplore();
     fetchCategories();
     fetchSaved();
@@ -78,7 +103,9 @@ class MusicSheetController extends GetxController {
   Future<void> fetchByCategory(int categoryId) async {
     isLoading.value = true;
     try {
-      final items = await musicService.fetchMusicByCategory(categoryId: categoryId);
+      final items = await musicService.fetchMusicByCategory(
+        categoryId: categoryId,
+      );
       // Show results inline on explore tab
       exploreList.value = items;
     } catch (_) {}
@@ -87,8 +114,11 @@ class MusicSheetController extends GetxController {
 
   void onTabChanged(int index) {
     selectedTab.value = index;
-    pageController.animateToPage(index,
-        duration: const Duration(milliseconds: 250), curve: Curves.easeIn);
+    pageController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 250),
+      curve: Curves.easeIn,
+    );
     isSearching.value = false;
     searchCtrl.clear();
     searchList.clear();
@@ -131,8 +161,7 @@ class MusicSheetController extends GetxController {
     if (isDownloading.value) return null;
     isDownloading.value = true;
     try {
-      final file = await DefaultCacheManager()
-          .getSingleFile(music.sound ?? '');
+      final file = await DefaultCacheManager().getSingleFile(music.sound ?? '');
       isDownloading.value = false;
       return SelectedMusic(
         music: music,

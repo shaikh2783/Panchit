@@ -5,13 +5,18 @@ import 'package:snginepro/features/reels/data/models/music_model.dart';
 import 'package:snginepro/features/reels/presentation/controllers/music_sheet_controller.dart';
 import 'package:snginepro/features/reels/presentation/pages/selected_music_sheet.dart';
 
+/// Shows the music-list sheet.
+///
+/// Returns the trimmed [SelectedMusic] chosen through [SelectedMusicSheet],
+/// or null when the user dismisses without completing a selection.
 Future<SelectedMusic?> showMusicSheet(
   BuildContext context, {
   required MusicSheetController controller,
 }) async {
-  return await showModalBottomSheet<SelectedMusic>(
+  return showModalBottomSheet<SelectedMusic>(
     context: context,
     isScrollControlled: true,
+    enableDrag: true,
     backgroundColor: Colors.transparent,
     builder: (_) => _MusicSheetBody(controller: controller),
   );
@@ -61,13 +66,18 @@ class _MusicSheetBody extends StatelessWidget {
                           filled: true,
                           fillColor: Colors.white10,
                           contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 14, vertical: 10),
+                            horizontal: 14,
+                            vertical: 10,
+                          ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
                           ),
-                          prefixIcon: const Icon(Icons.search,
-                              color: Colors.white38, size: 20),
+                          prefixIcon: const Icon(
+                            Icons.search,
+                            color: Colors.white38,
+                            size: 20,
+                          ),
                         ),
                         onChanged: controller.onSearchChanged,
                       ),
@@ -75,8 +85,10 @@ class _MusicSheetBody extends StatelessWidget {
                     const SizedBox(width: 10),
                     GestureDetector(
                       onTap: controller.onCancelSearch,
-                      child: Text('cancel'.tr,
-                          style: const TextStyle(color: Color(0xFFE1306C))),
+                      child: Text(
+                        'cancel'.tr,
+                        style: const TextStyle(color: Color(0xFFE1306C)),
+                      ),
                     ),
                   ],
                 );
@@ -84,11 +96,14 @@ class _MusicSheetBody extends StatelessWidget {
               return Row(
                 children: [
                   Expanded(
-                    child: Text('sounds'.tr,
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600)),
+                    child: Text(
+                      'sounds'.tr,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                   IconButton(
                     icon: const Icon(Icons.search, color: Colors.white70),
@@ -115,7 +130,9 @@ class _MusicSheetBody extends StatelessWidget {
                     child: Container(
                       margin: const EdgeInsets.only(right: 8),
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 7),
+                        horizontal: 16,
+                        vertical: 7,
+                      ),
                       decoration: BoxDecoration(
                         color: selected
                             ? const Color(0xFFE1306C)
@@ -145,7 +162,8 @@ class _MusicSheetBody extends StatelessWidget {
                   controller.exploreList.isEmpty &&
                   controller.searchList.isEmpty) {
                 return const Center(
-                    child: CircularProgressIndicator(color: Color(0xFFE1306C)));
+                  child: CircularProgressIndicator(color: Color(0xFFE1306C)),
+                );
               }
 
               // Search mode
@@ -154,8 +172,10 @@ class _MusicSheetBody extends StatelessWidget {
                     controller.searchCtrl.text.isNotEmpty &&
                     !controller.isLoading.value) {
                   return Center(
-                    child: Text('no_results'.tr,
-                        style: const TextStyle(color: Colors.white54)),
+                    child: Text(
+                      'no_results'.tr,
+                      style: const TextStyle(color: Colors.white54),
+                    ),
                   );
                 }
                 return _MusicList(
@@ -170,10 +190,14 @@ class _MusicSheetBody extends StatelessWidget {
                 physics: const NeverScrollableScrollPhysics(),
                 children: [
                   _MusicList(
-                      items: controller.exploreList, controller: controller),
+                    items: controller.exploreList,
+                    controller: controller,
+                  ),
                   _CategoriesGrid(controller: controller),
                   _MusicList(
-                      items: controller.savedList, controller: controller),
+                    items: controller.savedList,
+                    controller: controller,
+                  ),
                 ],
               );
             }),
@@ -194,8 +218,10 @@ class _MusicList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (items.isEmpty) {
       return Center(
-        child: Text('no_sounds_yet'.tr,
-            style: const TextStyle(color: Colors.white54)),
+        child: Text(
+          'no_sounds_yet'.tr,
+          style: const TextStyle(color: Colors.white54),
+        ),
       );
     }
     return ListView.builder(
@@ -214,6 +240,34 @@ class _MusicTile extends StatelessWidget {
   final MusicSheetController controller;
 
   const _MusicTile({required this.music, required this.controller});
+
+  Future<void> _onSelect(BuildContext context) async {
+    // downloadAndSelect ignores taps while a download is already running,
+    // which also prevents opening the trim sheet twice.
+    final selected = await controller.downloadAndSelect(music);
+    if (selected == null || !context.mounted) return;
+
+    // Open the trim sheet and wait for the trimmed result. The music-list
+    // sheet stays open underneath until a valid result comes back.
+    final trimmed = await showModalBottomSheet<SelectedMusic>(
+      context: context,
+      isScrollControlled: true,
+      enableDrag: true,
+      backgroundColor: Colors.transparent,
+      barrierColor: Colors.black.withValues(alpha: 0.72),
+      builder: (_) {
+        return SelectedMusicSheet(
+          selectedMusic: selected,
+          videoDurationSec: controller.videoDurationSec,
+        );
+      },
+    );
+
+    // Dismissed without Done: stay on the music list.
+    if (trimmed == null || !context.mounted) return;
+
+    Navigator.of(context).pop(trimmed);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -235,7 +289,10 @@ class _MusicTile extends StatelessWidget {
       title: Text(
         music.title ?? 'unknown'.tr,
         style: const TextStyle(
-            color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),
+          color: Colors.white,
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+        ),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
@@ -251,32 +308,14 @@ class _MusicTile extends StatelessWidget {
             width: 24,
             height: 24,
             child: CircularProgressIndicator(
-                strokeWidth: 2, color: Color(0xFFE1306C)),
+              strokeWidth: 2,
+              color: Color(0xFFE1306C),
+            ),
           );
         }
         return const Icon(Icons.chevron_right, color: Colors.white38);
       }),
-      onTap: () async {
-        final selected = await controller.downloadAndSelect(music);
-        if (selected == null) return;
-
-        if (!context.mounted) return;
-
-        // Show trim sheet
-        final trimmed = await showModalBottomSheet<SelectedMusic>(
-          context: context,
-          isScrollControlled: true,
-          backgroundColor: Colors.transparent,
-          builder: (_) => SelectedMusicSheet(
-            selectedMusic: selected,
-            videoDurationSec: controller.videoDurationSec,
-          ),
-        );
-
-        if (trimmed != null && context.mounted) {
-          Navigator.of(context).pop(trimmed);
-        }
-      },
+      onTap: () => _onSelect(context),
     );
   }
 
@@ -300,8 +339,10 @@ class _CategoriesGrid extends StatelessWidget {
     return Obx(() {
       if (controller.categoryList.isEmpty) {
         return Center(
-          child: Text('no_categories'.tr,
-              style: const TextStyle(color: Colors.white54)),
+          child: Text(
+            'no_categories'.tr,
+            style: const TextStyle(color: Colors.white54),
+          ),
         );
       }
       return GridView.builder(
@@ -329,8 +370,7 @@ class _CategoriesGrid extends StatelessWidget {
                     CachedNetworkImage(
                       imageUrl: cat.image!,
                       fit: BoxFit.cover,
-                      placeholder: (_, __) =>
-                          Container(color: Colors.white10),
+                      placeholder: (_, __) => Container(color: Colors.white10),
                       errorWidget: (_, __, ___) =>
                           Container(color: Colors.white10),
                     )
@@ -341,7 +381,7 @@ class _CategoriesGrid extends StatelessWidget {
                       gradient: LinearGradient(
                         colors: [
                           Colors.black.withOpacity(0.6),
-                          Colors.transparent
+                          Colors.transparent,
                         ],
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
