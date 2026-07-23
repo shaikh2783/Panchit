@@ -1080,7 +1080,10 @@ class _ReelCameraScreenState extends State<ReelCameraScreen> {
       final result = await showModalBottomSheet<SelectedMusic>(
         context: context,
         isScrollControlled: true,
-        enableDrag: true,
+        // The waveform's own horizontal drag competes with the sheet's
+        // vertical drag-to-dismiss in the gesture arena, which can swallow
+        // the seek drag. The sheet already has an explicit close button.
+        enableDrag: false,
         backgroundColor: Colors.transparent,
         barrierColor: Colors.black.withValues(alpha: 0.72),
         builder: (_) {

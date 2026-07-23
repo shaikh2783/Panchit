@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
 import 'package:snginepro/features/reels/data/models/music_model.dart';
+
+const Color _accentColor = Color(0xFFE1306C);
 
 class WaveSliderController {
   WaveSliderController({
@@ -14,52 +17,139 @@ class WaveSliderController {
   final int videoDurationMs;
 
   final PlayerController audioPlayer = PlayerController();
+
   int audioStartMS = 0;
   int? totalDurationMs;
   bool isPlaying = false;
 
-  final _startNotifier = ValueNotifier<int>(0);
-  ValueNotifier<int> get startNotifier => _startNotifier;
+  final ValueNotifier<int> _startNotifier = ValueNotifier<int>(0);
+  final ValueNotifier<bool> _playingNotifier = ValueNotifier<bool>(false);
 
-  Timer? _timer;
-  StreamSubscription? _posSub;
+  ValueNotifier<int> get startNotifier => _startNotifier;
+  ValueNotifier<bool> get playingNotifier => _playingNotifier;
+
+  Timer? _previewTimer;
+
+  bool _resumeAfterDrag = false;
+  Future<void>? _dragPauseFuture;
 
   Future<void> init() async {
-    audioStartMS = selectedMusic.audioStartMS;
-    await audioPlayer.preparePlayer(path: selectedMusic.downloadedURL);
+    await audioPlayer.preparePlayer(
+      path: selectedMusic.downloadedURL,
+    );
+
     totalDurationMs = await audioPlayer.getDuration();
+    audioStartMS = _clampStart(selectedMusic.audioStartMS);
+
     _startNotifier.value = audioStartMS;
+
     await audioPlayer.seekTo(audioStartMS);
-    audioPlayer.setFinishMode(finishMode: FinishMode.pause);
+
+    audioPlayer.setFinishMode(
+      finishMode: FinishMode.pause,
+    );
+
     await _play();
   }
 
+  int _clampStart(int milliseconds) {
+    final durationMs = totalDurationMs ?? 0;
+    final maxStartMs = math.max(0, durationMs - videoDurationMs);
+
+    return milliseconds.clamp(0, maxStartMs).toInt();
+  }
+
   Future<void> _play() async {
+    if (isPlaying) {
+      return;
+    }
+
+    _previewTimer?.cancel();
+
     await audioPlayer.seekTo(audioStartMS);
     await audioPlayer.startPlayer();
+
     isPlaying = true;
-    _timer?.cancel();
-    _timer = Timer(Duration(milliseconds: videoDurationMs), pause);
+    _playingNotifier.value = true;
+
+    final durationMs = totalDurationMs ?? videoDurationMs;
+    final remainingDurationMs = math.max(
+      0,
+      durationMs - audioStartMS,
+    );
+
+    final previewDurationMs = math.min(
+      videoDurationMs,
+      remainingDurationMs,
+    );
+
+    if (previewDurationMs > 0) {
+      _previewTimer = Timer(
+        Duration(milliseconds: previewDurationMs),
+        pause,
+      );
+    }
   }
 
   Future<void> pause() async {
-    _timer?.cancel();
-    await audioPlayer.pausePlayer();
+    _previewTimer?.cancel();
+
+    if (!isPlaying) {
+      return;
+    }
+
+    // Update immediately so repeated drag events cannot trigger
+    // multiple pause/play operations.
     isPlaying = false;
+    _playingNotifier.value = false;
+
+    await audioPlayer.pausePlayer();
   }
 
   Future<void> togglePlay() async {
-    isPlaying ? await pause() : await _play();
+    if (isPlaying) {
+      await pause();
+    } else {
+      await _play();
+    }
   }
 
-  void seekTo(int ms) {
-    // Songs shorter than the reel duration would make the upper bound
-    // negative, and clamp throws when max < min.
-    final maxStartMs = (totalDurationMs ?? 0) - videoDurationMs;
-    audioStartMS = maxStartMs > 0 ? ms.clamp(0, maxStartMs) : 0;
+  /// Called once when dragging starts.
+  void beginSelectionDrag() {
+    _resumeAfterDrag = isPlaying;
+
+    _dragPauseFuture = isPlaying
+        ? pause()
+        : Future<void>.value();
+  }
+
+  /// Updates only the selected start position.
+  ///
+  /// Audio is not restarted for every pointer movement.
+  void seekTo(int milliseconds) {
+    final newStartMs = _clampStart(milliseconds);
+
+    if (newStartMs == audioStartMS) {
+      return;
+    }
+
+    audioStartMS = newStartMs;
     _startNotifier.value = audioStartMS;
-    if (isPlaying) {
-      pause().then((_) => _play());
+  }
+
+  /// Called once when dragging finishes.
+  Future<void> endSelectionDrag() async {
+    final shouldResume = _resumeAfterDrag;
+
+    _resumeAfterDrag = false;
+
+    await _dragPauseFuture;
+    _dragPauseFuture = null;
+
+    await audioPlayer.seekTo(audioStartMS);
+
+    if (shouldResume) {
+      await _play();
     }
   }
 
@@ -73,30 +163,39 @@ class WaveSliderController {
   }
 
   void dispose() {
-    _timer?.cancel();
-    _posSub?.cancel();
+    _previewTimer?.cancel();
+
     audioPlayer.release();
     audioPlayer.dispose();
+
     _startNotifier.dispose();
+    _playingNotifier.dispose();
   }
 }
 
 class WaveSlider extends StatefulWidget {
-  final WaveSliderController controller;
+  const WaveSlider({
+    super.key,
+    required this.controller,
+  });
 
-  const WaveSlider({super.key, required this.controller});
+  final WaveSliderController controller;
 
   @override
   State<WaveSlider> createState() => _WaveSliderState();
 }
 
 class _WaveSliderState extends State<WaveSlider> {
-  double _dragStart = 0;
+  double _dragStartX = 0;
   int _dragStartMs = 0;
 
   WaveSliderController get ctrl => widget.controller;
 
-  int get totalMs => ctrl.totalDurationMs ?? 1;
+  int get totalMs => math.max(
+    ctrl.totalDurationMs ?? 0,
+    1,
+  );
+
   int get videoMs => ctrl.videoDurationMs;
 
   @override
@@ -104,83 +203,156 @@ class _WaveSliderState extends State<WaveSlider> {
     return ValueListenableBuilder<int>(
       valueListenable: ctrl.startNotifier,
       builder: (context, startMs, _) {
-        final double progress = totalMs > 0 ? startMs / totalMs : 0;
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Waveform bar
-            GestureDetector(
-              onHorizontalDragStart: (d) {
-                _dragStart = d.localPosition.dx;
-                _dragStartMs = startMs;
-              },
-              onHorizontalDragUpdate: (d) {
-                final dx = d.localPosition.dx - _dragStart;
-                final screenWidth = MediaQuery.of(context).size.width - 48;
-                final deltaMs = (dx / screenWidth * totalMs).toInt();
-                ctrl.seekTo(_dragStartMs + deltaMs);
-              },
-              child: Container(
-                height: 56,
-                margin: const EdgeInsets.symmetric(horizontal: 24),
-                decoration: BoxDecoration(
-                  color: Colors.white10,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Stack(
-                  children: [
-                    // Filled portion representing video duration
-                    FractionallySizedBox(
-                      widthFactor: (videoMs / totalMs).clamp(0.0, 1.0),
-                      alignment: Alignment(progress * 2 - 1, 0),
+            Padding(
+              // Keep padding outside LayoutBuilder so maxWidth represents
+              // the actual draggable waveform width.
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final trackWidth = constraints.maxWidth;
+
+                  final selectionFraction =
+                  (videoMs / totalMs).clamp(0.0, 1.0);
+
+                  final selectionWidth =
+                      trackWidth * selectionFraction;
+
+                  final travelWidth = math.max(
+                    0.0,
+                    trackWidth - selectionWidth,
+                  );
+
+                  final maxStartMs = math.max(
+                    0,
+                    totalMs - videoMs,
+                  );
+
+                  final progress = maxStartMs > 0
+                      ? (startMs / maxStartMs).clamp(0.0, 1.0)
+                      : 0.0;
+
+                  final selectionLeft = travelWidth * progress;
+
+                  return GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onHorizontalDragStart: (details) {
+                      _dragStartX = details.localPosition.dx;
+                      _dragStartMs = startMs;
+
+                      ctrl.beginSelectionDrag();
+                    },
+                    onHorizontalDragUpdate: (details) {
+                      if (travelWidth <= 0 || maxStartMs <= 0) {
+                        return;
+                      }
+
+                      final dragDistance =
+                          details.localPosition.dx - _dragStartX;
+
+                      final deltaMs = (
+                          dragDistance / travelWidth * maxStartMs
+                      ).round();
+
+                      ctrl.seekTo(_dragStartMs + deltaMs);
+                    },
+                    onHorizontalDragEnd: (_) {
+                      unawaited(ctrl.endSelectionDrag());
+                    },
+                    onHorizontalDragCancel: () {
+                      unawaited(ctrl.endSelectionDrag());
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
                       child: Container(
+                        width: double.infinity,
+                        height: 56,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFE1306C).withOpacity(0.35),
+                          color: Colors.white10,
                           borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Stack(
+                          children: [
+                            Positioned.fill(
+                              child: _WaveBars(
+                                totalMs: totalMs,
+                                videoMs: videoMs,
+                                startMs: startMs,
+                              ),
+                            ),
+
+                            // Draggable fixed-duration selection window.
+                            Positioned(
+                              left: selectionLeft,
+                              top: 0,
+                              bottom: 0,
+                              width: selectionWidth,
+                              child: IgnorePointer(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: _accentColor.withOpacity(0.20),
+                                    border: Border.all(
+                                      color: _accentColor,
+                                      width: 2,
+                                    ),
+                                    borderRadius: BorderRadius.circular(7),
+                                  ),
+                                  child: const Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      _SelectionHandle(),
+                                      _SelectionHandle(),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                    // Wave bars
-                    _WaveBars(
-                      totalMs: totalMs,
-                      videoMs: videoMs,
-                      startMs: startMs,
-                    ),
-                    // Drag handle line
-                    Center(
-                      child: Container(
-                        width: 2,
-                        color: const Color(0xFFE1306C),
-                      ),
-                    ),
-                  ],
-                ),
+                  );
+                },
               ),
             ),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                GestureDetector(
-                  onTap: ctrl.togglePlay,
-                  child: Container(
-                    width: 36,
-                    height: 36,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE1306C),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      ctrl.isPlaying ? Icons.pause : Icons.play_arrow,
-                      color: Colors.white,
-                      size: 20,
-                    ),
-                  ),
+                ValueListenableBuilder<bool>(
+                  valueListenable: ctrl.playingNotifier,
+                  builder: (context, isPlaying, _) {
+                    return GestureDetector(
+                      onTap: ctrl.togglePlay,
+                      child: Container(
+                        width: 36,
+                        height: 36,
+                        decoration: const BoxDecoration(
+                          color: _accentColor,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          isPlaying
+                              ? Icons.pause
+                              : Icons.play_arrow,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  '${_formatMs(startMs)} – ${_formatMs(startMs + videoMs)}',
-                  style: const TextStyle(color: Colors.white70, fontSize: 13),
+                  '${_formatMs(startMs)} – '
+                      '${_formatMs(startMs + videoMs)}',
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 13,
+                  ),
                 ),
               ],
             ),
@@ -190,41 +362,70 @@ class _WaveSliderState extends State<WaveSlider> {
     );
   }
 
-  String _formatMs(int ms) {
-    final s = (ms ~/ 1000) % 60;
-    final m = ms ~/ 60000;
-    return '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
+  String _formatMs(int milliseconds) {
+    final safeMilliseconds = math.max(0, milliseconds);
+    final totalSeconds = safeMilliseconds ~/ 1000;
+
+    final seconds = totalSeconds % 60;
+    final minutes = totalSeconds ~/ 60;
+
+    return '${minutes.toString().padLeft(2, '0')}:'
+        '${seconds.toString().padLeft(2, '0')}';
+  }
+}
+
+class _SelectionHandle extends StatelessWidget {
+  const _SelectionHandle();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 4,
+      height: 24,
+      margin: const EdgeInsets.symmetric(horizontal: 4),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(4),
+      ),
+    );
   }
 }
 
 class _WaveBars extends StatelessWidget {
-  final int totalMs;
-  final int videoMs;
-  final int startMs;
-
   const _WaveBars({
     required this.totalMs,
     required this.videoMs,
     required this.startMs,
   });
 
+  final int totalMs;
+  final int videoMs;
+  final int startMs;
+
   @override
   Widget build(BuildContext context) {
     const barCount = 40;
+
     return Row(
-      children: List.generate(barCount, (i) {
-        final barMs = (i / barCount * totalMs).toInt();
-        final inWindow = barMs >= startMs && barMs < startMs + videoMs;
-        // Pseudo-random height for visual variety
-        final h = 8.0 + ((i * 7 + 3) % 28).toDouble();
+      children: List.generate(barCount, (index) {
+        final barMs = (index / barCount * totalMs).toInt();
+
+        final isSelected = barMs >= startMs &&
+            barMs < startMs + videoMs;
+
+        final barHeight =
+            8.0 + ((index * 7 + 3) % 28).toDouble();
+
         return Expanded(
           child: Center(
             child: Container(
               width: 2,
-              height: h,
+              height: barHeight,
               margin: const EdgeInsets.symmetric(horizontal: 1),
               decoration: BoxDecoration(
-                color: inWindow ? const Color(0xFFE1306C) : Colors.white24,
+                color: isSelected
+                    ? _accentColor
+                    : Colors.white24,
                 borderRadius: BorderRadius.circular(1),
               ),
             ),
