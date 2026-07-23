@@ -120,6 +120,10 @@ class Post {
     this.merit,
     // ⏱️ VIDEO DURATION (seconds)
     this.videoDurationSeconds,
+    // 🎵 REEL SOUND FIELDS
+    this.soundId,
+    this.soundTitle,
+    this.soundUrl,
     // 📦 PRODUCT FIELDS
     this.available = true,
     this.productId,
@@ -261,6 +265,12 @@ class Post {
   // ⏱️ VIDEO DURATION (seconds)
   final int? videoDurationSeconds;
 
+  // 🎵 REEL SOUND FIELDS — sound_id/sound_title come top-level per the reels
+  // contract (§14); soundUrl only when the backend embeds the sound object.
+  final int? soundId;
+  final String? soundTitle;
+  final String? soundUrl;
+
   final String reactionsCountFormatted;
   final String commentsCountFormatted;
   final String sharesCountFormatted;
@@ -363,6 +373,22 @@ class Post {
             ? json['product'] as Map<String, dynamic>
             : null;
 
+        // 🎵 Reel sound: top-level sound_id/sound_title, or nested in the
+        // reel object (reel.sound_id / embedded reel.sound music object)
+        final Map<String, dynamic>? reelObj =
+            json['reel'] is Map<String, dynamic>
+                ? json['reel'] as Map<String, dynamic>
+                : null;
+        final Map<String, dynamic>? soundObj =
+            reelObj?['sound'] is Map<String, dynamic>
+                ? reelObj!['sound'] as Map<String, dynamic>
+                : (json['sound'] is Map<String, dynamic>
+                    ? json['sound'] as Map<String, dynamic>
+                    : null);
+        final String? soundIdRaw = _string(json['sound_id']) ??
+            _string(reelObj?['sound_id']) ??
+            _string(soundObj?['id']);
+
         return Post(
         id: _int(json['post_id']),
         // 👤 Handle anonymous posts - show "anonymous_user" key for translation
@@ -407,6 +433,9 @@ class Post {
         reactionBreakdown: _parseReactions(json['reactions']),
         permalink: _string(json['post_author_url']),
         video: PostVideo.maybeFromJson(json['video'] ?? json['reel']),
+        soundId: soundIdRaw != null ? int.tryParse(soundIdRaw) : null,
+        soundTitle: _string(json['sound_title']) ?? _string(soundObj?['title']),
+        soundUrl: _string(json['sound_url']) ?? _string(soundObj?['sound']),
         photos: photos,
         ogImage: ogImage,
         poll: PostPoll.maybeFromJson(json['poll']),
@@ -681,6 +710,10 @@ class Post {
     Merit? merit,
     // ⏱️ VIDEO DURATION
     int? videoDurationSeconds,
+    // 🎵 REEL SOUND PARAMETERS
+    int? soundId,
+    String? soundTitle,
+    String? soundUrl,
   }) {
     return Post(
       id: id ?? this.id,
@@ -799,6 +832,10 @@ class Post {
       merit: merit ?? this.merit,
       // ⏱️ VIDEO DURATION
       videoDurationSeconds: videoDurationSeconds ?? this.videoDurationSeconds,
+      // 🎵 REEL SOUND FIELDS
+      soundId: soundId ?? this.soundId,
+      soundTitle: soundTitle ?? this.soundTitle,
+      soundUrl: soundUrl ?? this.soundUrl,
     );
   }
 
@@ -1074,6 +1111,10 @@ class Post {
       merit: merit,
       // ⏱️ VIDEO DURATION
       videoDurationSeconds: videoDurationSeconds,
+      // 🎵 REEL SOUND FIELDS
+      soundId: soundId,
+      soundTitle: soundTitle,
+      soundUrl: soundUrl,
     );
   }
 }

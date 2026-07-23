@@ -335,33 +335,62 @@ class _ProfilePageState extends State<ProfilePage>
 
   /// Returns the competition tag widgets for the profile header:
   /// - Running competition: competition name pill only (no rank)
-  /// - Finished competition: rank badge only (no name, no category chip)
+  /// - Finished competition: category badge (e.g. Dancer, Singer) tinted by
+  ///   medal tier; falls back to a plain rank badge if no category is set
   List<Widget> _buildCompetitionTagWidgets(
     profile_models.UserProfile profile,
     List<String> achievementTags,
   ) {
     final theme = Theme.of(context);
     final tags = <Widget>[];
-
-    // --- Finished competitions: show rank only, tap → CompetitionDetailPage ---
+    // --- Finished competitions: show category badge, tap → CompetitionDetailPage ---
     for (final badge in profile.badges) {
       if (badge.competitionId == null) continue;
       final rank = badge.effectiveRank;
-      if (rank != null && rank <= 3) {
-        tags.add(
-          GestureDetector(
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => CompetitionDetailPage(
-                  competitionId: badge.competitionId!,
-                ),
+      if (rank == null || rank > 3) continue;
+
+      final category = (badge.categoryName?.trim().isNotEmpty ?? false)
+          ? badge.categoryName!.trim()
+          : (badge.categoryTag?.trim().isNotEmpty ?? false)
+              ? badge.categoryTag!.trim()
+              : null;
+
+      Color tierBg;
+      Color tierFg;
+      switch (rank) {
+        case 1:
+          tierBg = const Color(0xFFFFD700);
+          tierFg = const Color(0xFF7A5C00);
+          break;
+        case 2:
+          tierBg = const Color(0xFF9CA3AF);
+          tierFg = const Color(0xFF374151);
+          break;
+        default:
+          tierBg = const Color(0xFFCD7F32);
+          tierFg = const Color(0xFF5C3A1E);
+      }
+
+      tags.add(
+        GestureDetector(
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => CompetitionDetailPage(
+                competitionId: badge.competitionId!,
               ),
             ),
-            child: WinnerRankBadge(rank: rank, compact: true),
           ),
-        );
-      }
+          child: category != null
+              ? _CompetitionNameChip(
+                  label: category,
+                  color: tierFg,
+                  backgroundColor: tierBg,
+                  icon: Iconsax.award,
+                )
+              : WinnerRankBadge(rank: rank, compact: true),
+        ),
+      );
     }
 
     // --- Running competitions: show name only, tap → CompetitionsHubPage ---

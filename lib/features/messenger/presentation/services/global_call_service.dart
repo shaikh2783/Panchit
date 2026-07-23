@@ -24,9 +24,13 @@ class GlobalCallService extends GetxService {
     _callsApiService = CallsApiService(apiClient);
     _callManager = CallManager(_callsApiService);
     
-    // Initialize Agora with app ID
+    // Initialize Agora with app ID.
+    // Timeout guards against the native engine init hanging and never
+    // completing (seen as an app frozen at launch on some devices).
     try {
-      await _callManager.initializeAgora('06e8cc01e5ce4a1ba6d1254c2a5aa7da');
+      await _callManager
+          .initializeAgora('06e8cc01e5ce4a1ba6d1254c2a5aa7da')
+          .timeout(const Duration(seconds: 15));
     } catch (e) {
     }
     
