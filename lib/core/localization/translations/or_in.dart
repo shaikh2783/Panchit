@@ -3033,5 +3033,5 @@ const Map<String, String> orIN = {
   "widget_timer_unavailable": "ଟାଇମର ଉପଲବ୍ଧ ନୁହେଁ",
   "hub_no_filtered_competitions": "\"@category\" ପ୍ରତିଯୋଗିତା ନାହିଁ",
   "hub_no_filtered_msg": "ଏହି ବର୍ଗ ସହ ମେଳ ଖାଉଥିବା କୌଣସି ପ୍ରତିଯୋଗିତା ନାହିଁ। ଭିନ୍ନ ଫିଲ୍ଟର ଚେଷ୍ଟା କରନ୍ତୁ।",
-  "hub_clear_filter": "ଫିଲ୍ଟର ସଫା କରନ୍ତୁ",
+  "hub_clear_filter": "ଫିଲ୍ଟର ସଫା କରନ୍ତୁ"
 };

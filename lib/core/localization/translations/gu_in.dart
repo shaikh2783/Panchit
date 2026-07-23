@@ -3020,5 +3020,4 @@ const Map<String, String> guIN = {
   "hub_no_filtered_competitions": "કોઈ \"@category\" સ્પર્ધાઓ નથી",
   "hub_no_filtered_msg": "આ શ્રેણી સાથે કોઈ સ્પર્ધા મળતી નથી. અલગ ફિલ્ટર અજમાવો.",
   "hub_clear_filter": "ફિલ્ટર સાફ કરો",
-
 };

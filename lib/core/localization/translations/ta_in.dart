@@ -3024,5 +3024,5 @@ const Map<String, String> taIN = {
   'no_categories': 'வகைகள் இல்லை',
   'tap_to_apply': 'பயன்படுத்த தட்டவும்',
   'drag_choose_song_part': 'பாடலின் எந்தப் பகுதி ஒலிக்க வேண்டும் என்பதைத் தேர்வு செய்ய இழுக்கவும்',
-  'categories': 'வகைகள்',
+  'categories': 'வகைகள்'
 };

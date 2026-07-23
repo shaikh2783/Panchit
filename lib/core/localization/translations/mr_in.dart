@@ -3280,5 +3280,5 @@ const Map<String, String> mrIN = {
   "widget_timer_unavailable": "टायमर उपलब्ध नाही",
   "hub_no_filtered_competitions": "\"@category\" स्पर्धा नाहीत",
   "hub_no_filtered_msg": "या श्रेणीशी जुळणाऱ्या कोणत्याही स्पर्धा नाहीत. वेगळा फिल्टर वापरून पाहा.",
-  "hub_clear_filter": "फिल्टर साफ करा"
+  "hub_clear_filter": "फिल्टर साफ करा",
 };

@@ -3065,5 +3065,5 @@ const Map<String, String> bnIN = {
   // Hub Filter
   "hub_no_filtered_competitions": "কোনো \"@category\" প্রতিযোগিতা নেই",
   "hub_no_filtered_msg": "এই বিভাগের সাথে কোনো প্রতিযোগিতা মেলে না। ভিন্ন ফিল্টার ব্যবহার করুন।",
-  "hub_clear_filter": "ফিল্টার সাফ করুন",
+  "hub_clear_filter": "ফিল্টার সাফ করুন"
 };
