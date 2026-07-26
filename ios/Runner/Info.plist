@@ -264,18 +264,19 @@
 		<key>UIViewControllerBasedStatusBarAppearance</key>
 		<false/>
 		<key>NSCameraUsageDescription</key>
-		<string>We need camera access to capture photos and videos and enable live streaming.</string>
-		<key>NSMicrophoneUsageDescription</key>
-		<string>We need microphone access to record audio with videos and live streaming.</string>
-		<key>NSPhotoLibraryUsageDescription</key>
-		<string>We need access to your photo library so you can select photos and videos.</string>
-		<key>NSLocalNetworkUsageDescription</key>
-		<string>We need access to the local network to improve live streaming quality.</string>
-		<key>NSUserTrackingUsageDescription</key>
-		<string>This identifier will be used to deliver personalized ads to you.</string>
-		<key>NSLocationWhenInUseUsageDescription</key>
-		<string>We need your location to show relevant local content and connect you with nearby users.</string>
-		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-		<string>We need your location to provide personalized updates even when the app is in the background.</string>
+        <string>Panchit uses the camera so you can take profile photos, record videos, and broadcast live video to other users.</string>
+
+        <key>NSMicrophoneUsageDescription</key>
+        <string>Panchit uses the microphone so viewers can hear you when you record a video, send a voice message, or start a live broadcast.</string>
+
+        <key>NSPhotoLibraryUsageDescription</key>
+        <string>Panchit accesses your photo library so you can select photos and videos to upload to your profile or share with other users.</string>
+
+        <key>NSUserTrackingUsageDescription</key>
+        <string>Panchit uses your device identifier to show and measure advertisements that are more relevant to you.</string>
+
+        <key>NSLocationWhenInUseUsageDescription</key>
+        <string>Panchit uses your location while the app is open to show local content and users near your current area.</string>
+
 	</dict>
 </plist>
