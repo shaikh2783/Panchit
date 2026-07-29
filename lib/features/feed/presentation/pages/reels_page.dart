@@ -25,6 +25,7 @@ import 'package:snginepro/features/feed/presentation/widgets/post_menu_bottom_sh
 import 'package:snginepro/features/auth/application/auth_notifier.dart';
 import 'package:snginepro/features/friends/data/services/friends_api_service.dart';
 import 'package:snginepro/features/friends/data/models/friendship_model.dart';
+import 'package:snginepro/features/profile/data/services/profile_api_service.dart';
 import 'package:snginepro/features/feed/data/services/post_management_api_service.dart';
 import 'package:snginepro/features/profile/presentation/pages/profile_page.dart';
 
@@ -630,17 +631,25 @@ class _CaptionAndOwner extends StatefulWidget {
 }
 
 class _CaptionAndOwnerState extends State<_CaptionAndOwner> {
+  // Remembers the last confirmed follow status per author for this app
+  // session, so re-mounting a reel (PageView disposes offscreen pages)
+  // doesn't flash back to "Follow" while a fresh status fetch is in flight.
+  static final Map<int, bool> _followStatusCache = {};
+
   bool _isFollowing = false;
   bool _isLoadingFollow = false;
   bool _didLoadStatus = false;
   bool _isOwner = false;
   int? _authorId;
   FriendsApiService? _friendsService;
+  ProfileApiService? _profileService;
 
   @override
   void initState() {
     super.initState();
     _authorId = int.tryParse(widget.post.authorId ?? '');
+    final cached = _authorId != null ? _followStatusCache[_authorId] : null;
+    if (cached != null) _isFollowing = cached;
   }
 
   @override
@@ -648,7 +657,9 @@ class _CaptionAndOwnerState extends State<_CaptionAndOwner> {
     super.didChangeDependencies();
 
     // إعداد خدمة المتابعة وحساب ملكية الريل
-    _friendsService ??= FriendsApiService(context.read<ApiClient>());
+    final apiClient = context.read<ApiClient>();
+    _friendsService ??= FriendsApiService(apiClient);
+    _profileService ??= ProfileApiService(apiClient);
     _computeOwnership();
 
     if (!_didLoadStatus) {
@@ -667,21 +678,24 @@ class _CaptionAndOwnerState extends State<_CaptionAndOwner> {
     }
   }
 
+  // Uses the same profile endpoint the (working) profile page follow button
+  // relies on — the dedicated `/relationship` endpoint this used to call is
+  // otherwise unused in the app and doesn't reliably reflect follow state.
   Future<void> _loadFollowStatus() async {
     if (_isOwner) return;
     final authorId = _authorId;
-    final service = _friendsService;
+    final service = _profileService;
     if (authorId == null || service == null) return;
 
     try {
-      final data = await service.getUserRelationshipStatus(authorId);
-      final statusString = (data?['friendship_status'] ?? data?['status'] ?? '').toString().toLowerCase();
-      final isFollowing = data?['is_following'] == true || statusString == 'following' || statusString == 'friends';
+      final profile = await service.getProfileById(authorId);
+      final isFollowing = profile.relationship.isFollowing;
+      _followStatusCache[authorId] = isFollowing;
       if (mounted) {
         setState(() => _isFollowing = isFollowing);
       }
     } catch (_) {
-      // تجاهل الخطأ والاكتفاء بالقيمة الافتراضية
+      // تجاهل الخطأ والاكتفاء بالقيمة المخزّنة/الافتراضية
     }
   }
 
@@ -703,6 +717,7 @@ class _CaptionAndOwnerState extends State<_CaptionAndOwner> {
         final newStatus = result.newStatus;
         _isFollowing = newStatus == FriendshipStatus.following || newStatus == FriendshipStatus.friends;
       });
+      _followStatusCache[authorId] = _isFollowing;
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(result.message)),
