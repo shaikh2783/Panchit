@@ -1196,7 +1196,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
             Icons.close_rounded,
             color: isDark ? Colors.white : Colors.grey[700],
           ),
-          onPressed: () => Get.back(),
+          onPressed: () => Navigator.of(context).pop(),
         ),
       ),
       title: Text(

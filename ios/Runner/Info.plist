@@ -272,9 +272,6 @@
         <key>NSPhotoLibraryUsageDescription</key>
         <string>Panchit accesses your photo library so you can select photos and videos to upload to your profile or share with other users.</string>
 
-        <key>NSUserTrackingUsageDescription</key>
-        <string>Panchit uses your device identifier to show and measure advertisements that are more relevant to you.</string>
-
         <key>NSLocationWhenInUseUsageDescription</key>
         <string>Panchit uses your location while the app is open to show local content and users near your current area.</string>
 
