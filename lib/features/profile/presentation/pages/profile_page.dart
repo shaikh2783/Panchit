@@ -334,45 +334,33 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   /// Returns the competition tag widgets for the profile header:
+  /// - Finished competitions (top 2 by rank): compact medal chip, e.g.
+  ///   "🥇 1st Place · Dancing"; tap → CompetitionDetailPage
   /// - Running competition: competition name pill only (no rank)
-  /// - Finished competition: category badge (e.g. Dancer, Singer) tinted by
-  ///   medal tier; falls back to a plain rank badge if no category is set
+  static const int _maxHeaderCompetitionAchievements = 2;
+
   List<Widget> _buildCompetitionTagWidgets(
     profile_models.UserProfile profile,
     List<String> achievementTags,
   ) {
     final theme = Theme.of(context);
     final tags = <Widget>[];
-    // --- Finished competitions: show category badge, tap → CompetitionDetailPage ---
-    for (final badge in profile.badges) {
-      if (badge.competitionId == null) continue;
+
+    // --- Finished competitions: compact medal chip, tap → CompetitionDetailPage ---
+    final winnerBadges = profile.badges.where((badge) {
       final rank = badge.effectiveRank;
-      if (rank == null || rank > 3) continue;
+      return badge.competitionId != null && rank != null && rank <= 3;
+    }).toList()
+      ..sort(
+        (a, b) => (a.effectiveRank ?? 99).compareTo(b.effectiveRank ?? 99),
+      );
 
-      final category = (badge.categoryName?.trim().isNotEmpty ?? false)
-          ? badge.categoryName!.trim()
-          : (badge.categoryTag?.trim().isNotEmpty ?? false)
-              ? badge.categoryTag!.trim()
-              : null;
-
-      Color tierBg;
-      Color tierFg;
-      switch (rank) {
-        case 1:
-          tierBg = const Color(0xFFFFD700);
-          tierFg = const Color(0xFF7A5C00);
-          break;
-        case 2:
-          tierBg = const Color(0xFF9CA3AF);
-          tierFg = const Color(0xFF374151);
-          break;
-        default:
-          tierBg = const Color(0xFFCD7F32);
-          tierFg = const Color(0xFF5C3A1E);
-      }
-
+    final visibleWinnerBadges =
+        winnerBadges.take(_maxHeaderCompetitionAchievements);
+    for (final badge in visibleWinnerBadges) {
       tags.add(
-        GestureDetector(
+        _CompetitionWinnerChip(
+          badge: badge,
           onTap: () => Navigator.push(
             context,
             MaterialPageRoute(
@@ -381,16 +369,13 @@ class _ProfilePageState extends State<ProfilePage>
               ),
             ),
           ),
-          child: category != null
-              ? _CompetitionNameChip(
-                  label: category,
-                  color: tierFg,
-                  backgroundColor: tierBg,
-                  icon: Iconsax.award,
-                )
-              : WinnerRankBadge(rank: rank, compact: true),
         ),
       );
+    }
+    final hiddenWinnerCount =
+        winnerBadges.length - _maxHeaderCompetitionAchievements;
+    if (hiddenWinnerCount > 0) {
+      tags.add(_MoreAchievementsChip(count: hiddenWinnerCount));
     }
 
     // --- Running competitions: show name only, tap → CompetitionsHubPage ---
@@ -582,72 +567,6 @@ class _ProfilePageState extends State<ProfilePage>
                           profile,
                           achievementTags,
                         ),
-                        if (profile.badges.isNotEmpty) ...[
-                          const SizedBox(height: 10),
-                          SizedBox(
-                            height: 50,
-                            child: ListView.separated(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: profile.badges.take(4).length,
-                              separatorBuilder: (_, __) => const SizedBox(width: 8),
-                              itemBuilder: (context, index) {
-                                final badge = profile.badges[index];
-                                final badgeColor = (() {
-                                  final raw = badge.color?.trim();
-                                  if (raw == null || raw.isEmpty) return Colors.amber;
-                                  final normalized = raw.startsWith('#') ? raw.substring(1) : raw;
-                                  final value = int.tryParse('0xff$normalized');
-                                  return value != null ? Color(value) : Colors.amber;
-                                })();
-                                return GestureDetector(
-                                  onTap: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) => _BadgeDetailDialog(badge: badge),
-                                    );
-                                  },
-                                  child: Container(
-                                    width: 48,
-                                    height: 48,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: badgeColor.withValues(alpha: 0.2),
-                                      border: Border.all(
-                                        color: badgeColor,
-                                        width: 1.5,
-                                      ),
-                                    ),
-                                    child: Center(
-                                      child: badge.icon != null && badge.icon!.isNotEmpty
-                                          ? ClipRRect(
-                                            borderRadius: BorderRadius.circular(24),
-                                            child: CachedNetworkImage(
-                                              imageUrl: badge.icon!,
-                                              fit: BoxFit.cover,
-                                              placeholder: (_, __) => Icon(
-                                                Iconsax.award,
-                                                color: badgeColor,
-                                                size: 24,
-                                              ),
-                                              errorWidget: (_, __, ___) => Icon(
-                                                Iconsax.award,
-                                                color: badgeColor,
-                                                size: 24,
-                                              ),
-                                            ),
-                                          )
-                                          : Icon(
-                                        Iconsax.award,
-                                        color: badgeColor,
-                                        size: 24,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
                       ],
                     ),
                   ),
@@ -1337,9 +1256,22 @@ class _ProfilePageState extends State<ProfilePage>
             (profile.education.major?.isNotEmpty ?? false) ||
             (profile.education.classYear?.isNotEmpty ?? false);
 
+    final competitionBadges = profile.badges
+        .where((badge) => badge.competitionId != null)
+        .toList()
+      ..sort(
+        (a, b) => (a.effectiveRank ?? 99).compareTo(b.effectiveRank ?? 99),
+      );
+    final genericBadges =
+        profile.badges.where((badge) => badge.competitionId == null).toList();
+
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
+        if (competitionBadges.isNotEmpty) ...[
+          _buildCompetitionAchievementsSection(competitionBadges),
+          const SizedBox(height: 16),
+        ],
         if (achievementTags.isNotEmpty) ...[
           _InfoCard(
             title: 'Achievements',
@@ -1356,8 +1288,8 @@ class _ProfilePageState extends State<ProfilePage>
           ),
           const SizedBox(height: 16),
         ],
-        if (profile.badges.isNotEmpty) ...[
-          _buildBadgesSection(profile.badges),
+        if (genericBadges.isNotEmpty) ...[
+          _buildBadgesSection(genericBadges),
           const SizedBox(height: 16),
         ],
         if ((profile.about ?? '').isNotEmpty) ...[
@@ -1608,6 +1540,40 @@ class _ProfilePageState extends State<ProfilePage>
           ],
         ),
       ),
+    );
+  }
+
+  /// Competition Achievements: one card, clean rows separated by dividers,
+  /// sourced from [profile_models.Badge]s that reference a competition.
+  Widget _buildCompetitionAchievementsSection(
+    List<profile_models.Badge> competitionBadges,
+  ) {
+    final rows = <Widget>[];
+    for (var i = 0; i < competitionBadges.length; i++) {
+      if (i > 0) {
+        rows.add(const Divider(height: 20));
+      }
+      final badge = competitionBadges[i];
+      rows.add(
+        _CompetitionAchievementTile(
+          badge: badge,
+          onTap: badge.competitionId == null
+              ? null
+              : () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => CompetitionDetailPage(
+                        competitionId: badge.competitionId!,
+                      ),
+                    ),
+                  ),
+        ),
+      );
+    }
+    return _InfoCard(
+      title: 'Competition Achievements',
+      icon: Iconsax.cup,
+      children: rows,
     );
   }
 
@@ -3935,8 +3901,9 @@ class _BadgeCard extends StatelessWidget {
       final value = int.tryParse('0xff$normalized');
       return value != null ? Color(value) : cs.primary;
     })();
-
+    print("badge ${badge.label}");
     return GestureDetector(
+
       onTap: () {
         // Show badge details in a dialog
         showDialog(
@@ -4008,6 +3975,7 @@ class _BadgeCard extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               // Badge Label
+
               Text(
                 badge.label ?? 'Badge',
                 textAlign: TextAlign.center,
@@ -4242,6 +4210,265 @@ class _CompetitionNameChip extends StatelessWidget {
           ),
         ],
       ),
+      ),
+    );
+  }
+}
+
+/// Subtle premium medal tint for a competition rank (1st/2nd/3rd).
+Color _competitionTierColor(int rank) {
+  switch (rank) {
+    case 1:
+      return const Color(0xFFD4AF37);
+    case 2:
+      return const Color(0xFFA8ADB4);
+    case 3:
+      return const Color(0xFFB87333);
+    default:
+      return const Color(0xFFD4AF37);
+  }
+}
+
+/// Human-readable rank label, e.g. "1st Place".
+String _competitionRankLabel(int rank) {
+  switch (rank) {
+    case 1:
+      return '1st Place';
+    case 2:
+      return '2nd Place';
+    case 3:
+      return '3rd Place';
+    default:
+      return 'Rank #$rank';
+  }
+}
+
+/// Medal emoji for a competition rank, falling back to a trophy.
+String _competitionMedalEmoji(int rank) {
+  switch (rank) {
+    case 1:
+      return '🥇';
+    case 2:
+      return '🥈';
+    case 3:
+      return '🥉';
+    default:
+      return '🏆';
+  }
+}
+
+/// Compact premium winner chip for the profile header, e.g.
+/// "🥇 1st Place · Dancing". Falls back to "🏆 1st Place" when the
+/// competition category is unavailable.
+class _CompetitionWinnerChip extends StatelessWidget {
+  const _CompetitionWinnerChip({required this.badge, this.onTap});
+
+  final profile_models.Badge badge;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final rank = badge.effectiveRank ?? 0;
+    final tierColor = _competitionTierColor(rank);
+    final category = (badge.categoryName?.trim().isNotEmpty ?? false)
+        ? badge.categoryName!.trim()
+        : (badge.categoryTag?.trim().isNotEmpty ?? false)
+            ? badge.categoryTag!.trim()
+            : null;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(17),
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 220),
+          padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
+          decoration: BoxDecoration(
+            color: tierColor.withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(17),
+            border: Border.all(color: tierColor.withValues(alpha: 0.35)),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                _competitionMedalEmoji(rank),
+                style: const TextStyle(fontSize: 14),
+              ),
+              const SizedBox(width: 6),
+              Flexible(
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: _competitionRankLabel(rank),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      if (category != null)
+                        TextSpan(
+                          text: ' · $category',
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.82),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                    ],
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Small "+N" indicator shown after the visible header winner chips when
+/// there are more competition achievements than fit in the header.
+class _MoreAchievementsChip extends StatelessWidget {
+  const _MoreAchievementsChip({required this.count});
+
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(17),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.24)),
+      ),
+      child: Text(
+        '+$count',
+        style: TextStyle(
+          color: Colors.white.withValues(alpha: 0.82),
+          fontSize: 12,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+  }
+}
+
+/// Professional row for a single competition achievement inside the About
+/// tab's Competition Achievements card: medal, rank, competition name,
+/// category, optional awarded date, and a trailing arrow when tappable.
+class _CompetitionAchievementTile extends StatelessWidget {
+  const _CompetitionAchievementTile({required this.badge, this.onTap});
+
+  final profile_models.Badge badge;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    final rank = badge.effectiveRank;
+    final tierColor = rank != null ? _competitionTierColor(rank) : cs.primary;
+    final rankLabel =
+        rank != null ? _competitionRankLabel(rank) : (badge.label ?? 'Winner');
+    final medal = rank != null ? _competitionMedalEmoji(rank) : '🏆';
+
+    final competitionName =
+        (badge.name?.trim().isNotEmpty ?? false) ? badge.name!.trim() : null;
+    final category = (badge.categoryName?.trim().isNotEmpty ?? false)
+        ? badge.categoryName!.trim()
+        : (badge.categoryTag?.trim().isNotEmpty ?? false)
+            ? badge.categoryTag!.trim()
+            : null;
+    final awardedAt = (badge.awardedAt?.trim().isNotEmpty ?? false)
+        ? badge.awardedAt!.trim()
+        : null;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: tierColor.withValues(alpha: 0.12),
+                  border: Border.all(color: tierColor.withValues(alpha: 0.35)),
+                ),
+                child: Text(medal, style: const TextStyle(fontSize: 18)),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      rankLabel,
+                      style: theme.textTheme.bodyMedium
+                          ?.copyWith(fontWeight: FontWeight.w700),
+                    ),
+                    if (competitionName != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2),
+                        child: Text(
+                          competitionName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.bodySmall
+                              ?.copyWith(color: cs.onSurfaceVariant),
+                        ),
+                      ),
+                    if (category != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2),
+                        child: Text(
+                          category,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: cs.primary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    if (awardedAt != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2),
+                        child: Text(
+                          awardedAt,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color:
+                                cs.onSurfaceVariant.withValues(alpha: 0.7),
+                            fontSize: 11,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              if (onTap != null)
+                Icon(
+                  Iconsax.arrow_right_3,
+                  size: 18,
+                  color: cs.onSurfaceVariant,
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }

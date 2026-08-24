@@ -156,9 +156,9 @@ class Badge {
     }
     return Badge(
       name: json['name'],
-      label: json['label'],
-      icon: json['icon'],
-      color: json['color'],
+      label: json['badge_label'],
+      icon: json['badge_icon'],
+      color: json['badge_color'],
       categoryName: json['category_name'],
       categoryTag: json['category_tag'],
       competitionId: json['competition_id'],
