@@ -123,6 +123,74 @@ class SocialLinks {
       vkontakte == null;
 }
 
+class Badge {
+  final String? name;
+  final String? label;
+  final String? icon;
+  final String? color;
+  final String? categoryName;
+  final String? categoryTag;
+  final int? competitionId;
+  final String? awardedAt;
+  final int? rank;
+
+  Badge({
+    this.name,
+    this.label,
+    this.icon,
+    this.color,
+    this.categoryName,
+    this.categoryTag,
+    this.competitionId,
+    this.awardedAt,
+    this.rank,
+  });
+
+  factory Badge.fromJson(Map<String, dynamic> json) {
+    final rawRank = json['rank'] ?? json['winner_rank'] ?? json['position'];
+    int? parsedRank;
+    if (rawRank is int) {
+      parsedRank = rawRank;
+    } else if (rawRank != null) {
+      parsedRank = int.tryParse(rawRank.toString());
+    }
+    return Badge(
+      name: json['name'],
+      label: json['badge_label'],
+      icon: json['badge_icon'],
+      color: json['badge_color'],
+      categoryName: json['category_name'],
+      categoryTag: json['category_tag'],
+      competitionId: json['competition_id'],
+      awardedAt: json['awarded_at'],
+      rank: parsedRank,
+    );
+  }
+
+  int? get effectiveRank {
+    if (rank != null) return rank;
+    final l = (label ?? '').toLowerCase();
+    if (l.contains('1st') || l.contains('first')) return 1;
+    if (l.contains('2nd') || l.contains('second')) return 2;
+    if (l.contains('3rd') || l.contains('third')) return 3;
+    return null;
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'label': label,
+      'icon': icon,
+      'color': color,
+      'category_name': categoryName,
+      'category_tag': categoryTag,
+      'competition_id': competitionId,
+      'awarded_at': awardedAt,
+      'rank': rank,
+    };
+  }
+}
+
 class UserProfile {
   final String id;
   final String username;
@@ -145,6 +213,8 @@ class UserProfile {
   final LocationInfo location;
   final EducationInfo education;
   final SocialLinks socialLinks;
+  final List<String> achievementTags;
+  final List<Badge> badges;
 
   UserProfile({
     required this.id,
@@ -168,6 +238,8 @@ class UserProfile {
     required this.location,
     required this.education,
     required this.socialLinks,
+    this.achievementTags = const <String>[],
+    this.badges = const <Badge>[],
   });
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
@@ -208,6 +280,19 @@ class UserProfile {
       location: LocationInfo.fromJson(profile['location'] ?? {}),
       education: EducationInfo.fromJson(profile['education'] ?? {}),
       socialLinks: SocialLinks.fromJson(profile['social_links'] ?? {}),
+      achievementTags: _parseTags(
+        profile['winner_tags'] ??
+            profile['competition_tags'] ??
+            profile['profile_tags'] ??
+            profile['achievement_tags'] ??
+            profile['category_tags'] ??
+            json['winner_tags'] ??
+            json['competition_tags'] ??
+            json['profile_tags'] ??
+            json['achievement_tags'] ??
+            json['category_tags'],
+      ),
+      badges: _parseBadges(profile['badges']),
     );
   }
 }
@@ -309,6 +394,7 @@ class UserProfileResponse {
   final Map<String, dynamic> privacy;
   final List<Address> addresses;
   final Map<String, String?> socialLinks;
+  final List<String> achievementTags;
 
   UserProfileResponse({
     required this.profile,
@@ -317,6 +403,7 @@ class UserProfileResponse {
     required this.privacy,
     required this.addresses,
     required this.socialLinks,
+    this.achievementTags = const <String>[],
   });
 
   factory UserProfileResponse.fromJson(Map<String, dynamic> json) {
@@ -331,6 +418,59 @@ class UserProfileResponse {
               .toList() ??
           [],
       socialLinks: Map<String, String?>.from(data['social_links'] ?? {}),
+      achievementTags: _parseTags(
+        data['winner_tags'] ??
+            data['competition_tags'] ??
+            data['profile_tags'] ??
+            data['achievement_tags'] ??
+            data['category_tags'],
+      ),
     );
   }
 }
+
+List<String> _parseTags(Object? value) {
+  if (value is List) {
+    return value
+        .map((item) {
+          if (item is Map<String, dynamic>) {
+            return item['title']?.toString() ??
+                item['name']?.toString() ??
+                item['label']?.toString() ??
+                item['tag']?.toString() ??
+                '';
+          }
+          return item?.toString() ?? '';
+        })
+        .map((item) => item.trim())
+        .where((item) => item.isNotEmpty)
+        .toList(growable: false);
+  }
+
+  if (value is String && value.trim().isNotEmpty) {
+    return value
+        .split(',')
+        .map((item) => item.trim())
+        .where((item) => item.isNotEmpty)
+        .toList(growable: false);
+  }
+
+  return const <String>[];
+}
+
+List<Badge> _parseBadges(Object? value) {
+  if (value is List) {
+    return value
+        .map((item) {
+          if (item is Map<String, dynamic>) {
+            return Badge.fromJson(item);
+          }
+          return null;
+        })
+        .whereType<Badge>()
+        .toList(growable: false);
+  }
+
+  return const <Badge>[];
+}
+

@@ -1,4 +1,5 @@
 import 'package:snginepro/features/feed/data/models/post.dart';
+import 'package:snginepro/features/reels/data/models/music_model.dart';
 
 class ReelsResponse {
   ReelsResponse({
@@ -54,6 +55,55 @@ class ReelsResponse {
       sources: sources,
       pagination: pagination,
       hasMore: hasMore,
+    );
+  }
+}
+
+/// Response of GET `configCfgP('reels_by_sound')` — all reels using a sound
+/// (docs/reels_backend_api.md §20).
+class ReelsBySoundResponse {
+  ReelsBySoundResponse({
+    required this.status,
+    required this.sound,
+    required this.reels,
+    required this.hasMore,
+  });
+
+  final String status;
+  final Music? sound;
+  final List<Post> reels;
+  final bool hasMore;
+
+  bool get isSuccess => status == 'success';
+
+  factory ReelsBySoundResponse.fromJson(Map<String, dynamic> json) {
+    final data = json['data'] as Map<String, dynamic>? ?? {};
+
+    final soundData = data['sound'];
+    final sound = soundData is Map<String, dynamic>
+        ? Music.fromJson(soundData)
+        : null;
+
+    final reels = <Post>[];
+    final reelsData = data['reels'] as List?;
+    if (reelsData != null) {
+      for (final item in reelsData) {
+        if (item is Map<String, dynamic>) {
+          try {
+            reels.add(Post.fromJson(item));
+          } catch (_) {
+            // Skip invalid reels
+            continue;
+          }
+        }
+      }
+    }
+
+    return ReelsBySoundResponse(
+      status: json['status'] as String? ?? 'error',
+      sound: sound,
+      reels: reels,
+      hasMore: json['has_more'] as bool? ?? false,
     );
   }
 }

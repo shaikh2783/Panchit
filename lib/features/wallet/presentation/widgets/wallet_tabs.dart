@@ -23,11 +23,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 class WalletTransactionsTab extends StatelessWidget {
   const WalletTransactionsTab({
     super.key,
-    required this.controller,
     required this.onRefresh,
   });
 
-  final ScrollController controller;
   final Future<void> Function() onRefresh;
 
   @override
@@ -38,15 +36,19 @@ class WalletTransactionsTab extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
 
+        final screenWidth = MediaQuery.sizeOf(context).width;
+        final hPadding = screenWidth > 720 + 2 * Spacing.lg
+            ? (screenWidth - 720) / 2
+            : Spacing.lg;
+
         return RefreshIndicator(
           onRefresh: onRefresh,
           child: ListView(
-            controller: controller,
             physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.fromLTRB(
-              Spacing.lg,
+            padding: EdgeInsets.fromLTRB(
+              hPadding,
               Spacing.md,
-              Spacing.lg,
+              hPadding,
               Spacing.xxxl,
             ),
             children: [
@@ -98,11 +100,9 @@ class WalletTransactionsTab extends StatelessWidget {
 class WalletPaymentsTab extends StatelessWidget {
   const WalletPaymentsTab({
     super.key,
-    required this.controller,
     required this.onRefresh,
   });
 
-  final ScrollController controller;
   final Future<void> Function() onRefresh;
 
   @override
@@ -113,15 +113,19 @@ class WalletPaymentsTab extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
 
+        final screenWidth = MediaQuery.sizeOf(context).width;
+        final hPadding = screenWidth > 720 + 2 * Spacing.lg
+            ? (screenWidth - 720) / 2
+            : Spacing.lg;
+
         return RefreshIndicator(
           onRefresh: onRefresh,
           child: ListView(
-            controller: controller,
             physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.fromLTRB(
-              Spacing.lg,
+            padding: EdgeInsets.fromLTRB(
+              hPadding,
               Spacing.md,
-              Spacing.lg,
+              hPadding,
               Spacing.xxxl,
             ),
             children: [
@@ -408,9 +412,12 @@ class WalletTransactionTile extends StatelessWidget {
     final related = transaction.relatedUser;
 
     return Card(
-      elevation: 1,
+      elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Radii.large),
+        side: BorderSide(
+          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(Spacing.md),
@@ -490,9 +497,12 @@ class WalletPaymentTile extends StatelessWidget {
         : walletFormatDate(walletDateTimeFromTimestamp(payment.timestamp));
 
     return Card(
-      elevation: 1,
+      elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Radii.large),
+        side: BorderSide(
+          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(Spacing.md),

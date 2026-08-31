@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart'
-    as GetTransitions;
+as GetTransitions;
 import 'dart:ui' show Locale;
 import 'package:provider/provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -55,6 +55,10 @@ import 'package:snginepro/features/profile/data/services/profile_api_service.dar
 import 'package:snginepro/features/reels/application/reels_notifier.dart';
 import 'package:snginepro/features/reels/application/bloc/reels_bloc.dart';
 import 'package:snginepro/features/reels/data/datasources/reels_api_service.dart';
+import 'package:snginepro/features/reels/data/services/audio_extraction_service.dart';
+import 'package:snginepro/features/reels/data/services/music_api_service.dart';
+import 'package:snginepro/features/reels/data/services/reel_upload_service.dart';
+import 'package:snginepro/features/reels/data/services/reels_management_api_service.dart';
 import 'package:snginepro/features/reels/domain/reels_repository.dart';
 // Groups module removed; strip group-related imports
 import 'package:snginepro/features/events/application/bloc/events_bloc.dart';
@@ -86,6 +90,7 @@ import 'package:snginepro/features/feed/data/services/share_api_service.dart';
 import 'package:snginepro/features/feed/domain/share_repository.dart';
 import 'package:snginepro/features/feed/data/services/reviews_api_service.dart';
 import 'package:snginepro/features/feed/domain/reviews_repository.dart';
+import 'package:snginepro/features/competitions/data/services/competition_api_service.dart';
 import 'package:snginepro/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:snginepro/features/ai_chat/providers/ai_chat_provider.dart';
 
@@ -93,10 +98,10 @@ class App extends StatelessWidget {
   const App({super.key, required this.sharedPreferences});
 
   final SharedPreferences sharedPreferences;
-  
+
   /// Global NavigatorKey للتحكم في الملاحة من الخارج (الإشعارات)
-  static final GlobalKey<NavigatorState> navigatorKey = 
-      GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> navigatorKey =
+  GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -166,6 +171,16 @@ class App extends StatelessWidget {
         ),
         Provider<ReelsRepository>(
           create: (context) => ReelsRepository(context.read<ReelsApiService>()),
+        ),
+        Provider<MusicApiService>(
+          create: (context) => MusicApiService(context.read<ApiClient>()),
+        ),
+        Provider<ReelsManagementApiService>(
+          create: (context) =>
+              ReelsManagementApiService(context.read<ApiClient>()),
+        ),
+        Provider<AudioExtractionService>(
+          create: (_) => AudioExtractionService(),
         ),
 
         // Events Service
@@ -248,6 +263,9 @@ class App extends StatelessWidget {
         Provider<WalletRepository>(
           create: (context) =>
               WalletRepository(context.read<WalletApiService>()),
+        ),
+        Provider<CompetitionApiService>(
+          create: (context) => CompetitionApiService(context.read<ApiClient>()),
         ),
 
         // Ads / Campaigns
@@ -333,6 +351,22 @@ class App extends StatelessWidget {
         ),
         ChangeNotifierProvider<ReelsNotifier>(
           create: (context) => ReelsNotifier(context.read<ReelsRepository>()),
+        ),
+        Provider<ReelUploadService>(
+          create: (context) {
+            final auth = context.read<AuthNotifier>();
+            return ReelUploadService(
+              postsService: context.read<PostsApiService>(),
+              musicService: context.read<MusicApiService>(),
+              audioExtractor: context.read<AudioExtractionService>(),
+              usernameProvider: () {
+                final user = auth.currentUser;
+                final username =
+                    user?['user_name'] ?? user?['username'] ?? user?['first_name'];
+                return username?.toString();
+              },
+            );
+          },
         ),
 
         // Dynamic App Config Provider

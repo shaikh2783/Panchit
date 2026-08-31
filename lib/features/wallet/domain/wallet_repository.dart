@@ -1,3 +1,4 @@
+import '../data/models/razorpay_order_response.dart';
 import '../data/models/wallet_action_result.dart';
 import '../data/models/wallet_paginated.dart';
 import '../data/models/wallet_package.dart';
@@ -70,5 +71,28 @@ class WalletRepository {
 
   Future<WalletActionResult> purchasePackage({required int packageId}) {
     return _apiService.purchasePackage(packageId: packageId);
+  }
+
+  Future<RazorpayOrderResponse> createRazorpayOrder({
+    required double amount,
+    String? note,
+  }) {
+    return _apiService.createRazorpayOrder(amount: amount, note: note);
+  }
+
+  Future<WalletActionResult> verifyRazorpayPayment({
+    required String orderId,
+    required String paymentId,
+    required String signature,
+    required double amount,
+    String? note,
+  }) {
+    return _apiService.verifyRazorpayPayment(
+      orderId: orderId,
+      paymentId: paymentId,
+      signature: signature,
+      amount: amount,
+      note: note,
+    );
   }
 }

@@ -10,6 +10,7 @@ import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/core/services/reactions_api_service.dart';
 import 'package:snginepro/core/services/reactions_service.dart';
 import 'package:snginepro/core/services/notification_navigation_service.dart';
+import 'package:snginepro/core/services/onesignal_service.dart';
 import 'package:snginepro/features/messenger/presentation/services/global_call_service.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:snginepro/features/settings/data/models/seeting.dart';
@@ -29,6 +30,20 @@ List cfgP = [
   {"docs": ameen},
 ];
 List GetSetList = [];
+
+// Fallbacks for endpoint keys the encrypted boot config does not (yet)
+// include — see docs/reels_backend_gaps.md gap 7. Paths follow the same
+// `/data/...` convention as the rest of the registry (e.g. reels →
+// /data/reels). Remove entries once the boot config ships the real keys,
+// which always take precedence.
+const Map<String, String> _cfgEndpointFallbacks = {
+  'sounds': '/data/sounds',
+  'sound_categories': '/data/sounds/categories',
+  'sounds_saved': '/data/sounds/saved',
+  'sounds_search': '/data/sounds/search',
+  'sounds_add': '/data/sounds/add',
+  'reels_by_sound': '/data/reels/by-sound',
+};
 
 // ✅ دالة عامة للحصول على endpoints من البيانات المشفرة
 // مع دعم تعيين المفاتيح القديمة إلى الجديدة
@@ -54,6 +69,15 @@ String configCfgP(String key) {
       return endpoints[actualKey]?.toString() ?? '';
     }
 
+    final fallback = _cfgEndpointFallbacks[actualKey];
+    if (fallback != null) {
+      debugPrint(
+        '⚠️ configCfgP: "$key" missing from boot config — using fallback '
+        '"$fallback"',
+      );
+      return fallback;
+    }
+
     throw Exception(
       'Endpoint "$key" (mapped to "$actualKey") not found in encrypted config',
     );
@@ -68,9 +92,14 @@ bool _oneSignalHandlersSet = false;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await ImageGrids(); // تحميل الصور الافتراضية
-  final posts = await SharedP.Get('posts');
-  await postsconst(posts);
+  try {
+    await ImageGrids(); // تحميل الصور الافتراضية
+    final posts = await SharedP.Get('posts');
+    await postsconst(posts);
+  } catch (e) {
+    // فشل تحميل الإعدادات يجب ألا يمنع إقلاع التطبيق (وإلا يعلق على شاشة البداية)
+    debugPrint('Startup config initialization failed: $e');
+  }
   // Load SharedPreferences
   final sharedPreferences = await SharedPreferences.getInstance();
 
@@ -103,8 +132,13 @@ Future<void> main() async {
   // Initialize NotificationNavigationService with navigatorKey
   NotificationNavigationService.navigatorKey = App.navigatorKey;
 
-  // Initialize Global Call Service (for incoming calls from anywhere)
-  await Get.putAsync(() => GlobalCallService().init(apiClient));
+  // Initialize Global Call Service (for incoming calls from anywhere).
+  // Registered synchronously; the Agora engine initializes after the first
+  // frame so a hang in native init can never block startup.
+  final globalCallService = Get.put(GlobalCallService());
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    globalCallService.init(apiClient);
+  });
 
   // ============ UPDATE SYSTEM - START ============
   // فحص التحديث تلقائياً عند بدء التطبيق
@@ -164,7 +198,10 @@ void _setupNotificationHandlers() {
   OneSignal.User.pushSubscription.addObserver((state) {
     final playerId = state.current.id;
     if (playerId != null && playerId.isNotEmpty) {
-      // يمكن حفظ Player ID هنا للاستخدام لاحقاً
+      if (globalApiClient.hasAuthToken) {
+        final oneSignalService = OneSignalService(globalApiClient);
+        oneSignalService.updateOneSignalPlayerId(playerId);
+      }
     }
   });
 
@@ -204,6 +241,18 @@ void _setupNotificationHandlers() {
   OneSignal.Notifications.addForegroundWillDisplayListener((event) {
     // Display notification normally (don't prevent default display)
     // If you want to prevent notification display in foreground, uncomment: event.preventDefault();
+    final additional = event.notification.additionalData;
+    final launchUrl = event.notification.launchUrl;
+    final data = <String, dynamic>{
+      if (additional != null) ...additional,
+      if (launchUrl != null && launchUrl.isNotEmpty) 'url': launchUrl,
+    };
+
+    NotificationNavigationService.handleForegroundNotification(
+      title: event.notification.title,
+      body: event.notification.body,
+      data: data,
+    );
   });
 }
 

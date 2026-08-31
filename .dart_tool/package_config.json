@@ -44,6 +44,12 @@
       "languageVersion": "3.4"
     },
     {
+      "name": "audio_waveforms",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/audio_waveforms-2.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "audioplayers",
       "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/audioplayers-6.5.1",
       "packageUri": "lib/",
@@ -122,8 +128,38 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "camera",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/camera-0.11.4",
+      "packageUri": "lib/",
+      "languageVersion": "3.9"
+    },
+    {
+      "name": "camera_android_camerax",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/camera_android_camerax-0.6.30",
+      "packageUri": "lib/",
+      "languageVersion": "3.9"
+    },
+    {
+      "name": "camera_avfoundation",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/camera_avfoundation-0.9.23+2",
+      "packageUri": "lib/",
+      "languageVersion": "3.9"
+    },
+    {
+      "name": "camera_platform_interface",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/camera_platform_interface-2.13.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.9"
+    },
+    {
+      "name": "camera_web",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/camera_web-0.3.5+3",
+      "packageUri": "lib/",
+      "languageVersion": "3.8"
+    },
+    {
       "name": "characters",
-      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/characters-1.4.0",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/characters-1.4.1",
       "packageUri": "lib/",
       "languageVersion": "3.4"
     },
@@ -236,6 +272,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "eventify",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/eventify-1.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "fake_async",
       "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/fake_async-1.3.3",
       "packageUri": "lib/",
@@ -258,6 +300,18 @@
       "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/ffi-2.1.4",
       "packageUri": "lib/",
       "languageVersion": "3.7"
+    },
+    {
+      "name": "ffmpeg_kit_flutter_new",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/ffmpeg_kit_flutter_new-3.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
+      "name": "ffmpeg_kit_flutter_platform_interface",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/ffmpeg_kit_flutter_platform_interface-0.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "file",
@@ -305,7 +359,7 @@
       "name": "flutter",
       "rootUri": "file:///Users/shaikhasfak/flutter/packages/flutter",
       "packageUri": "lib/",
-      "languageVersion": "3.8"
+      "languageVersion": "3.10"
     },
     {
       "name": "flutter_bloc",
@@ -398,12 +452,6 @@
       "languageVersion": "3.0"
     },
     {
-      "name": "flutter_paypal_payment",
-      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/flutter_paypal_payment-1.0.8",
-      "packageUri": "lib/",
-      "languageVersion": "3.1"
-    },
-    {
       "name": "flutter_plugin_android_lifecycle",
       "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.32",
       "packageUri": "lib/",
@@ -425,13 +473,13 @@
       "name": "flutter_test",
       "rootUri": "file:///Users/shaikhasfak/flutter/packages/flutter_test",
       "packageUri": "lib/",
-      "languageVersion": "3.8"
+      "languageVersion": "3.10"
     },
     {
       "name": "flutter_web_plugins",
       "rootUri": "file:///Users/shaikhasfak/flutter/packages/flutter_web_plugins",
       "packageUri": "lib/",
-      "languageVersion": "3.8"
+      "languageVersion": "3.10"
     },
     {
       "name": "flutter_widget_from_html",
@@ -447,7 +495,7 @@
     },
     {
       "name": "font_awesome_flutter",
-      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/font_awesome_flutter-10.12.0",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/font_awesome_flutter-11.0.0",
       "packageUri": "lib/",
       "languageVersion": "3.9"
     },
@@ -711,21 +759,21 @@
     },
     {
       "name": "matcher",
-      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/matcher-0.12.17",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/matcher-0.12.19",
       "packageUri": "lib/",
-      "languageVersion": "3.4"
+      "languageVersion": "3.7"
     },
     {
       "name": "material_color_utilities",
-      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/material_color_utilities-0.11.1",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/material_color_utilities-0.13.0",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "3.5"
     },
     {
       "name": "meta",
-      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/meta-1.16.0",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/meta-1.18.0",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.5"
     },
     {
       "name": "mime",
@@ -747,7 +795,7 @@
     },
     {
       "name": "onesignal_flutter",
-      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/onesignal_flutter-5.3.4",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/onesignal_flutter-5.6.4",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -896,6 +944,12 @@
       "languageVersion": "2.19"
     },
     {
+      "name": "razorpay_flutter",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/razorpay_flutter-1.4.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "record",
       "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/record-6.1.2",
       "packageUri": "lib/",
@@ -1025,7 +1079,7 @@
       "name": "sky_engine",
       "rootUri": "file:///Users/shaikhasfak/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
-      "languageVersion": "3.8"
+      "languageVersion": "3.10"
     },
     {
       "name": "source_span",
@@ -1076,6 +1130,12 @@
       "languageVersion": "3.3"
     },
     {
+      "name": "stream_transform",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/stream_transform-2.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
       "name": "string_scanner",
       "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/string_scanner-1.4.1",
       "packageUri": "lib/",
@@ -1095,9 +1155,9 @@
     },
     {
       "name": "test_api",
-      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/test_api-0.7.6",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/test_api-0.7.11",
       "packageUri": "lib/",
-      "languageVersion": "3.5"
+      "languageVersion": "3.7"
     },
     {
       "name": "timeago",
@@ -1226,6 +1286,12 @@
       "languageVersion": "3.6"
     },
     {
+      "name": "video_thumbnail",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/video_thumbnail-0.5.6",
+      "packageUri": "lib/",
+      "languageVersion": "2.16"
+    },
+    {
       "name": "vimeo_video_player",
       "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/vimeo_video_player-1.0.3",
       "packageUri": "lib/",
@@ -1323,8 +1389,8 @@
     }
   ],
   "generator": "pub",
-  "generatorVersion": "3.9.2",
+  "generatorVersion": "3.12.2",
   "flutterRoot": "file:///Users/shaikhasfak/flutter",
-  "flutterVersion": "3.35.7",
+  "flutterVersion": "3.44.8",
   "pubCache": "file:///Users/shaikhasfak/.pub-cache"
 }

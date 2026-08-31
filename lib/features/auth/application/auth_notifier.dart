@@ -263,6 +263,7 @@ class AuthNotifier extends ChangeNotifier {
     // حذف OneSignal Player ID قبل تسجيل الخروج
     try {
       await _oneSignalService.removeOneSignalPlayerId();
+      await _oneSignalService.logoutUser();
     } catch (_) {}
 
     final activeId = _activeAccountId;
@@ -304,6 +305,7 @@ class AuthNotifier extends ChangeNotifier {
   Future<void> signOutAllAccounts() async {
     try {
       await _oneSignalService.removeOneSignalPlayerId();
+      await _oneSignalService.logoutUser();
     } catch (_) {}
 
     await _storage.clearAllAccounts();
@@ -427,7 +429,9 @@ class AuthNotifier extends ChangeNotifier {
   void _registerOneSignalInBackground() {
     Future.microtask(() async {
       try {
-        final result = await _oneSignalService.registerCurrentPlayerId();
+        final result = await _oneSignalService.loginUserAndRegister(
+          userId: activeAccount?.userId ?? _lastResponse?.userId,
+        );
         if (result) {
         } else {}
       } catch (_) {}
