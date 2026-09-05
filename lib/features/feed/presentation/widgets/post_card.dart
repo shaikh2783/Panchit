@@ -1981,7 +1981,7 @@ class _PostCardState extends State<PostCard>
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFE1306C),
+                    backgroundColor: AppColors.brandPink,
                   ),
                   child: Text('show_packages_button'.tr),
                 ),

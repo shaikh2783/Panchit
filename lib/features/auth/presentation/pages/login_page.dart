@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import 'package:snginepro/App_Settings.dart';
+import 'package:snginepro/core/theme/app_colors.dart';
 import 'package:snginepro/core/theme/panchit_auth_ui.dart';
 import 'package:snginepro/features/auth/application/auth_notifier.dart';
 import 'package:snginepro/features/auth/data/models/auth_response.dart';

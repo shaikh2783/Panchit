@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:snginepro/core/theme/app_colors.dart';
 import 'package:snginepro/core/theme/panchit_auth_ui.dart';
 
 class OnboardingPage extends StatefulWidget {

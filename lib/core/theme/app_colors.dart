@@ -192,3 +192,81 @@ class AppColors {
     return color.withValues(alpha: opacity);
   }
 }
+
+/// Shared design tokens for the onboarding / auth flow
+/// (OnboardingPage, LoginPage, SignUpPage). Keeping these in one place
+/// ensures every screen in that flow uses the same colors, gradient
+/// button, text field and error/divider styling.
+class PanchitAuthColors {
+  PanchitAuthColors._();
+
+  static const Color backgroundDark = Color(0xFF030615);
+  static const Color backgroundLight = Color(0xFFFCFCFF);
+
+  static const Color surfaceDark = Color(0xFF080B18);
+  static const Color inputDark = Color(0xFF0B0E1C);
+
+  static const Color borderDark = Color(0xFF292C3D);
+  static const Color borderLight = Color(0xFFE4E4EA);
+
+  static const Color purple = Color(0xFF6C20FF);
+  static const Color purpleAccentDark = Color(0xFFB593FF);
+  static const Color pink = Color(0xFFFF267F);
+  static const Color orange = Color(0xFFFF8A00);
+
+  static const Color textPrimaryDark = Colors.white;
+  static const Color textPrimaryLight = Color(0xFF15151D);
+
+  static const Color textSecondaryDark = Color(0xFFB8B9C5);
+  static const Color textSecondaryLight = Color(0xFF62636D);
+
+  static const Color textMutedDark = Color(0xFF777988);
+  static const Color textMutedLight = Color(0xFF888994);
+
+  static const Color textFieldValueDark = Colors.white;
+  static const Color textFieldValueLight = Color(0xFF17171E);
+
+  static const Color textFieldHintDark = Color(0xFF606271);
+  static const Color textFieldHintLight = Color(0xFFA0A1AA);
+
+  static const Color success = Color(0xFF10B981);
+  static const Color error = Color(0xFFEF4444);
+  static const Color errorTextDark = Color(0xFFFFB4B4);
+  static const Color errorTextLight = Color(0xFFB42318);
+
+  static const LinearGradient primaryGradient = LinearGradient(
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+    colors: [
+      Color(0xFF6200FF),
+      Color(0xFF8B00FF),
+      Color(0xFFFF267F),
+    ],
+  );
+
+  static Color background(bool isDark) =>
+      isDark ? backgroundDark : backgroundLight;
+
+  static Color border(bool isDark) => isDark ? borderDark : borderLight;
+
+  static Color inputFill(bool isDark) =>
+      isDark ? inputDark : Colors.white;
+
+  static Color textPrimary(bool isDark) =>
+      isDark ? textPrimaryDark : textPrimaryLight;
+
+  static Color textSecondary(bool isDark) =>
+      isDark ? textSecondaryDark : textSecondaryLight;
+
+  static Color textMuted(bool isDark) =>
+      isDark ? textMutedDark : textMutedLight;
+
+  static Color textFieldValue(bool isDark) =>
+      isDark ? textFieldValueDark : textFieldValueLight;
+
+  static Color textFieldHint(bool isDark) =>
+      isDark ? textFieldHintDark : textFieldHintLight;
+
+  static Color linkAccent(bool isDark) =>
+      isDark ? purpleAccentDark : purple;
+}

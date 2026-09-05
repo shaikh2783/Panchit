@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 import 'package:snginepro/core/network/api_client.dart';
+import 'package:snginepro/core/theme/app_colors.dart';
 import 'package:snginepro/core/theme/panchit_auth_ui.dart';
 import 'package:snginepro/features/auth/application/auth_notifier.dart';
 import 'package:snginepro/features/auth/data/models/auth_response.dart';

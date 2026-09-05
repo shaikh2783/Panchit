@@ -8,6 +8,7 @@ import 'product_details_page.dart';
 import 'cart_page.dart';
 import 'orders_page.dart';
 import 'add_product_page.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/ui_constants.dart';
 import '../../../../core/utils/html_decoder.dart';
 import '../../../../core/widgets/skeletons.dart';
@@ -127,12 +128,17 @@ class _ProductsPageState extends State<ProductsPage> {
 
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Colors.red),
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Theme.of(context).colorScheme.error,
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('market_title'.tr),
@@ -181,23 +187,28 @@ class _ProductsPageState extends State<ProductsPage> {
                       )
                     : null,
                 filled: true,
-                fillColor: Get.isDarkMode
-                    ? const Color(0xFF252d48)
-                    : Colors.white,
+                fillColor: isDark ? AppColors.surfaceDark : Colors.white,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(UI.rMd),
                   borderSide: BorderSide(
-                    color: Get.isDarkMode
-                        ? Colors.grey[700]!
-                        : Colors.grey[300]!,
+                    color: isDark
+                        ? AppColors.borderDark
+                        : AppColors.borderLight,
                   ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(UI.rMd),
                   borderSide: BorderSide(
-                    color: Get.isDarkMode
-                        ? Colors.grey[700]!
-                        : Colors.grey[300]!,
+                    color: isDark
+                        ? AppColors.borderDark
+                        : AppColors.borderLight,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(UI.rMd),
+                  borderSide: const BorderSide(
+                    color: AppColors.primary,
+                    width: 1.5,
                   ),
                 ),
               ),
@@ -293,16 +304,47 @@ class _ProductsPageState extends State<ProductsPage> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => Get.to(() => const AddProductPage()),
-        icon: const Icon(Icons.add),
-        label: Text('market_create_product'.tr),
+      floatingActionButton: Container(
+        decoration: BoxDecoration(
+          gradient: AppColors.primaryGradient,
+          borderRadius: BorderRadius.circular(28),
+          boxShadow: AppColors.brandGlow,
+        ),
+        child: Material(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(28),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(28),
+            onTap: () => Get.to(() => const AddProductPage()),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 16,
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.add_rounded, color: Colors.white, size: 20),
+                  const SizedBox(width: 8),
+                  Text(
+                    'market_create_product'.tr,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
 }
 
-/// Category Chip Widget
+/// Category Chip Widget — pill tab matching the home feed's filter bar.
 class _CategoryChip extends StatelessWidget {
   final String label;
   final bool isSelected;
@@ -316,28 +358,37 @@ class _CategoryChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cs = Theme.of(context).colorScheme;
+    final borderColor = isDark ? AppColors.dividerDark : AppColors.dividerLight;
+
     return Padding(
       padding: const EdgeInsets.only(left: 8),
-      child: FilterChip(
-        label: Text(label),
-        selected: isSelected,
-        onSelected: (_) => onTap(),
-        backgroundColor: Get.isDarkMode
-            ? const Color(0xFF252d48)
-            : Colors.grey[200],
-        selectedColor: Theme.of(context).colorScheme.primary.withOpacity(0.15),
-        checkmarkColor: Theme.of(context).colorScheme.primary,
-        labelStyle: TextStyle(
-          color: isSelected
-              ? Theme.of(context).colorScheme.primary
-              : (Get.isDarkMode ? Colors.white : Colors.black87),
-          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-        ),
-        shape: StadiumBorder(
-          side: BorderSide(
-            color: isSelected
-                ? Theme.of(context).colorScheme.primary
-                : (Get.isDarkMode ? Colors.grey[700]! : Colors.grey[300]!),
+      child: GestureDetector(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 220),
+          curve: Curves.easeInOut,
+          alignment: Alignment.center,
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+          decoration: BoxDecoration(
+            border: Border.all(color: borderColor),
+            gradient: isSelected ? AppColors.primaryGradient : null,
+            borderRadius: BorderRadius.circular(28),
+            boxShadow: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              color: isSelected
+                  ? Colors.white
+                  : (isDark
+                      ? Colors.white.withValues(alpha: 0.7)
+                      : cs.onSurface.withValues(alpha: 0.75)),
+              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+              fontSize: 13,
+              letterSpacing: isSelected ? 0.1 : 0,
+            ),
           ),
         ),
       ),

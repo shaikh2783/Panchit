@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:snginepro/core/theme/app_colors.dart';
 
 const List<double> kDefaultFilter = [
   1, 0, 0, 0, 0,
@@ -99,7 +100,7 @@ class ColorFilterPicker extends StatefulWidget {
 }
 
 class _ColorFilterPickerState extends State<ColorFilterPicker> {
-  static const Color _accentColor = Color(0xFFE1306C);
+  static const Color _accentColor = AppColors.brandPink;
   static const double _itemWidth = 74;
   static const double _itemSpacing = 12;
 
@@ -293,14 +294,7 @@ class _FilterItem extends StatelessWidget {
                 padding: EdgeInsets.all(isSelected ? 3 : 2),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  gradient: isSelected
-                      ? const LinearGradient(
-                    colors: [
-                      Color(0xFFE1306C),
-                      Color(0xFFFF8A00),
-                    ],
-                  )
-                      : null,
+                  gradient: isSelected ? AppColors.reelGradient : null,
                   border: Border.all(
                     color: isSelected
                         ? Colors.transparent

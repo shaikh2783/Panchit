@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:snginepro/core/theme/app_colors.dart';
 import 'package:snginepro/core/theme/theme_controller.dart';
 import 'package:snginepro/features/reels/data/models/music_model.dart';
 import 'package:snginepro/features/reels/data/services/reel_upload_service.dart';
@@ -31,7 +32,7 @@ class ReelPublishPage extends StatefulWidget {
 }
 
 class _ReelPublishPageState extends State<ReelPublishPage> {
-  static const Color _reelPink = Color(0xFFE1306C);
+  static const Color _reelPink = AppColors.brandPink;
   static const int _captionMaxLength = 2200;
 
   final TextEditingController _descriptionController = TextEditingController();
@@ -140,7 +141,7 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
               onPressed: () => Navigator.pop(dialogContext, true),
               child: Text(
                 'discard'.tr,
-                style: const TextStyle(color: Colors.red),
+                style: const TextStyle(color: AppColors.error),
               ),
             ),
           ],
@@ -193,7 +194,7 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('reel_published_success'.tr),
-          backgroundColor: Colors.green,
+          backgroundColor: AppColors.success,
         ),
       );
       Navigator.of(context).popUntil((route) => route.isFirst);
@@ -210,7 +211,8 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
   @override
   Widget build(BuildContext context) {
     final isDark = _themeController.isDarkMode;
-    final backgroundColor = isDark ? const Color(0xFF0F0F10) : Colors.white;
+    final backgroundColor =
+        isDark ? AppColors.backgroundDark : AppColors.backgroundLight;
 
     return WillPopScope(
       onWillPop: _confirmDiscardIfNeeded,
@@ -250,10 +252,10 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
     return Container(
       padding: const EdgeInsets.fromLTRB(8, 6, 12, 8),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF0F0F10) : Colors.white,
+        color: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
         border: Border(
           bottom: BorderSide(
-            color: isDark ? const Color(0xFF242428) : const Color(0xFFEDEDED),
+            color: isDark ? AppColors.dividerDark : AppColors.dividerLight,
           ),
         ),
       ),
@@ -263,7 +265,9 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
             onPressed: _isPublishing ? null : _handleClose,
             icon: Icon(
               Icons.close,
-              color: isDark ? Colors.white : Colors.black,
+              color: isDark
+                  ? AppColors.textPrimaryDark
+                  : AppColors.textPrimaryLight,
             ),
           ),
           Expanded(
@@ -271,7 +275,9 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
               'new_reel'.tr,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: isDark ? Colors.white : Colors.black,
+                color: isDark
+                    ? AppColors.textPrimaryDark
+                    : AppColors.textPrimaryLight,
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
               ),
@@ -286,7 +292,7 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
                 elevation: 0,
                 backgroundColor: _reelPink,
                 disabledBackgroundColor:
-                isDark ? Colors.grey[800] : Colors.grey[300],
+                isDark ? AppColors.dividerDark : AppColors.dividerLight,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 18),
                 shape: RoundedRectangleBorder(
@@ -316,7 +322,9 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
         Text(
           'preview'.tr,
           style: TextStyle(
-            color: isDark ? Colors.white : Colors.black,
+            color: isDark
+                ? AppColors.textPrimaryDark
+                : AppColors.textPrimaryLight,
             fontSize: 15,
             fontWeight: FontWeight.w700,
           ),
@@ -376,18 +384,20 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
     }
 
     return Container(
-      color: isDark ? const Color(0xFF18181B) : const Color(0xFFF3F4F6),
+      color: isDark ? AppColors.surfaceDark : AppColors.backgroundLight,
       child: Center(
         child: _isPreviewLoading
             ? CircularProgressIndicator(
           strokeWidth: 2,
           valueColor: AlwaysStoppedAnimation<Color>(
-            isDark ? Colors.white : Colors.black,
+            isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
           ),
         )
             : Icon(
           Icons.error_outline,
-          color: isDark ? Colors.white70 : Colors.black54,
+          color: isDark
+              ? AppColors.textSecondaryDark
+              : AppColors.textSecondaryLight,
           size: 40,
         ),
       ),
@@ -508,11 +518,13 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
               CircleAvatar(
                 radius: 18,
                 backgroundColor:
-                isDark ? const Color(0xFF2A2A2E) : const Color(0xFFEDEDED),
+                isDark ? AppColors.dividerDark : AppColors.dividerLight,
                 child: Icon(
                   Icons.person,
                   size: 20,
-                  color: isDark ? Colors.white70 : Colors.black54,
+                  color: isDark
+                      ? AppColors.textSecondaryDark
+                      : AppColors.textSecondaryLight,
                 ),
               ),
               const SizedBox(width: 12),
@@ -526,19 +538,25 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
                   decoration: InputDecoration(
                     hintText: 'write_a_caption'.tr,
                     hintStyle: TextStyle(
-                      color: isDark ? Colors.grey[600] : Colors.grey[500],
+                      color: isDark
+                          ? AppColors.textTertiaryDark
+                          : AppColors.textTertiaryLight,
                       fontSize: 14,
                     ),
                     border: InputBorder.none,
                     counterStyle: TextStyle(
-                      color: isDark ? Colors.grey[500] : Colors.grey[600],
+                      color: isDark
+                          ? AppColors.textTertiaryDark
+                          : AppColors.textTertiaryLight,
                       fontSize: 11,
                     ),
                     isDense: true,
                     contentPadding: EdgeInsets.all(8),
                   ),
                   style: TextStyle(
-                    color: isDark ? Colors.white : Colors.black,
+                    color: isDark
+                        ? AppColors.textPrimaryDark
+                        : AppColors.textPrimaryLight,
                     fontSize: 14,
                     height: 1.35,
                   ),
@@ -655,10 +673,10 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
       width: double.infinity,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.red.withOpacity(isDark ? 0.16 : 0.10),
+        color: AppColors.error.withOpacity(isDark ? 0.16 : 0.10),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Colors.red.withOpacity(0.25),
+          color: AppColors.error.withOpacity(0.25),
         ),
       ),
       child: Row(
@@ -666,7 +684,7 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
         children: [
           const Icon(
             Icons.error_outline,
-            color: Colors.red,
+            color: AppColors.error,
             size: 20,
           ),
           const SizedBox(width: 10),
@@ -674,7 +692,7 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
             child: Text(
               '${'reel_publish_failed'.tr}: $_error',
               style: const TextStyle(
-                color: Colors.red,
+                color: AppColors.error,
                 fontSize: 13,
                 height: 1.35,
               ),
@@ -691,19 +709,13 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 14),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF18181B) : Colors.white,
+        color: isDark ? AppColors.surfaceDark : AppColors.backgroundLight,
         border: Border(
           top: BorderSide(
-            color: isDark ? const Color(0xFF242428) : const Color(0xFFEDEDED),
+            color: isDark ? AppColors.dividerDark : AppColors.dividerLight,
           ),
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.28 : 0.08),
-            blurRadius: 18,
-            offset: const Offset(0, -8),
-          ),
-        ],
+        boxShadow: isDark ? AppColors.darkShadow : AppColors.lightShadow,
       ),
       child: Row(
         children: [
@@ -721,7 +733,9 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
             child: Text(
               _stageLabel,
               style: TextStyle(
-                color: isDark ? Colors.white : Colors.black,
+                color: isDark
+                    ? AppColors.textPrimaryDark
+                    : AppColors.textPrimaryLight,
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
@@ -730,7 +744,9 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
           Text(
             _hasVideoUploadProgress ? '${(_stageProgress * 100).toInt()}%' : '',
             style: TextStyle(
-              color: isDark ? Colors.white70 : Colors.black54,
+              color: isDark
+                  ? AppColors.textSecondaryDark
+                  : AppColors.textSecondaryLight,
               fontSize: 13,
               fontWeight: FontWeight.w600,
             ),
@@ -747,10 +763,10 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF18181B) : const Color(0xFFF9FAFB),
+        color: isDark ? AppColors.cardDark : AppColors.cardLight,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isDark ? const Color(0xFF27272A) : const Color(0xFFEFEFEF),
+          color: isDark ? AppColors.borderDark : AppColors.borderLight,
         ),
       ),
       child: child,
@@ -768,7 +784,9 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
         Text(
           title,
           style: TextStyle(
-            color: isDark ? Colors.white : Colors.black,
+            color: isDark
+                ? AppColors.textPrimaryDark
+                : AppColors.textPrimaryLight,
             fontSize: 15,
             fontWeight: FontWeight.w700,
           ),
@@ -777,7 +795,9 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
         Text(
           subtitle,
           style: TextStyle(
-            color: isDark ? Colors.grey[500] : Colors.grey[600],
+            color: isDark
+                ? AppColors.textSecondaryDark
+                : AppColors.textSecondaryLight,
             fontSize: 12,
           ),
         ),
@@ -794,7 +814,7 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
     VoidCallback? onTap,
   }) {
     final iconBackground =
-    isDark ? const Color(0xFF242428) : const Color(0xFFFFFFFF);
+    isDark ? AppColors.dividerDark : AppColors.backgroundLight;
 
     return InkWell(
       onTap: onTap,
@@ -812,7 +832,9 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
               ),
               child: Icon(
                 icon,
-                color: isDark ? Colors.white70 : Colors.black87,
+                color: isDark
+                    ? AppColors.textSecondaryDark
+                    : AppColors.textSecondaryLight,
                 size: 20,
               ),
             ),
@@ -824,7 +846,9 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
                   Text(
                     title,
                     style: TextStyle(
-                      color: isDark ? Colors.white : Colors.black,
+                      color: isDark
+                          ? AppColors.textPrimaryDark
+                          : AppColors.textPrimaryLight,
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
@@ -835,7 +859,9 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      color: isDark ? Colors.grey[500] : Colors.grey[600],
+                      color: isDark
+                          ? AppColors.textSecondaryDark
+                          : AppColors.textSecondaryLight,
                       fontSize: 12,
                     ),
                   ),
@@ -848,7 +874,9 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
             ] else if (onTap != null)
               Icon(
                 Icons.chevron_right,
-                color: isDark ? Colors.grey[600] : Colors.grey[500],
+                color: isDark
+                    ? AppColors.textTertiaryDark
+                    : AppColors.textTertiaryLight,
               ),
           ],
         ),
@@ -871,12 +899,14 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
             width: 38,
             height: 38,
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF242428) : Colors.white,
+              color: isDark ? AppColors.dividerDark : AppColors.backgroundLight,
               shape: BoxShape.circle,
             ),
             child: Icon(
               icon,
-              color: isDark ? Colors.white70 : Colors.black87,
+              color: isDark
+                  ? AppColors.textSecondaryDark
+                  : AppColors.textSecondaryLight,
               size: 20,
             ),
           ),
@@ -885,7 +915,9 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
             child: Text(
               title,
               style: TextStyle(
-                color: isDark ? Colors.white : Colors.black,
+                color: isDark
+                    ? AppColors.textPrimaryDark
+                    : AppColors.textPrimaryLight,
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
@@ -907,7 +939,9 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
     if (thumbnailPath == null || thumbnailPath.trim().isEmpty) {
       return Icon(
         Icons.chevron_right,
-        color: isDark ? Colors.grey[600] : Colors.grey[500],
+        color: isDark
+            ? AppColors.textTertiaryDark
+            : AppColors.textTertiaryLight,
       );
     }
 
@@ -922,11 +956,13 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
           return Container(
             width: 42,
             height: 42,
-            color: isDark ? const Color(0xFF242428) : const Color(0xFFEDEDED),
+            color: isDark ? AppColors.dividerDark : AppColors.dividerLight,
             child: Icon(
               Icons.image_not_supported_outlined,
               size: 18,
-              color: isDark ? Colors.white60 : Colors.black45,
+              color: isDark
+                  ? AppColors.textTertiaryDark
+                  : AppColors.textTertiaryLight,
             ),
           );
         },
@@ -940,7 +976,7 @@ class _ReelPublishPageState extends State<ReelPublishPage> {
       child: Divider(
         height: 1,
         thickness: 1,
-        color: isDark ? const Color(0xFF27272A) : const Color(0xFFEFEFEF),
+        color: isDark ? AppColors.dividerDark : AppColors.dividerLight,
       ),
     );
   }

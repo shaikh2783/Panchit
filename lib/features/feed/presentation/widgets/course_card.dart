@@ -12,6 +12,7 @@ import '../../../courses/presentation/pages/course_edit_page.dart';
 import '../../../courses/presentation/pages/course_candidates_page.dart';
 import '../pages/post_detail_page.dart';
 import '../../../../core/network/api_client.dart';
+import '../../../../core/theme/app_colors.dart';
 
 /// Widget to display course information in a post
 class CourseCard extends StatelessWidget {
@@ -29,7 +30,9 @@ class CourseCard extends StatelessWidget {
     final course = post.course;
     if (course == null) return const SizedBox.shrink();
 
-    final isDark = Get.isDarkMode;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final mutedColor =
+        isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight;
 
     // Check if current user owns this course
     final auth = context.watch<AuthNotifier>();
@@ -41,17 +44,9 @@ class CourseCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+        color: isDark ? AppColors.cardDark : AppColors.cardLight,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: isDark
-                ? Colors.black.withOpacity(0.3)
-                : Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        boxShadow: isDark ? AppColors.darkShadow : AppColors.lightShadow,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,16 +63,22 @@ class CourseCard extends StatelessWidget {
                   imageUrl: mediaResolver(course.coverImage!).toString(),
                   fit: BoxFit.cover,
                   placeholder: (context, url) => Container(
-                    color: isDark ? Colors.grey[800] : Colors.grey[200],
-                    child: const Center(child: CircularProgressIndicator()),
+                    color: isDark
+                        ? AppColors.dividerDark
+                        : AppColors.dividerLight,
+                    child: const Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          AppColors.primary,
+                        ),
+                      ),
+                    ),
                   ),
                   errorWidget: (context, url, error) => Container(
-                    color: isDark ? Colors.grey[800] : Colors.grey[200],
-                    child: Icon(
-                      Iconsax.book,
-                      size: 48,
-                      color: isDark ? Colors.grey[600] : Colors.grey,
-                    ),
+                    color: isDark
+                        ? AppColors.dividerDark
+                        : AppColors.dividerLight,
+                    child: Icon(Iconsax.book, size: 48, color: mutedColor),
                   ),
                 ),
               ),
@@ -96,7 +97,9 @@ class CourseCard extends StatelessWidget {
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     height: 1.3,
-                    color: isDark ? Colors.white : Colors.black,
+                    color: isDark
+                        ? AppColors.textPrimaryDark
+                        : AppColors.textPrimaryLight,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -109,21 +112,12 @@ class CourseCard extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 8),
                     child: Row(
                       children: [
-                        Icon(
-                          Iconsax.location,
-                          size: 16,
-                          color: isDark ? Colors.grey[400] : Colors.grey,
-                        ),
+                        Icon(Iconsax.location, size: 16, color: mutedColor),
                         const SizedBox(width: 6),
                         Expanded(
                           child: Text(
                             course.location!,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: isDark
-                                  ? Colors.grey[300]
-                                  : Colors.grey[700],
-                            ),
+                            style: TextStyle(fontSize: 14, color: mutedColor),
                           ),
                         ),
                       ],
@@ -136,21 +130,12 @@ class CourseCard extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 8),
                     child: Row(
                       children: [
-                        Icon(
-                          Iconsax.calendar,
-                          size: 16,
-                          color: isDark ? Colors.grey[400] : Colors.grey,
-                        ),
+                        Icon(Iconsax.calendar, size: 16, color: mutedColor),
                         const SizedBox(width: 6),
                         Expanded(
                           child: Text(
                             _formatDateRange(course.startDate, course.endDate),
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: isDark
-                                  ? Colors.grey[300]
-                                  : Colors.grey[700],
-                            ),
+                            style: TextStyle(fontSize: 14, color: mutedColor),
                           ),
                         ),
                       ],
@@ -160,11 +145,7 @@ class CourseCard extends StatelessWidget {
                 // Price
                 Row(
                   children: [
-                    Icon(
-                      Iconsax.money,
-                      size: 16,
-                      color: isDark ? Colors.grey[400] : Colors.grey,
-                    ),
+                    Icon(Iconsax.money, size: 16, color: mutedColor),
                     const SizedBox(width: 6),
                     if (course.isFree)
                       Container(
@@ -173,7 +154,7 @@ class CourseCard extends StatelessWidget {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(0.1),
+                          color: AppColors.success.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
@@ -181,7 +162,7 @@ class CourseCard extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
-                            color: Colors.green,
+                            color: AppColors.success,
                           ),
                         ),
                       )
@@ -191,7 +172,7 @@ class CourseCard extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Colors.blue,
+                          color: AppColors.primary,
                         ),
                       ),
                     const Spacer(),
@@ -224,7 +205,7 @@ class CourseCard extends StatelessWidget {
                           icon: const Icon(Iconsax.people, size: 18),
                           label: Text('course_candidates'.trParams({'count': course.candidatesCount.toString()})),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
+                            backgroundColor: AppColors.primary,
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             shape: RoundedRectangleBorder(
@@ -275,7 +256,7 @@ class CourseCard extends StatelessWidget {
                                     Get.snackbar(
                                       'course_error'.tr,
                                       'course_login_required'.tr,
-                                      backgroundColor: Colors.red,
+                                      backgroundColor: AppColors.error,
                                       colorText: Colors.white,
                                     );
                                     return;
@@ -438,14 +419,14 @@ class CourseCard extends StatelessWidget {
                                     Get.snackbar(
                                       'course_success'.tr,
                                       result.message,
-                                      backgroundColor: Colors.green,
+                                      backgroundColor: AppColors.success,
                                       colorText: Colors.white,
                                     );
                                   } else {
                                     Get.snackbar(
                                       'course_error'.tr,
                                       result.message,
-                                      backgroundColor: Colors.red,
+                                      backgroundColor: AppColors.error,
                                       colorText: Colors.white,
                                     );
                                   }
@@ -455,8 +436,10 @@ class CourseCard extends StatelessWidget {
                           label: Text(course.available ? 'course_enroll_button'.tr : 'course_closed'.tr),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: course.available
-                                ? Colors.blue
-                                : Colors.grey,
+                                ? AppColors.primary
+                                : (isDark
+                                    ? AppColors.dividerDark
+                                    : AppColors.dividerLight),
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             shape: RoundedRectangleBorder(
@@ -498,18 +481,11 @@ class CourseCard extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 12),
                     child: Row(
                       children: [
-                        Icon(
-                          Iconsax.people,
-                          size: 14,
-                          color: isDark ? Colors.grey[400] : Colors.grey,
-                        ),
+                        Icon(Iconsax.people, size: 14, color: mutedColor),
                         const SizedBox(width: 4),
                         Text(
                           'course_candidates_count'.trParams({'count': course.candidatesCount.toString()}),
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: isDark ? Colors.grey[400] : Colors.grey[600],
-                          ),
+                          style: TextStyle(fontSize: 12, color: mutedColor),
                         ),
                       ],
                     ),
@@ -531,24 +507,24 @@ class CourseCard extends StatelessWidget {
       color = Colors.grey;
     } else if (course.hasEnded) {
       text = 'course_status_ended'.tr;
-      color = Colors.red;
+      color = AppColors.error;
     } else if (course.isOngoing) {
       text = 'course_status_ongoing'.tr;
-      color = Colors.orange;
+      color = AppColors.warning;
     } else if (course.hasStarted) {
       text = 'course_status_started'.tr;
-      color = Colors.blue;
+      color = AppColors.info;
     } else {
       text = 'course_status_upcoming'.tr;
-      color = Colors.green;
+      color = AppColors.success;
     }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Text(
         text,

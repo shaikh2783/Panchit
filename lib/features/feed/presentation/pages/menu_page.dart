@@ -951,10 +951,10 @@ class _MenuPageState extends State<MenuPage> {
                     GridView.count(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      crossAxisCount: 4,
-                      crossAxisSpacing: 6,
-                      mainAxisSpacing: 6,
-                      childAspectRatio: 0.9,
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      childAspectRatio: 1.0,
                       children: [
                         if (AppSettings.enableEvents)
                           _FeedItem(
@@ -1002,26 +1002,6 @@ class _MenuPageState extends State<MenuPage> {
                             onTap: () {
                               _hapticTap();
                               Get.to(() => const WatchPostsPage());
-                            },
-                          ),
-                        if (AppSettings.enableReels)
-                          _FeedItem(
-                            icon: Iconsax.video_play,
-                            label: 'reels',
-                            gradient: const [
-                              Color(0xFFFF8A65),
-                              Color(0xFFD84315),
-                            ],
-                            onTap: () {
-                              _hapticTap();
-                              // Navigate to ReelsPage (index 3 in main navigation)
-                              if (widget.onNavigateToTab != null) {
-                                widget.onNavigateToTab!(
-                                  3,
-                                ); // Switch to Reels tab
-                              } else {
-                                Navigator.pop(context); // Fallback
-                              }
                             },
                           ),
                         // Removed duplicate Watch item
