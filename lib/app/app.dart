@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart'
-as GetTransitions;
+    as GetTransitions;
 import 'dart:ui' show Locale;
 import 'package:provider/provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +11,7 @@ import 'package:snginepro/core/config/dynamic_app_config_provider.dart';
 import 'package:snginepro/core/config/dynamic_app_config_service.dart';
 import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/core/theme/app_theme.dart';
+import 'package:snginepro/core/theme/theme_controller.dart';
 import 'package:snginepro/core/localization/app_translations.dart';
 import 'package:snginepro/core/localization/localization_controller.dart';
 import 'package:snginepro/features/ads/domain/ads_repository.dart';
@@ -101,7 +102,7 @@ class App extends StatelessWidget {
 
   /// Global NavigatorKey للتحكم في الملاحة من الخارج (الإشعارات)
   static final GlobalKey<NavigatorState> navigatorKey =
-  GlobalKey<NavigatorState>();
+      GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -113,12 +114,13 @@ class App extends StatelessWidget {
           value: globalApiClient, // Use the global instance with auth token
         ),
         Provider<SystemSettingsApiService>(
-          create: (context) => SystemSettingsApiService(context.read<ApiClient>()),
+          create: (context) =>
+              SystemSettingsApiService(context.read<ApiClient>()),
         ),
         ChangeNotifierProvider<SystemSettingsProvider>(
-          create: (context) => SystemSettingsProvider(
-            context.read<SystemSettingsApiService>(),
-          )..initialize(),
+          create: (context) =>
+              SystemSettingsProvider(context.read<SystemSettingsApiService>())
+                ..initialize(),
         ),
         Provider<AuthStorage>(
           create: (context) => AuthStorage(context.read<SharedPreferences>()),
@@ -297,7 +299,8 @@ class App extends StatelessWidget {
           create: (context) => ReviewsApiService(context.read<ApiClient>()),
         ),
         Provider<ReviewsRepository>(
-          create: (context) => ReviewsRepository(context.read<ReviewsApiService>()),
+          create: (context) =>
+              ReviewsRepository(context.read<ReviewsApiService>()),
         ),
 
         // Dynamic App Config Service
@@ -362,7 +365,9 @@ class App extends StatelessWidget {
               usernameProvider: () {
                 final user = auth.currentUser;
                 final username =
-                    user?['user_name'] ?? user?['username'] ?? user?['first_name'];
+                    user?['user_name'] ??
+                    user?['username'] ??
+                    user?['first_name'];
                 return username?.toString();
               },
             );
@@ -452,19 +457,23 @@ class App extends StatelessWidget {
           ),
         ],
         child: GetBuilder<LocalizationController>(
-          builder: (localizationController) => GetMaterialApp(
-            title: 'Panchit',
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            themeMode: ThemeMode.dark,
-            home: const _AuthSwitcher(),
-            defaultTransition: GetTransitions.Transition.cupertino,
-            transitionDuration: const Duration(milliseconds: 300),
-            // GetX Internationalization
-            translations: AppTranslations(),
-            locale: localizationController.currentLocale,
-            fallbackLocale: const Locale('en', 'US'), // English as fallback
+          builder: (localizationController) => Obx(
+            () => GetMaterialApp(
+              title: 'Panchit',
+              debugShowCheckedModeBanner: false,
+              theme: AppTheme.lightTheme,
+              darkTheme: AppTheme.darkTheme,
+              themeMode: Get.find<ThemeController>().isDarkMode
+                  ? ThemeMode.dark
+                  : ThemeMode.light,
+              home: const _AuthSwitcher(),
+              defaultTransition: GetTransitions.Transition.cupertino,
+              transitionDuration: const Duration(milliseconds: 300),
+              // GetX Internationalization
+              translations: AppTranslations(),
+              locale: localizationController.currentLocale,
+              fallbackLocale: const Locale('en', 'US'), // English as fallback
+            ),
           ),
         ),
       ),

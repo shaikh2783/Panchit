@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:snginepro/core/theme/app_colors.dart';
 import 'package:snginepro/core/theme/design_tokens.dart';
 import 'package:snginepro/core/theme/widgets/frosted_glass_card.dart';
 import 'package:snginepro/features/competitions/data/models/competition_models.dart';
@@ -299,6 +300,7 @@ class _CompetitionCountdownTimerState extends State<CompetitionCountdownTimer> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final remaining = _remaining;
     final label = remaining == null || remaining <= Duration.zero
         ? widget.emptyLabel
@@ -309,14 +311,18 @@ class _CompetitionCountdownTimerState extends State<CompetitionCountdownTimer> {
         Icon(
           Iconsax.timer_1,
           size: 16,
-          color: theme.colorScheme.primary,
+          color: isDark
+              ? AppColors.textSecondaryDark
+              : AppColors.textSecondaryLight,
         ),
         const SizedBox(width: 8),
         Expanded(
           child: Text(
             label,
             style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.primary,
+              color: isDark
+                  ? AppColors.textSecondaryDark
+                  : AppColors.textSecondaryLight,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -344,23 +350,25 @@ class WinnerRankBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     if (!showLabel) {
       final theme = Theme.of(context);
+      final isDark = theme.brightness == Brightness.dark;
       return Container(
         padding: EdgeInsets.symmetric(
           horizontal: compact ? 8 : 10,
           vertical: compact ? 4 : 6,
         ),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHighest
-              .withValues(alpha: 0.6),
+          color: isDark ? AppColors.surfaceDark : AppColors.hoverLight,
           borderRadius: BorderRadius.circular(Radii.pill),
           border: Border.all(
-            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
+            color: isDark ? AppColors.dividerDark : AppColors.dividerLight,
           ),
         ),
         child: Text(
           '#$rank',
           style: TextStyle(
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
+            color: isDark
+                ? AppColors.textSecondaryDark
+                : AppColors.textSecondaryLight,
             fontSize: compact ? 11 : 12,
             fontWeight: FontWeight.w700,
           ),
@@ -428,7 +436,8 @@ class CompetitionEntryBadge extends StatelessWidget {
       return const Color(0xFF14B8A6);
     }
     if (s.contains('voting')) return const Color(0xFFF59E0B);
-    return theme.colorScheme.outline;
+    final isDark = theme.brightness == Brightness.dark;
+    return isDark ? AppColors.textTertiaryDark : AppColors.textTertiaryLight;
   }
 
   @override

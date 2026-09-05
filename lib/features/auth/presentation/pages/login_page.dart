@@ -1,22 +1,24 @@
-import 'dart:math' as math;
-import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:iconsax_flutter/iconsax_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+
 import 'package:snginepro/App_Settings.dart';
+import 'package:snginepro/core/theme/panchit_auth_ui.dart';
 import 'package:snginepro/features/auth/application/auth_notifier.dart';
 import 'package:snginepro/features/auth/data/models/auth_response.dart';
-import 'package:snginepro/features/auth/presentation/pages/signup_page.dart';
 import 'package:snginepro/features/auth/presentation/pages/forgot_password_page.dart';
+import 'package:snginepro/features/auth/presentation/pages/signup_page.dart';
 
-/// 🎨 Ultra Modern Login Page - Complete Redesign
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key, this.addAccountMode = false});
+  const LoginPage({
+    super.key,
+    this.addAccountMode = false,
+  });
 
   final bool addAccountMode;
 
@@ -24,36 +26,38 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
+class _LoginPageState extends State<LoginPage>
+    with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
+
   final _identityController = TextEditingController();
   final _passwordController = TextEditingController();
+
   bool _obscurePassword = true;
+
+  late AnimationController _formController;
 
   String get _deviceType =>
       defaultTargetPlatform == TargetPlatform.iOS ? 'I' : 'A';
 
   final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: ['email', 'profile', 'openid'],
+    scopes: [
+      'email',
+      'profile',
+      'openid',
+    ],
     clientId: defaultTargetPlatform == TargetPlatform.iOS
         ? AppSettings.googleClientIdIOS
         : null,
   );
 
-  late AnimationController _backgroundController;
-  late AnimationController _formController;
-
   @override
   void initState() {
     super.initState();
-    _backgroundController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 20),
-    )..repeat();
 
     _formController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 450),
     );
 
     _formController.forward();
@@ -63,17 +67,31 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   void dispose() {
     _identityController.dispose();
     _passwordController.dispose();
-    _backgroundController.dispose();
     _formController.dispose();
+
     super.dispose();
+  }
+
+  String _translate({
+    required String key,
+    required String fallback,
+  }) {
+    final translated = key.tr;
+
+    return translated == key ? fallback : translated;
   }
 
   Future<void> _handleLogin() async {
     final form = _formKey.currentState;
-    if (form == null || !form.validate()) return;
+
+    if (form == null || !form.validate()) {
+      return;
+    }
 
     FocusScope.of(context).unfocus();
+
     final authNotifier = context.read<AuthNotifier>();
+
     final AuthResponse? response = await authNotifier.signIn(
       identity: _identityController.text.trim(),
       password: _passwordController.text,
@@ -81,49 +99,41 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     );
 
     if (!mounted) return;
-    final messenger = ScaffoldMessenger.of(context);
-    messenger.clearSnackBars();
 
     if (response != null) {
       final displayName = response.userDisplayName;
+
       final message = displayName != null
-          ? 'welcome_back_user'.trParams({'name': displayName})
+          ? 'welcome_back_user'.trParams({
+        'name': displayName,
+      })
           : (response.message ?? 'login_success'.tr);
-      messenger.showSnackBar(
-        SnackBar(
-          content: Text(message),
-          backgroundColor: const Color(0xFF10B981),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          margin: const EdgeInsets.all(16),
-        ),
-      );
+
+      PanchitSnackBar.showSuccess(context, message);
+
       if (widget.addAccountMode) {
         Navigator.of(context).pop(true);
+      } else {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          '/',
+          (route) => false,
+        );
       }
-    } else {
-      final error =
-          authNotifier.errorMessage ?? 'login_failed'.tr;
-      messenger.showSnackBar(
-        SnackBar(
-          content: Text(error),
-          backgroundColor: const Color(0xFFEF4444),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          margin: const EdgeInsets.all(16),
-        ),
-      );
+
+      return;
     }
+
+    final error =
+        authNotifier.errorMessage ?? 'login_failed'.tr;
+
+    PanchitSnackBar.showError(context, error);
   }
 
   String? _validateIdentity(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'email_username_required'.tr;
     }
+
     return null;
   }
 
@@ -131,58 +141,45 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     if (value == null || value.isEmpty) {
       return 'password_required'.tr;
     }
+
     if (value.length < 6) {
       return 'password_min_length'.tr;
     }
+
     return null;
   }
 
   Future<void> _handleGoogleSignIn() async {
-    // التحقق من تفعيل الميزة
     if (!AppSettings.enableGoogleSignIn) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('تسجيل الدخول عبر Google معطل حالياً'),
-          backgroundColor: const Color(0xFFEF4444),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          margin: const EdgeInsets.all(16),
-        ),
+      PanchitSnackBar.showError(
+        context,
+        'تسجيل الدخول عبر Google معطل حالياً',
       );
+
       return;
     }
 
-    // التحقق من اكتمال الإعدادات
-    final validationError = AppSettings.validateGoogleSignInConfig();
+    final validationError =
+    AppSettings.validateGoogleSignInConfig();
+
     if (validationError != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(validationError),
-          backgroundColor: const Color(0xFFEF4444),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          margin: const EdgeInsets.all(16),
-        ),
-      );
+      PanchitSnackBar.showError(context, validationError);
+
       return;
     }
 
     try {
-      // تسجيل الخروج أولاً لإظهار قائمة الحسابات في كل مرة
       await _googleSignIn.signOut();
 
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      final GoogleSignInAccount? googleUser =
+      await _googleSignIn.signIn();
+
       if (googleUser == null) {
-        // User cancelled sign in
         return;
       }
 
-      // الحصول على ID Token / Server Auth Code من Google
       final googleAuth = await googleUser.authentication;
+
       final idToken = googleAuth.idToken;
       final serverAuthCode = googleUser.serverAuthCode;
 
@@ -190,80 +187,72 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           (serverAuthCode == null || serverAuthCode.isEmpty)) {
         throw PlatformException(
           code: 'google_sign_in_missing_token',
-          message: 'Google Sign-In did not return an ID token on this device.',
+          message:
+          'Google Sign-In did not return an ID token on this device.',
         );
       }
 
       if (!mounted) return;
+
       final authNotifier = context.read<AuthNotifier>();
-      final AuthResponse? response = await authNotifier.signInWithGoogle(
+
+      final AuthResponse? response =
+      await authNotifier.signInWithGoogle(
         googleId: googleUser.id,
         email: googleUser.email,
-        firstName: googleUser.displayName?.split(' ').first,
-        lastName: googleUser.displayName?.split(' ').skip(1).join(' '),
+        firstName:
+        googleUser.displayName?.split(' ').first,
+        lastName: googleUser.displayName
+            ?.split(' ')
+            .skip(1)
+            .join(' '),
         picture: googleUser.photoUrl,
         idToken: idToken ?? serverAuthCode,
         deviceType: _deviceType,
       );
 
       if (!mounted) return;
-      final messenger = ScaffoldMessenger.of(context);
-      messenger.clearSnackBars();
 
       if (response != null) {
         final displayName = response.userDisplayName;
+
         final message = displayName != null
             ? 'Welcome back, $displayName! 🎉'
-            : (response.message ?? 'Successfully logged in.');
-        messenger.showSnackBar(
-          SnackBar(
-            content: Text(message),
-            backgroundColor: const Color(0xFF10B981),
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            margin: const EdgeInsets.all(16),
-          ),
-        );
+            : (response.message ??
+            'Successfully logged in.');
+
+        PanchitSnackBar.showSuccess(context, message);
+
         if (widget.addAccountMode) {
           Navigator.of(context).pop(true);
+        } else {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            '/',
+            (route) => false,
+          );
         }
-      } else {
-        final error =
-            authNotifier.errorMessage ?? 'Login failed. Please try again.';
-        messenger.showSnackBar(
-          SnackBar(
-            content: Text(error),
-            backgroundColor: const Color(0xFFEF4444),
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            margin: const EdgeInsets.all(16),
-          ),
-        );
-      }
-    } catch (error) {
 
+        return;
+      }
+
+      final error = authNotifier.errorMessage ??
+          'Login failed. Please try again.';
+
+      PanchitSnackBar.showError(context, error);
+    } catch (error) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Google Sign-In failed: $error'),
-          backgroundColor: const Color(0xFFEF4444),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          margin: const EdgeInsets.all(16),
-        ),
+
+      PanchitSnackBar.showError(
+        context,
+        'Google Sign-In failed: $error',
       );
     }
   }
 
   Future<void> _handleAppleSignIn() async {
     try {
-      final credential = await SignInWithApple.getAppleIDCredential(
+      final credential =
+      await SignInWithApple.getAppleIDCredential(
         scopes: [
           AppleIDAuthorizationScopes.email,
           AppleIDAuthorizationScopes.fullName,
@@ -271,44 +260,38 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       );
 
       final userId = credential.userIdentifier;
+
       if (userId == null) {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Apple Sign-In did not return a valid user.'),
-            backgroundColor: const Color(0xFFEF4444),
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            margin: const EdgeInsets.all(16),
-          ),
+
+        PanchitSnackBar.showError(
+          context,
+          'Apple Sign-In did not return a valid user.',
         );
+
         return;
       }
 
       final identityToken = credential.identityToken;
-      if (identityToken == null || identityToken.isEmpty) {
+
+      if (identityToken == null ||
+          identityToken.isEmpty) {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text(
-              'Apple Sign-In did not return an identity token.',
-            ),
-            backgroundColor: const Color(0xFFEF4444),
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            margin: const EdgeInsets.all(16),
-          ),
+
+        PanchitSnackBar.showError(
+          context,
+          'Apple Sign-In did not return an identity token.',
         );
+
         return;
       }
 
       if (!mounted) return;
+
       final authNotifier = context.read<AuthNotifier>();
-      final AuthResponse? response = await authNotifier.signInWithApple(
+
+      final AuthResponse? response =
+      await authNotifier.signInWithApple(
         appleId: userId,
         email: credential.email,
         firstName: credential.givenName,
@@ -319,414 +302,345 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       );
 
       if (!mounted) return;
-      final messenger = ScaffoldMessenger.of(context);
-      messenger.clearSnackBars();
 
       if (response != null) {
         final displayName = response.userDisplayName;
+
         final message = displayName != null
             ? 'Welcome back, $displayName! 🎉'
-            : (response.message ?? 'Successfully logged in.');
-        messenger.showSnackBar(
-          SnackBar(
-            content: Text(message),
-            backgroundColor: const Color(0xFF10B981),
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            margin: const EdgeInsets.all(16),
-          ),
-        );
+            : (response.message ??
+            'Successfully logged in.');
+
+        PanchitSnackBar.showSuccess(context, message);
+
         if (widget.addAccountMode) {
           Navigator.of(context).pop(true);
+        } else {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            '/',
+            (route) => false,
+          );
         }
-      } else {
-        final error =
-            authNotifier.errorMessage ?? 'Login failed. Please try again.';
-        messenger.showSnackBar(
-          SnackBar(
-            content: Text(error),
-            backgroundColor: const Color(0xFFEF4444),
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            margin: const EdgeInsets.all(16),
-          ),
-        );
+
+        return;
       }
+
+      final error = authNotifier.errorMessage ??
+          'Login failed. Please try again.';
+
+      PanchitSnackBar.showError(context, error);
     } catch (error) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Apple Sign-In failed: $error'),
-          backgroundColor: const Color(0xFFEF4444),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          margin: const EdgeInsets.all(16),
-        ),
+
+      PanchitSnackBar.showError(
+        context,
+        'Apple Sign-In failed: $error',
       );
     }
+  }
+
+  void _openSignUp() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SignUpPage(
+          addAccountMode: widget.addAccountMode,
+        ),
+      ),
+    );
+  }
+
+  void _openForgotPassword() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const ForgotPasswordPage(),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final authState = context.watch<AuthNotifier>();
+
     final isLoading = authState.isLoading;
     final errorMessage = authState.errorMessage;
-    final size = MediaQuery.of(context).size;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final isIOS = defaultTargetPlatform == TargetPlatform.iOS;
+
+    final isDark =
+        Theme.of(context).brightness == Brightness.dark;
+
+    final showGoogle =
+        AppSettings.enableGoogleSignIn;
+
+    final showApple =
+        defaultTargetPlatform == TargetPlatform.iOS;
+
+    final showSocialLogin =
+        showGoogle || showApple;
 
     return Scaffold(
-      body: Stack(
-        children: [
-          // 🌈 Clean Gradient Background
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: isDark
-                    ? [const Color(0xFF1A1A2E), const Color(0xFF16213E)]
-                    : [const Color(0xFF5B86E5), const Color(0xFF36D1DC)],
+      resizeToAvoidBottomInset: true,
+      backgroundColor: PanchitAuthColors.background(isDark),
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              keyboardDismissBehavior:
+              ScrollViewKeyboardDismissBehavior.onDrag,
+              padding: const EdgeInsets.fromLTRB(
+                24,
+                20,
+                24,
+                24,
               ),
-            ),
-          ),
-
-          // ✨ Floating Particles
-          ...List.generate(8, (index) {
-            return AnimatedBuilder(
-              animation: _backgroundController,
-              builder: (context, child) {
-                final offset =
-                    (_backgroundController.value + index * 0.125) % 1;
-                final x = size.width * ((index * 0.125) % 1);
-                final y = size.height * offset;
-                final scale = 0.5 + math.sin(offset * math.pi * 2) * 0.3;
-
-                return Positioned(
-                  left: x,
-                  top: y,
-                  child: Opacity(
-                    opacity: 0.15,
-                    child: Transform.scale(
-                      scale: scale,
-                      child: Container(
-                        width: 3 + (index % 2) * 2,
-                        height: 3 + (index % 2) * 2,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.white.withOpacity(0.2),
-                              blurRadius: 4,
-                              spreadRadius: 1,
-                            ),
-                          ],
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxWidth: 420,
+                  ),
+                  child: FadeTransition(
+                    opacity: CurvedAnimation(
+                      parent: _formController,
+                      curve: Curves.easeOut,
+                    ),
+                    child: SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(0, 0.025),
+                        end: Offset.zero,
+                      ).animate(
+                        CurvedAnimation(
+                          parent: _formController,
+                          curve: Curves.easeOutCubic,
                         ),
                       ),
-                    ),
-                  ),
-                );
-              },
-            );
-          }),
-
-          // 📱 Main Content
-          SafeArea(
-            child: Center(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 40,
-                ),
-                child: FadeTransition(
-                  opacity: _formController,
-                  child: SlideTransition(
-                    position:
-                        Tween<Offset>(
-                          begin: const Offset(0, 0.1),
-                          end: Offset.zero,
-                        ).animate(
-                          CurvedAnimation(
-                            parent: _formController,
-                            curve: Curves.easeOutCubic,
-                          ),
-                        ),
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 440),
                       child: Column(
-                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment:
+                        CrossAxisAlignment.stretch,
                         children: [
-                          // 🎯 Logo & Brand
                           _buildLogo(),
-                          const SizedBox(height: 48),
 
-                          // 💎 Glass Card with Form
-                          _buildGlassCard(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                // Header
-                                _buildHeader(),
-                                const SizedBox(height: 32),
+                          const SizedBox(height: 30),
 
-                                // Error Banner
-                                if (errorMessage != null) ...[
-                                  _buildErrorBanner(errorMessage),
-                                  const SizedBox(height: 20),
-                                ],
+                          _buildHeader(isDark),
 
-                                // Form
-                                _buildForm(),
-                                const SizedBox(height: 24),
+                          const SizedBox(height: 28),
 
-                                // Login Button
-                                _buildLoginButton(isLoading),
-                                const SizedBox(height: 20),
-
-                                if (defaultTargetPlatform == TargetPlatform.android &&
-                                      AppSettings.enableGoogleSignIn) ...[
-                                    _buildDivider(),
-                                    const SizedBox(height: 20),
-                                    _buildGoogleSignInButton(isLoading),
-                                    const SizedBox(height: 20),
-                                  ] else if (isIOS) ...[
-                                    _buildDivider(),
-                                    const SizedBox(height: 20),
-                                    if (AppSettings.enableGoogleSignIn) ...[
-                                      _buildGoogleSignInButton(isLoading),
-                                      const SizedBox(height: 20),
-                                    ],
-                                    _buildAppleSignInButton(isLoading),
-                                    const SizedBox(height: 20),
-                                  ],
-
-                                // Footer
-                                _buildFooter(),
-                              ],
+                          if (errorMessage != null) ...[
+                            PanchitErrorBanner(
+                              message: errorMessage,
+                              isDark: isDark,
                             ),
+                            const SizedBox(height: 18),
+                          ],
+
+                          _buildForm(isDark),
+
+                          const SizedBox(height: 22),
+
+                          _buildLoginButton(isLoading),
+
+                          const SizedBox(height: 12),
+
+                          _buildSignUpButton(
+                            isDark: isDark,
+                            isLoading: isLoading,
                           ),
+
+                          if (showSocialLogin) ...[
+                            const SizedBox(height: 24),
+
+                            _buildDivider(isDark),
+
+                            const SizedBox(height: 18),
+
+                            _buildSocialButtons(
+                              isLoading: isLoading,
+                              isDark: isDark,
+                              showGoogle: showGoogle,
+                              showApple: showApple,
+                            ),
+                          ],
+
+                          const SizedBox(height: 24),
+
+                          _buildBottomHint(isDark),
                         ],
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // 🎯 Logo Section
-  Widget _buildLogo() {
-    return TweenAnimationBuilder<double>(
-      duration: const Duration(milliseconds: 1200),
-      tween: Tween(begin: 0.0, end: 1.0),
-      curve: Curves.elasticOut,
-      builder: (context, value, child) {
-        return Transform.scale(
-          scale: value,
-          child: Column(
-            children: [
-              Image.asset('assets/app_icon.png',height: 100,width: 100),
-              const SizedBox(height: 20),
-              const Text(
-                'Panchit',
-                style: TextStyle(
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  letterSpacing: 1.5,
-                  shadows: [
-                    Shadow(
-                      color: Colors.black26,
-                      offset: Offset(0, 4),
-                      blurRadius: 10,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Connect • Share • Inspire',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.white.withOpacity(0.9),
-                  letterSpacing: 2,
-                  fontWeight: FontWeight.w300,
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  // 💎 Solid Card with Dark Mode Support
-  Widget _buildGlassCard({required Widget child}) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return Container(
-      decoration: BoxDecoration(
-        color: isDark
-            ? const Color(0xFF0F1419).withOpacity(0.95)
-            : Colors.white,
-        borderRadius: BorderRadius.circular(32),
-        border: Border.all(
-          color: isDark
-              ? const Color(0xFF2D3748).withOpacity(0.5)
-              : Colors.white.withOpacity(0.3),
-          width: 1.5,
+            );
+          },
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.3 : 0.15),
-            blurRadius: 30,
-            spreadRadius: 5,
-            offset: const Offset(0, 10),
-          ),
-        ],
       ),
-      padding: const EdgeInsets.all(32),
-      child: child,
     );
   }
 
-  // 📝 Header
-  Widget _buildHeader() {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+  Widget _buildLogo() {
+    return Center(
+      child: TweenAnimationBuilder<double>(
+        duration: const Duration(
+          milliseconds: 550,
+        ),
+        tween: Tween(
+          begin: 0.85,
+          end: 1,
+        ),
+        curve: Curves.easeOutBack,
+        builder: (
+            context,
+            value,
+            child,
+            ) {
+          return Transform.scale(
+            scale: value,
+            child: child,
+          );
+        },
+        child: Image.asset(
+          'assets/app_icon.png',
+          width: 62,
+          height: 62,
+          fit: BoxFit.contain,
+        ),
+      ),
+    );
+  }
 
+  Widget _buildHeader(bool isDark) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment:
+      CrossAxisAlignment.start,
       children: [
         Text(
-          'welcome_back'.tr,
+          widget.addAccountMode
+              ? _translate(
+            key: 'add_another_account',
+            fallback: 'Add another account',
+          )
+              : _translate(
+            key: 'login_welcome_title',
+            fallback:
+            'Welcome to\nPanchit 👋',
+          ),
           style: TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
-            color: isDark ? Colors.white : const Color(0xFF1A202C),
-            height: 1.2,
+            color: PanchitAuthColors.textPrimary(isDark),
+            fontSize: 28,
+            fontWeight: FontWeight.w700,
+            height: 1.12,
+            letterSpacing: -0.6,
           ),
         ),
-        const SizedBox(height: 8),
+
+        const SizedBox(height: 10),
+
         Text(
-          widget.addAccountMode ? 'Add another account' : 'sign_in_continue'.tr,
+          widget.addAccountMode
+              ? _translate(
+            key: 'add_account_description',
+            fallback:
+            'Sign in to add another account.',
+          )
+              : _translate(
+            key: 'login_welcome_description',
+            fallback:
+            'Connect with people around the world and share your moments.',
+          ),
           style: TextStyle(
-            fontSize: 15,
-            color: isDark
-                ? Colors.white.withOpacity(0.7)
-                : const Color(0xFF4A5568),
+            color: PanchitAuthColors.textSecondary(isDark),
+            fontSize: 14,
             fontWeight: FontWeight.w400,
+            height: 1.45,
           ),
         ),
       ],
     );
   }
 
-  // ⚠️ Error Banner
-  Widget _buildErrorBanner(String message) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFFEF4444).withOpacity(0.2),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: const Color(0xFFEF4444).withOpacity(0.4),
-          width: 1,
-        ),
-      ),
-      child: Row(
-        children: [
-          const Icon(
-            Icons.error_outline_rounded,
-            color: Colors.white,
-            size: 24,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              message,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // 📋 Form
-  Widget _buildForm() {
+  Widget _buildForm(bool isDark) {
     return Form(
       key: _formKey,
       child: Column(
         children: [
-          // Email/Username Field
-          _buildTextField(
+          PanchitTextField(
             controller: _identityController,
             label: 'email_username'.tr,
             hint: 'enter_email_username'.tr,
-            icon: Icons.person_outline_rounded,
-            keyboardType: TextInputType.emailAddress,
+            keyboardType:
+            TextInputType.emailAddress,
+            textInputAction:
+            TextInputAction.next,
             validator: _validateIdentity,
-            onChanged: (_) => context.read<AuthNotifier>().clearError(),
+            onChanged: (_) {
+              context
+                  .read<AuthNotifier>()
+                  .clearError();
+            },
+            isDark: isDark,
           ),
+
           const SizedBox(height: 16),
 
-          // Password Field
-          _buildTextField(
+          PanchitTextField(
             controller: _passwordController,
             label: 'password'.tr,
             hint: 'enter_password'.tr,
-            icon: Icons.lock_outline_rounded,
             obscureText: _obscurePassword,
+            textInputAction:
+            TextInputAction.done,
             validator: _validatePassword,
-            onChanged: (_) => context.read<AuthNotifier>().clearError(),
-            onFieldSubmitted: (_) => _handleLogin(),
+            onChanged: (_) {
+              context
+                  .read<AuthNotifier>()
+                  .clearError();
+            },
+            onFieldSubmitted: (_) {
+              _handleLogin();
+            },
+            isDark: isDark,
             suffixIcon: IconButton(
+              onPressed: () {
+                setState(() {
+                  _obscurePassword =
+                  !_obscurePassword;
+                });
+              },
+              splashRadius: 20,
               icon: Icon(
                 _obscurePassword
                     ? Icons.visibility_off_outlined
                     : Icons.visibility_outlined,
-                color: Colors.white.withOpacity(0.7),
+                color: PanchitAuthColors.textMuted(isDark),
+                size: 20,
               ),
-              onPressed: () =>
-                  setState(() => _obscurePassword = !_obscurePassword),
             ),
           ),
-          const SizedBox(height: 12),
 
-          // Forgot Password
+          const SizedBox(height: 4),
+
           Align(
-            alignment: AlignmentDirectional.centerEnd,
+            alignment:
+            AlignmentDirectional.centerEnd,
             child: TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const ForgotPasswordPage(),
-                  ),
-                );
-              },
+              onPressed: _openForgotPassword,
               style: TextButton.styleFrom(
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                foregroundColor: PanchitAuthColors.purple,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 4,
+                  vertical: 6,
+                ),
+                minimumSize: Size.zero,
+                tapTargetSize:
+                MaterialTapTargetSize.shrinkWrap,
               ),
               child: Text(
                 'forgot_password'.tr,
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                  color: PanchitAuthColors.linkAccent(isDark),
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
@@ -735,392 +649,227 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     );
   }
 
-  // 🎨 Custom TextField
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    required String hint,
-    required IconData icon,
-    bool obscureText = false,
-    TextInputType? keyboardType,
-    String? Function(String?)? validator,
-    void Function(String)? onChanged,
-    void Function(String)? onFieldSubmitted,
-    Widget? suffixIcon,
+  Widget _buildLoginButton(
+      bool isLoading,
+      ) {
+    return PanchitPrimaryButton(
+      label: 'sign_in'.tr,
+      onPressed: _handleLogin,
+      isLoading: isLoading,
+    );
+  }
+
+  Widget _buildSignUpButton({
+    required bool isDark,
+    required bool isLoading,
   }) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return TextFormField(
-      controller: controller,
-      obscureText: obscureText,
-      keyboardType: keyboardType,
-      validator: validator,
-      onChanged: onChanged,
-      onFieldSubmitted: onFieldSubmitted,
-      style: TextStyle(
-        color: isDark ? Colors.white : const Color(0xFF1A202C),
-        fontSize: 16,
-        fontWeight: FontWeight.w500,
+    return PanchitOutlinedButton(
+      label: widget.addAccountMode
+          ? _translate(
+        key: 'create_another_account',
+        fallback: 'Create another account',
+      )
+          : _translate(
+        key: 'create_account',
+        fallback: 'Sign Up',
       ),
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: hint,
-        prefixIcon: Icon(
-          icon,
-          color: isDark
-              ? Colors.white.withOpacity(0.7)
-              : const Color(0xFF5B86E5).withOpacity(0.8),
-        ),
-        suffixIcon: suffixIcon,
-        labelStyle: TextStyle(
-          color: isDark
-              ? Colors.white.withOpacity(0.7)
-              : const Color(0xFF4A5568),
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-        ),
-        hintStyle: TextStyle(
-          color: isDark
-              ? Colors.white.withOpacity(0.3)
-              : const Color(0xFF718096),
-          fontSize: 14,
-        ),
-        filled: true,
-        fillColor: isDark ? const Color(0xFF1A202C) : const Color(0xFFF7FAFC),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(
-            color: isDark ? const Color(0xFF2D3748) : const Color(0xFFE2E8F0),
-            width: 1.5,
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(
-            color: isDark ? const Color(0xFF2D3748) : const Color(0xFFE2E8F0),
-            width: 1.5,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(
-            color: isDark ? const Color(0xFF5B86E5) : const Color(0xFF5B86E5),
-            width: 2,
-          ),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: Color(0xFFEF4444), width: 1.5),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: Color(0xFFEF4444), width: 2),
-        ),
-        errorStyle: TextStyle(
-          color: isDark ? const Color(0xFFFFCDD2) : const Color(0xFFEF4444),
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-        ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 18,
-        ),
-      ),
+      onPressed: isLoading ? null : _openSignUp,
+      isDark: isDark,
     );
   }
 
-  // 🚀 Login Button
-  Widget _buildLoginButton(bool isLoading) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return Container(
-      height: 56,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: isDark
-              ? [const Color(0xFF5B86E5), const Color(0xFF36D1DC)]
-              : [const Color(0xFF5B86E5), const Color(0xFF36D1DC)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF5B86E5).withOpacity(0.4),
-            blurRadius: 20,
-            spreadRadius: 0,
-            offset: const Offset(0, 8),
-          ),
-        ],
+  Widget _buildDivider(bool isDark) {
+    return PanchitDivider(
+      text: _translate(
+        key: 'or_continue_with',
+        fallback: 'or continue with',
       ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: isLoading ? null : _handleLogin,
-          borderRadius: BorderRadius.circular(16),
-          child: Center(
-            child: isLoading
-                ? const SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 3,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                  )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'sign_in'.tr,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      const Icon(
-                        Icons.arrow_forward_rounded,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                    ],
-                  ),
-          ),
-        ),
-      ),
+      isDark: isDark,
     );
   }
 
-  // 🔵 Google Sign-In Button
-  Widget _buildGoogleSignInButton(bool isLoading) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return Container(
-      height: 56,
-      decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1A202C) : Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: isDark ? const Color(0xFF2D3748) : const Color(0xFFE2E8F0),
-          width: 1.5,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            spreadRadius: 0,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: isLoading ? null : _handleGoogleSignIn,
-          borderRadius: BorderRadius.circular(16),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ShaderMask(
-                  shaderCallback: (Rect bounds) {
-                    return const LinearGradient(
-                      colors: [
-                        Color(0xFF4285F4), // Blue
-                        Color(0xFFDB4437), // Red
-                        Color(0xFFF4B400), // Yellow
-                        Color(0xFF0F9D58), // Green
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ).createShader(bounds);
-                  },
-                  child: const Icon(
-                    Iconsax.google_1,
-                    color: Colors.white,
-                    size: 24,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Flexible(
-                  child: Text(
-                    'sign_in_with_google'.tr,
-                    style: TextStyle(
-                      color: isDark ? Colors.white : const Color(0xFF1F2937),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAppleSignInButton(bool isLoading) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final backgroundColor = isDark ? Colors.white : Colors.black;
-    final foregroundColor = isDark ? Colors.black : Colors.white;
-
-    return Container(
-      height: 56,
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: isDark ? const Color(0xFF2D3748) : const Color(0xFFE2E8F0),
-          width: 1.5,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            spreadRadius: 0,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: isLoading ? null : _handleAppleSignIn,
-          borderRadius: BorderRadius.circular(16),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.apple,
-                  color: foregroundColor,
-                  size: 24,
-                ),
-                const SizedBox(width: 12),
-                Flexible(
-                  child: Text(
-                    'sign_in_with_apple'.tr,
-                    style: TextStyle(
-                      color: foregroundColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  // ➖ Divider
-  Widget _buildDivider() {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
+  Widget _buildSocialButtons({
+    required bool isLoading,
+    required bool isDark,
+    required bool showGoogle,
+    required bool showApple,
+  }) {
     return Row(
       children: [
-        Expanded(
-          child: Divider(
-            color: isDark
-                ? Colors.white.withOpacity(0.1)
-                : const Color(0xFFE2E8F0),
-            thickness: 1,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            'or'.tr,
-            style: TextStyle(
-              color: isDark
-                  ? Colors.white.withOpacity(0.5)
-                  : const Color(0xFF718096),
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 1,
+        if (showGoogle)
+          Expanded(
+            child: _buildGoogleSignInButton(
+              isLoading,
+              isDark,
             ),
           ),
-        ),
-        Expanded(
-          child: Divider(
-            color: isDark
-                ? Colors.white.withOpacity(0.1)
-                : const Color(0xFFE2E8F0),
-            thickness: 1,
+
+        if (showGoogle && showApple)
+          const SizedBox(width: 12),
+
+        if (showApple)
+          Expanded(
+            child: _buildAppleSignInButton(
+              isLoading,
+              isDark,
+            ),
           ),
-        ),
       ],
     );
   }
 
-  // 📄 Footer
-  Widget _buildFooter() {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return Column(
-      children: [
-        Text(
-          'dont_have_account'.tr,
-          style: TextStyle(
-            color: isDark
-                ? Colors.white.withOpacity(0.7)
-                : const Color(0xFF4A5568),
-            fontSize: 14,
+  Widget _buildGoogleSignInButton(
+      bool isLoading,
+      bool isDark,
+      ) {
+    return SizedBox(
+      height: 45,
+      child: OutlinedButton(
+        onPressed: isLoading
+            ? null
+            : _handleGoogleSignIn,
+        style: OutlinedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 10,
+          ),
+          foregroundColor: isDark
+              ? Colors.white
+              : const Color(0xFF202027),
+          backgroundColor: isDark
+              ? PanchitAuthColors.surfaceDark
+              : Colors.white,
+          side: BorderSide(
+            color: PanchitAuthColors.border(isDark),
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius:
+            BorderRadius.circular(8),
           ),
         ),
-        const SizedBox(height: 8),
-        TextButton(
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    SignUpPage(addAccountMode: widget.addAccountMode),
-              ),
-            );
-          },
-          style: TextButton.styleFrom(
-            foregroundColor: isDark ? Colors.white : const Color(0xFF5B86E5),
-            backgroundColor: isDark
-                ? const Color(0xFF1A202C)
-                : const Color(0xFFF7FAFC),
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-              side: BorderSide(
-                color: isDark
-                    ? const Color(0xFF2D3748)
-                    : const Color(0xFFE2E8F0),
-                width: 1,
+        child: Row(
+          mainAxisAlignment:
+          MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ShaderMask(
+              shaderCallback: (bounds) {
+                return const LinearGradient(
+                  colors: [
+                    Color(0xFF4285F4),
+                    Color(0xFFDB4437),
+                    Color(0xFFF4B400),
+                    Color(0xFF0F9D58),
+                  ],
+                ).createShader(bounds);
+              },
+              child: const Icon(
+                Iconsax.google_1,
+                color: Colors.white,
+                size: 19,
               ),
             ),
+
+            const SizedBox(width: 8),
+
+            Flexible(
+              child: Text(
+                'Google',
+                overflow:
+                TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight:
+                  FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAppleSignInButton(
+      bool isLoading,
+      bool isDark,
+      ) {
+    return SizedBox(
+      height: 45,
+      child: OutlinedButton(
+        onPressed:
+        isLoading ? null : _handleAppleSignIn,
+        style: OutlinedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 10,
           ),
-          child: Text(
-            widget.addAccountMode ? 'Create another account' : 'create_account'.tr,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+          foregroundColor: isDark
+              ? Colors.white
+              : const Color(0xFF202027),
+          backgroundColor: isDark
+              ? PanchitAuthColors.surfaceDark
+              : Colors.white,
+          side: BorderSide(
+            color: PanchitAuthColors.border(isDark),
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius:
+            BorderRadius.circular(8),
           ),
         ),
-        const SizedBox(height: 16),
-        Text(
-          '© 2025 Panchit. All rights reserved.',
-          style: TextStyle(
-            color: isDark
-                ? Colors.white.withOpacity(0.4)
-                : const Color(0xFF718096),
-            fontSize: 12,
-          ),
+        child: Row(
+          mainAxisAlignment:
+          MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.apple,
+              color: isDark
+                  ? Colors.white
+                  : Colors.black,
+              size: 20,
+            ),
+
+            const SizedBox(width: 7),
+
+            const Flexible(
+              child: Text(
+                'Apple',
+                overflow:
+                TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight:
+                  FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
+    );
+  }
+
+  Widget _buildBottomHint(bool isDark) {
+    return Center(
+      child: Text.rich(
+        TextSpan(
+          children: [
+            TextSpan(
+              text: _translate(
+                key: 'panchit_auth_footer',
+                fallback:
+                'Connect • Share • Belong',
+              ),
+              style: TextStyle(
+                color: PanchitAuthColors.textMuted(isDark),
+                fontSize: 11,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ],
+        ),
+        textAlign: TextAlign.center,
+      ),
     );
   }
 }

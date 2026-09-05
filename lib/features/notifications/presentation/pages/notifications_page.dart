@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:snginepro/core/theme/app_colors.dart';
+import 'package:snginepro/core/theme/panchit_auth_ui.dart';
 import 'package:snginepro/features/notifications/application/notifications_notifier.dart';
 import 'package:snginepro/features/notifications/data/models/notification.dart';
 import 'package:snginepro/features/feed/presentation/pages/post_detail_page.dart';
@@ -83,7 +85,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
         'notifications_marked_success'.tr,
         snackPosition: SnackPosition.BOTTOM,
         duration: const Duration(seconds: 2),
-        backgroundColor: Colors.green.withOpacity(0.85),
+        backgroundColor: AppColors.success.withValues(alpha: 0.85),
         colorText: Colors.white,
       );
     } catch (e) {
@@ -91,7 +93,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
         'notifications_error'.tr,
         'notifications_mark_error'.tr,
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.withOpacity(0.85),
+        backgroundColor: AppColors.error.withValues(alpha: 0.85),
         colorText: Colors.white,
       );
     }
@@ -318,9 +320,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark
-          ? const Color(0xFF0A0A0A)
-          : const Color(0xFFF8F9FA),
+      backgroundColor: PanchitAuthColors.background(isDark),
       appBar: AppBar(
         centerTitle: false,
         title: Text(
@@ -328,10 +328,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: isDark ? Colors.white : Colors.grey[800],
+            color: isDark
+                ? AppColors.textPrimaryDark
+                : AppColors.textPrimaryLight,
           ),
         ),
-        backgroundColor: isDark ? const Color(0xFF1A1A1A) : Colors.white,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         shadowColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
@@ -342,13 +344,11 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 return Container(
                   margin: const EdgeInsets.only(right: 8),
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [cs.primary, cs.primary.withOpacity(0.8)],
-                    ),
+                    gradient: AppColors.primaryGradient,
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: cs.primary.withOpacity(0.3),
+                        color: cs.primary.withValues(alpha: 0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
                       ),
@@ -373,157 +373,132 @@ class _NotificationsPageState extends State<NotificationsPage> {
           ),
         ],
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: isDark
-                ? [const Color(0xFF0A0A0A), const Color(0xFF1A1A1A)]
-                : [const Color(0xFFF8F9FA), const Color(0xFFE9ECEF)],
-          ),
-        ),
-        child: Consumer<NotificationsNotifier>(
-          builder: (context, n, _) {
-            if (n.isLoading && n.notifications.isEmpty) {
-              return _buildInitialLoading(isDark);
-            }
+      body: Consumer<NotificationsNotifier>(
+        builder: (context, n, _) {
+          if (n.isLoading && n.notifications.isEmpty) {
+            return _buildInitialLoading(isDark);
+          }
 
-            if (n.error != null && n.notifications.isEmpty) {
-              return _buildErrorView(
-                n.error!,
-                () => n.fetchNotifications(refresh: true),
-                isDark,
-              );
-            }
+          if (n.error != null && n.notifications.isEmpty) {
+            return _buildErrorView(
+              n.error!,
+              () => n.fetchNotifications(refresh: true),
+              isDark,
+            );
+          }
 
-            if (n.notifications.isEmpty) {
-              return _buildEmptyView(isDark);
-            }
+          if (n.notifications.isEmpty) {
+            return _buildEmptyView(isDark);
+          }
 
-            return RefreshIndicator(
-              onRefresh: _handleRefresh,
-              backgroundColor: isDark ? const Color(0xFF2A2A2A) : Colors.white,
-              color: cs.primary,
-              child: ListView.separated(
-                controller: _scrollController,
-                padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
-                itemCount: n.notifications.length + (n.isLoadingMore ? 1 : 0),
-                separatorBuilder: (_, __) => const SizedBox(height: 12),
-                itemBuilder: (context, index) {
-                  if (index == n.notifications.length) {
-                    return Container(
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          strokeWidth: 3,
-                          valueColor: AlwaysStoppedAnimation<Color>(cs.primary),
-                        ),
+          return RefreshIndicator(
+            onRefresh: _handleRefresh,
+            backgroundColor: isDark ? AppColors.cardDark : Colors.white,
+            color: cs.primary,
+            child: ListView.separated(
+              controller: _scrollController,
+              padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
+              itemCount: n.notifications.length + (n.isLoadingMore ? 1 : 0),
+              separatorBuilder: (_, __) => const SizedBox(height: 12),
+              itemBuilder: (context, index) {
+                if (index == n.notifications.length) {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 3,
+                        valueColor: AlwaysStoppedAnimation<Color>(cs.primary),
                       ),
-                    );
-                  }
-
-                  final item = n.notifications[index];
-
-                  return Dismissible(
-                    key: ValueKey(item.notificationId),
-                    background: _slideBg(
-                      context,
-                      color: cs.primary,
-                      icon: Icons.mark_email_read_rounded,
-                      label: 'notifications_mark_read'.tr,
-                      alignStart: true,
-                    ),
-                    secondaryBackground: _slideBg(
-                      context,
-                      color: Colors.red,
-                      icon: Icons.delete_outline_rounded,
-                      label: 'notifications_delete'.tr,
-                      alignStart: false,
-                    ),
-                    confirmDismiss: (dir) async {
-                      if (dir == DismissDirection.startToEnd) {
-                        // Mark as read on swipe right
-                        await context.read<NotificationsNotifier>().markAsRead(
-                          item.notificationId,
-                        );
-                        return false;
-                      }
-                      // Allow dismissal for swipe left (endToStart)
-                      return true;
-                    },
-                    onDismissed: (dir) {
-                      if (dir == DismissDirection.endToStart) {
-                        context
-                            .read<NotificationsNotifier>()
-                            .removeNotificationById(item.notificationId)
-                            .then((_) {
-                          Get.snackbar(
-                            'notification'.tr,
-                            'notifications_deleted'.tr,
-                            snackPosition: SnackPosition.BOTTOM,
-                            duration: const Duration(seconds: 2),
-                          );
-                        }).catchError((e) {
-                          Get.snackbar(
-                            'notifications_error'.tr,
-                            e.toString(),
-                            snackPosition: SnackPosition.BOTTOM,
-                          );
-                        });
-                      }
-                    },
-                    child: _NotificationCard(
-                      notification: item,
-                      onTap: () {
-                        context.read<NotificationsNotifier>().markAsRead(
-                          item.notificationId,
-                        );
-                        _handleNotificationTap(item);
-                      },
                     ),
                   );
-                },
-              ),
-            );
-          },
-        ),
+                }
+
+                final item = n.notifications[index];
+
+                return Dismissible(
+                  key: ValueKey(item.notificationId),
+                  background: _slideBg(
+                    context,
+                    color: cs.primary,
+                    icon: Icons.mark_email_read_rounded,
+                    label: 'notifications_mark_read'.tr,
+                    alignStart: true,
+                  ),
+                  secondaryBackground: _slideBg(
+                    context,
+                    color: AppColors.error,
+                    icon: Icons.delete_outline_rounded,
+                    label: 'notifications_delete'.tr,
+                    alignStart: false,
+                  ),
+                  confirmDismiss: (dir) async {
+                    if (dir == DismissDirection.startToEnd) {
+                      // Mark as read on swipe right
+                      await context.read<NotificationsNotifier>().markAsRead(
+                        item.notificationId,
+                      );
+                      return false;
+                    }
+                    // Allow dismissal for swipe left (endToStart)
+                    return true;
+                  },
+                  onDismissed: (dir) {
+                    if (dir == DismissDirection.endToStart) {
+                      context
+                          .read<NotificationsNotifier>()
+                          .removeNotificationById(item.notificationId)
+                          .then((_) {
+                        Get.snackbar(
+                          'notification'.tr,
+                          'notifications_deleted'.tr,
+                          snackPosition: SnackPosition.BOTTOM,
+                          duration: const Duration(seconds: 2),
+                        );
+                      }).catchError((e) {
+                        Get.snackbar(
+                          'notifications_error'.tr,
+                          e.toString(),
+                          snackPosition: SnackPosition.BOTTOM,
+                        );
+                      });
+                    }
+                  },
+                  child: _NotificationCard(
+                    notification: item,
+                    onTap: () {
+                      context.read<NotificationsNotifier>().markAsRead(
+                        item.notificationId,
+                      );
+                      _handleNotificationTap(item);
+                    },
+                  ),
+                );
+              },
+            ),
+          );
+        },
       ),
     );
   }
 
   Widget _buildInitialLoading(bool isDark) {
     return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: isDark
-              ? [const Color(0xFF0A0A0A), const Color(0xFF1A1A1A)]
-              : [const Color(0xFFF8F9FA), const Color(0xFFE9ECEF)],
-        ),
-      ),
+      color: PanchitAuthColors.background(isDark),
       child: ListView.separated(
         padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
         itemCount: 8,
         separatorBuilder: (_, __) => const SizedBox(height: 12),
         itemBuilder: (context, index) {
+          final shimmerColor = isDark
+              ? AppColors.dividerDark
+              : AppColors.dividerLight;
+
           return Container(
             height: 80,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
-              gradient: LinearGradient(
-                colors: isDark
-                    ? [const Color(0xFF2A2A2A), const Color(0xFF1F1F1F)]
-                    : [Colors.white, const Color(0xFFF5F5F5)],
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: isDark ? Colors.black26 : Colors.grey.withOpacity(0.1),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
+              color: isDark ? AppColors.cardDark : Colors.white,
+              boxShadow: isDark ? AppColors.darkShadow : AppColors.lightShadow,
             ),
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -534,9 +509,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     height: 52,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: isDark
-                          ? const Color(0xFF3A3A3A)
-                          : const Color(0xFFE0E0E0),
+                      color: shimmerColor,
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -550,9 +523,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                           width: double.infinity,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(7),
-                            color: isDark
-                                ? const Color(0xFF3A3A3A)
-                                : const Color(0xFFE0E0E0),
+                            color: shimmerColor,
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -561,9 +532,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                           width: 150,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(6),
-                            color: isDark
-                                ? const Color(0xFF2A2A2A)
-                                : const Color(0xFFF0F0F0),
+                            color: shimmerColor.withValues(alpha: 0.6),
                           ),
                         ),
                       ],
@@ -579,130 +548,97 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   Widget _buildErrorView(String message, VoidCallback onRetry, bool isDark) {
+    final textSecondary =
+        isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight;
+
     return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: isDark
-              ? [const Color(0xFF0A0A0A), const Color(0xFF1A1A1A)]
-              : [const Color(0xFFF8F9FA), const Color(0xFFE9ECEF)],
-        ),
-      ),
+      color: PanchitAuthColors.background(isDark),
       child: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 40.0),
-          child: Card(
-            elevation: isDark ? 8 : 4,
-            shadowColor: isDark ? Colors.black54 : Colors.grey.withOpacity(0.3),
-            shape: RoundedRectangleBorder(
+          child: Container(
+            padding: const EdgeInsets.all(32),
+            decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-            ),
-            child: Container(
-              padding: const EdgeInsets.all(32),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                gradient: isDark
-                    ? const LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [Color(0xFF2A2A2A), Color(0xFF1F1F1F)],
-                      )
-                    : const LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [Colors.white, Color(0xFFF8F9FA)],
-                      ),
+              color: isDark ? AppColors.cardDark : Colors.white,
+              boxShadow: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+              border: Border.all(
+                color: isDark ? AppColors.dividerDark : AppColors.dividerLight,
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        colors: isDark
-                            ? [Colors.red[700]!, Colors.red[800]!]
-                            : [Colors.red[300]!, Colors.red[400]!],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.error,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.error.withValues(alpha: 0.3),
+                        blurRadius: 20,
+                        spreadRadius: 2,
                       ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.red.withOpacity(0.3),
-                          blurRadius: 20,
-                          spreadRadius: 2,
-                        ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.error_outline_rounded,
-                      size: 48,
+                    ],
+                  ),
+                  child: const Icon(
+                    Icons.error_outline_rounded,
+                    size: 48,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  'notifications_connection_error'.tr,
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: isDark
+                        ? AppColors.textPrimaryDark
+                        : AppColors.textPrimaryLight,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  message,
+                  style: TextStyle(fontSize: 16, color: textSecondary),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 32),
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: AppColors.primaryGradient,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: AppColors.brandGlow,
+                  ),
+                  child: ElevatedButton.icon(
+                    onPressed: onRetry,
+                    icon: const Icon(
+                      Icons.refresh_rounded,
                       color: Colors.white,
                     ),
-                  ),
-                  const SizedBox(height: 24),
-                  Text(
-                    'notifications_connection_error'.tr,
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: isDark ? Colors.white : Colors.grey[800],
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    message,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: isDark ? Colors.grey[400] : Colors.grey[600],
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 32),
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: isDark
-                            ? [Colors.blue[600]!, Colors.blue[700]!]
-                            : [Colors.blue[500]!, Colors.blue[600]!],
-                      ),
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.blue.withOpacity(0.3),
-                          blurRadius: 8,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: ElevatedButton.icon(
-                      onPressed: onRetry,
-                      icon: const Icon(
-                        Icons.refresh_rounded,
+                    label: Text(
+                      'notifications_try_again'.tr,
+                      style: const TextStyle(
                         color: Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
-                      label: Text(
-                        'notifications_try_again'.tr,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 14,
                       ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.transparent,
-                        shadowColor: Colors.transparent,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 14,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -711,96 +647,66 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   Widget _buildEmptyView(bool isDark) {
+    final textSecondary =
+        isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight;
+    final textTertiary =
+        isDark ? AppColors.textTertiaryDark : AppColors.textTertiaryLight;
+
     return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: isDark
-              ? [const Color(0xFF0A0A0A), const Color(0xFF1A1A1A)]
-              : [const Color(0xFFF8F9FA), const Color(0xFFE9ECEF)],
-        ),
-      ),
+      color: PanchitAuthColors.background(isDark),
       child: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 40.0),
-          child: Card(
-            elevation: isDark ? 8 : 4,
-            shadowColor: isDark ? Colors.black54 : Colors.grey.withOpacity(0.3),
-            shape: RoundedRectangleBorder(
+          child: Container(
+            padding: const EdgeInsets.all(32),
+            decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
+              color: isDark ? AppColors.cardDark : Colors.white,
+              boxShadow: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+              border: Border.all(
+                color: isDark ? AppColors.dividerDark : AppColors.dividerLight,
+              ),
             ),
-            child: Container(
-              padding: const EdgeInsets.all(32),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                gradient: isDark
-                    ? const LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [Color(0xFF2A2A2A), Color(0xFF1F1F1F)],
-                      )
-                    : const LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [Colors.white, Color(0xFFF8F9FA)],
-                      ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        colors: isDark
-                            ? [Colors.blue[700]!, Colors.blue[800]!]
-                            : [Colors.blue[300]!, Colors.blue[400]!],
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.blue.withOpacity(0.3),
-                          blurRadius: 20,
-                          spreadRadius: 2,
-                        ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.notifications_none_rounded,
-                      size: 48,
-                      color: Colors.white,
-                    ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: AppColors.primaryGradient,
+                    boxShadow: AppColors.brandGlow,
                   ),
-                  const SizedBox(height: 24),
-                  Text(
-                    'notifications_empty_title'.tr,
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: isDark ? Colors.white : Colors.grey[800],
-                    ),
+                  child: const Icon(
+                    Icons.notifications_none_rounded,
+                    size: 48,
+                    color: Colors.white,
                   ),
-                  const SizedBox(height: 12),
-                  Text(
-                    'notifications_empty_subtitle'.tr,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: isDark ? Colors.grey[400] : Colors.grey[600],
-                    ),
-                    textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  'notifications_empty_title'.tr,
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: isDark
+                        ? AppColors.textPrimaryDark
+                        : AppColors.textPrimaryLight,
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'notifications_empty_hint'.tr,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: isDark ? Colors.grey[500] : Colors.grey[500],
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'notifications_empty_subtitle'.tr,
+                  style: TextStyle(fontSize: 16, color: textSecondary),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'notifications_empty_hint'.tr,
+                  style: TextStyle(fontSize: 14, color: textTertiary),
+                  textAlign: TextAlign.center,
+                ),
+              ],
             ),
           ),
         ),
@@ -819,11 +725,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
       alignment: alignStart ? Alignment.centerLeft : Alignment.centerRight,
       padding: const EdgeInsets.symmetric(horizontal: 24),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [color, color.withOpacity(0.8)]),
+        gradient: LinearGradient(
+          colors: [color, color.withValues(alpha: 0.8)],
+        ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.3),
+            color: color.withValues(alpha: 0.3),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -903,15 +811,15 @@ class _NotificationCard extends StatelessWidget {
       case 'follow':
         return cs.primary;
       case 'poke':
-        return Colors.orange;
+        return AppColors.warning;
       case 'comment':
       case 'reply':
       case 'mention':
-        return Colors.green;
+        return AppColors.success;
       case 'share':
-        return Colors.purple;
+        return AppColors.postTypeVideo;
       default:
-        return notification.isReaction ? Colors.red : cs.secondary;
+        return notification.isReaction ? AppColors.like : cs.secondary;
     }
   }
 
@@ -920,33 +828,26 @@ class _NotificationCard extends StatelessWidget {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
+    final cardColor = isDark ? AppColors.cardDark : Colors.white;
     final isUnread = !notification.seen;
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 2),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        gradient: LinearGradient(
-          colors: isDark
-              ? isUnread
-                    ? [const Color(0xFF2A3A4A), const Color(0xFF1F2F3F)]
-                    : [const Color(0xFF2A2A2A), const Color(0xFF1F1F1F)]
-              : isUnread
-              ? [const Color(0xFFF0F8FF), Colors.white]
-              : [Colors.white, const Color(0xFFFAFAFA)],
-        ),
+        color: cardColor,
         boxShadow: [
           BoxShadow(
             color: isDark
-                ? Colors.black.withOpacity(0.3)
-                : Colors.grey.withOpacity(0.15),
+                ? Colors.black.withValues(alpha: 0.3)
+                : Colors.grey.withValues(alpha: 0.15),
             blurRadius: isUnread ? 12 : 6,
             spreadRadius: isUnread ? 1 : 0,
             offset: const Offset(0, 3),
           ),
         ],
         border: isUnread
-            ? Border.all(color: cs.primary.withOpacity(0.5), width: 1.5)
+            ? Border.all(color: cs.primary.withValues(alpha: 0.5), width: 1.5)
             : null,
       ),
       child: Material(
@@ -973,7 +874,9 @@ class _NotificationCard extends StatelessWidget {
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: cs.primary.withOpacity(isUnread ? 0.3 : 0.1),
+                            color: cs.primary.withValues(
+                              alpha: isUnread ? 0.3 : 0.1,
+                            ),
                             blurRadius: 8,
                             spreadRadius: 1,
                           ),
@@ -994,12 +897,7 @@ class _NotificationCard extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: cs.primary,
                             shape: BoxShape.circle,
-                            border: Border.all(
-                              color: isDark
-                                  ? const Color(0xFF2A2A2A)
-                                  : Colors.white,
-                              width: 2,
-                            ),
+                            border: Border.all(color: cardColor, width: 2),
                           ),
                           padding: const EdgeInsets.all(3),
                           child: const Icon(
@@ -1016,15 +914,10 @@ class _NotificationCard extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: _iconColor(cs),
                           shape: BoxShape.circle,
-                          border: Border.all(
-                            color: isDark
-                                ? const Color(0xFF2A2A2A)
-                                : Colors.white,
-                            width: 2,
-                          ),
+                          border: Border.all(color: cardColor, width: 2),
                           boxShadow: [
                             BoxShadow(
-                              color: _iconColor(cs).withOpacity(0.4),
+                              color: _iconColor(cs).withValues(alpha: 0.4),
                               blurRadius: 6,
                               spreadRadius: 1,
                             ),
@@ -1051,7 +944,9 @@ class _NotificationCard extends StatelessWidget {
                                 fontWeight: isUnread
                                     ? FontWeight.w700
                                     : FontWeight.w600,
-                                color: isDark ? Colors.white : Colors.grey[800],
+                                color: isDark
+                                    ? AppColors.textPrimaryDark
+                                    : AppColors.textPrimaryLight,
                                 fontSize: 15,
                               ),
                             ),
@@ -1059,8 +954,8 @@ class _NotificationCard extends StatelessWidget {
                               text: ' ${notification.message}',
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 color: isDark
-                                    ? Colors.grey[300]
-                                    : Colors.grey[600],
+                                    ? AppColors.textSecondaryDark
+                                    : AppColors.textSecondaryLight,
                                 fontSize: 14,
                                 height: 1.3,
                               ),
@@ -1077,9 +972,9 @@ class _NotificationCard extends StatelessWidget {
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color:
-                                  (isDark ? Colors.grey[800] : Colors.grey[100])
-                                      ?.withOpacity(0.8),
+                              color: isDark
+                                  ? AppColors.surfaceDark
+                                  : AppColors.hoverLight,
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Row(
@@ -1089,16 +984,16 @@ class _NotificationCard extends StatelessWidget {
                                   Icons.schedule_rounded,
                                   size: 12,
                                   color: isDark
-                                      ? Colors.grey[400]
-                                      : Colors.grey[600],
+                                      ? AppColors.textSecondaryDark
+                                      : AppColors.textSecondaryLight,
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
                                   _t(notification.time),
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: isDark
-                                        ? Colors.grey[400]
-                                        : Colors.grey[600],
+                                        ? AppColors.textSecondaryDark
+                                        : AppColors.textSecondaryLight,
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -1112,8 +1007,8 @@ class _NotificationCard extends StatelessWidget {
                               padding: const EdgeInsets.all(6),
                               decoration: BoxDecoration(
                                 color: isDark
-                                    ? Colors.grey[800]
-                                    : Colors.grey[100],
+                                    ? AppColors.surfaceDark
+                                    : AppColors.hoverLight,
                                 shape: BoxShape.circle,
                               ),
                               child: Text(
@@ -1130,13 +1025,13 @@ class _NotificationCard extends StatelessWidget {
                                 gradient: LinearGradient(
                                   colors: [
                                     cs.primary,
-                                    cs.primary.withOpacity(0.8),
+                                    cs.primary.withValues(alpha: 0.8),
                                   ],
                                 ),
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: cs.primary.withOpacity(0.4),
+                                    color: cs.primary.withValues(alpha: 0.4),
                                     blurRadius: 4,
                                     spreadRadius: 1,
                                   ),

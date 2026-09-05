@@ -3,6 +3,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:snginepro/core/network/api_client.dart';
+import 'package:snginepro/core/theme/panchit_auth_ui.dart';
 
 /// Forgot Password Page
 /// 
@@ -47,8 +48,14 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
+      backgroundColor: PanchitAuthColors.background(isDark),
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        foregroundColor: PanchitAuthColors.textPrimary(isDark),
         leading: IconButton(
           icon: const Icon(Iconsax.arrow_left),
           onPressed: () => Navigator.pop(context),
@@ -128,11 +135,9 @@ class _Step1EnterEmailState extends State<_Step1EnterEmail> {
           widget.onEmailSet(_emailController.text.trim());
           // Move to step 2
           widget.tabController.animateTo(1);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(response['message'] ?? 'Verification code sent'),
-              backgroundColor: Colors.green,
-            ),
+          PanchitSnackBar.showSuccess(
+            context,
+            response['message'] ?? 'Verification code sent',
           );
         } else {
           setState(() {
@@ -155,6 +160,8 @@ class _Step1EnterEmailState extends State<_Step1EnterEmail> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Form(
@@ -165,27 +172,28 @@ class _Step1EnterEmailState extends State<_Step1EnterEmail> {
             const SizedBox(height: 24),
             Text(
               'enter_email_username'.tr,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
+              style: TextStyle(
+                color: PanchitAuthColors.textPrimary(isDark),
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
               ),
             ),
             const SizedBox(height: 8),
             Text(
               'we_will_send_verification_code'.tr,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[600],
+              style: TextStyle(
+                color: PanchitAuthColors.textSecondary(isDark),
+                fontSize: 14,
+                height: 1.45,
               ),
             ),
             const SizedBox(height: 32),
-            TextFormField(
+            PanchitTextField(
               controller: _emailController,
-              decoration: InputDecoration(
-                labelText: 'email_or_username'.tr,
-                prefixIcon: const Icon(Iconsax.sms),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
+              label: 'email_or_username'.tr,
+              hint: 'email_or_username'.tr,
+              isDark: isDark,
+              keyboardType: TextInputType.emailAddress,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'this_field_is_required'.tr;
@@ -194,45 +202,17 @@ class _Step1EnterEmailState extends State<_Step1EnterEmail> {
               },
             ),
             const SizedBox(height: 24),
-            if (_errorMessage != null)
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.red[100],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Iconsax.warning_2, color: Colors.red[700]),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        _errorMessage!,
-                        style: TextStyle(color: Colors.red[700]),
-                      ),
-                    ),
-                  ],
-                ),
+            if (_errorMessage != null) ...[
+              PanchitErrorBanner(
+                message: _errorMessage!,
+                isDark: isDark,
               ),
-            const SizedBox(height: 24),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: _isLoading ? null : _sendResetCode,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: _isLoading
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : Text('send_code'.tr),
-              ),
+              const SizedBox(height: 24),
+            ],
+            PanchitPrimaryButton(
+              label: 'send_code'.tr,
+              onPressed: _sendResetCode,
+              isLoading: _isLoading,
             ),
           ],
         ),
@@ -353,6 +333,8 @@ class _Step2VerifyCodeState extends State<_Step2VerifyCode> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -361,15 +343,19 @@ class _Step2VerifyCodeState extends State<_Step2VerifyCode> {
           const SizedBox(height: 24),
           Text(
             'enter_verification_code'.tr,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
+            style: TextStyle(
+              color: PanchitAuthColors.textPrimary(isDark),
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             'we_sent_code_to_your_email'.tr,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey[600],
+            style: TextStyle(
+              color: PanchitAuthColors.textSecondary(isDark),
+              fontSize: 14,
+              height: 1.45,
             ),
           ),
           const SizedBox(height: 32),
@@ -379,19 +365,23 @@ class _Step2VerifyCodeState extends State<_Step2VerifyCode> {
             children: List.generate(
               6,
               (index) => SizedBox(
-                width: 50,
-                height: 60,
+                width: 46,
+                height: 56,
                 child: TextFormField(
                   controller: _codeControllers[index],
                   maxLength: 1,
                   textAlign: TextAlign.center,
                   keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    counterText: '',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                  cursorColor: PanchitAuthColors.purple,
+                  style: TextStyle(
+                    color: PanchitAuthColors.textFieldValue(isDark),
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
                   ),
+                  decoration: panchitFieldDecoration(
+                    isDark: isDark,
+                    hint: '',
+                  ).copyWith(counterText: ''),
                   onChanged: (value) {
                     if (value.isNotEmpty && index < 5) {
                       FocusScope.of(context).nextFocus();
@@ -402,27 +392,13 @@ class _Step2VerifyCodeState extends State<_Step2VerifyCode> {
             ),
           ),
           const SizedBox(height: 24),
-          if (_errorMessage != null)
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.red[100],
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                children: [
-                  Icon(Iconsax.warning_2, color: Colors.red[700]),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      _errorMessage!,
-                      style: TextStyle(color: Colors.red[700]),
-                    ),
-                  ),
-                ],
-              ),
+          if (_errorMessage != null) ...[
+            PanchitErrorBanner(
+              message: _errorMessage!,
+              isDark: isDark,
             ),
-          const SizedBox(height: 24),
+            const SizedBox(height: 24),
+          ],
           // Resend Code
           Center(
             child: Column(
@@ -430,35 +406,33 @@ class _Step2VerifyCodeState extends State<_Step2VerifyCode> {
                 if (!_canResend)
                   Text(
                     '${'resend_code_in'.tr} $_secondsRemaining ${'seconds'.tr}',
-                    style: Theme.of(context).textTheme.bodySmall,
+                    style: TextStyle(
+                      color: PanchitAuthColors.textMuted(isDark),
+                      fontSize: 12,
+                    ),
                   )
                 else
                   TextButton(
                     onPressed: _resendCode,
-                    child: Text('resend_code'.tr),
+                    style: TextButton.styleFrom(
+                      foregroundColor: PanchitAuthColors.purple,
+                    ),
+                    child: Text(
+                      'resend_code'.tr,
+                      style: TextStyle(
+                        color: PanchitAuthColors.linkAccent(isDark),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
               ],
             ),
           ),
           const SizedBox(height: 16),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: _isLoading ? null : _verifyCode,
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: _isLoading
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : Text('verify_code'.tr),
-            ),
+          PanchitPrimaryButton(
+            label: 'verify_code'.tr,
+            onPressed: _verifyCode,
+            isLoading: _isLoading,
           ),
         ],
       ),
@@ -526,11 +500,9 @@ class _Step3ResetPasswordState extends State<_Step3ResetPassword> {
 
       if (mounted) {
         if (response['status'] == 'success') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(response['message'] ?? 'Password reset successful'),
-              backgroundColor: Colors.green,
-            ),
+          PanchitSnackBar.showSuccess(
+            context,
+            response['message'] ?? 'Password reset successful',
           );
           Future.delayed(const Duration(seconds: 2), () {
             if (mounted) Navigator.pop(context);
@@ -554,6 +526,8 @@ class _Step3ResetPasswordState extends State<_Step3ResetPassword> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Form(
@@ -564,36 +538,38 @@ class _Step3ResetPasswordState extends State<_Step3ResetPassword> {
             const SizedBox(height: 24),
             Text(
               'create_new_password'.tr,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
+              style: TextStyle(
+                color: PanchitAuthColors.textPrimary(isDark),
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
               ),
             ),
             const SizedBox(height: 8),
             Text(
               'enter_strong_password'.tr,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[600],
+              style: TextStyle(
+                color: PanchitAuthColors.textSecondary(isDark),
+                fontSize: 14,
+                height: 1.45,
               ),
             ),
             const SizedBox(height: 32),
             // New Password
-            TextFormField(
+            PanchitTextField(
               controller: _passwordController,
+              label: 'new_password'.tr,
+              hint: 'new_password'.tr,
+              isDark: isDark,
               obscureText: _obscurePassword,
-              decoration: InputDecoration(
-                labelText: 'new_password'.tr,
-                prefixIcon: const Icon(Iconsax.lock),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _obscurePassword ? Iconsax.eye_slash : Iconsax.eye,
-                  ),
-                  onPressed: () {
-                    setState(() => _obscurePassword = !_obscurePassword);
-                  },
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _obscurePassword ? Iconsax.eye_slash : Iconsax.eye,
+                  color: PanchitAuthColors.textMuted(isDark),
+                  size: 20,
                 ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                onPressed: () {
+                  setState(() => _obscurePassword = !_obscurePassword);
+                },
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -607,26 +583,24 @@ class _Step3ResetPasswordState extends State<_Step3ResetPassword> {
             ),
             const SizedBox(height: 16),
             // Confirm Password
-            TextFormField(
+            PanchitTextField(
               controller: _confirmPasswordController,
+              label: 'confirm_password'.tr,
+              hint: 'confirm_password'.tr,
+              isDark: isDark,
               obscureText: _obscureConfirmPassword,
-              decoration: InputDecoration(
-                labelText: 'confirm_password'.tr,
-                prefixIcon: const Icon(Iconsax.lock),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _obscureConfirmPassword ? Iconsax.eye_slash : Iconsax.eye,
-                  ),
-                  onPressed: () {
-                    setState(
-                      () =>
-                          _obscureConfirmPassword = !_obscureConfirmPassword,
-                    );
-                  },
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _obscureConfirmPassword ? Iconsax.eye_slash : Iconsax.eye,
+                  color: PanchitAuthColors.textMuted(isDark),
+                  size: 20,
                 ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                onPressed: () {
+                  setState(
+                    () =>
+                        _obscureConfirmPassword = !_obscureConfirmPassword,
+                  );
+                },
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -636,45 +610,17 @@ class _Step3ResetPasswordState extends State<_Step3ResetPassword> {
               },
             ),
             const SizedBox(height: 24),
-            if (_errorMessage != null)
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.red[100],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Iconsax.warning_2, color: Colors.red[700]),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        _errorMessage!,
-                        style: TextStyle(color: Colors.red[700]),
-                      ),
-                    ),
-                  ],
-                ),
+            if (_errorMessage != null) ...[
+              PanchitErrorBanner(
+                message: _errorMessage!,
+                isDark: isDark,
               ),
-            const SizedBox(height: 24),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: _isLoading ? null : _resetPassword,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: _isLoading
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : Text('reset_password'.tr),
-              ),
+              const SizedBox(height: 24),
+            ],
+            PanchitPrimaryButton(
+              label: 'reset_password'.tr,
+              onPressed: _resetPassword,
+              isLoading: _isLoading,
             ),
           ],
         ),

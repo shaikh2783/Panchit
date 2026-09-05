@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 
 import 'package:snginepro/App_Settings.dart';
 import 'package:snginepro/core/config/app_config.dart';
+import 'package:snginepro/core/theme/app_colors.dart';
+import 'package:snginepro/core/theme/panchit_auth_ui.dart';
 import 'package:snginepro/core/theme/widgets/GradineCard.dart';
 import 'package:snginepro/core/theme/widgets/theme_toggle_button.dart';
 import 'package:snginepro/features/auth/application/auth_notifier.dart';
@@ -95,17 +97,17 @@ class _MenuPageState extends State<MenuPage> {
   Future<void> _refreshUserStats() async {
     try {
       await context.read<AuthNotifier>().refreshCurrentUser();
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final onBg = theme.textTheme.bodyLarge?.color;
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
+      backgroundColor: PanchitAuthColors.background(isDark),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -160,8 +162,7 @@ class _MenuPageState extends State<MenuPage> {
             ),
 
             SizedBox(height: 20),
-            if(false)
-
+            if (false)
               Container(
                 margin: const EdgeInsets.only(bottom: 8),
                 child: GestureDetector(
@@ -232,8 +233,8 @@ class _MenuPageState extends State<MenuPage> {
                   ),
                 ),
               ),
-            if(false)
-            // Feed Section Content
+            if (false)
+              // Feed Section Content
               if (_isFeedExpanded) ...[
                 const SizedBox(height: 16),
                 Container(
@@ -269,7 +270,10 @@ class _MenuPageState extends State<MenuPage> {
                         _FeedItem(
                           icon: Iconsax.home,
                           label: 'news_feed',
-                          gradient: const [Color(0xFF64B5F6), Color(0xFF1E88E5)],
+                          gradient: const [
+                            Color(0xFF64B5F6),
+                            Color(0xFF1E88E5),
+                          ],
                           onTap: () {
                             _hapticTap();
                             // Navigate to HomePage (index 0 in main navigation)
@@ -284,7 +288,10 @@ class _MenuPageState extends State<MenuPage> {
                         _FeedItem(
                           icon: Iconsax.refresh,
                           label: 'recent_updates',
-                          gradient: const [Color(0xFF81C784), Color(0xFF43A047)],
+                          gradient: const [
+                            Color(0xFF81C784),
+                            Color(0xFF43A047),
+                          ],
                           onTap: () {
                             _hapticTap();
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -298,7 +305,10 @@ class _MenuPageState extends State<MenuPage> {
                         _FeedItem(
                           icon: Iconsax.trend_up,
                           label: 'popular_posts',
-                          gradient: const [Color(0xFFFFB74D), Color(0xFFF57C00)],
+                          gradient: const [
+                            Color(0xFFFFB74D),
+                            Color(0xFFF57C00),
+                          ],
                           onTap: () {
                             _hapticTap();
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -312,7 +322,10 @@ class _MenuPageState extends State<MenuPage> {
                         _FeedItem(
                           icon: Iconsax.discover,
                           label: 'discover_posts',
-                          gradient: const [Color(0xFF26A69A), Color(0xFF00897B)],
+                          gradient: const [
+                            Color(0xFF26A69A),
+                            Color(0xFF00897B),
+                          ],
                           onTap: () {
                             _hapticTap();
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -404,23 +417,17 @@ class _MenuPageState extends State<MenuPage> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Get.isDarkMode
-                      ? const Color(0xFF1E1E1E)
-                      : Colors.white,
+                  color: isDark ? AppColors.cardDark : AppColors.cardLight,
                   borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Get.isDarkMode
-                          ? Colors.black.withOpacity(0.3)
-                          : Colors.grey.withOpacity(0.1),
-                      spreadRadius: 0,
-                      blurRadius: 10,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                  border: Get.isDarkMode
-                      ? Border.all(color: const Color(0xFF333333), width: 0.5)
-                      : null,
+                  boxShadow: isDark
+                      ? AppColors.darkShadow
+                      : AppColors.lightShadow,
+                  border: Border.all(
+                    color: isDark
+                        ? AppColors.dividerDark
+                        : AppColors.dividerLight,
+                    width: isDark ? 0.5 : 1,
+                  ),
                 ),
                 child: GridView.count(
                   physics: const NeverScrollableScrollPhysics(),
@@ -471,7 +478,7 @@ class _MenuPageState extends State<MenuPage> {
                             context,
                             MaterialPageRoute(
                               builder: (_) =>
-                              const FundingListPage(mineOnly: true),
+                                  const FundingListPage(mineOnly: true),
                             ),
                           );
                         },
@@ -487,7 +494,7 @@ class _MenuPageState extends State<MenuPage> {
                             context,
                             MaterialPageRoute(
                               builder: (_) =>
-                              const OffersListPage(mineOnly: true),
+                                  const OffersListPage(mineOnly: true),
                             ),
                           );
                         },
@@ -503,7 +510,7 @@ class _MenuPageState extends State<MenuPage> {
                             context,
                             MaterialPageRoute(
                               builder: (_) =>
-                              const JobsListPage(mineOnly: true),
+                                  const JobsListPage(mineOnly: true),
                             ),
                           );
                         },
@@ -591,9 +598,8 @@ class _MenuPageState extends State<MenuPage> {
             const SizedBox(height: 12),
 
             // ================== ADVERTISING SECTION ==================
-
             Visibility(
-              visible: Platform.isAndroid==true,
+              visible: Platform.isAndroid == true,
               child: Container(
                 margin: const EdgeInsets.only(bottom: 8),
                 child: GestureDetector(
@@ -669,23 +675,17 @@ class _MenuPageState extends State<MenuPage> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Get.isDarkMode
-                      ? const Color(0xFF1E1E1E)
-                      : Colors.white,
+                  color: isDark ? AppColors.cardDark : AppColors.cardLight,
                   borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Get.isDarkMode
-                          ? Colors.black.withOpacity(0.3)
-                          : Colors.grey.withOpacity(0.1),
-                      spreadRadius: 0,
-                      blurRadius: 10,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                  border: Get.isDarkMode
-                      ? Border.all(color: const Color(0xFF333333), width: 0.5)
-                      : null,
+                  boxShadow: isDark
+                      ? AppColors.darkShadow
+                      : AppColors.lightShadow,
+                  border: Border.all(
+                    color: isDark
+                        ? AppColors.dividerDark
+                        : AppColors.dividerLight,
+                    width: isDark ? 0.5 : 1,
+                  ),
                 ),
                 child: GridView.count(
                   physics: const NeverScrollableScrollPhysics(),
@@ -740,6 +740,7 @@ class _MenuPageState extends State<MenuPage> {
                           );
                         },
                       ),
+
                     // if (AppSettings.enableBoosted)
                     //   _FeedItem(
                     //     icon: Iconsax.flash,
@@ -754,8 +755,6 @@ class _MenuPageState extends State<MenuPage> {
                     //       );
                     //     },
                     //   ),
-
-
                     if (AppSettings.enableBoostedPosts)
                       _FeedItem(
                         icon: Iconsax.note,
@@ -866,23 +865,17 @@ class _MenuPageState extends State<MenuPage> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Get.isDarkMode
-                      ? const Color(0xFF1E1E1E)
-                      : Colors.white,
+                  color: isDark ? AppColors.cardDark : AppColors.cardLight,
                   borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Get.isDarkMode
-                          ? Colors.black.withOpacity(0.3)
-                          : Colors.grey.withOpacity(0.1),
-                      spreadRadius: 0,
-                      blurRadius: 10,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                  border: Get.isDarkMode
-                      ? Border.all(color: const Color(0xFF333333), width: 0.5)
-                      : null,
+                  boxShadow: isDark
+                      ? AppColors.darkShadow
+                      : AppColors.lightShadow,
+                  border: Border.all(
+                    color: isDark
+                        ? AppColors.dividerDark
+                        : AppColors.dividerLight,
+                    width: isDark ? 0.5 : 1,
+                  ),
                 ),
                 child: Column(
                   children: [
@@ -928,8 +921,7 @@ class _MenuPageState extends State<MenuPage> {
                               },
                             ),
                           ),
-                        if (AppSettings.enablePages &&
-                            AppSettings.enableGroups)
+                        if (AppSettings.enablePages && AppSettings.enableGroups)
                           const SizedBox(width: 12),
                         if (AppSettings.enableGroups)
                           Expanded(
@@ -1259,15 +1251,13 @@ class _MenuPageState extends State<MenuPage> {
             // --------- LOGOUT ----------
             AnimationConfiguration.staggeredList(
               position: 50,
+
               duration: const Duration(milliseconds: 420),
               child: SlideAnimation(
                 verticalOffset: 36,
                 child: FadeInAnimation(child: const _LogoutButton()),
               ),
             ),
-
-
-
           ],
         ),
       ),
@@ -1289,23 +1279,32 @@ class _GlassySearch extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
+        color: isDark ? AppColors.surfaceDark : AppColors.backgroundLight,
         borderRadius: BorderRadius.circular(Radii.large),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: isDark
-              ? [const Color(0x22FFFFFF), const Color(0x11000000)]
-              : [const Color(0x11FFFFFF), const Color(0x08000000)],
-        ),
         border: Border.all(
-          color: (isDark ? Colors.white12 : Colors.black12),
+          color: isDark ? AppColors.dividerDark : AppColors.dividerLight,
           width: 1,
         ),
       ),
       child: TextField(
+        style: TextStyle(
+          color: isDark
+              ? AppColors.textPrimaryDark
+              : AppColors.textPrimaryLight,
+        ),
         decoration: InputDecoration(
           hintText: 'menu_search_placeholder'.tr,
-          prefixIcon: const Icon(Iconsax.search_normal),
+          hintStyle: TextStyle(
+            color: isDark
+                ? AppColors.textSecondaryDark
+                : AppColors.textSecondaryLight,
+          ),
+          prefixIcon: Icon(
+            Iconsax.search_normal,
+            color: isDark
+                ? AppColors.textSecondaryDark
+                : AppColors.textSecondaryLight,
+          ),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: Spacing.lg,
@@ -1407,11 +1406,11 @@ class _ExploreCarouselState extends State<_ExploreCarousel> {
               final t = (_page - i).abs().clamp(0.0, 1.0);
               final scale =
                   1 -
-                      (t *
-                          0.08); // Scale up for the central card // 'تكبير للبطاقة المركزية'
+                  (t *
+                      0.08); // Scale up for the central card // 'تكبير للبطاقة المركزية'
               final translateY =
                   6 *
-                      t; // Slight vertical shift for edges // 'نزول خفيف للأطراف'
+                  t; // Slight vertical shift for edges // 'نزول خفيف للأطراف'
               final d = items[i];
 
               return Transform.translate(
@@ -1512,22 +1511,18 @@ class _LogoutButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 22),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFFE53935), Color(0xFFEF5350)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          gradient: AppColors.primaryGradient,
           borderRadius: BorderRadius.circular(Radii.large),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFFE53935).withOpacity(0.28),
+              color: AppColors.error.withValues(alpha: 0.28),
               blurRadius: 14,
               spreadRadius: 1,
               offset: const Offset(0, 6),
             ),
           ],
         ),
-        child:  Row(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Iconsax.logout, color: Colors.white, size: 22),
@@ -1578,7 +1573,7 @@ class _LogoutButton extends StatelessWidget {
               Navigator.pop(context);
               _performLogout(context);
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
             child: Text(
               hasOtherAccounts ? 'Sign out current' : 'menu_sign_out'.tr,
             ),
@@ -1613,7 +1608,7 @@ class _LogoutButton extends StatelessWidget {
       messenger.showSnackBar(
         SnackBar(
           content: Text('menu_sign_out_success'.tr),
-          backgroundColor: Colors.green,
+          backgroundColor: AppColors.success,
           duration: const Duration(seconds: 2),
         ),
       );
@@ -1623,7 +1618,7 @@ class _LogoutButton extends StatelessWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error: $e'),
-            backgroundColor: Colors.red,
+            backgroundColor: AppColors.error,
           ), // 'خطأ: $e'
         );
       }
@@ -1636,29 +1631,39 @@ class _AccountsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final auth = context.watch<AuthNotifier>();
     final active = auth.activeAccount;
     final accountCountLabel = auth.savedAccounts.length == 1
         ? '1 saved account'
         : '${auth.savedAccounts.length} saved accounts';
-
+    final isDark = theme.brightness == Brightness.dark;
+    final borderColor = isDark ? AppColors.dividerDark : AppColors.dividerLight;
+    final primaryTextColor = isDark ? Colors.white : AppColors.textPrimaryLight;
+    final secondaryTextColor = isDark
+        ? Colors.white.withOpacity(0.85)
+        : AppColors.textSecondaryLight;
     return GradientCard(
       margin: const EdgeInsets.symmetric(vertical: 4),
       borderRadius: Radii.xLarge,
       padding: const EdgeInsets.all(16),
-      gradientColors: const [Color(0xFF4568DC), Color(0xFFB06AB3)],
+      gradientColors: isDark
+          ? AppColors.darkBackgroundGradient.colors
+          : AppColors.lightBackgroundGradient.colors,
+      boxShadow: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+      border: Border.all(color: borderColor),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Iconsax.profile_2user, color: Colors.white),
+              Icon(Iconsax.profile_2user, color: primaryTextColor),
               const SizedBox(width: 10),
-              const Expanded(
+              Expanded(
                 child: Text(
                   'Accounts',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: primaryTextColor,
                     fontSize: 16,
                     fontWeight: FontWeight.w800,
                   ),
@@ -1666,10 +1671,7 @@ class _AccountsCard extends StatelessWidget {
               ),
               Text(
                 accountCountLabel,
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.9),
-                  fontSize: 12,
-                ),
+                style: TextStyle(color: secondaryTextColor, fontSize: 12),
               ),
             ],
           ),
@@ -1684,11 +1686,13 @@ class _AccountsCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        active.displayName ?? active.username ?? 'Current account',
+                        active.displayName ??
+                            active.username ??
+                            'Current account',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: TextStyle(
+                          color: primaryTextColor,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -1699,7 +1703,7 @@ class _AccountsCard extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.85),
+                          color: secondaryTextColor,
                           fontSize: 12,
                         ),
                       ),
@@ -1715,8 +1719,12 @@ class _AccountsCard extends StatelessWidget {
                 child: OutlinedButton.icon(
                   onPressed: () => _showAccountsSheet(context),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    side: BorderSide(color: Colors.white.withOpacity(0.35)),
+                    foregroundColor: primaryTextColor,
+                    side: BorderSide(
+                      color: isDark
+                          ? Colors.white.withOpacity(0.35)
+                          : borderColor,
+                    ),
                   ),
                   icon: const Icon(Iconsax.repeat_circle, size: 18),
                   label: const Text('Switch'),
@@ -1744,9 +1752,7 @@ class _AccountsCard extends StatelessWidget {
   Future<void> _addAccount(BuildContext context) async {
     final result = await Navigator.push<bool>(
       context,
-      MaterialPageRoute(
-        builder: (_) => const LoginPage(addAccountMode: true),
-      ),
+      MaterialPageRoute(builder: (_) => const LoginPage(addAccountMode: true)),
     );
 
     if (result == true && context.mounted) {
@@ -1781,7 +1787,8 @@ class _AccountsCard extends StatelessWidget {
                     separatorBuilder: (_, __) => const Divider(height: 1),
                     itemBuilder: (context, index) {
                       final account = auth.savedAccounts[index];
-                      final isActive = account.accountId == auth.activeAccountId;
+                      final isActive =
+                          account.accountId == auth.activeAccountId;
                       return ListTile(
                         leading: _AccountAvatar(imageUrl: account.avatarUrl),
                         title: Text(
@@ -1790,7 +1797,9 @@ class _AccountsCard extends StatelessWidget {
                         subtitle: Text(
                           account.username != null
                               ? '@${account.username}'
-                              : (account.email ?? account.userId ?? 'Saved account'),
+                              : (account.email ??
+                                    account.userId ??
+                                    'Saved account'),
                         ),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -1798,7 +1807,10 @@ class _AccountsCard extends StatelessWidget {
                             if (isActive)
                               const Padding(
                                 padding: EdgeInsets.only(right: 8),
-                                child: Icon(Iconsax.tick_circle, color: Colors.green),
+                                child: Icon(
+                                  Iconsax.tick_circle,
+                                  color: AppColors.success,
+                                ),
                               ),
                             IconButton(
                               tooltip: 'Remove account',
@@ -1806,16 +1818,19 @@ class _AccountsCard extends StatelessWidget {
                                 Navigator.pop(sheetContext);
                                 await auth.removeAccount(account.accountId);
                               },
-                              icon: const Icon(Iconsax.trash, color: Colors.redAccent),
+                              icon: const Icon(
+                                Iconsax.trash,
+                                color: AppColors.error,
+                              ),
                             ),
                           ],
                         ),
                         onTap: isActive
                             ? () => Navigator.pop(sheetContext)
                             : () async {
-                          Navigator.pop(sheetContext);
-                          await auth.switchAccount(account.accountId);
-                        },
+                                Navigator.pop(sheetContext);
+                                await auth.switchAccount(account.accountId);
+                              },
                       );
                     },
                   ),
@@ -1855,10 +1870,7 @@ class _AccountAvatar extends StatelessWidget {
       );
     }
 
-    return const CircleAvatar(
-      radius: 20,
-      child: Icon(Iconsax.user, size: 18),
-    );
+    return const CircleAvatar(radius: 20, child: Icon(Iconsax.user, size: 18));
   }
 }
 
@@ -1870,25 +1882,32 @@ class _UserProfileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final auth = context.watch<AuthNotifier>();
     final user = auth.currentUser;
     final mediaAsset = context.read<AppConfig>().mediaAsset;
     final avatarUrl = user?['user_picture'];
     final name = user?['user_fullname'] ?? user?['user_name'] ?? 'Your Profile';
+    final borderColor = isDark ? AppColors.dividerDark : AppColors.dividerLight;
     final pointsCount = _formatCount(
       _readNumber(user, ['user_points', 'points', 'points_balance']),
     );
     final followersCount = _formatCount(
-      _readNumber(
-        user,
-        ['followers', 'followers_count', 'user_followers', 'user_subscribers'],
-      ),
+      _readNumber(user, [
+        'followers',
+        'followers_count',
+        'user_followers',
+        'user_subscribers',
+      ]),
     );
     final followingCount = _formatCount(
-      _readNumber(
-        user,
-        ['following', 'followings', 'followings_count', 'user_following'],
-      ),
+      _readNumber(user, [
+        'following',
+        'followings',
+        'followings_count',
+        'user_following',
+      ]),
     );
 
     return GestureDetector(
@@ -1918,10 +1937,11 @@ class _UserProfileCard extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 8),
         padding: EdgeInsets.zero,
         borderRadius: Radii.xLarge,
-        gradientColors: const [
-          Color(0xFF7B4397), // purple
-          Color(0xFF1D976C), // teal
-        ],
+        gradientColors: isDark
+            ? AppColors.darkBackgroundGradient.colors
+            : AppColors.lightBackgroundGradient.colors,
+        boxShadow: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+        border: Border.all(color: borderColor),
         gradientBegin: Alignment.topLeft,
         gradientEnd: Alignment.bottomRight,
         child: Column(
@@ -1953,8 +1973,10 @@ class _UserProfileCard extends StatelessWidget {
                       child: CircleAvatar(
                         radius: 26,
                         backgroundImage:
-                        (avatarUrl != null && avatarUrl.isNotEmpty)
-                            ? CachedNetworkImageProvider(mediaAsset(avatarUrl).toString())
+                            (avatarUrl != null && avatarUrl.isNotEmpty)
+                            ? CachedNetworkImageProvider(
+                                mediaAsset(avatarUrl).toString(),
+                              )
                             : null,
                         child: (avatarUrl == null || avatarUrl.isEmpty)
                             ? const Icon(Iconsax.user, size: 26)
@@ -1971,10 +1993,12 @@ class _UserProfileCard extends StatelessWidget {
                           name,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w800,
-                            color: Colors.white,
+                            color: isDark
+                                ? Colors.white
+                                : AppColors.textPrimaryLight,
                             letterSpacing: -0.2,
                           ),
                         ),
@@ -1983,21 +2007,27 @@ class _UserProfileCard extends StatelessWidget {
                           'menu_view_profile'.tr,
                           style: TextStyle(
                             fontSize: 13,
-                            color: Colors.white.withOpacity(0.92),
+                            color: isDark
+                                ? Colors.white.withOpacity(0.92)
+                                : AppColors.textSecondaryLight,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const Icon(
+                  Icon(
                     Icons.chevron_right_rounded,
                     size: 18,
-                    color: Colors.white,
+                    color: isDark ? Colors.white : AppColors.textPrimaryLight,
                   ),
                 ],
               ),
             ),
-            const Divider(color: Colors.white30, height: 1, thickness: 1),
+            Divider(
+              color: isDark ? Colors.white30 : AppColors.dividerLight,
+              height: 1,
+              thickness: 1,
+            ),
             Padding(
               padding: EdgeInsets.fromLTRB(
                 Spacing.lg,
@@ -2064,6 +2094,12 @@ class _StatItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryTextColor = isDark ? Colors.white : AppColors.textPrimaryLight;
+    final secondaryTextColor = isDark
+        ? Colors.white.withOpacity(0.85)
+        : AppColors.textSecondaryLight;
+
     return Column(
       children: [
         Row(
@@ -2072,8 +2108,8 @@ class _StatItem extends StatelessWidget {
             const SizedBox(width: 6),
             Text(
               count,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: primaryTextColor,
                 fontWeight: FontWeight.w800,
                 fontSize: 15,
                 letterSpacing: 0.1,
@@ -2084,7 +2120,7 @@ class _StatItem extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           label.tr,
-          style: TextStyle(color: Colors.white.withOpacity(0.85), fontSize: 12),
+          style: TextStyle(color: secondaryTextColor, fontSize: 12),
         ),
       ],
     );

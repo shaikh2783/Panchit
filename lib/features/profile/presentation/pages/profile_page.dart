@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:snginepro/features/messenger/data/models/conversation_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:snginepro/core/theme/app_colors.dart';
+import 'package:snginepro/core/theme/design_tokens.dart';
 import 'package:snginepro/features/profile/data/services/profile_api_service.dart';
 import 'package:snginepro/features/profile/data/services/user_videos_service.dart';
 import 'package:snginepro/features/profile/application/bloc/profile_posts_bloc.dart';
@@ -45,10 +47,10 @@ class ProfilePage extends StatefulWidget {
   final int? userId;
 
   const ProfilePage({super.key, this.username, this.userId})
-      : assert(
-  username != null || userId != null,
-  'Either username or userId must be provided',
-  );
+    : assert(
+        username != null || userId != null,
+        'Either username or userId must be provided',
+      );
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -76,7 +78,7 @@ class _ProfilePageState extends State<ProfilePage>
   final int _productsLimit = 20;
   String _productsSearchQuery = '';
   final TextEditingController _productsSearchController =
-  TextEditingController();
+      TextEditingController();
 
   @override
   void initState() {
@@ -289,19 +291,19 @@ class _ProfilePageState extends State<ProfilePage>
               ),
               actions: relationship.isSelf
                   ? [
-                IconButton(
-                  icon: const Icon(Iconsax.edit),
-                  onPressed: () async {
-                    final result = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => ProfileEditPage(profile: profile),
+                      IconButton(
+                        icon: const Icon(Iconsax.edit),
+                        onPressed: () async {
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => ProfileEditPage(profile: profile),
+                            ),
+                          );
+                          if (result == true && mounted) _loadProfile();
+                        },
                       ),
-                    );
-                    if (result == true && mounted) _loadProfile();
-                  },
-                ),
-              ]
+                    ]
                   : null,
             ),
           ],
@@ -347,16 +349,17 @@ class _ProfilePageState extends State<ProfilePage>
     final tags = <Widget>[];
 
     // --- Finished competitions: compact medal chip, tap → CompetitionDetailPage ---
-    final winnerBadges = profile.badges.where((badge) {
-      final rank = badge.effectiveRank;
-      return badge.competitionId != null && rank != null && rank <= 3;
-    }).toList()
-      ..sort(
-        (a, b) => (a.effectiveRank ?? 99).compareTo(b.effectiveRank ?? 99),
-      );
+    final winnerBadges =
+        profile.badges.where((badge) {
+          final rank = badge.effectiveRank;
+          return badge.competitionId != null && rank != null && rank <= 3;
+        }).toList()..sort(
+          (a, b) => (a.effectiveRank ?? 99).compareTo(b.effectiveRank ?? 99),
+        );
 
-    final visibleWinnerBadges =
-        winnerBadges.take(_maxHeaderCompetitionAchievements);
+    final visibleWinnerBadges = winnerBadges.take(
+      _maxHeaderCompetitionAchievements,
+    );
     for (final badge in visibleWinnerBadges) {
       tags.add(
         _CompetitionWinnerChip(
@@ -364,9 +367,8 @@ class _ProfilePageState extends State<ProfilePage>
           onTap: () => Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => CompetitionDetailPage(
-                competitionId: badge.competitionId!,
-              ),
+              builder: (_) =>
+                  CompetitionDetailPage(competitionId: badge.competitionId!),
             ),
           ),
         ),
@@ -405,10 +407,10 @@ class _ProfilePageState extends State<ProfilePage>
 
   // Header
   Widget _buildHeader(
-      profile_models.UserProfile profile,
-      profile_models.ProfileRelationship relationship,
-      profile_models.ProfileStats stats,
-      ) {
+    profile_models.UserProfile profile,
+    profile_models.ProfileRelationship relationship,
+    profile_models.ProfileStats stats,
+  ) {
     final achievementTags = profile.achievementTags.isNotEmpty
         ? profile.achievementTags
         : (_profileData?.achievementTags ?? const <String>[]);
@@ -468,10 +470,7 @@ class _ProfilePageState extends State<ProfilePage>
                             decoration: BoxDecoration(
                               color: Colors.green,
                               shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Colors.white,
-                                width: 2,
-                              ),
+                              border: Border.all(color: Colors.white, width: 2),
                             ),
                           ),
                         ),
@@ -578,16 +577,24 @@ class _ProfilePageState extends State<ProfilePage>
                   final systemSettings = context
                       .watch<SystemSettingsProvider>();
                   final List<Widget> statWidgets = [
-                    _buildHeaderStat('profile_stat_posts'.tr, stats.posts,onTap: () => _tabController.animateTo(0)),
-                    _buildHeaderStat('profile_stat_photos'.tr, stats.photos,onTap: () => _tabController.animateTo(2))
+                    _buildHeaderStat(
+                      'profile_stat_posts'.tr,
+                      stats.posts,
+                      onTap: () => _tabController.animateTo(0),
+                    ),
+                    _buildHeaderStat(
+                      'profile_stat_photos'.tr,
+                      stats.photos,
+                      onTap: () => _tabController.animateTo(2),
+                    ),
                   ];
 
                   if (systemSettings.isFriendsEnabled) {
                     statWidgets.add(
                       _buildHeaderStat(
-                          'profile_stat_friends'.tr,
-                          stats.friends,
-                          onTap: () => _tabController.animateTo(5)
+                        'profile_stat_friends'.tr,
+                        stats.friends,
+                        onTap: () => _tabController.animateTo(5),
                       ),
                     );
                   }
@@ -595,9 +602,9 @@ class _ProfilePageState extends State<ProfilePage>
                   if (systemSettings.isFollowersEnabled) {
                     statWidgets.add(
                       _buildHeaderStat(
-                          'profile_stat_followers'.tr,
-                          stats.followers,
-                          onTap: () => _tabController.animateTo(5)
+                        'profile_stat_followers'.tr,
+                        stats.followers,
+                        onTap: () => _tabController.animateTo(5),
                       ),
                     );
                   }
@@ -641,7 +648,6 @@ class _ProfilePageState extends State<ProfilePage>
       ),
     );
   }
-
 
   String _formatNumber(int number) {
     if (number >= 1000000) return '${(number / 1000000).toStringAsFixed(1)}M';
@@ -767,14 +773,20 @@ class _ProfilePageState extends State<ProfilePage>
 
   Widget _buildFollowButton(profile_models.ProfileRelationship relationship) {
     final isFollowing = relationship.isFollowing;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return ElevatedButton.icon(
       onPressed: () => _handleFollowAction(isFollowing),
       icon: Icon(isFollowing ? Iconsax.user_tick : Iconsax.user_add, size: 18),
       label: Text(isFollowing ? 'profile_following'.tr : 'profile_follow'.tr),
       style: ElevatedButton.styleFrom(
-        backgroundColor: isFollowing ? Colors.grey[300] : Colors.blue,
-        foregroundColor: isFollowing ? Colors.black87 : Colors.white,
+        backgroundColor: isFollowing
+            ? (isDark ? AppColors.hoverDark : AppColors.hoverLight)
+            : theme.colorScheme.primary,
+        foregroundColor: isFollowing
+            ? (isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight)
+            : Colors.white,
         padding: const EdgeInsets.symmetric(vertical: 10),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
@@ -810,7 +822,6 @@ class _ProfilePageState extends State<ProfilePage>
       }
     }
   }
-
 
   void _showMoreOptions() {
     showModalBottomSheet(
@@ -854,11 +865,11 @@ class _ProfilePageState extends State<ProfilePage>
                     builder: (context) => ReportContentPage(
                       contentType: ReportContentType.user,
                       contentId:
-                      _profileData?.profile.id ??
+                          _profileData?.profile.id ??
                           widget.userId?.toString() ??
                           '',
                       contentAuthor:
-                      _profileData?.profile.fullName ??
+                          _profileData?.profile.fullName ??
                           _profileData?.profile.username ??
                           widget.username ??
                           'User',
@@ -896,12 +907,13 @@ class _ProfilePageState extends State<ProfilePage>
     }
 
     // Show loading
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     Get.dialog(
       Center(
         child: Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDark ? AppColors.surfaceDark : Colors.white,
             borderRadius: BorderRadius.circular(15),
           ),
           child: const CircularProgressIndicator(),
@@ -921,7 +933,8 @@ class _ProfilePageState extends State<ProfilePage>
 
       Get.back(); // Close loading dialog
 
-      if (conversation == null && _profileData?.relationship.isFriend==false) {
+      if (conversation == null &&
+          _profileData?.relationship.isFriend == false) {
         Get.snackbar(
           'error'.tr,
           'profile_must_be_friend'.tr,
@@ -931,12 +944,20 @@ class _ProfilePageState extends State<ProfilePage>
         );
         return;
       }
-      UserPreview otherUser=UserPreview(userId: userId, username: _profileData?.profile.username??"", firstName: _profileData?.profile.firstName??"",lastName: _profileData?.profile.lastName??"",avatar: _profileData?.profile.picture??"",isVerified: _profileData?.profile.isVerified??false,link: _profileData?.profile.socialLinks.website);
+      UserPreview otherUser = UserPreview(
+        userId: userId,
+        username: _profileData?.profile.username ?? "",
+        firstName: _profileData?.profile.firstName ?? "",
+        lastName: _profileData?.profile.lastName ?? "",
+        avatar: _profileData?.profile.picture ?? "",
+        isVerified: _profileData?.profile.isVerified ?? false,
+        link: _profileData?.profile.socialLinks.website,
+      );
       // Navigate to chat page with the real conversation
       Get.to(
-            () => ChatPage(
-          conversationId: conversation?.conversationId??"0",
-          otherUser: conversation?.otherUser??otherUser,
+        () => ChatPage(
+          conversationId: conversation?.conversationId ?? "0",
+          otherUser: conversation?.otherUser ?? otherUser,
         ),
       );
     } catch (e) {
@@ -970,7 +991,6 @@ class _ProfilePageState extends State<ProfilePage>
         colorText: Colors.white,
         duration: const Duration(seconds: 4),
       );
-
     }
   }
 
@@ -995,8 +1015,8 @@ class _ProfilePageState extends State<ProfilePage>
         final resp = await service.unblockUser(userId: userId);
         final ok =
             (resp['status']?.toString() == 'success') ||
-                (resp['message']?.toString().toLowerCase().contains('unblocked') ??
-                    false);
+            (resp['message']?.toString().toLowerCase().contains('unblocked') ??
+                false);
         if (ok) {
           setState(() => _isBlocked = false);
           ScaffoldMessenger.of(context).showSnackBar(
@@ -1020,8 +1040,8 @@ class _ProfilePageState extends State<ProfilePage>
         final resp = await service.blockUser(userId: userId);
         final ok =
             (resp['status']?.toString() == 'success') ||
-                (resp['message']?.toString().toLowerCase().contains('blocked') ??
-                    false);
+            (resp['message']?.toString().toLowerCase().contains('blocked') ??
+                false);
         if (ok) {
           setState(() => _isBlocked = true);
           ScaffoldMessenger.of(context).showSnackBar(
@@ -1051,41 +1071,86 @@ class _ProfilePageState extends State<ProfilePage>
 
   // Tabs
   Widget _buildTabBar() {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final tabs = [
+      (icon: Iconsax.document_text, label: 'profile_tab_posts'.tr),
+      (icon: Iconsax.info_circle, label: 'profile_tab_about'.tr),
+      (icon: Iconsax.gallery, label: 'profile_tab_photos'.tr),
+      (icon: Iconsax.video_play, label: 'profile_tab_videos'.tr),
+      (icon: Iconsax.shopping_bag, label: 'page_tab_products'.tr),
+      (icon: Iconsax.people, label: 'profile_tab_friends'.tr),
+      (icon: Iconsax.more_square, label: 'profile_tab_more'.tr),
+    ];
+    final unselectedColor = isDark
+        ? Colors.white.withValues(alpha: 0.65)
+        : theme.colorScheme.onSurface.withValues(alpha: 0.65);
+
     return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
+      color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
+      padding: const EdgeInsets.symmetric(
+        horizontal: Spacing.md,
+        vertical: Spacing.sm,
       ),
-      child: TabBar(
-        controller: _tabController,
-        isScrollable: true,
-        tabs: [
-          Tab(
-            icon: const Icon(Iconsax.document_text),
-            text: 'profile_tab_posts'.tr,
-          ),
-          Tab(
-            icon: const Icon(Iconsax.info_circle),
-            text: 'profile_tab_about'.tr,
-          ),
-          Tab(icon: const Icon(Iconsax.gallery), text: 'profile_tab_photos'.tr),
-          Tab(
-            icon: const Icon(Iconsax.video_play),
-            text: 'profile_tab_videos'.tr,
-          ),
-          Tab(icon: const Icon(Iconsax.shopping_bag), text: 'page_tab_products'.tr),
-          Tab(icon: const Icon(Iconsax.people), text: 'profile_tab_friends'.tr),
-          Tab(
-            icon: const Icon(Iconsax.more_square),
-            text: 'profile_tab_more'.tr,
-          ),
-        ],
+      child: AnimatedBuilder(
+        animation: _tabController,
+        builder: (context, _) {
+          return SizedBox(
+            height: 40,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              itemCount: tabs.length,
+              separatorBuilder: (_, __) => const SizedBox(width: Spacing.sm),
+              itemBuilder: (context, index) {
+                final tab = tabs[index];
+                final isSelected = _tabController.index == index;
+
+                return GestureDetector(
+                  onTap: () => _tabController.animateTo(index),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 220),
+                    curve: Curves.easeInOut,
+                    padding: const EdgeInsets.symmetric(horizontal: Spacing.md),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      gradient: isSelected ? AppColors.primaryGradient : null,
+                      border: isSelected
+                          ? null
+                          : Border.all(
+                              color: isDark
+                                  ? AppColors.dividerDark
+                                  : AppColors.dividerLight,
+                            ),
+                      borderRadius: BorderRadius.circular(Radii.pill),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          tab.icon,
+                          size: 16,
+                          color: isSelected ? Colors.white : unselectedColor,
+                        ),
+                        const SizedBox(width: Spacing.xs),
+                        Text(
+                          tab.label,
+                          style: TextStyle(
+                            color: isSelected ? Colors.white : unselectedColor,
+                            fontWeight: isSelected
+                                ? FontWeight.w700
+                                : FontWeight.w500,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
+        },
       ),
     );
   }
@@ -1138,11 +1203,9 @@ class _ProfilePageState extends State<ProfilePage>
             // تحقق من الوصول لنهاية القائمة
             if (scrollInfo.metrics.pixels >=
                 scrollInfo.metrics.maxScrollExtent - 200) {
-
               if (hasMore && !isLoadingMore) {
                 context.read<ProfilePostsBloc>().add(LoadMoreUserPostsEvent());
-              } else {
-              }
+              } else {}
             }
             return false;
           },
@@ -1244,26 +1307,26 @@ class _ProfilePageState extends State<ProfilePage>
         : (_profileData?.achievementTags ?? const <String>[]);
     final hasWork =
         (profile.work.title?.isNotEmpty ?? false) ||
-            (profile.work.place?.isNotEmpty ?? false) ||
-            (profile.work.website?.isNotEmpty ?? false);
+        (profile.work.place?.isNotEmpty ?? false) ||
+        (profile.work.website?.isNotEmpty ?? false);
 
     final hasLocation =
         (profile.location.currentCity?.isNotEmpty ?? false) ||
-            (profile.location.hometown?.isNotEmpty ?? false);
+        (profile.location.hometown?.isNotEmpty ?? false);
 
     final hasEducation =
         (profile.education.school?.isNotEmpty ?? false) ||
-            (profile.education.major?.isNotEmpty ?? false) ||
-            (profile.education.classYear?.isNotEmpty ?? false);
+        (profile.education.major?.isNotEmpty ?? false) ||
+        (profile.education.classYear?.isNotEmpty ?? false);
 
-    final competitionBadges = profile.badges
-        .where((badge) => badge.competitionId != null)
-        .toList()
-      ..sort(
-        (a, b) => (a.effectiveRank ?? 99).compareTo(b.effectiveRank ?? 99),
-      );
-    final genericBadges =
-        profile.badges.where((badge) => badge.competitionId == null).toList();
+    final competitionBadges =
+        profile.badges.where((badge) => badge.competitionId != null).toList()
+          ..sort(
+            (a, b) => (a.effectiveRank ?? 99).compareTo(b.effectiveRank ?? 99),
+          );
+    final genericBadges = profile.badges
+        .where((badge) => badge.competitionId == null)
+        .toList();
 
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -1481,7 +1544,7 @@ class _ProfilePageState extends State<ProfilePage>
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
                     decoration:
-                    TextDecoration.none, // ✅ يمنع أي خط أصفر أو أزرق
+                        TextDecoration.none, // ✅ يمنع أي خط أصفر أو أزرق
                   ),
                 ),
               ],
@@ -1560,13 +1623,13 @@ class _ProfilePageState extends State<ProfilePage>
           onTap: badge.competitionId == null
               ? null
               : () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => CompetitionDetailPage(
-                        competitionId: badge.competitionId!,
-                      ),
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => CompetitionDetailPage(
+                      competitionId: badge.competitionId!,
                     ),
                   ),
+                ),
         ),
       );
     }
@@ -1633,7 +1696,6 @@ class _ProfilePageState extends State<ProfilePage>
       userId = int.tryParse(_profileData!.profile.id);
     }
 
-
     return _VideosTabContent(userId: userId, username: widget.username);
   }
 
@@ -1650,15 +1712,15 @@ class _ProfilePageState extends State<ProfilePage>
               prefixIcon: const Icon(Iconsax.search_normal),
               suffixIcon: _productsSearchQuery.isNotEmpty
                   ? IconButton(
-                icon: const Icon(Icons.clear),
-                onPressed: () {
-                  _productsSearchController.clear();
-                  setState(() {
-                    _productsSearchQuery = '';
-                  });
-                  _loadUserProducts(refresh: true);
-                },
-              )
+                      icon: const Icon(Icons.clear),
+                      onPressed: () {
+                        _productsSearchController.clear();
+                        setState(() {
+                          _productsSearchQuery = '';
+                        });
+                        _loadUserProducts(refresh: true);
+                      },
+                    )
                   : null,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -1785,9 +1847,9 @@ class _ProfilePageState extends State<ProfilePage>
                         color: Colors.grey[200],
                         image: thumb != null
                             ? DecorationImage(
-                          image: CachedNetworkImageProvider(thumb),
-                          fit: BoxFit.cover,
-                        )
+                                image: CachedNetworkImageProvider(thumb),
+                                fit: BoxFit.cover,
+                              )
                             : null,
                       ),
                       child: thumb == null
@@ -1877,7 +1939,6 @@ class _ProfilePageState extends State<ProfilePage>
         int.tryParse(_profileData?.profile.id ?? '') ?? widget.userId;
     return _FriendsRelationshipsTab(userId: resolvedUserId, stats: stats);
   }
-
 
   Widget _buildMoreTab(profile_models.UserProfile profile) {
     final socialLinks = _profileData!.socialLinks;
@@ -2817,12 +2878,12 @@ class _SubscriptionListTile extends StatelessWidget {
             : null,
         child: picture == null
             ? Icon(
-          subscription.nodeType == 'profile'
-              ? Iconsax.user
-              : subscription.nodeType == 'page'
-              ? Iconsax.folder
-              : Iconsax.people,
-        )
+                subscription.nodeType == 'profile'
+                    ? Iconsax.user
+                    : subscription.nodeType == 'page'
+                    ? Iconsax.folder
+                    : Iconsax.people,
+              )
             : null,
       ),
       title: Text(name),
@@ -2881,7 +2942,7 @@ class _UserPhotosGridState extends State<_UserPhotosGrid> {
 
   void _onScroll() {
     if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent * 0.8 &&
+            _scrollController.position.maxScrollExtent * 0.8 &&
         !_isLoading &&
         _hasMore) {
       _loadPhotos();
@@ -2966,7 +3027,7 @@ class _UserPhotosGridState extends State<_UserPhotosGrid> {
               mainAxisSpacing: 6,
             ),
             itemCount:
-            _photos.length +
+                _photos.length +
                 (_isLoading ? 1 : 0) +
                 ((_hasMore && !_isLoading) ? 1 : 0),
             itemBuilder: (context, index) {
@@ -3022,7 +3083,7 @@ class _UserPhotosGridState extends State<_UserPhotosGrid> {
                               ).colorScheme.surfaceContainerHighest,
                             ),
                             errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
+                                const Icon(Icons.error),
                           ),
                         ),
                         if (photo.isBlurred)
@@ -3086,7 +3147,7 @@ class _UserAlbumsGridState extends State<_UserAlbumsGrid> {
 
   void _onScroll() {
     if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent * 0.8 &&
+            _scrollController.position.maxScrollExtent * 0.8 &&
         !_isLoading &&
         _hasMore) {
       _loadAlbums();
@@ -3166,23 +3227,23 @@ class _UserAlbumsGridState extends State<_UserAlbumsGrid> {
                 Expanded(
                   child: album.cover != null
                       ? CachedNetworkImage(
-                    imageUrl: album.cover!,
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    placeholder: (context, url) => Container(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.surfaceContainerHighest,
-                    ),
-                    errorWidget: (context, url, error) =>
-                    const Icon(Icons.error),
-                  )
+                          imageUrl: album.cover!,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          placeholder: (context, url) => Container(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.surfaceContainerHighest,
+                          ),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        )
                       : Container(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.surfaceContainerHighest,
-                    child: const Icon(Iconsax.folder_2, size: 48),
-                  ),
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.surfaceContainerHighest,
+                          child: const Icon(Iconsax.folder_2, size: 48),
+                        ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(12),
@@ -3268,7 +3329,7 @@ class _AlbumPhotosGridState extends State<_AlbumPhotosGrid> {
 
   void _onScroll() {
     if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent * 0.8 &&
+            _scrollController.position.maxScrollExtent * 0.8 &&
         !_isLoading &&
         _hasMore) {
       _loadPhotos();
@@ -3354,7 +3415,7 @@ class _AlbumPhotosGridState extends State<_AlbumPhotosGrid> {
               mainAxisSpacing: 6,
             ),
             itemCount:
-            _photos.length +
+                _photos.length +
                 (_isLoading ? 1 : 0) +
                 ((_hasMore && !_isLoading) ? 1 : 0),
             itemBuilder: (context, index) {
@@ -3410,7 +3471,7 @@ class _AlbumPhotosGridState extends State<_AlbumPhotosGrid> {
                               ).colorScheme.surfaceContainerHighest,
                             ),
                             errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
+                                const Icon(Icons.error),
                           ),
                         ),
                         if (photo.isBlurred)
@@ -3501,7 +3562,7 @@ class _PhotoViewerPageState extends State<_PhotoViewerPage> {
                           child: CircularProgressIndicator(),
                         ),
                         errorWidget: (context, url, error) =>
-                        const Icon(Icons.error, color: Colors.white),
+                            const Icon(Icons.error, color: Colors.white),
                       ),
                     ),
                   ),
@@ -3643,14 +3704,12 @@ class _VideosTabContentState extends State<_VideosTabContent> {
     }
 
     try {
-
       final videos = await _videosService.getUserVideos(
         userId: widget.userId,
         username: widget.username,
         offset: _offset,
         limit: _limit,
       );
-
 
       if (!mounted) return;
 
@@ -3661,7 +3720,6 @@ class _VideosTabContentState extends State<_VideosTabContent> {
         _isLoading = false;
         _error = null;
       });
-
     } catch (e) {
       if (!mounted) return;
       setState(() {
@@ -3671,10 +3729,8 @@ class _VideosTabContentState extends State<_VideosTabContent> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     if (_isLoading && _videos.isEmpty) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -3721,7 +3777,7 @@ class _VideosTabContentState extends State<_VideosTabContent> {
       child: NotificationListener<ScrollNotification>(
         onNotification: (ScrollNotification scrollInfo) {
           if (scrollInfo.metrics.pixels >=
-              scrollInfo.metrics.maxScrollExtent - 200 &&
+                  scrollInfo.metrics.maxScrollExtent - 200 &&
               !_isLoading &&
               _hasMore) {
             _loadVideos();
@@ -3737,7 +3793,7 @@ class _VideosTabContentState extends State<_VideosTabContent> {
             childAspectRatio: 9 / 16,
           ),
           itemCount:
-          _videos.length + (_isLoading && _videos.isNotEmpty ? 1 : 0),
+              _videos.length + (_isLoading && _videos.isNotEmpty ? 1 : 0),
           itemBuilder: (context, index) {
             if (index == _videos.length) {
               return const Center(child: CircularProgressIndicator());
@@ -3882,7 +3938,6 @@ class _VideoThumbnail extends StatelessWidget {
       ),
     );
   }
-
 }
 
 // Badge Card Widget
@@ -3903,7 +3958,6 @@ class _BadgeCard extends StatelessWidget {
     })();
     print("badge ${badge.label}");
     return GestureDetector(
-
       onTap: () {
         // Show badge details in a dialog
         showDialog(
@@ -3942,40 +3996,33 @@ class _BadgeCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: badgeColor.withValues(alpha: 0.2),
-                  border: Border.all(
-                    color: badgeColor,
-                    width: 2,
-                  ),
+                  border: Border.all(color: badgeColor, width: 2),
                 ),
                 child: Center(
                   child: badge.icon != null && badge.icon!.isNotEmpty
                       ? ClipRRect(
-                        borderRadius: BorderRadius.circular(30),
-                        child: CachedNetworkImage(
-                          imageUrl: badge.icon!,
-                          fit: BoxFit.cover,
-                          placeholder: (_, __) => Icon(
-                            Iconsax.award,
-                            color: badgeColor,
-                            size: 32,
+                          borderRadius: BorderRadius.circular(30),
+                          child: CachedNetworkImage(
+                            imageUrl: badge.icon!,
+                            fit: BoxFit.cover,
+                            placeholder: (_, __) => Icon(
+                              Iconsax.award,
+                              color: badgeColor,
+                              size: 32,
+                            ),
+                            errorWidget: (_, __, ___) => Icon(
+                              Iconsax.award,
+                              color: badgeColor,
+                              size: 32,
+                            ),
                           ),
-                          errorWidget: (_, __, ___) => Icon(
-                            Iconsax.award,
-                            color: badgeColor,
-                            size: 32,
-                          ),
-                        ),
-                      )
-                      : Icon(
-                    Iconsax.award,
-                    color: badgeColor,
-                    size: 32,
-                  ),
+                        )
+                      : Icon(Iconsax.award, color: badgeColor, size: 32),
                 ),
               ),
               const SizedBox(height: 8),
-              // Badge Label
 
+              // Badge Label
               Text(
                 badge.label ?? 'Badge',
                 textAlign: TextAlign.center,
@@ -4021,10 +4068,13 @@ class _BadgeDetailDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final badgeColor = (() {
       final raw = badge.color?.trim();
-      if (raw == null || raw.isEmpty) return Theme.of(context).colorScheme.primary;
+      if (raw == null || raw.isEmpty)
+        return Theme.of(context).colorScheme.primary;
       final normalized = raw.startsWith('#') ? raw.substring(1) : raw;
       final value = int.tryParse('0xff$normalized');
-      return value != null ? Color(value) : Theme.of(context).colorScheme.primary;
+      return value != null
+          ? Color(value)
+          : Theme.of(context).colorScheme.primary;
     })();
 
     return Dialog(
@@ -4051,35 +4101,28 @@ class _BadgeDetailDialog extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: badgeColor.withValues(alpha: 0.15),
-                  border: Border.all(
-                    color: badgeColor,
-                    width: 2,
-                  ),
+                  border: Border.all(color: badgeColor, width: 2),
                 ),
                 child: Center(
                   child: badge.icon != null && badge.icon!.isNotEmpty
                       ? ClipRRect(
-                        borderRadius: BorderRadius.circular(50),
-                        child: CachedNetworkImage(
-                          imageUrl: badge.icon!,
-                          fit: BoxFit.cover,
-                          placeholder: (_, __) => Icon(
-                            Iconsax.award,
-                            color: badgeColor,
-                            size: 48,
+                          borderRadius: BorderRadius.circular(50),
+                          child: CachedNetworkImage(
+                            imageUrl: badge.icon!,
+                            fit: BoxFit.cover,
+                            placeholder: (_, __) => Icon(
+                              Iconsax.award,
+                              color: badgeColor,
+                              size: 48,
+                            ),
+                            errorWidget: (_, __, ___) => Icon(
+                              Iconsax.award,
+                              color: badgeColor,
+                              size: 48,
+                            ),
                           ),
-                          errorWidget: (_, __, ___) => Icon(
-                            Iconsax.award,
-                            color: badgeColor,
-                            size: 48,
-                          ),
-                        ),
-                      )
-                      : Icon(
-                    Iconsax.award,
-                    color: badgeColor,
-                    size: 48,
-                  ),
+                        )
+                      : Icon(Iconsax.award, color: badgeColor, size: 48),
                 ),
               ),
               const SizedBox(height: 20),
@@ -4096,14 +4139,14 @@ class _BadgeDetailDialog extends StatelessWidget {
               // Category
               if (badge.categoryName != null && badge.categoryName!.isNotEmpty)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: badgeColor.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: badgeColor,
-                      width: 1,
-                    ),
+                    border: Border.all(color: badgeColor, width: 1),
                   ),
                   child: Text(
                     badge.categoryName!,
@@ -4124,10 +4167,7 @@ class _BadgeDetailDialog extends StatelessWidget {
                     const SizedBox(width: 8),
                     Text(
                       'Awarded: ${badge.awardedAt!}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                     ),
                   ],
                 ),
@@ -4147,10 +4187,7 @@ class _BadgeDetailDialog extends StatelessWidget {
                   ),
                   child: const Text(
                     'Close',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -4183,33 +4220,33 @@ class _CompetitionNameChip extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: backgroundColor.withValues(alpha: 0.20),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: backgroundColor.withValues(alpha: 0.55)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (icon != null) ...[
-            Icon(icon, size: 12, color: color),
-            const SizedBox(width: 5),
-          ],
-          Flexible(
-            child: Text(
-              label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: color,
-                fontSize: 11,
-                fontWeight: FontWeight.w700,
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        decoration: BoxDecoration(
+          color: backgroundColor.withValues(alpha: 0.20),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: backgroundColor.withValues(alpha: 0.55)),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (icon != null) ...[
+              Icon(icon, size: 12, color: color),
+              const SizedBox(width: 5),
+            ],
+            Flexible(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: color,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
       ),
     );
   }
@@ -4273,8 +4310,8 @@ class _CompetitionWinnerChip extends StatelessWidget {
     final category = (badge.categoryName?.trim().isNotEmpty ?? false)
         ? badge.categoryName!.trim()
         : (badge.categoryTag?.trim().isNotEmpty ?? false)
-            ? badge.categoryTag!.trim()
-            : null;
+        ? badge.categoryTag!.trim()
+        : null;
 
     return Material(
       color: Colors.transparent,
@@ -4375,17 +4412,19 @@ class _CompetitionAchievementTile extends StatelessWidget {
     final cs = theme.colorScheme;
     final rank = badge.effectiveRank;
     final tierColor = rank != null ? _competitionTierColor(rank) : cs.primary;
-    final rankLabel =
-        rank != null ? _competitionRankLabel(rank) : (badge.label ?? 'Winner');
+    final rankLabel = rank != null
+        ? _competitionRankLabel(rank)
+        : (badge.label ?? 'Winner');
     final medal = rank != null ? _competitionMedalEmoji(rank) : '🏆';
 
-    final competitionName =
-        (badge.name?.trim().isNotEmpty ?? false) ? badge.name!.trim() : null;
+    final competitionName = (badge.name?.trim().isNotEmpty ?? false)
+        ? badge.name!.trim()
+        : null;
     final category = (badge.categoryName?.trim().isNotEmpty ?? false)
         ? badge.categoryName!.trim()
         : (badge.categoryTag?.trim().isNotEmpty ?? false)
-            ? badge.categoryTag!.trim()
-            : null;
+        ? badge.categoryTag!.trim()
+        : null;
     final awardedAt = (badge.awardedAt?.trim().isNotEmpty ?? false)
         ? badge.awardedAt!.trim()
         : null;
@@ -4418,8 +4457,9 @@ class _CompetitionAchievementTile extends StatelessWidget {
                   children: [
                     Text(
                       rankLabel,
-                      style: theme.textTheme.bodyMedium
-                          ?.copyWith(fontWeight: FontWeight.w700),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                     if (competitionName != null)
                       Padding(
@@ -4428,8 +4468,9 @@ class _CompetitionAchievementTile extends StatelessWidget {
                           competitionName,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.bodySmall
-                              ?.copyWith(color: cs.onSurfaceVariant),
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: cs.onSurfaceVariant,
+                          ),
                         ),
                       ),
                     if (category != null)
@@ -4451,8 +4492,7 @@ class _CompetitionAchievementTile extends StatelessWidget {
                         child: Text(
                           awardedAt,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color:
-                                cs.onSurfaceVariant.withValues(alpha: 0.7),
+                            color: cs.onSurfaceVariant.withValues(alpha: 0.7),
                             fontSize: 11,
                           ),
                         ),
@@ -4473,22 +4513,3 @@ class _CompetitionAchievementTile extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -6,6 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:snginepro/core/theme/app_colors.dart';
+import 'package:snginepro/core/theme/panchit_auth_ui.dart';
 import 'package:snginepro/features/feed/presentation/pages/post_detail_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 // <-- 💡 1. إضافة الحزمة الاحترافية
@@ -2006,7 +2008,7 @@ class _PostCardState extends State<PostCard>
     }
   }
 
-  @override
+
   @override
   Widget build(BuildContext context) {
     super.build(context); // مطلوب لـ AutomaticKeepAliveClientMixin
@@ -2028,29 +2030,20 @@ class _PostCardState extends State<PostCard>
       return const SizedBox.shrink();
     }
 
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+      key: ValueKey('post_card_${_currentPost.id}'),
+      margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        border: _isCompetitionWinner
-            ? Border.all(
-                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.24),
-              )
-            : null,
-        boxShadow: _showActiveCompetitionBadge
-            ? [
-                BoxShadow(
-                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.12),
-                  blurRadius: 22,
-                  spreadRadius: 1,
-                ),
-              ]
-            : const [],
+        color: PanchitAuthColors.background(isDark),
+        border: Border(
+          bottom: BorderSide(
+            color: isDark ? AppColors.dividerDark : AppColors.dividerLight,
+            width: 0.7,
+          ),
+        ),
       ),
-      child: ElevatedCard(
-        key: ValueKey('post_card_${_currentPost.id}'),
-        margin: EdgeInsets.zero,
-        padding: EdgeInsets.zero,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -2070,7 +2063,7 @@ class _PostCardState extends State<PostCard>
                 ),
               ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
+            padding: const EdgeInsets.fromLTRB(14, 12, 8, 8),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -2080,12 +2073,12 @@ class _PostCardState extends State<PostCard>
                     url: _currentPost.authorAvatarUrl != null
                         ? mediaAsset(_currentPost.authorAvatarUrl!).toString()
                         : null,
-                    radius: 22,
+                    radius: 20,
                     showOnlineIndicator: _currentPost.authorType == 'user',
                     isOnline: _currentPost.authorIsOnline,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 10),
                 Expanded(
                   child: GestureDetector(
                     onTap: () => _onAuthorTap(context),
@@ -2112,8 +2105,8 @@ class _PostCardState extends State<PostCard>
                               const SizedBox(width: 4),
                               Icon(
                                 Iconsax.verify,
-                                size: 16,
-                                color: theme.colorScheme.primary,
+                                size: 15,
+                                color: AppColors.secondary,
                               ),
                             ],
                             // إضافة تسمية "18+" للمحتوى للبالغين
@@ -2579,7 +2572,7 @@ class _PostCardState extends State<PostCard>
                       Row(
                         children: [
                           const Icon(Iconsax.box, size: 20, color: Colors.blue),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: 10),
                           Expanded(
                             child: Text(
                               (_currentPost.productName ?? '').isNotEmpty
@@ -2879,7 +2872,7 @@ class _PostCardState extends State<PostCard>
                                                     content: Row(
                                                       children: [
                                                         const Icon(Icons.check_circle, color: Colors.white),
-                                                        const SizedBox(width: 12),
+                                                        const SizedBox(width: 10),
                                                         Expanded(child: Text('Added to cart!'.tr)),
                                                         TextButton(
                                                           onPressed: () {
@@ -2980,7 +2973,7 @@ class _PostCardState extends State<PostCard>
                                 ),
                               ),
                             ),
-                          if (_currentPost.isProductPost) const SizedBox(width: 12),
+                          if (_currentPost.isProductPost) const SizedBox(width: 10),
                           // Message Seller Button
                           if (_currentPost.isProductPost)
                             Expanded(
@@ -3225,108 +3218,8 @@ class _PostCardState extends State<PostCard>
           ],
           if (!isPaidLocked) ...[
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              padding: const EdgeInsets.fromLTRB(6, 4, 6, 0),
               child: Row(
-                children: [
-                  // عرض التفاعلات المفصلة
-                  if (_currentPost.reactionsCount > 0)
-                    Expanded(
-                      child: InkWell(
-                        onTap: () {
-                          showReactionUsersSheet(
-                            context: context,
-                            type: 'post',
-                            id: _currentPost.id,
-                            reactionStats:
-                            _currentPost.reactionBreakdown.isEmpty
-                                ? {'like': _currentPost.reactionsCount}
-                                : _currentPost.reactionBreakdown,
-                          );
-                        },
-                        borderRadius: BorderRadius.circular(12),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 4,
-                            vertical: 2,
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              if (_currentPost
-                                  .reactionBreakdown
-                                  .isNotEmpty) ...[
-                                ..._buildReactionIcons(),
-                                const SizedBox(width: 6),
-                              ],
-                              Text(
-                                _currentPost.reactionsCountFormatted,
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  color: theme.colorScheme.onSurface
-                                      .withOpacity(0.6),
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    )
-                  else
-                    const Expanded(child: SizedBox()),
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: Wrap(
-                        alignment: WrapAlignment.end,
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        spacing: 10,
-                        runSpacing: 4,
-                        children: [
-                          Text(
-                            'post_reviews'.trParams({
-                              'count': _currentPost.reviewsCountFormatted,
-                            }),
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                            ),
-                          ),
-                          if (_currentPost.viewsCount > 0)
-                            Text(
-                              'post_views'.trParams({
-                                'count': _currentPost.viewsCountFormatted,
-                              }),
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                              ),
-                            ),
-                          Text(
-                            '${_currentPost.commentsCountFormatted} ${'comments'.tr}',
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                            ),
-                          ),
-                          Text(
-                            'post_shares2'.trParams({
-                              'count': _currentPost.sharesCountFormatted,
-                            }),
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Divider(height: 1),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-              child: Wrap(
-                spacing: 8,
-                runSpacing: 4,
-                alignment: WrapAlignment.spaceEvenly,
                 children: [
                   // Like / Reactions
                   _PostAction(
@@ -3338,7 +3231,7 @@ class _PostCardState extends State<PostCard>
                     icon: _currentPost.commentsDisabled
                         ? Iconsax.message_minus
                         : Iconsax.message,
-                    label: _currentPost.commentsDisabled
+                    tooltip: _currentPost.commentsDisabled
                         ? 'disabled'.tr
                         : 'comment'.tr,
                     isDisabled: _currentPost.commentsDisabled,
@@ -3365,16 +3258,10 @@ class _PostCardState extends State<PostCard>
                       );
                     },
                   ),
-                  // Review
-                  _SimpleActionButton(
-                    icon: Iconsax.star,
-                    label: 'action_review'.tr,
-                    onTap: () => _showReviewsBottomSheet(context),
-                  ),
                   // Share
                   _SimpleActionButton(
-                    icon: Iconsax.share,
-                    label: 'action_share'.tr,
+                    icon: Iconsax.send_2,
+                    tooltip: 'action_share'.tr,
                     onTap: () {
                       showDialog(
                         context: context,
@@ -3392,6 +3279,12 @@ class _PostCardState extends State<PostCard>
                       );
                     },
                   ),
+                  // Review
+                  _SimpleActionButton(
+                    icon: Iconsax.star,
+                    label: 'action_review'.tr,
+                    onTap: () => _showReviewsBottomSheet(context),
+                  ),
                   // Boost (owner only)
                   if (_isOwner(_currentPost))
                     _BoostActionButton(
@@ -3406,13 +3299,139 @@ class _PostCardState extends State<PostCard>
                       label: 'action_tip'.tr,
                       onTap: () => _showTipBottomSheet(context),
                     ),
+                  const Spacer(),
+                  // Save / Bookmark
+                  _SimpleActionButton(
+                    icon: _currentPost.isSaved
+                        ? Iconsax.bookmark_copy
+                        : Iconsax.bookmark,
+                    tooltip: _currentPost.isSaved
+                        ? 'unsave_post'.tr
+                        : 'save_post'.tr,
+                    onTap: () => _handlePostAction(
+                      _currentPost.isSaved
+                          ? PostAction.unsavePost
+                          : PostAction.savePost,
+                    ),
+                  ),
                 ],
               ),
             ),
+            if (_currentPost.reactionsCount > 0 ||
+                (!_currentPost.commentsDisabled &&
+                    _currentPost.commentsCount > 0) ||
+                _currentPost.reviewsCount > 0 ||
+                _currentPost.viewsCount > 0 ||
+                _currentPost.sharesCount > 0)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(12, 2, 12, 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // عرض التفاعلات المفصلة
+                    if (_currentPost.reactionsCount > 0)
+                      InkWell(
+                        onTap: () {
+                          showReactionUsersSheet(
+                            context: context,
+                            type: 'post',
+                            id: _currentPost.id,
+                            reactionStats:
+                            _currentPost.reactionBreakdown.isEmpty
+                                ? {'like': _currentPost.reactionsCount}
+                                : _currentPost.reactionBreakdown,
+                          );
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (_currentPost
+                                .reactionBreakdown
+                                .isNotEmpty) ...[
+                              ..._buildReactionIcons(),
+                              const SizedBox(width: 6),
+                            ],
+                            Text(
+                              '${_currentPost.reactionsCountFormatted} ${'likes_label'.tr}',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: theme.colorScheme.onSurface,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    if (!_currentPost.commentsDisabled &&
+                        _currentPost.commentsCount > 0)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2),
+                        child: InkWell(
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              useSafeArea: false,
+                              backgroundColor: Colors.transparent,
+                              builder: (context) => CommentsBottomSheet(
+                                postId: _currentPost.id,
+                                commentsCount: _currentPost.commentsCount,
+                                postText: _currentPost.text,
+                              ),
+                            );
+                          },
+                          child: Text(
+                            '${'view_all'.tr} ${_currentPost.commentsCountFormatted} ${'comments'.tr}',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                            ),
+                          ),
+                        ),
+                      ),
+                    if (_currentPost.reviewsCount > 0 ||
+                        _currentPost.viewsCount > 0 ||
+                        _currentPost.sharesCount > 0)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2),
+                        child: Wrap(
+                          spacing: 10,
+                          runSpacing: 2,
+                          children: [
+                            if (_currentPost.reviewsCount > 0)
+                              Text(
+                                'post_reviews'.trParams({
+                                  'count': _currentPost.reviewsCountFormatted,
+                                }),
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                                ),
+                              ),
+                            if (_currentPost.viewsCount > 0)
+                              Text(
+                                'post_views'.trParams({
+                                  'count': _currentPost.viewsCountFormatted,
+                                }),
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                                ),
+                              ),
+                            if (_currentPost.sharesCount > 0)
+                              Text(
+                                'post_shares2'.trParams({
+                                  'count': _currentPost.sharesCountFormatted,
+                                }),
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+              ),
           ],
           ],
         ),
-      ),
     );
   }
 
@@ -3652,80 +3671,68 @@ class _PostActionState extends State<_PostAction>
   @override
   Widget build(BuildContext context) {
     final postData = widget.post;
-    final reactionModel = postData.myReaction != null
+    final hasReaction = postData.myReaction != null;
+    final reactionModel = hasReaction
         ? ReactionsService.instance.getReactionByName(postData.myReaction!)
         : null;
 
     final String actionLabel =
         reactionModel?.title ?? 'like'.tr; // استخدام الترجمة الافتراضية
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final Color actionColor =
         reactionModel?.colorValue ??
-            Theme.of(context).colorScheme.onSurface.withOpacity(0.65);
+            (hasReaction
+                ? AppColors.like
+                : (isDark
+                    ? AppColors.textSecondaryDark
+                    : AppColors.textSecondaryLight));
 
     return AnimatedBuilder(
       animation: _animationController,
       builder: (context, child) {
         return Transform.scale(
           scale: 1.0 + (_animationController.value * 0.1), // تأثير نبض خفيف
-          child: InkWell(
-            onTap: () {
-              // إذا كان هناك تفاعل حالياً، قم بإزالته، وإلا أضف like
-              final currentReaction = postData.myReaction;
+          child: Tooltip(
+            message: actionLabel,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(20),
+              onTap: () {
+                // إذا كان هناك تفاعل حالياً، قم بإزالته، وإلا أضف like
+                final currentReaction = postData.myReaction;
 
-              if (currentReaction != null) {
-                _handleReaction('remove'); // إزالة التفاعل الحالي
-              } else {
-                _handleReaction('like'); // إضافة إعجاب
-              }
-            },
-            onLongPress: _showReactionsPicker,
-            child: Container(
-              constraints: const BoxConstraints(minWidth: 80, maxWidth: 120),
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (reactionModel != null)
-                    CachedNetworkImage(
-                      imageUrl: reactionModel.imageUrl,
-                      width: 20,
-                      height: 20,
-                      placeholder: (context, url) => SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
+                if (currentReaction != null) {
+                  _handleReaction('remove'); // إزالة التفاعل الحالي
+                } else {
+                  _handleReaction('like'); // إضافة إعجاب
+                }
+              },
+              onLongPress: _showReactionsPicker,
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: reactionModel != null
+                    ? CachedNetworkImage(
+                        imageUrl: reactionModel.imageUrl,
+                        width: 22,
+                        height: 22,
+                        placeholder: (context, url) => SizedBox(
+                          width: 22,
+                          height: 22,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: actionColor,
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Icon(
+                          Iconsax.heart_copy,
+                          size: 22,
                           color: actionColor,
                         ),
-                      ),
-                      errorWidget: (context, url, error) => Icon(
-                        Iconsax.happyemoji, // <-- 💡 1. أيقونة
-                        size: 20,
+                      )
+                    : Icon(
+                        hasReaction ? Iconsax.heart_copy : Iconsax.heart,
                         color: actionColor,
+                        size: 22,
                       ),
-                    )
-                  else
-                    Icon(
-                      Iconsax.like_1, // <-- 💡 1. أيقونة
-                      color: actionColor,
-                      size: 20,
-                    ),
-                  const SizedBox(width: 4),
-                  Flexible(
-                    child: Text(
-                      actionLabel,
-                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: actionColor,
-                        fontSize: 12,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ],
               ),
             ),
           ),
@@ -3739,47 +3746,49 @@ class _SimpleActionButton extends StatelessWidget {
   const _SimpleActionButton({
     required this.icon,
     this.label,
+    this.tooltip,
     this.onTap,
     this.isDisabled = false,
   });
 
   final IconData icon;
   final String? label;
+  final String? tooltip;
   final VoidCallback? onTap;
   final bool isDisabled;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final opacity = isDisabled ? 0.4 : 0.7;
+    final isDark = theme.brightness == Brightness.dark;
+    final baseColor =
+        isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight;
+    final color = baseColor.withValues(alpha: isDisabled ? 0.35 : 0.85);
 
-    return InkWell(
+    final button = InkWell(
+      borderRadius: BorderRadius.circular(20),
       onTap: isDisabled ? null : onTap,
-      child: Container(
-        constraints: const BoxConstraints(minWidth: 80, maxWidth: 120),
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          vertical: 8,
+          horizontal: label != null ? 10 : 8,
+        ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              icon,
-              color: theme.colorScheme.onSurface.withOpacity(opacity),
-              size: 20,
-            ),
+            Icon(icon, color: color, size: 22),
             if (label != null) ...[
-              const SizedBox(width: 4),
+              const SizedBox(width: 6),
               Flexible(
                 child: Text(
                   label!,
                   style: theme.textTheme.labelMedium?.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: theme.colorScheme.onSurface.withOpacity(opacity),
+                    color: color,
                     fontSize: 12,
                   ),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
-                  textAlign: TextAlign.center,
                 ),
               ),
             ],
@@ -3787,6 +3796,12 @@ class _SimpleActionButton extends StatelessWidget {
         ),
       ),
     );
+
+    if (label != null || tooltip == null) {
+      return button;
+    }
+
+    return Tooltip(message: tooltip!, child: button);
   }
 }
 
@@ -4471,7 +4486,7 @@ class _PollWidget extends StatelessWidget {
                               ),
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: 10),
                           Text(
                             '$percentageText%',
                             style: theme.textTheme.bodySmall?.copyWith(
@@ -4973,7 +4988,7 @@ class _EventWidget extends StatelessWidget {
                           size: 20,
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: 10),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -5121,7 +5136,7 @@ class _EventWidget extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: 10),
                       Expanded(
                         child: OutlinedButton.icon(
                           onPressed: () {
@@ -5419,7 +5434,7 @@ class _FundingWidget extends StatelessWidget {
                     isDark: isDark,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 10),
                 Expanded(
                   child: _FundingStatCard(
                     icon: Icons.monetization_on_rounded,
@@ -6474,7 +6489,7 @@ class _MeritWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
+    final isDark = theme.brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -6526,7 +6541,7 @@ class _MeritWidget extends StatelessWidget {
                   size: 20,
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 10),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -6543,8 +6558,9 @@ class _MeritWidget extends StatelessWidget {
                     Text(
                       merit.categoryName,
                       style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: Colors.amber[900],
+                        fontWeight: FontWeight.w700,
+                        fontSize: 13.5,
+                        color: PanchitAuthColors.background(isDark)
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

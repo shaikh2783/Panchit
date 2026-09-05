@@ -7,7 +7,9 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:snginepro/core/config/app_config.dart';
 import 'package:snginepro/core/network/api_client.dart';
+import 'package:snginepro/core/theme/app_colors.dart';
 import 'package:snginepro/core/theme/design_tokens.dart';
+import 'package:snginepro/core/theme/panchit_auth_ui.dart';
 import 'package:snginepro/core/utils/time_ago.dart';
 import 'package:snginepro/features/auth/application/auth_notifier.dart';
 import 'package:snginepro/features/competitions/data/models/competition_models.dart';
@@ -440,14 +442,31 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
           ],
         ),
       ),
-      bottomNavigationBar: SafeArea(
+      bottomNavigationBar: _buildBottomBar(competition),
+    );
+  }
+
+  Widget _buildBottomBar(CompetitionModel competition) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.cardDark : AppColors.cardLight,
+        border: Border(
+          top: BorderSide(
+            color: isDark ? AppColors.dividerDark : AppColors.dividerLight,
+          ),
+        ),
+      ),
+      child: SafeArea(
         top: false,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(
             Spacing.lg,
             Spacing.sm,
             Spacing.lg,
-            Spacing.lg,
+            Spacing.sm,
           ),
           child: Row(
             children: [
@@ -460,14 +479,47 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
                   ),
                 ),
               ),
-              const SizedBox(width: Spacing.md),
+              if (competition.isRegistrationOpen)
+                const SizedBox(width: Spacing.md),
               Expanded(
-                child: ElevatedButton(
-                  onPressed: _isCheckingWallet ? null : _handlePrimaryAction,
-                  child: Text(
-                    _isCheckingWallet
-                        ? 'competition_checking'.tr
-                        : _primaryActionLabel(competition),
+                child: Container(
+                  height: 48,
+                  decoration: BoxDecoration(
+                    gradient: _isCheckingWallet
+                        ? null
+                        : AppColors.verticalBrandGradient,
+                    color: _isCheckingWallet
+                        ? (isDark ? AppColors.hoverDark : AppColors.hoverLight)
+                        : null,
+                    borderRadius: BorderRadius.circular(Radii.medium),
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(Radii.medium),
+                      onTap: _isCheckingWallet ? null : _handlePrimaryAction,
+                      child: Center(
+                        child: _isCheckingWallet
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.white,
+                                  ),
+                                ),
+                              )
+                            : Text(
+                                _primaryActionLabel(competition),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -482,13 +534,14 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
 
   Widget _buildSliverAppBar(CompetitionModel competition) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final hasBanner = (competition.bannerUrl ?? '').isNotEmpty;
 
     return SliverAppBar(
       expandedHeight: 300,
       pinned: true,
       stretch: true,
-      backgroundColor: theme.colorScheme.surface,
+      backgroundColor: PanchitAuthColors.background(isDark),
       foregroundColor: Colors.white,
       elevation: 0,
       actions: [
@@ -511,12 +564,12 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
               Image.network(
                 competition.bannerUrl!,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => _buildBannerFallback(theme),
+                errorBuilder: (_, __, ___) => _buildBannerFallback(),
                 loadingBuilder: (_, child, progress) =>
-                    progress == null ? child : _buildBannerFallback(theme),
+                    progress == null ? child : _buildBannerFallback(),
               )
             else
-              _buildBannerFallback(theme),
+              _buildBannerFallback(),
 
             // Top scrim for toolbar icons
             DecoratedBox(
@@ -657,19 +710,10 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
     );
   }
 
-  Widget _buildBannerFallback(ThemeData theme) {
+  Widget _buildBannerFallback() {
     return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            theme.colorScheme.primary,
-            theme.colorScheme.secondary,
-            theme.colorScheme.primary.withValues(alpha: 0.6),
-          ],
-          stops: const [0.0, 0.6, 1.0],
-        ),
+      decoration: const BoxDecoration(
+        gradient: AppColors.verticalBrandGradient,
       ),
       child: Center(
         child: Icon(
@@ -1081,12 +1125,13 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
     Widget? trailing,
   }) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Radii.large),
         side: BorderSide(
-          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+          color: isDark ? AppColors.dividerDark : AppColors.dividerLight,
         ),
       ),
       child: Padding(
@@ -1132,6 +1177,7 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
 
   Widget _detailRow(String label, String value) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     return Padding(
       padding: const EdgeInsets.only(bottom: Spacing.sm),
       child: Row(
@@ -1141,7 +1187,9 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
             child: Text(
               label,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
+                color: isDark
+                    ? AppColors.textPrimaryDark.withValues(alpha: 0.65)
+                    : AppColors.textPrimaryLight.withValues(alpha: 0.65),
               ),
             ),
           ),
@@ -1231,6 +1279,7 @@ class _CompetitionWalletPaymentDialogState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final mq = MediaQuery.of(context);
     final screenWidth = mq.size.width;
     final screenHeight = mq.size.height;
@@ -1260,10 +1309,10 @@ class _CompetitionWalletPaymentDialogState
       return Container(
         padding: EdgeInsets.all(isSmall ? Spacing.sm : Spacing.md),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+          color: isDark ? AppColors.surfaceDark : AppColors.hoverLight,
           borderRadius: BorderRadius.circular(Radii.large),
           border: Border.all(
-            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+            color: isDark ? AppColors.dividerDark : AppColors.dividerLight,
           ),
         ),
         child: Row(
@@ -1411,10 +1460,10 @@ class _CompetitionWalletPaymentDialogState
                       : 'competition_balance_shortfall'.tr,
                   value: formatMoney(remaining.abs(), currencySymbol),
                   iconColor: remaining >= 0
-                      ? Colors.green[700]
+                      ? AppColors.success
                       : theme.colorScheme.error,
                   valueColor: remaining >= 0
-                      ? Colors.green[700]
+                      ? AppColors.success
                       : theme.colorScheme.error,
                 ),
                 if (!hasEnoughBalance) ...[
@@ -1423,13 +1472,15 @@ class _CompetitionWalletPaymentDialogState
                     width: double.infinity,
                     padding: EdgeInsets.all(isSmall ? Spacing.sm : Spacing.md),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.errorContainer.withValues(alpha: 0.45),
+                      color: isDark
+                          ? AppColors.error.withValues(alpha: 0.18)
+                          : AppColors.errorLight,
                       borderRadius: BorderRadius.circular(Radii.large),
                     ),
                     child: Text(
                       'competition_insufficient_balance_msg'.tr,
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onErrorContainer,
+                        color: AppColors.error,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -1441,13 +1492,15 @@ class _CompetitionWalletPaymentDialogState
                     width: double.infinity,
                     padding: EdgeInsets.all(isSmall ? Spacing.sm : Spacing.md),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.errorContainer.withValues(alpha: 0.45),
+                      color: isDark
+                          ? AppColors.error.withValues(alpha: 0.18)
+                          : AppColors.errorLight,
                       borderRadius: BorderRadius.circular(Radii.large),
                     ),
                     child: Text(
                       _errorMessage!,
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onErrorContainer,
+                        color: AppColors.error,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -1733,10 +1786,11 @@ class _CompetitionEntryCard extends StatelessWidget {
     Color? iconColor,
   }) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.45),
+        color: isDark ? AppColors.surfaceDark : AppColors.hoverLight,
         borderRadius: BorderRadius.circular(Radii.pill),
       ),
       child: Row(
@@ -1806,7 +1860,7 @@ class _CompetitionEntryCard extends StatelessWidget {
         _buildCountChip(
           context,
           icon: Icons.favorite_rounded,
-          iconColor: Colors.redAccent,
+          iconColor: AppColors.like,
           text: '${_formatCount(entry.reactionsCount)} ${'likes_label'.tr}',
         ),
       if ((entry.reviewsCount ?? 0) > 0)
@@ -1848,7 +1902,7 @@ class _CompetitionEntryCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Radii.large),
         side: BorderSide(
-          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
+          color: isDark ? AppColors.dividerDark : AppColors.dividerLight,
         ),
       ),
       child: Column(
@@ -1973,20 +2027,18 @@ class _CompetitionEntryCard extends StatelessWidget {
                     fit: BoxFit.cover,
                     placeholder: (_, __) => Container(
                       height: 220,
-                      color: isDark
-                          ? const Color(0xFF2A2A2A)
-                          : Colors.grey[200],
+                      color: isDark ? AppColors.cardDark : AppColors.hoverLight,
                     ),
                     errorWidget: (_, __, ___) => Container(
                       height: 220,
-                      color: isDark
-                          ? const Color(0xFF2A2A2A)
-                          : Colors.grey[200],
+                      color: isDark ? AppColors.cardDark : AppColors.hoverLight,
                       child: Center(
                         child: Icon(
                           Iconsax.gallery,
                           size: 40,
-                          color: isDark ? Colors.grey[600] : Colors.grey[400],
+                          color: isDark
+                              ? AppColors.textSecondaryDark
+                              : AppColors.textSecondaryLight,
                         ),
                       ),
                     ),

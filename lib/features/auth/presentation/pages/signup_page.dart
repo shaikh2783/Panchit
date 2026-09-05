@@ -1,9 +1,8 @@
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 import 'package:snginepro/core/network/api_client.dart';
+import 'package:snginepro/core/theme/panchit_auth_ui.dart';
 import 'package:snginepro/features/auth/application/auth_notifier.dart';
 import 'package:snginepro/features/auth/data/models/auth_response.dart';
 import 'package:snginepro/features/auth/data/models/gender.dart';
@@ -12,9 +11,11 @@ import 'package:snginepro/features/auth/presentation/pages/login_page.dart';
 import 'package:snginepro/features/auth/presentation/pages/getting_started_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-/// 🎨 Modern Sign Up Page with Translation Support
 class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key, this.addAccountMode = false});
+  const SignUpPage({
+    super.key,
+    this.addAccountMode = false,
+  });
 
   final bool addAccountMode;
 
@@ -22,41 +23,42 @@ class SignUpPage extends StatefulWidget {
   State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
+class _SignUpPageState extends State<SignUpPage>
+    with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
+
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  bool _agreeToTerms = false; // Add this near your other controllers
+
+  bool _agreeToTerms = false;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
+
   String? _selectedGender;
   DateTime? _selectedBirthdate;
+
   static const String _deviceType = 'A';
-  
+
   List<Gender> _genders = [];
   bool _loadingGenders = true;
 
-  late AnimationController _backgroundController;
   late AnimationController _formController;
 
   @override
   void initState() {
     super.initState();
-    _backgroundController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 20),
-    )..repeat();
 
     _formController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 450),
     );
 
     _formController.forward();
+
     _fetchGenders();
   }
 
@@ -64,7 +66,9 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
     try {
       final apiClient = context.read<ApiClient>();
       final genderService = GenderApiService(apiClient);
+
       final genders = await genderService.getGenders();
+
       if (mounted) {
         setState(() {
           _genders = genders;
@@ -88,10 +92,15 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
-    _backgroundController.dispose();
+
     _formController.dispose();
+
     super.dispose();
   }
+
+  // ---------------------------------------------------------------------------
+  // Existing functional logic - unchanged
+  // ---------------------------------------------------------------------------
 
   Future<void> _handleSignUp() async {
     if (!_agreeToTerms) {
@@ -103,10 +112,15 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
       );
       return;
     }
+
     final form = _formKey.currentState;
-    if (form == null || !form.validate()) return;
+
+    if (form == null || !form.validate()) {
+      return;
+    }
 
     FocusScope.of(context).unfocus();
+
     final authNotifier = context.read<AuthNotifier>();
 
     final AuthResponse? response = await authNotifier.signUp(
@@ -121,47 +135,34 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
     );
 
     if (!mounted) return;
-    final messenger = ScaffoldMessenger.of(context);
-    messenger.clearSnackBars();
 
     if (response != null) {
-      messenger.showSnackBar(
-        SnackBar(
-          content: Text('account_created_successfully'.tr),
-          backgroundColor: const Color(0xFF10B981),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          margin: const EdgeInsets.all(16),
-          duration: const Duration(seconds: 2),
-        ),
+      PanchitSnackBar.showSuccess(
+        context,
+        'account_created_successfully'.tr,
+        duration: const Duration(seconds: 2),
       );
 
-      // Navigate to Getting Started page
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(
+        const Duration(seconds: 2),
+      );
+
       if (!mounted) return;
 
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) =>
-              GettingStartedPage(addAccountMode: widget.addAccountMode),
+          builder: (context) => GettingStartedPage(
+            addAccountMode: widget.addAccountMode,
+          ),
         ),
       );
     } else {
-      final error = authNotifier.errorMessage ?? 'registration_failed'.tr;
-      messenger.showSnackBar(
-        SnackBar(
-          content: Text(error),
-          backgroundColor: const Color(0xFFEF4444),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          margin: const EdgeInsets.all(16),
-        ),
-      );
+      final error =
+          authNotifier.errorMessage ??
+              'registration_failed'.tr;
+
+      PanchitSnackBar.showError(context, error);
     }
   }
 
@@ -169,6 +170,7 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
     if (value == null || value.trim().isEmpty) {
       return 'first_name_required'.tr;
     }
+
     return null;
   }
 
@@ -176,6 +178,7 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
     if (value == null || value.trim().isEmpty) {
       return 'last_name_required'.tr;
     }
+
     return null;
   }
 
@@ -183,11 +186,15 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
     if (value == null || value.trim().isEmpty) {
       return 'username_required'.tr;
     }
-    // Username should only contain letters, numbers, and underscores
-    final usernameRegex = RegExp(r'^[a-zA-Z0-9_]+$');
+
+    final usernameRegex = RegExp(
+      r'^[a-zA-Z0-9_]+$',
+    );
+
     if (!usernameRegex.hasMatch(value.trim())) {
       return 'username_alphanumeric'.tr;
     }
+
     return null;
   }
 
@@ -195,10 +202,15 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
     if (value == null || value.trim().isEmpty) {
       return 'email_required'.tr;
     }
-    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+
+    final emailRegex = RegExp(
+      r'^[^@]+@[^@]+\.[^@]+',
+    );
+
     if (!emailRegex.hasMatch(value.trim())) {
       return 'invalid_email'.tr;
     }
+
     return null;
   }
 
@@ -206,45 +218,62 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
     if (value == null || value.isEmpty) {
       return 'password_required'.tr;
     }
+
     if (value.length < 6) {
       return 'password_min_length'.tr;
     }
+
     return null;
   }
 
-  String? _validateConfirmPassword(String? value) {
+  String? _validateConfirmPassword(
+      String? value,
+      ) {
     if (value == null || value.isEmpty) {
       return 'password_required'.tr;
     }
+
     if (value != _passwordController.text) {
       return 'passwords_not_match'.tr;
     }
+
     return null;
   }
 
   Future<void> _selectBirthdate() async {
-    final DateTime? picked = await showDatePicker(
+    final isDark =
+        Theme.of(context).brightness ==
+            Brightness.dark;
+
+    final DateTime? picked =
+    await showDatePicker(
       context: context,
       initialDate: DateTime(2000),
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
       builder: (context, child) {
-        final isDark = Theme.of(context).brightness == Brightness.dark;
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: isDark
-                  ? const Color(0xFF5B86E5)
-                  : const Color(0xFF5B86E5),
-              onPrimary: Colors.white,
-              surface: isDark ? const Color(0xFF1A202C) : Colors.white,
-              onSurface: isDark ? Colors.white : const Color(0xFF1A202C),
+            colorScheme:
+            isDark
+                ? const ColorScheme.dark(
+              primary: PanchitAuthColors.purple,
+              surface: PanchitAuthColors.inputDark,
+              onSurface:
+              Colors.white,
+            )
+                : const ColorScheme.light(
+              primary: PanchitAuthColors.purple,
+              surface: Colors.white,
+              onSurface:
+              Color(0xFF15151D),
             ),
           ),
           child: child!,
         );
       },
     );
+
     if (picked != null) {
       setState(() {
         _selectedBirthdate = picked;
@@ -252,132 +281,129 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
     }
   }
 
+  // ---------------------------------------------------------------------------
+  // Screen
+  // ---------------------------------------------------------------------------
+
   @override
   Widget build(BuildContext context) {
-    final authState = context.watch<AuthNotifier>();
+    final authState =
+    context.watch<AuthNotifier>();
+
     final isLoading = authState.isLoading;
-    final errorMessage = authState.errorMessage;
-    final size = MediaQuery.of(context).size;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final errorMessage =
+        authState.errorMessage;
+
+    final isDark =
+        Theme.of(context).brightness ==
+            Brightness.dark;
 
     return Scaffold(
-      body: Stack(
-        children: [
-          // 🌈 Clean Gradient Background
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: isDark
-                    ? [const Color(0xFF1A1A2E), const Color(0xFF16213E)]
-                    : [const Color(0xFF5B86E5), const Color(0xFF36D1DC)],
+      resizeToAvoidBottomInset: true,
+      backgroundColor: PanchitAuthColors.background(isDark),
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (
+              context,
+              constraints,
+              ) {
+            return SingleChildScrollView(
+              keyboardDismissBehavior:
+              ScrollViewKeyboardDismissBehavior
+                  .onDrag,
+              padding:
+              const EdgeInsets.fromLTRB(
+                24,
+                18,
+                24,
+                26,
               ),
-            ),
-          ),
-
-          // ✨ Floating Particles
-          ...List.generate(8, (index) {
-            return AnimatedBuilder(
-              animation: _backgroundController,
-              builder: (context, child) {
-                final offset =
-                    (_backgroundController.value + index * 0.125) % 1;
-                final x = size.width * ((index * 0.125) % 1);
-                final y = size.height * offset;
-                final scale = 0.5 + math.sin(offset * math.pi * 2) * 0.3;
-
-                return Positioned(
-                  left: x,
-                  top: y,
-                  child: Opacity(
-                    opacity: 0.15,
-                    child: Transform.scale(
-                      scale: scale,
-                      child: Container(
-                        width: 3 + (index % 2) * 2,
-                        height: 3 + (index % 2) * 2,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.white.withValues(alpha: 0.2),
-                              blurRadius: 4,
-                              spreadRadius: 1,
-                            ),
-                          ],
+              child: Center(
+                child: ConstrainedBox(
+                  constraints:
+                  const BoxConstraints(
+                    maxWidth: 440,
+                  ),
+                  child: FadeTransition(
+                    opacity: CurvedAnimation(
+                      parent: _formController,
+                      curve: Curves.easeOut,
+                    ),
+                    child: SlideTransition(
+                      position:
+                      Tween<Offset>(
+                        begin:
+                        const Offset(
+                          0,
+                          0.025,
+                        ),
+                        end:
+                        Offset.zero,
+                      ).animate(
+                        CurvedAnimation(
+                          parent:
+                          _formController,
+                          curve: Curves
+                              .easeOutCubic,
                         ),
                       ),
-                    ),
-                  ),
-                );
-              },
-            );
-          }),
-
-          // 📱 Main Content
-          SafeArea(
-            child: Center(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 40,
-                ),
-                child: FadeTransition(
-                  opacity: _formController,
-                  child: SlideTransition(
-                    position:
-                        Tween<Offset>(
-                          begin: const Offset(0, 0.1),
-                          end: Offset.zero,
-                        ).animate(
-                          CurvedAnimation(
-                            parent: _formController,
-                            curve: Curves.easeOutCubic,
-                          ),
-                        ),
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 440),
                       child: Column(
-                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment:
+                        CrossAxisAlignment
+                            .stretch,
                         children: [
-                          // 🎯 Logo & Brand
-                          _buildLogo(),
-                          const SizedBox(height: 40),
+                          _buildTopBrand(),
 
-                          // 💎 Solid Card with Form
-                          _buildSolidCard(
-                            isDark: isDark,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                // Header
-                                _buildHeader(isDark),
-                                const SizedBox(height: 24),
+                          const SizedBox(
+                            height: 24,
+                          ),
 
-                                // Error Banner
-                                if (errorMessage != null) ...[
-                                  _buildErrorBanner(errorMessage),
-                                  const SizedBox(height: 20),
-                                ],
+                          _buildHeader(
+                            isDark,
+                          ),
 
-                                // Form
-                                _buildForm(isDark),
-                                const SizedBox(height: 24),
+                          const SizedBox(
+                            height: 24,
+                          ),
 
-                                // Sign Up Button
-                                _buildSignUpButton(isLoading),
-                                const SizedBox(height: 20),
-
-                                // Divider
-                                _buildDivider(isDark),
-                                const SizedBox(height: 20),
-
-                                // Footer
-                                _buildFooter(isDark),
-                              ],
+                          if (errorMessage !=
+                              null) ...[
+                            PanchitErrorBanner(
+                              message: errorMessage,
+                              isDark: isDark,
                             ),
+                            const SizedBox(
+                              height: 18,
+                            ),
+                          ],
+
+                          _buildForm(
+                            isDark,
+                          ),
+
+                          const SizedBox(
+                            height: 24,
+                          ),
+
+                          _buildSignUpButton(
+                            isLoading,
+                          ),
+
+                          const SizedBox(
+                            height: 24,
+                          ),
+
+                          _buildDivider(
+                            isDark,
+                          ),
+
+                          const SizedBox(
+                            height: 18,
+                          ),
+
+                          _buildFooter(
+                            isDark,
+                            isLoading,
                           ),
                         ],
                       ),
@@ -385,753 +411,753 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
                   ),
                 ),
               ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // 🎯 Logo Section
-  Widget _buildLogo() {
-    return TweenAnimationBuilder<double>(
-      duration: const Duration(milliseconds: 1200),
-      tween: Tween(begin: 0.0, end: 1.0),
-      curve: Curves.elasticOut,
-      builder: (context, value, child) {
-        return Transform.scale(
-          scale: value,
-          child: Column(
-            children: [
-              Image.asset('assets/app_icon.png', height: 100, width: 100),
-              const SizedBox(height: 20),
-              const Text(
-                'Panchit',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  letterSpacing: 1.2,
-                  shadows: [
-                    Shadow(
-                      color: Colors.black26,
-                      offset: Offset(0, 3),
-                      blurRadius: 8,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  // 💎 Solid Card
-  Widget _buildSolidCard({required bool isDark, required Widget child}) {
-    return Container(
-      decoration: BoxDecoration(
-        color: isDark
-            ? const Color(0xFF0F1419).withValues(alpha: 0.95)
-            : Colors.white,
-        borderRadius: BorderRadius.circular(32),
-        border: Border.all(
-          color: isDark
-              ? const Color(0xFF2D3748).withValues(alpha:0.5)
-              : Colors.white.withValues(alpha:0.3),
-          width: 1.5,
+            );
+          },
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha:isDark ? 0.3 : 0.15),
-            blurRadius: 30,
-            spreadRadius: 5,
-            offset: const Offset(0, 10),
-          ),
-        ],
       ),
-      padding: const EdgeInsets.all(32),
-      child: child,
     );
   }
 
-  // 📝 Header
+  // ---------------------------------------------------------------------------
+  // Header
+  // ---------------------------------------------------------------------------
+
+  Widget _buildTopBrand() {
+    return Align(
+      alignment: Alignment.center,
+      child: TweenAnimationBuilder<double>(
+        duration:
+        const Duration(
+          milliseconds: 500,
+        ),
+        tween: Tween(
+          begin: 0.85,
+          end: 1,
+        ),
+        curve: Curves.easeOutBack,
+        builder: (
+            context,
+            value,
+            child,
+            ) {
+          return Transform.scale(
+            scale: value,
+            child: child,
+          );
+        },
+        child: Image.asset(
+          'assets/app_icon.png',
+          width: 52,
+          height: 52,
+          fit: BoxFit.contain,
+        ),
+      ),
+    );
+  }
+
   Widget _buildHeader(bool isDark) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment:
+      CrossAxisAlignment.start,
       children: [
         Text(
-          'join_community'.tr,
+          widget.addAccountMode
+              ? 'Create another account'
+              : 'Create Your\nAccount',
           style: TextStyle(
+            color: PanchitAuthColors.textPrimary(isDark),
             fontSize: 28,
-            fontWeight: FontWeight.bold,
-            color: isDark ? Colors.white : const Color(0xFF1A202C),
-            height: 1.2,
+            fontWeight:
+            FontWeight.w700,
+            height: 1.08,
+            letterSpacing: -0.6,
           ),
         ),
-        const SizedBox(height: 6),
+
+        const SizedBox(height: 9),
+
         Text(
-          widget.addAccountMode ? 'Create another account with a new token' : 'start_journey'.tr,
+          widget.addAccountMode
+              ? 'Create another account with a new token'
+              : 'start_journey'.tr,
           style: TextStyle(
-            fontSize: 14,
-            color: isDark
-                ? Colors.white.withValues(alpha:0.7)
-                : const Color(0xFF4A5568),
-            fontWeight: FontWeight.w400,
+            color: PanchitAuthColors.textSecondary(isDark),
+            fontSize: 13.5,
+            fontWeight:
+            FontWeight.w400,
+            height: 1.45,
           ),
         ),
       ],
     );
   }
 
-  // ⚠️ Error Banner
-  Widget _buildErrorBanner(String message) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: const Color(0xFFEF4444).withValues(alpha:0.2),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: const Color(0xFFEF4444).withValues(alpha:0.4),
-          width: 1,
-        ),
-      ),
-      child: Row(
-        children: [
-          const Icon(
-            Icons.error_outline_rounded,
-            color: Colors.white,
-            size: 22,
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              message,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // ---------------------------------------------------------------------------
+  // Form
+  // ---------------------------------------------------------------------------
 
-  // 📋 Form
   Widget _buildForm(bool isDark) {
     return Form(
       key: _formKey,
       child: Column(
         children: [
-          // First Name & Last Name Row
-          Row(
-            children: [
-              Expanded(
-                child: _buildTextField(
-                  isDark: isDark,
-                  controller: _firstNameController,
-                  label: 'first_name'.tr,
-                  hint: 'enter_first_name'.tr,
-                  icon: Icons.person_outline_rounded,
-                  validator: _validateFirstName,
-                  onChanged: (_) => context.read<AuthNotifier>().clearError(),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildTextField(
-                  isDark: isDark,
-                  controller: _lastNameController,
-                  label: 'last_name'.tr,
-                  hint: 'enter_last_name'.tr,
-                  icon: Icons.person_outline_rounded,
-                  validator: _validateLastName,
-                  onChanged: (_) => context.read<AuthNotifier>().clearError(),
-                ),
-              ),
-            ],
+          _buildResponsiveRow(
+            first: PanchitTextField(
+              isDark: isDark,
+              controller:
+              _firstNameController,
+              label: 'first_name'.tr,
+              hint:
+              'enter_first_name'.tr,
+              validator:
+              _validateFirstName,
+              onChanged: (_) =>
+                  context
+                      .read<
+                      AuthNotifier
+                  >()
+                      .clearError(),
+            ),
+            second: PanchitTextField(
+              isDark: isDark,
+              controller:
+              _lastNameController,
+              label: 'last_name'.tr,
+              hint:
+              'enter_last_name'.tr,
+              validator:
+              _validateLastName,
+              onChanged: (_) =>
+                  context
+                      .read<
+                      AuthNotifier
+                  >()
+                      .clearError(),
+            ),
           ),
-          const SizedBox(height: 14),
 
-          // Username
-          _buildTextField(
+          const SizedBox(height: 15),
+
+          PanchitTextField(
             isDark: isDark,
-            controller: _usernameController,
+            controller:
+            _usernameController,
             label: 'username'.tr,
             hint: 'enter_username'.tr,
-            icon: Icons.alternate_email_rounded,
-            validator: _validateUsername,
-            onChanged: (_) => context.read<AuthNotifier>().clearError(),
+            validator:
+            _validateUsername,
+            onChanged: (_) =>
+                context
+                    .read<AuthNotifier>()
+                    .clearError(),
           ),
-          const SizedBox(height: 14),
 
-          // Email
-          _buildTextField(
+          const SizedBox(height: 15),
+
+          PanchitTextField(
             isDark: isDark,
             controller: _emailController,
             label: 'email'.tr,
             hint: 'enter_email'.tr,
-            icon: Icons.email_outlined,
-            keyboardType: TextInputType.emailAddress,
+            keyboardType:
+            TextInputType
+                .emailAddress,
             validator: _validateEmail,
-            onChanged: (_) => context.read<AuthNotifier>().clearError(),
+            onChanged: (_) =>
+                context
+                    .read<AuthNotifier>()
+                    .clearError(),
           ),
-          const SizedBox(height: 14),
 
-          // Password
-          _buildTextField(
+          const SizedBox(height: 15),
+
+          PanchitTextField(
             isDark: isDark,
-            controller: _passwordController,
+            controller:
+            _passwordController,
             label: 'password'.tr,
             hint: 'enter_password'.tr,
-            icon: Icons.lock_outline_rounded,
-            obscureText: _obscurePassword,
-            validator: _validatePassword,
-            onChanged: (_) => context.read<AuthNotifier>().clearError(),
+            obscureText:
+            _obscurePassword,
+            validator:
+            _validatePassword,
+            onChanged: (_) =>
+                context
+                    .read<AuthNotifier>()
+                    .clearError(),
             suffixIcon: IconButton(
+              onPressed: () {
+                setState(() {
+                  _obscurePassword =
+                  !_obscurePassword;
+                });
+              },
+              splashRadius: 20,
               icon: Icon(
                 _obscurePassword
-                    ? Icons.visibility_off_outlined
-                    : Icons.visibility_outlined,
-                color: isDark
-                    ? Colors.white.withValues(alpha:0.7)
-                    : const Color(0xFF5B86E5).withValues(alpha:0.8),
+                    ? Icons
+                    .visibility_off_outlined
+                    : Icons
+                    .visibility_outlined,
+                color:
+                isDark
+                    ? const Color(
+                  0xFF858796,
+                )
+                    : const Color(
+                  0xFF777984,
+                ),
+                size: 20,
               ),
-              onPressed: () =>
-                  setState(() => _obscurePassword = !_obscurePassword),
             ),
           ),
-          const SizedBox(height: 14),
 
-          // Confirm Password
-          _buildTextField(
+          const SizedBox(height: 15),
+
+          PanchitTextField(
             isDark: isDark,
-            controller: _confirmPasswordController,
-            label: 'confirm_password'.tr,
-            hint: 'confirm_your_password'.tr,
-            icon: Icons.lock_outline_rounded,
-            obscureText: _obscureConfirmPassword,
-            validator: _validateConfirmPassword,
-            onChanged: (_) => context.read<AuthNotifier>().clearError(),
+            controller:
+            _confirmPasswordController,
+            label:
+            'confirm_password'.tr,
+            hint:
+            'confirm_your_password'
+                .tr,
+            obscureText:
+            _obscureConfirmPassword,
+            validator:
+            _validateConfirmPassword,
+            onChanged: (_) =>
+                context
+                    .read<AuthNotifier>()
+                    .clearError(),
             suffixIcon: IconButton(
+              onPressed: () {
+                setState(() {
+                  _obscureConfirmPassword =
+                  !_obscureConfirmPassword;
+                });
+              },
+              splashRadius: 20,
               icon: Icon(
                 _obscureConfirmPassword
-                    ? Icons.visibility_off_outlined
-                    : Icons.visibility_outlined,
-                color: isDark
-                    ? Colors.white.withValues(alpha:0.7)
-                    : const Color(0xFF5B86E5).withValues(alpha:0.8),
-              ),
-              onPressed: () => setState(
-                () => _obscureConfirmPassword = !_obscureConfirmPassword,
+                    ? Icons
+                    .visibility_off_outlined
+                    : Icons
+                    .visibility_outlined,
+                color:
+                isDark
+                    ? const Color(
+                  0xFF858796,
+                )
+                    : const Color(
+                  0xFF777984,
+                ),
+                size: 20,
               ),
             ),
           ),
-          const SizedBox(height: 14),
 
-          // Gender & Birthdate Row (Optional)
-          Row(
-            children: [
-              Expanded(child: _buildGenderDropdown(isDark)),
-              const SizedBox(width: 12),
-              Expanded(child: _buildBirthdateField(isDark)),
-            ],
+          const SizedBox(height: 15),
+
+          _buildResponsiveRow(
+            first:
+            _buildGenderDropdown(
+              isDark,
+            ),
+            second:
+            _buildBirthdateField(
+              isDark,
+            ),
           ),
+
           const SizedBox(height: 20),
-          _buildTermsCheckbox(isDark),
+
+          _buildTermsCheckbox(
+            isDark,
+          ),
         ],
       ),
     );
   }
 
-  // 🎨 Custom TextField
-  Widget _buildTextField({
-    required bool isDark,
-    required TextEditingController controller,
-    required String label,
-    required String hint,
-    required IconData icon,
-    bool obscureText = false,
-    TextInputType? keyboardType,
-    String? Function(String?)? validator,
-    void Function(String)? onChanged,
-    Widget? suffixIcon,
+  Widget _buildResponsiveRow({
+    required Widget first,
+    required Widget second,
   }) {
-    return TextFormField(
-      controller: controller,
-      obscureText: obscureText,
-      keyboardType: keyboardType,
-      validator: validator,
-      onChanged: onChanged,
-      style: TextStyle(
-        color: isDark ? Colors.white : const Color(0xFF1A202C),
-        fontSize: 15,
-        fontWeight: FontWeight.w500,
-      ),
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: hint,
-        prefixIcon: Icon(
-          icon,
-          size: 20,
-          color: isDark
-              ? Colors.white.withValues(alpha:0.7)
-              : const Color(0xFF5B86E5).withValues(alpha:0.8),
-        ),
-        suffixIcon: suffixIcon,
-        labelStyle: TextStyle(
-          color: isDark
-              ? Colors.white.withValues(alpha:0.7)
-              : const Color(0xFF4A5568),
-          fontSize: 13,
-          fontWeight: FontWeight.w500,
-        ),
-        hintStyle: TextStyle(
-          color: isDark
-              ? Colors.white.withValues(alpha: 0.3)
-              : const Color(0xFF718096),
-          fontSize: 13,
-        ),
-        filled: true,
-        fillColor: isDark ? const Color(0xFF1A202C) : const Color(0xFFF7FAFC),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide(
-            color: isDark ? const Color(0xFF2D3748) : const Color(0xFFE2E8F0),
-            width: 1.5,
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide(
-            color: isDark ? const Color(0xFF2D3748) : const Color(0xFFE2E8F0),
-            width: 1.5,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide(
-            color: isDark ? const Color(0xFF5B86E5) : const Color(0xFF5B86E5),
-            width: 2,
-          ),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: Color(0xFFEF4444), width: 1.5),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: Color(0xFFEF4444), width: 2),
-        ),
-        errorStyle: TextStyle(
-          color: isDark ? const Color(0xFFFFCDD2) : const Color(0xFFEF4444),
-          fontSize: 11,
-          fontWeight: FontWeight.w500,
-        ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 16,
-        ),
-      ),
+    return LayoutBuilder(
+      builder: (
+          context,
+          constraints,
+          ) {
+        if (constraints.maxWidth <
+            350) {
+          return Column(
+            children: [
+              first,
+
+              const SizedBox(
+                height: 15,
+              ),
+
+              second,
+            ],
+          );
+        }
+
+        return Row(
+          crossAxisAlignment:
+          CrossAxisAlignment.start,
+          children: [
+            Expanded(child: first),
+
+            const SizedBox(width: 12),
+
+            Expanded(child: second),
+          ],
+        );
+      },
     );
   }
 
-  // 🚻 Gender Dropdown
-  Widget _buildGenderDropdown(bool isDark) {
-    if (_loadingGenders) {
-      return Container(
-        decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF1A202C) : const Color(0xFFF7FAFC),
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: isDark ? const Color(0xFF2D3748) : const Color(0xFFE2E8F0),
-            width: 1.5,
-          ),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        child: Row(
-          children: [
-            Icon(
-              Icons.wc_rounded,
-              size: 20,
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.7)
-                  : const Color(0xFF5B86E5).withValues(alpha:0.8),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                '${'gender'.tr} (${'optional'.tr})',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: isDark
-                      ? Colors.white.withValues(alpha:0.7)
-                      : const Color(0xFF4A5568),
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
+  // ---------------------------------------------------------------------------
+  // Gender
+  // ---------------------------------------------------------------------------
 
-            const SizedBox(width: 12),
-            SizedBox(
-              width: 16,
-              height: 16,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation(
-                  isDark
-                      ? Colors.white.withValues(alpha:0.7)
-                      : const Color(0xFF5B86E5),
-                ),
-              ),
-            ),
-          ],
-        ),
+  Widget _buildGenderDropdown(
+      bool isDark,
+      ) {
+    if (_loadingGenders) {
+      return _buildLoadingDropdown(
+        isDark,
       );
     }
 
-    return DropdownButtonFormField<String>(
-      value: _selectedGender,
-      decoration: InputDecoration(
-        labelText: '${'gender'.tr} (${'optional'.tr})',
-        prefixIcon: Icon(
-          Icons.wc_rounded,
-          size: 20,
-          color: isDark
-              ? Colors.white.withValues(alpha:0.7)
-              : const Color(0xFF5B86E5).withValues(alpha:0.8),
-        ),
-        labelStyle: TextStyle(
-          color: isDark
-              ? Colors.white.withValues(alpha:0.7)
-              : const Color(0xFF4A5568),
-          fontSize: 13,
-          fontWeight: FontWeight.w500,
-        ),
-        filled: true,
-        fillColor: isDark ? const Color(0xFF1A202C) : const Color(0xFFF7FAFC),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide(
-            color: isDark ? const Color(0xFF2D3748) : const Color(0xFFE2E8F0),
-            width: 1.5,
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide(
-            color: isDark ? const Color(0xFF2D3748) : const Color(0xFFE2E8F0),
-            width: 1.5,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: Color(0xFF5B86E5), width: 2),
-        ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 16,
-        ),
-      ),
-      dropdownColor: isDark ? const Color(0xFF1A202C) : Colors.white,
-      style: TextStyle(
-        color: isDark ? Colors.white : const Color(0xFF1A202C),
-        fontSize: 15,
-        fontWeight: FontWeight.w500,
-      ),
-      items: _genders.isEmpty
-          ? null
-          : _genders.map((gender) {
-              return DropdownMenuItem<String>(
-                value: gender.id, // Store gender_id
-                child: Text(gender.name), // Display gender_name
-              );
-            }).toList(),
-      onChanged: _genders.isEmpty
-          ? null
-          : (value) {
-              setState(() {
-                _selectedGender = value; // Stores gender_id
-              });
-            },
-    );
-  }
-
-  // 📅 Birthdate Field
-  Widget _buildBirthdateField(bool isDark) {
-    return InkWell(
-      onTap: _selectBirthdate,
-      child: InputDecorator(
-        decoration: InputDecoration(
-          labelText: '${'birthdate'.tr} (${'optional'.tr})',
-          prefixIcon: Icon(
-            Icons.cake_outlined,
-            size: 20,
-            color: isDark
-                ? Colors.white.withValues(alpha:0.7)
-                : const Color(0xFF5B86E5).withValues(alpha:0.8),
-          ),
-          labelStyle: TextStyle(
-            color: isDark
-                ? Colors.white.withValues(alpha:0.7)
-                : const Color(0xFF4A5568),
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-          ),
-          filled: true,
-          fillColor: isDark ? const Color(0xFF1A202C) : const Color(0xFFF7FAFC),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: BorderSide(
-              color: isDark ? const Color(0xFF2D3748) : const Color(0xFFE2E8F0),
-              width: 1.5,
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: BorderSide(
-              color: isDark ? const Color(0xFF2D3748) : const Color(0xFFE2E8F0),
-              width: 1.5,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: const BorderSide(color: Color(0xFF5B86E5), width: 2),
-          ),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 16,
-          ),
-        ),
-        child: Text(
-          _selectedBirthdate == null
-              ? 'select_birthdate'.tr
-              : '${_selectedBirthdate!.year}-${_selectedBirthdate!.month.toString().padLeft(2, '0')}-${_selectedBirthdate!.day.toString().padLeft(2, '0')}',
-          style: TextStyle(
-            color: _selectedBirthdate == null
-                ? (isDark
-                      ? Colors.white.withValues(alpha:0.3)
-                      : const Color(0xFF718096))
-                : (isDark ? Colors.white : const Color(0xFF1A202C)),
-            fontSize: 15,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
-    );
-  }
-
-  // 🚀 Sign Up Button
-  Widget _buildSignUpButton(bool isLoading) {
-    return Container(
-      height: 52,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF5B86E5), Color(0xFF36D1DC)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF5B86E5).withValues(alpha:0.4),
-            blurRadius: 18,
-            spreadRadius: 0,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: isLoading ? null : _handleSignUp,
-          borderRadius: BorderRadius.circular(14),
-          child: Center(
-            child: isLoading
-                ? const SizedBox(
-                    width: 22,
-                    height: 22,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2.5,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                  )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'create_account'.tr,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 0.3,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      const Icon(
-                        Icons.arrow_forward_rounded,
-                        color: Colors.white,
-                        size: 18,
-                      ),
-                    ],
-                  ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  // ➖ Divider
-  Widget _buildDivider(bool isDark) {
-    return Row(
-      children: [
-        Expanded(
-          child: Divider(
-            color: isDark
-                ? Colors.white.withValues(alpha:0.1)
-                : const Color(0xFFE2E8F0),
-            thickness: 1,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14),
-          child: Text(
-            'or'.tr,
-            style: TextStyle(
-              color: isDark
-                  ? Colors.white.withValues(alpha:0.5)
-                  : const Color(0xFF718096),
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 0.8,
-            ),
-          ),
-        ),
-        Expanded(
-          child: Divider(
-            color: isDark
-                ? Colors.white.withValues(alpha:0.1)
-                : const Color(0xFFE2E8F0),
-            thickness: 1,
-          ),
-        ),
-      ],
-    );
-  }
-
-  // 📄 Footer
-  Widget _buildFooter(bool isDark) {
     return Column(
+      crossAxisAlignment:
+      CrossAxisAlignment.start,
       children: [
         Text(
-          'already_have_account'.tr,
+          '${'gender'.tr} (${'optional'.tr})',
           style: TextStyle(
-            color: isDark
-                ? Colors.white.withValues(alpha:0.7)
-                : const Color(0xFF4A5568),
-            fontSize: 13,
+            color:
+            isDark
+                ? const Color(
+              0xFFE5E5EC,
+            )
+                : const Color(
+              0xFF282832,
+            ),
+            fontSize: 11.5,
+            fontWeight:
+            FontWeight.w500,
           ),
         ),
-        const SizedBox(height: 8),
-        TextButton(
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    LoginPage(addAccountMode: widget.addAccountMode),
+
+        const SizedBox(height: 7),
+
+        DropdownButtonFormField<String>(
+          value: _selectedGender,
+          isExpanded: true,
+          icon: Icon(
+            Icons
+                .keyboard_arrow_down_rounded,
+            size: 20,
+            color:
+            isDark
+                ? const Color(
+              0xFF858796,
+            )
+                : const Color(
+              0xFF777984,
+            ),
+          ),
+          decoration: panchitFieldDecoration(
+            isDark: isDark,
+            hint: '',
+          ),
+          dropdownColor:
+          isDark
+              ? PanchitAuthColors.inputDark
+              : Colors.white,
+          style: TextStyle(
+            color:
+            isDark
+                ? Colors.white
+                : const Color(
+              0xFF17171E,
+            ),
+            fontSize: 13,
+            fontWeight:
+            FontWeight.w400,
+          ),
+          items:
+          _genders.isEmpty
+              ? null
+              : _genders.map((
+              gender,
+              ) {
+            return DropdownMenuItem<
+                String
+            >(
+              value: gender.id,
+              child: Text(
+                gender.name,
+                overflow:
+                TextOverflow
+                    .ellipsis,
               ),
             );
+          }).toList(),
+          onChanged:
+          _genders.isEmpty
+              ? null
+              : (value) {
+            setState(() {
+              _selectedGender =
+                  value;
+            });
           },
-          style: TextButton.styleFrom(
-            foregroundColor: isDark ? Colors.white : const Color(0xFF5B86E5),
-            backgroundColor: isDark
-                ? const Color(0xFF1A202C)
-                : const Color(0xFFF7FAFC),
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-              side: BorderSide(
-                color: isDark
-                    ? const Color(0xFF2D3748)
-                    : const Color(0xFFE2E8F0),
-                width: 1,
-              ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLoadingDropdown(
+      bool isDark,
+      ) {
+    return Column(
+      crossAxisAlignment:
+      CrossAxisAlignment.start,
+      children: [
+        Text(
+          '${'gender'.tr} (${'optional'.tr})',
+          style: TextStyle(
+            color:
+            isDark
+                ? const Color(
+              0xFFE5E5EC,
+            )
+                : const Color(
+              0xFF282832,
             ),
-          ),
-          child: Text(
-            'sign_in'.tr,
-            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+            fontSize: 11.5,
+            fontWeight:
+            FontWeight.w500,
           ),
         ),
-        const SizedBox(height: 14),
-        Text(
-          '© 2026 Panchit. All rights reserved.',
-          style: TextStyle(
-            color: isDark
-                ? Colors.white.withValues(alpha:0.4)
-                : const Color(0xFF718096),
-            fontSize: 11,
+
+        const SizedBox(height: 7),
+
+        Container(
+          height: 46,
+          padding:
+          const EdgeInsets.symmetric(
+            horizontal: 13,
+          ),
+          decoration: BoxDecoration(
+            color:
+            isDark
+                ? PanchitAuthColors.inputDark
+                : Colors.white,
+            borderRadius:
+            BorderRadius.circular(8),
+            border: Border.all(
+              color:
+              isDark
+                  ? PanchitAuthColors.borderDark
+                  : PanchitAuthColors.borderLight,
+            ),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'gender'.tr,
+                  maxLines: 1,
+                  overflow:
+                  TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color:
+                    isDark
+                        ? const Color(
+                      0xFF606271,
+                    )
+                        : const Color(
+                      0xFFA0A1AA,
+                    ),
+                    fontSize: 12.5,
+                  ),
+                ),
+              ),
+
+              const SizedBox(width: 8),
+
+              const SizedBox(
+                width: 15,
+                height: 15,
+                child:
+                CircularProgressIndicator(
+                  strokeWidth: 1.8,
+                  valueColor:
+                  AlwaysStoppedAnimation<
+                      Color
+                  >(
+                    PanchitAuthColors.purple,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ],
     );
   }
-  Widget _buildTermsCheckbox(bool isDark) {
+
+  // ---------------------------------------------------------------------------
+  // Birth date
+  // ---------------------------------------------------------------------------
+
+  Widget _buildBirthdateField(
+      bool isDark,
+      ) {
+    return Column(
+      crossAxisAlignment:
+      CrossAxisAlignment.start,
+      children: [
+        Text(
+          '${'birthdate'.tr} (${'optional'.tr})',
+          style: TextStyle(
+            color:
+            isDark
+                ? const Color(
+              0xFFE5E5EC,
+            )
+                : const Color(
+              0xFF282832,
+            ),
+            fontSize: 11.5,
+            fontWeight:
+            FontWeight.w500,
+          ),
+        ),
+
+        const SizedBox(height: 7),
+
+        InkWell(
+          onTap: _selectBirthdate,
+          borderRadius:
+          BorderRadius.circular(8),
+          child: Container(
+            height: 46,
+            padding:
+            const EdgeInsets
+                .symmetric(
+              horizontal: 13,
+            ),
+            decoration: BoxDecoration(
+              color:
+              isDark
+                  ? PanchitAuthColors.inputDark
+                  : Colors.white,
+              borderRadius:
+              BorderRadius.circular(8),
+              border: Border.all(
+                color:
+                isDark
+                    ? PanchitAuthColors.borderDark
+                    : PanchitAuthColors.borderLight,
+              ),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    _selectedBirthdate ==
+                        null
+                        ? 'select_birthdate'
+                        .tr
+                        : '${_selectedBirthdate!.year}-'
+                        '${_selectedBirthdate!.month.toString().padLeft(2, '0')}-'
+                        '${_selectedBirthdate!.day.toString().padLeft(2, '0')}',
+                    maxLines: 1,
+                    overflow:
+                    TextOverflow
+                        .ellipsis,
+                    style: TextStyle(
+                      color:
+                      _selectedBirthdate ==
+                          null
+                          ? isDark
+                          ? const Color(
+                        0xFF606271,
+                      )
+                          : const Color(
+                        0xFFA0A1AA,
+                      )
+                          : isDark
+                          ? Colors.white
+                          : const Color(
+                        0xFF17171E,
+                      ),
+                      fontSize: 12.5,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(width: 8),
+
+                Icon(
+                  Icons
+                      .calendar_today_outlined,
+                  size: 17,
+                  color:
+                  isDark
+                      ? const Color(
+                    0xFF858796,
+                  )
+                      : const Color(
+                    0xFF777984,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Terms
+  // ---------------------------------------------------------------------------
+
+  Widget _buildTermsCheckbox(
+      bool isDark,
+      ) {
     return Row(
+      crossAxisAlignment:
+      CrossAxisAlignment.start,
       children: [
         SizedBox(
-          height: 24,
-          width: 24,
+          width: 22,
+          height: 22,
           child: Checkbox(
             value: _agreeToTerms,
-            activeColor: const Color(0xFF5B86E5),
+            activeColor: PanchitAuthColors.purple,
+            side: BorderSide(
+              color:
+              isDark
+                  ? const Color(
+                0xFF555767,
+              )
+                  : const Color(
+                0xFFB8B9C1,
+              ),
+            ),
+            shape:
+            RoundedRectangleBorder(
+              borderRadius:
+              BorderRadius.circular(
+                4,
+              ),
+            ),
             onChanged: (value) {
               setState(() {
-                _agreeToTerms = value ?? false;
+                _agreeToTerms =
+                    value ?? false;
               });
             },
           ),
         ),
-        const SizedBox(width: 12),
+
+        const SizedBox(width: 10),
+
         Expanded(
           child: RichText(
             text: TextSpan(
               style: TextStyle(
-                fontSize: 12,
-                color: isDark ? Colors.white70 : Colors.black87,
+                color: PanchitAuthColors.textSecondary(isDark),
+                fontSize: 11.5,
+                height: 1.45,
               ),
               children: [
-                TextSpan(text: 'i_agree_to'.tr),
+                TextSpan(
+                  text: 'i_agree_to'.tr,
+                ),
+
                 WidgetSpan(
-                  alignment: PlaceholderAlignment.middle,
-                  child: GestureDetector(
-                    onTap: () => _launchURL('https://www.panchit.com/static/terms'), // Update with your terms link
+                  alignment:
+                  PlaceholderAlignment
+                      .middle,
+                  child:
+                  GestureDetector(
+                    onTap:
+                        () =>
+                        _launchURL(
+                          'https://www.panchit.com/static/terms',
+                        ),
+                    child: const Text(
+                      ' ',
+                    ),
+                  ),
+                ),
+
+                WidgetSpan(
+                  alignment:
+                  PlaceholderAlignment
+                      .middle,
+                  child:
+                  GestureDetector(
+                    onTap:
+                        () =>
+                        _launchURL(
+                          'https://www.panchit.com/static/terms',
+                        ),
                     child: Text(
-                      ' ${'terms_and_conditions'.tr}',
-                      style: const TextStyle(
-                        color: Color(0xFF5B86E5),
-                        fontWeight: FontWeight.bold,
+                      'terms_and_conditions'
+                          .tr,
+                      style:
+                      const TextStyle(
+                        color:
+                        PanchitAuthColors.purple,
+                        fontSize:
+                        11.5,
+                        fontWeight:
+                        FontWeight
+                            .w600,
                       ),
                     ),
                   ),
                 ),
-                TextSpan(text: ' ${'and'.tr} '),
+
+                TextSpan(
+                  text:
+                  ' ${'and'.tr} ',
+                ),
+
                 WidgetSpan(
-                  alignment: PlaceholderAlignment.middle,
-                  child: GestureDetector(
-                    onTap: () => _launchURL('https://www.panchit.com/static/privacy'),
+                  alignment:
+                  PlaceholderAlignment
+                      .middle,
+                  child:
+                  GestureDetector(
+                    onTap:
+                        () =>
+                        _launchURL(
+                          'https://www.panchit.com/static/privacy',
+                        ),
                     child: Text(
                       'privacy_policy'.tr,
-                      style: const TextStyle(
-                        color: Color(0xFF5B86E5),
-                        fontWeight: FontWeight.bold,
+                      style:
+                      const TextStyle(
+                        color:
+                        PanchitAuthColors.purple,
+                        fontSize:
+                        11.5,
+                        fontWeight:
+                        FontWeight
+                            .w600,
                       ),
                     ),
                   ),
@@ -1143,13 +1169,131 @@ class _SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
       ],
     );
   }
-  Future<void> _launchURL(String urlString) async {
-    final Uri url = Uri.parse(urlString);
-    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not launch the link')),
+
+  // ---------------------------------------------------------------------------
+  // CTA
+  // ---------------------------------------------------------------------------
+
+  Widget _buildSignUpButton(
+      bool isLoading,
+      ) {
+    return PanchitPrimaryButton(
+      label: 'create_account'.tr,
+      onPressed: _handleSignUp,
+      isLoading: isLoading,
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Footer
+  // ---------------------------------------------------------------------------
+
+  Widget _buildDivider(bool isDark) {
+    return PanchitDivider(
+      text: 'or'.tr,
+      isDark: isDark,
+    );
+  }
+
+  Widget _buildFooter(
+      bool isDark,
+      bool isLoading,
+      ) {
+    return Row(
+      mainAxisAlignment:
+      MainAxisAlignment.center,
+      children: [
+        Flexible(
+          child: Text(
+            'already_have_account'.tr,
+            style: TextStyle(
+              color: PanchitAuthColors.textSecondary(isDark),
+              fontSize: 12,
+            ),
+          ),
+        ),
+
+        const SizedBox(width: 4),
+
+        TextButton(
+          onPressed:
+          isLoading
+              ? null
+              : () {
+            Navigator
+                .pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder:
+                    (
+                    context,
+                    ) =>
+                    LoginPage(
+                      addAccountMode:
+                      widget
+                          .addAccountMode,
+                    ),
+              ),
+            );
+          },
+          style:
+          TextButton.styleFrom(
+            foregroundColor:
+            PanchitAuthColors.purple,
+            padding:
+            const EdgeInsets
+                .symmetric(
+              horizontal: 2,
+              vertical: 2,
+            ),
+            minimumSize:
+            Size.zero,
+            tapTargetSize:
+            MaterialTapTargetSize
+                .shrinkWrap,
+          ),
+          child: Text(
+            'sign_in'.tr,
+            style:
+            const TextStyle(
+              color: PanchitAuthColors.purple,
+              fontSize: 12,
+              fontWeight:
+              FontWeight.w600,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Existing URL logic - unchanged
+  // ---------------------------------------------------------------------------
+
+  Future<void> _launchURL(
+      String urlString,
+      ) async {
+    final Uri url =
+    Uri.parse(urlString);
+
+    if (!await launchUrl(
+      url,
+      mode:
+      LaunchMode
+          .externalApplication,
+    )) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Could not launch the link',
+          ),
+        ),
       );
     }
   }
-
 }

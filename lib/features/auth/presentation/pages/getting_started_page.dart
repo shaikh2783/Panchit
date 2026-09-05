@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/core/services/general_data_service.dart';
 import 'package:snginepro/core/models/country.dart';
+import 'package:snginepro/core/theme/panchit_auth_ui.dart';
 import 'package:snginepro/features/auth/application/auth_notifier.dart';
 import 'package:snginepro/features/profile/data/services/profile_update_service.dart';
 
@@ -103,12 +104,7 @@ class _GettingStartedPageState extends State<GettingStartedPage> with TickerProv
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('error_picking_image'.tr),
-            backgroundColor: const Color(0xFFEF4444),
-          ),
-        );
+        PanchitSnackBar.showError(context, 'error_picking_image'.tr);
       }
     }
   }
@@ -122,7 +118,7 @@ class _GettingStartedPageState extends State<GettingStartedPage> with TickerProv
         return Container(
           margin: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF2D3748) : Colors.white,
+            color: isDark ? PanchitAuthColors.surfaceDark : Colors.white,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
@@ -196,21 +192,14 @@ class _GettingStartedPageState extends State<GettingStartedPage> with TickerProv
     try {
       await _profileService.uploadProfilePicture(_selectedImage!);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('photo_uploaded_successfully'.tr),
-            backgroundColor: const Color(0xFF10B981),
-          ),
+        PanchitSnackBar.showSuccess(
+          context,
+          'photo_uploaded_successfully'.tr,
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('error_uploading_photo'.tr),
-            backgroundColor: const Color(0xFFEF4444),
-          ),
-        );
+        PanchitSnackBar.showError(context, 'error_uploading_photo'.tr);
       }
     } finally {
       if (mounted) setState(() => _uploadingPhoto = false);
@@ -234,12 +223,7 @@ class _GettingStartedPageState extends State<GettingStartedPage> with TickerProv
     // Validate current step
     if (_currentStep == 2) {
       if (_selectedCountryId == null || _selectedCountryId!.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('please_select_country'.tr),
-            backgroundColor: const Color(0xFFEF4444),
-          ),
-        );
+        PanchitSnackBar.showError(context, 'please_select_country'.tr);
         return;
       }
     }
@@ -284,15 +268,10 @@ class _GettingStartedPageState extends State<GettingStartedPage> with TickerProv
       await authNotifier.finishGettingStarted();
 
       if (!mounted) return;
-      
+
       // Show success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('profile_setup_complete'.tr),
-          backgroundColor: const Color(0xFF10B981),
-        ),
-      );
-      
+      PanchitSnackBar.showSuccess(context, 'profile_setup_complete'.tr);
+
       // Navigate to main app
       if (widget.addAccountMode) {
         Navigator.of(context).pop(true);
@@ -301,12 +280,7 @@ class _GettingStartedPageState extends State<GettingStartedPage> with TickerProv
       }
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error: ${e.toString()}'),
-          backgroundColor: const Color(0xFFEF4444),
-        ),
-      );
+      PanchitSnackBar.showError(context, 'Error: ${e.toString()}');
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
     }
@@ -369,13 +343,16 @@ class _GettingStartedPageState extends State<GettingStartedPage> with TickerProv
   Widget _buildBackground(bool isDark) {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: isDark
-              ? [const Color(0xFF1A202C), const Color(0xFF2D3748)]
-              : [const Color(0xFF5B86E5), const Color(0xFF36D1DC)],
-        ),
+        gradient: isDark
+            ? const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  PanchitAuthColors.backgroundDark,
+                  PanchitAuthColors.surfaceDark,
+                ],
+              )
+            : PanchitAuthColors.primaryGradient,
       ),
       child: Stack(
         children: List.generate(8, (index) {
@@ -443,7 +420,7 @@ class _GettingStartedPageState extends State<GettingStartedPage> with TickerProv
         margin: const EdgeInsets.all(16),
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF2D3748) : Colors.white,
+          color: isDark ? PanchitAuthColors.surfaceDark : Colors.white,
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
@@ -500,7 +477,7 @@ class _GettingStartedPageState extends State<GettingStartedPage> with TickerProv
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: isDark ? Colors.white : const Color(0xFF1A202C),
+            color: PanchitAuthColors.textPrimary(isDark),
           ),
           textAlign: TextAlign.center,
         ),
@@ -588,7 +565,7 @@ class _GettingStartedPageState extends State<GettingStartedPage> with TickerProv
                       ),
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: isDark ? const Color(0xFF2D3748) : Colors.white,
+                        color: isDark ? PanchitAuthColors.surfaceDark : Colors.white,
                         width: 3,
                       ),
                     ),
@@ -645,7 +622,7 @@ class _GettingStartedPageState extends State<GettingStartedPage> with TickerProv
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: isDark ? Colors.white : const Color(0xFF1A202C),
+            color: PanchitAuthColors.textPrimary(isDark),
           ),
         ),
         const SizedBox(height: 8),
@@ -672,7 +649,7 @@ class _GettingStartedPageState extends State<GettingStartedPage> with TickerProv
               child: Icon(Icons.format_quote_rounded),
             ),
             filled: true,
-            fillColor: isDark ? const Color(0xFF1A202C) : const Color(0xFFF7FAFC),
+            fillColor: PanchitAuthColors.inputFill(isDark),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
               borderSide: BorderSide.none,
@@ -711,7 +688,7 @@ class _GettingStartedPageState extends State<GettingStartedPage> with TickerProv
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: isDark ? Colors.white : const Color(0xFF1A202C),
+            color: PanchitAuthColors.textPrimary(isDark),
           ),
         ),
         const SizedBox(height: 8),
@@ -729,7 +706,7 @@ class _GettingStartedPageState extends State<GettingStartedPage> with TickerProv
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF1A202C) : const Color(0xFFF7FAFC),
+              color: PanchitAuthColors.inputFill(isDark),
               borderRadius: BorderRadius.circular(14),
             ),
             child: const Center(child: CircularProgressIndicator()),
@@ -742,15 +719,15 @@ class _GettingStartedPageState extends State<GettingStartedPage> with TickerProv
               hintText: 'select_your_country'.tr,
               prefixIcon: const Icon(Icons.pin_drop_rounded),
               filled: true,
-              fillColor: isDark ? const Color(0xFF1A202C) : const Color(0xFFF7FAFC),
+              fillColor: PanchitAuthColors.inputFill(isDark),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
                 borderSide: BorderSide.none,
               ),
             ),
-            dropdownColor: isDark ? const Color(0xFF1A202C) : Colors.white,
+            dropdownColor: PanchitAuthColors.inputFill(isDark),
             style: TextStyle(
-              color: isDark ? Colors.white : const Color(0xFF1A202C),
+              color: PanchitAuthColors.textPrimary(isDark),
               fontSize: 15,
             ),
             items: _countries.map((country) {
@@ -797,7 +774,7 @@ class _GettingStartedPageState extends State<GettingStartedPage> with TickerProv
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: isDark ? Colors.white : const Color(0xFF1A202C),
+            color: PanchitAuthColors.textPrimary(isDark),
           ),
         ),
         const SizedBox(height: 8),
@@ -818,7 +795,7 @@ class _GettingStartedPageState extends State<GettingStartedPage> with TickerProv
             hintText: 'job_title_hint'.tr,
             prefixIcon: const Icon(Icons.business_center_rounded),
             filled: true,
-            fillColor: isDark ? const Color(0xFF1A202C) : const Color(0xFFF7FAFC),
+            fillColor: PanchitAuthColors.inputFill(isDark),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
               borderSide: BorderSide.none,
@@ -857,7 +834,7 @@ class _GettingStartedPageState extends State<GettingStartedPage> with TickerProv
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: isDark ? Colors.white : const Color(0xFF1A202C),
+            color: PanchitAuthColors.textPrimary(isDark),
           ),
         ),
         const SizedBox(height: 8),
@@ -878,7 +855,7 @@ class _GettingStartedPageState extends State<GettingStartedPage> with TickerProv
             hintText: 'field_of_study_hint'.tr,
             prefixIcon: const Icon(Icons.menu_book_rounded),
             filled: true,
-            fillColor: isDark ? const Color(0xFF1A202C) : const Color(0xFFF7FAFC),
+            fillColor: PanchitAuthColors.inputFill(isDark),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
               borderSide: BorderSide.none,
@@ -893,7 +870,7 @@ class _GettingStartedPageState extends State<GettingStartedPage> with TickerProv
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF2D3748) : Colors.white,
+        color: isDark ? PanchitAuthColors.surfaceDark : Colors.white,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -921,9 +898,7 @@ class _GettingStartedPageState extends State<GettingStartedPage> with TickerProv
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4),
                     gradient: isActive || isCompleted
-                        ? const LinearGradient(
-                            colors: [Color(0xFF5B86E5), Color(0xFF36D1DC)],
-                          )
+                        ? PanchitAuthColors.primaryGradient
                         : null,
                     color: !isActive && !isCompleted
                         ? (isDark 
@@ -998,12 +973,10 @@ class _GettingStartedPageState extends State<GettingStartedPage> with TickerProv
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF5B86E5), Color(0xFF36D1DC)],
-                    ),
+                    gradient: PanchitAuthColors.primaryGradient,
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFF5B86E5).withOpacity(0.3),
+                        color: PanchitAuthColors.purple.withOpacity(0.3),
                         blurRadius: 12,
                         offset: const Offset(0, 4),
                       ),

@@ -1,134 +1,185 @@
 import 'package:flutter/material.dart';
 
-/// Integrated color system for the application
-/// Supports light and dark modes
+/// Centralized Panchit color system.
+/// Supports light and dark modes.
 class AppColors {
   AppColors._();
 
-  // ========== Primary Brand Colors ==========
-  static const Color primary = Color(0xFF1877F2); // Facebook Blue
-  static const Color primaryDark = Color(0xFF166FE5);
-  static const Color primaryLight = Color(0xFF4A90F4);
+  // ========== Panchit Brand Colors ==========
+  static const Color primary = Color(0xFF7B00FF);
+  static const Color primaryDark = Color(0xFF5700C9);
+  static const Color primaryLight = Color(0xFFA855F7);
 
-  static const Color secondary = Color(0xFF42B72A); // Green
-  static const Color secondaryDark = Color(0xFF36A420);
-  static const Color secondaryLight = Color(0xFF5BC43A);
+  static const Color secondary = Color(0xFFF000A8);
+  static const Color secondaryDark = Color(0xFFC60088);
+  static const Color secondaryLight = Color(0xFFFF4FC3);
 
-  static const Color accent = Color(0xFFE7F3FF); // Very light blue
-  static const Color accentDark = Color(0xFF1C2B33);
+  static const Color brandOrange = Color(0xFFFF6A24);
+  static const Color brandPink = Color(0xFFFF1B8D);
 
   // ========== Light Mode - Backgrounds ==========
-  static const Color backgroundLight = Color(0xFFF0F2F5);
+  static const Color backgroundLight = Color(0xFFF8F8FC);
   static const Color surfaceLight = Color(0xFFFFFFFF);
   static const Color cardLight = Color(0xFFFFFFFF);
-  static const Color dividerLight = Color(0xFFE4E6EB);
+  static const Color dividerLight = Color(0xFFE8E8F0);
 
   // ========== Dark Mode - Backgrounds ==========
-  static const Color backgroundDark = Color(0xFF18191A);
-  static const Color surfaceDark = Color(0xFF242526);
-  static const Color cardDark = Color(0xFF3A3B3C);
-  static const Color dividerDark = Color(0xFF3E4042);
+  static const Color backgroundDark = Color(0xFF030312);
+  static const Color surfaceDark = Color(0xFF080819);
+  static const Color cardDark = Color(0xFF0D0D20);
+  static const Color surfaceElevatedDark = Color(0xFF131329);
+  static const Color dividerDark = Color(0xFF24243A);
 
   // ========== Text - Light Mode ==========
-  static const Color textPrimaryLight = Color(0xFF050505);
-  static const Color textSecondaryLight = Color(0xFF65676B);
-  static const Color textTertiaryLight = Color(0xFF8A8D91);
-  static const Color textDisabledLight = Color(0xFFBCC0C4);
+  static const Color textPrimaryLight = Color(0xFF11111A);
+  static const Color textSecondaryLight = Color(0xFF666678);
+  static const Color textTertiaryLight = Color(0xFF9090A0);
+  static const Color textDisabledLight = Color(0xFFBCBCC8);
 
   // ========== Text - Dark Mode ==========
-  static const Color textPrimaryDark = Color(0xFFE4E6EB);
-  static const Color textSecondaryDark = Color(0xFFB0B3B8);
-  static const Color textTertiaryDark = Color(0xFF8A8D91);
-  static const Color textDisabledDark = Color(0xFF606770);
+  static const Color textPrimaryDark = Color(0xFFF7F7FA);
+  static const Color textSecondaryDark = Color(0xFFAAAAba);
+  static const Color textTertiaryDark = Color(0xFF777789);
+  static const Color textDisabledDark = Color(0xFF555568);
+
+  // ========== Borders ==========
+  static const Color borderLight = Color(0xFFE7E7EF);
+  static const Color borderDark = Color(0xFF25253A);
 
   // ========== Status Colors ==========
-  static const Color success = Color(0xFF42B72A);
-  static const Color successLight = Color(0xFFE7F3E8);
-  static const Color successDark = Color(0xFF2D7A1F);
+  static const Color success = Color(0xFF31C76A);
+  static const Color successLight = Color(0xFFE9F9EF);
+  static const Color successDark = Color(0xFF168A43);
 
-  static const Color error = Color(0xFFED4956);
-  static const Color errorLight = Color(0xFFFEEBED);
-  static const Color errorDark = Color(0xFFD32F2F);
+  static const Color error = Color(0xFFF04452);
+  static const Color errorLight = Color(0xFFFFECEE);
+  static const Color errorDark = Color(0xFFC62835);
 
-  static const Color warning = Color(0xFFFFA726);
-  static const Color warningLight = Color(0xFFFFF3E0);
-  static const Color warningDark = Color(0xFFF57C00);
+  static const Color warning = Color(0xFFFFA62B);
+  static const Color warningLight = Color(0xFFFFF4E5);
+  static const Color warningDark = Color(0xFFD97706);
 
-  static const Color info = Color(0xFF1877F2);
-  static const Color infoLight = Color(0xFFE7F3FF);
-  static const Color infoDark = Color(0xFF0D47A1);
+  static const Color info = Color(0xFF5B8DEF);
+  static const Color infoLight = Color(0xFFEEF4FF);
+  static const Color infoDark = Color(0xFF315FC2);
 
-  // ========== Interactive Colors ==========
-  static const Color hoverLight = Color(0xFFF2F3F5);
-  static const Color hoverDark = Color(0xFF3A3B3C);
+  // ========== Interactive ==========
+  static const Color hoverLight = Color(0xFFF3F3F8);
+  static const Color hoverDark = Color(0xFF141428);
 
-  static const Color pressedLight = Color(0xFFE4E6EB);
-  static const Color pressedDark = Color(0xFF4E4F50);
+  static const Color pressedLight = Color(0xFFEAEAF2);
+  static const Color pressedDark = Color(0xFF1C1C33);
 
-  static const Color focusLight = Color(0xFFE7F3FF);
-  static const Color focusDark = Color(0xFF263951);
+  static const Color focusLight = Color(0xFFF4ECFF);
+  static const Color focusDark = Color(0xFF22123D);
+
+  // ========== Social / Feed Colors ==========
+  static const Color like = Color(0xFFFF2D73);
+  static const Color comment = Color(0xFFB9B9C8);
+  static const Color share = Color(0xFFB9B9C8);
+  static const Color bookmark = Color(0xFFB9B9C8);
 
   // ========== Post Type Colors ==========
-  static const Color postTypeText = Color(0xFF1877F2);
+  static const Color postTypeText = primary;
   static const Color postTypePhoto = Color(0xFF45BD62);
   static const Color postTypeAlbum = Color(0xFFF02849);
-  static const Color postTypeVideo = Color(0xFF7F66FF);
-  static const Color postTypeReel = Color(0xFFE4405F);
-  static const Color postTypeAudio = Color(0xFFFF9500);
-  static const Color postTypeFile = Color(0xFF5E72E4);
+  static const Color postTypeVideo = Color(0xFF9B5CFF);
+  static const Color postTypeReel = brandPink;
+  static const Color postTypeAudio = brandOrange;
+  static const Color postTypeFile = Color(0xFF6C7CFF);
   static const Color postTypePoll = Color(0xFF20C997);
   static const Color postTypeFeeling = Color(0xFFFFC107);
-  static const Color postTypeColored = Color(0xFFE91E63);
+  static const Color postTypeColored = secondary;
   static const Color postTypeOffer = Color(0xFF00BCD4);
-  static const Color postTypeJob = Color(0xFF9C27B0);
+  static const Color postTypeJob = Color(0xFFB34DDB);
 
-  // ========== Gradient Colors ==========
+  // ========== Panchit Gradients ==========
   static const LinearGradient primaryGradient = LinearGradient(
-    colors: [primary, primaryLight],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
+    colors: [
+      Color(0xFF6B00FF),
+      Color(0xFFF000A8),
+      Color(0xFFFF5A36),
+    ],
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
   );
 
-  static const LinearGradient secondaryGradient = LinearGradient(
-    colors: [secondary, secondaryLight],
+  static const LinearGradient verticalBrandGradient = LinearGradient(
+    colors: [
+      Color(0xFF6B00FF),
+      Color(0xFFF000A8),
+      Color(0xFFFF6A24),
+    ],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
 
   static const LinearGradient storyGradient = LinearGradient(
-    colors: [Color(0xFFF58529), Color(0xFFDD2A7B), Color(0xFF8134AF)],
+    colors: [
+      Color(0xFF6B00FF),
+      Color(0xFFF000A8),
+      Color(0xFFFF6A24),
+    ],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
 
   static const LinearGradient reelGradient = LinearGradient(
-    colors: [Color(0xFFE4405F), Color(0xFFF77737)],
+    colors: [
+      Color(0xFFF000A8),
+      Color(0xFFFF6A24),
+    ],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
+  );
+
+  static const LinearGradient darkBackgroundGradient = LinearGradient(
+    colors: [
+      Color(0xFF030312),
+      Color(0xFF080819),
+    ],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
+  static const LinearGradient lightBackgroundGradient = LinearGradient(
+    colors: [
+      Color(0xFFF3F3F8),
+      Color(0xFFC6C6CA),
+    ],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
   );
 
   // ========== Shadows ==========
   static List<BoxShadow> get lightShadow => [
     BoxShadow(
-      color: Colors.black.withValues(alpha: 0.08),
-      blurRadius: 8,
-      offset: const Offset(0, 2),
+      color: Colors.black.withValues(alpha: 0.06),
+      blurRadius: 10,
+      offset: const Offset(0, 3),
     ),
   ];
 
   static List<BoxShadow> get darkShadow => [
     BoxShadow(
-      color: Colors.black.withValues(alpha: 0.3),
-      blurRadius: 12,
-      offset: const Offset(0, 4),
+      color: Colors.black.withValues(alpha: 0.35),
+      blurRadius: 14,
+      offset: const Offset(0, 5),
     ),
   ];
 
   static List<BoxShadow> get cardShadow => [
     BoxShadow(
-      color: Colors.black.withValues(alpha: 0.05),
-      blurRadius: 4,
-      offset: const Offset(0, 1),
+      color: Colors.black.withValues(alpha: 0.06),
+      blurRadius: 6,
+      offset: const Offset(0, 2),
+    ),
+  ];
+
+  static List<BoxShadow> get brandGlow => [
+    BoxShadow(
+      color: secondary.withValues(alpha: 0.22),
+      blurRadius: 14,
+      offset: const Offset(0, 4),
     ),
   ];
 
@@ -137,8 +188,7 @@ class AppColors {
   static const double overlayMedium = 0.12;
   static const double overlayHigh = 0.24;
 
-  // ========== Semi-transparent ==========
   static Color withOpacity(Color color, double opacity) {
-    return color.withOpacity(opacity);
+    return color.withValues(alpha: opacity);
   }
 }

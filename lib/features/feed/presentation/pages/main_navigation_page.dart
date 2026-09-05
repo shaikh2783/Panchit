@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:snginepro/core/theme/app_colors.dart';
 // Bloc Pages
 import 'package:snginepro/features/feed/presentation/pages/home_page.dart';
 // Traditional Provider Pages (for gradual migration)
@@ -73,7 +74,9 @@ class _MainNavigationPageState extends State<MainNavigationPage>
       const CompetitionsHubPage(),
       const ReelsPage(),
       const NotificationsPage(),
-      MenuPage(onNavigateToTab: (index) => setState(() => _currentIndex = index)),
+      MenuPage(
+        onNavigateToTab: (index) => setState(() => _currentIndex = index),
+      ),
     ];
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -139,11 +142,7 @@ class _MainNavigationPageState extends State<MainNavigationPage>
       activeIcon: Iconsax.profile_2user,
       label: 'Friends',
     ),
-    _NavItem(
-      icon: Iconsax.cup,
-      activeIcon: Iconsax.cup,
-      label: 'Competition',
-    ),
+    _NavItem(icon: Iconsax.cup, activeIcon: Iconsax.cup, label: 'Competition'),
     _NavItem(
       icon: Iconsax.video_play,
       activeIcon: Iconsax.video_play,
@@ -197,80 +196,77 @@ class _MainNavigationPageState extends State<MainNavigationPage>
             ? SystemUiOverlayStyle.light
             : SystemUiOverlayStyle.dark,
         child: Scaffold(
-        extendBody: true,
-        backgroundColor: theme.brightness == Brightness.dark
-            ? const Color(0xFF0A0A0A)
-            : const Color(0xFFF8F9FA),
-        body: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 300),
-          switchInCurve: Curves.easeInOutCubic,
-          switchOutCurve: Curves.easeInOutCubic,
-          transitionBuilder: (child, animation) {
-            return FadeTransition(
-              opacity: animation,
-              child: SlideTransition(
-                position:
-                    Tween<Offset>(
-                      begin: const Offset(0.0, 0.02),
-                      end: Offset.zero,
-                    ).animate(
-                      CurvedAnimation(
-                        parent: animation,
-                        curve: Curves.easeInOutCubic,
+          extendBody: true,
+          backgroundColor: theme.brightness == Brightness.dark
+              ? AppColors.backgroundDark
+              : AppColors.backgroundLight,
+          body: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            switchInCurve: Curves.easeInOutCubic,
+            switchOutCurve: Curves.easeInOutCubic,
+            transitionBuilder: (child, animation) {
+              return FadeTransition(
+                opacity: animation,
+                child: SlideTransition(
+                  position:
+                      Tween<Offset>(
+                        begin: const Offset(0.0, 0.02),
+                        end: Offset.zero,
+                      ).animate(
+                        CurvedAnimation(
+                          parent: animation,
+                          curve: Curves.easeInOutCubic,
+                        ),
                       ),
-                    ),
-                child: child,
-              ),
-            );
-          },
-          child: Padding(
-            padding: EdgeInsets.only(
-              bottom: _currentIndex == 3 || !_showNavBar
-                  ? 0
-                  : _navBarHeight +
-                        _navBarBottomMargin +
-                        MediaQuery.of(context).padding.bottom,
-            ),
-            child: IndexedStack(
-              index: _currentIndex,
-              children: _pages,
-            ),
-          ),
-        ),
-        bottomNavigationBar: AnimatedSlide(
-          duration: const Duration(milliseconds: 220),
-          curve: Curves.easeInOut,
-          offset: Offset(0, _showNavBar ? 0 : 1),
-          child: _BottomNavBar(
-            currentIndex: _currentIndex,
-            items: _items,
-            friendRequestsCount: _friendRequestsCount,
-            navBarHeight: _navBarHeight,
-            bottomMargin: _navBarBottomMargin,
-            onItemSelected: (index) {
-              if (index == _currentIndex) {
-                HapticFeedback.selectionClick();
-
-                if (index == 0) {
-                  _homePageKey.currentState?.scrollToTop();
-                  if (!_showNavBar) setState(() => _showNavBar = true);
-                }
-                return;
-              }
-
-              HapticFeedback.lightImpact();
-              setState(() {
-                _currentIndex = index;
-                if (!_showNavBar) _showNavBar = true;
-              });
-
-              if (index == 1) {
-                _loadFriendRequestsCount();
-              }
+                  child: child,
+                ),
+              );
             },
+            child: Padding(
+              padding: EdgeInsets.only(
+                bottom: _currentIndex == 3 || !_showNavBar
+                    ? 0
+                    : _navBarHeight +
+                          _navBarBottomMargin +
+                          MediaQuery.of(context).padding.bottom,
+              ),
+              child: IndexedStack(index: _currentIndex, children: _pages),
+            ),
+          ),
+          bottomNavigationBar: AnimatedSlide(
+            duration: const Duration(milliseconds: 220),
+            curve: Curves.easeInOut,
+            offset: Offset(0, _showNavBar ? 0 : 1),
+            child: _BottomNavBar(
+              currentIndex: _currentIndex,
+              items: _items,
+              friendRequestsCount: _friendRequestsCount,
+              navBarHeight: _navBarHeight,
+              bottomMargin: _navBarBottomMargin,
+              onItemSelected: (index) {
+                if (index == _currentIndex) {
+                  HapticFeedback.selectionClick();
+
+                  if (index == 0) {
+                    _homePageKey.currentState?.scrollToTop();
+                    if (!_showNavBar) setState(() => _showNavBar = true);
+                  }
+                  return;
+                }
+
+                HapticFeedback.lightImpact();
+                setState(() {
+                  _currentIndex = index;
+                  if (!_showNavBar) _showNavBar = true;
+                });
+
+                if (index == 1) {
+                  _loadFriendRequestsCount();
+                }
+              },
+            ),
           ),
         ),
-      ),
       ),
     );
   }
@@ -295,6 +291,9 @@ class _BottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final navBarColor = isDark ? AppColors.surfaceDark : Colors.white;
+
     return SafeArea(
       top: false,
       child: Padding(
@@ -303,15 +302,9 @@ class _BottomNavBar extends StatelessWidget {
           height: navBarHeight,
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
           decoration: BoxDecoration(
-            color: const Color(0xFF1E1F23),
+            color: navBarColor,
             borderRadius: BorderRadius.circular(36),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.25),
-                blurRadius: 18,
-                offset: const Offset(0, 8),
-              ),
-            ],
+            boxShadow: isDark ? AppColors.darkShadow : AppColors.lightShadow,
           ),
           child: Row(
             children: List.generate(items.length, (index) {
@@ -324,6 +317,7 @@ class _BottomNavBar extends StatelessWidget {
                   item: item,
                   isActive: isActive,
                   badgeCount: index == 1 ? friendRequestsCount : 0,
+                  navBarColor: navBarColor,
                   onTap: () => onItemSelected(index),
                 ),
               );
@@ -340,16 +334,21 @@ class _NavButton extends StatelessWidget {
     required this.item,
     required this.isActive,
     required this.onTap,
+    required this.navBarColor,
     this.badgeCount = 0,
   });
 
   final _NavItem item;
   final bool isActive;
   final VoidCallback onTap;
+  final Color navBarColor;
   final int badgeCount;
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final inactiveColor = isDark ? Colors.white : AppColors.textSecondaryLight;
+
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
@@ -370,7 +369,7 @@ class _NavButton extends StatelessWidget {
             ),
             decoration: BoxDecoration(
               color: isActive
-                  ? const Color(0xFF2F80ED).withValues(alpha: 0.12)
+                  ? AppColors.primary.withValues(alpha: 0.12)
                   : Colors.transparent,
               borderRadius: BorderRadius.circular(28),
             ),
@@ -393,7 +392,7 @@ class _NavButton extends StatelessWidget {
                         children: [
                           Icon(
                             item.activeIcon,
-                            color: const Color(0xFF2F80ED),
+                            color: AppColors.primary,
                             size: 22,
                           ),
                           const SizedBox(height: 4),
@@ -405,7 +404,7 @@ class _NavButton extends StatelessWidget {
                               textAlign: TextAlign.center,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
-                                color: Color(0xFF2F80ED),
+                                color: AppColors.primary,
                                 fontSize: 11,
                                 fontWeight: FontWeight.w700,
                                 height: 1.1,
@@ -417,11 +416,7 @@ class _NavButton extends StatelessWidget {
                     )
                   : Center(
                       key: const ValueKey('inactive'),
-                      child: Icon(
-                        item.icon,
-                        color: Colors.white,
-                        size: 22,
-                      ),
+                      child: Icon(item.icon, color: inactiveColor, size: 22),
                     ),
             ),
           ),
@@ -433,9 +428,9 @@ class _NavButton extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF56A8FF),
+                  color: AppColors.error,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: const Color(0xFF1E1F23), width: 2),
+                  border: Border.all(color: navBarColor, width: 2),
                 ),
                 child: Text(
                   badgeCount > 999 ? '999+' : '$badgeCount',
