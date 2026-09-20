@@ -2869,6 +2869,19 @@ const Map<String, String> urPK = {
   "competition_opening_soon": "جلد کھلے گا",
   "competition_rank_prefix": "درجہ #",
 
+  // Competition KYC gate
+  "kyc_required_title": "شناختی تصدیق درکار ہے",
+  "kyc_required_message": "مقابلوں میں حصہ لینے کے لیے، براہ کرم آدھار کا استعمال کرتے ہوئے اپنا KYC مکمل کریں۔",
+  "kyc_verify_aadhaar": "آدھار کی تصدیق کریں",
+  "kyc_not_now": "ابھی نہیں",
+  "kyc_status_check_failed": "KYC کی حیثیت چیک نہیں ہو سکی۔ براہ کرم دوبارہ کوشش کریں۔",
+  "kyc_session_failed": "آدھار تصدیق شروع نہیں ہو سکی۔ براہ کرم دوبارہ کوشش کریں۔",
+  "kyc_verification_failed": "آدھار تصدیق کی تصدیق نہیں ہو سکی۔ براہ کرم دوبارہ کوشش کریں۔",
+  "kyc_config_missing": "آدھار تصدیق اس وقت دستیاب نہیں ہے۔",
+  "kyc_consent_title": "آدھار کی تفصیلات شیئر کریں",
+  "kyc_consent_message": "Panchit آپ کی شناخت کی تصدیق کے لیے DigiLocker استعمال کرتا ہے۔ آپ کا آدھار OTP اور تفصیلات DigiLocker کے ذریعے سنبھالی جاتی ہیں، Panchit کے ذریعے نہیں۔",
+  "kyc_consent_checkbox_label": "میں KYC تصدیق کے لیے DigiLocker کے ذریعے اپنی آدھار تفصیلات شیئر کرنے پر رضامند ہوں۔",
+
   // Competition Entry Page
   "entry_title": "مقابلے کا اندراج",
   "entry_view_details": "تفصیلات دیکھیں",

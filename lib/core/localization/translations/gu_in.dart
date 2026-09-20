@@ -2863,6 +2863,19 @@ const Map<String, String> guIN = {
   "competition_opening_soon": "ટૂંક સમયમાં ખુલ્લી",
   "competition_rank_prefix": "ક્રમ #",
 
+  // Competition KYC gate
+  "kyc_required_title": "ઓળખ ચકાસણી જરૂરી છે",
+  "kyc_required_message": "સ્પર્ધાઓમાં ભાગ લેવા માટે, કૃપા કરીને આધારનો ઉપયોગ કરીને તમારું KYC પૂર્ણ કરો.",
+  "kyc_verify_aadhaar": "આધાર ચકાસો",
+  "kyc_not_now": "હમણાં નહીં",
+  "kyc_status_check_failed": "KYC સ્થિતિ તપાસી શકાઈ નથી. કૃપા કરીને ફરી પ્રયાસ કરો.",
+  "kyc_session_failed": "આધાર ચકાસણી શરૂ કરી શકાઈ નથી. કૃપા કરીને ફરી પ્રયાસ કરો.",
+  "kyc_verification_failed": "આધાર ચકાસણીની પુષ્ટિ કરી શકાઈ નથી. કૃપા કરીને ફરી પ્રયાસ કરો.",
+  "kyc_config_missing": "આધાર ચકાસણી હાલમાં ઉપલબ્ધ નથી.",
+  "kyc_consent_title": "આધાર વિગતો શેર કરો",
+  "kyc_consent_message": "Panchit તમારી ઓળખ ચકાસવા માટે DigiLocker નો ઉપયોગ કરે છે. તમારો આધાર OTP અને વિગતો DigiLocker દ્વારા સંભાળવામાં આવે છે, Panchit દ્વારા નહીં.",
+  "kyc_consent_checkbox_label": "હું KYC ચકાસણી માટે DigiLocker દ્વારા મારી આધાર વિગતો શેર કરવા સંમત છું.",
+
   // Competition Entry Page
   "entry_title": "સ્પર્ધા નોંધણી",
   "entry_view_details": "વિગતો જુઓ",

@@ -3186,6 +3186,19 @@ const Map<String, String> mrIN = {
   "competition_opening_soon": "लवकरच उघडेल",
   "competition_rank_prefix": "क्रमांक #",
 
+  // Competition KYC gate
+  "kyc_required_title": "ओळख पडताळणी आवश्यक",
+  "kyc_required_message": "स्पर्धांमध्ये सहभागी होण्यासाठी, कृपया आधार वापरून तुमची KYC पूर्ण करा.",
+  "kyc_verify_aadhaar": "आधार सत्यापित करा",
+  "kyc_not_now": "आत्ता नाही",
+  "kyc_status_check_failed": "KYC स्थिती तपासता आली नाही. कृपया पुन्हा प्रयत्न करा.",
+  "kyc_session_failed": "आधार पडताळणी सुरू करता आली नाही. कृपया पुन्हा प्रयत्न करा.",
+  "kyc_verification_failed": "आधार पडताळणीची पुष्टी होऊ शकली नाही. कृपया पुन्हा प्रयत्न करा.",
+  "kyc_config_missing": "आधार पडताळणी सध्या उपलब्ध नाही.",
+  "kyc_consent_title": "आधार तपशील शेअर करा",
+  "kyc_consent_message": "Panchit तुमची ओळख पडताळण्यासाठी DigiLocker वापरते. तुमचा आधार OTP आणि तपशील DigiLocker द्वारे हाताळले जातात, Panchit द्वारे नाही.",
+  "kyc_consent_checkbox_label": "मी KYC पडताळणीसाठी DigiLocker द्वारे माझे आधार तपशील शेअर करण्यास सहमत आहे.",
+
   // Competition Entry Page
   "entry_title": "स्पर्धा नोंदणी",
   "entry_view_details": "तपशील पहा",

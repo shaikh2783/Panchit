@@ -2902,6 +2902,19 @@ const Map<String, String> enUS = {
   'competition_opening_soon': 'Opening soon',
   'competition_rank_prefix': 'Rank #',
 
+  // Competition KYC gate
+  'kyc_required_title': 'Identity Verification Required',
+  'kyc_required_message': 'To participate in competitions, please complete your KYC using Aadhaar.',
+  'kyc_verify_aadhaar': 'Verify Aadhaar',
+  'kyc_not_now': 'Not Now',
+  'kyc_status_check_failed': 'Unable to check KYC status. Please try again.',
+  'kyc_session_failed': 'Unable to start Aadhaar verification. Please try again.',
+  'kyc_verification_failed': 'Aadhaar verification could not be confirmed. Please try again.',
+  'kyc_config_missing': 'Aadhaar verification is not available right now.',
+  'kyc_consent_title': 'Share Aadhaar Details',
+  'kyc_consent_message': 'Panchit uses DigiLocker to verify your identity. Your Aadhaar OTP and details are handled by DigiLocker, not by Panchit.',
+  'kyc_consent_checkbox_label': 'I agree to share my Aadhaar details through DigiLocker for KYC verification.',
+
   // Competition Entry Page
   'entry_title': 'Competition Entry',
   'entry_view_details': 'View Details',

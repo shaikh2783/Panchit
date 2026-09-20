@@ -2878,6 +2878,20 @@ const Map<String, String> orIN = {
   "competition_opens_in": "ଖୋଲିବ",
   "competition_opening_soon": "ଶୀଘ୍ର ଖୋଲିବ",
   "competition_rank_prefix": "ର୍ୟାଙ୍କ #",
+
+  // Competition KYC gate
+  "kyc_required_title": "ପରିଚୟ ଯାଞ୍ଚ ଆବଶ୍ୟକ",
+  "kyc_required_message": "ପ୍ରତିଯୋଗିତାରେ ଅଂଶଗ୍ରହଣ କରିବାକୁ, ଦୟାକରି ଆଧାର ବ୍ୟବହାର କରି ଆପଣଙ୍କର KYC ସମ୍ପୂର୍ଣ୍ଣ କରନ୍ତୁ।",
+  "kyc_verify_aadhaar": "ଆଧାର ଯାଞ୍ଚ କରନ୍ତୁ",
+  "kyc_not_now": "ବର୍ତ୍ତମାନ ନୁହେଁ",
+  "kyc_status_check_failed": "KYC ସ୍ଥିତି ଯାଞ୍ଚ କରିହେଲା ନାହିଁ। ଦୟାକରି ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।",
+  "kyc_session_failed": "ଆଧାର ଯାଞ୍ଚ ଆରମ୍ଭ କରିହେଲା ନାହିଁ। ଦୟାକରି ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।",
+  "kyc_verification_failed": "ଆଧାର ଯାଞ୍ଚ ନିଶ୍ଚିତ କରିହେଲା ନାହିଁ। ଦୟାକରି ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।",
+  "kyc_config_missing": "ଆଧାର ଯାଞ୍ଚ ବର୍ତ୍ତମାନ ଉପଲବ୍ଧ ନାହିଁ।",
+  "kyc_consent_title": "ଆଧାର ବିବରଣୀ ସେୟାର କରନ୍ତୁ",
+  "kyc_consent_message": "Panchit ଆପଣଙ୍କର ପରିଚୟ ଯାଞ୍ଚ କରିବାକୁ DigiLocker ବ୍ୟବହାର କରେ। ଆପଣଙ୍କର ଆଧାର OTP ଏବଂ ବିବରଣୀ DigiLocker ଦ୍ୱାରା ପରିଚାଳିତ ହୁଏ, Panchit ଦ୍ୱାରା ନୁହେଁ।",
+  "kyc_consent_checkbox_label": "ମୁଁ KYC ଯାଞ୍ଚ ପାଇଁ DigiLocker ମାଧ୍ୟମରେ ମୋର ଆଧାର ବିବରଣୀ ସେୟାର କରିବାକୁ ସହମତ।",
+
   // Reels module
   'use_camera_music_filters': 'ମ୍ୟୁଜିକ୍ ଓ ଫିଲ୍ଟର୍ ସହିତ କ୍ୟାମେରା ବ୍ୟବହାର କରନ୍ତୁ',
   'upload_from_gallery': 'ଗ୍ୟାଲେରୀରୁ ଅପଲୋଡ୍ କରନ୍ତୁ',

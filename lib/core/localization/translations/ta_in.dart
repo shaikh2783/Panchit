@@ -2869,6 +2869,19 @@ const Map<String, String> taIN = {
   "competition_opening_soon": "விரைவில் திறக்கப்படும்",
   "competition_rank_prefix": "தரம் #",
 
+  // Competition KYC gate
+  "kyc_required_title": "அடையாள சரிபார்ப்பு தேவை",
+  "kyc_required_message": "போட்டிகளில் பங்கேற்க, ஆதார் மூலம் உங்கள் KYC-ஐ முடிக்கவும்.",
+  "kyc_verify_aadhaar": "ஆதார் சரிபார்க்கவும்",
+  "kyc_not_now": "இப்போது வேண்டாம்",
+  "kyc_status_check_failed": "KYC நிலையை சரிபார்க்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
+  "kyc_session_failed": "ஆதார் சரிபார்ப்பைத் தொடங்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
+  "kyc_verification_failed": "ஆதார் சரிபார்ப்பை உறுதிப்படுத்த முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
+  "kyc_config_missing": "ஆதார் சரிபார்ப்பு தற்போது கிடைக்கவில்லை.",
+  "kyc_consent_title": "ஆதார் விவரங்களைப் பகிரவும்",
+  "kyc_consent_message": "Panchit உங்கள் அடையாளத்தை சரிபார்க்க DigiLocker-ஐப் பயன்படுத்துகிறது. உங்கள் ஆதார் OTP மற்றும் விவரங்கள் DigiLocker மூலம் கையாளப்படுகின்றன, Panchit மூலம் அல்ல.",
+  "kyc_consent_checkbox_label": "KYC சரிபார்ப்புக்காக DigiLocker மூலம் எனது ஆதார் விவரங்களைப் பகிர நான் ஒப்புக்கொள்கிறேன்.",
+
   // Competition Entry Page
   "entry_title": "போட்டி பங்கேற்பு",
   "entry_view_details": "விவரங்களைக் காண்க",

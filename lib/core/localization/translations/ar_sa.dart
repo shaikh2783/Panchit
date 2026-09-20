@@ -2941,6 +2941,19 @@ const Map<String, String> arSA = {
   "competition_opening_soon": "تفتح قريباً",
   "competition_rank_prefix": "المرتبة #",
 
+  // Competition KYC gate
+  "kyc_required_title": "التحقق من الهوية مطلوب",
+  "kyc_required_message": "للمشاركة في المسابقات، يرجى إكمال KYC الخاص بك باستخدام Aadhaar.",
+  "kyc_verify_aadhaar": "التحقق من Aadhaar",
+  "kyc_not_now": "ليس الآن",
+  "kyc_status_check_failed": "تعذر التحقق من حالة KYC. يرجى المحاولة مرة أخرى.",
+  "kyc_session_failed": "تعذر بدء التحقق من Aadhaar. يرجى المحاولة مرة أخرى.",
+  "kyc_verification_failed": "تعذر تأكيد التحقق من Aadhaar. يرجى المحاولة مرة أخرى.",
+  "kyc_config_missing": "التحقق من Aadhaar غير متاح حاليًا.",
+  "kyc_consent_title": "مشاركة تفاصيل Aadhaar",
+  "kyc_consent_message": "يستخدم Panchit تطبيق DigiLocker للتحقق من هويتك. يتم التعامل مع رمز التحقق (OTP) الخاص بـ Aadhaar وتفاصيلك بواسطة DigiLocker، وليس بواسطة Panchit.",
+  "kyc_consent_checkbox_label": "أوافق على مشاركة تفاصيل Aadhaar الخاصة بي عبر DigiLocker للتحقق من KYC.",
+
   // Competition Entry Page
   "entry_title": "صفحة المشاركة",
   "entry_view_details": "عرض التفاصيل",

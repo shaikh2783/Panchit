@@ -3095,6 +3095,19 @@ const Map<String, String> knIN = {
   "competition_opening_soon": "ಶೀಘ್ರದಲ್ಲೇ ತೆರೆಯುತ್ತದೆ",
   "competition_rank_prefix": "ಶ್ರೇಣಿ #",
 
+  // Competition KYC gate
+  "kyc_required_title": "ಗುರುತು ಪರಿಶೀಲನೆ ಅಗತ್ಯವಿದೆ",
+  "kyc_required_message": "ಸ್ಪರ್ಧೆಗಳಲ್ಲಿ ಭಾಗವಹಿಸಲು, ದಯವಿಟ್ಟು ಆಧಾರ್ ಬಳಸಿ ನಿಮ್ಮ KYC ಪೂರ್ಣಗೊಳಿಸಿ.",
+  "kyc_verify_aadhaar": "ಆಧಾರ್ ಪರಿಶೀಲಿಸಿ",
+  "kyc_not_now": "ಈಗ ಬೇಡ",
+  "kyc_status_check_failed": "KYC ಸ್ಥಿತಿ ಪರಿಶೀಲಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+  "kyc_session_failed": "ಆಧಾರ್ ಪರಿಶೀಲನೆ ಪ್ರಾರಂಭಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+  "kyc_verification_failed": "ಆಧಾರ್ ಪರಿಶೀಲನೆಯನ್ನು ಖಚಿತಪಡಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+  "kyc_config_missing": "ಆಧಾರ್ ಪರಿಶೀಲನೆ ಸದ್ಯಕ್ಕೆ ಲಭ್ಯವಿಲ್ಲ.",
+  "kyc_consent_title": "ಆಧಾರ್ ವಿವರಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳಿ",
+  "kyc_consent_message": "Panchit ನಿಮ್ಮ ಗುರುತನ್ನು ಪರಿಶೀಲಿಸಲು DigiLocker ಅನ್ನು ಬಳಸುತ್ತದೆ. ನಿಮ್ಮ ಆಧಾರ್ OTP ಮತ್ತು ವಿವರಗಳನ್ನು DigiLocker ನಿರ್ವಹಿಸುತ್ತದೆ, Panchit ಅಲ್ಲ.",
+  "kyc_consent_checkbox_label": "KYC ಪರಿಶೀಲನೆಗಾಗಿ DigiLocker ಮೂಲಕ ನನ್ನ ಆಧಾರ್ ವಿವರಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳಲು ನಾನು ಒಪ್ಪುತ್ತೇನೆ.",
+
   // Competition Entry Page
   "entry_title": "ಸ್ಪರ್ಧೆಯ ನೋಂದಾವಣೆ",
   "entry_view_details": "ವಿವರಗಳನ್ನು ನೋಡಿ",

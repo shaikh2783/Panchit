@@ -3154,6 +3154,19 @@ const Map<String, String> mlIN = {
   "competition_opening_soon": "ഉടൻ തുറക്കും",
   "competition_rank_prefix": "റാങ്ക് #",
 
+  // Competition KYC gate
+  "kyc_required_title": "ഐഡന്റിറ്റി പരിശോധന ആവശ്യമാണ്",
+  "kyc_required_message": "മത്സരങ്ങളിൽ പങ്കെടുക്കാൻ, ദയവായി ആധാർ ഉപയോഗിച്ച് നിങ്ങളുടെ KYC പൂർത്തിയാക്കുക.",
+  "kyc_verify_aadhaar": "ആധാർ പരിശോധിക്കുക",
+  "kyc_not_now": "ഇപ്പോൾ വേണ്ട",
+  "kyc_status_check_failed": "KYC സ്ഥിതി പരിശോധിക്കാൻ കഴിഞ്ഞില്ല. ദയവായി വീണ്ടും ശ്രമിക്കുക.",
+  "kyc_session_failed": "ആധാർ പരിശോധന ആരംഭിക്കാൻ കഴിഞ്ഞില്ല. ദയവായി വീണ്ടും ശ്രമിക്കുക.",
+  "kyc_verification_failed": "ആധാർ പരിശോധന സ്ഥിരീകരിക്കാൻ കഴിഞ്ഞില്ല. ദയവായി വീണ്ടും ശ്രമിക്കുക.",
+  "kyc_config_missing": "ആധാർ പരിശോധന ഇപ്പോൾ ലഭ്യമല്ല.",
+  "kyc_consent_title": "ആധാർ വിവരങ്ങൾ പങ്കിടുക",
+  "kyc_consent_message": "നിങ്ങളുടെ ഐഡന്റിറ്റി പരിശോധിക്കാൻ Panchit DigiLocker ഉപയോഗിക്കുന്നു. നിങ്ങളുടെ ആധാർ OTP ഉം വിവരങ്ങളും കൈകാര്യം ചെയ്യുന്നത് DigiLocker ആണ്, Panchit അല്ല.",
+  "kyc_consent_checkbox_label": "KYC പരിശോധനയ്ക്കായി DigiLocker വഴി എന്റെ ആധാർ വിവരങ്ങൾ പങ്കിടാൻ ഞാൻ സമ്മതിക്കുന്നു.",
+
   // Competition Entry Page
   "entry_title": "മത്സര എൻ‌ട്രി",
   "entry_view_details": "വിശദാംശങ്ങൾ കാണുക",

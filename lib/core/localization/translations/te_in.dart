@@ -2906,6 +2906,19 @@ const Map<String, String> teIN = {
   "competition_opening_soon": "త్వరలో తెరుచుకుంటుంది",
   "competition_rank_prefix": "ర్యాంక్ #",
 
+  // Competition KYC gate
+  "kyc_required_title": "గుర్తింపు ధృవీకరణ అవసరం",
+  "kyc_required_message": "పోటీలలో పాల్గొనడానికి, దయచేసి ఆధార్ ఉపయోగించి మీ KYC పూర్తి చేయండి.",
+  "kyc_verify_aadhaar": "ఆధార్ ధృవీకరించండి",
+  "kyc_not_now": "ఇప్పుడు కాదు",
+  "kyc_status_check_failed": "KYC స్థితిని తనిఖీ చేయడం సాధ్యం కాలేదు. దయచేసి మళ్లీ ప్రయత్నించండి.",
+  "kyc_session_failed": "ఆధార్ ధృవీకరణ ప్రారంభించడం సాధ్యం కాలేదు. దయచేసి మళ్లీ ప్రయత్నించండి.",
+  "kyc_verification_failed": "ఆధార్ ధృవీకరణను నిర్ధారించలేకపోయాము. దయచేసి మళ్లీ ప్రయత్నించండి.",
+  "kyc_config_missing": "ఆధార్ ధృవీకరణ ప్రస్తుతం అందుబాటులో లేదు.",
+  "kyc_consent_title": "ఆధార్ వివరాలను షేర్ చేయండి",
+  "kyc_consent_message": "Panchit మీ గుర్తింపును ధృవీకరించడానికి DigiLocker ఉపయోగిస్తుంది. మీ ఆధార్ OTP మరియు వివరాలు DigiLocker ద్వారా నిర్వహించబడతాయి, Panchit ద్వారా కాదు.",
+  "kyc_consent_checkbox_label": "KYC ధృవీకరణ కోసం DigiLocker ద్వారా నా ఆధార్ వివరాలను షేర్ చేయడానికి నేను అంగీకరిస్తున్నాను.",
+
   // Competition Entry Page
   "entry_title": "పోటీ ఎంట్రీ",
   "entry_view_details": "వివరాలు చూడండి",

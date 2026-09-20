@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:sandbox_digilocker_sdk/sandbox_digilocker_sdk.dart';
 import 'package:snginepro/core/config/app_config.dart';
 import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/core/theme/app_colors.dart';
@@ -22,9 +23,17 @@ import 'package:snginepro/features/feed/data/services/post_management_api_servic
 import 'package:snginepro/features/feed/presentation/pages/create_post_page_modern.dart';
 import 'package:snginepro/features/feed/presentation/pages/edit_post_page.dart';
 import 'package:snginepro/features/feed/presentation/widgets/adaptive_video_player.dart';
+import 'package:snginepro/features/kyc/data/models/kyc_models.dart';
+import 'package:snginepro/features/kyc/data/services/kyc_api_service.dart';
 import 'package:snginepro/features/wallet/data/models/wallet_summary.dart';
 import 'package:snginepro/features/wallet/domain/wallet_repository.dart';
 import 'package:snginepro/features/wallet/presentation/pages/wallet_recharge_page.dart';
+
+/// Event type sent by the Sandbox DigiLocker SDK when the user completes
+/// the Aadhaar/DigiLocker consent flow. Not exported by the SDK package,
+/// so it is mirrored here from `sandbox_digilocker_sdk`'s `Events` enum.
+const String _kDigilockerSessionCompletedEvent =
+    'in.co.sandbox.kyc.digilocker_sdk.session.completed';
 
 class CompetitionDetailPage extends StatefulWidget {
   const CompetitionDetailPage({
@@ -44,8 +53,11 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
   CompetitionModel? _competition;
   bool _isLoading = true;
   bool _isCheckingWallet = false;
+  bool _isCheckingKyc = false;
   bool _descExpanded = false;
   String? _errorMessage;
+
+  bool get _isPrimaryActionBusy => _isCheckingKyc || _isCheckingWallet;
 
   @override
   void initState() {
@@ -141,6 +153,9 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
       _openLeaderboard();
       return;
     }
+
+    final kycCompleted = await _ensureKycCompleted();
+    if (!kycCompleted || !mounted) return;
 
     final rules = (competition.rules ?? '').trim();
     if (rules.isNotEmpty) {
@@ -298,6 +313,153 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
       if (mounted) {
         setState(() => _isCheckingWallet = false);
       }
+    }
+  }
+
+  /// Gates competition participation behind Aadhaar KYC.
+  ///
+  /// The server is always treated as the source of truth: a locally cached
+  /// "verified" flag is never trusted here. Returns `true` only once the
+  /// backend confirms `kyc_completed == true`.
+  Future<bool> _ensureKycCompleted() async {
+    if (_isCheckingKyc) return false;
+
+    setState(() => _isCheckingKyc = true);
+    try {
+      final kycApi = context.read<KycApiService>();
+      final status = await kycApi.getKycStatus();
+      if (!mounted) return false;
+
+      if (!status.success) {
+        _showMessage('kyc_status_check_failed'.tr, isError: true);
+        return false;
+      }
+      if (status.kycCompleted) {
+        return true;
+      }
+
+      return await _startAadhaarVerification();
+    } catch (error) {
+      if (!mounted) return false;
+      _showMessage('kyc_status_check_failed'.tr, isError: true);
+      return false;
+    } finally {
+      if (mounted) {
+        setState(() => _isCheckingKyc = false);
+      }
+    }
+  }
+
+  Future<bool> _startAadhaarVerification() async {
+    final proceed = await showDialog<bool>(
+      context: context,
+      builder: (context) => GlassPopupDialog(
+        title: 'kyc_required_title'.tr,
+        message: 'kyc_required_message'.tr,
+        primaryLabel: 'kyc_verify_aadhaar'.tr,
+        secondaryLabel: 'kyc_not_now'.tr,
+        icon: Icons.verified_user_outlined,
+      ),
+    );
+    if (proceed != true || !mounted) return false;
+
+    final consented = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const _KycConsentDialog(),
+    );
+    if (consented != true || !mounted) return false;
+
+    final session = await _createAadhaarSession();
+    if (session == null || !mounted) return false;
+
+    final sessionId = session.sessionId!;
+    final apiKey = session.sdkApiKey ?? '';
+    if (apiKey.trim().isEmpty) {
+      _showMessage('kyc_config_missing'.tr, isError: true);
+      return false;
+    }
+
+    final sessionCompleted = await _openDigilockerSession(
+      apiKey: apiKey,
+      sessionId: sessionId,
+    );
+    if (!sessionCompleted || !mounted) return false;
+
+    return _verifyAadhaarSession(sessionId);
+  }
+
+  /// Creates a Sandbox DigiLocker session via the backend. The returned
+  /// [KycSessionResponse.sdkApiKey] is the only Sandbox key the app may use —
+  /// it is issued per-session by the backend, which holds the Sandbox API
+  /// secret; the app never configures or caches a key locally.
+  Future<KycSessionResponse?> _createAadhaarSession() async {
+    try {
+      final kycApi = context.read<KycApiService>();
+      final session = await kycApi.createAadhaarSession();
+      final sessionId = session.sessionId;
+      if (!session.success || sessionId == null || sessionId.isEmpty) {
+        if (mounted) {
+          _showMessage(session.message ?? 'kyc_session_failed'.tr, isError: true);
+        }
+        return null;
+      }
+      return session;
+    } catch (error) {
+      // Backend session-creation calls out to the Sandbox DigiLocker API;
+      // a 404 KYC_SESSION_NOT_FOUND here means that server-side call is
+      // failing (bad/misconfigured Sandbox credentials or wrong endpoint),
+      // not a client-side bug — confirmed via device logs 2026-09-20.
+      if (mounted) _showMessage('kyc_session_failed'.tr, isError: true);
+      return null;
+    }
+  }
+
+  /// Opens the Sandbox DigiLocker SDK and waits for the user to finish (or
+  /// cancel) the flow. Returns `true` only when the SDK reports its
+  /// `session.completed` event — cancelling/closing never counts as success,
+  /// and success here still requires backend verification afterwards.
+  Future<bool> _openDigilockerSession({
+    required String apiKey,
+    required String sessionId,
+  }) async {
+    final listener = _DigilockerCompletionListener();
+    DigilockerSDK.instance
+      ..setAPIKey(apiKey)
+      ..setEventListener(listener);
+
+    try {
+      await DigilockerSDK.instance.open(
+        context: context,
+        options: {
+          'session_id': sessionId,
+          'brand': {'name': 'Panchit'},
+        },
+      );
+    } catch (error) {
+      if (mounted) _showMessage('kyc_session_failed'.tr, isError: true);
+      return false;
+    } finally {
+      // Drop the reference to this page's listener so the SDK singleton
+      // does not retain a stale callback after the page moves on.
+      DigilockerSDK.instance.setEventListener(_DigilockerCompletionListener());
+    }
+
+    return listener.sessionCompleted;
+  }
+
+  Future<bool> _verifyAadhaarSession(String sessionId) async {
+    try {
+      final kycApi = context.read<KycApiService>();
+      final verify = await kycApi.verifyAadhaarSession(sessionId);
+      if (verify.success && verify.kycCompleted) {
+        return true;
+      }
+      if (mounted) _showMessage('kyc_verification_failed'.tr, isError: true);
+      return false;
+    } catch (error) {
+      if (mounted) _showMessage('kyc_verification_failed'.tr, isError: true);
+      return false;
     }
   }
 
@@ -485,10 +647,10 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
                 child: Container(
                   height: 48,
                   decoration: BoxDecoration(
-                    gradient: _isCheckingWallet
+                    gradient: _isPrimaryActionBusy
                         ? null
                         : AppColors.verticalBrandGradient,
-                    color: _isCheckingWallet
+                    color: _isPrimaryActionBusy
                         ? (isDark ? AppColors.hoverDark : AppColors.hoverLight)
                         : null,
                     borderRadius: BorderRadius.circular(Radii.medium),
@@ -497,9 +659,9 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
                     color: Colors.transparent,
                     child: InkWell(
                       borderRadius: BorderRadius.circular(Radii.medium),
-                      onTap: _isCheckingWallet ? null : _handlePrimaryAction,
+                      onTap: _isPrimaryActionBusy ? null : _handlePrimaryAction,
                       child: Center(
-                        child: _isCheckingWallet
+                        child: _isPrimaryActionBusy
                             ? const SizedBox(
                                 width: 20,
                                 height: 20,
@@ -1549,6 +1711,115 @@ class _CompetitionWalletPaymentDialogState
   }
 }
 
+// ── KYC consent dialog ───────────────────────────────────────────────────────
+
+/// Explicit Aadhaar-sharing consent step shown before a DigiLocker session is
+/// created. The user must check the box before continuing.
+class _KycConsentDialog extends StatefulWidget {
+  const _KycConsentDialog();
+
+  @override
+  State<_KycConsentDialog> createState() => _KycConsentDialogState();
+}
+
+class _KycConsentDialogState extends State<_KycConsentDialog> {
+  bool _agreed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 420),
+        child: Card(
+          margin: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Radii.xLarge),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(Spacing.lg),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'kyc_consent_title'.tr,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: Spacing.sm),
+                Text(
+                  'kyc_consent_message'.tr,
+                  style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+                ),
+                const SizedBox(height: Spacing.md),
+                InkWell(
+                  borderRadius: BorderRadius.circular(Radii.medium),
+                  onTap: () => setState(() => _agreed = !_agreed),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Spacing.sm,
+                      vertical: Spacing.xs,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isDark ? AppColors.surfaceDark : AppColors.hoverLight,
+                      borderRadius: BorderRadius.circular(Radii.medium),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Checkbox(
+                          value: _agreed,
+                          onChanged: (value) =>
+                              setState(() => _agreed = value ?? false),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 14),
+                            child: Text(
+                              'kyc_consent_checkbox_label'.tr,
+                              style: theme.textTheme.bodyMedium,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: Spacing.lg),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: Text('cancel'.tr),
+                      ),
+                    ),
+                    const SizedBox(width: Spacing.md),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: _agreed
+                            ? () => Navigator.of(context).pop(true)
+                            : null,
+                        child: Text('continue'.tr),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 // ── Private banner widgets ───────────────────────────────────────────────────
 
 class _BannerStatChip extends StatelessWidget {
@@ -2157,5 +2428,23 @@ class _CompetitionEntryCard extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+/// Tracks whether the Sandbox DigiLocker SDK reported a completed session.
+///
+/// The SDK's `open()` future resolves on both `session.closed` and
+/// `session.completed`, so this flag is the only way to tell the two apart
+/// afterwards. A `session.completed` event must still be confirmed with the
+/// backend before KYC is treated as verified — this listener only records
+/// that the user finished the DigiLocker flow.
+class _DigilockerCompletionListener implements EventListener {
+  bool sessionCompleted = false;
+
+  @override
+  void onEvent(Map<String, dynamic> event) {
+    if (event['type'] == _kDigilockerSessionCompletedEvent) {
+      sessionCompleted = true;
+    }
   }
 }

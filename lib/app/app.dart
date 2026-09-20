@@ -92,6 +92,7 @@ import 'package:snginepro/features/feed/domain/share_repository.dart';
 import 'package:snginepro/features/feed/data/services/reviews_api_service.dart';
 import 'package:snginepro/features/feed/domain/reviews_repository.dart';
 import 'package:snginepro/features/competitions/data/services/competition_api_service.dart';
+import 'package:snginepro/features/kyc/data/services/kyc_api_service.dart';
 import 'package:snginepro/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:snginepro/features/ai_chat/providers/ai_chat_provider.dart';
 
@@ -268,6 +269,9 @@ class App extends StatelessWidget {
         ),
         Provider<CompetitionApiService>(
           create: (context) => CompetitionApiService(context.read<ApiClient>()),
+        ),
+        Provider<KycApiService>(
+          create: (context) => KycApiService(context.read<ApiClient>()),
         ),
 
         // Ads / Campaigns

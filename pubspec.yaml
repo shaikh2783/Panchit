@@ -86,6 +86,7 @@ dependencies:
   camera: ^0.11.1
   video_thumbnail: ^0.5.3
   ffmpeg_kit_flutter_new: ^3.2.0
+  sandbox_digilocker_sdk: ^1.0.1
 
 
 dev_dependencies:

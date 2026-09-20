@@ -2969,6 +2969,19 @@ const Map<String, String> bnIN = {
   "competition_opening_soon": "শীঘ্রই খুলবে",
   "competition_rank_prefix": "র‌্যাংক #",
 
+  // Competition KYC gate
+  "kyc_required_title": "পরিচয় যাচাইকরণ প্রয়োজন",
+  "kyc_required_message": "প্রতিযোগিতায় অংশগ্রহণ করতে, অনুগ্রহ করে আধার ব্যবহার করে আপনার KYC সম্পূর্ণ করুন।",
+  "kyc_verify_aadhaar": "আধার যাচাই করুন",
+  "kyc_not_now": "এখন নয়",
+  "kyc_status_check_failed": "KYC স্ট্যাটাস পরীক্ষা করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।",
+  "kyc_session_failed": "আধার যাচাইকরণ শুরু করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।",
+  "kyc_verification_failed": "আধার যাচাইকরণ নিশ্চিত করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।",
+  "kyc_config_missing": "আধার যাচাইকরণ এখন উপলব্ধ নয়।",
+  "kyc_consent_title": "আধার বিবরণ শেয়ার করুন",
+  "kyc_consent_message": "Panchit আপনার পরিচয় যাচাই করতে DigiLocker ব্যবহার করে। আপনার আধার OTP এবং বিবরণ DigiLocker দ্বারা পরিচালিত হয়, Panchit দ্বারা নয়।",
+  "kyc_consent_checkbox_label": "আমি KYC যাচাইকরণের জন্য DigiLocker-এর মাধ্যমে আমার আধার বিবরণ শেয়ার করতে সম্মত।",
+
   // Competition Entry Page
   "entry_title": "প্রতিযোগিতায় অংশগ্রহণ",
   "entry_view_details": "বিবরণ দেখুন",
