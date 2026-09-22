@@ -768,9 +768,9 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
             ),
             child: Center(
               child: Text(
-                comment.userName.isNotEmpty 
+                comment.userName.isNotEmpty
                     ? comment.userName.substring(0, 1).toUpperCase()
-                    : 'م',
+                    : 'live_comment_unknown_initial'.tr,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 10,
@@ -941,11 +941,11 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
       if (difference.inSeconds < 60) {
         return 'now'.tr;
       } else if (difference.inMinutes < 60) {
-        return '${difference.inMinutes}د';
+        return 'time_ago_minutes_short'.trParams({'count': '${difference.inMinutes}'});
       } else if (difference.inHours < 24) {
-        return '${difference.inHours}س';
+        return 'time_ago_hours_short'.trParams({'count': '${difference.inHours}'});
       } else {
-        return '${difference.inDays}ي';
+        return 'time_ago_days_short'.trParams({'count': '${difference.inDays}'});
       }
     } catch (e) {
       return 'now'.tr;

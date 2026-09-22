@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import '../../bloc/live_comments_bloc.dart';
 import '../../data/models/live_stream_models.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -108,9 +109,9 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
                     size: 16,
                   ),
                   const SizedBox(width: 8),
-                  const Text(
-                    'التعليقات المباشرة',
-                    style: TextStyle(
+                  Text(
+                    'live_comments_header'.tr,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
@@ -178,12 +179,12 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
                   
                   if (state is LiveCommentsLoaded) {
                     if (state.comments.isEmpty) {
-                      return const Center(
+                      return Center(
                         child: Padding(
-                          padding: EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(16),
                           child: Text(
-                            'لا توجد تعليقات بعد\nكن أول من يعلق!',
-                            style: TextStyle(
+                            'live_comments_empty'.tr,
+                            style: const TextStyle(
                               color: Colors.white70,
                               fontSize: 14,
                             ),
@@ -208,10 +209,10 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
                     );
                   }
                   
-                  return const Center(
+                  return Center(
                     child: Text(
-                      'ابدأ مشاهدة التعليقات المباشرة',
-                      style: TextStyle(
+                      'live_comments_start_watching'.tr,
+                      style: const TextStyle(
                         color: Colors.white70,
                         fontSize: 14,
                       ),
@@ -238,7 +239,7 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
                       controller: _textController,
                       style: const TextStyle(color: Colors.white),
                       decoration: InputDecoration(
-                        hintText: 'أضف تعليق...',
+                        hintText: 'live_comments_hint'.tr,
                         hintStyle: TextStyle(
                           color: Colors.white.withOpacity(0.5),
                         ),
@@ -408,13 +409,13 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
       final difference = now.difference(dateTime);
       
       if (difference.inMinutes < 1) {
-        return 'الآن';
+        return 'now'.tr;
       } else if (difference.inMinutes < 60) {
-        return '${difference.inMinutes}د';
+        return 'time_ago_minutes_short'.trParams({'count': '${difference.inMinutes}'});
       } else if (difference.inHours < 24) {
-        return '${difference.inHours}س';
+        return 'time_ago_hours_short'.trParams({'count': '${difference.inHours}'});
       } else {
-        return '${difference.inDays}ي';
+        return 'time_ago_days_short'.trParams({'count': '${difference.inDays}'});
       }
     } catch (e) {
       return time;

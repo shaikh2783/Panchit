@@ -1,6 +1,7 @@
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
 import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 
 /// خدمة API للبث المباشر - تستخدم ApiClient مصادق من المشروع
 class LiveStreamApiService {
@@ -92,10 +93,10 @@ class LiveStreamApiService {
       } else if (response['status'] == 'success' && response['data'] != null) {
         return response['data'];
       } else {
-        throw Exception('فشل في إنشاء البث: ${response['message'] ?? 'Unknown error'}');
+        throw Exception('live_api_error_create_stream'.trParams({'message': (response['message'] ?? 'Unknown error').toString()}));
       }
     } catch (e) {
-      throw Exception('فشل في إنشاء البث المباشر: $e');
+      throw Exception('live_api_error_create_stream_generic'.trParams({'error': e.toString()}));
     }
   }
 
@@ -126,7 +127,7 @@ class LiveStreamApiService {
       return response;
       
     } catch (e) {
-      throw Exception('فشل في جلب التعليقات: $e');
+      throw Exception('live_api_error_fetch_comments'.trParams({'error': e.toString()}));
     }
   }
 
@@ -160,7 +161,7 @@ class LiveStreamApiService {
       return response;
       
     } catch (e) {
-      throw Exception('فشل في إضافة التعليق: $e');
+      throw Exception('live_api_error_add_comment'.trParams({'error': e.toString()}));
     }
   }
 
@@ -183,7 +184,7 @@ class LiveStreamApiService {
       );
       return response;
     } catch (e) {
-      throw Exception('فشل في التفاعل مع التعليق: $e');
+      throw Exception('live_api_error_react_comment'.trParams({'error': e.toString()}));
     }
   }
 
@@ -201,7 +202,7 @@ class LiveStreamApiService {
       );
       return response;
     } catch (e) {
-      throw Exception('فشل في حذف التعليق: $e');
+      throw Exception('live_api_error_delete_comment'.trParams({'error': e.toString()}));
     }
   }
 
@@ -221,7 +222,7 @@ class LiveStreamApiService {
       );
       return response;
     } catch (e) {
-      throw Exception('فشل في تعديل التعليق: $e');
+      throw Exception('live_api_error_edit_comment'.trParams({'error': e.toString()}));
     }
   }
 
@@ -244,7 +245,7 @@ class LiveStreamApiService {
       );
       return response;
     } catch (e) {
-      throw Exception('فشل في إرسال التفاعل: $e');
+      throw Exception('live_api_error_send_reaction'.trParams({'error': e.toString()}));
     }
   }
 
@@ -333,7 +334,7 @@ class LiveStreamApiService {
       );
       return response;
     } catch (e) {
-      throw Exception('فشل في بدء البث المباشر: $e');
+      throw Exception('live_api_error_start_stream'.trParams({'error': e.toString()}));
     }
   }
 
@@ -353,7 +354,7 @@ class LiveStreamApiService {
       
       return response;
     } catch (e) {
-      throw Exception('فشل في إنهاء البث المباشر: $e');
+      throw Exception('live_api_error_end_stream'.trParams({'error': e.toString()}));
     }
   }
 
@@ -377,7 +378,7 @@ class LiveStreamApiService {
       );
       return response;
     } catch (e) {
-      throw Exception('فشل في جلب قائمة البثوث: $e');
+      throw Exception('live_api_error_fetch_list'.trParams({'error': e.toString()}));
     }
   }
 
@@ -395,7 +396,7 @@ class LiveStreamApiService {
       if (useMockData) {
         return {
           'status': 'success',
-          'message': 'انضمام تجريبي - Backend قيد الصيانة',
+          'message': 'live_api_trial_join_maintenance'.tr,
           'data': {
             'live_count': 3, // عدد ثابت للانضمام الأولي
             'is_live': true,
@@ -430,7 +431,7 @@ class LiveStreamApiService {
         }
       }
       
-      throw Exception('جميع endpoints فشلت');
+      throw Exception('live_api_all_endpoints_failed'.tr);
       
     } catch (e) {
       // Fallback للبيانات التجريبية
@@ -439,7 +440,7 @@ class LiveStreamApiService {
           e.toString().contains('set_time')) {
         return {
           'status': 'success',
-          'message': 'انضمام تجريبي (خطأ في Backend تم تجاهله)',
+          'message': 'live_api_trial_join_error_ignored'.tr,
           'data': {
             'live_count': 1,
             'is_live': true,
@@ -447,7 +448,7 @@ class LiveStreamApiService {
           }
         };
       }
-      throw Exception('فشل في الانضمام للبث: $e');
+      throw Exception('live_api_error_join_stream'.trParams({'error': e.toString()}));
     }
   }
 
@@ -471,7 +472,7 @@ class LiveStreamApiService {
       
     } catch (e) {
       // Return success for graceful cleanup
-      return {'status': 'success', 'message': 'تم المغادرة محلياً'};
+      return {'status': 'success', 'message': 'live_api_left_locally'.tr};
     }
   }  /// جلب تحديثات مباشرة (Long Polling)
   /// GET /apis/php/live/poll
@@ -491,7 +492,7 @@ class LiveStreamApiService {
       );
       return response;
     } catch (e) {
-      throw Exception('فشل في جلب التحديثات: $e');
+      throw Exception('live_api_error_fetch_updates'.trParams({'error': e.toString()}));
     }
   }
 
@@ -512,7 +513,7 @@ class LiveStreamApiService {
       );
       return response;
     } catch (e) {
-      throw Exception('فشل في رفع الملف: $e');
+      throw Exception('live_api_error_upload_file'.trParams({'error': e.toString()}));
     }
   }
 
@@ -534,7 +535,7 @@ class LiveStreamApiService {
       
       return response;
     } catch (e) {
-      throw Exception('فشل في الحصول على Agora token: $e');
+      throw Exception('live_api_error_agora_token'.trParams({'error': e.toString()}));
     }
   }
 
@@ -554,7 +555,7 @@ class LiveStreamApiService {
       
       return response;
     } catch (e) {
-      throw Exception('فشل في جلب البثوث النشطة: $e');
+      throw Exception('live_api_error_fetch_active'.trParams({'error': e.toString()}));
     }
   }
 
@@ -576,7 +577,7 @@ class LiveStreamApiService {
       
       return response;
     } catch (e) {
-      throw Exception('فشل في جلب منشورات البث المباشر: $e');
+      throw Exception('live_api_error_fetch_posts'.trParams({'error': e.toString()}));
     }
   }
 }
