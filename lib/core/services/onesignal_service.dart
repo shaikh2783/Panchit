@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/main.dart' show configCfgP;
@@ -8,6 +7,21 @@ class OneSignalService {
   final ApiClient _apiClient;
 
   OneSignalService(this._apiClient);
+
+  Future<void> loginUser(String? userId) async {
+    if (userId == null || userId.trim().isEmpty) {
+      return;
+    }
+    try {
+      OneSignal.login(userId.trim());
+    } catch (_) {}
+  }
+
+  Future<void> logoutUser() async {
+    try {
+      OneSignal.logout();
+    } catch (_) {}
+  }
 
   /// محاولة الحصول على Player ID من OneSignal مع إعادة المحاولة
   Future<String?> getPlayerId({int maxRetries = 20}) async {
@@ -39,6 +53,13 @@ class OneSignalService {
       return false;
     }
     return updateOneSignalPlayerId(playerId);
+  }
+
+  Future<bool> loginUserAndRegister({
+    required String? userId,
+  }) async {
+    await loginUser(userId);
+    return registerCurrentPlayerId();
   }
 
   /// إرسال Player ID إلى API

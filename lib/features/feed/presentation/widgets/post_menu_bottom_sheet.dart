@@ -747,12 +747,25 @@ class PostMenuBottomSheet extends StatelessWidget {
     Function(PostAction) onAction,
   ) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    // A genuine competition entry must have both a competition ID and a name.
+    final compName = (post.competitionName ?? '').trim();
+    final isCompEntry = post.competitionId != null && compName.isNotEmpty;
+
+    final deleteMessage = isCompEntry
+        ? 'Are you sure you want to delete this post? This post is participating in '
+            '"${compName.isNotEmpty ? compName : 'a competition'}". '
+            'By deleting this post you will lose all points you have collected. '
+            'But you can create a new post if you want in the same competition.'
+        : 'post_menu_delete_confirm'.tr;
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         backgroundColor: isDark ? const Color(0xFF2A2A2A) : Colors.white,
+        titlePadding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+        contentPadding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+        actionsPadding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
         title: Row(
           children: [
             Container(
@@ -768,98 +781,102 @@ class PostMenuBottomSheet extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 12),
-            Text(
-              'post_menu_delete_title'.tr,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.grey[800],
+            Expanded(
+              child: Text(
+                'post_menu_delete_title'.tr,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: isDark ? Colors.white : Colors.grey[800],
+                ),
               ),
             ),
           ],
         ),
         content: Text(
-          'post_menu_delete_confirm'.tr,
+          deleteMessage,
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 15,
             color: isDark ? Colors.grey[300] : Colors.grey[600],
-            height: 1.5,
+            height: 1.55,
           ),
         ),
         actions: [
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: isDark
-                    ? [const Color(0xFF3A3A3A), const Color(0xFF2F2F2F)]
-                    : [Colors.grey[100]!, Colors.white],
-              ),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: isDark
-                    ? Colors.white.withOpacity(0.1)
-                    : Colors.grey.withOpacity(0.3),
-              ),
-            ),
-            child: TextButton(
-              onPressed: () => Navigator.pop(context),
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 12,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: Text(
-                'post_menu_cancel'.tr,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: isDark ? Colors.white : Colors.grey[700],
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Container(
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Colors.red, Color(0xFFD32F2F)],
-              ),
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.red.withOpacity(0.3),
-                  blurRadius: 8,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                onAction(PostAction.deletePost);
-              },
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 12,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: isDark
+                          ? [const Color(0xFF3A3A3A), const Color(0xFF2F2F2F)]
+                          : [Colors.grey[100]!, Colors.white],
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: isDark
+                          ? Colors.white.withOpacity(0.1)
+                          : Colors.grey.withOpacity(0.3),
+                    ),
+                  ),
+                  child: TextButton(
+                    onPressed: () => Navigator.pop(dialogContext),
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 13),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      'post_menu_cancel'.tr,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: isDark ? Colors.white : Colors.grey[700],
+                      ),
+                    ),
+                  ),
                 ),
               ),
-              child: Text(
-                'post_menu_delete_button'.tr,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
+              const SizedBox(width: 12),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Colors.red, Color(0xFFD32F2F)],
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.red.withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pop(dialogContext);
+                      onAction(PostAction.deletePost);
+                    },
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 13),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      'post_menu_delete_button'.tr,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
         ],
       ),

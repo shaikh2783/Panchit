@@ -18,20 +18,40 @@ class ApiClient {
 
   void _log(String msg) {
     if (!kDebugMode) return;
-    debugPrint(msg);
+    // debugPrint splits at 1024 chars by default; use a custom chunked print
+    // to show the full response without truncation.
+    const chunkSize = 800;
+    for (var i = 0; i < msg.length; i += chunkSize) {
+      debugPrint(msg.substring(i, i + chunkSize > msg.length ? msg.length : i + chunkSize));
+    }
   }
 
-  String _truncate(String s, [int max = 1200]) {
-    if (s.length <= max) return s;
-    return '${s.substring(0, max)}...';
+  String _truncate(String s, [int max = 999999]) {
+    return s;
   }
   final AppConfig _config;
   final http.Client _httpClient;
   String? _authToken;
 
+  /// Cap on every non-upload request so a stalled connection surfaces as an
+  /// error instead of hanging its caller forever.
+  static const Duration _requestTimeout = Duration(seconds: 30);
+
+  Future<http.Response> _withTimeout(Future<http.Response> request) {
+    return request.timeout(
+      _requestTimeout,
+      onTimeout: () => throw ApiException(
+        'Request timed out. Please check your connection.',
+        statusCode: 408,
+      ),
+    );
+  }
+
   void updateAuthToken(String? token) {
     _authToken = token;
   }
+
+  bool get hasAuthToken => _authToken != null && _authToken!.isNotEmpty;
 
   Future<Map<String, dynamic>> post(
     String relativePath, {
@@ -55,11 +75,11 @@ class ApiClient {
       _log('➡️ Body: null');
     }
 
-    final response = await _httpClient.post(
+    final response = await _withTimeout(_httpClient.post(
       uri,
       headers: _buildHeaders(headers, asJson: asJson),
       body: _encodeBody(requestBody, asJson: asJson),
-    );
+    ));
     return _handleResponse(response);
   }
 
@@ -78,11 +98,11 @@ class ApiClient {
     } else {
     }
 
-    final response = await _httpClient.put(
+    final response = await _withTimeout(_httpClient.put(
       uri,
       headers: _buildHeaders(headers, asJson: asJson),
       body: _encodeBody(body, asJson: asJson),
-    );
+    ));
     return _handleResponse(response);
   }
 
@@ -95,13 +115,22 @@ class ApiClient {
     void Function(int sentBytes, int totalBytes)? onProgress,
     String? fileName,
   }) async {
-    final request = http.MultipartRequest('POST', _buildUri(relativePath))
+    final uri = _buildUri(relativePath);
+    final request = http.MultipartRequest('POST', uri)
       ..headers.addAll(_buildHeaders({}, asJson: false))
       ..fields.addAll(body);
 
     // Prepare streaming upload to report progress
     final file = File(filePath);
     final total = await file.length();
+
+    _log('➡️ MULTIPART POST $uri');
+    _log('➡️ Fields: $body');
+    _log(
+      '➡️ File: field="$fileFieldName" path="$filePath" '
+      'size=$total bytes contentType=${contentType ?? 'null (octet-stream)'} '
+      'fileName=${fileName ?? _basename(filePath)}',
+    );
 
     // Stream transformer to report progress while reading file content
     int sent = 0;
@@ -130,7 +159,10 @@ class ApiClient {
     request.files.add(multipartFile);
 
     final response = await _httpClient.send(request);
-    return _handleResponse(await http.Response.fromStream(response));
+    final fullResponse = await http.Response.fromStream(response);
+    _log('⬅️ MULTIPART Status: ${fullResponse.statusCode}');
+    _log('⬅️ MULTIPART Response: ${fullResponse.body}');
+    return _handleResponse(fullResponse);
   }
 
   Future<Map<String, dynamic>> get(
@@ -144,7 +176,7 @@ class ApiClient {
     _log('➡️ GET $uri');
     _log('➡️ Headers: $finalHeaders');
 
-    final response = await _httpClient.get(uri, headers: finalHeaders);
+    final response = await _withTimeout(_httpClient.get(uri, headers: finalHeaders));
 
     _log('⬅️ Status: ${response.statusCode}');
     _log('⬅️ Response: ${_truncate(response.body)}');
@@ -160,10 +192,10 @@ class ApiClient {
   }) async {
     final uri = _buildUri(relativePath, queryParameters: queryParameters);
 
-    final response = await _httpClient.delete(
+    final response = await _withTimeout(_httpClient.delete(
       uri,
       headers: _buildHeaders(headers, asJson: true),
-    );
+    ));
     return _handleResponse(response);
   }
 
@@ -173,10 +205,10 @@ class ApiClient {
     Map<String, String>? queryParameters,
     Map<String, String>? headers,
   }) async {
-    final response = await _httpClient.get(
+    final response = await _withTimeout(_httpClient.get(
       _buildUri(relativePath, queryParameters: queryParameters),
       headers: _buildPublicHeaders(headers),
-    );
+    ));
     return _handleResponse(response);
   }
 

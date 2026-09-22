@@ -249,8 +249,8 @@ class SearchResultFactory {
 
 /// أنواع البحث المتاحة
 enum SearchType {
+  users('users', 'Users', 'المستخدمين'),
   posts('posts', 'Posts', 'المنشورات'),
-  users('users', 'Users', 'المستخدمين'), 
   pages('pages', 'Pages', 'الصفحات'),
   groups('groups', 'Groups', 'المجموعات'),
   events('events', 'Events', 'الفعاليات'),

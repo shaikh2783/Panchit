@@ -5,12 +5,14 @@
   "packages": [
     {
       "name": "snginepro",
-      "version": "1.0.10+15",
+      "version": "1.0.13+19",
       "dependencies": [
         "agora_rtc_engine",
+        "audio_waveforms",
         "audioplayers",
         "cached_network_image",
         "cached_video_player_plus",
+        "camera",
         "crypto",
         "cupertino_icons",
         "dart_openai",
@@ -19,12 +21,13 @@
         "emoji_picker_flutter",
         "encrypt",
         "equatable",
+        "ffmpeg_kit_flutter_new",
         "file_picker",
         "flutter",
         "flutter_bloc",
+        "flutter_cache_manager",
         "flutter_html",
         "flutter_markdown",
-        "flutter_paypal_payment",
         "flutter_staggered_animations",
         "flutter_svg",
         "flutter_widget_from_html",
@@ -37,6 +40,7 @@
         "iconsax_flutter",
         "image_picker",
         "intl",
+        "just_audio",
         "lucide_icons_flutter",
         "onesignal_flutter",
         "package_info_plus",
@@ -45,6 +49,7 @@
         "pointycastle",
         "provider",
         "qr_flutter",
+        "razorpay_flutter",
         "record",
         "share_plus",
         "shared_preferences",
@@ -52,6 +57,7 @@
         "timeago",
         "url_launcher",
         "video_player",
+        "video_thumbnail",
         "vimeo_video_player",
         "visibility_detector",
         "youtube_player_flutter"
@@ -119,6 +125,56 @@
       ]
     },
     {
+      "name": "ffmpeg_kit_flutter_new",
+      "version": "3.2.0",
+      "dependencies": [
+        "ffmpeg_kit_flutter_platform_interface",
+        "flutter"
+      ]
+    },
+    {
+      "name": "video_thumbnail",
+      "version": "0.5.6",
+      "dependencies": [
+        "flutter"
+      ]
+    },
+    {
+      "name": "camera",
+      "version": "0.11.4",
+      "dependencies": [
+        "camera_android_camerax",
+        "camera_avfoundation",
+        "camera_platform_interface",
+        "camera_web",
+        "flutter",
+        "flutter_plugin_android_lifecycle"
+      ]
+    },
+    {
+      "name": "flutter_cache_manager",
+      "version": "3.4.1",
+      "dependencies": [
+        "clock",
+        "collection",
+        "file",
+        "flutter",
+        "http",
+        "path",
+        "path_provider",
+        "rxdart",
+        "sqflite",
+        "uuid"
+      ]
+    },
+    {
+      "name": "audio_waveforms",
+      "version": "2.0.2",
+      "dependencies": [
+        "flutter"
+      ]
+    },
+    {
       "name": "sign_in_with_apple",
       "version": "7.0.1",
       "dependencies": [
@@ -130,7 +186,7 @@
     },
     {
       "name": "font_awesome_flutter",
-      "version": "10.12.0",
+      "version": "11.0.0",
       "dependencies": [
         "flutter"
       ]
@@ -288,12 +344,11 @@
       ]
     },
     {
-      "name": "flutter_paypal_payment",
-      "version": "1.0.8",
+      "name": "razorpay_flutter",
+      "version": "1.4.5",
       "dependencies": [
-        "dio",
-        "flutter",
-        "flutter_inappwebview"
+        "eventify",
+        "flutter"
       ]
     },
     {
@@ -307,7 +362,7 @@
     },
     {
       "name": "onesignal_flutter",
-      "version": "5.3.4",
+      "version": "5.6.4",
       "dependencies": [
         "flutter"
       ]
@@ -440,6 +495,23 @@
         "path_provider_linux",
         "path_provider_platform_interface",
         "path_provider_windows"
+      ]
+    },
+    {
+      "name": "just_audio",
+      "version": "0.9.46",
+      "dependencies": [
+        "async",
+        "audio_session",
+        "crypto",
+        "flutter",
+        "just_audio_platform_interface",
+        "just_audio_web",
+        "meta",
+        "path",
+        "path_provider",
+        "rxdart",
+        "uuid"
       ]
     },
     {
@@ -669,7 +741,7 @@
     },
     {
       "name": "meta",
-      "version": "1.16.0",
+      "version": "1.18.0",
       "dependencies": []
     },
     {
@@ -780,7 +852,7 @@
     },
     {
       "name": "matcher",
-      "version": "0.12.17",
+      "version": "0.12.19",
       "dependencies": [
         "async",
         "meta",
@@ -791,7 +863,7 @@
     },
     {
       "name": "test_api",
-      "version": "0.7.6",
+      "version": "0.7.11",
       "dependencies": [
         "async",
         "boolean_selector",
@@ -802,6 +874,96 @@
         "stream_channel",
         "string_scanner",
         "term_glyph"
+      ]
+    },
+    {
+      "name": "ffmpeg_kit_flutter_platform_interface",
+      "version": "0.2.1",
+      "dependencies": [
+        "flutter",
+        "plugin_platform_interface"
+      ]
+    },
+    {
+      "name": "flutter_plugin_android_lifecycle",
+      "version": "2.0.32",
+      "dependencies": [
+        "flutter"
+      ]
+    },
+    {
+      "name": "camera_web",
+      "version": "0.3.5+3",
+      "dependencies": [
+        "camera_platform_interface",
+        "flutter",
+        "flutter_web_plugins",
+        "stream_transform",
+        "web"
+      ]
+    },
+    {
+      "name": "camera_platform_interface",
+      "version": "2.13.0",
+      "dependencies": [
+        "cross_file",
+        "flutter",
+        "plugin_platform_interface",
+        "stream_transform"
+      ]
+    },
+    {
+      "name": "camera_avfoundation",
+      "version": "0.9.23+2",
+      "dependencies": [
+        "camera_platform_interface",
+        "flutter",
+        "stream_transform"
+      ]
+    },
+    {
+      "name": "camera_android_camerax",
+      "version": "0.6.30",
+      "dependencies": [
+        "async",
+        "camera_platform_interface",
+        "flutter",
+        "meta",
+        "stream_transform"
+      ]
+    },
+    {
+      "name": "uuid",
+      "version": "4.5.2",
+      "dependencies": [
+        "crypto",
+        "fixnum",
+        "meta"
+      ]
+    },
+    {
+      "name": "sqflite",
+      "version": "2.4.2",
+      "dependencies": [
+        "flutter",
+        "path",
+        "sqflite_android",
+        "sqflite_common",
+        "sqflite_darwin",
+        "sqflite_platform_interface"
+      ]
+    },
+    {
+      "name": "rxdart",
+      "version": "0.28.0",
+      "dependencies": []
+    },
+    {
+      "name": "file",
+      "version": "7.0.1",
+      "dependencies": [
+        "meta",
+        "path"
       ]
     },
     {
@@ -871,14 +1033,6 @@
         "flutter_web_plugins",
         "url_launcher_platform_interface",
         "web"
-      ]
-    },
-    {
-      "name": "file",
-      "version": "7.0.1",
-      "dependencies": [
-        "meta",
-        "path"
       ]
     },
     {
@@ -1135,6 +1289,11 @@
       ]
     },
     {
+      "name": "eventify",
+      "version": "1.0.1",
+      "dependencies": []
+    },
+    {
       "name": "iris_method_channel",
       "version": "2.2.4",
       "dependencies": [
@@ -1240,22 +1399,6 @@
       "version": "2.1.0",
       "dependencies": [
         "flutter"
-      ]
-    },
-    {
-      "name": "flutter_cache_manager",
-      "version": "3.4.1",
-      "dependencies": [
-        "clock",
-        "collection",
-        "file",
-        "flutter",
-        "http",
-        "path",
-        "path_provider",
-        "rxdart",
-        "sqflite",
-        "uuid"
       ]
     },
     {
@@ -1366,12 +1509,32 @@
       ]
     },
     {
-      "name": "uuid",
-      "version": "4.5.2",
+      "name": "audio_session",
+      "version": "0.1.25",
       "dependencies": [
-        "crypto",
-        "fixnum",
-        "meta"
+        "flutter",
+        "flutter_web_plugins",
+        "meta",
+        "rxdart"
+      ]
+    },
+    {
+      "name": "just_audio_web",
+      "version": "0.4.16",
+      "dependencies": [
+        "flutter",
+        "flutter_web_plugins",
+        "just_audio_platform_interface",
+        "synchronized",
+        "web"
+      ]
+    },
+    {
+      "name": "just_audio_platform_interface",
+      "version": "4.6.0",
+      "dependencies": [
+        "flutter",
+        "plugin_platform_interface"
       ]
     },
     {
@@ -1493,13 +1656,6 @@
       "name": "asn1lib",
       "version": "1.6.5",
       "dependencies": []
-    },
-    {
-      "name": "flutter_plugin_android_lifecycle",
-      "version": "2.0.32",
-      "dependencies": [
-        "flutter"
-      ]
     },
     {
       "name": "image_picker_windows",
@@ -1664,14 +1820,14 @@
     },
     {
       "name": "material_color_utilities",
-      "version": "0.11.1",
+      "version": "0.13.0",
       "dependencies": [
         "collection"
       ]
     },
     {
       "name": "characters",
-      "version": "1.4.0",
+      "version": "1.4.1",
       "dependencies": []
     },
     {
@@ -1741,29 +1897,63 @@
       ]
     },
     {
+      "name": "stream_transform",
+      "version": "2.1.1",
+      "dependencies": []
+    },
+    {
+      "name": "fixnum",
+      "version": "1.1.1",
+      "dependencies": []
+    },
+    {
+      "name": "sqflite_common",
+      "version": "2.5.6",
+      "dependencies": [
+        "meta",
+        "path",
+        "synchronized"
+      ]
+    },
+    {
+      "name": "sqflite_platform_interface",
+      "version": "2.4.0",
+      "dependencies": [
+        "flutter",
+        "meta",
+        "platform",
+        "plugin_platform_interface",
+        "sqflite_common"
+      ]
+    },
+    {
+      "name": "sqflite_darwin",
+      "version": "2.4.2",
+      "dependencies": [
+        "flutter",
+        "meta",
+        "path",
+        "sqflite_common",
+        "sqflite_platform_interface"
+      ]
+    },
+    {
+      "name": "sqflite_android",
+      "version": "2.4.2+2",
+      "dependencies": [
+        "flutter",
+        "path",
+        "sqflite_common",
+        "sqflite_platform_interface"
+      ]
+    },
+    {
       "name": "webview_flutter_platform_interface",
       "version": "2.14.0",
       "dependencies": [
         "flutter",
         "meta",
         "plugin_platform_interface"
-      ]
-    },
-    {
-      "name": "just_audio",
-      "version": "0.9.46",
-      "dependencies": [
-        "async",
-        "audio_session",
-        "crypto",
-        "flutter",
-        "just_audio_platform_interface",
-        "just_audio_web",
-        "meta",
-        "path",
-        "path_provider",
-        "rxdart",
-        "uuid"
       ]
     },
     {
@@ -1852,23 +2042,6 @@
       ]
     },
     {
-      "name": "sqflite",
-      "version": "2.4.2",
-      "dependencies": [
-        "flutter",
-        "path",
-        "sqflite_android",
-        "sqflite_common",
-        "sqflite_darwin",
-        "sqflite_platform_interface"
-      ]
-    },
-    {
-      "name": "rxdart",
-      "version": "0.28.0",
-      "dependencies": []
-    },
-    {
       "name": "platform",
       "version": "3.1.6",
       "dependencies": []
@@ -1880,11 +2053,6 @@
         "meta",
         "path"
       ]
-    },
-    {
-      "name": "fixnum",
-      "version": "1.1.1",
-      "dependencies": []
     },
     {
       "name": "file_selector_windows",
@@ -1938,35 +2106,6 @@
       "dependencies": []
     },
     {
-      "name": "audio_session",
-      "version": "0.1.25",
-      "dependencies": [
-        "flutter",
-        "flutter_web_plugins",
-        "meta",
-        "rxdart"
-      ]
-    },
-    {
-      "name": "just_audio_web",
-      "version": "0.4.16",
-      "dependencies": [
-        "flutter",
-        "flutter_web_plugins",
-        "just_audio_platform_interface",
-        "synchronized",
-        "web"
-      ]
-    },
-    {
-      "name": "just_audio_platform_interface",
-      "version": "4.6.0",
-      "dependencies": [
-        "flutter",
-        "plugin_platform_interface"
-      ]
-    },
-    {
       "name": "wakelock_plus",
       "version": "1.4.0",
       "dependencies": [
@@ -1984,47 +2123,6 @@
       "name": "flutter_inappwebview_internal_annotations",
       "version": "1.2.0",
       "dependencies": []
-    },
-    {
-      "name": "sqflite_common",
-      "version": "2.5.6",
-      "dependencies": [
-        "meta",
-        "path",
-        "synchronized"
-      ]
-    },
-    {
-      "name": "sqflite_platform_interface",
-      "version": "2.4.0",
-      "dependencies": [
-        "flutter",
-        "meta",
-        "platform",
-        "plugin_platform_interface",
-        "sqflite_common"
-      ]
-    },
-    {
-      "name": "sqflite_darwin",
-      "version": "2.4.2",
-      "dependencies": [
-        "flutter",
-        "meta",
-        "path",
-        "sqflite_common",
-        "sqflite_platform_interface"
-      ]
-    },
-    {
-      "name": "sqflite_android",
-      "version": "2.4.2+2",
-      "dependencies": [
-        "flutter",
-        "path",
-        "sqflite_common",
-        "sqflite_platform_interface"
-      ]
     },
     {
       "name": "dbus",

@@ -35,7 +35,6 @@ import 'package:snginepro/features/offers/presentation/pages/offer_detail_page.d
 import 'package:snginepro/features/funding/presentation/pages/funding_detail_page.dart';
 import 'package:snginepro/features/funding/presentation/pages/funding_donate_page.dart';
 import 'package:snginepro/features/wallet/presentation/pages/wallet_packages_page.dart';
-import 'package:video_player/video_player.dart';
 import '../../../agora/presentation/pages/live_stream_viewer_page.dart';
 import 'package:snginepro/features/feed/presentation/widgets/adaptive_video_player.dart';
 import 'package:snginepro/features/feed/presentation/widgets/post_audio_widget.dart';
@@ -61,6 +60,8 @@ import 'package:snginepro/features/wallet/data/services/wallet_api_service.dart'
 import 'package:snginepro/features/wallet/domain/wallet_repository.dart';
 import 'package:snginepro/features/wallet/presentation/pages/wallet_page.dart';
 import 'package:snginepro/features/blog/presentation/pages/blog_post_page.dart';
+import 'package:snginepro/features/competitions/presentation/pages/competition_detail_page.dart';
+import 'package:snginepro/features/competitions/presentation/widgets/competition_widgets.dart';
 import 'package:snginepro/features/feed/presentation/widgets/share_post_dialog.dart';
 import 'package:snginepro/features/feed/presentation/widgets/post_reviews_bottom_sheet.dart';
 import 'package:snginepro/features/messenger/presentation/pages/chat_page.dart';
@@ -156,6 +157,129 @@ class _PostCardState extends State<PostCard>
     super.dispose();
   }
 
+  bool get _isCompetitionPost =>
+      _currentPost.isCompetitionEntry || _currentPost.competitionId != null;
+
+  bool get _isCompetitionWinner =>
+      _currentPost.isWinner ||
+      ((_currentPost.winnerRank ?? _currentPost.competitionRank) != null &&
+          (_currentPost.winnerRank ?? _currentPost.competitionRank)! <= 3);
+
+  int? get _winnerRank => _currentPost.winnerRank ?? _currentPost.competitionRank;
+
+  bool get _showActiveCompetitionBadge {
+    if (!_isCompetitionPost) return false;
+    if (_isCompetitionWinner) return false;
+    final status = _currentPost.competitionStatus?.toLowerCase();
+    return status == null ||
+        status.contains('live') ||
+        status.contains('voting') ||
+        status.contains('registration_open') ||
+        status.contains('open');
+  }
+
+  void _openCompetitionDetails() {
+    final competitionId = _currentPost.competitionId;
+    if (competitionId == null) return;
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => CompetitionDetailPage(competitionId: competitionId),
+      ),
+    );
+  }
+
+  Widget _buildCompetitionWinnerBanner(BuildContext context, ThemeData theme) {
+    final name = _currentPost.competitionBadgeText ??
+        _currentPost.competitionName;
+    final rank = _winnerRank;
+
+    return GestureDetector(
+      onTap: _openCompetitionDetails,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: [
+              const Color(0xFFFFD700).withValues(alpha: 0.18),
+              const Color(0xFFB8860B).withValues(alpha: 0.07),
+            ],
+          ),
+          border: Border(
+            bottom: BorderSide(
+              color: const Color(0xFFFFD700).withValues(alpha: 0.30),
+            ),
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Color(0xFFFFD700), Color(0xFFB8860B)],
+                ),
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFFFFD700).withValues(alpha: 0.45),
+                    blurRadius: 6,
+                    spreadRadius: 1,
+                  ),
+                ],
+              ),
+              child: const Icon(Iconsax.cup, size: 15, color: Colors.white),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'competition_winner_label'.tr,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: const Color(0xFFB8860B),
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.2,
+                    ),
+                  ),
+                  if (name != null) ...[
+                    const SizedBox(height: 1),
+                    Text(
+                      name,
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            if (rank != null) ...[
+              const SizedBox(width: 8),
+              WinnerRankBadge(rank: rank, compact: true),
+            ],
+            const SizedBox(width: 6),
+            Icon(
+              Iconsax.arrow_right_3,
+              size: 14,
+              color: const Color(0xFFB8860B).withValues(alpha: 0.55),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   void didUpdateWidget(covariant PostCard oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -165,9 +289,9 @@ class _PostCardState extends State<PostCard>
       final isDifferentPost = newPost.id != oldWidget.post.id;
       final shouldTrackAdView =
           isDifferentPost &&
-          newPost.isAd &&
-          newPost.campaignBidding == 'view' &&
-          newPost.campaignId != null;
+              newPost.isAd &&
+              newPost.campaignBidding == 'view' &&
+              newPost.campaignId != null;
 
       // Reinitialize video if ad video changed
       if (isDifferentPost && newPost.isAd && newPost.adsVideo != null && newPost.adsVideo!.isNotEmpty) {
@@ -289,8 +413,8 @@ class _PostCardState extends State<PostCard>
         context.read<PostsBloc>().add(UpdatePostEvent(_currentPost));
         final priceText = _currentPost.postPrice != null
             ? _currentPost.postPrice!.toStringAsFixed(
-                _currentPost.postPrice! % 1 == 0 ? 0 : 2,
-              )
+          _currentPost.postPrice! % 1 == 0 ? 0 : 2,
+        )
             : null;
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -588,7 +712,7 @@ class _PostCardState extends State<PostCard>
                       message.toLowerCase().contains(
                         "don't have enough balance",
                       ) ||
-                      _isInsufficientBalanceError(ApiException(message));
+                          _isInsufficientBalanceError(ApiException(message));
 
                   if (needsTopUp) {
                     Navigator.pop(sheetContext);
@@ -654,7 +778,7 @@ class _PostCardState extends State<PostCard>
 
                 final needsTopUp =
                     _isInsufficientBalanceError(e) ||
-                    message.toLowerCase().contains("don't have enough balance");
+                        message.toLowerCase().contains("don't have enough balance");
 
                 if (needsTopUp) {
                   Navigator.pop(sheetContext);
@@ -728,9 +852,9 @@ class _PostCardState extends State<PostCard>
                       _Avatar(
                         url: _currentPost.authorAvatarUrl != null
                             ? sheetContext
-                                  .read<AppConfig>()
-                                  .mediaAsset(_currentPost.authorAvatarUrl!)
-                                  .toString()
+                            .read<AppConfig>()
+                            .mediaAsset(_currentPost.authorAvatarUrl!)
+                            .toString()
                             : null,
                         radius: 20,
                         showOnlineIndicator: _currentPost.authorType == 'user',
@@ -782,15 +906,15 @@ class _PostCardState extends State<PostCard>
                     child: ElevatedButton.icon(
                       icon: isSubmitting
                           ? const SizedBox(
-                              width: 18,
-                              height: 18,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation(
-                                  Colors.white,
-                                ),
-                              ),
-                            )
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation(
+                            Colors.white,
+                          ),
+                        ),
+                      )
                           : const Icon(Iconsax.send_2),
                       label: Text(isSubmitting ? 'Sending...' : 'Send Tip'),
                       onPressed: isSubmitting ? null : sendTip,
@@ -844,13 +968,13 @@ class _PostCardState extends State<PostCard>
         content: Text(
           isMarkingAsAdult
               ? 'This will:\n'
-                    '• Add 18+ label to your post\n'
-                    '• Apply blur to all photos\n'
-                    '• Require age verification to view'
+              '• Add 18+ label to your post\n'
+              '• Apply blur to all photos\n'
+              '• Require age verification to view'
               : 'This will:\n'
-                    '• Remove 18+ label\n'
-                    '• Remove blur from photos\n'
-                    '• Make content visible to everyone',
+              '• Remove 18+ label\n'
+              '• Remove blur from photos\n'
+              '• Make content visible to everyone',
         ),
         actions: [
           TextButton(
@@ -959,9 +1083,7 @@ class _PostCardState extends State<PostCard>
     }
   }
 
-  /// التعامل مع إجراءات المنشور
   Future<void> _handlePostAction(PostAction action) async {
-    // معالجة خاصة لتعديل المنشور
     if (action == PostAction.editPost) {
       await Navigator.push(
         context,
@@ -973,8 +1095,6 @@ class _PostCardState extends State<PostCard>
                 _currentPost = updatedPost;
               });
               widget.onPostUpdated?.call(updatedPost);
-
-              // تحديث PostsBloc للتأكد من تحديث جميع الواجهات
               if (mounted) {
                 context.read<PostsBloc>().add(UpdatePostEvent(updatedPost));
               }
@@ -984,8 +1104,6 @@ class _PostCardState extends State<PostCard>
       );
       return;
     }
-
-    // معالجة خاصة لتعليم المنشور كـ للبالغين
     if (action == PostAction.markAsAdult ||
         action == PostAction.unmarkAsAdult) {
       await _handleAdultContentAction(action);
@@ -1249,10 +1367,10 @@ class _PostCardState extends State<PostCard>
 
   // 📢 Build Ad Card - Professional & Unique Design
   Widget _buildAdCard(
-    BuildContext context,
-    ThemeData theme,
-    Function mediaAsset,
-  ) {
+      BuildContext context,
+      ThemeData theme,
+      Function mediaAsset,
+      ) {
     final isDark = theme.brightness == Brightness.dark;
 
     return Container(
@@ -1265,9 +1383,9 @@ class _PostCardState extends State<PostCard>
           end: Alignment.bottomRight,
           colors: isDark
               ? [
-                  theme.colorScheme.surfaceContainerHighest,
-                  theme.colorScheme.surface,
-                ]
+            theme.colorScheme.surfaceContainerHighest,
+            theme.colorScheme.surface,
+          ]
               : [Colors.white, theme.colorScheme.surfaceContainerLowest],
         ),
         boxShadow: [
@@ -1385,34 +1503,23 @@ class _PostCardState extends State<PostCard>
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
                               child:
-                                  _currentPost.targetPicture != null &&
-                                      _currentPost.targetPicture!.isNotEmpty
+                              _currentPost.targetPicture != null &&
+                                  _currentPost.targetPicture!.isNotEmpty
                                   ? CachedNetworkImage(
-                                      imageUrl: _currentPost.targetPicture!,
-                                      fit: BoxFit.cover,
-                                      placeholder: (context, url) => Container(
-                                        color: theme
-                                            .colorScheme
-                                            .surfaceContainerHighest,
-                                        child: Icon(
-                                          _getAdTypeIcon(),
-                                          size: 24,
-                                          color: theme.colorScheme.outline,
-                                        ),
-                                      ),
-                                      errorWidget: (context, url, error) =>
-                                          Container(
-                                            color: theme
-                                                .colorScheme
-                                                .surfaceContainerHighest,
-                                            child: Icon(
-                                              _getAdTypeIcon(),
-                                              size: 24,
-                                              color: theme.colorScheme.outline,
-                                            ),
-                                          ),
-                                    )
-                                  : Container(
+                                imageUrl: _currentPost.targetPicture!,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => Container(
+                                  color: theme
+                                      .colorScheme
+                                      .surfaceContainerHighest,
+                                  child: Icon(
+                                    _getAdTypeIcon(),
+                                    size: 24,
+                                    color: theme.colorScheme.outline,
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    Container(
                                       color: theme
                                           .colorScheme
                                           .surfaceContainerHighest,
@@ -1422,6 +1529,17 @@ class _PostCardState extends State<PostCard>
                                         color: theme.colorScheme.outline,
                                       ),
                                     ),
+                              )
+                                  : Container(
+                                color: theme
+                                    .colorScheme
+                                    .surfaceContainerHighest,
+                                child: Icon(
+                                  _getAdTypeIcon(),
+                                  size: 24,
+                                  color: theme.colorScheme.outline,
+                                ),
+                              ),
                             ),
                           ),
                           const SizedBox(width: 12),
@@ -1451,9 +1569,9 @@ class _PostCardState extends State<PostCard>
                                       _getAdTypeLabel(),
                                       style: theme.textTheme.labelSmall
                                           ?.copyWith(
-                                            color: theme.colorScheme.primary,
-                                            fontWeight: FontWeight.w500,
-                                          ),
+                                        color: theme.colorScheme.primary,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -1604,29 +1722,29 @@ class _PostCardState extends State<PostCard>
           width: double.infinity,
           child: _adVideoController != null && _adVideoController!.value.isInitialized
               ? FittedBox(
-                  fit: BoxFit.cover,
-                  child: SizedBox(
-                    width: _adVideoController!.value.size.width,
-                    height: _adVideoController!.value.size.height,
-                    child: VideoPlayer(_adVideoController!),
-                  ),
-                )
+            fit: BoxFit.cover,
+            child: SizedBox(
+              width: _adVideoController!.value.size.width,
+              height: _adVideoController!.value.size.height,
+              child: VideoPlayer(_adVideoController!),
+            ),
+          )
               : Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        theme.colorScheme.surfaceContainerHighest,
-                        theme.colorScheme.surface,
-                      ],
-                    ),
-                  ),
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: theme.colorScheme.primary,
-                    ),
-                  ),
-                ),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  theme.colorScheme.surfaceContainerHighest,
+                  theme.colorScheme.surface,
+                ],
+              ),
+            ),
+            child: Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: theme.colorScheme.primary,
+              ),
+            ),
+          ),
         ),
         // Gradient Overlay at bottom
         Positioned(
@@ -1835,8 +1953,8 @@ class _PostCardState extends State<PostCard>
         final errorMessage = e.toString();
         final isSubscriptionRequired =
             errorMessage.contains('SUBSCRIPTION_REQUIRED') ||
-            errorMessage.contains('You need to subscribe') ||
-            errorMessage.contains('Error: SUBSCRIPTION_REQUIRED');
+                errorMessage.contains('You need to subscribe') ||
+                errorMessage.contains('Error: SUBSCRIPTION_REQUIRED');
 
         if (isSubscriptionRequired) {
           // عرض dialog مع خيار الذهاب للباقات
@@ -1910,13 +2028,47 @@ class _PostCardState extends State<PostCard>
       return const SizedBox.shrink();
     }
 
-    return ElevatedCard(
-      key: ValueKey('post_card_${_currentPost.id}'),
+    return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      padding: EdgeInsets.zero,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        border: _isCompetitionWinner
+            ? Border.all(
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.24),
+              )
+            : null,
+        boxShadow: _showActiveCompetitionBadge
+            ? [
+                BoxShadow(
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.12),
+                  blurRadius: 22,
+                  spreadRadius: 1,
+                ),
+              ]
+            : const [],
+      ),
+      child: ElevatedCard(
+        key: ValueKey('post_card_${_currentPost.id}'),
+        margin: EdgeInsets.zero,
+        padding: EdgeInsets.zero,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (_isCompetitionWinner)
+              _buildCompetitionWinnerBanner(context, theme)
+            else if (_showActiveCompetitionBadge)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: CompetitionEntryBadge(
+                    label: _currentPost.competitionBadgeText ??
+                        (_currentPost.competitionName ?? 'Competition'),
+                    onTap: _openCompetitionDetails,
+                    status: _currentPost.competitionStatus,
+                  ),
+                ),
+              ),
           Padding(
             padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
             child: Row(
@@ -2193,7 +2345,7 @@ class _PostCardState extends State<PostCard>
                                     Text(
                                       'Reels',
                                       style:
-                                          theme.textTheme.bodySmall?.copyWith(
+                                      theme.textTheme.bodySmall?.copyWith(
                                         color: theme.colorScheme.primary,
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -2396,16 +2548,16 @@ class _PostCardState extends State<PostCard>
                 ),
                 child: _currentPost.hasColoredPattern
                     ? RepaintBoundary(
-                        child: _ColoredTextWidget(
-                          key: ValueKey('colored_${_currentPost.id}'),
-                          htmlContent: _currentPost.text,
-                          coloredPattern: _currentPost.coloredPattern!,
-                        ),
-                      )
+                  child: _ColoredTextWidget(
+                    key: ValueKey('colored_${_currentPost.id}'),
+                    htmlContent: _currentPost.text,
+                    coloredPattern: _currentPost.coloredPattern!,
+                  ),
+                )
                     : HtmlTextWidget(
-                        htmlContent: _currentPost.text,
-                        maxLength: 300,
-                      ),
+                  htmlContent: _currentPost.text,
+                  maxLength: 300,
+                ),
               ),
             // Product quick info (price + availability + reviews)
             if (_currentPost.isProductPost) ...[
@@ -2434,9 +2586,9 @@ class _PostCardState extends State<PostCard>
                                   ? _currentPost.productName!
                                   : 'Product',
                               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 16,
-                                  ),
+                                fontWeight: FontWeight.w700,
+                                fontSize: 16,
+                              ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -2447,426 +2599,427 @@ class _PostCardState extends State<PostCard>
                       // Status Badges
                       Wrap(
                         spacing: 8,
-                            children: [
-                              if ((_currentPost.productStatus ?? '').isNotEmpty)
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                                  decoration: BoxDecoration(
-                                    color: _currentPost.productStatus == 'new' ? Colors.blue.withOpacity(0.1) : Colors.orange.withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: _currentPost.productStatus == 'new' ? Colors.blue : Colors.orange,
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: Text(
-                                    _currentPost.productStatus == 'new' ? '🆕 New' : '♻️ Used',
-                                    style: TextStyle(
-                                      color: _currentPost.productStatus == 'new' ? Colors.blue : Colors.orange,
+                        children: [
+                          if ((_currentPost.productStatus ?? '').isNotEmpty)
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: _currentPost.productStatus == 'new' ? Colors.blue.withOpacity(0.1) : Colors.orange.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: _currentPost.productStatus == 'new' ? Colors.blue : Colors.orange,
+                                  width: 1,
+                                ),
+                              ),
+                              child: Text(
+                                _currentPost.productStatus == 'new' ? '🆕 New' : '♻️ Used',
+                                style: TextStyle(
+                                  color: _currentPost.productStatus == 'new' ? Colors.blue : Colors.orange,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          if (_currentPost.isDigital)
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: Colors.purple.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: Colors.purple,
+                                  width: 1,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(Icons.cloud_download, size: 14, color: Colors.purple),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    'Digital',
+                                    style: const TextStyle(
+                                      color: Colors.purple,
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
+                                ],
+                              ),
+                            ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: _currentPost.available ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: _currentPost.available ? Colors.green : Colors.red,
+                                width: 1,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  _currentPost.available ? Icons.check_circle : Icons.cancel,
+                                  size: 14,
+                                  color: _currentPost.available ? Colors.green : Colors.red,
                                 ),
-                              if (_currentPost.isDigital)
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                                  decoration: BoxDecoration(
-                                    color: Colors.purple.withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: Colors.purple,
-                                      width: 1,
+                                const SizedBox(width: 4),
+                                Text(
+                                  _currentPost.available ? 'In Stock' : 'Sold Out',
+                                  style: TextStyle(
+                                    color: _currentPost.available ? Colors.green : Colors.red,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      const Divider(height: 1),
+                      const SizedBox(height: 12),
+                      // Product Description
+                      if (_currentPost.text.isNotEmpty)
+                        Text(
+                          _currentPost.text.replaceAll(RegExp(r'<[^>]*>'), ''),
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            height: 1.5,
+                          ),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      if (_currentPost.text.isNotEmpty)
+                        const SizedBox(height: 12),
+                      if (_currentPost.text.isNotEmpty)
+                        const Divider(height: 1),
+                      if (_currentPost.text.isNotEmpty)
+                        const SizedBox(height: 12),
+                      // Price and Details Row
+                      Row(
+                        children: [
+                          if (_currentPost.postPrice != null)
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Price',
+                                    style: TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.w500),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '\$${_currentPost.postPrice!.toStringAsFixed(
+                                      _currentPost.postPrice! % 1 == 0 ? 0 : 2,
+                                    )}',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16,
+                                      color: Colors.blue,
                                     ),
                                   ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
+                                ],
+                              ),
+                            ),
+                          if ((_currentPost.productLocation ?? '').isNotEmpty)
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Location',
+                                    style: TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.w500),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Row(
                                     children: [
-                                      const Icon(Icons.cloud_download, size: 14, color: Colors.purple),
+                                      const Icon(Iconsax.location, size: 14, color: Colors.teal),
                                       const SizedBox(width: 4),
-                                      Text(
-                                        'Digital',
-                                        style: const TextStyle(
-                                          color: Colors.purple,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,
+                                      Expanded(
+                                        child: Text(
+                                          _currentPost.productLocation!,
+                                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
                                     ],
                                   ),
-                                ),
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: _currentPost.available ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: _currentPost.available ? Colors.green : Colors.red,
-                                    width: 1,
+                                ],
+                              ),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      // Category and Reviews Row
+                      Row(
+                        children: [
+                          if ((_currentPost.productCategoryName ?? '').isNotEmpty)
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Category',
+                                    style: TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.w500),
                                   ),
+                                  const SizedBox(height: 4),
+                                  Row(
+                                    children: [
+                                      const Icon(Iconsax.category, size: 14, color: Colors.amber),
+                                      const SizedBox(width: 4),
+                                      Expanded(
+                                        child: Text(
+                                          HtmlDecoder.decode(_currentPost.productCategoryName!),
+                                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Reviews',
+                                  style: TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.w500),
                                 ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
+                                const SizedBox(height: 4),
+                                Row(
                                   children: [
-                                    Icon(
-                                      _currentPost.available ? Icons.check_circle : Icons.cancel,
-                                      size: 14,
-                                      color: _currentPost.available ? Colors.green : Colors.red,
-                                    ),
+                                    const Icon(Iconsax.star, size: 14, color: Colors.orange),
                                     const SizedBox(width: 4),
                                     Text(
-                                      _currentPost.available ? 'In Stock' : 'Sold Out',
-                                      style: TextStyle(
-                                        color: _currentPost.available ? Colors.green : Colors.red,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                      '${_currentPost.reviewsCountFormatted}',
+                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
                                     ),
                                   ],
                                 ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 12),
-                          const Divider(height: 1),
-                          const SizedBox(height: 12),
-                          // Product Description
-                          if (_currentPost.text.isNotEmpty)
-                            Text(
-                              _currentPost.text.replaceAll(RegExp(r'<[^>]*>'), ''),
-                              style: const TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                                height: 1.5,
-                              ),
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
+                              ],
                             ),
-                          if (_currentPost.text.isNotEmpty)
-                            const SizedBox(height: 12),
-                          if (_currentPost.text.isNotEmpty)
-                            const Divider(height: 1),
-                          if (_currentPost.text.isNotEmpty)
-                            const SizedBox(height: 12),
-                          // Price and Details Row
-                          Row(
-                            children: [
-                              if (_currentPost.postPrice != null)
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        'Price',
-                                        style: TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.w500),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        '\$${_currentPost.postPrice!.toStringAsFixed(
-                                          _currentPost.postPrice! % 1 == 0 ? 0 : 2,
-                                        )}',
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 16,
-                                          color: Colors.blue,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              if ((_currentPost.productLocation ?? '').isNotEmpty)
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        'Location',
-                                        style: TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.w500),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Row(
-                                        children: [
-                                          const Icon(Iconsax.location, size: 14, color: Colors.teal),
-                                          const SizedBox(width: 4),
-                                          Expanded(
-                                            child: Text(
-                                              _currentPost.productLocation!,
-                                              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                            ],
                           ),
-                          const SizedBox(height: 12),
-                          // Category and Reviews Row
-                          Row(
-                            children: [
-                              if ((_currentPost.productCategoryName ?? '').isNotEmpty)
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        'Category',
-                                        style: TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.w500),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Row(
-                                        children: [
-                                          const Icon(Iconsax.category, size: 14, color: Colors.amber),
-                                          const SizedBox(width: 4),
-                                          Expanded(
-                                            child: Text(
-                                              HtmlDecoder.decode(_currentPost.productCategoryName!),
-                                              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 14),
+                      const Divider(height: 1),
+                      const SizedBox(height: 14),
+                      // Product Action Buttons
+                      Row(
+                        children: [
+                          // Buy Button
+                          if (_currentPost.isProductPost)
+                            Expanded(
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: !_currentPost.available
+                                      ? null
+                                      : () async {
+                                    // Show buy options dialog
+                                    showModalBottomSheet(
+                                      context: context,
+                                      backgroundColor: Colors.transparent,
+                                      builder: (bottomSheetContext) => Container(
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context).scaffoldBackgroundColor,
+                                          borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(20),
+                                            topRight: Radius.circular(20),
                                           ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      'Reviews',
-                                      style: TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.w500),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Row(
-                                      children: [
-                                        const Icon(Iconsax.star, size: 14, color: Colors.orange),
-                                        const SizedBox(width: 4),
-                                        Text(
-                                          '${_currentPost.reviewsCountFormatted}',
-                                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
                                         ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 14),
-                          const Divider(height: 1),
-                          const SizedBox(height: 14),
-                          // Product Action Buttons
-                          Row(
-                            children: [
-                              // Buy Button
-                              if (_currentPost.isProductPost)
-                                Expanded(
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: InkWell(
-                                      onTap: !_currentPost.available
-                                          ? null
-                                          : () async {
-                                              // Show buy options dialog
-                                              showModalBottomSheet(
-                                                context: context,
-                                                backgroundColor: Colors.transparent,
-                                                builder: (bottomSheetContext) => Container(
-                                                  decoration: BoxDecoration(
-                                                    color: Theme.of(context).scaffoldBackgroundColor,
-                                                    borderRadius: const BorderRadius.only(
-                                                      topLeft: Radius.circular(20),
-                                                      topRight: Radius.circular(20),
-                                                    ),
+                                        padding: const EdgeInsets.all(20),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              _currentPost.productName ?? 'Product',
+                                              style: const TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Text(
+                                              '\$${_currentPost.postPrice?.toStringAsFixed(2) ?? "0.00"}',
+                                              style: const TextStyle(
+                                                fontSize: 24,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.blue,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 20),
+                                            ListTile(
+                                              leading: const Icon(Icons.shopping_cart, color: Colors.blue),
+                                              title: const Text('Add to Cart'),
+                                              subtitle: const Text('Add this item to your cart'),
+                                              onTap: () {
+                                                Navigator.pop(bottomSheetContext);
+                                                // Note: API parameter is 'product_id' but expects 'post_id'
+                                                final postId = _currentPost.id.toString();
+
+                                                // Add to cart using BLoC
+                                                context.read<CartBloc>().add(
+                                                  AddToCartEvent(
+                                                    productId: postId,
+                                                    quantity: 1,
                                                   ),
-                                                  padding: const EdgeInsets.all(20),
-                                                  child: Column(
-                                                    mainAxisSize: MainAxisSize.min,
-                                                    children: [
-                                                      Text(
-                                                        _currentPost.productName ?? 'Product',
-                                                        style: const TextStyle(
-                                                          fontSize: 18,
-                                                          fontWeight: FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                      const SizedBox(height: 8),
-                                                      Text(
-                                                        '\$${_currentPost.postPrice?.toStringAsFixed(2) ?? "0.00"}',
-                                                        style: const TextStyle(
-                                                          fontSize: 24,
-                                                          fontWeight: FontWeight.bold,
-                                                          color: Colors.blue,
-                                                        ),
-                                                      ),
-                                                      const SizedBox(height: 20),
-                                                      ListTile(
-                                                        leading: const Icon(Icons.shopping_cart, color: Colors.blue),
-                                                        title: const Text('Add to Cart'),
-                                                        subtitle: const Text('Add this item to your cart'),
-                                                        onTap: () {
-                                                          Navigator.pop(bottomSheetContext);
-                                                          // Note: API parameter is 'product_id' but expects 'post_id'
-                                                          final postId = _currentPost.id.toString();
-                                                          
-                                                          // Add to cart using BLoC
-                                                          context.read<CartBloc>().add(
-                                                            AddToCartEvent(
-                                                              productId: postId,
-                                                              quantity: 1,
-                                                            ),
-                                                          );
-                                                          ScaffoldMessenger.of(context).showSnackBar(
-                                                            SnackBar(
-                                                              content: Row(
-                                                                children: [
-                                                                  const Icon(Icons.check_circle, color: Colors.white),
-                                                                  const SizedBox(width: 12),
-                                                                  Expanded(child: Text('Added to cart!'.tr)),
-                                                                  TextButton(
-                                                                    onPressed: () {
-                                                                      Navigator.push(
-                                                                        context,
-                                                                        MaterialPageRoute(
-                                                                          builder: (_) => const CartPage(),
-                                                                        ),
-                                                                      );
-                                                                    },
-                                                                    child: const Text('VIEW', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              backgroundColor: Colors.green,
-                                                              duration: const Duration(seconds: 3),
-                                                            ),
-                                                          );
-                                                        },
-                                                      ),
-                                                      ListTile(
-                                                        leading: const Icon(Icons.flash_on, color: Colors.orange),
-                                                        title: const Text('Buy Now'),
-                                                        subtitle: const Text('Proceed to checkout'),
-                                                        onTap: () {
-                                                          Navigator.pop(bottomSheetContext);
-                                                          // Note: API parameter is 'product_id' but expects 'post_id'
-                                                          final postId = _currentPost.id.toString();
-                                                          
-                                                          // Add to cart and go to checkout
-                                                          context.read<CartBloc>().add(
-                                                            AddToCartEvent(
-                                                              productId: postId,
-                                                              quantity: 1,
-                                                            ),
-                                                          );
-                                                          // Navigate to cart then checkout
-                                                          Future.delayed(const Duration(milliseconds: 500), () {
+                                                );
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  SnackBar(
+                                                    content: Row(
+                                                      children: [
+                                                        const Icon(Icons.check_circle, color: Colors.white),
+                                                        const SizedBox(width: 12),
+                                                        Expanded(child: Text('Added to cart!'.tr)),
+                                                        TextButton(
+                                                          onPressed: () {
                                                             Navigator.push(
                                                               context,
                                                               MaterialPageRoute(
-                                                                builder: (_) => const CheckoutPage(),
+                                                                builder: (_) => const CartPage(),
                                                               ),
                                                             );
-                                                          });
-                                                        },
-                                                      ),
-                                                      ListTile(
-                                                        leading: const Icon(Icons.info_outline, color: Colors.grey),
-                                                        title: const Text('View Details'),
-                                                        subtitle: const Text('See full product information'),
-                                                        onTap: () {
-                                                          Navigator.pop(bottomSheetContext);
-                                                          Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (_) => PostDetailPage(
-                                                                postId: _currentPost.id,
-                                                              ),
-                                                            ),
-                                                          );
-                                                        },
-                                                      ),
-                                                      const SizedBox(height: 10),
-                                                    ],
+                                                          },
+                                                          child: const Text('VIEW', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    backgroundColor: Colors.green,
+                                                    duration: const Duration(seconds: 3),
                                                   ),
-                                                ),
-                                              );
-                                            },
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(vertical: 12),
-                                        decoration: BoxDecoration(
-                                          color: _currentPost.available ? Colors.blue : Colors.grey.shade300,
-                                          borderRadius: BorderRadius.circular(10),
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              Iconsax.shopping_bag,
-                                              size: 18,
-                                              color: _currentPost.available ? Colors.white : Colors.grey.shade500,
+                                                );
+                                              },
                                             ),
-                                            const SizedBox(width: 8),
-                                            Text(
-                                              _currentPost.available ? 'Buy Now' : 'Sold Out',
-                                              style: TextStyle(
-                                                color: _currentPost.available ? Colors.white : Colors.grey.shade500,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 14,
-                                              ),
+                                            ListTile(
+                                              leading: const Icon(Icons.flash_on, color: Colors.orange),
+                                              title: const Text('Buy Now'),
+                                              subtitle: const Text('Proceed to checkout'),
+                                              onTap: () {
+                                                Navigator.pop(bottomSheetContext);
+                                                // Note: API parameter is 'product_id' but expects 'post_id'
+                                                final postId = _currentPost.id.toString();
+
+                                                // Add to cart and go to checkout
+                                                context.read<CartBloc>().add(
+                                                  AddToCartEvent(
+                                                    productId: postId,
+                                                    quantity: 1,
+                                                  ),
+                                                );
+                                                // Navigate to cart then checkout
+                                                Future.delayed(const Duration(milliseconds: 500), () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (_) => const CheckoutPage(),
+                                                    ),
+                                                  );
+                                                });
+                                              },
                                             ),
+                                            ListTile(
+                                              leading: const Icon(Icons.info_outline, color: Colors.grey),
+                                              title: const Text('View Details'),
+                                              subtitle: const Text('See full product information'),
+                                              onTap: () {
+                                                Navigator.pop(bottomSheetContext);
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (_) => PostDetailPage(
+                                                      postId: _currentPost.id,
+                                                      initialPost: _currentPost,
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                            const SizedBox(height: 10),
                                           ],
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                ),
-                              if (_currentPost.isProductPost) const SizedBox(width: 12),
-                              // Message Seller Button
-                              if (_currentPost.isProductPost)
-                                Expanded(
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: InkWell(
-                                      onTap: _messageSeller,
+                                    );
+                                  },
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(vertical: 12),
+                                    decoration: BoxDecoration(
+                                      color: _currentPost.available ? Colors.blue : Colors.grey.shade300,
                                       borderRadius: BorderRadius.circular(10),
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(vertical: 12),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(color: Colors.teal, width: 2),
-                                          borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Iconsax.shopping_bag,
+                                          size: 18,
+                                          color: _currentPost.available ? Colors.white : Colors.grey.shade500,
                                         ),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            const Icon(
-                                              Iconsax.message,
-                                              size: 18,
-                                              color: Colors.teal,
-                                            ),
-                                            const SizedBox(width: 8),
-                                            const Text(
-                                              'Message',
-                                              style: TextStyle(
-                                                color: Colors.teal,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                          ],
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          _currentPost.available ? 'Buy Now' : 'Sold Out',
+                                          style: TextStyle(
+                                            color: _currentPost.available ? Colors.white : Colors.grey.shade500,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 14,
+                                          ),
                                         ),
-                                      ),
+                                      ],
                                     ),
                                   ),
                                 ),
-                            ],
-                          ),
+                              ),
+                            ),
+                          if (_currentPost.isProductPost) const SizedBox(width: 12),
+                          // Message Seller Button
+                          if (_currentPost.isProductPost)
+                            Expanded(
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: _messageSeller,
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(vertical: 12),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.teal, width: 2),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        const Icon(
+                                          Iconsax.message,
+                                          size: 18,
+                                          color: Colors.teal,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        const Text(
+                                          'Message',
+                                          style: TextStyle(
+                                            color: Colors.teal,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -2902,7 +3055,7 @@ class _PostCardState extends State<PostCard>
                   isFullscreen: false,
                   startMuted: true, // تشغيل صامت لتحسين الأداء
                   autoplayWhenVisible:
-                      false, // تعطيل التشغيل التلقائي لتحسين الأداء
+                  false, // تعطيل التشغيل التلقائي لتحسين الأداء
                   video: _currentPost.video!,
                   mediaResolver: context.read<AppConfig>().mediaAsset,
                 ),
@@ -3085,7 +3238,7 @@ class _PostCardState extends State<PostCard>
                             type: 'post',
                             id: _currentPost.id,
                             reactionStats:
-                                _currentPost.reactionBreakdown.isEmpty
+                            _currentPost.reactionBreakdown.isEmpty
                                 ? {'like': _currentPost.reactionsCount}
                                 : _currentPost.reactionBreakdown,
                           );
@@ -3099,7 +3252,6 @@ class _PostCardState extends State<PostCard>
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              // عرض أيقونات التفاعلات الرئيسية
                               if (_currentPost
                                   .reactionBreakdown
                                   .isNotEmpty) ...[
@@ -3121,41 +3273,48 @@ class _PostCardState extends State<PostCard>
                     )
                   else
                     const Expanded(child: SizedBox()),
-                  const Spacer(),
-                  // عرض إحصائيات متقدمة - Reviews يظهر للجميع
-                  Text(
-                    'post_reviews'.trParams({
-                      'count': _currentPost.reviewsCountFormatted,
-                    }),
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.6),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  if (_currentPost.viewsCount > 0) ...[
-                    Text(
-                      'post_views'.trParams({
-                        'count': _currentPost.viewsCountFormatted,
-                      }),
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.6),
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Wrap(
+                        alignment: WrapAlignment.end,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: 10,
+                        runSpacing: 4,
+                        children: [
+                          Text(
+                            'post_reviews'.trParams({
+                              'count': _currentPost.reviewsCountFormatted,
+                            }),
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                            ),
+                          ),
+                          if (_currentPost.viewsCount > 0)
+                            Text(
+                              'post_views'.trParams({
+                                'count': _currentPost.viewsCountFormatted,
+                              }),
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                              ),
+                            ),
+                          Text(
+                            '${_currentPost.commentsCountFormatted} ${'comments'.tr}',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                            ),
+                          ),
+                          Text(
+                            'post_shares2'.trParams({
+                              'count': _currentPost.sharesCountFormatted,
+                            }),
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(width: 12),
-                  ],
-                  Text(
-                    '${_currentPost.commentsCountFormatted} ${'comments'.tr}',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.6),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Text(
-                    'post_shares2'.trParams({
-                      'count': _currentPost.sharesCountFormatted,
-                    }),
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.6),
                     ),
                   ),
                 ],
@@ -3185,26 +3344,26 @@ class _PostCardState extends State<PostCard>
                     isDisabled: _currentPost.commentsDisabled,
                     onTap: _currentPost.commentsDisabled
                         ? () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('comments_disabled_message'.tr),
-                                behavior: SnackBarBehavior.floating,
-                              ),
-                            );
-                          }
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('comments_disabled_message'.tr),
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                    }
                         : () {
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              useSafeArea: false,
-                              backgroundColor: Colors.transparent,
-                              builder: (context) => CommentsBottomSheet(
-                                postId: _currentPost.id,
-                                commentsCount: _currentPost.commentsCount,
-                                postText: _currentPost.text,
-                              ),
-                            );
-                          },
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        useSafeArea: false,
+                        backgroundColor: Colors.transparent,
+                        builder: (context) => CommentsBottomSheet(
+                          postId: _currentPost.id,
+                          commentsCount: _currentPost.commentsCount,
+                          postText: _currentPost.text,
+                        ),
+                      );
+                    },
                   ),
                   // Review
                   _SimpleActionButton(
@@ -3251,7 +3410,8 @@ class _PostCardState extends State<PostCard>
               ),
             ),
           ],
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -3333,10 +3493,10 @@ class _Avatar extends StatelessWidget {
           // أيقونة fallback
           child: url == null
               ? Icon(
-                  Iconsax.user,
-                  size: radius,
-                  color: theme.colorScheme.primary,
-                )
+            Iconsax.user,
+            size: radius,
+            color: theme.colorScheme.primary,
+          )
               : null,
         ),
         // مؤشر حالة الاتصال
@@ -3500,7 +3660,7 @@ class _PostActionState extends State<_PostAction>
         reactionModel?.title ?? 'like'.tr; // استخدام الترجمة الافتراضية
     final Color actionColor =
         reactionModel?.colorValue ??
-        Theme.of(context).colorScheme.onSurface.withOpacity(0.65);
+            Theme.of(context).colorScheme.onSurface.withOpacity(0.65);
 
     return AnimatedBuilder(
       animation: _animationController,
@@ -3880,13 +4040,13 @@ class _PaidContentLock extends StatelessWidget {
               onPressed: isLoading ? null : onUnlock,
               icon: isLoading
                   ? const SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
-                      ),
-                    )
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.white,
+                ),
+              )
                   : const Icon(Iconsax.unlock),
               label: Text(
                 priceText != null ? 'Unlock for $priceText' : 'Unlock post',
@@ -4159,10 +4319,10 @@ class _PhotosGrid extends StatelessWidget {
 
   // --- 💡 4. تحسين _showPhotoViewer (معرض صور احترافي) ---
   void _showPhotoViewer(
-    BuildContext context,
-    int initialIndex, {
-    bool forAdult = false,
-  }) {
+      BuildContext context,
+      int initialIndex, {
+        bool forAdult = false,
+      }) {
     showDialog(
       context: context,
       barrierColor: Colors.black.withOpacity(0.8),
@@ -4188,7 +4348,7 @@ class _PhotosGrid extends StatelessWidget {
                           ).toString(),
                           fit: BoxFit.contain,
                           placeholder: (context, url) =>
-                              const Center(child: CircularProgressIndicator()),
+                          const Center(child: CircularProgressIndicator()),
                           errorWidget: (context, url, error) => const Center(
                             child: Icon(
                               Iconsax.gallery_slash,
@@ -4842,9 +5002,9 @@ class _EventWidget extends StatelessWidget {
                                       event.eventLocation!,
                                       style: theme.textTheme.bodySmall
                                           ?.copyWith(
-                                            color: theme.colorScheme.onSurface
-                                                .withOpacity(0.6),
-                                          ),
+                                        color: theme.colorScheme.onSurface
+                                            .withOpacity(0.6),
+                                      ),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
@@ -5083,9 +5243,9 @@ class _FundingWidget extends StatelessWidget {
         gradient: LinearGradient(
           colors: isDark
               ? [
-                  Colors.green.shade900.withOpacity(0.2),
-                  Colors.green.shade800.withOpacity(0.1),
-                ]
+            Colors.green.shade900.withOpacity(0.2),
+            Colors.green.shade800.withOpacity(0.1),
+          ]
               : [Colors.green.shade50, Colors.green.shade100],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -5282,33 +5442,33 @@ class _FundingWidget extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: funding.isGoalReached
                     ? () {
-                        // Navigate to funding detail page if goal reached
-                        final postIdInt = int.tryParse(funding.postId);
-                        if (postIdInt != null) {
-                          Get.to(() => FundingDetailPage(fundingId: postIdInt));
-                        }
-                      }
+                  // Navigate to funding detail page if goal reached
+                  final postIdInt = int.tryParse(funding.postId);
+                  if (postIdInt != null) {
+                    Get.to(() => FundingDetailPage(fundingId: postIdInt));
+                  }
+                }
                     : () async {
-                        // Navigate to donate page if goal not reached
-                        final postIdInt = int.tryParse(funding.postId);
-                        if (postIdInt != null) {
-                          // First get full funding details using postId
-                          try {
-                            final repo = Provider.of<FundingRepository>(
-                              context,
-                              listen: false,
-                            );
-                            final fullFunding = await repo.getFundingById(
-                              postIdInt,
-                            );
-                            await Get.to(
-                              () => FundingDonatePage(funding: fullFunding),
-                            );
-                          } catch (e) {
-                            Get.snackbar('error'.tr, e.toString());
-                          }
-                        }
-                      },
+                  // Navigate to donate page if goal not reached
+                  final postIdInt = int.tryParse(funding.postId);
+                  if (postIdInt != null) {
+                    // First get full funding details using postId
+                    try {
+                      final repo = Provider.of<FundingRepository>(
+                        context,
+                        listen: false,
+                      );
+                      final fullFunding = await repo.getFundingById(
+                        postIdInt,
+                      );
+                      await Get.to(
+                            () => FundingDonatePage(funding: fullFunding),
+                      );
+                    } catch (e) {
+                      Get.snackbar('error'.tr, e.toString());
+                    }
+                  }
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: isDark
                       ? Colors.green.shade700
@@ -5444,19 +5604,19 @@ class _FundingStatCard extends StatelessWidget {
         ),
         boxShadow: isDark
             ? [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  offset: const Offset(0, 2),
-                  blurRadius: 4,
-                ),
-              ]
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            offset: const Offset(0, 2),
+            blurRadius: 4,
+          ),
+        ]
             : [
-                BoxShadow(
-                  color: color.withOpacity(0.1),
-                  offset: const Offset(0, 2),
-                  blurRadius: 6,
-                ),
-              ],
+          BoxShadow(
+            color: color.withOpacity(0.1),
+            offset: const Offset(0, 2),
+            blurRadius: 6,
+          ),
+        ],
       ),
       child: Column(
         children: [
@@ -5524,9 +5684,9 @@ class _OfferWidget extends StatelessWidget {
           gradient: LinearGradient(
             colors: isDark
                 ? [
-                    Colors.orange.shade900.withOpacity(0.2),
-                    Colors.orange.shade800.withOpacity(0.1),
-                  ]
+              Colors.orange.shade900.withOpacity(0.2),
+              Colors.orange.shade800.withOpacity(0.1),
+            ]
                 : [Colors.orange.shade50, Colors.orange.shade100],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -5692,7 +5852,7 @@ class _OfferWidget extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: () {
                         Get.to(
-                          () => OfferDetailPage(
+                              () => OfferDetailPage(
                             offerId: int.parse(offer.offerId),
                           ),
                         );
@@ -5810,37 +5970,37 @@ class _ColoredTextWidgetState extends State<_ColoredTextWidget>
             // خلفية الصورة أو اللون
             image: widget.coloredPattern.isImagePattern
                 ? DecorationImage(
-                    image: CachedNetworkImageProvider(
-                      widget.coloredPattern.backgroundImage!.full,
-                    ),
-                    fit: BoxFit.cover,
-                  )
+              image: CachedNetworkImageProvider(
+                widget.coloredPattern.backgroundImage!.full,
+              ),
+              fit: BoxFit.cover,
+            )
                 : null,
             // خلفية متدرجة إذا كان هناك لونين
             gradient:
-                widget.coloredPattern.hasGradient &&
-                    !widget.coloredPattern.isImagePattern
+            widget.coloredPattern.hasGradient &&
+                !widget.coloredPattern.isImagePattern
                 ? LinearGradient(
-                    colors: [
-                      _parseColor(
-                        widget.coloredPattern.backgroundColors!.primary,
-                      ),
-                      _parseColor(
-                        widget.coloredPattern.backgroundColors!.secondary!,
-                      ),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  )
+              colors: [
+                _parseColor(
+                  widget.coloredPattern.backgroundColors!.primary,
+                ),
+                _parseColor(
+                  widget.coloredPattern.backgroundColors!.secondary!,
+                ),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            )
                 : null,
             // لون واحد إذا لم يكن هناك تدرج
             color:
-                widget.coloredPattern.isColorPattern &&
-                    !widget.coloredPattern.hasGradient
+            widget.coloredPattern.isColorPattern &&
+                !widget.coloredPattern.hasGradient
                 ? _parseColor(
-                    widget.coloredPattern.backgroundColors?.primary ??
-                        '#4A90E2',
-                  )
+              widget.coloredPattern.backgroundColors?.primary ??
+                  '#4A90E2',
+            )
                 : null,
           ),
           child: Container(
@@ -5934,9 +6094,9 @@ class _LiveWidget extends StatelessWidget {
         gradient: LinearGradient(
           colors: isDark
               ? [
-                  Colors.red.shade900.withOpacity(0.3),
-                  Colors.red.shade800.withOpacity(0.1),
-                ]
+            Colors.red.shade900.withOpacity(0.3),
+            Colors.red.shade800.withOpacity(0.1),
+          ]
               : [Colors.red.shade50, Colors.red.shade100],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -5974,41 +6134,41 @@ class _LiveWidget extends StatelessWidget {
                   aspectRatio: 16 / 9,
                   child: live.videoThumbnail != null
                       ? CachedNetworkImage(
-                          imageUrl: mediaResolver(
-                            live.videoThumbnail!,
-                          ).toString(),
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) => Container(
-                            color: theme.colorScheme.surfaceContainerHighest,
-                            child: Center(
-                              child: Icon(
-                                Iconsax.video,
-                                size: 48,
-                                color: theme.colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                          ),
-                          errorWidget: (context, url, error) => Container(
-                            color: theme.colorScheme.surfaceContainerHighest,
-                            child: Center(
-                              child: Icon(
-                                Iconsax.close_circle,
-                                size: 48,
-                                color: theme.colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                          ),
-                        )
-                      : Container(
-                          color: theme.colorScheme.surfaceContainerHighest,
-                          child: Center(
-                            child: Icon(
-                              Iconsax.video,
-                              size: 48,
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
-                          ),
+                    imageUrl: mediaResolver(
+                      live.videoThumbnail!,
+                    ).toString(),
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Container(
+                      color: theme.colorScheme.surfaceContainerHighest,
+                      child: Center(
+                        child: Icon(
+                          Iconsax.video,
+                          size: 48,
+                          color: theme.colorScheme.onSurfaceVariant,
                         ),
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                      color: theme.colorScheme.surfaceContainerHighest,
+                      child: Center(
+                        child: Icon(
+                          Iconsax.close_circle,
+                          size: 48,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+                  )
+                      : Container(
+                    color: theme.colorScheme.surfaceContainerHighest,
+                    child: Center(
+                      child: Icon(
+                        Iconsax.video,
+                        size: 48,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
                 ),
               ),
 
@@ -6347,24 +6507,24 @@ class _MeritWidget extends StatelessWidget {
                 ),
                 child: merit.categoryImage != null
                     ? CachedNetworkImage(
-                        imageUrl: mediaResolver(merit.categoryImage!).toString(),
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => const Center(
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                          ),
-                        ),
-                        errorWidget: (context, url, error) => Icon(
-                          Iconsax.medal_star,
-                          color: Colors.amber[700],
-                          size: 20,
-                        ),
-                      )
+                  imageUrl: mediaResolver(merit.categoryImage!).toString(),
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => const Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Icon(
+                    Iconsax.medal_star,
+                    color: Colors.amber[700],
+                    size: 20,
+                  ),
+                )
                     : Icon(
-                        Iconsax.medal_star,
-                        color: Colors.amber[700],
-                        size: 20,
-                      ),
+                  Iconsax.medal_star,
+                  color: Colors.amber[700],
+                  size: 20,
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -6446,125 +6606,6 @@ class _MeritWidget extends StatelessWidget {
             ),
           ],
         ],
-      ),
-    );
-  }
-}
-
-/// Widget لعرض الوسائط (YouTube, Vimeo, إلخ)
-class _MediaWidget extends StatelessWidget {
-  const _MediaWidget({required this.media});
-
-  final PostMedia media;
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(12),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () async {
-            if (media.hasUrl) {
-              final url = Uri.parse(media.sourceUrl!);
-              if (await canLaunchUrl(url)) {
-                await launchUrl(url, mode: LaunchMode.externalApplication);
-              }
-            }
-          },
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              // صورة مصغرة
-              CachedNetworkImage(
-                imageUrl: media.sourceThumbnail!,
-                fit: BoxFit.cover,
-                height: 250,
-                width: double.infinity,
-                placeholder: (context, url) => Container(
-                  height: 250,
-                  color: Colors.grey[300],
-                  child: const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
-                errorWidget: (context, url, error) => Container(
-                  height: 250,
-                  color: Colors.grey[300],
-                  child: Icon(
-                    Iconsax.gallery_slash,
-                    color: Colors.grey[500],
-                  ),
-                ),
-              ),
-              // أيقونة التشغيل
-              Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.7),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Iconsax.play,
-                  color: Colors.white,
-                  size: 28,
-                ),
-              ),
-              // شارة المزود (YouTube, Vimeo, etc.)
-              if (media.sourceProvider != null)
-                Positioned(
-                  top: 12,
-                  right: 12,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.8),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      media.sourceProvider!,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              // العنوان في الأسفل
-              if (media.sourceTitle != null)
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.transparent,
-                          Colors.black.withOpacity(0.8),
-                        ],
-                      ),
-                    ),
-                    child: Text(
-                      media.sourceTitle!,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ),
       ),
     );
   }

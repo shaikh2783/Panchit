@@ -8,7 +8,6 @@ import 'post_live.dart';
 import 'post_audio.dart';
 import 'post_media.dart';
 import 'package:snginepro/features/merits/data/models/merit_models.dart';
-import 'package:flutter/foundation.dart';
 
 class Post {
   Post({
@@ -108,10 +107,23 @@ class Post {
     this.forSubscriptions = false,
     this.postPrice,
     this.paidText,
+    this.isCompetitionEntry = false,
+    this.competitionId,
+    this.competitionName,
+    this.competitionStatus,
+    this.competitionRank,
+    this.competitionCategory,
+    this.competitionBadgeText,
+    this.isWinner = false,
+    this.winnerRank,
     // 🎖️ MERIT FIELD
     this.merit,
     // ⏱️ VIDEO DURATION (seconds)
     this.videoDurationSeconds,
+    // 🎵 REEL SOUND FIELDS
+    this.soundId,
+    this.soundTitle,
+    this.soundUrl,
     // 📦 PRODUCT FIELDS
     this.available = true,
     this.productId,
@@ -237,12 +249,27 @@ class Post {
   final bool forSubscriptions; // هل الدفع عبر الاشتراكات فقط
   final double? postPrice; // سعر المنشور (إن وجد)
   final String? paidText; // نص المعاينة للمنشور المدفوع
+  final bool isCompetitionEntry;
+  final int? competitionId;
+  final String? competitionName;
+  final String? competitionStatus;
+  final int? competitionRank;
+  final String? competitionCategory;
+  final String? competitionBadgeText;
+  final bool isWinner;
+  final int? winnerRank;
 
   // 🎖️ MERIT FIELD
   final Merit? merit; // معلومات الجدارة إذا كان المنشور عن جدارة
 
   // ⏱️ VIDEO DURATION (seconds)
   final int? videoDurationSeconds;
+
+  // 🎵 REEL SOUND FIELDS — sound_id/sound_title come top-level per the reels
+  // contract (§14); soundUrl only when the backend embeds the sound object.
+  final int? soundId;
+  final String? soundTitle;
+  final String? soundUrl;
 
   final String reactionsCountFormatted;
   final String commentsCountFormatted;
@@ -346,12 +373,28 @@ class Post {
             ? json['product'] as Map<String, dynamic>
             : null;
 
+        // 🎵 Reel sound: top-level sound_id/sound_title, or nested in the
+        // reel object (reel.sound_id / embedded reel.sound music object)
+        final Map<String, dynamic>? reelObj =
+            json['reel'] is Map<String, dynamic>
+                ? json['reel'] as Map<String, dynamic>
+                : null;
+        final Map<String, dynamic>? soundObj =
+            reelObj?['sound'] is Map<String, dynamic>
+                ? reelObj!['sound'] as Map<String, dynamic>
+                : (json['sound'] is Map<String, dynamic>
+                    ? json['sound'] as Map<String, dynamic>
+                    : null);
+        final String? soundIdRaw = _string(json['sound_id']) ??
+            _string(reelObj?['sound_id']) ??
+            _string(soundObj?['id']);
+
         return Post(
         id: _int(json['post_id']),
         // 👤 Handle anonymous posts - show "anonymous_user" key for translation
         authorName: isAnonymous ? 'anonymous_user' : _authorName(json),
         publishedAt: _string(json['time']) ?? '',
-        text: _string(json['text']) ?? _string(json['text']) ?? '',
+        text: _string(json['text']) ?? _string(json['text_plain']) ?? _string(json['post_text']) ?? '',
         postType: _string(json['post_type']) ?? '',
         // 👤 Handle anonymous posts - hide avatar
         authorAvatarUrl: isAnonymous ? null : _authorAvatar(json),
@@ -390,6 +433,9 @@ class Post {
         reactionBreakdown: _parseReactions(json['reactions']),
         permalink: _string(json['post_author_url']),
         video: PostVideo.maybeFromJson(json['video'] ?? json['reel']),
+        soundId: soundIdRaw != null ? int.tryParse(soundIdRaw) : null,
+        soundTitle: _string(json['sound_title']) ?? _string(soundObj?['title']),
+        soundUrl: _string(json['sound_url']) ?? _string(soundObj?['sound']),
         photos: photos,
         ogImage: ogImage,
         poll: PostPoll.maybeFromJson(json['poll']),
@@ -499,6 +545,29 @@ class Post {
           ? _double(productObj['price'])
           : _double(json['post_price']),
         paidText: _string(json['paid_text']),
+        isCompetitionEntry:
+            _bool(json['is_competition_entry']) ||
+            _bool(json['competition_entry']) ||
+            _int(json['competition_id']) > 0,
+        competitionId:
+            _int(json['competition_id']) != 0 ? _int(json['competition_id']) : null,
+        competitionName:
+            _string(json['competition_name']) ?? _string(json['contest_name']),
+        competitionStatus:
+            _string(json['competition_status']) ?? _string(json['contest_status']),
+        competitionRank: _int(
+                  json['competition_rank'] ?? json['entry_rank'],
+                ) !=
+                0
+            ? _int(json['competition_rank'] ?? json['entry_rank'])
+            : null,
+        competitionCategory:
+            _string(json['competition_category']) ??
+            _string(json['contest_category']),
+        competitionBadgeText: _string(json['competition_badge_text']),
+        isWinner: _bool(json['is_winner']) || _int(json['winner_rank']) > 0,
+        winnerRank:
+            _int(json['winner_rank']) != 0 ? _int(json['winner_rank']) : null,
         // 🎖️ MERIT SUPPORT
         merit: json['merit'] != null
             ? Merit.fromJson(json['merit'] as Map<String, dynamic>)
@@ -518,7 +587,7 @@ class Post {
               )
             : null,
       );
-    } catch (e, stackTrace) {
+    } catch (e) {
       rethrow; // Re-throw to let the caller handle it
     }
   }
@@ -562,6 +631,9 @@ class Post {
     PostVideo? video,
     List<PostPhoto>? photos,
     String? ogImage,
+    bool clearVideo = false,
+    bool clearPhotos = false,
+    bool clearOgImage = false,
     PostPoll? poll,
     PostLink? link,
     PostAudio? audio,
@@ -625,10 +697,23 @@ class Post {
     bool? forSubscriptions,
     double? postPrice,
     String? paidText,
+    bool? isCompetitionEntry,
+    int? competitionId,
+    String? competitionName,
+    String? competitionStatus,
+    int? competitionRank,
+    String? competitionCategory,
+    String? competitionBadgeText,
+    bool? isWinner,
+    int? winnerRank,
     // 🎖️ MERIT PARAMETER
     Merit? merit,
     // ⏱️ VIDEO DURATION
     int? videoDurationSeconds,
+    // 🎵 REEL SOUND PARAMETERS
+    int? soundId,
+    String? soundTitle,
+    String? soundUrl,
   }) {
     return Post(
       id: id ?? this.id,
@@ -667,9 +752,9 @@ class Post {
       privacy: privacy ?? this.privacy,
       reactionBreakdown: reactionBreakdown ?? this.reactionBreakdown,
       permalink: permalink ?? this.permalink,
-      video: video ?? this.video,
-      photos: photos ?? this.photos,
-      ogImage: ogImage ?? this.ogImage,
+      video: clearVideo ? null : (video ?? this.video),
+      photos: clearPhotos ? null : (photos ?? this.photos),
+      ogImage: clearOgImage ? null : (ogImage ?? this.ogImage),
       poll: poll ?? this.poll,
       link: link ?? this.link,
       audio: audio ?? this.audio,
@@ -734,10 +819,23 @@ class Post {
       forSubscriptions: forSubscriptions ?? this.forSubscriptions,
       postPrice: postPrice ?? this.postPrice,
       paidText: paidText ?? this.paidText,
+      isCompetitionEntry: isCompetitionEntry ?? this.isCompetitionEntry,
+      competitionId: competitionId ?? this.competitionId,
+      competitionName: competitionName ?? this.competitionName,
+      competitionStatus: competitionStatus ?? this.competitionStatus,
+      competitionRank: competitionRank ?? this.competitionRank,
+      competitionCategory: competitionCategory ?? this.competitionCategory,
+      competitionBadgeText: competitionBadgeText ?? this.competitionBadgeText,
+      isWinner: isWinner ?? this.isWinner,
+      winnerRank: winnerRank ?? this.winnerRank,
       // 🎖️ MERIT FIELD
       merit: merit ?? this.merit,
       // ⏱️ VIDEO DURATION
       videoDurationSeconds: videoDurationSeconds ?? this.videoDurationSeconds,
+      // 🎵 REEL SOUND FIELDS
+      soundId: soundId ?? this.soundId,
+      soundTitle: soundTitle ?? this.soundTitle,
+      soundUrl: soundUrl ?? this.soundUrl,
     );
   }
 
@@ -1000,10 +1098,23 @@ class Post {
       forSubscriptions: forSubscriptions,
       postPrice: postPrice,
       paidText: paidText,
+      isCompetitionEntry: isCompetitionEntry,
+      competitionId: competitionId,
+      competitionName: competitionName,
+      competitionStatus: competitionStatus,
+      competitionRank: competitionRank,
+      competitionCategory: competitionCategory,
+      competitionBadgeText: competitionBadgeText,
+      isWinner: isWinner,
+      winnerRank: winnerRank,
       // 🎖️ MERIT FIELD - الحفاظ على بيانات الجدارة
       merit: merit,
       // ⏱️ VIDEO DURATION
       videoDurationSeconds: videoDurationSeconds,
+      // 🎵 REEL SOUND FIELDS
+      soundId: soundId,
+      soundTitle: soundTitle,
+      soundUrl: soundUrl,
     );
   }
 }

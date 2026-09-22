@@ -27,6 +27,7 @@ import 'package:snginepro/features/friends/data/services/friends_api_service.dar
 import 'package:snginepro/core/network/api_client.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:snginepro/features/profile/presentation/pages/profile_page.dart';
+import 'package:video_player/video_player.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, this.onScrollDirectionChanged});
@@ -65,17 +66,38 @@ class _ReelsPreviewRail extends StatelessWidget {
     return '${m}:${s.toString().padLeft(2, '0')}';
   }
 
+  // Priority: video.thumbnail → photos[0] → ogImage
   String _thumbFor(Post reel) {
-    if (reel.video?.thumbnail != null && reel.video!.thumbnail.isNotEmpty) {
-      return reel.video!.thumbnail;
-    }
+    final vt = reel.video?.thumbnail ?? '';
+    if (vt.isNotEmpty) return vt;
+
     if (reel.photos != null && reel.photos!.isNotEmpty) {
-      return reel.photos!.first.source;
+      final src = reel.photos!.first.source;
+      if (src.isNotEmpty) return src;
     }
-    if (reel.ogImage != null && reel.ogImage!.isNotEmpty) {
-      return reel.ogImage!;
-    }
+
+    final og = reel.ogImage ?? '';
+    if (og.isNotEmpty) return og;
+
     return '';
+  }
+
+  // Returns a resolved URL. Skips mediaResolver for already-absolute URLs
+  // to avoid double-base-URL bugs (e.g. https://host.com/https://host.com/…).
+  String? _resolveMediaUrl(String raw) {
+    if (raw.isEmpty) return null;
+    if (raw.startsWith('http://') || raw.startsWith('https://')) return raw;
+    return mediaResolver(raw).toString();
+  }
+
+  String? _resolveThumb(Post reel) => _resolveMediaUrl(_thumbFor(reel));
+
+  String? _resolveVideoUrl(Post reel) {
+    final bestSource = reel.video?.bestSourceUri()?.toString() ?? '';
+    if (bestSource.isNotEmpty) return _resolveMediaUrl(bestSource);
+
+    final original = reel.video?.originalSource ?? '';
+    return _resolveMediaUrl(original);
   }
 
   @override
@@ -131,9 +153,9 @@ class _ReelsPreviewRail extends StatelessWidget {
             separatorBuilder: (_, __) => const SizedBox(width: 12),
             itemBuilder: (context, index) {
               final reel = reels[index];
-              final thumb = _thumbFor(reel);
-              final thumbUrl = thumb.isNotEmpty ? mediaResolver(thumb).toString() : null;
-                final durationText = reel.videoDurationSeconds != null
+              final thumbUrl = _resolveThumb(reel);
+              final videoUrl = _resolveVideoUrl(reel);
+              final durationText = reel.videoDurationSeconds != null
                   ? _formatDuration(reel.videoDurationSeconds!)
                   : null;
 
@@ -156,32 +178,22 @@ class _ReelsPreviewRail extends StatelessWidget {
                     children: [
                       // Thumbnail
                       Positioned.fill(
-                        child: thumbUrl != null
-                            ? CachedNetworkImage(
-                                imageUrl: thumbUrl,
-                                fit: BoxFit.cover,
-                                placeholder: (_, __) => Container(
-                                  color: isDark ? const Color(0xFF1F1F1F) : Colors.grey[200],
-                                ),
-                                errorWidget: (_, __, ___) => Container(
-                                  color: isDark ? const Color(0xFF1F1F1F) : Colors.grey[300],
-                                  child: Icon(Icons.broken_image, color: Colors.grey[500]),
-                                ),
-                              )
-                            : Container(
-                                color: isDark ? const Color(0xFF1F1F1F) : Colors.grey[200],
-                              ),
+                        child: _ReelThumbnail(
+                          imageUrl: thumbUrl,
+                          videoUrl: videoUrl,
+                          isDark: isDark,
+                        ),
                       ),
                       // Overlay gradient
                       Positioned.fill(
-                        child: Container(
+                        child: DecoratedBox(
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                               colors: [
-                                Colors.black.withValues(alpha: 0.05),
-                                Colors.black.withValues(alpha: 0.55),
+                                Colors.black.withValues(alpha: 0.08),
+                                Colors.black.withValues(alpha: 0.6),
                               ],
                             ),
                           ),
@@ -233,6 +245,174 @@ class _ReelsPreviewRail extends StatelessWidget {
         ),
         const SizedBox(height: 8),
       ],
+    );
+  }
+}
+
+class _ReelThumbnail extends StatefulWidget {
+  const _ReelThumbnail({
+    required this.imageUrl,
+    required this.videoUrl,
+    required this.isDark,
+  });
+
+  final String? imageUrl;
+  final String? videoUrl;
+  final bool isDark;
+
+  @override
+  State<_ReelThumbnail> createState() => _ReelThumbnailState();
+}
+
+class _ReelThumbnailState extends State<_ReelThumbnail> {
+  VideoPlayerController? _videoController;
+  Future<void>? _initializeFuture;
+  bool _imageFailed = false;
+
+  bool get _shouldUseVideoFallback =>
+      _imageFailed || (widget.imageUrl == null || widget.imageUrl!.isEmpty);
+
+  @override
+  void initState() {
+    super.initState();
+    _setupVideoController();
+  }
+
+  @override
+  void didUpdateWidget(covariant _ReelThumbnail oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.videoUrl != widget.videoUrl) {
+      _disposeVideoController();
+      _setupVideoController();
+    }
+    if (oldWidget.imageUrl != widget.imageUrl) {
+      _imageFailed = false;
+    }
+  }
+
+  void _setupVideoController() {
+    final videoUrl = widget.videoUrl;
+    if (videoUrl == null || videoUrl.isEmpty) return;
+
+    final uri = Uri.tryParse(videoUrl);
+    if (uri == null) return;
+
+    final controller = VideoPlayerController.networkUrl(uri);
+    _videoController = controller;
+    _initializeFuture = controller.initialize().then((_) async {
+      await controller.setLooping(false);
+      await controller.setVolume(0);
+      await controller.pause();
+    }).catchError((_) {});
+  }
+
+  void _disposeVideoController() {
+    final controller = _videoController;
+    _videoController = null;
+    _initializeFuture = null;
+    controller?.dispose();
+  }
+
+  @override
+  void dispose() {
+    _disposeVideoController();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_shouldUseVideoFallback) {
+      return CachedNetworkImage(
+        imageUrl: widget.imageUrl!,
+        fit: BoxFit.cover,
+        placeholder: (_, __) => _ReelThumbPlaceholder(
+          isDark: widget.isDark,
+          showSpinner: true,
+        ),
+        errorWidget: (_, __, ___) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              setState(() {
+                _imageFailed = true;
+              });
+            }
+          });
+          return _buildVideoFallback();
+        },
+      );
+    }
+
+    return _buildVideoFallback();
+  }
+
+  Widget _buildVideoFallback() {
+    final controller = _videoController;
+    final initializeFuture = _initializeFuture;
+    if (controller == null || initializeFuture == null) {
+      return _ReelThumbPlaceholder(isDark: widget.isDark);
+    }
+
+    return FutureBuilder<void>(
+      future: initializeFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done ||
+            !controller.value.isInitialized) {
+          return _ReelThumbPlaceholder(
+            isDark: widget.isDark,
+            showSpinner: true,
+          );
+        }
+
+        return FittedBox(
+          fit: BoxFit.cover,
+          clipBehavior: Clip.hardEdge,
+          child: SizedBox(
+            width: controller.value.size.width,
+            height: controller.value.size.height,
+            child: VideoPlayer(controller),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _ReelThumbPlaceholder extends StatelessWidget {
+  const _ReelThumbPlaceholder({required this.isDark, this.showSpinner = false});
+
+  final bool isDark;
+  final bool showSpinner;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isDark
+              ? [const Color(0xFF2A2A2E), const Color(0xFF1A1A1E)]
+              : [const Color(0xFFD0D4DC), const Color(0xFFB8BCC6)],
+        ),
+      ),
+      child: Center(
+        child: showSpinner
+            ? SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: (isDark ? Colors.white : Colors.grey[600])!
+                      .withValues(alpha: 0.4),
+                ),
+              )
+            : Icon(
+                Icons.play_circle_outline_rounded,
+                size: 36,
+                color: (isDark ? Colors.white : Colors.black)
+                    .withValues(alpha: 0.3),
+              ),
+      ),
     );
   }
 }
@@ -526,7 +706,7 @@ class HomePageState extends State<HomePage> {
   double _lastScrollOffset = 0.0;
   
   // متغيرات الفلتر
-  String _selectedType = 'newsfeed';
+  String _selectedType = 'discover';
   Future<List<SuggestedFriend>>? _suggestedFriendsFuture;
 
   void _onScroll() {
@@ -553,8 +733,10 @@ class HomePageState extends State<HomePage> {
       final state = postsBloc.state;
 
       if (state is PostsLoadedState && state.hasMore && !state.isLoadingMore) {
-        postsBloc.add(LoadMorePostsEvent());
-      } else if (state is PostsLoadedState) {
+        postsBloc.add(LoadMorePostsEvent(
+          type: _selectedType,
+          includeAds: _selectedType == 'competition' ? '0' : '1',
+        ));
       }
     }
   }
@@ -623,7 +805,10 @@ class HomePageState extends State<HomePage> {
   Future<void> _handleRefresh() async {
 
     final postsBloc = context.read<PostsBloc>();
-    postsBloc.add(RefreshPostsEvent());
+    postsBloc.add(RefreshPostsEvent(
+      type: _selectedType,
+      includeAds: _selectedType == 'competition' ? '0' : '1',
+    ));
 
     // 📖 تحديث القصص
     final storiesBloc = context.read<StoriesBloc>();
@@ -649,11 +834,11 @@ class HomePageState extends State<HomePage> {
     setState(() {
       _selectedType = type;
     });
-    
+
     final postsBloc = context.read<PostsBloc>();
     postsBloc.add(LoadPostsEvent(
       type: type,
-      includeAds: '1',
+      includeAds: type == 'competition' ? '0' : '1',
     ));
   }
 
@@ -1271,78 +1456,83 @@ class HomePageState extends State<HomePage> {
   Widget _buildFilterBar() {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cs = Theme.of(context).colorScheme;
-    
-    final filterOptions = [
-      {'label': 'filter_newsfeed'.tr, 'value': 'newsfeed'},
-      {'label': 'filter_popular'.tr, 'value': 'popular'},
-      {'label': 'filter_discover'.tr, 'value': 'discover'},
+
+    const filterOptions = [
+      (label: 'Home',    value: 'discover',    icon: Icons.home_rounded),
+      (label: 'Competition',     value: 'competition', icon: Iconsax.cup),
+      (label: 'Popular',     value: 'popular',     icon: Icons.trending_up_rounded),
+      (label: 'For You',    value: 'newsfeed',    icon: Icons.explore_outlined),
     ];
-    
+
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-      child: Container(
-        padding: const EdgeInsets.all(4),
-        decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF151518) : const Color(0xFFE7ECF3),
-          borderRadius: BorderRadius.circular(32),
-        ),
-        child: Row(
-          children: filterOptions.map((option) {
-            final value = option['value'] as String;
-            final label = option['label'] as String;
-            final isSelected = _selectedType == value;
-            
-            return Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 5),
-                child: InkWell(
-                  onTap: () => _applyFilter(value),
-                  borderRadius: BorderRadius.circular(28),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    curve: Curves.easeInOut,
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? cs.primary
-                          : (isDark ? const Color(0xFF1E1F23) : Colors.transparent),
-                      borderRadius: BorderRadius.circular(28),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (isSelected) ...[
-                          Icon(
-                            Icons.check_circle,
-                            color: Colors.white,
-                            size: 18,
-                          ),
-                          const SizedBox(width: 6),
-                        ],
-                        Flexible(
-                          child: Text(
-                            label,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: isSelected
-                                  ? Colors.white
-                                  : (isDark ? Colors.white.withOpacity(0.9) : cs.onSurface),
-                              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
-                              fontSize: 14,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
+      height: 48,
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF1A1A1F) : const Color(0xFFECEFF4),
+        borderRadius: BorderRadius.circular(32),
+      ),
+      padding: const EdgeInsets.all(4),
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        itemCount: filterOptions.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 4),
+        itemBuilder: (context, index) {
+          final opt = filterOptions[index];
+          final isSelected = _selectedType == opt.value;
+
+          return GestureDetector(
+            onTap: () => _applyFilter(opt.value),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 220),
+              curve: Curves.easeInOut,
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? cs.primary
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(28),
+                boxShadow: isSelected
+                    ? [
+                        BoxShadow(
+                          color: cs.primary.withValues(alpha: 0.35),
+                          blurRadius: 8,
+                          offset: const Offset(0, 3),
                         ),
-                      ],
+                      ]
+                    : null,
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    opt.icon,
+                    size: 15,
+                    color: isSelected
+                        ? Colors.white
+                        : (isDark
+                            ? Colors.white.withValues(alpha: 0.55)
+                            : cs.onSurface.withValues(alpha: 0.55)),
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    opt.label,
+                    style: TextStyle(
+                      color: isSelected
+                          ? Colors.white
+                          : (isDark
+                              ? Colors.white.withValues(alpha: 0.7)
+                              : cs.onSurface.withValues(alpha: 0.75)),
+                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                      fontSize: 13,
+                      letterSpacing: isSelected ? 0.1 : 0,
                     ),
                   ),
-                ),
+                ],
               ),
-            );
-          }).toList(),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

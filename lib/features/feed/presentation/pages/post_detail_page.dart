@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:snginepro/features/auth/application/auth_notifier.dart';
 import 'package:snginepro/features/feed/data/models/post.dart';
+import 'package:snginepro/features/feed/data/services/post_view_tracking_service.dart';
 import 'package:snginepro/features/feed/domain/posts_repository.dart';
 import 'package:snginepro/features/feed/presentation/widgets/post_card.dart';
 
 class PostDetailPage extends StatefulWidget {
-  const PostDetailPage({super.key, required this.postId});
+  const PostDetailPage({
+    super.key,
+    required this.postId,
+    this.initialPost,
+  });
 
   final int postId;
+  /// Pass the already-loaded Post to skip the fetch when the post is already known.
+  final Post? initialPost;
 
   @override
   State<PostDetailPage> createState() => _PostDetailPageState();
@@ -22,7 +31,45 @@ class _PostDetailPageState extends State<PostDetailPage> {
   @override
   void initState() {
     super.initState();
-    _loadPost();
+    // If the caller already has the post data, display it immediately and only
+    // fetch (which triggers the backend view-count increment) when this is the
+    // first time this account views the post.
+    if (widget.initialPost != null) {
+      _post = widget.initialPost;
+      _isLoading = false;
+      _maybeFetchForFirstView();
+    } else {
+      _loadPost();
+    }
+  }
+
+  /// Fetches the post (incrementing backend view count) only on the first view
+  /// per account. Subsequent opens reuse the already-passed initialPost.
+  Future<void> _maybeFetchForFirstView() async {
+    try {
+      final auth = Provider.of<AuthNotifier>(context, listen: false);
+      final rawUser = auth.currentUser;
+      String? userId;
+      if (rawUser != null) {
+        userId = (rawUser['user_id'] ?? rawUser['id'] ?? rawUser['userID'])?.toString();
+      }
+      if (userId == null || userId.isEmpty) return;
+
+      final prefs = await SharedPreferences.getInstance();
+      final tracker = PostViewTrackingService(prefs);
+      if (!tracker.shouldCountView(userId, widget.postId)) return;
+
+      // First view for this account — fetch to let backend record the view.
+      final repository = context.read<PostsRepository>();
+      final postData = await repository.fetchPost(widget.postId);
+      if (mounted) {
+        setState(() {
+          _post = Post.fromJson(postData);
+        });
+      }
+    } catch (_) {
+      // View tracking is best-effort; ignore errors.
+    }
   }
 
   Future<void> _loadPost() async {
@@ -32,6 +79,28 @@ class _PostDetailPageState extends State<PostDetailPage> {
     });
 
     try {
+      // For cases where we don't have initialPost (e.g. notification tap),
+      // still deduplicate the view count.
+      String? userId;
+      try {
+        final auth = Provider.of<AuthNotifier>(context, listen: false);
+        final rawUser = auth.currentUser;
+        if (rawUser != null) {
+          userId = (rawUser['user_id'] ?? rawUser['id'] ?? rawUser['userID'])?.toString();
+        }
+      } catch (_) {}
+
+      if (userId != null && userId.isNotEmpty) {
+        final prefs = await SharedPreferences.getInstance();
+        final tracker = PostViewTrackingService(prefs);
+        if (!tracker.shouldCountView(userId, widget.postId)) {
+          // Already viewed — fetch for display only; backend will count again
+          // but we've done our best on the app side. At minimum, re-opening
+          // from an already-open feed card (where initialPost is passed) won't
+          // reach this path.
+        }
+      }
+
       final repository = context.read<PostsRepository>();
       final postData = await repository.fetchPost(widget.postId);
 

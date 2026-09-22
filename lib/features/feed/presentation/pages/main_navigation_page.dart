@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -12,9 +11,8 @@ import 'package:snginepro/features/feed/presentation/pages/menu_page.dart';
 import 'package:snginepro/features/friends/presentation/pages/friend_requests_page.dart';
 import 'package:snginepro/features/friends/data/services/friends_api_service.dart';
 import 'package:snginepro/core/network/api_client.dart';
-import 'package:snginepro/core/theme/design_tokens.dart';
 import 'package:snginepro/features/notifications/presentation/pages/notifications_page.dart';
-import 'package:snginepro/features/discover/presentation/pages/discover_page.dart';
+import 'package:snginepro/features/competitions/presentation/pages/competitions_hub_page.dart';
 
 // ... (صفحة FriendsPage كما هي) ...
 class FriendsPage extends StatelessWidget {
@@ -39,6 +37,7 @@ class _MainNavigationPageState extends State<MainNavigationPage>
   int _friendRequestsCount = 0;
   late AnimationController _badgeAnimationController;
   bool _showNavBar = true;
+  DateTime? _lastBackPress;
   static const double _navBarHeight = 75;
   static const double _navBarBottomMargin = 8;
   // Global Keys للوصول إلى ScrollControllers
@@ -57,8 +56,25 @@ class _MainNavigationPageState extends State<MainNavigationPage>
       vsync: this,
     );
 
-    // Initialize items list
-    // (items are const and initialized above)
+    // Build pages once — IndexedStack keeps all alive, preventing repeated initState
+    // and the redundant API calls those would trigger.
+    _pages = [
+      HomePage(
+        key: _homePageKey,
+        onScrollDirectionChanged: (isScrollingDown) {
+          if (_currentIndex != 0) return;
+          final shouldShow = !isScrollingDown;
+          if (shouldShow != _showNavBar) {
+            setState(() => _showNavBar = shouldShow);
+          }
+        },
+      ),
+      const FriendRequestsPage(),
+      const CompetitionsHubPage(),
+      const ReelsPage(),
+      const NotificationsPage(),
+      MenuPage(onNavigateToTab: (index) => setState(() => _currentIndex = index)),
+    ];
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeFriendsService();
@@ -113,23 +129,8 @@ class _MainNavigationPageState extends State<MainNavigationPage>
   }
 
   // 🔄 Migration: Using Bloc pages for specific features while keeping Provider for others
-  List<Widget> get _pages => [
-    HomePage(
-      key: _homePageKey,
-      onScrollDirectionChanged: (isScrollingDown) {
-        if (_currentIndex != 0) return;
-        final shouldShow = !isScrollingDown;
-        if (shouldShow != _showNavBar) {
-          setState(() => _showNavBar = shouldShow);
-        }
-      },
-    ),
-    const FriendRequestsPage(),
-    const DiscoverPage(),
-    const ReelsPage(),
-    const NotificationsPage(),
-    MenuPage(onNavigateToTab: (index) => setState(() => _currentIndex = index)),
-  ];
+  // Field (not getter) so page widgets are created once and kept alive by IndexedStack.
+  late final List<Widget> _pages;
 
   final List<_NavItem> _items = const [
     _NavItem(icon: Iconsax.message, activeIcon: Iconsax.message, label: 'Home'),
@@ -139,9 +140,9 @@ class _MainNavigationPageState extends State<MainNavigationPage>
       label: 'Friends',
     ),
     _NavItem(
-      icon: Iconsax.search_normal_1,
-      activeIcon: Iconsax.search_normal_1,
-      label: 'Discover',
+      icon: Iconsax.cup,
+      activeIcon: Iconsax.cup,
+      label: 'Competition',
     ),
     _NavItem(
       icon: Iconsax.video_play,
@@ -162,11 +163,40 @@ class _MainNavigationPageState extends State<MainNavigationPage>
     final isDarkDestination = _currentIndex == 3; // Reels page (updated index)
     final theme = Theme.of(context);
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: isDarkDestination
-          ? SystemUiOverlayStyle.light
-          : SystemUiOverlayStyle.dark,
-      child: Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+
+        // Not on home tab → go home
+        if (_currentIndex != 0) {
+          setState(() {
+            _currentIndex = 0;
+            _showNavBar = true;
+          });
+          return;
+        }
+
+        // On home tab → double-back to exit
+        final now = DateTime.now();
+        if (_lastBackPress == null ||
+            now.difference(_lastBackPress!) > const Duration(seconds: 2)) {
+          _lastBackPress = now;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Press back again to exit'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        } else {
+          SystemNavigator.pop();
+        }
+      },
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: isDarkDestination
+            ? SystemUiOverlayStyle.light
+            : SystemUiOverlayStyle.dark,
+        child: Scaffold(
         extendBody: true,
         backgroundColor: theme.brightness == Brightness.dark
             ? const Color(0xFF0A0A0A)
@@ -202,7 +232,6 @@ class _MainNavigationPageState extends State<MainNavigationPage>
                         MediaQuery.of(context).padding.bottom,
             ),
             child: IndexedStack(
-              key: ValueKey(_currentIndex),
               index: _currentIndex,
               children: _pages,
             ),
@@ -242,6 +271,7 @@ class _MainNavigationPageState extends State<MainNavigationPage>
           ),
         ),
       ),
+      ),
     );
   }
 }
@@ -277,7 +307,7 @@ class _BottomNavBar extends StatelessWidget {
             borderRadius: BorderRadius.circular(36),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.25),
+                color: Colors.black.withValues(alpha: 0.25),
                 blurRadius: 18,
                 offset: const Offset(0, 8),
               ),
@@ -288,7 +318,8 @@ class _BottomNavBar extends StatelessWidget {
               final item = items[index];
               final isActive = index == currentIndex;
 
-              return Expanded(
+              return Flexible(
+                flex: isActive ? 2 : 1,
                 child: _NavButton(
                   item: item,
                   isActive: isActive,
@@ -333,39 +364,72 @@ class _NavButton extends StatelessWidget {
             curve: Curves.easeInOut,
             height: double.infinity,
             margin: const EdgeInsets.symmetric(horizontal: 4),
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            padding: EdgeInsets.symmetric(
+              horizontal: isActive ? 12 : 8,
+              vertical: 8,
+            ),
             decoration: BoxDecoration(
-              color: Colors.transparent,
+              color: isActive
+                  ? const Color(0xFF2F80ED).withValues(alpha: 0.12)
+                  : Colors.transparent,
               borderRadius: BorderRadius.circular(28),
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  isActive ? item.activeIcon : item.icon,
-                  color: isActive ? const Color(0xFF2F80ED) : Colors.white,
-                  size: 22,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  item.label,
-                  maxLines: 1,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: isActive ? const Color(0xFF2F80ED) : Colors.white,
-                    fontSize: 11,
-                    fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
-                  ),
-                ),
-              ],
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 180),
+              switchInCurve: Curves.easeOut,
+              switchOutCurve: Curves.easeIn,
+              transitionBuilder: (child, animation) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: ScaleTransition(scale: animation, child: child),
+                );
+              },
+              child: isActive
+                  ? Center(
+                      key: const ValueKey('active'),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            item.activeIcon,
+                            color: const Color(0xFF2F80ED),
+                            size: 22,
+                          ),
+                          const SizedBox(height: 4),
+                          ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 140),
+                            child: Text(
+                              item.label,
+                              maxLines: 1,
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Color(0xFF2F80ED),
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                                height: 1.1,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : Center(
+                      key: const ValueKey('inactive'),
+                      child: Icon(
+                        item.icon,
+                        color: Colors.white,
+                        size: 22,
+                      ),
+                    ),
             ),
           ),
 
           if (badgeCount > 0)
             Positioned(
               top: 2,
-              right: 16,
+              right: isActive ? 12 : 16,
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(

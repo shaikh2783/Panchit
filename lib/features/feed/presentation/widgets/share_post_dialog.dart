@@ -562,7 +562,7 @@ class _SharePostDialogState extends State<SharePostDialog> {
           onTap: _shareOnTelegram,
         ),
         _SocialMediaButton(
-          icon: FontAwesomeIcons.x,
+          icon: FontAwesomeIcons.x.data,
           label: 'X',
           color: Colors.black,
           onTap: _shareOnTwitter,

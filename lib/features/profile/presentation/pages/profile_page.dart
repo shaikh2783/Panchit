@@ -26,7 +26,7 @@ import '../../../../core/providers/system_settings_provider.dart';
 import '../../../messenger/data/services/messenger_api_service.dart';
 import '../../../messenger/presentation/pages/chat_page.dart';
 
-import '../../data/models/user_profile_model.dart';
+import '../../data/models/user_profile_model.dart' as profile_models;
 import '../../data/models/profile_completion_model.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../reports/presentation/pages/report_content_page.dart';
@@ -36,16 +36,19 @@ import '../../../friends/data/models/friendship_model.dart';
 import '../../../friends/data/services/friends_api_service.dart';
 import '../widgets/profile_completion_card.dart';
 import 'profile_edit_page.dart';
+import 'package:snginepro/features/competitions/presentation/widgets/competition_widgets.dart';
+import 'package:snginepro/features/competitions/presentation/pages/competition_detail_page.dart';
+import 'package:snginepro/features/competitions/presentation/pages/competitions_hub_page.dart';
 
 class ProfilePage extends StatefulWidget {
   final String? username;
   final int? userId;
 
   const ProfilePage({super.key, this.username, this.userId})
-    : assert(
-        username != null || userId != null,
-        'Either username or userId must be provided',
-      );
+      : assert(
+  username != null || userId != null,
+  'Either username or userId must be provided',
+  );
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -55,7 +58,7 @@ class _ProfilePageState extends State<ProfilePage>
     with SingleTickerProviderStateMixin {
   late ProfileApiService _profileService;
   late UserProductsService _userProductsService;
-  UserProfileResponse? _profileData;
+  profile_models.UserProfileResponse? _profileData;
   ProfileCompletionData? _completionData;
   bool _isLoading = true;
   String? _error;
@@ -73,7 +76,7 @@ class _ProfilePageState extends State<ProfilePage>
   final int _productsLimit = 20;
   String _productsSearchQuery = '';
   final TextEditingController _productsSearchController =
-      TextEditingController();
+  TextEditingController();
 
   @override
   void initState() {
@@ -286,19 +289,19 @@ class _ProfilePageState extends State<ProfilePage>
               ),
               actions: relationship.isSelf
                   ? [
-                      IconButton(
-                        icon: const Icon(Iconsax.edit),
-                        onPressed: () async {
-                          final result = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => ProfileEditPage(profile: profile),
-                            ),
-                          );
-                          if (result == true && mounted) _loadProfile();
-                        },
+                IconButton(
+                  icon: const Icon(Iconsax.edit),
+                  onPressed: () async {
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ProfileEditPage(profile: profile),
                       ),
-                    ]
+                    );
+                    if (result == true && mounted) _loadProfile();
+                  },
+                ),
+              ]
                   : null,
             ),
           ],
@@ -330,12 +333,85 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
+  /// Returns the competition tag widgets for the profile header:
+  /// - Finished competitions (top 2 by rank): compact medal chip, e.g.
+  ///   "🥇 1st Place · Dancing"; tap → CompetitionDetailPage
+  /// - Running competition: competition name pill only (no rank)
+  static const int _maxHeaderCompetitionAchievements = 2;
+
+  List<Widget> _buildCompetitionTagWidgets(
+    profile_models.UserProfile profile,
+    List<String> achievementTags,
+  ) {
+    final theme = Theme.of(context);
+    final tags = <Widget>[];
+
+    // --- Finished competitions: compact medal chip, tap → CompetitionDetailPage ---
+    final winnerBadges = profile.badges.where((badge) {
+      final rank = badge.effectiveRank;
+      return badge.competitionId != null && rank != null && rank <= 3;
+    }).toList()
+      ..sort(
+        (a, b) => (a.effectiveRank ?? 99).compareTo(b.effectiveRank ?? 99),
+      );
+
+    final visibleWinnerBadges =
+        winnerBadges.take(_maxHeaderCompetitionAchievements);
+    for (final badge in visibleWinnerBadges) {
+      tags.add(
+        _CompetitionWinnerChip(
+          badge: badge,
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => CompetitionDetailPage(
+                competitionId: badge.competitionId!,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+    final hiddenWinnerCount =
+        winnerBadges.length - _maxHeaderCompetitionAchievements;
+    if (hiddenWinnerCount > 0) {
+      tags.add(_MoreAchievementsChip(count: hiddenWinnerCount));
+    }
+
+    // --- Running competitions: show name only, tap → CompetitionsHubPage ---
+    for (final tag in achievementTags.take(3)) {
+      if (tag.trim().isEmpty) continue;
+      tags.add(
+        _CompetitionNameChip(
+          label: tag.trim(),
+          color: Colors.white,
+          backgroundColor: theme.colorScheme.primary,
+          icon: Iconsax.cup,
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const CompetitionsHubPage()),
+          ),
+        ),
+      );
+    }
+
+    if (tags.isEmpty) return const [];
+
+    return [
+      const SizedBox(height: 10),
+      Wrap(spacing: 8, runSpacing: 8, children: tags),
+    ];
+  }
+
   // Header
   Widget _buildHeader(
-    UserProfile profile,
-    ProfileRelationship relationship,
-    ProfileStats stats,
-  ) {
+      profile_models.UserProfile profile,
+      profile_models.ProfileRelationship relationship,
+      profile_models.ProfileStats stats,
+      ) {
+    final achievementTags = profile.achievementTags.isNotEmpty
+        ? profile.achievementTags
+        : (_profileData?.achievementTags ?? const <String>[]);
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -487,6 +563,10 @@ class _ProfilePageState extends State<ProfilePage>
                             fontSize: 14,
                           ),
                         ),
+                        ..._buildCompetitionTagWidgets(
+                          profile,
+                          achievementTags,
+                        ),
                       ],
                     ),
                   ),
@@ -505,8 +585,8 @@ class _ProfilePageState extends State<ProfilePage>
                   if (systemSettings.isFriendsEnabled) {
                     statWidgets.add(
                       _buildHeaderStat(
-                        'profile_stat_friends'.tr,
-                        stats.friends,
+                          'profile_stat_friends'.tr,
+                          stats.friends,
                           onTap: () => _tabController.animateTo(5)
                       ),
                     );
@@ -515,8 +595,8 @@ class _ProfilePageState extends State<ProfilePage>
                   if (systemSettings.isFollowersEnabled) {
                     statWidgets.add(
                       _buildHeaderStat(
-                        'profile_stat_followers'.tr,
-                        stats.followers,
+                          'profile_stat_followers'.tr,
+                          stats.followers,
                           onTap: () => _tabController.animateTo(5)
                       ),
                     );
@@ -570,7 +650,7 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   // Actions
-  Widget _buildActionButtons(ProfileRelationship relationship) {
+  Widget _buildActionButtons(profile_models.ProfileRelationship relationship) {
     // Get system settings to check which features are enabled
     final systemSettings = context.watch<SystemSettingsProvider>();
     final friendsEnabled = systemSettings.isFriendsEnabled;
@@ -654,7 +734,7 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  Widget _buildFriendButton(ProfileRelationship relationship) {
+  Widget _buildFriendButton(profile_models.ProfileRelationship relationship) {
     final resolvedUserId =
         int.tryParse(_profileData?.profile.id ?? '') ?? widget.userId ?? 0;
     FriendshipStatus friendshipStatus;
@@ -685,7 +765,7 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  Widget _buildFollowButton(ProfileRelationship relationship) {
+  Widget _buildFollowButton(profile_models.ProfileRelationship relationship) {
     final isFollowing = relationship.isFollowing;
 
     return ElevatedButton.icon(
@@ -774,11 +854,11 @@ class _ProfilePageState extends State<ProfilePage>
                     builder: (context) => ReportContentPage(
                       contentType: ReportContentType.user,
                       contentId:
-                          _profileData?.profile.id ??
+                      _profileData?.profile.id ??
                           widget.userId?.toString() ??
                           '',
                       contentAuthor:
-                          _profileData?.profile.fullName ??
+                      _profileData?.profile.fullName ??
                           _profileData?.profile.username ??
                           widget.username ??
                           'User',
@@ -854,7 +934,7 @@ class _ProfilePageState extends State<ProfilePage>
       UserPreview otherUser=UserPreview(userId: userId, username: _profileData?.profile.username??"", firstName: _profileData?.profile.firstName??"",lastName: _profileData?.profile.lastName??"",avatar: _profileData?.profile.picture??"",isVerified: _profileData?.profile.isVerified??false,link: _profileData?.profile.socialLinks.website);
       // Navigate to chat page with the real conversation
       Get.to(
-        () => ChatPage(
+            () => ChatPage(
           conversationId: conversation?.conversationId??"0",
           otherUser: conversation?.otherUser??otherUser,
         ),
@@ -915,8 +995,8 @@ class _ProfilePageState extends State<ProfilePage>
         final resp = await service.unblockUser(userId: userId);
         final ok =
             (resp['status']?.toString() == 'success') ||
-            (resp['message']?.toString().toLowerCase().contains('unblocked') ??
-                false);
+                (resp['message']?.toString().toLowerCase().contains('unblocked') ??
+                    false);
         if (ok) {
           setState(() => _isBlocked = false);
           ScaffoldMessenger.of(context).showSnackBar(
@@ -940,8 +1020,8 @@ class _ProfilePageState extends State<ProfilePage>
         final resp = await service.blockUser(userId: userId);
         final ok =
             (resp['status']?.toString() == 'success') ||
-            (resp['message']?.toString().toLowerCase().contains('blocked') ??
-                false);
+                (resp['message']?.toString().toLowerCase().contains('blocked') ??
+                    false);
         if (ok) {
           setState(() => _isBlocked = true);
           ScaffoldMessenger.of(context).showSnackBar(
@@ -1158,24 +1238,60 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   // About
-  Widget _buildAboutTab(UserProfile profile) {
+  Widget _buildAboutTab(profile_models.UserProfile profile) {
+    final achievementTags = profile.achievementTags.isNotEmpty
+        ? profile.achievementTags
+        : (_profileData?.achievementTags ?? const <String>[]);
     final hasWork =
         (profile.work.title?.isNotEmpty ?? false) ||
-        (profile.work.place?.isNotEmpty ?? false) ||
-        (profile.work.website?.isNotEmpty ?? false);
+            (profile.work.place?.isNotEmpty ?? false) ||
+            (profile.work.website?.isNotEmpty ?? false);
 
     final hasLocation =
         (profile.location.currentCity?.isNotEmpty ?? false) ||
-        (profile.location.hometown?.isNotEmpty ?? false);
+            (profile.location.hometown?.isNotEmpty ?? false);
 
     final hasEducation =
         (profile.education.school?.isNotEmpty ?? false) ||
-        (profile.education.major?.isNotEmpty ?? false) ||
-        (profile.education.classYear?.isNotEmpty ?? false);
+            (profile.education.major?.isNotEmpty ?? false) ||
+            (profile.education.classYear?.isNotEmpty ?? false);
+
+    final competitionBadges = profile.badges
+        .where((badge) => badge.competitionId != null)
+        .toList()
+      ..sort(
+        (a, b) => (a.effectiveRank ?? 99).compareTo(b.effectiveRank ?? 99),
+      );
+    final genericBadges =
+        profile.badges.where((badge) => badge.competitionId == null).toList();
 
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
+        if (competitionBadges.isNotEmpty) ...[
+          _buildCompetitionAchievementsSection(competitionBadges),
+          const SizedBox(height: 16),
+        ],
+        if (achievementTags.isNotEmpty) ...[
+          _InfoCard(
+            title: 'Achievements',
+            icon: Iconsax.cup,
+            children: [
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: achievementTags
+                    .map((tag) => ProfileAchievementTag(label: tag))
+                    .toList(growable: false),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+        ],
+        if (genericBadges.isNotEmpty) ...[
+          _buildBadgesSection(genericBadges),
+          const SizedBox(height: 16),
+        ],
         if ((profile.about ?? '').isNotEmpty) ...[
           _InfoCard(
             title: 'profile_about_title'.tr,
@@ -1365,7 +1481,7 @@ class _ProfilePageState extends State<ProfilePage>
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
                     decoration:
-                        TextDecoration.none, // ✅ يمنع أي خط أصفر أو أزرق
+                    TextDecoration.none, // ✅ يمنع أي خط أصفر أو أزرق
                   ),
                 ),
               ],
@@ -1376,8 +1492,93 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
+  Widget _buildBadgesSection(List<profile_models.Badge> badges) {
+    final cs = Theme.of(context).colorScheme;
+    return Card(
+      elevation: 0,
+      color: cs.surfaceContainerHighest,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Iconsax.award, size: 20, color: cs.primary),
+                const SizedBox(width: 8),
+                Text(
+                  'Badges',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const Divider(height: 24),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final crossAxisCount = constraints.maxWidth > 600 ? 3 : 2;
+                return GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    childAspectRatio: 0.85,
+                  ),
+                  itemCount: badges.length,
+                  itemBuilder: (context, index) {
+                    final badge = badges[index];
+                    return _BadgeCard(badge: badge);
+                  },
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Competition Achievements: one card, clean rows separated by dividers,
+  /// sourced from [profile_models.Badge]s that reference a competition.
+  Widget _buildCompetitionAchievementsSection(
+    List<profile_models.Badge> competitionBadges,
+  ) {
+    final rows = <Widget>[];
+    for (var i = 0; i < competitionBadges.length; i++) {
+      if (i > 0) {
+        rows.add(const Divider(height: 20));
+      }
+      final badge = competitionBadges[i];
+      rows.add(
+        _CompetitionAchievementTile(
+          badge: badge,
+          onTap: badge.competitionId == null
+              ? null
+              : () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => CompetitionDetailPage(
+                        competitionId: badge.competitionId!,
+                      ),
+                    ),
+                  ),
+        ),
+      );
+    }
+    return _InfoCard(
+      title: 'Competition Achievements',
+      icon: Iconsax.cup,
+      children: rows,
+    );
+  }
+
   // Other tabs
-  Widget _buildPhotosTab(ProfileStats stats) {
+  Widget _buildPhotosTab(profile_models.ProfileStats stats) {
     final items = [
       _FriendMenuItem(
         title: 'profile_photos'.tr,
@@ -1436,7 +1637,7 @@ class _ProfilePageState extends State<ProfilePage>
     return _VideosTabContent(userId: userId, username: widget.username);
   }
 
-  Widget _buildProductsTab(UserProfile profile) {
+  Widget _buildProductsTab(profile_models.UserProfile profile) {
     return Column(
       children: [
         // Search Bar
@@ -1449,15 +1650,15 @@ class _ProfilePageState extends State<ProfilePage>
               prefixIcon: const Icon(Iconsax.search_normal),
               suffixIcon: _productsSearchQuery.isNotEmpty
                   ? IconButton(
-                      icon: const Icon(Icons.clear),
-                      onPressed: () {
-                        _productsSearchController.clear();
-                        setState(() {
-                          _productsSearchQuery = '';
-                        });
-                        _loadUserProducts(refresh: true);
-                      },
-                    )
+                icon: const Icon(Icons.clear),
+                onPressed: () {
+                  _productsSearchController.clear();
+                  setState(() {
+                    _productsSearchQuery = '';
+                  });
+                  _loadUserProducts(refresh: true);
+                },
+              )
                   : null,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -1481,7 +1682,7 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  Widget _buildProductsList(UserProfile profile) {
+  Widget _buildProductsList(profile_models.UserProfile profile) {
     if (_isLoadingProducts && _userProducts.isEmpty) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -1584,9 +1785,9 @@ class _ProfilePageState extends State<ProfilePage>
                         color: Colors.grey[200],
                         image: thumb != null
                             ? DecorationImage(
-                                image: CachedNetworkImageProvider(thumb),
-                                fit: BoxFit.cover,
-                              )
+                          image: CachedNetworkImageProvider(thumb),
+                          fit: BoxFit.cover,
+                        )
                             : null,
                       ),
                       child: thumb == null
@@ -1671,14 +1872,14 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  Widget _buildFriendsTab(ProfileStats stats) {
+  Widget _buildFriendsTab(profile_models.ProfileStats stats) {
     final resolvedUserId =
         int.tryParse(_profileData?.profile.id ?? '') ?? widget.userId;
     return _FriendsRelationshipsTab(userId: resolvedUserId, stats: stats);
   }
 
 
-  Widget _buildMoreTab(UserProfile profile) {
+  Widget _buildMoreTab(profile_models.UserProfile profile) {
     final socialLinks = _profileData!.socialLinks;
     final hasLinks = socialLinks.values.any((v) => (v ?? '').isNotEmpty);
 
@@ -1835,7 +2036,7 @@ class _FriendMenuTile extends StatelessWidget {
 
 class _FriendsRelationshipsTab extends StatelessWidget {
   final int? userId;
-  final ProfileStats stats;
+  final profile_models.ProfileStats stats;
 
   const _FriendsRelationshipsTab({required this.userId, required this.stats});
 
@@ -2616,12 +2817,12 @@ class _SubscriptionListTile extends StatelessWidget {
             : null,
         child: picture == null
             ? Icon(
-                subscription.nodeType == 'profile'
-                    ? Iconsax.user
-                    : subscription.nodeType == 'page'
-                    ? Iconsax.folder
-                    : Iconsax.people,
-              )
+          subscription.nodeType == 'profile'
+              ? Iconsax.user
+              : subscription.nodeType == 'page'
+              ? Iconsax.folder
+              : Iconsax.people,
+        )
             : null,
       ),
       title: Text(name),
@@ -2680,7 +2881,7 @@ class _UserPhotosGridState extends State<_UserPhotosGrid> {
 
   void _onScroll() {
     if (_scrollController.position.pixels >=
-            _scrollController.position.maxScrollExtent * 0.8 &&
+        _scrollController.position.maxScrollExtent * 0.8 &&
         !_isLoading &&
         _hasMore) {
       _loadPhotos();
@@ -2765,7 +2966,7 @@ class _UserPhotosGridState extends State<_UserPhotosGrid> {
               mainAxisSpacing: 6,
             ),
             itemCount:
-                _photos.length +
+            _photos.length +
                 (_isLoading ? 1 : 0) +
                 ((_hasMore && !_isLoading) ? 1 : 0),
             itemBuilder: (context, index) {
@@ -2821,7 +3022,7 @@ class _UserPhotosGridState extends State<_UserPhotosGrid> {
                               ).colorScheme.surfaceContainerHighest,
                             ),
                             errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
+                            const Icon(Icons.error),
                           ),
                         ),
                         if (photo.isBlurred)
@@ -2885,7 +3086,7 @@ class _UserAlbumsGridState extends State<_UserAlbumsGrid> {
 
   void _onScroll() {
     if (_scrollController.position.pixels >=
-            _scrollController.position.maxScrollExtent * 0.8 &&
+        _scrollController.position.maxScrollExtent * 0.8 &&
         !_isLoading &&
         _hasMore) {
       _loadAlbums();
@@ -2965,23 +3166,23 @@ class _UserAlbumsGridState extends State<_UserAlbumsGrid> {
                 Expanded(
                   child: album.cover != null
                       ? CachedNetworkImage(
-                          imageUrl: album.cover!,
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                          placeholder: (context, url) => Container(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.surfaceContainerHighest,
-                          ),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
-                        )
+                    imageUrl: album.cover!,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    placeholder: (context, url) => Container(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.surfaceContainerHighest,
+                    ),
+                    errorWidget: (context, url, error) =>
+                    const Icon(Icons.error),
+                  )
                       : Container(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.surfaceContainerHighest,
-                          child: const Icon(Iconsax.folder_2, size: 48),
-                        ),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.surfaceContainerHighest,
+                    child: const Icon(Iconsax.folder_2, size: 48),
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(12),
@@ -3067,7 +3268,7 @@ class _AlbumPhotosGridState extends State<_AlbumPhotosGrid> {
 
   void _onScroll() {
     if (_scrollController.position.pixels >=
-            _scrollController.position.maxScrollExtent * 0.8 &&
+        _scrollController.position.maxScrollExtent * 0.8 &&
         !_isLoading &&
         _hasMore) {
       _loadPhotos();
@@ -3153,7 +3354,7 @@ class _AlbumPhotosGridState extends State<_AlbumPhotosGrid> {
               mainAxisSpacing: 6,
             ),
             itemCount:
-                _photos.length +
+            _photos.length +
                 (_isLoading ? 1 : 0) +
                 ((_hasMore && !_isLoading) ? 1 : 0),
             itemBuilder: (context, index) {
@@ -3209,7 +3410,7 @@ class _AlbumPhotosGridState extends State<_AlbumPhotosGrid> {
                               ).colorScheme.surfaceContainerHighest,
                             ),
                             errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
+                            const Icon(Icons.error),
                           ),
                         ),
                         if (photo.isBlurred)
@@ -3300,7 +3501,7 @@ class _PhotoViewerPageState extends State<_PhotoViewerPage> {
                           child: CircularProgressIndicator(),
                         ),
                         errorWidget: (context, url, error) =>
-                            const Icon(Icons.error, color: Colors.white),
+                        const Icon(Icons.error, color: Colors.white),
                       ),
                     ),
                   ),
@@ -3520,7 +3721,7 @@ class _VideosTabContentState extends State<_VideosTabContent> {
       child: NotificationListener<ScrollNotification>(
         onNotification: (ScrollNotification scrollInfo) {
           if (scrollInfo.metrics.pixels >=
-                  scrollInfo.metrics.maxScrollExtent - 200 &&
+              scrollInfo.metrics.maxScrollExtent - 200 &&
               !_isLoading &&
               _hasMore) {
             _loadVideos();
@@ -3536,7 +3737,7 @@ class _VideosTabContentState extends State<_VideosTabContent> {
             childAspectRatio: 9 / 16,
           ),
           itemCount:
-              _videos.length + (_isLoading && _videos.isNotEmpty ? 1 : 0),
+          _videos.length + (_isLoading && _videos.isNotEmpty ? 1 : 0),
           itemBuilder: (context, index) {
             if (index == _videos.length) {
               return const Center(child: CircularProgressIndicator());
@@ -3683,3 +3884,611 @@ class _VideoThumbnail extends StatelessWidget {
   }
 
 }
+
+// Badge Card Widget
+class _BadgeCard extends StatelessWidget {
+  final profile_models.Badge badge;
+
+  const _BadgeCard({required this.badge});
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final badgeColor = (() {
+      final raw = badge.color?.trim();
+      if (raw == null || raw.isEmpty) return cs.primary;
+      final normalized = raw.startsWith('#') ? raw.substring(1) : raw;
+      final value = int.tryParse('0xff$normalized');
+      return value != null ? Color(value) : cs.primary;
+    })();
+    print("badge ${badge.label}");
+    return GestureDetector(
+
+      onTap: () {
+        // Show badge details in a dialog
+        showDialog(
+          context: context,
+          builder: (context) => _BadgeDetailDialog(badge: badge),
+        );
+      },
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                badgeColor.withValues(alpha: 0.1),
+                badgeColor.withValues(alpha: 0.05),
+              ],
+            ),
+            border: Border.all(
+              color: badgeColor.withValues(alpha: 0.3),
+              width: 1.5,
+            ),
+          ),
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Badge Icon/Circle
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: badgeColor.withValues(alpha: 0.2),
+                  border: Border.all(
+                    color: badgeColor,
+                    width: 2,
+                  ),
+                ),
+                child: Center(
+                  child: badge.icon != null && badge.icon!.isNotEmpty
+                      ? ClipRRect(
+                        borderRadius: BorderRadius.circular(30),
+                        child: CachedNetworkImage(
+                          imageUrl: badge.icon!,
+                          fit: BoxFit.cover,
+                          placeholder: (_, __) => Icon(
+                            Iconsax.award,
+                            color: badgeColor,
+                            size: 32,
+                          ),
+                          errorWidget: (_, __, ___) => Icon(
+                            Iconsax.award,
+                            color: badgeColor,
+                            size: 32,
+                          ),
+                        ),
+                      )
+                      : Icon(
+                    Iconsax.award,
+                    color: badgeColor,
+                    size: 32,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              // Badge Label
+
+              Text(
+                badge.label ?? 'Badge',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                  height: 1.2,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 4),
+              // Category
+              if (badge.categoryName != null && badge.categoryName!.isNotEmpty)
+                Expanded(
+                  child: Text(
+                    badge.categoryName!,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Colors.grey[600],
+                      height: 1.1,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Badge Detail Dialog
+class _BadgeDetailDialog extends StatelessWidget {
+  final profile_models.Badge badge;
+
+  const _BadgeDetailDialog({required this.badge});
+
+  @override
+  Widget build(BuildContext context) {
+    final badgeColor = (() {
+      final raw = badge.color?.trim();
+      if (raw == null || raw.isEmpty) return Theme.of(context).colorScheme.primary;
+      final normalized = raw.startsWith('#') ? raw.substring(1) : raw;
+      final value = int.tryParse('0xff$normalized');
+      return value != null ? Color(value) : Theme.of(context).colorScheme.primary;
+    })();
+
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Close Button
+              Align(
+                alignment: Alignment.topRight,
+                child: GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Icon(Iconsax.close_circle, size: 28),
+                ),
+              ),
+              const SizedBox(height: 16),
+              // Badge Icon
+              Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: badgeColor.withValues(alpha: 0.15),
+                  border: Border.all(
+                    color: badgeColor,
+                    width: 2,
+                  ),
+                ),
+                child: Center(
+                  child: badge.icon != null && badge.icon!.isNotEmpty
+                      ? ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: CachedNetworkImage(
+                          imageUrl: badge.icon!,
+                          fit: BoxFit.cover,
+                          placeholder: (_, __) => Icon(
+                            Iconsax.award,
+                            color: badgeColor,
+                            size: 48,
+                          ),
+                          errorWidget: (_, __, ___) => Icon(
+                            Iconsax.award,
+                            color: badgeColor,
+                            size: 48,
+                          ),
+                        ),
+                      )
+                      : Icon(
+                    Iconsax.award,
+                    color: badgeColor,
+                    size: 48,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              // Badge Name
+              Text(
+                badge.label ?? 'Badge',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 12),
+              // Category
+              if (badge.categoryName != null && badge.categoryName!.isNotEmpty)
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: badgeColor.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: badgeColor,
+                      width: 1,
+                    ),
+                  ),
+                  child: Text(
+                    badge.categoryName!,
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: badgeColor,
+                    ),
+                  ),
+                ),
+              if (badge.categoryName != null) const SizedBox(height: 16),
+              // Awarded Date
+              if (badge.awardedAt != null && badge.awardedAt!.isNotEmpty)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Iconsax.calendar, size: 16, color: Colors.grey[600]),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Awarded: ${badge.awardedAt!}',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ),
+              const SizedBox(height: 20),
+              // Close Button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: badgeColor,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
+                  child: const Text(
+                    'Close',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Pill chip for active competition name or winner label.
+class _CompetitionNameChip extends StatelessWidget {
+  const _CompetitionNameChip({
+    required this.label,
+    required this.color,
+    required this.backgroundColor,
+    this.icon,
+    this.onTap,
+  });
+
+  final String label;
+  final Color color;
+  final Color backgroundColor;
+  final IconData? icon;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: backgroundColor.withValues(alpha: 0.20),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: backgroundColor.withValues(alpha: 0.55)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (icon != null) ...[
+            Icon(icon, size: 12, color: color),
+            const SizedBox(width: 5),
+          ],
+          Flexible(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: color,
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ],
+      ),
+      ),
+    );
+  }
+}
+
+/// Subtle premium medal tint for a competition rank (1st/2nd/3rd).
+Color _competitionTierColor(int rank) {
+  switch (rank) {
+    case 1:
+      return const Color(0xFFD4AF37);
+    case 2:
+      return const Color(0xFFA8ADB4);
+    case 3:
+      return const Color(0xFFB87333);
+    default:
+      return const Color(0xFFD4AF37);
+  }
+}
+
+/// Human-readable rank label, e.g. "1st Place".
+String _competitionRankLabel(int rank) {
+  switch (rank) {
+    case 1:
+      return '1st Place';
+    case 2:
+      return '2nd Place';
+    case 3:
+      return '3rd Place';
+    default:
+      return 'Rank #$rank';
+  }
+}
+
+/// Medal emoji for a competition rank, falling back to a trophy.
+String _competitionMedalEmoji(int rank) {
+  switch (rank) {
+    case 1:
+      return '🥇';
+    case 2:
+      return '🥈';
+    case 3:
+      return '🥉';
+    default:
+      return '🏆';
+  }
+}
+
+/// Compact premium winner chip for the profile header, e.g.
+/// "🥇 1st Place · Dancing". Falls back to "🏆 1st Place" when the
+/// competition category is unavailable.
+class _CompetitionWinnerChip extends StatelessWidget {
+  const _CompetitionWinnerChip({required this.badge, this.onTap});
+
+  final profile_models.Badge badge;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final rank = badge.effectiveRank ?? 0;
+    final tierColor = _competitionTierColor(rank);
+    final category = (badge.categoryName?.trim().isNotEmpty ?? false)
+        ? badge.categoryName!.trim()
+        : (badge.categoryTag?.trim().isNotEmpty ?? false)
+            ? badge.categoryTag!.trim()
+            : null;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(17),
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 220),
+          padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
+          decoration: BoxDecoration(
+            color: tierColor.withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(17),
+            border: Border.all(color: tierColor.withValues(alpha: 0.35)),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                _competitionMedalEmoji(rank),
+                style: const TextStyle(fontSize: 14),
+              ),
+              const SizedBox(width: 6),
+              Flexible(
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: _competitionRankLabel(rank),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      if (category != null)
+                        TextSpan(
+                          text: ' · $category',
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.82),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                    ],
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Small "+N" indicator shown after the visible header winner chips when
+/// there are more competition achievements than fit in the header.
+class _MoreAchievementsChip extends StatelessWidget {
+  const _MoreAchievementsChip({required this.count});
+
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(17),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.24)),
+      ),
+      child: Text(
+        '+$count',
+        style: TextStyle(
+          color: Colors.white.withValues(alpha: 0.82),
+          fontSize: 12,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+  }
+}
+
+/// Professional row for a single competition achievement inside the About
+/// tab's Competition Achievements card: medal, rank, competition name,
+/// category, optional awarded date, and a trailing arrow when tappable.
+class _CompetitionAchievementTile extends StatelessWidget {
+  const _CompetitionAchievementTile({required this.badge, this.onTap});
+
+  final profile_models.Badge badge;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    final rank = badge.effectiveRank;
+    final tierColor = rank != null ? _competitionTierColor(rank) : cs.primary;
+    final rankLabel =
+        rank != null ? _competitionRankLabel(rank) : (badge.label ?? 'Winner');
+    final medal = rank != null ? _competitionMedalEmoji(rank) : '🏆';
+
+    final competitionName =
+        (badge.name?.trim().isNotEmpty ?? false) ? badge.name!.trim() : null;
+    final category = (badge.categoryName?.trim().isNotEmpty ?? false)
+        ? badge.categoryName!.trim()
+        : (badge.categoryTag?.trim().isNotEmpty ?? false)
+            ? badge.categoryTag!.trim()
+            : null;
+    final awardedAt = (badge.awardedAt?.trim().isNotEmpty ?? false)
+        ? badge.awardedAt!.trim()
+        : null;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: tierColor.withValues(alpha: 0.12),
+                  border: Border.all(color: tierColor.withValues(alpha: 0.35)),
+                ),
+                child: Text(medal, style: const TextStyle(fontSize: 18)),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      rankLabel,
+                      style: theme.textTheme.bodyMedium
+                          ?.copyWith(fontWeight: FontWeight.w700),
+                    ),
+                    if (competitionName != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2),
+                        child: Text(
+                          competitionName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.bodySmall
+                              ?.copyWith(color: cs.onSurfaceVariant),
+                        ),
+                      ),
+                    if (category != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2),
+                        child: Text(
+                          category,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: cs.primary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    if (awardedAt != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2),
+                        child: Text(
+                          awardedAt,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color:
+                                cs.onSurfaceVariant.withValues(alpha: 0.7),
+                            fontSize: 11,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              if (onTap != null)
+                Icon(
+                  Iconsax.arrow_right_3,
+                  size: 18,
+                  color: cs.onSurfaceVariant,
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
