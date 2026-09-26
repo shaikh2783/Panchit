@@ -7,6 +7,7 @@ import 'package:ffmpeg_kit_flutter_new/return_code.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:snginepro/core/theme/app_colors.dart';
 import 'package:snginepro/features/reels/data/models/music_model.dart';
 import 'package:snginepro/features/reels/presentation/pages/reel_edit_screen.dart';
 import 'package:video_player/video_player.dart';
@@ -34,7 +35,7 @@ class ReelGalleryTrimScreen extends StatefulWidget {
 class _ReelGalleryTrimScreenState extends State<ReelGalleryTrimScreen> {
   static const int _maxTrimSec = 30;
   static const int _minTrimSec = 1;
-  static const Color _accent = Color(0xFFE1306C);
+  static const Color _accent = AppColors.brandPink;
   static const double _bottomPanelReservedHeight = 292;
   VideoPlayerController? _playerCtrl;
 

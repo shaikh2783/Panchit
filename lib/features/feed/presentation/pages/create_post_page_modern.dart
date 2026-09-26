@@ -305,7 +305,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         'error'.tr,
         'failed_to_pick_file'.tr,
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
+        backgroundColor: AppColors.error,
         colorText: Colors.white,
       );
     }
@@ -1103,17 +1103,17 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
 
       return Scaffold(
         backgroundColor: isDark
-            ? const Color(0xFF0A0A0A)
-            : const Color(0xFFF8F9FA),
+            ? AppColors.backgroundDark
+            : AppColors.backgroundLight,
         appBar: _buildAppBar(isDark),
         body: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: isDark 
-                ? [const Color(0xFF0A0A0A), const Color(0xFF1A1A1A)]
-                : [const Color(0xFFF8F9FA), const Color(0xFFE9ECEF)],
+              colors: isDark
+                  ? [AppColors.backgroundDark, AppColors.surfaceDark]
+                  : [AppColors.backgroundLight, AppColors.dividerLight],
             ),
           ),
           child: _isCreating
@@ -1139,9 +1139,9 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
     }
     
     return AppBar(
-      backgroundColor: isDark 
-        ? const Color(0xFF1A1A1A).withOpacity(0.95)
-        : Colors.white.withOpacity(0.95),
+      backgroundColor: isDark
+          ? AppColors.surfaceDark.withValues(alpha: 0.95)
+          : AppColors.surfaceLight.withValues(alpha: 0.95),
       elevation: 0,
       shadowColor: Colors.transparent,
       surfaceTintColor: Colors.transparent,
@@ -1151,25 +1151,17 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: isDark 
-              ? [
-                  const Color(0xFF1A1A1A).withOpacity(0.98),
-                  const Color(0xFF0A0A0A).withOpacity(0.95),
-                ]
-              : [
-                  Colors.white.withOpacity(0.98),
-                  const Color(0xFFF8F9FA).withOpacity(0.95),
-                ],
+            colors: isDark
+                ? [
+                    AppColors.surfaceDark.withValues(alpha: 0.98),
+                    AppColors.backgroundDark.withValues(alpha: 0.95),
+                  ]
+                : [
+                    AppColors.surfaceLight.withValues(alpha: 0.98),
+                    AppColors.backgroundLight.withValues(alpha: 0.95),
+                  ],
           ),
-          boxShadow: [
-            BoxShadow(
-              color: isDark 
-                ? Colors.black.withOpacity(0.3)
-                : Colors.black.withOpacity(0.05),
-              blurRadius: 12,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          boxShadow: isDark ? AppColors.darkShadow : AppColors.lightShadow,
         ),
       ),
       leading: Container(
@@ -1177,34 +1169,30 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           gradient: LinearGradient(
-            colors: isDark 
-              ? [const Color(0xFF2A2A2A), const Color(0xFF1F1F1F)]
-              : [Colors.white, const Color(0xFFF5F5F5)],
+            colors: isDark
+                ? [AppColors.cardDark, AppColors.surfaceDark]
+                : [Colors.white, AppColors.backgroundLight],
           ),
-          boxShadow: [
-            BoxShadow(
-              color: isDark 
-                ? Colors.black.withOpacity(0.4)
-                : Colors.black.withOpacity(0.08),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          boxShadow: isDark ? AppColors.darkShadow : AppColors.lightShadow,
         ),
         child: IconButton(
           icon: Icon(
             Icons.close_rounded,
-            color: isDark ? Colors.white : Colors.grey[700],
+            color: isDark
+                ? AppColors.textPrimaryDark
+                : AppColors.textSecondaryLight,
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
       title: Text(
-        title, 
+        title,
         style: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,
-          color: isDark ? Colors.white : Colors.grey[800],
+          color: isDark
+              ? AppColors.textPrimaryDark
+              : AppColors.textPrimaryLight,
         ),
       ),
       actions: [
@@ -1212,20 +1200,20 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
           margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: _isCreating 
-                ? [Colors.grey[500]!, Colors.grey[600]!]
-                : [AppColors.primary, AppColors.primary.withOpacity(0.8)],
+              colors: _isCreating
+                  ? [Colors.grey[500]!, Colors.grey[600]!]
+                  : [AppColors.primary, AppColors.primary.withValues(alpha: 0.8)],
             ),
             borderRadius: BorderRadius.circular(12),
-            boxShadow: _isCreating 
-              ? []
-              : [
-                  BoxShadow(
-                    color: AppColors.primary.withOpacity(0.3),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
+            boxShadow: _isCreating
+                ? []
+                : [
+                    BoxShadow(
+                      color: AppColors.primary.withValues(alpha: 0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
           ),
           child: ElevatedButton(
             onPressed: _isCreating ? null : _createPost,
@@ -1258,22 +1246,18 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         padding: const EdgeInsets.all(32),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          gradient: isDark 
-            ? const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFF2A2A2A), Color(0xFF1F1F1F)],
-              )
-            : const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Colors.white, Color(0xFFF8F9FA)],
-              ),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: isDark
+                ? [AppColors.cardDark, AppColors.surfaceDark]
+                : [Colors.white, AppColors.backgroundLight],
+          ),
           boxShadow: [
             BoxShadow(
-              color: isDark 
-                ? Colors.black54 
-                : Colors.grey.withOpacity(0.3),
+              color: isDark
+                  ? Colors.black.withValues(alpha: 0.4)
+                  : Colors.black.withValues(alpha: 0.15),
               blurRadius: 20,
               spreadRadius: 2,
             ),
@@ -1315,7 +1299,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                     height: 8,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
-                      color: isDark ? Colors.grey[800] : Colors.grey[300],
+                      color: isDark ? AppColors.dividerDark : AppColors.dividerLight,
                     ),
                     child: FractionallySizedBox(
                       alignment: Alignment.centerLeft,
@@ -1339,7 +1323,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: isDark ? Colors.white : Colors.grey[800],
+                      color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -1347,7 +1331,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                     'Creating post...',
                     style: TextStyle(
                       fontSize: 14,
-                      color: isDark ? Colors.grey[400] : Colors.grey[600],
+                      color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
                     ),
                   ),
                 ],
@@ -1382,7 +1366,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: isDark ? Colors.white : Colors.grey[800],
+                  color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
                 ),
               ),
               const SizedBox(height: 8),
@@ -1390,7 +1374,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                 'Please wait while we process your content',
                 style: TextStyle(
                   fontSize: 14,
-                  color: isDark ? Colors.grey[400] : Colors.grey[600],
+                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -1423,7 +1407,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: isDark ? Colors.grey[400] : Colors.grey[600],
+                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
                 ),
               ),
             ),
@@ -1469,18 +1453,10 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         borderRadius: BorderRadius.circular(16),
         gradient: LinearGradient(
           colors: isDark 
-            ? [const Color(0xFF2A2A2A), const Color(0xFF1F1F1F)]
-            : [Colors.white, const Color(0xFFF8F9FA)],
+            ? [AppColors.cardDark, AppColors.surfaceDark]
+            : [Colors.white, AppColors.backgroundLight],
         ),
-        boxShadow: [
-          BoxShadow(
-            color: isDark 
-              ? Colors.black.withOpacity(0.3)
-              : Colors.black.withOpacity(0.08),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: isDark ? AppColors.darkShadow : AppColors.lightShadow,
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -1531,7 +1507,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: isDark ? Colors.white : Colors.grey[800],
+                      color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
                     ),
                   ),
                   if (widget.showPrivacySelector) ...[
@@ -1552,15 +1528,13 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: isDark 
-            ? [const Color(0xFF3A3A3A), const Color(0xFF2F2F2F)]
-            : [const Color(0xFFF0F0F0), Colors.white],
+          colors: isDark
+              ? [AppColors.surfaceElevatedDark, AppColors.cardDark]
+              : [AppColors.backgroundLight, Colors.white],
         ),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isDark 
-            ? Colors.white.withOpacity(0.1)
-            : Colors.black.withOpacity(0.08),
+          color: isDark ? AppColors.borderDark : AppColors.borderLight,
           width: 1,
         ),
         boxShadow: [
@@ -1580,11 +1554,11 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w500,
-          color: isDark ? Colors.white : Colors.grey[700],
+          color: isDark ? AppColors.textPrimaryDark : AppColors.textSecondaryLight,
         ),
         icon: Icon(
           Icons.keyboard_arrow_down_rounded,
-          color: isDark ? Colors.grey[400] : Colors.grey[600],
+          color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
           size: 20,
         ),
         items: [
@@ -1595,10 +1569,10 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                 Container(
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
-                    color: Colors.blue.withOpacity(0.1),
+                    color: AppColors.info.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.public, size: 16, color: Colors.blue),
+                  child: const Icon(Icons.public, size: 16, color: AppColors.info),
                 ),
                 const SizedBox(width: 8),
                 Text('public_privacy'.tr),
@@ -1612,10 +1586,10 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                 Container(
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
-                    color: Colors.green.withOpacity(0.1),
+                    color: AppColors.success.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.people, size: 16, color: Colors.green),
+                  child: const Icon(Icons.people, size: 16, color: AppColors.success),
                 ),
                 const SizedBox(width: 8),
                 Text('friends_privacy'.tr),
@@ -1629,10 +1603,10 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                 Container(
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
-                    color: Colors.orange.withOpacity(0.1),
+                    color: AppColors.warning.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.lock, size: 16, color: Colors.orange),
+                  child: const Icon(Icons.lock, size: 16, color: AppColors.warning),
                 ),
                 const SizedBox(width: 8),
                 Text('private_privacy'.tr),
@@ -1660,18 +1634,10 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         borderRadius: BorderRadius.circular(16),
         gradient: LinearGradient(
           colors: isDark 
-            ? [const Color(0xFF2A2A2A), const Color(0xFF1F1F1F)]
-            : [Colors.white, const Color(0xFFF8F9FA)],
+            ? [AppColors.cardDark, AppColors.surfaceDark]
+            : [Colors.white, AppColors.backgroundLight],
         ),
-        boxShadow: [
-          BoxShadow(
-            color: isDark 
-              ? Colors.black.withOpacity(0.3)
-              : Colors.black.withOpacity(0.08),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: isDark ? AppColors.darkShadow : AppColors.lightShadow,
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -1707,37 +1673,37 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                     gradient: isSelected
                         ? LinearGradient(
                             colors: [
-                              config.color.withOpacity(0.2),
-                              config.color.withOpacity(0.1),
+                              config.color.withValues(alpha: 0.2),
+                              config.color.withValues(alpha: 0.1),
                             ],
                           )
                         : LinearGradient(
-                            colors: isDark 
-                              ? [const Color(0xFF3A3A3A), const Color(0xFF2F2F2F)]
-                              : [const Color(0xFFF5F5F5), Colors.white],
+                            colors: isDark
+                                ? [AppColors.surfaceElevatedDark, AppColors.cardDark]
+                                : [AppColors.backgroundLight, Colors.white],
                           ),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: isSelected 
-                        ? config.color 
-                        : (isDark 
-                          ? Colors.white.withOpacity(0.1)
-                          : Colors.black.withOpacity(0.08)),
+                      color: isSelected
+                          ? config.color
+                          : (isDark
+                              ? AppColors.borderDark
+                              : AppColors.borderLight),
                       width: isSelected ? 2 : 1,
                     ),
                     boxShadow: isSelected
                         ? [
                             BoxShadow(
-                              color: config.color.withOpacity(0.3),
+                              color: config.color.withValues(alpha: 0.3),
                               blurRadius: 8,
                               offset: const Offset(0, 4),
                             ),
                           ]
                         : [
                             BoxShadow(
-                              color: isDark 
-                                ? Colors.black.withOpacity(0.2)
-                                : Colors.black.withOpacity(0.04),
+                              color: isDark
+                                  ? Colors.black.withValues(alpha: 0.2)
+                                  : Colors.black.withValues(alpha: 0.04),
                               blurRadius: 4,
                               offset: const Offset(0, 2),
                             ),
@@ -1751,17 +1717,17 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           color: isSelected
-                              ? config.color.withOpacity(0.2)
-                              : (isDark 
-                                ? Colors.white.withOpacity(0.1)
-                                : Colors.black.withOpacity(0.05)),
+                              ? config.color.withValues(alpha: 0.2)
+                              : (isDark
+                                  ? AppColors.dividerDark
+                                  : AppColors.dividerLight),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
                           config.icon,
                           color: isSelected
                               ? config.color
-                              : (isDark ? Colors.grey[400] : Colors.grey[600]),
+                              : (isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight),
                           size: 22,
                         ),
                       ),
@@ -1772,9 +1738,11 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                           style: TextStyle(
                             fontSize: 11,
                             fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                            color: isSelected 
-                              ? config.color 
-                              : (isDark ? Colors.grey[300] : Colors.grey[700]),
+                            color: isSelected
+                                ? config.color
+                                : (isDark
+                                    ? AppColors.textSecondaryDark
+                                    : AppColors.textSecondaryLight),
                           ),
                           textAlign: TextAlign.center,
                           maxLines: 1,
@@ -1798,23 +1766,13 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         gradient: LinearGradient(
-          colors: isDark 
-            ? [const Color(0xFF2A2A2A), const Color(0xFF1F1F1F)]
-            : [Colors.white, const Color(0xFFF8F9FA)],
+          colors: isDark
+              ? [AppColors.cardDark, AppColors.surfaceDark]
+              : [Colors.white, AppColors.backgroundLight],
         ),
-        boxShadow: [
-          BoxShadow(
-            color: isDark 
-              ? Colors.black.withOpacity(0.3)
-              : Colors.black.withOpacity(0.08),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: isDark ? AppColors.darkShadow : AppColors.lightShadow,
         border: Border.all(
-          color: isDark 
-            ? Colors.white.withOpacity(0.1)
-            : Colors.black.withOpacity(0.05),
+          color: isDark ? AppColors.borderDark : AppColors.borderLight,
           width: 1,
         ),
       ),
@@ -1822,9 +1780,9 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          color: _selectedColoredPattern != null 
+          color: _selectedColoredPattern != null
               ? (_selectedColoredPattern!.isImagePattern ? null : _getPatternBackground())
-              : (isDark ? Colors.grey[900] : Colors.white),
+              : (isDark ? AppColors.surfaceDark : Colors.white),
           gradient: _selectedColoredPattern?.backgroundColors != null && 
                     _selectedColoredPattern!.backgroundColors!.secondary != null &&
                     !_selectedColoredPattern!.isImagePattern
@@ -1888,7 +1846,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
             height: 1.5,
             color: _selectedColoredPattern != null 
                 ? Colors.white
-                : (isDark ? Colors.white : Colors.grey[800]),
+                : (isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight),
             fontWeight: _selectedColoredPattern != null ? FontWeight.bold : FontWeight.normal,
           ),
           textAlign: _selectedColoredPattern != null ? TextAlign.center : TextAlign.start,
@@ -1896,9 +1854,11 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
             hintText: 'what_do_you_want_to_share'.tr,
             hintStyle: TextStyle(
               fontSize: _selectedColoredPattern != null ? 20 : 16,
-              color: _selectedColoredPattern != null 
+              color: _selectedColoredPattern != null
                   ? Colors.white70
-                  : (isDark ? Colors.grey[500] : Colors.grey[500]),
+                  : (isDark
+                      ? AppColors.textTertiaryDark
+                      : AppColors.textTertiaryLight),
             ),
             border: InputBorder.none,
             enabledBorder: InputBorder.none,
@@ -1953,17 +1913,17 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
-              color: isDark ? const Color(0xFF2A2A2A) : Colors.white,
+              color: isDark ? AppColors.cardDark : AppColors.cardLight,
               border: Border.all(
-                color: Colors.orange.withOpacity(0.3),
+                color: AppColors.warning.withValues(alpha: 0.3),
                 width: 1,
               ),
             ),
             child: Column(
               children: [
-                Icon(
+                const Icon(
                   Icons.info_outline,
-                  color: Colors.orange,
+                  color: AppColors.warning,
                   size: 48,
                 ),
                 const SizedBox(height: 16),
@@ -1972,7 +1932,9 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.black87,
+                    color: isDark
+                        ? AppColors.textPrimaryDark
+                        : AppColors.textPrimaryLight,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -1981,14 +1943,16 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 14,
-                    color: isDark ? Colors.white70 : Colors.black54,
+                    color: isDark
+                        ? AppColors.textSecondaryDark
+                        : AppColors.textSecondaryLight,
                   ),
                 ),
               ],
             ),
           );
         }
-        
+
         // إذا لم تكن هناك أنماط متاحة
         if (patterns.isEmpty) {
           return Container(
@@ -1996,13 +1960,15 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
-              color: isDark ? const Color(0xFF2A2A2A) : Colors.white,
+              color: isDark ? AppColors.cardDark : AppColors.cardLight,
             ),
             child: Column(
               children: [
                 Icon(
                   Icons.palette_outlined,
-                  color: isDark ? Colors.white54 : Colors.black45,
+                  color: isDark
+                      ? AppColors.textTertiaryDark
+                      : AppColors.textTertiaryLight,
                   size: 48,
                 ),
                 const SizedBox(height: 16),
@@ -2011,7 +1977,9 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.black87,
+                    color: isDark
+                        ? AppColors.textPrimaryDark
+                        : AppColors.textPrimaryLight,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -2020,7 +1988,9 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 14,
-                    color: isDark ? Colors.white70 : Colors.black54,
+                    color: isDark
+                        ? AppColors.textSecondaryDark
+                        : AppColors.textSecondaryLight,
                   ),
                 ),
               ],
@@ -2034,22 +2004,12 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
             borderRadius: BorderRadius.circular(16),
             gradient: LinearGradient(
               colors: isDark 
-                ? [const Color(0xFF2A2A2A), const Color(0xFF1F1F1F)]
-                : [Colors.white, const Color(0xFFF8F9FA)],
+                ? [AppColors.cardDark, AppColors.surfaceDark]
+                : [Colors.white, AppColors.backgroundLight],
             ),
-            boxShadow: [
-              BoxShadow(
-                color: isDark 
-                  ? Colors.black.withOpacity(0.3)
-                  : Colors.black.withOpacity(0.08),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
+            boxShadow: isDark ? AppColors.darkShadow : AppColors.lightShadow,
             border: Border.all(
-              color: isDark 
-                ? Colors.white.withOpacity(0.1)
-                : Colors.black.withOpacity(0.05),
+              color: isDark ? AppColors.borderDark : AppColors.borderLight,
               width: 1,
             ),
           ),
@@ -2061,8 +2021,10 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                 Row(
                   children: [
                     Icon(
-                      Icons.color_lens_rounded, 
-                      color: isDark ? Colors.white : Colors.grey[700],
+                      Icons.color_lens_rounded,
+                      color: isDark
+                          ? AppColors.textSecondaryDark
+                          : AppColors.textSecondaryLight,
                       size: 20,
                     ),
                     const SizedBox(width: 8),
@@ -2071,7 +2033,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: isDark ? Colors.white : Colors.grey[800],
+                        color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -2085,7 +2047,9 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
                                   valueColor: AlwaysStoppedAnimation<Color>(
-                                    isDark ? Colors.white60 : Colors.grey[600]!,
+                                    isDark
+                                        ? AppColors.textSecondaryDark
+                                        : AppColors.textSecondaryLight,
                                   ),
                                 ),
                               )
@@ -2099,7 +2063,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                                         SnackBar(
                                           content: Text('Updated! Found $patternsCount patterns'),
                                           duration: Duration(seconds: 2),
-                                          backgroundColor: Colors.green,
+                                          backgroundColor: AppColors.success,
                                         ),
                                       );
                                     }
@@ -2109,7 +2073,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                                         SnackBar(
                                           content: Text('Failed to update patterns'),
                                           duration: Duration(seconds: 2),
-                                          backgroundColor: Colors.red,
+                                          backgroundColor: AppColors.error,
                                         ),
                                       );
                                     }
@@ -2118,7 +2082,9 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                                 icon: Icon(
                                   Icons.refresh_rounded,
                                   size: 18,
-                                  color: isDark ? Colors.white70 : Colors.grey[600],
+                                  color: isDark
+                                      ? AppColors.textSecondaryDark
+                                      : AppColors.textSecondaryLight,
                                 ),
                                 tooltip: 'Refresh patterns',
                                 padding: EdgeInsets.all(4),
@@ -2183,14 +2149,20 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                     child: Column(
                       children: [
                         Icon(
-                          Icons.color_lens_outlined, 
-                          size: 48, 
-                          color: Colors.grey[400],
+                          Icons.color_lens_outlined,
+                          size: 48,
+                          color: isDark
+                              ? AppColors.textTertiaryDark
+                              : AppColors.textTertiaryLight,
                         ),
                         const SizedBox(height: 8),
                         Text(
                           'No colored patterns available',
-                          style: TextStyle(color: Colors.grey[600]),
+                          style: TextStyle(
+                            color: isDark
+                                ? AppColors.textSecondaryDark
+                                : AppColors.textSecondaryLight,
+                          ),
                         ),
                       ],
                     ),
@@ -2219,13 +2191,13 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                                   width: 3,
                                 )
                               : Border.all(
-                                  color: isDark 
-                                    ? Colors.white.withOpacity(0.2) 
-                                    : Colors.grey[300]!,
+                                  color: isDark
+                                      ? AppColors.borderDark
+                                      : AppColors.borderLight,
                                 ),
                           boxShadow: isSelected ? [
                             BoxShadow(
-                              color: const Color(0xFFFF6B6B).withOpacity(0.3),
+                              color: const Color(0xFFFF6B6B).withValues(alpha: 0.3),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),
@@ -2300,22 +2272,12 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         borderRadius: BorderRadius.circular(16),
         gradient: LinearGradient(
           colors: isDark 
-            ? [const Color(0xFF2A2A2A), const Color(0xFF1F1F1F)]
-            : [Colors.white, const Color(0xFFF8F9FA)],
+            ? [AppColors.cardDark, AppColors.surfaceDark]
+            : [Colors.white, AppColors.backgroundLight],
         ),
-        boxShadow: [
-          BoxShadow(
-            color: isDark 
-              ? Colors.black.withOpacity(0.3)
-              : Colors.black.withOpacity(0.08),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: isDark ? AppColors.darkShadow : AppColors.lightShadow,
         border: Border.all(
-          color: isDark 
-            ? Colors.white.withOpacity(0.1)
-            : Colors.black.withOpacity(0.05),
+          color: isDark ? AppColors.borderDark : AppColors.borderLight,
           width: 1,
         ),
       ),
@@ -2355,7 +2317,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: isDark ? Colors.white : Colors.grey[800],
+                      color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -2381,11 +2343,11 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
             ),
             Container(
               decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.1),
+                color: AppColors.error.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: IconButton(
-                icon: const Icon(Icons.close_rounded, color: Colors.red),
+                icon: const Icon(Icons.close_rounded, color: AppColors.error),
                 onPressed: () {
                   setState(() {
                     _video = null;
@@ -2407,22 +2369,12 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         borderRadius: BorderRadius.circular(16),
         gradient: LinearGradient(
           colors: isDark 
-            ? [const Color(0xFF2A2A2A), const Color(0xFF1F1F1F)]
-            : [Colors.white, const Color(0xFFF8F9FA)],
+            ? [AppColors.cardDark, AppColors.surfaceDark]
+            : [Colors.white, AppColors.backgroundLight],
         ),
-        boxShadow: [
-          BoxShadow(
-            color: isDark 
-              ? Colors.black.withOpacity(0.3)
-              : Colors.black.withOpacity(0.08),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: isDark ? AppColors.darkShadow : AppColors.lightShadow,
         border: Border.all(
-          color: isDark 
-            ? Colors.white.withOpacity(0.1)
-            : Colors.black.withOpacity(0.05),
+          color: isDark ? AppColors.borderDark : AppColors.borderLight,
           width: 1,
         ),
       ),
@@ -2462,7 +2414,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: isDark ? Colors.white : Colors.grey[800],
+                      color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -2488,11 +2440,11 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
             ),
             Container(
               decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.1),
+                color: AppColors.error.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: IconButton(
-                icon: const Icon(Icons.close_rounded, color: Colors.red),
+                icon: const Icon(Icons.close_rounded, color: AppColors.error),
                 onPressed: () {
                   setState(() {
                     _audio = null;
@@ -2513,22 +2465,12 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         borderRadius: BorderRadius.circular(16),
         gradient: LinearGradient(
           colors: isDark 
-            ? [const Color(0xFF2A2A2A), const Color(0xFF1F1F1F)]
-            : [Colors.white, const Color(0xFFF8F9FA)],
+            ? [AppColors.cardDark, AppColors.surfaceDark]
+            : [Colors.white, AppColors.backgroundLight],
         ),
-        boxShadow: [
-          BoxShadow(
-            color: isDark 
-              ? Colors.black.withOpacity(0.3)
-              : Colors.black.withOpacity(0.08),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: isDark ? AppColors.darkShadow : AppColors.lightShadow,
         border: Border.all(
-          color: isDark 
-            ? Colors.white.withOpacity(0.1)
-            : Colors.black.withOpacity(0.05),
+          color: isDark ? AppColors.borderDark : AppColors.borderLight,
           width: 1,
         ),
       ),
@@ -2545,7 +2487,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: isDark ? Colors.white : Colors.grey[800],
+                    color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
                   ),
                 ),
                 Container(
@@ -2643,11 +2585,11 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                           right: 6,
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Colors.red,
+                              color: AppColors.error,
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.red.withOpacity(0.3),
+                                  color: AppColors.error.withValues(alpha: 0.3),
                                   blurRadius: 4,
                                   offset: const Offset(0, 2),
                                 ),
@@ -2689,22 +2631,12 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         borderRadius: BorderRadius.circular(16),
         gradient: LinearGradient(
           colors: isDark 
-            ? [const Color(0xFF2A2A2A), const Color(0xFF1F1F1F)]
-            : [Colors.white, const Color(0xFFF8F9FA)],
+            ? [AppColors.cardDark, AppColors.surfaceDark]
+            : [Colors.white, AppColors.backgroundLight],
         ),
-        boxShadow: [
-          BoxShadow(
-            color: isDark 
-              ? Colors.black.withOpacity(0.3)
-              : Colors.black.withOpacity(0.08),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: isDark ? AppColors.darkShadow : AppColors.lightShadow,
         border: Border.all(
-          color: isDark 
-            ? Colors.white.withOpacity(0.1)
-            : Colors.black.withOpacity(0.05),
+          color: isDark ? AppColors.borderDark : AppColors.borderLight,
           width: 1,
         ),
       ),
@@ -2742,7 +2674,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: isDark ? Colors.white : Colors.grey[800],
+                    color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
                   ),
                 ),
               ],
@@ -2756,14 +2688,14 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
-                          color: isDark 
-                            ? const Color(0xFF3A3A3A) 
-                            : const Color(0xFFF5F6FA),
+                          color: isDark
+                              ? AppColors.surfaceElevatedDark
+                              : AppColors.backgroundLight,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: isDark 
-                              ? Colors.white.withOpacity(0.1)
-                              : Colors.grey.withOpacity(0.2),
+                            color: isDark
+                                ? AppColors.borderDark
+                                : AppColors.borderLight,
                           ),
                         ),
                         child: TextField(
@@ -2771,14 +2703,14 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
-                            color: isDark ? Colors.white : Colors.grey[800],
+                            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
                           ),
                           decoration: InputDecoration(
                             hintText: 'Option ${entry.key + 1}',
                             hintStyle: TextStyle(
-                              color: isDark 
-                                ? Colors.white.withOpacity(0.5)
-                                : Colors.grey.withOpacity(0.7),
+                              color: isDark
+                                  ? AppColors.textTertiaryDark
+                                  : AppColors.textTertiaryLight,
                             ),
                             border: InputBorder.none,
                             contentPadding: const EdgeInsets.symmetric(
@@ -2793,13 +2725,13 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                       const SizedBox(width: 8),
                       Container(
                         decoration: BoxDecoration(
-                          color: Colors.red.withOpacity(0.1),
+                          color: AppColors.error.withValues(alpha: 0.1),
                           shape: BoxShape.circle,
                         ),
                         child: IconButton(
                           icon: const Icon(
                             Icons.remove_circle_outline_rounded,
-                            color: Colors.red,
+                            color: AppColors.error,
                             size: 20,
                           ),
                           onPressed: () => _removePollOption(entry.key),
@@ -2880,22 +2812,12 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
         borderRadius: BorderRadius.circular(16),
         gradient: LinearGradient(
           colors: isDark 
-            ? [const Color(0xFF2A2A2A), const Color(0xFF1F1F1F)]
-            : [Colors.white, const Color(0xFFF8F9FA)],
+            ? [AppColors.cardDark, AppColors.surfaceDark]
+            : [Colors.white, AppColors.backgroundLight],
         ),
-        boxShadow: [
-          BoxShadow(
-            color: isDark 
-              ? Colors.black.withOpacity(0.3)
-              : Colors.black.withOpacity(0.08),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: isDark ? AppColors.darkShadow : AppColors.lightShadow,
         border: Border.all(
-          color: isDark 
-            ? Colors.white.withOpacity(0.1)
-            : Colors.black.withOpacity(0.05),
+          color: isDark ? AppColors.borderDark : AppColors.borderLight,
           width: 1,
         ),
       ),
@@ -2909,7 +2831,7 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: isDark ? Colors.white : Colors.grey[800],
+                color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
               ),
             ),
             const SizedBox(height: 16),
@@ -3283,7 +3205,9 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: Colors.grey[700],
+                    color: _themeController.isDarkMode
+                        ? AppColors.textSecondaryDark
+                        : AppColors.textSecondaryLight,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -3319,7 +3243,12 @@ class _CreatePostPageModernState extends State<CreatePostPageModern> {
                       } else {
                         icon = Icons.text_fields;
                       }
-                      return Icon(icon, color: Colors.grey[600]);
+                      return Icon(
+                        icon,
+                        color: _themeController.isDarkMode
+                            ? AppColors.textSecondaryDark
+                            : AppColors.textSecondaryLight,
+                      );
                     }(),
                     hintText: _getTranslatedPlaceholder(_selectedFeelingAction ?? ''),
                     counterText: '', // إخفاء عداد الأحرف
@@ -3435,7 +3364,7 @@ List<Map<String, dynamic>> _normalizeList(dynamic data) {
                 'Scheduled: $_scheduledDateTime',
                 style: TextStyle(
                   fontSize: 12,
-                  color: isDark ? Colors.grey[400] : Colors.grey[600],
+                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
                 ),
               ),
             ),

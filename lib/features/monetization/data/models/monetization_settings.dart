@@ -59,7 +59,7 @@ class MonetizationSystemSettings {
       monetizationEnabled: json['monetization_enabled'] ?? false,
       verificationRequired: json['verification_required'] ?? false,
       moneyWithdrawEnabled: json['money_withdraw_enabled'] ?? false,
-      currency: json['currency'] ?? 'USD',
+      currency: json['currency'] ?? 'INR',
     );
   }
 }

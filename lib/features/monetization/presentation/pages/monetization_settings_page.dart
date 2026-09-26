@@ -84,7 +84,7 @@ class _MonetizationSettingsPageState extends State<MonetizationSettingsPage> {
     if (chatPrice < (_settings?.minPrice ?? 0) ||
         callPrice < (_settings?.minPrice ?? 0)) {
       _showError(
-        '${'minimum_price_is'.tr} \$${_settings?.minPrice.toStringAsFixed(2)}',
+        '${'minimum_price_is'.tr} ₹${_settings?.minPrice.toStringAsFixed(2)}',
       );
       return;
     }
@@ -548,8 +548,8 @@ class _PriceField extends StatelessWidget {
       controller: controller,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       decoration: InputDecoration(
-        labelText: '$label (\$$currency)',
-        hintText: 'Min: \$${minPrice.toStringAsFixed(2)}',
+        labelText: '$label ($currency)',
+        hintText: 'Min: ₹${minPrice.toStringAsFixed(2)}',
         prefixIcon: Container(
           margin: const EdgeInsets.all(8),
           padding: const EdgeInsets.all(8),
@@ -653,7 +653,7 @@ class _PlanCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                '\$${plan.price.toStringAsFixed(2)}',
+                '₹${plan.price.toStringAsFixed(2)}',
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

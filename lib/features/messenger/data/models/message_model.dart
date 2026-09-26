@@ -1,5 +1,6 @@
 import 'package:snginepro/main.dart';
 import 'package:flutter/foundation.dart';
+import 'chat_text_utils.dart';
 
 /// نموذج الرسالة - مطابق لـ Backend API
 class MessageModel {
@@ -86,7 +87,7 @@ class MessageModel {
       username: _toStringOrNull(json['user_name']) ?? _toStringOrNull(json['username']) ?? '',
       firstName: _toStringOrNull(json['user_firstname']) ?? _toStringOrNull(json['first_name']) ?? '',
       lastName: _toStringOrNull(json['user_lastname']) ?? _toStringOrNull(json['last_name']) ?? '',
-      messageText: _toStringOrNull(json['message_decoded']) ?? _toStringOrNull(json['message']) ?? _toStringOrNull(json['text']) ?? '',
+      messageText: sanitizeChatText(_toStringOrNull(json['message_decoded']) ?? _toStringOrNull(json['message']) ?? _toStringOrNull(json['text']) ?? ''),
       avatar: avatarUrl,
       image: imageUrl,
       voiceNote: voiceUrl,

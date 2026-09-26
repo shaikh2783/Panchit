@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:snginepro/core/theme/app_colors.dart';
 import 'package:snginepro/features/reels/data/models/music_model.dart';
 import 'package:snginepro/features/reels/presentation/pages/reel_publish_page.dart';
 import 'package:snginepro/features/reels/presentation/controllers/reel_edit_controller.dart';
@@ -144,7 +145,7 @@ class _ReelEditScreenState extends State<ReelEditScreen> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 20, vertical: 9),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFE1306C),
+                              gradient: AppColors.reelGradient,
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
@@ -182,7 +183,7 @@ class _ReelEditScreenState extends State<ReelEditScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         const Icon(Icons.music_note,
-                            color: Color(0xFFE1306C), size: 15),
+                            color: AppColors.brandPink, size: 15),
                         const SizedBox(width: 6),
                         Text(
                           widget.selectedMusic!.music?.title ?? 'sound'.tr,

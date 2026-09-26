@@ -8,6 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
 import '../../../../core/config/app_config.dart';
+import '../../../../core/theme/app_colors.dart';
 
 /// صفحة إنشاء دورة جديدة
 class CourseCreatePage extends StatefulWidget {
@@ -101,7 +102,7 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
     final tomorrow = DateTime.now().add(const Duration(days: 1));
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: isStartDate 
+      initialDate: isStartDate
           ? (_startDate ?? tomorrow)
           : (_endDate ?? tomorrow.add(const Duration(days: 30))),
       firstDate: isStartDate ? tomorrow : (_startDate ?? tomorrow),
@@ -131,7 +132,7 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
 
     try {
       final client = context.read<ApiClient>();
-      
+
       final body = <String, dynamic>{
         'title': _titleCtrl.text.trim(),
         'description': _descriptionCtrl.text.trim(),
@@ -166,11 +167,10 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Get.isDarkMode;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final mediaResolver = context.read<AppConfig>().mediaAsset;
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF121212) : Colors.grey[50],
       appBar: AppBar(
         title: Text(
           'course_create_title'.tr,
@@ -262,17 +262,19 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+                color: isDark ? AppColors.cardDark : AppColors.cardLight,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: isDark ? Colors.grey[800]! : Colors.grey[300]!,
+                  color: isDark ? AppColors.borderDark : AppColors.borderLight,
                 ),
               ),
               child: Row(
                 children: [
                   Icon(
                     Iconsax.money,
-                    color: isDark ? Colors.grey[400] : Colors.grey[700],
+                    color: isDark
+                        ? AppColors.textSecondaryDark
+                        : AppColors.textSecondaryLight,
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -281,7 +283,9 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: isDark ? Colors.white : Colors.black,
+                        color: isDark
+                            ? AppColors.textPrimaryDark
+                            : AppColors.textPrimaryLight,
                       ),
                     ),
                   ),
@@ -319,17 +323,19 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+                color: isDark ? AppColors.cardDark : AppColors.cardLight,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: isDark ? Colors.grey[800]! : Colors.grey[300]!,
+                  color: isDark ? AppColors.borderDark : AppColors.borderLight,
                 ),
               ),
               child: Row(
                 children: [
                   Icon(
                     Iconsax.status,
-                    color: isDark ? Colors.grey[400] : Colors.grey[700],
+                    color: isDark
+                        ? AppColors.textSecondaryDark
+                        : AppColors.textSecondaryLight,
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -341,7 +347,9 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: isDark ? Colors.white : Colors.black,
+                            color: isDark
+                                ? AppColors.textPrimaryDark
+                                : AppColors.textPrimaryLight,
                           ),
                         ),
                         Text(
@@ -350,7 +358,9 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
                               : 'course_available_closed'.tr,
                           style: TextStyle(
                             fontSize: 12,
-                            color: isDark ? Colors.grey[400] : Colors.grey[600],
+                            color: isDark
+                                ? AppColors.textSecondaryDark
+                                : AppColors.textSecondaryLight,
                           ),
                         ),
                       ],
@@ -371,7 +381,7 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
               child: ElevatedButton(
                 onPressed: _submitting ? null : _submit,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
+                  backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -403,12 +413,15 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
   }
 
   Widget _buildCoverSection(bool isDark, Uri Function(String) mediaResolver) {
+    final mutedColor =
+        isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight;
+
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+        color: isDark ? AppColors.cardDark : AppColors.cardLight,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isDark ? Colors.grey[800]! : Colors.grey[300]!,
+          color: isDark ? AppColors.borderDark : AppColors.borderLight,
         ),
       ),
       child: Column(
@@ -418,17 +431,16 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                Icon(
-                  Iconsax.gallery,
-                  color: isDark ? Colors.grey[400] : Colors.grey[700],
-                ),
+                Icon(Iconsax.gallery, color: mutedColor),
                 const SizedBox(width: 12),
                 Text(
                   'course_cover_label'.tr,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: isDark ? Colors.white : Colors.black,
+                    color: isDark
+                        ? AppColors.textPrimaryDark
+                        : AppColors.textPrimaryLight,
                   ),
                 ),
               ],
@@ -472,10 +484,14 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
                 child: Container(
                   height: 150,
                   decoration: BoxDecoration(
-                    color: isDark ? Colors.grey[850] : Colors.grey[100],
+                    color: isDark
+                        ? AppColors.surfaceDark
+                        : AppColors.backgroundLight,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
+                      color: isDark
+                          ? AppColors.borderDark
+                          : AppColors.borderLight,
                       style: BorderStyle.solid,
                       width: 2,
                     ),
@@ -487,13 +503,14 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
                             children: [
                               CircularProgressIndicator(
                                 value: _uploadProgress,
+                                valueColor: const AlwaysStoppedAnimation<Color>(
+                                  AppColors.primary,
+                                ),
                               ),
                               const SizedBox(height: 8),
                               Text(
                                 '${(_uploadProgress * 100).toInt()}%',
-                                style: TextStyle(
-                                  color: isDark ? Colors.grey[400] : Colors.grey[600],
-                                ),
+                                style: TextStyle(color: mutedColor),
                               ),
                             ],
                           )
@@ -503,14 +520,12 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
                               Icon(
                                 Iconsax.camera,
                                 size: 48,
-                                color: isDark ? Colors.grey[600] : Colors.grey[400],
+                                color: mutedColor,
                               ),
                               const SizedBox(height: 8),
                               Text(
                                 'course_cover_tap'.tr,
-                                style: TextStyle(
-                                  color: isDark ? Colors.grey[400] : Colors.grey[600],
-                                ),
+                                style: TextStyle(color: mutedColor),
                               ),
                             ],
                           ),
@@ -529,7 +544,9 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
     required DateTime? date,
     required VoidCallback onTap,
   }) {
-    final isDark = Get.isDarkMode;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final mutedColor =
+        isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight;
 
     return InkWell(
       onTap: onTap,
@@ -537,10 +554,10 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+          color: isDark ? AppColors.cardDark : AppColors.cardLight,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isDark ? Colors.grey[800]! : Colors.grey[300]!,
+            color: isDark ? AppColors.borderDark : AppColors.borderLight,
           ),
         ),
         child: Column(
@@ -548,19 +565,12 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
           children: [
             Text(
               label,
-              style: TextStyle(
-                fontSize: 12,
-                color: isDark ? Colors.grey[400] : Colors.grey[600],
-              ),
+              style: TextStyle(fontSize: 12, color: mutedColor),
             ),
             const SizedBox(height: 4),
             Row(
               children: [
-                Icon(
-                  Iconsax.calendar,
-                  size: 18,
-                  color: isDark ? Colors.grey[400] : Colors.grey[700],
-                ),
+                Icon(Iconsax.calendar, size: 18, color: mutedColor),
                 const SizedBox(width: 8),
                 Text(
                     date != null
@@ -570,8 +580,12 @@ class _CourseCreatePageState extends State<CourseCreatePage> {
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: date != null
-                        ? (isDark ? Colors.white : Colors.black)
-                        : (isDark ? Colors.grey[500] : Colors.grey[400]),
+                        ? (isDark
+                            ? AppColors.textPrimaryDark
+                            : AppColors.textPrimaryLight)
+                        : (isDark
+                            ? AppColors.textTertiaryDark
+                            : AppColors.textTertiaryLight),
                   ),
                 ),
               ],
