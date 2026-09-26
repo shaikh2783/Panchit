@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
@@ -8,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:sandbox_digilocker_sdk/sandbox_digilocker_sdk.dart';
 import 'package:snginepro/core/config/app_config.dart';
 import 'package:snginepro/core/network/api_client.dart';
+import 'package:snginepro/core/providers/system_settings_provider.dart';
 import 'package:snginepro/core/theme/app_colors.dart';
 import 'package:snginepro/core/theme/design_tokens.dart';
 import 'package:snginepro/core/theme/panchit_auth_ui.dart';
@@ -28,12 +30,21 @@ import 'package:snginepro/features/kyc/data/services/kyc_api_service.dart';
 import 'package:snginepro/features/wallet/data/models/wallet_summary.dart';
 import 'package:snginepro/features/wallet/domain/wallet_repository.dart';
 import 'package:snginepro/features/wallet/presentation/pages/wallet_recharge_page.dart';
+import 'package:snginepro/main.dart' show configCfgP;
 
-/// Event type sent by the Sandbox DigiLocker SDK when the user completes
-/// the Aadhaar/DigiLocker consent flow. Not exported by the SDK package,
-/// so it is mirrored here from `sandbox_digilocker_sdk`'s `Events` enum.
+/// Event types sent by the Sandbox DigiLocker SDK. Not exported by the SDK
+/// package, so they are mirrored here from `sandbox_digilocker_sdk`'s
+/// `Events` enum.
+///
+/// The SDK's own WebView wrapper only auto-closes its full-screen route on
+/// `closed`/`completed` (see `sandbox_digilocker_sdk`'s `_handleEvent`) — a
+/// `session.failed` event (e.g. the DigiLocker page hitting an internal
+/// error) is forwarded to the event listener but otherwise left open, so it
+/// must be handled here or the user is stuck looking at a dead-end WebView.
 const String _kDigilockerSessionCompletedEvent =
     'in.co.sandbox.kyc.digilocker_sdk.session.completed';
+const String _kDigilockerSessionFailedEvent =
+    'in.co.sandbox.kyc.digilocker_sdk.session.failed';
 
 class CompetitionDetailPage extends StatefulWidget {
   const CompetitionDetailPage({
@@ -44,7 +55,6 @@ class CompetitionDetailPage extends StatefulWidget {
 
   final int competitionId;
   final CompetitionModel? initialCompetition;
-
   @override
   State<CompetitionDetailPage> createState() => _CompetitionDetailPageState();
 }
@@ -91,7 +101,10 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
         ),
       ];
       setState(() {
-        _competition = details.copyWith(entries: mergedEntries, winners: winners);
+        _competition = details.copyWith(
+          entries: mergedEntries,
+          winners: winners,
+        );
         _isLoading = false;
       });
     } catch (error) {
@@ -141,10 +154,7 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
     }
 
     if (!competition.isRegistrationOpen) {
-      _showMessage(
-        'competition_registration_closed'.tr,
-        isError: true,
-      );
+      _showMessage('competition_registration_closed'.tr, isError: true);
       await _loadDetails();
       return;
     }
@@ -180,7 +190,9 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
     if (competition == null) return;
 
     try {
-      await context.read<CompetitionApiService>().notifyCompetition(competition.id);
+      await context.read<CompetitionApiService>().notifyCompetition(
+        competition.id,
+      );
       if (!mounted) return;
       setState(() {
         _competition = competition.copyWith(isNotifyEnabled: true);
@@ -236,7 +248,9 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
 
       if (result is CompetitionPaymentResponse) {
         _applyPaymentState(result, competition);
-        _showMessage(result.message ?? 'Competition entry fee paid successfully.');
+        _showMessage(
+          result.message ?? 'Competition entry fee paid successfully.',
+        );
         return true;
       }
 
@@ -276,7 +290,9 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
       }
 
       if (competition.requiresPayment) {
-        final walletSummary = await context.read<WalletRepository>().fetchSummary();
+        final walletSummary = await context
+            .read<WalletRepository>()
+            .fetchSummary();
         if (!mounted) return;
 
         final paymentCompleted = await _completeWalletPaymentBeforeUpload(
@@ -331,7 +347,10 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
       if (!mounted) return false;
 
       if (!status.success) {
-        _showMessage('kyc_status_check_failed'.tr, isError: true);
+        _showMessage(
+          status.message ?? 'kyc_status_check_failed'.tr,
+          isError: true,
+        );
         return false;
       }
       if (status.kycCompleted) {
@@ -373,6 +392,11 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
     final session = await _createAadhaarSession();
     if (session == null || !mounted) return false;
 
+    // Per the backend contract, a user who is already verified gets back
+    // the same shape as `/data/kyc/status` here — no `session_id` — and the
+    // DigiLocker SDK must not be opened in that case.
+    if (session.kycCompleted) return true;
+
     final sessionId = session.sessionId!;
     final apiKey = session.sdkApiKey ?? '';
     if (apiKey.trim().isEmpty) {
@@ -389,30 +413,84 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
     return _verifyAadhaarSession(sessionId);
   }
 
-  /// Creates a Sandbox DigiLocker session via the backend. The returned
-  /// [KycSessionResponse.sdkApiKey] is the only Sandbox key the app may use —
-  /// it is issued per-session by the backend, which holds the Sandbox API
-  /// secret; the app never configures or caches a key locally.
+  /// Creates a Sandbox DigiLocker session via the backend.
+  ///
+  /// The returned [KycSessionResponse.sdkApiKey] is the only Sandbox key the
+  /// app may use — it is returned by our backend together with the newly
+  /// created session; server-side Sandbox credentials/access tokens remain
+  /// on the backend.
   Future<KycSessionResponse?> _createAadhaarSession() async {
     try {
       final kycApi = context.read<KycApiService>();
+
+      if (kDebugMode) debugPrint('🔵 KYC: Creating Aadhaar session...');
+
       final session = await kycApi.createAadhaarSession();
+
+      if (kDebugMode) {
+        debugPrint('🟢 KYC CREATE RESPONSE');
+        debugPrint('success: ${session.success}');
+        debugPrint('sessionId: ${session.sessionId}');
+        debugPrint('sdkApiKey present: ${session.sdkApiKey?.isNotEmpty}');
+        debugPrint('sdkApiKey length: ${session.sdkApiKey?.length}');
+        debugPrint('message: ${session.message}');
+      }
+
       final sessionId = session.sessionId;
-      if (!session.success || sessionId == null || sessionId.isEmpty) {
+
+      if (!session.success ||
+          (!session.kycCompleted && (sessionId == null || sessionId.isEmpty))) {
+        if (kDebugMode) debugPrint('🔴 Invalid KYC session response');
+
         if (mounted) {
-          _showMessage(session.message ?? 'kyc_session_failed'.tr, isError: true);
+          _showMessage(
+            session.message ?? 'kyc_session_failed'.tr,
+            isError: true,
+          );
         }
+
         return null;
       }
+
       return session;
-    } catch (error) {
-      // Backend session-creation calls out to the Sandbox DigiLocker API;
-      // a 404 KYC_SESSION_NOT_FOUND here means that server-side call is
-      // failing (bad/misconfigured Sandbox credentials or wrong endpoint),
-      // not a client-side bug — confirmed via device logs 2026-09-20.
-      if (mounted) _showMessage('kyc_session_failed'.tr, isError: true);
+    } catch (error, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('🔴 CREATE KYC SESSION ERROR');
+        debugPrint(error.toString());
+        debugPrintStack(stackTrace: stackTrace);
+      }
+
+      if (mounted) {
+        _showMessage('kyc_session_failed'.tr, isError: true);
+      }
+
       return null;
     }
+  }
+
+  /// Public HTTPS logo URL to show on the DigiLocker consent screen.
+  ///
+  /// DigiLocker's SDK only accepts a publicly reachable URL (a bundled
+  /// local asset is not usable here), so this reuses the app's own
+  /// branding: an explicit `kyc_brand_logo_url` boot-config override if one
+  /// is set, otherwise the public site logo already exposed via
+  /// [SystemSettingsProvider]. Returns `null` — and the `brand` map simply
+  /// omits `logo_url` — rather than falling back to a placeholder domain.
+  String? _brandLogoUrl() {
+    final configured = configCfgP('kyc_brand_logo_url').trim();
+    if (configured.isNotEmpty) return configured;
+
+    final siteLogo = context
+        .read<SystemSettingsProvider?>()
+        ?.settings
+        .siteInfo
+        .logo
+        .trim();
+    if (siteLogo != null && siteLogo.startsWith('http')) {
+      return siteLogo;
+    }
+
+    return null;
   }
 
   /// Opens the Sandbox DigiLocker SDK and waits for the user to finish (or
@@ -423,26 +501,51 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
     required String apiKey,
     required String sessionId,
   }) async {
-    final listener = _DigilockerCompletionListener();
+    final listener = _DigilockerCompletionListener(
+      // The SDK doesn't close its own WebView route on a failed session, so
+      // do it ourselves as soon as the event arrives instead of leaving the
+      // user stuck on the SDK's dead-end error screen.
+      onFailed: () {
+        if (mounted && Navigator.of(context).canPop()) {
+          Navigator.of(context).pop();
+        }
+      },
+    );
+    if (kDebugMode) {
+      debugPrint('🔵 Opening DigiLocker');
+      debugPrint('sessionId = $sessionId');
+      debugPrint('apiKey present = ${apiKey.isNotEmpty}');
+      debugPrint('apiKey length = ${apiKey.length}');
+    }
     DigilockerSDK.instance
       ..setAPIKey(apiKey)
       ..setEventListener(listener);
+
+    final brand = <String, dynamic>{'name': 'Panchit'};
+    final logoUrl = _brandLogoUrl();
+    if (logoUrl != null) brand['logo_url'] = logoUrl;
 
     try {
       await DigilockerSDK.instance.open(
         context: context,
         options: {
           'session_id': sessionId,
-          'brand': {'name': 'Panchit'},
+          'brand': brand,
+          'theme': {'mode': 'light', 'seed': '#3D6838'},
         },
       );
     } catch (error) {
+      if (kDebugMode) debugPrint('🔴 DigiLocker SDK open() threw: $error');
       if (mounted) _showMessage('kyc_session_failed'.tr, isError: true);
       return false;
     } finally {
       // Drop the reference to this page's listener so the SDK singleton
       // does not retain a stale callback after the page moves on.
       DigilockerSDK.instance.setEventListener(_DigilockerCompletionListener());
+    }
+
+    if (listener.sessionFailed && mounted) {
+      _showMessage('kyc_session_failed'.tr, isError: true);
     }
 
     return listener.sessionCompleted;
@@ -453,14 +556,69 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
       final kycApi = context.read<KycApiService>();
       final verify = await kycApi.verifyAadhaarSession(sessionId);
       if (verify.success && verify.kycCompleted) {
+        if (!mounted) return true;
+        if (!_aadhaarNameMatchesLogin(verify.aadhaarName)) {
+          return _handleAadhaarNameMismatch();
+        }
+        _showMessage('kyc_verified_success'.tr);
         return true;
       }
-      if (mounted) _showMessage('kyc_verification_failed'.tr, isError: true);
+      if (mounted) {
+        _showMessage(
+          verify.message ?? 'kyc_verification_failed'.tr,
+          isError: true,
+        );
+      }
       return false;
     } catch (error) {
       if (mounted) _showMessage('kyc_verification_failed'.tr, isError: true);
       return false;
     }
+  }
+
+  /// Compares the Aadhaar e-KYC name against the logged-in user's Panchit
+  /// profile name. Returns `true` when the backend didn't return a name to
+  /// compare against — the backend remains the source of truth for
+  /// `kyc_completed`, this check only guards against the wrong DigiLocker
+  /// account being used.
+  bool _aadhaarNameMatchesLogin(String? aadhaarName) {
+    if (aadhaarName == null || aadhaarName.trim().isEmpty) return true;
+    final loginName = _currentUserDisplayName;
+    if (loginName == null || loginName.trim().isEmpty) return true;
+    return _normalizeName(aadhaarName) == _normalizeName(loginName);
+  }
+
+  String _normalizeName(String value) => value
+      .toLowerCase()
+      .replaceAll(RegExp(r'[^a-z0-9\s]'), '')
+      .replaceAll(RegExp(r'\s+'), ' ')
+      .trim();
+
+  String? get _currentUserDisplayName {
+    final user = context.read<AuthNotifier?>()?.currentUser;
+    final value =
+        user?['user_fullname'] ?? user?['user_firstname'] ?? user?['user_name'];
+    return value?.toString();
+  }
+
+  /// Shown when the verified Aadhaar name doesn't match the logged-in
+  /// user's profile name. Offers a retry that restarts the DigiLocker flow
+  /// from scratch so the user can sign in with the correct Aadhaar account.
+  Future<bool> _handleAadhaarNameMismatch() async {
+    if (!mounted) return false;
+    final retry = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => GlassPopupDialog(
+        title: 'kyc_name_mismatch_title'.tr,
+        message: 'kyc_name_mismatch_message'.tr,
+        primaryLabel: 'kyc_retry_verification'.tr,
+        secondaryLabel: 'kyc_not_now'.tr,
+        icon: Icons.error_outline,
+      ),
+    );
+    if (retry != true || !mounted) return false;
+    return _startAadhaarVerification();
   }
 
   int? get _currentUserId {
@@ -494,7 +652,9 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
           postJson = Map<String, dynamic>.from(data);
         }
       } else if (details['post'] is Map<String, dynamic>) {
-        postJson = Map<String, dynamic>.from(details['post'] as Map<String, dynamic>);
+        postJson = Map<String, dynamic>.from(
+          details['post'] as Map<String, dynamic>,
+        );
       }
 
       if (postJson == null || postJson.isEmpty) {
@@ -503,11 +663,9 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
       }
 
       final post = Post.fromJson(postJson);
-      final updated = await Navigator.of(context).push<Post>(
-        MaterialPageRoute(
-          builder: (_) => EditPostPage(post: post),
-        ),
-      );
+      final updated = await Navigator.of(
+        context,
+      ).push<Post>(MaterialPageRoute(builder: (_) => EditPostPage(post: post)));
       if (updated != null && mounted) {
         _showMessage('post_updated_successfully'.tr);
         _loadDetails();
@@ -792,16 +950,13 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
                   Text(
                     competition.title,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w800,
-                          height: 1.2,
-                          shadows: const [
-                            Shadow(
-                              blurRadius: 12,
-                              color: Colors.black54,
-                            ),
-                          ],
-                        ),
+                      color: Colors.white,
+                      fontWeight: FontWeight.w800,
+                      height: 1.2,
+                      shadows: const [
+                        Shadow(blurRadius: 12, color: Colors.black54),
+                      ],
+                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -895,8 +1050,14 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
       icon: Iconsax.info_circle,
       child: Column(
         children: [
-          _detailRow('competition_category'.tr, competition.category ?? 'competition_general'.tr),
-          _detailRow('competition_allowed_media'.tr, competition.allowedMediaType.label),
+          _detailRow(
+            'competition_category'.tr,
+            competition.category ?? 'competition_general'.tr,
+          ),
+          _detailRow(
+            'competition_allowed_media'.tr,
+            competition.allowedMediaType.label,
+          ),
           _detailRow(
             'competition_entry_fee'.tr,
             formatMoney(competition.entryFee, competition.currencySymbol),
@@ -948,7 +1109,9 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
               GestureDetector(
                 onTap: () => setState(() => _descExpanded = !_descExpanded),
                 child: Text(
-                  _descExpanded ? 'competition_show_less'.tr : 'competition_read_more'.tr,
+                  _descExpanded
+                      ? 'competition_show_less'.tr
+                      : 'competition_read_more'.tr,
                   style: theme.textTheme.labelMedium?.copyWith(
                     color: theme.colorScheme.primary,
                     fontWeight: FontWeight.w700,
@@ -1026,7 +1189,9 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
                       height: 26,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.primary.withValues(alpha: 0.12),
+                        color: theme.colorScheme.primary.withValues(
+                          alpha: 0.12,
+                        ),
                         shape: BoxShape.circle,
                       ),
                       child: Text(
@@ -1045,8 +1210,9 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
                           rule,
                           style: theme.textTheme.bodySmall?.copyWith(
                             height: 1.55,
-                            color: theme.colorScheme.onSurface
-                                .withValues(alpha: 0.85),
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.85,
+                            ),
                           ),
                         ),
                       ),
@@ -1074,12 +1240,12 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
     // If every line starts with a number/bullet, strip that prefix.
     final numbered = RegExp(r'^[\d]+[.)]\s*');
     final bulleted = RegExp(r'^[-•*]\s*');
-    return lines.map((l) {
-      return l
-          .replaceFirst(numbered, '')
-          .replaceFirst(bulleted, '')
-          .trim();
-    }).where((l) => l.isNotEmpty).toList(growable: false);
+    return lines
+        .map((l) {
+          return l.replaceFirst(numbered, '').replaceFirst(bulleted, '').trim();
+        })
+        .where((l) => l.isNotEmpty)
+        .toList(growable: false);
   }
 
   Widget _buildScheduleCard(CompetitionModel competition) {
@@ -1090,7 +1256,8 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
         children: [
           _detailRow(
             'competition_registration_start'.tr,
-            formatDateTime(competition.registrationStart) ?? 'competition_tba'.tr,
+            formatDateTime(competition.registrationStart) ??
+                'competition_tba'.tr,
           ),
           _detailRow(
             'competition_registration_end'.tr,
@@ -1118,16 +1285,16 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
                 ),
               ]
             : competition.prizes
-                .map(
-                  (prize) => Padding(
-                    padding: const EdgeInsets.only(bottom: Spacing.sm),
-                    child: _detailRow(
-                      prize.displayTitle,
-                      formatMoney(prize.amount, prize.currencySymbol),
+                  .map(
+                    (prize) => Padding(
+                      padding: const EdgeInsets.only(bottom: Spacing.sm),
+                      child: _detailRow(
+                        prize.displayTitle,
+                        formatMoney(prize.amount, prize.currencySymbol),
+                      ),
                     ),
-                  ),
-                )
-                .toList(growable: false),
+                  )
+                  .toList(growable: false),
       ),
     );
   }
@@ -1150,39 +1317,39 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
               child: Text('competition_leaderboard_empty'.tr),
             )
           : Column(
-              children: leaders.take(3).map((entry) {
-                final rank = entry.rank ?? (leaders.indexOf(entry) + 1);
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: Spacing.sm),
-                  child: Row(
-                    children: [
-                      WinnerRankBadge(
-                        rank: rank,
-                        compact: true,
-                        showLabel: competition.isCompleted,
+              children: leaders
+                  .take(3)
+                  .map((entry) {
+                    final rank = entry.rank ?? (leaders.indexOf(entry) + 1);
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: Spacing.sm),
+                      child: Row(
+                        children: [
+                          WinnerRankBadge(
+                            rank: rank,
+                            compact: true,
+                            showLabel: competition.isCompleted,
+                          ),
+                          const SizedBox(width: Spacing.md),
+                          Expanded(
+                            child: Text(
+                              entry.userName ??
+                                  'competition_participant_default'.tr,
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          if (entry.totalScore != null)
+                            Text(
+                              entry.totalScore!.toStringAsFixed(0),
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(fontWeight: FontWeight.w700),
+                            ),
+                        ],
                       ),
-                      const SizedBox(width: Spacing.md),
-                      Expanded(
-                        child: Text(
-                          entry.userName ?? 'competition_participant_default'.tr,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                      if (entry.totalScore != null)
-                        Text(
-                          entry.totalScore!.toStringAsFixed(0),
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(fontWeight: FontWeight.w700),
-                        ),
-                    ],
-                  ),
-                );
-              }).toList(growable: false),
+                    );
+                  })
+                  .toList(growable: false),
             ),
     );
   }
@@ -1209,12 +1376,13 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
     final currentUserId = _currentUserId;
     final myEntries = currentUserId != null
         ? competition.entries
-            .where((e) => e.userId == currentUserId)
-            .toList(growable: false)
+              .where((e) => e.userId == currentUserId)
+              .toList(growable: false)
         : const <CompetitionEntryModel>[];
 
     // Hide section entirely when user hasn't joined and no entry found
-    if (!competition.isJoined && myEntries.isEmpty) return const SizedBox.shrink();
+    if (!competition.isJoined && myEntries.isEmpty)
+      return const SizedBox.shrink();
 
     final canEdit = competition.isRegistrationOpen;
     final mediaAsset = context.read<AppConfig>().mediaAsset;
@@ -1230,7 +1398,9 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(Radii.medium),
                 ),
                 child: Icon(
@@ -1242,9 +1412,9 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
               const SizedBox(width: Spacing.sm),
               Text(
                 'competition_my_entry'.tr,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
               ),
             ],
           ),
@@ -1254,11 +1424,10 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
           Text(
             'competition_no_entry_yet'.tr,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withValues(alpha: 0.55),
-                ),
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.55),
+            ),
           )
         else
           ...myEntries.map(
@@ -1309,11 +1478,7 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
                     color: theme.colorScheme.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(Radii.medium),
                   ),
-                  child: Icon(
-                    icon,
-                    size: 18,
-                    color: theme.colorScheme.primary,
-                  ),
+                  child: Icon(icon, size: 18, color: theme.colorScheme.primary),
                 ),
                 const SizedBox(width: Spacing.sm),
                 Expanded(
@@ -1373,7 +1538,8 @@ class _CompetitionDetailPageState extends State<CompetitionDetailPage> {
   String _primaryActionLabel(CompetitionModel competition) {
     if (competition.isCancelled) return 'competition_action_cancelled'.tr;
     if (competition.isCompleted) return 'competition_action_view_winners'.tr;
-    if (competition.isVotingOngoing) return 'competition_action_voting_ongoing'.tr;
+    if (competition.isVotingOngoing)
+      return 'competition_action_voting_ongoing'.tr;
     if (competition.isRegistrationNotStarted) {
       return competition.isNotifyEnabled
           ? 'competition_action_reminder_enabled'.tr
@@ -1483,7 +1649,9 @@ class _CompetitionWalletPaymentDialogState
               width: tileIconBoxSize,
               height: tileIconBoxSize,
               decoration: BoxDecoration(
-                color: (iconColor ?? theme.colorScheme.primary).withValues(alpha: 0.12),
+                color: (iconColor ?? theme.colorScheme.primary).withValues(
+                  alpha: 0.12,
+                ),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -1500,23 +1668,27 @@ class _CompetitionWalletPaymentDialogState
                 children: [
                   Text(
                     label,
-                    style: (isSmall
-                            ? theme.textTheme.labelSmall
-                            : theme.textTheme.labelMedium)
-                        ?.copyWith(
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
-                    ),
+                    style:
+                        (isSmall
+                                ? theme.textTheme.labelSmall
+                                : theme.textTheme.labelMedium)
+                            ?.copyWith(
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.65,
+                              ),
+                            ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     value,
-                    style: (isSmall
-                            ? theme.textTheme.titleSmall
-                            : theme.textTheme.titleMedium)
-                        ?.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: valueColor,
-                    ),
+                    style:
+                        (isSmall
+                                ? theme.textTheme.titleSmall
+                                : theme.textTheme.titleMedium)
+                            ?.copyWith(
+                              fontWeight: FontWeight.w800,
+                              color: valueColor,
+                            ),
                   ),
                 ],
               ),
@@ -1555,7 +1727,9 @@ class _CompetitionWalletPaymentDialogState
                       width: headerIconSize,
                       height: headerIconSize,
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.primary.withValues(alpha: 0.12),
+                        color: theme.colorScheme.primary.withValues(
+                          alpha: 0.12,
+                        ),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -1572,10 +1746,11 @@ class _CompetitionWalletPaymentDialogState
                         children: [
                           Text(
                             'competition_payment_title'.tr,
-                            style: (isSmall
-                                    ? theme.textTheme.titleMedium
-                                    : theme.textTheme.titleLarge)
-                                ?.copyWith(fontWeight: FontWeight.w800),
+                            style:
+                                (isSmall
+                                        ? theme.textTheme.titleMedium
+                                        : theme.textTheme.titleLarge)
+                                    ?.copyWith(fontWeight: FontWeight.w800),
                           ),
                           const SizedBox(height: 2),
                           Text(
@@ -1583,7 +1758,9 @@ class _CompetitionWalletPaymentDialogState
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.7,
+                              ),
                             ),
                           ),
                         ],
@@ -1685,13 +1862,15 @@ class _CompetitionWalletPaymentDialogState
                         onPressed: _isProcessing
                             ? null
                             : hasEnoughBalance
-                                ? _onPayPressed
-                                : () => Navigator.of(context).pop('recharge'),
+                            ? _onPayPressed
+                            : () => Navigator.of(context).pop('recharge'),
                         child: _isProcessing
                             ? const SizedBox(
                                 width: 18,
                                 height: 18,
-                                child: CircularProgressIndicator(strokeWidth: 2),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
                               )
                             : Text(
                                 hasEnoughBalance
@@ -1767,7 +1946,9 @@ class _KycConsentDialogState extends State<_KycConsentDialog> {
                       vertical: Spacing.xs,
                     ),
                     decoration: BoxDecoration(
-                      color: isDark ? AppColors.surfaceDark : AppColors.hoverLight,
+                      color: isDark
+                          ? AppColors.surfaceDark
+                          : AppColors.hoverLight,
                       borderRadius: BorderRadius.circular(Radii.medium),
                     ),
                     child: Row(
@@ -1844,9 +2025,7 @@ class _BannerStatChip extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: 0.14),
             borderRadius: BorderRadius.circular(Radii.medium),
-            border: Border.all(
-              color: Colors.white.withValues(alpha: 0.22),
-            ),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.22)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1901,9 +2080,7 @@ class _BannerChip extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: 0.18),
             borderRadius: BorderRadius.circular(Radii.pill),
-            border: Border.all(
-              color: Colors.white.withValues(alpha: 0.3),
-            ),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -2071,7 +2248,8 @@ class _CompetitionEntryCard extends StatelessWidget {
             icon,
             size: 14,
             color:
-                iconColor ?? theme.colorScheme.onSurface.withValues(alpha: 0.65),
+                iconColor ??
+                theme.colorScheme.onSurface.withValues(alpha: 0.65),
           ),
           const SizedBox(width: 6),
           Text(
@@ -2192,8 +2370,9 @@ class _CompetitionEntryCard extends StatelessWidget {
                 // Avatar
                 CircleAvatar(
                   radius: 20,
-                  backgroundColor:
-                      theme.colorScheme.primary.withValues(alpha: 0.12),
+                  backgroundColor: theme.colorScheme.primary.withValues(
+                    alpha: 0.12,
+                  ),
                   backgroundImage: avatarUrl != null
                       ? CachedNetworkImageProvider(avatarUrl)
                       : null,
@@ -2343,11 +2522,7 @@ class _CompetitionEntryCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (countChips.isNotEmpty)
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: countChips,
-                  ),
+                  Wrap(spacing: 8, runSpacing: 8, children: countChips),
                 if (countChips.isNotEmpty &&
                     (entry.totalScore != null ||
                         (entry.prizeAmount != null && entry.prizeAmount! > 0) ||
@@ -2392,8 +2567,9 @@ class _CompetitionEntryCard extends StatelessWidget {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color:
-                              theme.colorScheme.primary.withValues(alpha: 0.1),
+                          color: theme.colorScheme.primary.withValues(
+                            alpha: 0.1,
+                          ),
                           borderRadius: BorderRadius.circular(Radii.pill),
                         ),
                         child: Text(
@@ -2439,12 +2615,37 @@ class _CompetitionEntryCard extends StatelessWidget {
 /// backend before KYC is treated as verified — this listener only records
 /// that the user finished the DigiLocker flow.
 class _DigilockerCompletionListener implements EventListener {
+  _DigilockerCompletionListener({this.onFailed});
+
+  final VoidCallback? onFailed;
+
   bool sessionCompleted = false;
+  bool sessionFailed = false;
 
   @override
   void onEvent(Map<String, dynamic> event) {
-    if (event['type'] == _kDigilockerSessionCompletedEvent) {
-      sessionCompleted = true;
+    if (kDebugMode) {
+      debugPrint('====================================');
+      debugPrint('🔵 DIGILOCKER EVENT');
+      debugPrint(event.toString());
+      debugPrint('type = ${event['type']}');
+      debugPrint('====================================');
+    }
+
+    switch (event['type']) {
+      case _kDigilockerSessionCompletedEvent:
+        if (kDebugMode) debugPrint('🟢 DIGILOCKER COMPLETED');
+        sessionCompleted = true;
+        break;
+
+      case _kDigilockerSessionFailedEvent:
+        if (kDebugMode) debugPrint('🔴 DIGILOCKER SESSION FAILED: $event');
+
+        if (!sessionFailed) {
+          sessionFailed = true;
+          onFailed?.call();
+        }
+        break;
     }
   }
 }

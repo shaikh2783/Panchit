@@ -939,9 +939,31 @@ class _CaptionAndOwnerState extends State<_CaptionAndOwner> {
     );
   }
 
+  /// Convert simple HTML (e.g. `<a>#hashtag</a>`, `<br>`) to plain text —
+  /// the backend returns captions as HTML for web rendering, but this
+  /// overlay uses a plain Text widget.
+  String _toPlainText(String input) {
+    var t = input;
+    t = t.replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), '\n');
+    t = t.replaceAllMapped(
+      RegExp(r'<a[^>]*>(.*?)<\/a>', caseSensitive: false, dotAll: true),
+      (m) => m.group(1) ?? '',
+    );
+    t = t.replaceAll(RegExp(r'<[^>]+>'), '');
+    t = t
+        .replaceAll('&nbsp;', ' ')
+        .replaceAll('&amp;', '&')
+        .replaceAll('&lt;', '<')
+        .replaceAll('&gt;', '>')
+        .replaceAll('&quot;', '"')
+        .replaceAll('&#039;', "'")
+        .replaceAll('&#39;', "'");
+    return t.trim();
+  }
+
   Widget _buildCaption(String text) {
     return Text(
-      text,
+      _toPlainText(text),
       maxLines: 3,
       overflow: TextOverflow.ellipsis,
       style: TextStyle(

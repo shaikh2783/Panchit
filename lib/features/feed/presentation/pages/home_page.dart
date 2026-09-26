@@ -1545,7 +1545,7 @@ class HomePageState extends State<HomePage> {
         children: [
           Image.asset('assets/app_icon.png',width: 40,height: 40),
           const SizedBox(width: 12),
-          Image.asset('assets/ic_logo_txt.png',width: 120,height: 40)
+          Image.asset(isDark?'assets/ic_logo_txt_dark.png':'assets/ic_logo_txt_light.png',width: 120,height: 40)
         ],
       ),
       actions: [

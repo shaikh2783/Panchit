@@ -50,6 +50,13 @@ class _LoginPageState extends State<LoginPage>
     clientId: defaultTargetPlatform == TargetPlatform.iOS
         ? AppSettings.googleClientIdIOS
         : null,
+    // Required to get a backend-verifiable idToken/serverAuthCode on
+    // Android (see AppSettings.googleClientIdWeb doc). Omitted while the
+    // placeholder is still unset so we never hand Play Services a literal
+    // "YOUR_WEB_CLIENT_ID" string.
+    serverClientId: AppSettings.googleClientIdWeb == 'YOUR_WEB_CLIENT_ID'
+        ? null
+        : AppSettings.googleClientIdWeb,
   );
 
   @override

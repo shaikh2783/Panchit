@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class LiveStreamControlsWidget extends StatelessWidget {
   final bool isStreaming;
@@ -56,7 +57,7 @@ class LiveStreamControlsWidget extends StatelessWidget {
                     // Camera toggle
                     _buildControlButton(
                       icon: isCameraEnabled ? Icons.videocam : Icons.videocam_off,
-                      label: isCameraEnabled ? 'إيقاف الكاميرا' : 'تشغيل الكاميرا',
+                      label: isCameraEnabled ? 'live_controls_camera_off'.tr : 'live_controls_camera_on'.tr,
                       isActive: isCameraEnabled,
                       onPressed: onToggleCamera,
                     ),
@@ -64,7 +65,7 @@ class LiveStreamControlsWidget extends StatelessWidget {
                     // Microphone toggle
                     _buildControlButton(
                       icon: isMicrophoneEnabled ? Icons.mic : Icons.mic_off,
-                      label: isMicrophoneEnabled ? 'إيقاف المايك' : 'تشغيل المايك',
+                      label: isMicrophoneEnabled ? 'live_controls_mic_off'.tr : 'live_controls_mic_on'.tr,
                       isActive: isMicrophoneEnabled,
                       onPressed: onToggleMicrophone,
                     ),
@@ -72,7 +73,7 @@ class LiveStreamControlsWidget extends StatelessWidget {
                     // Switch camera
                     _buildControlButton(
                       icon: Icons.flip_camera_ios,
-                      label: 'تبديل الكاميرا',
+                      label: 'live_controls_switch_camera'.tr,
                       onPressed: onSwitchCamera,
                     ),
 
@@ -80,7 +81,7 @@ class LiveStreamControlsWidget extends StatelessWidget {
                     if (isStreaming)
                       _buildControlButton(
                         icon: Icons.stop,
-                        label: 'إنهاء البث',
+                        label: 'live_controls_end_stream'.tr,
                         isDestructive: true,
                         onPressed: onEndStream,
                       ),
@@ -109,20 +110,20 @@ class LiveStreamControlsWidget extends StatelessWidget {
           height: 56,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: isDestructive 
+            color: isDestructive
                 ? Colors.red
-                : isActive 
-                    ? Colors.white
-                    : Colors.white.withOpacity(0.3),
+                : isActive
+                ? Colors.white
+                : Colors.white.withOpacity(0.3),
           ),
           child: IconButton(
             icon: Icon(
               icon,
-              color: isDestructive 
+              color: isDestructive
                   ? Colors.white
-                  : isActive 
-                      ? Colors.black
-                      : Colors.white,
+                  : isActive
+                  ? Colors.black
+                  : Colors.white,
             ),
             onPressed: onPressed,
           ),

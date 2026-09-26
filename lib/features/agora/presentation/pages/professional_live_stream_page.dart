@@ -34,13 +34,13 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
   late RtcEngine _engine;
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  
+
   bool _isEngineInitialized = false;
   bool _isLiveStreamActive = false;
   bool _isCameraEnabled = true;
   bool _isMicrophoneEnabled = true;
   bool _isFrontCamera = true;
-  
+
   String? _currentStreamId;
   int _currentViewers = 0; // عدد المشاهدين الحالي
   Timer? _statsTimer; // مؤقت لتحديث الإحصائيات
@@ -71,7 +71,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
 
       // إنشاء Agora engine
       _engine = createAgoraRtcEngine();
-      
+
       await _engine.initialize(const RtcEngineContext(
         appId: "ba3efbf0e1cf4a9fb86c8a7734c79c0c", // App ID من البيئة
         channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
@@ -79,10 +79,10 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
 
       await _engine.enableVideo();
       await _engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
-      
+
       // إعداد معاينة الفيديو
       await _engine.startPreview();
-      
+
       setState(() {
         _isEngineInitialized = true;
       });
@@ -129,7 +129,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
     required int uid,
   }) async {
     try {
-      
+
       await _engine.joinChannel(
         token: token,
         channelId: channelName,
@@ -156,7 +156,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
         context.read<LiveCommentsBloc>().add(StopLiveCommentsPolling());
         _stopStatsPolling();
       }
-      
+
       if (_currentStreamId != null) {
         // إنهاء البث في الـ backend
         final apiService = LiveStreamApiService(context.read<ApiClient>());
@@ -165,7 +165,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
 
       // مغادرة قناة Agora
       await _engine.leaveChannel();
-      
+
       setState(() {
         _isLiveStreamActive = false;
         _currentStreamId = null;
@@ -180,8 +180,8 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
   /// بدء تحديث الإحصائيات كل 3 ثوان
   void _startStatsPolling() {
     _stopStatsPolling(); // إيقاف المؤقت السابق إن وجد
-    
-    
+
+
     _statsTimer = Timer.periodic(const Duration(seconds: 3), (timer) async {
       if (!mounted || !_isLiveStreamActive || _currentStreamId == null || _isUpdatingStats) {
         if (!mounted || !_isLiveStreamActive || _currentStreamId == null) {
@@ -189,17 +189,17 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
         }
         return;
       }
-      
+
       _isUpdatingStats = true;
-      
+
       try {
         final apiService = LiveStreamApiService(context.read<ApiClient>());
         final response = await apiService.getLiveStats(postId: _currentStreamId!);
-        
+
         if (response['status'] == 'success' && response['data'] != null) {
           final liveCount = response['data']['live_count'] ?? 0;
-          
-          
+
+
           // التأكد من أن الـ widget ما زال مُثبت وأن القيمة تغيرت فعلاً
           if (mounted && liveCount != _currentViewers) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -299,24 +299,24 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
                 uid: state.agoraUid!,
               );
             } else {
-              
+
               // إنشاء البث بدون token (للتجربة)
               setState(() {
                 _isLiveStreamActive = true;
               });
-              
+
               _showSuccessSnackBar('stream_created_successfully_no_agora_token'.tr);
             }
 
             _showSuccessSnackBar('stream_created_successfully'.tr);
-            
+
             // بدء تحديثات التعليقات والإحصائيات
             final commentsBloc = context.read<LiveCommentsBloc>();
             commentsBloc.add(LoadLiveComments(postId: _currentStreamId!));
-            
+
             // تشغيل التحديث التلقائي للتعليقات كل 3 ثوان
             commentsBloc.add(StartLiveCommentsPolling(postId: _currentStreamId!));
-            
+
             // تشغيل تحديث الإحصائيات حتى لو لم يكن هناك Agora token
             _startStatsPolling();
           } else if (state is LiveStreamCreationError) {
@@ -398,7 +398,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
           Positioned.fill(
             child: _buildVideoView(),
           ),
-          
+
           // Live stream setup (when not streaming)
           if (!_isLiveStreamActive)
             Positioned.fill(
@@ -406,35 +406,35 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
                 builder: (context) => _buildStreamSetupOverlay(context),
               ),
             ),
-        
-                // Live controls and overlay (when streaming)
-        if (_isLiveStreamActive) ...[
-          // Top overlay with live indicator and viewer count
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: _buildTopOverlay(),
-          ),
 
-          // Controls overlay (positioned at bottom to not cover chat)
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            height: 120, // Fixed height for controls only
-            child: _buildControlsSection(),
-          ),
+          // Live controls and overlay (when streaming)
+          if (_isLiveStreamActive) ...[
+            // Top overlay with live indicator and viewer count
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: _buildTopOverlay(),
+            ),
 
-          // Bottom chat area (above controls) - LAST for highest z-index
-          Positioned(
-            left: 16,
-            right: 16,
-            bottom: 130, // Above the 120px controls area
-            height: 280, // Slightly smaller to fit better
-            child: _buildChatArea(),
-          ),
-        ],
+            // Controls overlay (positioned at bottom to not cover chat)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              height: 120, // Fixed height for controls only
+              child: _buildControlsSection(),
+            ),
+
+            // Bottom chat area (above controls) - LAST for highest z-index
+            Positioned(
+              left: 16,
+              right: 16,
+              bottom: 130, // Above the 120px controls area
+              height: 280, // Slightly smaller to fit better
+              child: _buildChatArea(),
+            ),
+          ],
         ],
       ),
     );
@@ -447,21 +447,21 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
         height: double.infinity,
         child: _isEngineInitialized
             ? AgoraVideoView(
-                controller: VideoViewController(
-                  rtcEngine: _engine,
-                  canvas: const VideoCanvas(uid: 0),
-                ),
-              )
+          controller: VideoViewController(
+            rtcEngine: _engine,
+            canvas: const VideoCanvas(uid: 0),
+          ),
+        )
             : Container(
-                color: Colors.black54,
-                child: const Center(
-                  child: Icon(
-                    Icons.videocam_off,
-                    size: 64,
-                    color: Colors.white54,
-                  ),
-                ),
-              ),
+          color: Colors.black54,
+          child: const Center(
+            child: Icon(
+              Icons.videocam_off,
+              size: 64,
+              color: Colors.white54,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -481,7 +481,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-               Text(
+              Text(
                 'setup_live_stream'.tr,
                 style: TextStyle(
                   fontSize: 24,
@@ -533,13 +533,13 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
                     onPressed: isLoading ? null : () => _startLiveStream(context),
                     icon: isLoading
                         ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation(Colors.white),
-                            ),
-                          )
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation(Colors.white),
+                      ),
+                    )
                         : const Icon(Icons.play_arrow),
                     label: Text(
                       isLoading ? 'creating_live_start'.tr : 'live_chat'.tr,
@@ -608,9 +608,9 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
                 ],
               ),
             ),
-            
+
             const SizedBox(width: 12),
-            
+
             // عدد المشاهدين
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -676,7 +676,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
                     children: [
                       const Icon(Icons.chat, color: Colors.white, size: 16),
                       const SizedBox(width: 8),
-                       Text(
+                      Text(
                         'live_chat'.tr,
                         style: TextStyle(
                           color: Colors.white,
@@ -695,7 +695,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
                     ],
                   ),
                 ),
-                
+
                 // قائمة التعليقات
                 Expanded(
                   child: Container(
@@ -703,7 +703,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
                     child: _buildCommentsList(state),
                   ),
                 ),
-                
+
                 // منطقة إدخال التعليق
                 _buildCommentInput(),
               ],
@@ -722,12 +722,12 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
         ),
       );
     }
-    
+
     if (state is LiveCommentsLoaded && state.comments.isNotEmpty) {
       // ترتيب التعليقات بحسب التوقيت - الأحدث أولاً
       final sortedComments = List<LiveCommentModel>.from(state.comments);
       sortedComments.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-      
+
       return ListView.builder(
         reverse: true, // الأحدث في الأسفل (كالدردشات العادية)
         padding: const EdgeInsets.symmetric(vertical: 8),
@@ -739,7 +739,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
         },
       );
     }
-    
+
     return Center(
       child: Text(
         'start_chat_exclamation'.tr,
@@ -768,9 +768,9 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
             ),
             child: Center(
               child: Text(
-                comment.userName.isNotEmpty 
+                comment.userName.isNotEmpty
                     ? comment.userName.substring(0, 1).toUpperCase()
-                    : 'م',
+                    : 'live_comment_unknown_initial'.tr,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 10,
@@ -831,7 +831,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
   /// منطقة إدخال التعليق
   Widget _buildCommentInput() {
     final TextEditingController commentController = TextEditingController();
-    
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -911,7 +911,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
     if (controller.text.trim().isEmpty || _currentStreamId == null) return;
 
     final commentsBloc = context.read<LiveCommentsBloc>();
-    
+
     // إضافة التعليق عبر الـ BLoC
     commentsBloc.add(AddLiveComment(
       postId: _currentStreamId!,
@@ -941,11 +941,11 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
       if (difference.inSeconds < 60) {
         return 'now'.tr;
       } else if (difference.inMinutes < 60) {
-        return '${difference.inMinutes}د';
+        return 'time_ago_minutes_short'.trParams({'count': '${difference.inMinutes}'});
       } else if (difference.inHours < 24) {
-        return '${difference.inHours}س';
+        return 'time_ago_hours_short'.trParams({'count': '${difference.inHours}'});
       } else {
-        return '${difference.inDays}ي';
+        return 'time_ago_days_short'.trParams({'count': '${difference.inDays}'});
       }
     } catch (e) {
       return 'now'.tr;

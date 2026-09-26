@@ -115,7 +115,8 @@ flutter:
 
   assets:
     - assets/app_icon.png
-    - assets/ic_logo_txt.png
+    - assets/ic_logo_txt_light.png
+    - assets/ic_logo_txt_dark.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
@@ -152,13 +153,13 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/app_icon.png"
+  image_path: "assets/app_icon_t.png"
   min_sdk_android: 21
   remove_alpha_ios: true
 
 # Flutter Native Splash Configuration
 flutter_native_splash:
   color: "#FFFFFF"
-  image: assets/app_icon.png
+  image: assets/app_icon_t.png
   android: true
   ios: true
