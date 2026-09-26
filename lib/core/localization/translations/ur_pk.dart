@@ -1195,7 +1195,7 @@ const Map<String, String> urPK = {
 // Monetization Payments Page
   'your_balance': 'آپ کا بیلنس',
   'withdrawal_request': 'رقم نکالنے کی درخواست',
-  'amount_usd': 'رقم (USD)',
+  'amount_usd': 'رقم ',
   'minimum_withdrawal_amount': 'کم از کم رقم نکالنے کی حد ₹50 ہے',
   'payment_method': 'ادائیگی کا طریقہ',
   'transfer_to': 'ٹرانسفر کریں',
@@ -2435,6 +2435,10 @@ const Map<String, String> urPK = {
   'google_sign_in_disabled':
   'گوگل سائن اِن فی الحال غیر فعال ہے',
   'google_sign_in_failed': 'گوگل سائن اِن ناکام',
+  'i_agree_to': 'میں متفق ہوں',
+  'terms_and_conditions': 'شرائط و ضوابط',
+  'and': 'اور',
+  'privacy_policy': 'رازداری کی پالیسی',
 
 // Onboarding
   'onboarding_connect_title': 'دوستوں سے جڑیں',

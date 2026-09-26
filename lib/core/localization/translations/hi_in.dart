@@ -1199,7 +1199,7 @@ const Map<String, String> hiIN = {
   // Monetization Payments Page
   'your_balance': 'आपका बैलेंस',
   'withdrawal_request': 'निकासी अनुरोध',
-  'amount_usd': 'राशि (USD)',
+  'amount_usd': 'राशि',
   'minimum_withdrawal_amount': 'न्यूनतम निकासी राशि ₹50 है',
   'payment_method': 'भुगतान विधि',
   'transfer_to': 'ट्रांसफर करें',
@@ -2555,6 +2555,10 @@ const Map<String, String> hiIN = {
   'google_sign_in_disabled':
   'Google साइन-इन वर्तमान में अक्षम है',
   'google_sign_in_failed': 'Google साइन-इन विफल',
+  'i_agree_to': 'मैं सहमत हूं',
+  'terms_and_conditions': 'नियम और शर्तें',
+  'and': 'और',
+  'privacy_policy': 'गोपनीयता नीति',
 
 // Onboarding
   'onboarding_connect_title': 'मित्रों से जुड़ें',

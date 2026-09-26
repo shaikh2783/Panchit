@@ -1207,7 +1207,7 @@ const Map<String, String> mlIN = {
 // Monetization Payments Page
   'your_balance': 'നിങ്ങളുടെ ബാലൻസ്',
   'withdrawal_request': 'പിൻവലിക്കൽ അഭ്യർത്ഥന',
-  'amount_usd': 'തുക (USD)',
+  'amount_usd': 'തുക',
   'minimum_withdrawal_amount': 'കുറഞ്ഞ പിൻവലിക്കൽ തുക ₹50 ആണ്',
   'payment_method': 'പേയ്മെന്റ് രീതി',
   'transfer_to': 'ട്രാൻസ്ഫർ ചെയ്യുക',
@@ -2563,6 +2563,10 @@ const Map<String, String> mlIN = {
   'google_sign_in_disabled':
   'Google സൈൻ-ഇൻ ഇപ്പോൾ അപ്രാപ്തമാണ്',
   'google_sign_in_failed': 'Google സൈൻ-ഇൻ പരാജയപ്പെട്ടു',
+  'i_agree_to': 'ഞാൻ സമ്മതിക്കുന്നു',
+  'terms_and_conditions': 'നിബന്ധനകളും വ്യവസ്ഥകളും',
+  'and': 'കൂടാതെ',
+  'privacy_policy': 'സ്വകാര്യതാ നയം',
 
 // Onboarding
   'onboarding_connect_title': 'സുഹൃത്തുകളുമായി ബന്ധപ്പെടുക',

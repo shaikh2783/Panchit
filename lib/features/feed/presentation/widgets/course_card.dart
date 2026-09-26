@@ -92,7 +92,7 @@ class CourseCard extends StatelessWidget {
               children: [
                 // Title
                 Text(
-                  course.title,
+                  _sanitizeCourseText(course.title),
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -116,7 +116,7 @@ class CourseCard extends StatelessWidget {
                         const SizedBox(width: 6),
                         Expanded(
                           child: Text(
-                            course.location!,
+                            _sanitizeCourseText(course.location!),
                             style: TextStyle(fontSize: 14, color: mutedColor),
                           ),
                         ),
@@ -197,7 +197,7 @@ class CourseCard extends StatelessWidget {
                               MaterialPageRoute(
                                 builder: (_) => CourseCandidatesPage(
                                   courseId: post.id.toString(),
-                                  courseTitle: course.title,
+                                  courseTitle: _sanitizeCourseText(course.title),
                                 ),
                               ),
                             );
@@ -496,6 +496,28 @@ class CourseCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  /// Strips HTML tags/entities the backend may return in free-text course
+  /// fields (title, location) so this card never shows raw markup like
+  /// `<br>` or `&amp;`.
+  String _sanitizeCourseText(String input) {
+    var t = input;
+    t = t.replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), ' ');
+    t = t.replaceAllMapped(
+      RegExp(r'<a[^>]*>(.*?)<\/a>', caseSensitive: false, dotAll: true),
+      (m) => m.group(1) ?? '',
+    );
+    t = t.replaceAll(RegExp(r'<[^>]+>'), '');
+    t = t
+        .replaceAll('&nbsp;', ' ')
+        .replaceAll('&amp;', '&')
+        .replaceAll('&lt;', '<')
+        .replaceAll('&gt;', '>')
+        .replaceAll('&quot;', '"')
+        .replaceAll('&#039;', "'")
+        .replaceAll('&#39;', "'");
+    return t.trim();
   }
 
   Widget _buildStatusBadge(PostCourse course) {

@@ -1208,7 +1208,7 @@ const Map<String, String> orIN = {
 // Monetization Payments Page
   'your_balance': 'ଆପଣଙ୍କ ବ୍ୟାଲାନ୍ସ',
   'withdrawal_request': 'ନିକାସି ଅନୁରୋଧ',
-  'amount_usd': 'ରାଶି (USD)',
+  'amount_usd': 'ରାଶି',
   'minimum_withdrawal_amount': 'ନ୍ୟୁନତମ ନିକାସି ରାଶି ₹50 ଅଟେ',
   'payment_method': 'ଭୁଗତାନ ପଦ୍ଧତି',
   'transfer_to': 'ଟ୍ରାନ୍ସଫର୍ କରନ୍ତୁ',
@@ -2439,6 +2439,10 @@ const Map<String, String> orIN = {
   'google_sign_in_disabled':
   'Google ସାଇନ୍-ଇନ୍ ବର୍ତ୍ତମାନ ଅକ୍ରିୟ ଅଛି',
   'google_sign_in_failed': 'Google ସାଇନ୍-ଇନ୍ ବିଫଳ',
+  'i_agree_to': 'ମୁଁ ସହମତ',
+  'terms_and_conditions': 'ନିୟମ ଏବଂ ସର୍ତ୍ତାବଳୀ',
+  'and': 'ଏବଂ',
+  'privacy_policy': 'ଗୋପନୀୟତା ନୀତି',
 // Onboarding
   'onboarding_connect_title': 'ମିତ୍ରମାନଙ୍କ ସହିତ ଯୋଡନ୍ତୁ',
   'onboarding_connect_desc':

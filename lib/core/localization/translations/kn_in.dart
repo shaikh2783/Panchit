@@ -1198,7 +1198,7 @@ const Map<String, String> knIN = {
   // Monetization Payments Page
   'your_balance': 'ನಿಮ್ಮ ಬ್ಯಾಲೆನ್ಸ್',
   'withdrawal_request': 'ಹಿಂಪಡೆದಿನ ವಿನಂತಿ',
-  'amount_usd': 'ಮೊತ್ತ (USD)',
+  'amount_usd': 'ಮೊತ್ತ',
   'minimum_withdrawal_amount': 'ಕನಿಷ್ಠ ಹಿಂಪಡೆದಿನ ಮೊತ್ತ ₹50',
   'payment_method': 'ಪಾವತಿ ವಿಧಾನ',
   'transfer_to': 'ಟ್ರಾನ್ಸ್‌ಫರ್ ಮಾಡಿ',
@@ -2469,6 +2469,10 @@ const Map<String, String> knIN = {
   'or': 'ಅಥವಾ',
   'google_sign_in_disabled': 'Google ಸೈನ್-ಇನ್ ಪ್ರಸ್ತುತ ಅಶಕ್ತಗೊಳಿಸಲಾಗಿದೆ',
   'google_sign_in_failed': 'Google ಸೈನ್-ಇನ್ ವಿಫಲವಾಗಿದೆ',
+  'i_agree_to': 'ನಾನು ಒಪ್ಪುತ್ತೇನೆ',
+  'terms_and_conditions': 'ನಿಯಮಗಳು ಮತ್ತು ಷರತ್ತುಗಳು',
+  'and': 'ಮತ್ತು',
+  'privacy_policy': 'ಗೌಪ್ಯತಾ ನೀತಿ',
 
   // Onboarding
   'onboarding_connect_title': 'ಮಿತ್ರರೊಂದಿಗೆ ಸಂಪರ್ಕ ಸಾಧಿಸಿ',

@@ -128,7 +128,7 @@ class _MonetizationEarningsPageState extends State<MonetizationEarningsPage> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              '\$${_totalEarnings.toStringAsFixed(2)}',
+                              '₹${_totalEarnings.toStringAsFixed(2)}',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 40,
@@ -337,7 +337,7 @@ class _EarningCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      '+\$${earning.earning.toStringAsFixed(2)}',
+                      '+₹${earning.earning.toStringAsFixed(2)}',
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -367,7 +367,7 @@ class _EarningCard extends StatelessWidget {
               children: [
                 _DetailItem(
                   label: 'subscription_label'.tr,
-                  value: '\$${earning.price.toStringAsFixed(2)}',
+                  value: '₹${earning.price.toStringAsFixed(2)}',
                   icon: Icons.card_membership_rounded,
                 ),
                 Container(
@@ -377,7 +377,7 @@ class _EarningCard extends StatelessWidget {
                 ),
                 _DetailItem(
                   label: 'commission'.tr,
-                  value: '\$${earning.commission.toStringAsFixed(2)}',
+                  value: '₹${earning.commission.toStringAsFixed(2)}',
                   icon: Icons.remove_circle_outline_rounded,
                   isNegative: true,
                 ),

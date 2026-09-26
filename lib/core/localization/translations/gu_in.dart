@@ -1193,7 +1193,7 @@ const Map<String, String> guIN = {
 
   "your_balance": "તમારું બેલેન્સ",
   "withdrawal_request": "વિનંતી માટે રકમ કાઢો",
-  "amount_usd": "રકમ (USD)",
+  "amount_usd": "રકમ",
   "minimum_withdrawal_amount": "ન્યૂનતમ વિથડ્રૉલ રકમ \$50 છે",
   "payment_method": "પેમેન્ટ મથાેડ",
   "transfer_to": "જમાવા માટે ટ્રાન્સફર કરો",
@@ -2293,6 +2293,10 @@ const Map<String, String> guIN = {
   'google_sign_in_disabled':
   'Google સાઇન-ઇન હાલમાં બંધ છે',
   'google_sign_in_failed': 'Google સાઇન-ઇન નિષ્ફળ',
+  'i_agree_to': 'હું સંમત છું',
+  'terms_and_conditions': 'નિયમો અને શરતો',
+  'and': 'અને',
+  'privacy_policy': 'ગોપનીયતા નીતિ',
 
 // Onboarding
   'onboarding_connect_title': 'મિત્રો સાથે જોડાઓ',

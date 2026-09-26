@@ -1575,7 +1575,7 @@ const Map<String, String> enUS = {
   // Monetization Payments Page
   'your_balance': 'Your Balance',
   'withdrawal_request': 'Withdrawal Request',
-  'amount_usd': 'Amount (USD)',
+  'amount_usd': 'Amount',
   'minimum_withdrawal_amount': 'The minimum withdrawal request amount is \$50',
   'payment_method': 'Payment Method',
   'transfer_to': 'Transfer To',
@@ -1606,7 +1606,7 @@ const Map<String, String> enUS = {
   // Affiliates Page
   'affiliates_system': 'Affiliates System',
   'earn_per_referral':
-      'Earn up to \$0.15 (Level 1), \$0.10 (Level 2), \$0.05 (Level 3) For each user you will refer.',
+      'Earn up to ₹0.15 (Level 1), ₹0.10 (Level 2), ₹0.05 (Level 3) For each user you will refer.',
   'paid_when_register':
       'You will be paid when new user registered & bought a package or monetized content',
   'withdraw_or_transfer':
@@ -2307,6 +2307,10 @@ const Map<String, String> enUS = {
   'or': 'OR',
   'google_sign_in_disabled': 'Google Sign-In is currently disabled',
   'google_sign_in_failed': 'Google Sign-In failed',
+  'i_agree_to': 'I agree to the',
+  'terms_and_conditions': 'Terms and Conditions',
+  'and': 'and',
+  'privacy_policy': 'Privacy Policy',
 
   // Onboarding
   'onboarding_connect_title': 'Connect with Friends',

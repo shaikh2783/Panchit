@@ -1574,7 +1574,7 @@ const Map<String, String> arSA = {
   // Monetization Payments Page
   'your_balance': 'رصيدك',
   'withdrawal_request': 'طلب سحب',
-  'amount_usd': 'المبلغ (دولار أمريكي)',
+  'amount_usd': 'المبلغ ',
   'minimum_withdrawal_amount': 'الحد الأدنى لطلب السحب هو \$50',
   'payment_method': 'طريقة الدفع',
   'transfer_to': 'التحويل إلى',
@@ -2286,6 +2286,10 @@ const Map<String, String> arSA = {
   'or': 'أو',
   'google_sign_in_disabled': 'تسجيل الدخول عبر Google معطل حالياً',
   'google_sign_in_failed': 'فشل تسجيل الدخول عبر Google',
+  'i_agree_to': 'أوافق على',
+  'terms_and_conditions': 'الشروط والأحكام',
+  'and': 'و',
+  'privacy_policy': 'سياسة الخصوصية',
 
   // التعريف بالتطبيق
   'onboarding_connect_title': 'تواصل مع الأصدقاء',

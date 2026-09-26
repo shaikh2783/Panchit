@@ -1209,7 +1209,7 @@ const Map<String, String> mrIN = {
 // Monetization Payments Page
   'your_balance': 'आपला बॅलन्स',
   'withdrawal_request': 'रक्कम काढण्याची विनंती',
-  'amount_usd': 'रक्कम (USD)',
+  'amount_usd': 'रक्कम',
   'minimum_withdrawal_amount': 'किमान काढण्याची रक्कम ₹50 आहे',
   'payment_method': 'पेमेंट पद्धत',
   'transfer_to': 'ट्रान्सफर करा',
@@ -2636,6 +2636,10 @@ const Map<String, String> mrIN = {
   'Google साइन-इन सध्या अक्षम आहे',
   'google_sign_in_failed':
   'Google साइन-इन अयशस्वी',
+  'i_agree_to': 'मी सहमत आहे',
+  'terms_and_conditions': 'अटी व शर्ती',
+  'and': 'आणि',
+  'privacy_policy': 'गोपनीयता धोरण',
 
 // Onboarding
   'onboarding_connect_title': 'मित्रांशी कनेक्ट व्हा',

@@ -1191,7 +1191,7 @@ const Map<String, String> teIN = {
 // Monetization Payments Page
   'your_balance': 'మీ బ్యాలెన్స్',
   'withdrawal_request': 'విత్‌డ్రాయల్ అభ్యర్థన',
-  'amount_usd': 'మొత్తం (USD)',
+  'amount_usd': 'మొత్తం',
   'minimum_withdrawal_amount': 'కనీస విత్‌డ్రాయల్ మొత్తం ₹50',
   'payment_method': 'చెల్లింపు విధానం',
   'transfer_to': 'ట్రాన్స్‌ఫర్ చేయండి',
@@ -2447,6 +2447,10 @@ const Map<String, String> teIN = {
   'google_sign_in_disabled':
   'Google సైన్-ఇన్ ప్రస్తుతం నిలిపివేయబడింది',
   'google_sign_in_failed': 'Google సైన్-ఇన్ విఫలమైంది',
+  'i_agree_to': 'నేను అంగీకరిస్తున్నాను',
+  'terms_and_conditions': 'నిబంధనలు మరియు షరతులు',
+  'and': 'మరియు',
+  'privacy_policy': 'గోప్యతా విధానం',
 
 // Onboarding
   'onboarding_connect_title': 'స్నేహితులతో కలవండి',

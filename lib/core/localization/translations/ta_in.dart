@@ -1192,7 +1192,7 @@ const Map<String, String> taIN = {
   // Monetization Payments Page
   'your_balance': 'உங்கள் இருப்பு',
   'withdrawal_request': 'பணமெடுப்பு கோரிக்கை',
-  'amount_usd': 'தொகை (USD)',
+  'amount_usd': 'தொகை',
   'minimum_withdrawal_amount': 'குறைந்தபட்ச பணமெடுப்பு தொகை ₹50 ஆகும்',
   'payment_method': 'கட்டண முறை',
   'transfer_to': 'மாற்றவும்',
@@ -2436,6 +2436,10 @@ const Map<String, String> taIN = {
   'or': 'அல்லது',
   'google_sign_in_disabled': 'Google சைன்-இன் தற்போது முடக்கப்பட்டுள்ளது',
   'google_sign_in_failed': 'Google சைன்-இன் தோல்வியடைந்தது',
+  'i_agree_to': 'நான் ஒப்புக்கொள்கிறேன்',
+  'terms_and_conditions': 'விதிமுறைகள் மற்றும் நிபந்தனைகள்',
+  'and': 'மற்றும்',
+  'privacy_policy': 'தனியுரிமைக் கொள்கை',
 
 // Onboarding
   'onboarding_connect_title': 'நண்பர்களுடன் இணைக',

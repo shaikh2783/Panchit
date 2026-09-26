@@ -1291,7 +1291,7 @@ const Map<String, String> bnIN = {
   // Monetization Payments Page
   "your_balance": "আপনার ব্যালেন্স",
   "withdrawal_request": "উত্তোলন অনুরোধ",
-  "amount_usd": "পরিমাণ (USD)",
+  "amount_usd": "পরিমাণ",
   "minimum_withdrawal_amount": "ন্যূনতম উত্তোলনের পরিমাণ ₹50",
 
   "payment_method": "পেমেন্ট পদ্ধতি",
@@ -2367,6 +2367,10 @@ const Map<String, String> bnIN = {
   'or': 'অথবা',
   'google_sign_in_disabled': 'Google সাইন-ইন বর্তমানে বন্ধ রয়েছে',
   'google_sign_in_failed': 'Google সাইন-ইন ব্যর্থ',
+  'i_agree_to': 'আমি সম্মত',
+  'terms_and_conditions': 'নিয়ম ও শর্তাবলী',
+  'and': 'এবং',
+  'privacy_policy': 'গোপনীয়তা নীতি',
 
   // Onboarding
   'onboarding_connect_title': 'বন্ধুদের সাথে যুক্ত হন',
