@@ -29,8 +29,9 @@ class GradientIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ShaderMask(
-      shaderCallback: (bounds) =>
-          gradient.createShader(Rect.fromLTWH(0, 0, bounds.width, bounds.height)),
+      shaderCallback: (bounds) => gradient.createShader(
+        Rect.fromLTWH(0, 0, bounds.width, bounds.height),
+      ),
       child: Icon(icon, size: size, color: Colors.white),
     );
   }
@@ -145,8 +146,10 @@ class _ProfileEditPageState extends State<ProfileEditPage>
   @override
   void initState() {
     super.initState();
-    final initialIndex =
-        widget.initialTabIndex.clamp(0, 5); // 6 tabs: 0..5, photos = 5
+    final initialIndex = widget.initialTabIndex.clamp(
+      0,
+      5,
+    ); // 6 tabs: 0..5, photos = 5
     _tab = TabController(length: 6, vsync: this, initialIndex: initialIndex);
     _updateService = ProfileUpdateService(context.read<ApiClient>());
     _countriesService = CountriesService(context.read<ApiClient>());
@@ -167,19 +170,34 @@ class _ProfileEditPageState extends State<ProfileEditPage>
     _eduSchool = TextEditingController(text: widget.profile.education.school);
     _eduClass = TextEditingController(text: widget.profile.education.classYear);
 
-    _facebook = TextEditingController(text: widget.profile.socialLinks.facebook ?? '');
+    _facebook = TextEditingController(
+      text: widget.profile.socialLinks.facebook ?? '',
+    );
     _twitter = TextEditingController(text: widget.profile.socialLinks.x ?? '');
-    _youtube = TextEditingController(text: widget.profile.socialLinks.youtube ?? '');
-    _instagram = TextEditingController(text: widget.profile.socialLinks.instagram ?? '');
-    _linkedin = TextEditingController(text: widget.profile.socialLinks.linkedin ?? '');
-    _twitch = TextEditingController(text: widget.profile.socialLinks.twitch ?? '');
-    _vkontakte = TextEditingController(text: widget.profile.socialLinks.vkontakte ?? '');
+    _youtube = TextEditingController(
+      text: widget.profile.socialLinks.youtube ?? '',
+    );
+    _instagram = TextEditingController(
+      text: widget.profile.socialLinks.instagram ?? '',
+    );
+    _linkedin = TextEditingController(
+      text: widget.profile.socialLinks.linkedin ?? '',
+    );
+    _twitch = TextEditingController(
+      text: widget.profile.socialLinks.twitch ?? '',
+    );
+    _vkontakte = TextEditingController(
+      text: widget.profile.socialLinks.vkontakte ?? '',
+    );
 
     // gender mapping
     final g = widget.profile.gender;
-    if (g == '1') _selectedGender = 'male';
-    else if (g == '2') _selectedGender = 'female';
-    else if (g == '3') _selectedGender = 'other';
+    if (g == '1')
+      _selectedGender = 'male';
+    else if (g == '2')
+      _selectedGender = 'female';
+    else if (g == '3')
+      _selectedGender = 'other';
     else if (g.isNotEmpty) {
       final gl = g.toLowerCase();
       if (['male', 'female', 'other'].contains(gl)) _selectedGender = gl;
@@ -191,13 +209,21 @@ class _ProfileEditPageState extends State<ProfileEditPage>
 
     final rel = widget.profile.relationship?.toLowerCase() ?? '';
     if ([
-      'single','relationship','married','complicated','separated','divorced','widowed',
+      'single',
+      'relationship',
+      'married',
+      'complicated',
+      'separated',
+      'divorced',
+      'widowed',
     ].contains(rel)) {
       _selectedRelationship = rel;
     }
 
     if (widget.profile.birthDate?.isNotEmpty == true) {
-      try { _selectedBirthDate = DateTime.parse(widget.profile.birthDate!); } catch (_) {}
+      try {
+        _selectedBirthDate = DateTime.parse(widget.profile.birthDate!);
+      } catch (_) {}
     }
 
     _loadCountries();
@@ -234,8 +260,9 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       _countries = await _countriesService.getCountries();
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('${'error_loading_countries'.tr}: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${'error_loading_countries'.tr}: $e')),
+      );
     } finally {
       if (mounted) setState(() => _loadingCountries = false);
     }
@@ -253,13 +280,20 @@ class _ProfileEditPageState extends State<ProfileEditPage>
         birthDay = _selectedBirthDate!.day.toString();
       } else if (widget.profile.birthDate?.isNotEmpty == true) {
         final p = widget.profile.birthDate!.split('-');
-        if (p.length == 3) { birthYear = p[0]; birthMonth = p[1]; birthDay = p[2]; }
+        if (p.length == 3) {
+          birthYear = p[0];
+          birthMonth = p[1];
+          birthDay = p[2];
+        }
       }
 
       String? genderValue;
-      if (_selectedGender == 'male') genderValue = '1';
-      else if (_selectedGender == 'female') genderValue = '2';
-      else if (_selectedGender == 'other') genderValue = '3';
+      if (_selectedGender == 'male')
+        genderValue = '1';
+      else if (_selectedGender == 'female')
+        genderValue = '2';
+      else if (_selectedGender == 'other')
+        genderValue = '3';
       else if (_selectedGender != null) {
         genderValue = widget.profile.gender == 'male' ? '1' : '2';
       }
@@ -279,11 +313,15 @@ class _ProfileEditPageState extends State<ProfileEditPage>
 
       final res = await _updateService.updateBasicInfo(req);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(res.message)));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(res.message)));
       Navigator.pop(context, true);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error: $e')));
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -300,11 +338,15 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       );
       final res = await _updateService.updateWorkInfo(req);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(res.message)));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(res.message)));
       Navigator.pop(context, true);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error: $e')));
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -320,11 +362,15 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       );
       final res = await _updateService.updateLocation(req);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(res.message)));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(res.message)));
       Navigator.pop(context, true);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error: $e')));
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -341,11 +387,15 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       );
       final res = await _updateService.updateEducation(req);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(res.message)));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(res.message)));
       Navigator.pop(context, true);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error: $e')));
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -366,11 +416,15 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       );
       final res = await _updateService.updateSocialLinks(req);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(res.message)));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(res.message)));
       Navigator.pop(context, true);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error: $e')));
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -395,7 +449,10 @@ class _ProfileEditPageState extends State<ProfileEditPage>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Choose Image', style: Theme.of(context).textTheme.titleLarge),
+              Text(
+                'Choose Image',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
               const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -458,9 +515,14 @@ class _ProfileEditPageState extends State<ProfileEditPage>
             decoration: BoxDecoration(
               gradient: gradient.withOpacity(0.12),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: gradient.colors.first.withOpacity(0.35), width: 1.5),
+              border: Border.all(
+                color: gradient.colors.first.withOpacity(0.35),
+                width: 1.5,
+              ),
             ),
-            child: Center(child: GradientIcon(icon, size: 30, gradient: gradient)),
+            child: Center(
+              child: GradientIcon(icon, size: 30, gradient: gradient),
+            ),
           ),
           const SizedBox(height: 10),
           Text(label, style: TextStyle(color: cs.onSurface)),
@@ -474,14 +536,19 @@ class _ProfileEditPageState extends State<ProfileEditPage>
     if (_selectedProfileImage == null) return;
     setState(() => _isLoading = true);
     try {
-      final res = await _updateService.uploadProfilePicture(_selectedProfileImage!);
+      final res = await _updateService.uploadProfilePicture(
+        _selectedProfileImage!,
+      );
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(res.message)));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(res.message)));
       Navigator.pop(context, true);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('${'error_uploading_image'.tr}: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${'error_uploading_image'.tr}: $e')),
+      );
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -493,12 +560,15 @@ class _ProfileEditPageState extends State<ProfileEditPage>
     try {
       final res = await _updateService.uploadCoverPhoto(_selectedCoverImage!);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(res.message)));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(res.message)));
       Navigator.pop(context, true);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('${'error_uploading_cover'.tr}: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${'error_uploading_cover'.tr}: $e')),
+      );
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -515,7 +585,9 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       context: context,
       builder: (_) => StatefulBuilder(
         builder: (context, setS) => AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           title: Row(
             children: [
               const GradientIcon(Iconsax.key, gradient: AppGradients.password),
@@ -526,16 +598,34 @@ class _ProfileEditPageState extends State<ProfileEditPage>
           content: SingleChildScrollView(
             child: Column(
               children: [
-                _pwdField('current_password'.tr, current, obC, () => setS(() => obC = !obC)),
+                _pwdField(
+                  'current_password'.tr,
+                  current,
+                  obC,
+                  () => setS(() => obC = !obC),
+                ),
                 const SizedBox(height: 12),
-                _pwdField('new_password'.tr, newer, obN, () => setS(() => obN = !obN)),
+                _pwdField(
+                  'new_password'.tr,
+                  newer,
+                  obN,
+                  () => setS(() => obN = !obN),
+                ),
                 const SizedBox(height: 12),
-                _pwdField('confirm_password_label'.tr, confirm, obK, () => setS(() => obK = !obK)),
+                _pwdField(
+                  'confirm_password_label'.tr,
+                  confirm,
+                  obK,
+                  () => setS(() => obK = !obK),
+                ),
               ],
             ),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: Text('cancel'.tr)),
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('cancel'.tr),
+            ),
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
@@ -548,18 +638,23 @@ class _ProfileEditPageState extends State<ProfileEditPage>
                 ),
                 onPressed: () async {
                   if (current.text.isEmpty) {
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(content: Text('please_enter_current_password'.tr)));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('please_enter_current_password'.tr),
+                      ),
+                    );
                     return;
                   }
                   if (newer.text.length < 6) {
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(content: Text('new_password_too_short'.tr)));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('new_password_too_short'.tr)),
+                    );
                     return;
                   }
                   if (newer.text != confirm.text) {
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(content: Text('passwords_do_not_match'.tr)));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('passwords_do_not_match'.tr)),
+                    );
                     return;
                   }
                   Navigator.pop(context);
@@ -572,12 +667,14 @@ class _ProfileEditPageState extends State<ProfileEditPage>
                     );
                     final res = await _updateService.updatePassword(req);
                     if (!mounted) return;
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(content: Text(res.message)));
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text(res.message)));
                   } catch (e) {
                     if (!mounted) return;
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(content: Text('Error: $e')));
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text('Error: $e')));
                   } finally {
                     if (mounted) setState(() => _isLoading = false);
                   }
@@ -600,16 +697,25 @@ class _ProfileEditPageState extends State<ProfileEditPage>
     return TextFormField(
       controller: controller,
       obscureText: obscured,
-      decoration: _decoration(label, icon: Iconsax.key, gradient: AppGradients.password).copyWith(
-        suffixIcon: IconButton(
-          icon: Icon(obscured ? Iconsax.eye_slash : Iconsax.eye),
-          onPressed: toggle,
-        ),
-        prefixIcon: const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12.0),
-          child: GradientIcon(Iconsax.key, gradient: AppGradients.password, size: 20),
-        ),
-      ),
+      decoration:
+          _decoration(
+            label,
+            icon: Iconsax.key,
+            gradient: AppGradients.password,
+          ).copyWith(
+            suffixIcon: IconButton(
+              icon: Icon(obscured ? Iconsax.eye_slash : Iconsax.eye),
+              onPressed: toggle,
+            ),
+            prefixIcon: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 12.0),
+              child: GradientIcon(
+                Iconsax.key,
+                gradient: AppGradients.password,
+                size: 20,
+              ),
+            ),
+          ),
     );
   }
 
@@ -629,8 +735,14 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       ),
       filled: true,
       fillColor: cs.surfaceContainerHigh,
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
+      ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide(color: gradient.colors.first, width: 2),
@@ -660,9 +772,11 @@ class _ProfileEditPageState extends State<ProfileEditPage>
   Widget _socialField(TextEditingController c, String label, IconData icon) {
     return TextFormField(
       controller: c,
-      decoration: _decoration(label, icon: icon, gradient: AppGradients.social).copyWith(
-        helperText: 'Example: https://${label.replaceAll(' ', '').toLowerCase()}.com/username',
-      ),
+      decoration: _decoration(label, icon: icon, gradient: AppGradients.social)
+          .copyWith(
+            helperText:
+                'Example: https://${label.replaceAll(' ', '').toLowerCase()}.com/username',
+          ),
     );
   }
 
@@ -673,19 +787,40 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(100),
         gradient: AppGradients.save,
-        boxShadow: [BoxShadow(color: cs.primary.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 4))],
+        boxShadow: [
+          BoxShadow(
+            color: cs.primary.withOpacity(0.3),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: FilledButton.icon(
         onPressed: _isLoading ? null : onPressed,
         icon: _isLoading
-            ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+            ? const SizedBox(
+                width: 18,
+                height: 18,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.white,
+                ),
+              )
             : const Icon(Iconsax.save_2, color: Colors.white, size: 20),
-        label: Text(label, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        label: Text(
+          label,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         style: FilledButton.styleFrom(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
           padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(100),
+          ),
         ),
       ),
     );
@@ -707,16 +842,30 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       onTap: _loadingCountries ? null : _openCountrySheet,
       borderRadius: BorderRadius.circular(12),
       child: InputDecorator(
-        decoration: _decoration('country_label'.tr, icon: Iconsax.global, gradient: AppGradients.location)
-            .copyWith(contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8)),
+        decoration:
+            _decoration(
+              'country_label'.tr,
+              icon: Iconsax.global,
+              gradient: AppGradients.location,
+            ).copyWith(
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 4,
+                vertical: 8,
+              ),
+            ),
         child: Row(
           children: [
             Expanded(
               child: Text(
-                selectedName ?? (_loadingCountries ? 'loading_text'.tr : 'select_country'.tr),
+                selectedName ??
+                    (_loadingCountries
+                        ? 'loading_text'.tr
+                        : 'select_country'.tr),
                 style: TextStyle(
                   fontSize: 16,
-                  color: selectedName != null ? cs.onSurface : cs.onSurfaceVariant,
+                  color: selectedName != null
+                      ? cs.onSurface
+                      : cs.onSurfaceVariant,
                 ),
                 overflow: TextOverflow.ellipsis,
               ),
@@ -747,7 +896,9 @@ class _ProfileEditPageState extends State<ProfileEditPage>
           builder: (context, setS) => Padding(
             padding: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom,
-              left: 16, right: 16, top: 8,
+              left: 16,
+              right: 16,
+              top: 8,
             ),
             child: SafeArea(
               child: Column(
@@ -768,7 +919,10 @@ class _ProfileEditPageState extends State<ProfileEditPage>
                       query = t.trim().toLowerCase();
                       setS(() {
                         filtered = _countries
-                            .where((c) => c.countryName.toLowerCase().contains(query))
+                            .where(
+                              (c) =>
+                                  c.countryName.toLowerCase().contains(query),
+                            )
                             .toList();
                       });
                     },
@@ -783,10 +937,12 @@ class _ProfileEditPageState extends State<ProfileEditPage>
                           )
                         : ListView.separated(
                             itemCount: filtered.length,
-                            separatorBuilder: (_, __) => const Divider(height: 1, indent: 16),
+                            separatorBuilder: (_, __) =>
+                                const Divider(height: 1, indent: 16),
                             itemBuilder: (_, i) {
                               final c = filtered[i];
-                              final isSel = c.countryId.toString() == _selectedCountryId;
+                              final isSel =
+                                  c.countryId.toString() == _selectedCountryId;
                               return ListTile(
                                 leading: GradientIcon(
                                   isSel ? Iconsax.record_circle : Iconsax.radio,
@@ -826,28 +982,10 @@ class _ProfileEditPageState extends State<ProfileEditPage>
             title: Text('edit_profile'.tr),
             elevation: 0,
             bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(48),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: TabBar(
-                  controller: _tab,
-                  isScrollable: true,
-                  tabAlignment: TabAlignment.start,
-                  indicator: UnderlineTabIndicator(
-                    borderSide: BorderSide(width: 3, color: cs.primary),
-                    insets: const EdgeInsets.symmetric(horizontal: 16),
-                  ),
-                  labelStyle: const TextStyle(fontWeight: FontWeight.w700),
-                  tabs: [
-                    Tab(icon: const GradientIcon(Iconsax.user_edit, gradient: AppGradients.basic), text: 'tab_basic'.tr),
-                    Tab(icon: const GradientIcon(Iconsax.briefcase, gradient: AppGradients.work), text: 'tab_work'.tr),
-                    Tab(icon: const GradientIcon(Iconsax.location, gradient: AppGradients.location), text: 'tab_location'.tr),
-                    Tab(icon: const GradientIcon(Iconsax.book, gradient: AppGradients.education), text: 'tab_education'.tr),
-                    Tab(icon: const GradientIcon(Iconsax.global, gradient: AppGradients.social), text: 'tab_social'.tr),
-                    Tab(icon: const GradientIcon(Iconsax.gallery, gradient: AppGradients.photos), text: 'tab_photos'.tr),
-                  ],
-                ),
+              preferredSize: const Size.fromHeight(56),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+                child: _buildEditTabBar(cs),
               ),
             ),
           ),
@@ -865,10 +1003,108 @@ class _ProfileEditPageState extends State<ProfileEditPage>
         ),
         if (_isLoading)
           Container(
-            color: Colors.black.withOpacity(0.12),
+            color: Colors.black.withValues(alpha: 0.12),
             child: const Center(child: CircularProgressIndicator()),
           ),
       ],
+    );
+  }
+
+  Widget _buildEditTabBar(ColorScheme cs) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final tabs = [
+      (
+        icon: Iconsax.user_edit,
+        label: 'tab_basic'.tr,
+        gradient: AppGradients.basic,
+      ),
+      (
+        icon: Iconsax.briefcase,
+        label: 'tab_work'.tr,
+        gradient: AppGradients.work,
+      ),
+      (
+        icon: Iconsax.location,
+        label: 'tab_location'.tr,
+        gradient: AppGradients.location,
+      ),
+      (
+        icon: Iconsax.book,
+        label: 'tab_education'.tr,
+        gradient: AppGradients.education,
+      ),
+      (
+        icon: Iconsax.global,
+        label: 'tab_social'.tr,
+        gradient: AppGradients.social,
+      ),
+      (
+        icon: Iconsax.gallery,
+        label: 'tab_photos'.tr,
+        gradient: AppGradients.photos,
+      ),
+    ];
+
+    return AnimatedBuilder(
+      animation: _tab,
+      builder: (context, _) {
+        return SizedBox(
+          height: 40,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            itemCount: tabs.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 8),
+            itemBuilder: (context, index) {
+              final tab = tabs[index];
+              final isSelected = _tab.index == index;
+
+              return GestureDetector(
+                onTap: () => _tab.animateTo(index),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 220),
+                  curve: Curves.easeInOut,
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    gradient: isSelected ? tab.gradient : null,
+                    border: isSelected
+                        ? null
+                        : Border.all(color: cs.outlineVariant),
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (isSelected)
+                        Icon(tab.icon, size: 16, color: Colors.white)
+                      else
+                        GradientIcon(
+                          tab.icon,
+                          size: 16,
+                          gradient: tab.gradient,
+                        ),
+                      const SizedBox(width: 6),
+                      Text(
+                        tab.label,
+                        style: TextStyle(
+                          color: isSelected
+                              ? Colors.white
+                              : (isDark ? Colors.white70 : cs.onSurfaceVariant),
+                          fontWeight: isSelected
+                              ? FontWeight.w700
+                              : FontWeight.w500,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
@@ -887,7 +1123,8 @@ class _ProfileEditPageState extends State<ProfileEditPage>
               label: 'first_name_label'.tr,
               icon: Iconsax.user_edit,
               gradient: AppGradients.basic,
-              validator: (v) => v!.trim().isEmpty ? 'first_name_required'.tr : null,
+              validator: (v) =>
+                  v!.trim().isEmpty ? 'first_name_required'.tr : null,
             ),
             const SizedBox(height: 12),
             _field(
@@ -895,16 +1132,27 @@ class _ProfileEditPageState extends State<ProfileEditPage>
               label: 'last_name_label'.tr,
               icon: Iconsax.user_octagon,
               gradient: AppGradients.basic,
-              validator: (v) => v!.trim().isEmpty ? 'last_name_required'.tr : null,
+              validator: (v) =>
+                  v!.trim().isEmpty ? 'last_name_required'.tr : null,
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
               value: _selectedGender,
-              decoration: _decoration('gender'.tr, icon: Iconsax.woman, gradient: AppGradients.basic),
+              decoration: _decoration(
+                'gender'.tr,
+                icon: Iconsax.woman,
+                gradient: AppGradients.basic,
+              ),
               items: [
                 DropdownMenuItem(value: 'male', child: Text('gender_male'.tr)),
-                DropdownMenuItem(value: 'female', child: Text('gender_female'.tr)),
-                DropdownMenuItem(value: 'other', child: Text('gender_other'.tr)),
+                DropdownMenuItem(
+                  value: 'female',
+                  child: Text('gender_female'.tr),
+                ),
+                DropdownMenuItem(
+                  value: 'other',
+                  child: Text('gender_other'.tr),
+                ),
               ],
               onChanged: (v) => setState(() => _selectedGender = v),
             ),
@@ -921,8 +1169,17 @@ class _ProfileEditPageState extends State<ProfileEditPage>
               },
               borderRadius: BorderRadius.circular(12),
               child: InputDecorator(
-                decoration: _decoration('birthdate_label'.tr, icon: Iconsax.cake, gradient: AppGradients.basic)
-                    .copyWith(contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8)),
+                decoration:
+                    _decoration(
+                      'birthdate_label'.tr,
+                      icon: Iconsax.cake,
+                      gradient: AppGradients.basic,
+                    ).copyWith(
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 4,
+                        vertical: 8,
+                      ),
+                    ),
                 child: Row(
                   children: [
                     Expanded(
@@ -932,7 +1189,9 @@ class _ProfileEditPageState extends State<ProfileEditPage>
                             : 'select_birth_date'.tr,
                         style: TextStyle(
                           fontSize: 16,
-                          color: _selectedBirthDate != null ? cs.onSurface : cs.onSurfaceVariant,
+                          color: _selectedBirthDate != null
+                              ? cs.onSurface
+                              : cs.onSurfaceVariant,
                         ),
                       ),
                     ),
@@ -944,15 +1203,40 @@ class _ProfileEditPageState extends State<ProfileEditPage>
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
               value: _selectedRelationship,
-              decoration: _decoration('relationship_status'.tr, icon: Iconsax.heart, gradient: AppGradients.basic),
+              decoration: _decoration(
+                'relationship_status'.tr,
+                icon: Iconsax.heart,
+                gradient: AppGradients.basic,
+              ),
               items: [
-                DropdownMenuItem(value: 'single', child: Text('relationship_single'.tr)),
-                DropdownMenuItem(value: 'relationship', child: Text('relationship_in_relationship'.tr)),
-                DropdownMenuItem(value: 'married', child: Text('relationship_married'.tr)),
-                DropdownMenuItem(value: 'complicated', child: Text('relationship_complicated'.tr)),
-                DropdownMenuItem(value: 'separated', child: Text('relationship_separated'.tr)),
-                DropdownMenuItem(value: 'divorced', child: Text('relationship_divorced'.tr)),
-                DropdownMenuItem(value: 'widowed', child: Text('relationship_widowed'.tr)),
+                DropdownMenuItem(
+                  value: 'single',
+                  child: Text('relationship_single'.tr),
+                ),
+                DropdownMenuItem(
+                  value: 'relationship',
+                  child: Text('relationship_in_relationship'.tr),
+                ),
+                DropdownMenuItem(
+                  value: 'married',
+                  child: Text('relationship_married'.tr),
+                ),
+                DropdownMenuItem(
+                  value: 'complicated',
+                  child: Text('relationship_complicated'.tr),
+                ),
+                DropdownMenuItem(
+                  value: 'separated',
+                  child: Text('relationship_separated'.tr),
+                ),
+                DropdownMenuItem(
+                  value: 'divorced',
+                  child: Text('relationship_divorced'.tr),
+                ),
+                DropdownMenuItem(
+                  value: 'widowed',
+                  child: Text('relationship_widowed'.tr),
+                ),
               ],
               onChanged: (v) => setState(() => _selectedRelationship = v),
             ),
@@ -977,7 +1261,8 @@ class _ProfileEditPageState extends State<ProfileEditPage>
                 final t = v!.trim();
                 if (t.isEmpty) return null;
                 final uri = Uri.tryParse(t);
-                final ok = uri != null && (uri.hasScheme && uri.host.isNotEmpty);
+                final ok =
+                    uri != null && (uri.hasScheme && uri.host.isNotEmpty);
                 return ok ? null : 'invalid_url'.tr;
               },
             ),
@@ -986,11 +1271,17 @@ class _ProfileEditPageState extends State<ProfileEditPage>
             const SizedBox(height: 12),
             OutlinedButton.icon(
               onPressed: _showPasswordChangeDialog,
-              icon: const GradientIcon(Iconsax.key, gradient: AppGradients.password, size: 20),
+              icon: const GradientIcon(
+                Iconsax.key,
+                gradient: AppGradients.password,
+                size: 20,
+              ),
               label: Text('change_password'.tr),
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(100),
+                ),
               ),
             ),
           ],
@@ -1138,7 +1429,10 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text('profile_picture'.tr, style: Theme.of(context).textTheme.titleLarge),
+          Text(
+            'profile_picture'.tr,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
           const SizedBox(height: 16),
           Center(
             child: SizedBox(
@@ -1153,7 +1447,9 @@ class _ProfileEditPageState extends State<ProfileEditPage>
                       gradient: AppGradients.photos,
                       boxShadow: [
                         BoxShadow(
-                          color: AppGradients.photos.colors.first.withOpacity(0.3),
+                          color: AppGradients.photos.colors.first.withOpacity(
+                            0.3,
+                          ),
                           blurRadius: 15,
                           offset: const Offset(0, 5),
                         ),
@@ -1169,7 +1465,8 @@ class _ProfileEditPageState extends State<ProfileEditPage>
                         radius: 56,
                         backgroundImage: _selectedProfileImage != null
                             ? FileImage(_selectedProfileImage!)
-                            : CachedNetworkImageProvider(widget.profile.picture) as ImageProvider,
+                            : CachedNetworkImageProvider(widget.profile.picture)
+                                  as ImageProvider,
                       ),
                     ),
                   ),
@@ -1187,7 +1484,11 @@ class _ProfileEditPageState extends State<ProfileEditPage>
                           gradient: AppGradients.basic,
                           border: Border.all(color: cs.surface, width: 2),
                         ),
-                        child: const Icon(Iconsax.camera, size: 18, color: Colors.white),
+                        child: const Icon(
+                          Iconsax.camera,
+                          size: 18,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
@@ -1208,17 +1509,25 @@ class _ProfileEditPageState extends State<ProfileEditPage>
                   borderRadius: BorderRadius.circular(16),
                   color: cs.surfaceContainerHigh,
                   image: _selectedCoverImage != null
-                      ? DecorationImage(image: FileImage(_selectedCoverImage!), fit: BoxFit.cover)
+                      ? DecorationImage(
+                          image: FileImage(_selectedCoverImage!),
+                          fit: BoxFit.cover,
+                        )
                       : (coverFallback != null
-                          ? DecorationImage(image: CachedNetworkImageProvider(coverFallback), fit: BoxFit.cover)
-                          : null),
+                            ? DecorationImage(
+                                image: CachedNetworkImageProvider(
+                                  coverFallback,
+                                ),
+                                fit: BoxFit.cover,
+                              )
+                            : null),
                 ),
                 child: (_selectedCoverImage == null && coverFallback == null)
                     ? Center(
                         child: Padding(
                           padding: const EdgeInsets.all(16),
                           child: DottedBorder(
-                          
+                            options: RectDottedBorderOptions(color: cs.outline),
                             child: Container(
                               width: double.infinity,
                               height: double.infinity,
@@ -1226,10 +1535,18 @@ class _ProfileEditPageState extends State<ProfileEditPage>
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const GradientIcon(Iconsax.gallery_add, size: 48, gradient: AppGradients.photos),
+                                  const GradientIcon(
+                                    Iconsax.gallery_add,
+                                    size: 48,
+                                    gradient: AppGradients.photos,
+                                  ),
                                   const SizedBox(height: 12),
-                                  Text('tap_to_add_cover'.tr,
-                                      style: TextStyle(color: cs.onSurfaceVariant)),
+                                  Text(
+                                    'tap_to_add_cover'.tr,
+                                    style: TextStyle(
+                                      color: cs.onSurfaceVariant,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -1247,7 +1564,11 @@ class _ProfileEditPageState extends State<ProfileEditPage>
                               gradient: AppGradients.basic,
                               border: Border.all(color: cs.surface, width: 2),
                             ),
-                            child: const Icon(Iconsax.edit, size: 18, color: Colors.white),
+                            child: const Icon(
+                              Iconsax.edit,
+                              size: 18,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),

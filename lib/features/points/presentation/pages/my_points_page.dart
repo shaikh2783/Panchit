@@ -333,7 +333,7 @@ class _MyPointsPageState extends State<MyPointsPage> {
                         child: _buildStatBox(
                           icon: Iconsax.wallet_2,
                           label: 'min_amount'.tr,
-                          value: '\$50',
+                          value: '₹ 50',
                           color: const Color(0xFF00BCD4),
                         ),
                       ),

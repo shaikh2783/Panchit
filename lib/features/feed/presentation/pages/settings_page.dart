@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:snginepro/core/theme/app_colors.dart';
+import 'package:snginepro/core/theme/panchit_auth_ui.dart';
 import 'package:snginepro/features/settings/presentation/pages/cache_settings_page.dart';
 import '../../../settings/presentation/pages/privacy_settings_page.dart';
 import '../../../settings/presentation/pages/change_password_page.dart';
@@ -35,7 +37,7 @@ class SettingsPage extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
+      backgroundColor: PanchitAuthColors.background(isDark),
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -566,21 +568,24 @@ class SettingsPage extends StatelessWidget {
 
   // ---------- Helpers ----------
   void _showDeleteAccountDialog(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
+        backgroundColor: isDark ? AppColors.cardDark : Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Row(
           children: [
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.1),
+                color: AppColors.error.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const Icon(
                 Icons.warning_rounded,
-                color: Colors.red,
+                color: AppColors.error,
                 size: 24,
               ),
             ),
@@ -604,7 +609,12 @@ class SettingsPage extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               'delete_account_warning'.tr,
-              style: const TextStyle(fontSize: 13, color: Colors.grey),
+              style: TextStyle(
+                fontSize: 13,
+                color: isDark
+                    ? AppColors.textSecondaryDark
+                    : AppColors.textSecondaryLight,
+              ),
             ),
           ],
         ),
@@ -616,7 +626,7 @@ class SettingsPage extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(100),
-              color: Colors.red,
+              color: AppColors.error,
             ),
             child: TextButton(
               style: TextButton.styleFrom(
@@ -628,7 +638,7 @@ class SettingsPage extends StatelessWidget {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text('coming_soon'.tr),
-                    backgroundColor: Colors.red,
+                    backgroundColor: AppColors.error,
                   ),
                 );
               },
@@ -642,12 +652,13 @@ class SettingsPage extends StatelessWidget {
 
   void _showLanguageSheet(BuildContext context) {
     final localizationController = Get.find<LocalizationController>();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     showModalBottomSheet(
       context: context,
       showDragHandle: true,
       isScrollControlled: true,
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: isDark ? AppColors.cardDark : Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -709,11 +720,12 @@ class SettingsPage extends StatelessWidget {
 
   void _showThemeSheet(BuildContext context) {
     final themeController = Get.find<ThemeController>();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     showModalBottomSheet(
       context: context,
       showDragHandle: true,
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: isDark ? AppColors.cardDark : Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -781,36 +793,22 @@ class _GlassHeader extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
+        color: isDark ? AppColors.cardDark : Colors.white,
         borderRadius: BorderRadius.circular(16),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: isDark
-              ? [const Color(0x1FFFFFFF), const Color(0x11000000)]
-              : [const Color(0x11FFFFFF), const Color(0x08000000)],
-        ),
         border: Border.all(
-          color: isDark ? Colors.white12 : Colors.black12,
+          color: isDark ? AppColors.dividerDark : AppColors.dividerLight,
           width: 1,
         ),
+        boxShadow: isDark ? AppColors.darkShadow : AppColors.lightShadow,
       ),
       child: Row(
         children: [
           Container(
             width: 42,
             height: 42,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               shape: BoxShape.circle,
-              gradient: const LinearGradient(
-                colors: [Color(0xFF7B4397), Color(0xFF1D976C)],
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.12),
-                  blurRadius: 12,
-                  offset: const Offset(0, 6),
-                ),
-              ],
+              gradient: AppColors.primaryGradient,
             ),
             child: const Icon(Icons.tune_rounded, color: Colors.white),
           ),
@@ -824,13 +822,18 @@ class _GlassHeader extends StatelessWidget {
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w800,
                     letterSpacing: 0.1,
+                    color: isDark
+                        ? AppColors.textPrimaryDark
+                        : AppColors.textPrimaryLight,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   subtitle,
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.textTheme.bodySmall?.color?.withOpacity(0.8),
+                    color: isDark
+                        ? AppColors.textSecondaryDark
+                        : AppColors.textSecondaryLight,
                   ),
                 ),
               ],
@@ -850,14 +853,16 @@ class _SectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Row(
       children: [
         Container(
           width: 4,
           height: 16,
-          decoration: BoxDecoration(
-            color: theme.colorScheme.primary,
-            borderRadius: BorderRadius.circular(4),
+          decoration: const BoxDecoration(
+            gradient: AppColors.primaryGradient,
+            borderRadius: BorderRadius.all(Radius.circular(4)),
           ),
         ),
         const SizedBox(width: 8),
@@ -866,6 +871,9 @@ class _SectionTitle extends StatelessWidget {
           style: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.w800,
             letterSpacing: 0.1,
+            color: isDark
+                ? AppColors.textPrimaryDark
+                : AppColors.textPrimaryLight,
           ),
         ),
       ],
@@ -891,21 +899,18 @@ class _SettingsTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final textSecondary =
+        isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
-        color: theme.colorScheme.surface,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 14,
-            offset: const Offset(0, 6),
-          ),
-        ],
+        color: isDark ? AppColors.cardDark : Colors.white,
+        boxShadow: isDark ? AppColors.darkShadow : AppColors.lightShadow,
         border: Border.all(
-          color: theme.dividerColor.withOpacity(0.06),
+          color: isDark ? AppColors.dividerDark : AppColors.dividerLight,
           width: 1,
         ),
       ),
@@ -913,8 +918,8 @@ class _SettingsTile extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(14),
-          splashColor: theme.colorScheme.primary.withOpacity(0.06),
-          highlightColor: theme.colorScheme.primary.withOpacity(0.03),
+          splashColor: AppColors.primary.withValues(alpha: 0.06),
+          highlightColor: AppColors.primary.withValues(alpha: 0.03),
           onTap: () {
             HapticFeedback.lightImpact();
             onTap();
@@ -936,6 +941,9 @@ class _SettingsTile extends StatelessWidget {
                         style: theme.textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.w800,
                           letterSpacing: 0.1,
+                          color: isDark
+                              ? AppColors.textPrimaryDark
+                              : AppColors.textPrimaryLight,
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -944,9 +952,7 @@ class _SettingsTile extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.textTheme.bodySmall?.color?.withOpacity(
-                            0.7,
-                          ),
+                          color: textSecondary,
                         ),
                       ),
                     ],
@@ -956,7 +962,7 @@ class _SettingsTile extends StatelessWidget {
                 Icon(
                   Icons.chevron_right_rounded, // LTR arrow
                   size: 24,
-                  color: theme.iconTheme.color?.withOpacity(0.6),
+                  color: textSecondary,
                 ),
               ],
             ),
@@ -983,7 +989,7 @@ class _GradientIconBadge extends StatelessWidget {
         gradient: LinearGradient(colors: gradient),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.10),
+            color: gradient.last.withValues(alpha: 0.35),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
@@ -1018,20 +1024,20 @@ class _LanguageTile extends StatelessWidget {
         title,
         style: theme.textTheme.titleSmall?.copyWith(
           fontWeight: FontWeight.w700,
-          color: isSelected ? theme.primaryColor : null,
+          color: isSelected ? AppColors.primary : null,
         ),
       ),
       subtitle: Text(
         subtitle,
         style: theme.textTheme.bodySmall?.copyWith(
           color: isSelected
-              ? theme.primaryColor.withValues(alpha: 0.75)
+              ? AppColors.primary.withValues(alpha: 0.75)
               : theme.textTheme.bodySmall?.color?.withValues(alpha: 0.75),
         ),
       ),
       trailing: Icon(
         isSelected ? Icons.check_circle : Icons.chevron_right_rounded,
-        color: isSelected ? theme.primaryColor : null,
+        color: isSelected ? AppColors.primary : null,
       ),
       onTap: onTap,
     );
@@ -1057,25 +1063,25 @@ class _ThemeTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return ListTile(
-      leading: Icon(icon, color: isSelected ? theme.primaryColor : null),
+      leading: Icon(icon, color: isSelected ? AppColors.primary : null),
       title: Text(
         title,
         style: theme.textTheme.titleSmall?.copyWith(
           fontWeight: FontWeight.w700,
-          color: isSelected ? theme.primaryColor : null,
+          color: isSelected ? AppColors.primary : null,
         ),
       ),
       subtitle: Text(
         subtitle,
         style: theme.textTheme.bodySmall?.copyWith(
           color: isSelected
-              ? theme.primaryColor.withValues(alpha: 0.75)
+              ? AppColors.primary.withValues(alpha: 0.75)
               : theme.textTheme.bodySmall?.color?.withValues(alpha: 0.75),
         ),
       ),
       trailing: Icon(
         isSelected ? Icons.check_circle : Icons.chevron_right_rounded,
-        color: isSelected ? theme.primaryColor : null,
+        color: isSelected ? AppColors.primary : null,
       ),
       onTap: onTap,
     );
@@ -1111,20 +1117,19 @@ class _ExpandableSettingsSectionState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final dividerColor =
+        isDark ? AppColors.dividerDark : AppColors.dividerLight;
+    final textSecondary =
+        isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(
-          color: isDark
-              ? Colors.white.withOpacity(0.08)
-              : Colors.black.withOpacity(0.05),
-          width: 1,
-        ),
+        side: BorderSide(color: dividerColor, width: 1),
       ),
-      color: isDark ? Colors.grey[850] : Colors.white,
+      color: isDark ? AppColors.cardDark : Colors.white,
       child: Column(
         children: [
           InkWell(
@@ -1152,6 +1157,9 @@ class _ExpandableSettingsSectionState
                           widget.title,
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w700,
+                            color: isDark
+                                ? AppColors.textPrimaryDark
+                                : AppColors.textPrimaryLight,
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -1160,8 +1168,7 @@ class _ExpandableSettingsSectionState
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.textTheme.bodySmall?.color
-                                ?.withOpacity(0.7),
+                            color: textSecondary,
                           ),
                         ),
                       ],
@@ -1174,7 +1181,7 @@ class _ExpandableSettingsSectionState
                     child: Icon(
                       Icons.keyboard_arrow_down_rounded,
                       size: 28,
-                      color: theme.iconTheme.color?.withOpacity(0.6),
+                      color: textSecondary,
                     ),
                   ),
                 ],
@@ -1187,14 +1194,7 @@ class _ExpandableSettingsSectionState
             child: _isExpanded
                 ? Container(
                     decoration: BoxDecoration(
-                      border: Border(
-                        top: BorderSide(
-                          color: isDark
-                              ? Colors.white.withOpacity(0.08)
-                              : Colors.black.withOpacity(0.05),
-                          width: 1,
-                        ),
-                      ),
+                      border: Border(top: BorderSide(color: dividerColor)),
                     ),
                     child: Column(children: widget.children),
                   )

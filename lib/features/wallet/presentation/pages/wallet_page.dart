@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 
+import 'package:snginepro/core/theme/app_colors.dart';
 import 'package:snginepro/core/theme/design_tokens.dart';
 import 'package:snginepro/features/wallet/application/bloc/wallet_action_cubit.dart';
 import 'package:snginepro/features/wallet/application/bloc/wallet_overview_bloc.dart';
@@ -149,6 +150,7 @@ class _WalletViewState extends State<_WalletView> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -213,8 +215,26 @@ class _WalletViewState extends State<_WalletView> {
               pinned: true,
               delegate: _WalletTabHeaderDelegate(
                 tabBar: TabBar(
-                  labelPadding: const EdgeInsets.symmetric(
-                    vertical: Spacing.sm,
+                  indicator: BoxDecoration(
+                    color: AppColors.primary.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(Radii.pill),
+                  ),
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  indicatorPadding: EdgeInsets.zero,
+                  dividerColor: Colors.transparent,
+                  overlayColor: WidgetStateProperty.all(Colors.transparent),
+                  splashBorderRadius: BorderRadius.circular(Radii.pill),
+                  labelColor: AppColors.primary,
+                  unselectedLabelColor: isDark
+                      ? Colors.white
+                      : AppColors.textSecondaryLight,
+                  labelStyle: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  unselectedLabelStyle: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
                   ),
                   tabs: [
                     Tab(text: 'transactions'.tr),
@@ -222,7 +242,10 @@ class _WalletViewState extends State<_WalletView> {
                   ],
                 ),
                 backgroundColor: theme.scaffoldBackgroundColor,
-                dividerColor: theme.dividerColor,
+                pillColor: isDark ? AppColors.surfaceDark : Colors.white,
+                pillShadow: isDark
+                    ? AppColors.darkShadow
+                    : AppColors.lightShadow,
               ),
             ),
           ],
@@ -248,18 +271,30 @@ class _WalletTabHeaderDelegate extends SliverPersistentHeaderDelegate {
   _WalletTabHeaderDelegate({
     required this.tabBar,
     required this.backgroundColor,
-    required this.dividerColor,
+    required this.pillColor,
+    required this.pillShadow,
   });
 
   final TabBar tabBar;
   final Color backgroundColor;
-  final Color dividerColor;
+  final Color pillColor;
+  final List<BoxShadow> pillShadow;
+
+  static const double _pillHeight = 48;
+  static const EdgeInsets _outerPadding = EdgeInsets.fromLTRB(
+    Spacing.lg,
+    Spacing.xs,
+    Spacing.lg,
+    Spacing.md,
+  );
 
   @override
-  double get minExtent => tabBar.preferredSize.height + 2;
+  double get minExtent =>
+      _pillHeight + _outerPadding.top + _outerPadding.bottom;
 
   @override
-  double get maxExtent => tabBar.preferredSize.height + 2;
+  double get maxExtent =>
+      _pillHeight + _outerPadding.top + _outerPadding.bottom;
 
   @override
   Widget build(
@@ -269,12 +304,18 @@ class _WalletTabHeaderDelegate extends SliverPersistentHeaderDelegate {
   ) {
     return ColoredBox(
       color: backgroundColor,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          tabBar,
-          Divider(height: 1, color: dividerColor),
-        ],
+      child: Padding(
+        padding: _outerPadding,
+        child: Container(
+          height: _pillHeight,
+          padding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            color: pillColor,
+            borderRadius: BorderRadius.circular(Radii.pill),
+            boxShadow: pillShadow,
+          ),
+          child: tabBar,
+        ),
       ),
     );
   }
@@ -283,5 +324,6 @@ class _WalletTabHeaderDelegate extends SliverPersistentHeaderDelegate {
   bool shouldRebuild(_WalletTabHeaderDelegate old) =>
       old.tabBar != tabBar ||
       old.backgroundColor != backgroundColor ||
-      old.dividerColor != dividerColor;
+      old.pillColor != pillColor ||
+      old.pillShadow != pillShadow;
 }

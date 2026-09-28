@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:snginepro/core/theme/app_colors.dart';
 import 'package:snginepro/core/theme/design_tokens.dart';
+import 'package:snginepro/core/theme/panchit_auth_ui.dart';
 import 'package:snginepro/features/competitions/data/models/competition_models.dart';
 import 'package:snginepro/features/competitions/data/services/competition_api_service.dart';
 import 'package:snginepro/features/competitions/presentation/pages/competition_detail_page.dart';
@@ -67,7 +69,9 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
       _liveError = null;
     });
     try {
-      final items = await context.read<CompetitionApiService>().getLiveCompetitions();
+      final items = await context
+          .read<CompetitionApiService>()
+          .getLiveCompetitions();
       if (!mounted) return;
       setState(() {
         _liveCompetitions = items;
@@ -115,7 +119,9 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
       _pastError = null;
     });
     try {
-      final items = await context.read<CompetitionApiService>().getPastWinners();
+      final items = await context
+          .read<CompetitionApiService>()
+          .getPastWinners();
       if (!mounted) return;
       setState(() {
         _pastCompetitions = items;
@@ -153,14 +159,18 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
       _notifyingCompetitionIds = {..._notifyingCompetitionIds, competition.id};
     });
     try {
-      await context.read<CompetitionApiService>().notifyCompetition(competition.id);
+      await context.read<CompetitionApiService>().notifyCompetition(
+        competition.id,
+      );
       if (!mounted) return;
       setState(() {
-        _upcomingCompetitions = _upcomingCompetitions.map((item) {
-          return item.id == competition.id
-              ? item.copyWith(isNotifyEnabled: true)
-              : item;
-        }).toList(growable: false);
+        _upcomingCompetitions = _upcomingCompetitions
+            .map((item) {
+              return item.id == competition.id
+                  ? item.copyWith(isNotifyEnabled: true)
+                  : item;
+            })
+            .toList(growable: false);
       });
       _showMessage('competition_reminder_enabled'.tr);
     } catch (error) {
@@ -188,9 +198,9 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
   }
 
   void _openMyCompetitions() {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => const MyCompetitionsPage()),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const MyCompetitionsPage()));
   }
 
   void _showMessage(String message, {bool isError = false}) {
@@ -209,9 +219,7 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
     final theme = Theme.of(context);
     return Scaffold(
       body: NestedScrollView(
-        headerSliverBuilder: (context, _) => [
-          _buildSliverHeader(theme),
-        ],
+        headerSliverBuilder: (context, _) => [_buildSliverHeader(theme)],
         body: Column(
           children: [
             _buildFilterBar(theme),
@@ -232,7 +240,9 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
                       emptyIcon: Iconsax.flash_1,
                       emptyAccentColor: const Color(0xFF14B8A6),
                       filteredEmptyTitle: _selectedCategory != null
-                          ? 'hub_no_filtered_competitions'.trParams({'category': _selectedCategory!})
+                          ? 'hub_no_filtered_competitions'.trParams({
+                              'category': _selectedCategory!,
+                            })
                           : null,
                       filteredEmptyMessage: _selectedCategory != null
                           ? 'hub_no_filtered_msg'.tr
@@ -242,7 +252,9 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
                           : null,
                       cardBuilder: (c) => _CompetitionHubCard(
                         competition: c,
-                        primaryLabel: c.isJoined ? 'competition_action_view_my_entry'.tr : 'hub_join_now'.tr,
+                        primaryLabel: c.isJoined
+                            ? 'competition_action_view_my_entry'.tr
+                            : 'hub_join_now'.tr,
                         onTap: () => _openCompetitionDetails(c),
                         onPrimaryTap: () => _openCompetitionDetails(c),
                         showCountdown: true,
@@ -262,7 +274,9 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
                       emptyIcon: Iconsax.calendar_1,
                       emptyAccentColor: const Color(0xFF6366F1),
                       filteredEmptyTitle: _selectedCategory != null
-                          ? 'hub_no_filtered_competitions'.trParams({'category': _selectedCategory!})
+                          ? 'hub_no_filtered_competitions'.trParams({
+                              'category': _selectedCategory!,
+                            })
                           : null,
                       filteredEmptyMessage: _selectedCategory != null
                           ? 'hub_no_filtered_msg'.tr
@@ -275,12 +289,14 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
                         primaryLabel: _notifyingCompetitionIds.contains(c.id)
                             ? 'hub_please_wait'.tr
                             : c.isNotifyEnabled
-                                ? 'hub_reminder_set'.tr
-                                : 'competition_notify_me'.tr,
+                            ? 'hub_reminder_set'.tr
+                            : 'competition_notify_me'.tr,
                         onTap: () => _openCompetitionDetails(c),
                         onPrimaryTap: () {
                           if (_notifyingCompetitionIds.contains(c.id) ||
-                              c.isNotifyEnabled) { return; }
+                              c.isNotifyEnabled) {
+                            return;
+                          }
                           _handleNotifyMe(c);
                         },
                         showRegistrationStart: true,
@@ -300,7 +316,9 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
                       emptyIcon: Iconsax.crown_1,
                       emptyAccentColor: const Color(0xFFF59E0B),
                       filteredEmptyTitle: _selectedCategory != null
-                          ? 'hub_no_filtered_competitions'.trParams({'category': _selectedCategory!})
+                          ? 'hub_no_filtered_competitions'.trParams({
+                              'category': _selectedCategory!,
+                            })
                           : null,
                       filteredEmptyMessage: _selectedCategory != null
                           ? 'hub_no_filtered_msg'.tr
@@ -331,20 +349,23 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
   Widget _buildSliverHeader(ThemeData theme) {
     final liveCount = _liveCompetitions.length;
     final upcomingCount = _upcomingCompetitions.length;
-
+    final isDark = theme.brightness == Brightness.dark;
+    const LinearGradient horizontalBrandGradient = LinearGradient(
+      colors: [Color(0xFF6C00FF), Color(0xFFFF2E88)],
+    );
     return SliverAppBar(
-      expandedHeight: 160,
+      expandedHeight: 145,
       pinned: true,
       stretch: true,
       elevation: 0,
-      backgroundColor: theme.colorScheme.primary,
-      foregroundColor: Colors.white,
+      backgroundColor: PanchitAuthColors.background(isDark),
+      foregroundColor: isDark ? Colors.white : AppColors.textPrimaryLight,
       actions: [
         IconButton(
           tooltip: 'hub_my_competitions_tooltip'.tr,
           onPressed: _openMyCompetitions,
           icon: const Icon(Icons.person_outline),
-          color: Colors.white,
+          color: isDark ? Colors.white : AppColors.textPrimaryLight,
         ),
       ],
       flexibleSpace: FlexibleSpaceBar(
@@ -355,28 +376,19 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
             // Gradient background
             DecoratedBox(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    theme.colorScheme.primary,
-                    theme.colorScheme.secondary,
-                    theme.colorScheme.primary.withValues(alpha: 0.85),
-                  ],
-                  stops: const [0.0, 0.55, 1.0],
-                ),
+                color: PanchitAuthColors.background(isDark),
               ),
             ),
             // Decorative blurred circle
             Positioned(
-              right: -40,
-              top: -20,
+              right: -45,
+              top: -35,
               child: Container(
-                width: 180,
-                height: 180,
+                width: 170,
+                height: 170,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withValues(alpha: 0.07),
+                  color: Colors.pinkAccent.withValues(alpha: 0.10),
                 ),
               ),
             ),
@@ -403,14 +415,22 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
                 children: [
                   Row(
                     children: [
-                      const Icon(Iconsax.cup, size: 22, color: Colors.white),
+                      Icon(
+                        Iconsax.cup,
+                        size: 22,
+                        color: isDark
+                            ? Colors.white
+                            : AppColors.textPrimaryLight,
+                      ),
                       const SizedBox(width: Spacing.sm),
                       Text(
                         'hub_competitions_title'.tr,
                         style: theme.textTheme.headlineSmall?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: -0.5,
+                          color: isDark
+                              ? Colors.white
+                              : AppColors.textPrimaryLight,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -0.3,
                         ),
                       ),
                     ],
@@ -421,11 +441,13 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
                       _HeaderStatBadge(
                         label: '$liveCount ${'hub_live'.tr}',
                         icon: Iconsax.flash_1,
+                        isDark: isDark,
                       ),
                       const SizedBox(width: Spacing.sm),
                       _HeaderStatBadge(
                         label: '$upcomingCount ${'hub_tab_upcoming'.tr}',
                         icon: Iconsax.calendar_1,
+                        isDark: isDark,
                       ),
                     ],
                   ),
@@ -437,12 +459,16 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
         // Collapsed title
         title: Row(
           children: [
-            Icon(Iconsax.cup, size: 18, color: Colors.white),
+            Icon(
+              Iconsax.cup,
+              size: 18,
+              color: isDark ? Colors.white : AppColors.textPrimaryLight,
+            ),
             const SizedBox(width: Spacing.sm),
             Text(
               'hub_competitions_title'.tr,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: isDark ? Colors.white : AppColors.textPrimaryLight,
                 fontWeight: FontWeight.w700,
                 fontSize: 18,
               ),
@@ -458,64 +484,138 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
         collapseMode: CollapseMode.pin,
       ),
       bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(48),
-        child: ColoredBox(
-          color: theme.colorScheme.primary,
-          child: TabBar(
-            controller: _tabController,
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.white.withValues(alpha: 0.6),
-            indicatorColor: Colors.white,
-            indicatorWeight: 3,
-            labelStyle: theme.textTheme.labelLarge?.copyWith(
-              fontWeight: FontWeight.w700,
-            ),
-            unselectedLabelStyle: theme.textTheme.labelLarge,
-            tabs: [
-              Tab(text: 'hub_tab_live_now'.tr),
-              Tab(text: 'hub_tab_upcoming'.tr),
-              Tab(text: 'hub_tab_past_winners'.tr),
-            ],
+        preferredSize: const Size.fromHeight(56),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(
+            Spacing.lg,
+            0,
+            Spacing.lg,
+            Spacing.sm,
           ),
+          child: _buildHubTabBar(isDark, theme),
         ),
       ),
+    );
+  }
+
+  Widget _buildHubTabBar(bool isDark, ThemeData theme) {
+    final tabs = [
+      (icon: Iconsax.flash_1, label: 'hub_tab_live_now'.tr),
+      (icon: Iconsax.calendar_1, label: 'hub_tab_upcoming'.tr),
+      (icon: Iconsax.crown_1, label: 'hub_tab_past_winners'.tr),
+    ];
+    final unselectedColor = isDark
+        ? Colors.white.withValues(alpha: 0.6)
+        : Colors.black.withValues(alpha: 0.6);
+
+    return AnimatedBuilder(
+      animation: _tabController,
+      builder: (context, _) {
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(Radii.pill),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+            child: Container(
+              height: 44,
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: isDark ? 0.10 : 0.35),
+                borderRadius: BorderRadius.circular(Radii.pill),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.18)),
+              ),
+              child: Row(
+                children: List.generate(tabs.length, (index) {
+                  final tab = tabs[index];
+                  final isSelected = _tabController.index == index;
+
+                  return Expanded(
+                    child: GestureDetector(
+                      onTap: () => _tabController.animateTo(index),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 220),
+                        curve: Curves.easeInOut,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          gradient: isSelected
+                              ? AppColors.primaryGradient
+                              : null,
+                          borderRadius: BorderRadius.circular(Radii.pill),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              tab.icon,
+                              size: 15,
+                              color: isSelected
+                                  ? Colors.white
+                                  : unselectedColor,
+                            ),
+                            const SizedBox(width: 6),
+                            Flexible(
+                              child: Text(
+                                tab.label,
+                                overflow: TextOverflow.ellipsis,
+                                style: theme.textTheme.labelMedium?.copyWith(
+                                  color: isSelected
+                                      ? Colors.white
+                                      : unselectedColor,
+                                  fontWeight: isSelected
+                                      ? FontWeight.w700
+                                      : FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
   // ── Filter bar ────────────────────────────────────────────────────────────
 
   Widget _buildFilterBar(ThemeData theme) {
+    final isDark = theme.brightness == Brightness.dark;
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: Spacing.lg,
-        vertical: Spacing.xs,
-      ),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        border: Border(
-          bottom: BorderSide(
-            color: theme.dividerColor,
-            width: 0.5,
-          ),
-        ),
-      ),
+      color: theme.scaffoldBackgroundColor,
+      padding: const EdgeInsets.fromLTRB(Spacing.lg, 12, Spacing.lg, 8),
       child: Row(
         children: [
-          Icon(
-            Icons.tune_outlined,
-            size: 16,
-            color: theme.colorScheme.onSurfaceVariant,
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: theme.colorScheme.primary.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              Icons.tune_rounded,
+              size: 18,
+              color: isDark
+                  ? AppColors.textPrimaryDark
+                  : AppColors.textPrimaryLight,
+            ),
           ),
-          const SizedBox(width: Spacing.sm),
+          const SizedBox(width: 10),
+
           Expanded(
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
                   _buildCategoryChip(theme),
-                  const SizedBox(width: Spacing.xs),
+                  const SizedBox(width: 8),
                   _sortChip(_SortField.date, 'hub_sort_date'.tr, theme),
-                  const SizedBox(width: Spacing.xs),
+                  const SizedBox(width: 8),
                   _sortChip(_SortField.price, 'hub_sort_price'.tr, theme),
                 ],
               ),
@@ -544,6 +644,7 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
   }
 
   Widget _buildCategoryChip(ThemeData theme) {
+    final isDark = theme.brightness == Brightness.dark;
     final hasCategory = _selectedCategory != null;
     return FilterChip(
       label: Text(hasCategory ? _selectedCategory! : 'competition_category'.tr),
@@ -559,6 +660,9 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
           : Icon(
               hasCategory ? Icons.label : Icons.filter_list_outlined,
               size: 13,
+              color: isDark
+                  ? AppColors.textPrimaryDark
+                  : AppColors.textPrimaryLight,
             ),
       onSelected: _categoriesLoading ? null : (_) => _showCategoryPicker(),
       onDeleted: hasCategory
@@ -643,8 +747,9 @@ class _CompetitionsHubPageState extends State<CompetitionsHubPage>
       int cmp;
       switch (field) {
         case _SortField.date:
-          cmp = (a.registrationStart ?? DateTime(0))
-              .compareTo(b.registrationStart ?? DateTime(0));
+          cmp = (a.registrationStart ?? DateTime(0)).compareTo(
+            b.registrationStart ?? DateTime(0),
+          );
         case _SortField.price:
           cmp = (a.entryFee ?? 0).compareTo(b.entryFee ?? 0);
       }
@@ -713,17 +818,18 @@ class _CompetitionHubCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final hasBanner = (competition.bannerUrl ?? '').isNotEmpty;
+    final borderColor = isDark ? AppColors.dividerDark : AppColors.dividerLight;
+    final cardColor = isDark ? AppColors.cardDark : Colors.white;
 
     return Card(
       elevation: 0,
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(Radii.xLarge),
-        side: BorderSide(
-          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
-        ),
+        borderRadius: BorderRadius.circular(18),
+        side: BorderSide(color: borderColor),
       ),
       child: InkWell(
         onTap: onTap,
@@ -732,7 +838,7 @@ class _CompetitionHubCard extends StatelessWidget {
           children: [
             // ── Banner section ─────────────────────────────────────────────
             AspectRatio(
-              aspectRatio: 16 / 7,
+              aspectRatio: 16 / 6.5,
               child: Stack(
                 fit: StackFit.expand,
                 children: [
@@ -741,12 +847,25 @@ class _CompetitionHubCard extends StatelessWidget {
                     Image.network(
                       competition.bannerUrl!,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => _buildFallback(theme),
+                      errorBuilder: (_, __, ___) => _buildFallback(context),
                       loadingBuilder: (_, child, progress) =>
-                          progress == null ? child : _buildFallback(theme),
+                          progress == null ? child : _buildFallback(context),
                     )
                   else
-                    _buildFallback(theme),
+                    _buildFallback(context),
+
+                  // Darken the photo slightly so the top badges stay legible
+                  if (hasBanner)
+                    const DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                          stops: [0.0, 0.7],
+                          colors: [Color(0x99000000), Colors.transparent],
+                        ),
+                      ),
+                    ),
 
                   // Bottom gradient for text legibility
                   const DecoratedBox(
@@ -775,6 +894,7 @@ class _CompetitionHubCard extends StatelessWidget {
                       child: _GlassChip(
                         label: 'joined'.tr,
                         icon: Icons.check_circle_outline,
+                        isDark: isDark || hasBanner,
                       ),
                     ),
 
@@ -788,20 +908,41 @@ class _CompetitionHubCard extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         if ((competition.category ?? '').isNotEmpty)
-                          _GlassChip(label: competition.category!),
-                        const SizedBox(height: 4),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 5,
+                            ),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: borderColor),
+                              boxShadow: isDark
+                                  ? AppColors.darkShadow
+                                  : AppColors.lightShadow,
+                              color: cardColor,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              competition.category!,
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                color: isDark
+                                    ? AppColors.textPrimaryDark
+                                    : AppColors.textPrimaryLight,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+
+                        const SizedBox(height: 8),
+
                         Text(
                           competition.title,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                          style: theme.textTheme.titleLarge?.copyWith(
                             color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w800,
-                            height: 1.2,
-                            shadows: [
-                              Shadow(blurRadius: 8, color: Colors.black54),
-                            ],
+                            fontSize: 19,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: -0.3,
                           ),
                         ),
                       ],
@@ -836,7 +977,6 @@ class _CompetitionHubCard extends StatelessWidget {
                           competition.currencySymbol,
                         ),
                         tooltip: 'competition_prize_pool'.tr,
-                        highlight: true,
                       ),
                       if (competition.totalParticipants != null) ...[
                         const SizedBox(width: Spacing.sm),
@@ -878,25 +1018,37 @@ class _CompetitionHubCard extends StatelessWidget {
                     const SizedBox(height: Spacing.sm),
                     const Divider(height: 1),
                     const SizedBox(height: Spacing.sm),
-                    ...winnerPreview!.take(2).map(
-                          (w) => CompetitionWinnerTile(winner: w),
-                        ),
+                    ...winnerPreview!
+                        .take(2)
+                        .map((w) => CompetitionWinnerTile(winner: w)),
                   ],
 
                   const SizedBox(height: Spacing.sm),
 
                   // CTA button
-                  SizedBox(
+                  Container(
                     width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: onPrimaryTap,
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(Radii.large),
+                    height: 48,
+                    decoration: BoxDecoration(
+                      gradient: AppColors.verticalBrandGradient,
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(14),
+                        onTap: onPrimaryTap,
+                        child: Center(
+                          child: Text(
+                            primaryLabel,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                         ),
                       ),
-                      child: Text(primaryLabel),
                     ),
                   ),
                 ],
@@ -908,25 +1060,29 @@ class _CompetitionHubCard extends StatelessWidget {
     );
   }
 
-  Widget _buildFallback(ThemeData theme) {
+  Widget _buildFallback(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            theme.colorScheme.primary,
-            theme.colorScheme.secondary,
-            theme.colorScheme.primary.withValues(alpha: 0.7),
-          ],
-          stops: const [0.0, 0.55, 1.0],
+          colors: isDark
+              ? [const Color(0xFF171225), const Color(0xFF241033)]
+              : [const Color(0xFFF7F3FF), const Color(0xFFFFF2F7)],
         ),
       ),
       child: Center(
-        child: Icon(
-          Iconsax.cup,
-          size: 48,
-          color: Colors.white.withValues(alpha: 0.3),
+        child: Container(
+          width: 54,
+          height: 54,
+          decoration: BoxDecoration(
+            color: theme.colorScheme.primary.withValues(alpha: 0.10),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(Iconsax.cup, size: 28, color: theme.colorScheme.primary),
         ),
       ),
     );
@@ -995,10 +1151,7 @@ class _CompetitionsEmptyState extends StatelessWidget {
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [
-                        color,
-                        color.withValues(alpha: 0.75),
-                      ],
+                      colors: [color, color.withValues(alpha: 0.75)],
                     ),
                     boxShadow: [
                       BoxShadow(
@@ -1085,13 +1238,20 @@ class _CompetitionsEmptyState extends StatelessWidget {
 // ── Small reusable widgets ────────────────────────────────────────────────────
 
 class _GlassChip extends StatelessWidget {
-  const _GlassChip({required this.label, this.icon});
+  const _GlassChip({required this.label, this.icon, this.isDark = true});
 
   final String label;
   final IconData? icon;
 
+  /// Whether this chip sits over a dark surface (a photo or the dark
+  /// fallback gradient) and should use light glass + white content, or a
+  /// light surface (the light fallback gradient) and needs dark content.
+  final bool isDark;
+
   @override
   Widget build(BuildContext context) {
+    final contentColor = isDark ? Colors.white : AppColors.textPrimaryLight;
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(Radii.pill),
       child: BackdropFilter(
@@ -1099,21 +1259,27 @@ class _GlassChip extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.18),
+            color: isDark
+                ? Colors.white.withValues(alpha: 0.18)
+                : Colors.white.withValues(alpha: 0.6),
             borderRadius: BorderRadius.circular(Radii.pill),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.28)),
+            border: Border.all(
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.28)
+                  : AppColors.dividerLight,
+            ),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               if (icon != null) ...[
-                Icon(icon, size: 11, color: Colors.white),
+                Icon(icon, size: 11, color: contentColor),
                 const SizedBox(width: 4),
               ],
               Text(
                 label,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: contentColor,
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
                 ),
@@ -1142,12 +1308,14 @@ class _StatChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final color = highlight
         ? theme.colorScheme.primary
-        : theme.colorScheme.onSurface.withValues(alpha: 0.6);
+        : theme.colorScheme.onSurface.withValues(alpha: 0.65);
+
     final bg = highlight
-        ? theme.colorScheme.primary.withValues(alpha: 0.08)
-        : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.6);
+        ? theme.colorScheme.primary.withValues(alpha: 0.09)
+        : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.55);
 
     return Tooltip(
       message: tooltip,
@@ -1160,7 +1328,7 @@ class _StatChip extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 13, color: color),
+            Icon(icon, size: 14, color: color),
             const SizedBox(width: 4),
             Text(
               label,
@@ -1177,13 +1345,20 @@ class _StatChip extends StatelessWidget {
 }
 
 class _HeaderStatBadge extends StatelessWidget {
-  const _HeaderStatBadge({required this.label, required this.icon});
+  const _HeaderStatBadge({
+    required this.label,
+    required this.icon,
+    required this.isDark,
+  });
 
   final String label;
   final IconData icon;
+  final bool isDark;
 
   @override
   Widget build(BuildContext context) {
+    final contentColor = isDark ? Colors.white : AppColors.textPrimaryLight;
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(Radii.pill),
       child: BackdropFilter(
@@ -1191,19 +1366,25 @@ class _HeaderStatBadge extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.15),
+            color: isDark
+                ? Colors.white.withValues(alpha: 0.15)
+                : Colors.white.withValues(alpha: 0.55),
             borderRadius: BorderRadius.circular(Radii.pill),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.25)),
+            border: Border.all(
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.25)
+                  : AppColors.dividerLight,
+            ),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon, size: 13, color: Colors.white),
+              Icon(icon, size: 13, color: contentColor),
               const SizedBox(width: 5),
               Text(
                 label,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: contentColor,
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
                 ),
@@ -1249,8 +1430,9 @@ class _CategoryPickerSheet extends StatelessWidget {
                 Expanded(
                   child: Text(
                     'hub_filter_by_category'.tr,
-                    style: theme.textTheme.titleMedium
-                        ?.copyWith(fontWeight: FontWeight.w700),
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
                 if (isLoading)
@@ -1284,8 +1466,9 @@ class _CategoryPickerSheet extends StatelessWidget {
                     title: Text('hub_all_categories'.tr),
                     selected: selectedCategory == null,
                     selectedColor: theme.colorScheme.primary,
-                    selectedTileColor:
-                        theme.colorScheme.primary.withValues(alpha: 0.08),
+                    selectedTileColor: theme.colorScheme.primary.withValues(
+                      alpha: 0.08,
+                    ),
                     trailing: selectedCategory == null
                         ? Icon(Icons.check, color: theme.colorScheme.primary)
                         : null,
@@ -1300,8 +1483,9 @@ class _CategoryPickerSheet extends StatelessWidget {
                       title: Text(cat),
                       selected: selectedCategory == cat,
                       selectedColor: theme.colorScheme.primary,
-                      selectedTileColor:
-                          theme.colorScheme.primary.withValues(alpha: 0.08),
+                      selectedTileColor: theme.colorScheme.primary.withValues(
+                        alpha: 0.08,
+                      ),
                       trailing: selectedCategory == cat
                           ? Icon(Icons.check, color: theme.colorScheme.primary)
                           : null,

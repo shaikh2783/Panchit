@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'professional_live_stream_wrapper.dart';
 import 'live_stream_settings_page.dart';
 
@@ -9,15 +10,15 @@ class LiveStreamOptionsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text(
-          'البث المباشر',
-          style: TextStyle(
+        title: Text(
+          'live_options_title'.tr,
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -31,7 +32,7 @@ class LiveStreamOptionsPage extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 20),
-            
+
             // Header
             Container(
               width: double.infinity,
@@ -75,16 +76,16 @@ class LiveStreamOptionsPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  const Text(
-                    'ابدأ البث المباشر',
-                    style: TextStyle(
+                  Text(
+                    'live_options_hero_title'.tr,
+                    style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'شارك لحظاتك مع المتابعين في الوقت الفعلي',
+                    'live_options_hero_subtitle'.tr,
                     style: TextStyle(
                       fontSize: 16,
                       color: isDark ? Colors.grey[400] : Colors.grey[600],
@@ -94,14 +95,14 @@ class LiveStreamOptionsPage extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 32),
-            
+
             // Quick Start Option
             _buildOptionCard(
               context: context,
-              title: 'بث سريع',
-              subtitle: 'ابدأ البث فوراً بإعدادات افتراضية',
+              title: 'live_options_quick_title'.tr,
+              subtitle: 'live_options_quick_subtitle'.tr,
               icon: Icons.flash_on,
               gradient: const LinearGradient(
                 colors: [Color(0xFF4CAF50), Color(0xFF45A049)],
@@ -114,14 +115,14 @@ class LiveStreamOptionsPage extends StatelessWidget {
                 );
               },
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Advanced Options
             _buildOptionCard(
               context: context,
-              title: 'إعدادات متقدمة',
-              subtitle: 'تخصيص جودة وإعدادات البث',
+              title: 'live_options_advanced_title'.tr,
+              subtitle: 'live_options_advanced_subtitle'.tr,
               icon: Icons.settings,
               gradient: LinearGradient(
                 colors: [
@@ -137,14 +138,14 @@ class LiveStreamOptionsPage extends StatelessWidget {
                 );
               },
             ),
-            
+
             const SizedBox(height: 16),
-            
-            // Scheduled Stream Option  
+
+            // Scheduled Stream Option
             _buildOptionCard(
               context: context,
-              title: 'جدولة البث',
-              subtitle: 'حدد موعد البث المستقبلي',
+              title: 'live_options_schedule_title'.tr,
+              subtitle: 'live_options_schedule_subtitle'.tr,
               icon: Icons.schedule,
               gradient: const LinearGradient(
                 colors: [Color(0xFF9C27B0), Color(0xFF7B1FA2)],
@@ -153,14 +154,14 @@ class LiveStreamOptionsPage extends StatelessWidget {
                 _showComingSoonDialog(context);
               },
             ),
-            
+
             const Spacer(),
-            
+
             // Tips
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: isDark 
+                color: isDark
                     ? Colors.white.withOpacity(0.03)
                     : Colors.grey.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
@@ -174,7 +175,7 @@ class LiveStreamOptionsPage extends StatelessWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      'تأكد من اتصال إنترنت قوي لأفضل جودة بث',
+                      'live_options_connection_tip'.tr,
                       style: TextStyle(
                         fontSize: 14,
                         color: isDark ? Colors.grey[300] : Colors.grey[700],
@@ -199,7 +200,7 @@ class LiveStreamOptionsPage extends StatelessWidget {
     required VoidCallback onTap,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Card(
       elevation: 8,
       shadowColor: Colors.black.withOpacity(0.1),
@@ -214,15 +215,15 @@ class LiveStreamOptionsPage extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             gradient: LinearGradient(
-              colors: isDark 
+              colors: isDark
                   ? [
-                      Colors.white.withOpacity(0.05),
-                      Colors.white.withOpacity(0.02),
-                    ]
+                Colors.white.withOpacity(0.05),
+                Colors.white.withOpacity(0.02),
+              ]
                   : [
-                      Colors.white,
-                      Colors.grey.withOpacity(0.05),
-                    ],
+                Colors.white,
+                Colors.grey.withOpacity(0.05),
+              ],
             ),
           ),
           child: Row(
@@ -286,12 +287,12 @@ class LiveStreamOptionsPage extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('قريباً'),
-        content: const Text('ميزة جدولة البث ستكون متاحة في التحديث القادم.'),
+        title: Text('coming_soon'.tr),
+        content: Text('live_options_schedule_coming_message'.tr),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('موافق'),
+            child: Text('ok'.tr),
           ),
         ],
       ),

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:snginepro/core/theme/app_colors.dart';
 import 'package:snginepro/features/reels/data/models/music_model.dart';
 import 'package:snginepro/features/reels/presentation/controllers/music_sheet_controller.dart';
 import 'package:snginepro/features/reels/presentation/pages/selected_music_sheet.dart';
@@ -59,7 +60,7 @@ class _MusicSheetBody extends StatelessWidget {
                         controller: controller.searchCtrl,
                         autofocus: true,
                         style: const TextStyle(color: Colors.white),
-                        cursorColor: const Color(0xFFE1306C),
+                        cursorColor: AppColors.brandPink,
                         decoration: InputDecoration(
                           hintText: 'search_sounds'.tr,
                           hintStyle: const TextStyle(color: Colors.white38),
@@ -87,7 +88,7 @@ class _MusicSheetBody extends StatelessWidget {
                       onTap: controller.onCancelSearch,
                       child: Text(
                         'cancel'.tr,
-                        style: const TextStyle(color: Color(0xFFE1306C)),
+                        style: const TextStyle(color: AppColors.brandPink),
                       ),
                     ),
                   ],
@@ -135,7 +136,7 @@ class _MusicSheetBody extends StatelessWidget {
                       ),
                       decoration: BoxDecoration(
                         color: selected
-                            ? const Color(0xFFE1306C)
+                            ? AppColors.brandPink
                             : Colors.white10,
                         borderRadius: BorderRadius.circular(20),
                       ),
@@ -162,7 +163,7 @@ class _MusicSheetBody extends StatelessWidget {
                   controller.exploreList.isEmpty &&
                   controller.searchList.isEmpty) {
                 return const Center(
-                  child: CircularProgressIndicator(color: Color(0xFFE1306C)),
+                  child: CircularProgressIndicator(color: AppColors.brandPink),
                 );
               }
 
@@ -312,7 +313,7 @@ class _MusicTile extends StatelessWidget {
             height: 24,
             child: CircularProgressIndicator(
               strokeWidth: 2,
-              color: Color(0xFFE1306C),
+              color: AppColors.brandPink,
             ),
           );
         }

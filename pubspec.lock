@@ -1328,6 +1328,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.28.0"
+  sandbox_digilocker_sdk:
+    dependency: "direct main"
+    description:
+      name: sandbox_digilocker_sdk
+      sha256: "67daf72b80fec5e095480620e87397fd237cd7b229e2ae0d19364962a0449a06"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   share_plus:
     dependency: "direct main"
     description:

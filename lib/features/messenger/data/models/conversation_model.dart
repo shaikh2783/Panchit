@@ -1,4 +1,5 @@
 import 'package:snginepro/main.dart';
+import 'chat_text_utils.dart';
 
 /// نموذج المحادثة - مطابق لـ Backend API
 class ConversationModel {
@@ -44,10 +45,13 @@ class ConversationModel {
     final conversationIdStr = _toStringOrNull(json['conversation_id']) ?? _toStringOrNull(json['id']) ?? '';
     
     // البحث عن نص آخر رسالة في عدة حقول محتملة
-    final lastMessage = _toStringOrNull(json['last_message_decoded']) ?? 
-                       _toStringOrNull(json['last_message']) ?? 
+    final rawLastMessage = _toStringOrNull(json['last_message_decoded']) ??
+                       _toStringOrNull(json['last_message']) ??
                        _toStringOrNull(json['message']) ??
                        _toStringOrNull(json['text']);
+    final lastMessage = rawLastMessage != null
+        ? sanitizeChatText(rawLastMessage)
+        : null;
     
     return ConversationModel(
       conversationId: conversationIdStr,

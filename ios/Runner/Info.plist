@@ -29,7 +29,7 @@
 				<string>Editor</string>
 				<key>CFBundleURLSchemes</key>
 				<array>
-				<string>com.googleusercontent.apps.655828953502-f2sds4bbkom2cbslkctolp3dh6r3uaco</string>
+					<string>com.googleusercontent.apps.655828953502-f2sds4bbkom2cbslkctolp3dh6r3uaco</string>
 				</array>
 			</dict>
 		</array>
@@ -264,16 +264,12 @@
 		<key>UIViewControllerBasedStatusBarAppearance</key>
 		<false/>
 		<key>NSCameraUsageDescription</key>
-        <string>Panchit uses the camera so you can take profile photos, record videos, and broadcast live video to other users.</string>
-
-        <key>NSMicrophoneUsageDescription</key>
-        <string>Panchit uses the microphone so viewers can hear you when you record a video, send a voice message, or start a live broadcast.</string>
-
-        <key>NSPhotoLibraryUsageDescription</key>
-        <string>Panchit accesses your photo library so you can select photos and videos to upload to your profile or share with other users.</string>
-
-        <key>NSLocationWhenInUseUsageDescription</key>
-        <string>Panchit uses your location while the app is open to show local content and users near your current area.</string>
-
+		<string>Panchit uses the camera so you can take profile photos, record videos, and broadcast live video to other users.</string>
+		<key>NSMicrophoneUsageDescription</key>
+		<string>Panchit uses the microphone so viewers can hear you when you record a video, send a voice message, or start a live broadcast.</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Panchit accesses your photo library so you can select photos and videos to upload to your profile or share with other users.</string>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>Panchit uses your location while the app is open to show local content and users near your current area.</string>
 	</dict>
 </plist>

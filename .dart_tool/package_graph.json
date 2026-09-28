@@ -5,7 +5,7 @@
   "packages": [
     {
       "name": "snginepro",
-      "version": "1.0.13+19",
+      "version": "1.0.15+20",
       "dependencies": [
         "agora_rtc_engine",
         "audio_waveforms",
@@ -51,6 +51,7 @@
         "qr_flutter",
         "razorpay_flutter",
         "record",
+        "sandbox_digilocker_sdk",
         "share_plus",
         "shared_preferences",
         "sign_in_with_apple",
@@ -122,6 +123,15 @@
         "stream_channel",
         "test_api",
         "vector_math"
+      ]
+    },
+    {
+      "name": "sandbox_digilocker_sdk",
+      "version": "1.0.1",
+      "dependencies": [
+        "flutter",
+        "flutter_inappwebview",
+        "url_launcher"
       ]
     },
     {
@@ -877,6 +887,19 @@
       ]
     },
     {
+      "name": "flutter_inappwebview",
+      "version": "6.1.5",
+      "dependencies": [
+        "flutter",
+        "flutter_inappwebview_android",
+        "flutter_inappwebview_ios",
+        "flutter_inappwebview_macos",
+        "flutter_inappwebview_platform_interface",
+        "flutter_inappwebview_web",
+        "flutter_inappwebview_windows"
+      ]
+    },
+    {
       "name": "ffmpeg_kit_flutter_platform_interface",
       "version": "0.2.1",
       "dependencies": [
@@ -1159,19 +1182,6 @@
         "flutter",
         "flutter_cache_manager",
         "flutter_widget_from_html_core"
-      ]
-    },
-    {
-      "name": "flutter_inappwebview",
-      "version": "6.1.5",
-      "dependencies": [
-        "flutter",
-        "flutter_inappwebview_android",
-        "flutter_inappwebview_ios",
-        "flutter_inappwebview_macos",
-        "flutter_inappwebview_platform_interface",
-        "flutter_inappwebview_web",
-        "flutter_inappwebview_windows"
       ]
     },
     {
@@ -1897,6 +1907,57 @@
       ]
     },
     {
+      "name": "flutter_inappwebview_windows",
+      "version": "0.6.0",
+      "dependencies": [
+        "flutter",
+        "flutter_inappwebview_platform_interface"
+      ]
+    },
+    {
+      "name": "flutter_inappwebview_web",
+      "version": "1.1.2",
+      "dependencies": [
+        "flutter",
+        "flutter_inappwebview_platform_interface",
+        "flutter_web_plugins",
+        "web"
+      ]
+    },
+    {
+      "name": "flutter_inappwebview_macos",
+      "version": "1.1.2",
+      "dependencies": [
+        "flutter",
+        "flutter_inappwebview_platform_interface"
+      ]
+    },
+    {
+      "name": "flutter_inappwebview_ios",
+      "version": "1.1.2",
+      "dependencies": [
+        "flutter",
+        "flutter_inappwebview_platform_interface"
+      ]
+    },
+    {
+      "name": "flutter_inappwebview_android",
+      "version": "1.1.3",
+      "dependencies": [
+        "flutter",
+        "flutter_inappwebview_platform_interface"
+      ]
+    },
+    {
+      "name": "flutter_inappwebview_platform_interface",
+      "version": "1.3.0+1",
+      "dependencies": [
+        "flutter",
+        "flutter_inappwebview_internal_annotations",
+        "plugin_platform_interface"
+      ]
+    },
+    {
       "name": "stream_transform",
       "version": "2.1.1",
       "dependencies": []
@@ -1965,57 +2026,6 @@
         "provider",
         "video_player",
         "wakelock_plus"
-      ]
-    },
-    {
-      "name": "flutter_inappwebview_windows",
-      "version": "0.6.0",
-      "dependencies": [
-        "flutter",
-        "flutter_inappwebview_platform_interface"
-      ]
-    },
-    {
-      "name": "flutter_inappwebview_web",
-      "version": "1.1.2",
-      "dependencies": [
-        "flutter",
-        "flutter_inappwebview_platform_interface",
-        "flutter_web_plugins",
-        "web"
-      ]
-    },
-    {
-      "name": "flutter_inappwebview_macos",
-      "version": "1.1.2",
-      "dependencies": [
-        "flutter",
-        "flutter_inappwebview_platform_interface"
-      ]
-    },
-    {
-      "name": "flutter_inappwebview_ios",
-      "version": "1.1.2",
-      "dependencies": [
-        "flutter",
-        "flutter_inappwebview_platform_interface"
-      ]
-    },
-    {
-      "name": "flutter_inappwebview_android",
-      "version": "1.1.3",
-      "dependencies": [
-        "flutter",
-        "flutter_inappwebview_platform_interface"
-      ]
-    },
-    {
-      "name": "flutter_inappwebview_platform_interface",
-      "version": "1.3.0+1",
-      "dependencies": [
-        "flutter",
-        "flutter_inappwebview_internal_annotations",
-        "plugin_platform_interface"
       ]
     },
     {
@@ -2106,6 +2116,11 @@
       "dependencies": []
     },
     {
+      "name": "flutter_inappwebview_internal_annotations",
+      "version": "1.2.0",
+      "dependencies": []
+    },
+    {
       "name": "wakelock_plus",
       "version": "1.4.0",
       "dependencies": [
@@ -2118,11 +2133,6 @@
         "web",
         "win32"
       ]
-    },
-    {
-      "name": "flutter_inappwebview_internal_annotations",
-      "version": "1.2.0",
-      "dependencies": []
     },
     {
       "name": "dbus",

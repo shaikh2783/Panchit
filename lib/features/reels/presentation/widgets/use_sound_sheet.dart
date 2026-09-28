@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:snginepro/core/theme/app_colors.dart';
 import 'package:snginepro/features/feed/data/models/post.dart';
 import 'package:snginepro/features/reels/data/models/music_model.dart';
 import 'package:snginepro/features/reels/data/services/music_api_service.dart';
@@ -93,8 +94,8 @@ class _UseSoundSheetBodyState extends State<_UseSoundSheetBody> {
                     shape: BoxShape.circle,
                     gradient: LinearGradient(
                       colors: [
-                        const Color(0xFFE1306C).withOpacity(0.8),
-                        const Color(0xFFE1306C).withOpacity(0.4),
+                        AppColors.brandPink.withOpacity(0.8),
+                        AppColors.brandPink.withOpacity(0.4),
                       ],
                     ),
                   ),
@@ -150,7 +151,7 @@ class _UseSoundSheetBodyState extends State<_UseSoundSheetBody> {
                     : const Icon(Icons.videocam),
                 label: Text('use_this_sound'.tr),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFE1306C),
+                  backgroundColor: AppColors.brandPink,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(

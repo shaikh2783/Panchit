@@ -1199,7 +1199,7 @@ const Map<String, String> hiIN = {
   // Monetization Payments Page
   'your_balance': 'आपका बैलेंस',
   'withdrawal_request': 'निकासी अनुरोध',
-  'amount_usd': 'राशि (USD)',
+  'amount_usd': 'राशि',
   'minimum_withdrawal_amount': 'न्यूनतम निकासी राशि ₹50 है',
   'payment_method': 'भुगतान विधि',
   'transfer_to': 'ट्रांसफर करें',
@@ -2555,6 +2555,10 @@ const Map<String, String> hiIN = {
   'google_sign_in_disabled':
   'Google साइन-इन वर्तमान में अक्षम है',
   'google_sign_in_failed': 'Google साइन-इन विफल',
+  'i_agree_to': 'मैं सहमत हूं',
+  'terms_and_conditions': 'नियम और शर्तें',
+  'and': 'और',
+  'privacy_policy': 'गोपनीयता नीति',
 
 // Onboarding
   'onboarding_connect_title': 'मित्रों से जुड़ें',
@@ -3011,6 +3015,20 @@ const Map<String, String> hiIN = {
   "competition_opens_in": "खुलती है",
   "competition_opening_soon": "जल्द खुलेगी",
   "competition_rank_prefix": "रैंक #",
+
+  // Competition KYC gate
+  "kyc_required_title": "पहचान सत्यापन आवश्यक",
+  "kyc_required_message": "प्रतियोगिताओं में भाग लेने के लिए, कृपया आधार का उपयोग करके अपनी KYC पूरी करें।",
+  "kyc_verify_aadhaar": "आधार सत्यापित करें",
+  "kyc_not_now": "अभी नहीं",
+  "kyc_status_check_failed": "KYC स्थिति जांचने में असमर्थ। कृपया पुनः प्रयास करें।",
+  "kyc_session_failed": "आधार सत्यापन शुरू करने में असमर्थ। कृपया पुनः प्रयास करें।",
+  "kyc_verification_failed": "आधार सत्यापन की पुष्टि नहीं हो सकी। कृपया पुनः प्रयास करें।",
+  "kyc_config_missing": "आधार सत्यापन अभी उपलब्ध नहीं है।",
+  "kyc_consent_title": "आधार विवरण साझा करें",
+  "kyc_consent_message": "Panchit आपकी पहचान सत्यापित करने के लिए DigiLocker का उपयोग करता है। आपका आधार OTP और विवरण DigiLocker द्वारा संभाले जाते हैं, Panchit द्वारा नहीं।",
+  "kyc_consent_checkbox_label": "मैं KYC सत्यापन के लिए DigiLocker के माध्यम से अपना आधार विवरण साझा करने के लिए सहमत हूं।",
+
 // Reels module
   'use_camera_music_filters': 'म्यूज़िक और फ़िल्टर के साथ कैमरा इस्तेमाल करें',
   'upload_from_gallery': 'गैलरी से अपलोड करें',

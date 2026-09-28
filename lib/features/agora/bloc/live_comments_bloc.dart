@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:get/get.dart';
 
 import '../data/models/live_stream_models.dart';
 import '../data/api_service/live_stream_api_service.dart';
@@ -218,10 +219,10 @@ class LiveCommentsBloc extends Bloc<LiveCommentsEvent, LiveCommentsState> {
           metadata: metadata,
         ));
       } else {
-        emit(LiveCommentsError(message: result['message'] ?? 'خطأ في تحميل التعليقات'));
+        emit(LiveCommentsError(message: result['message'] ?? 'live_comments_error_loading'.tr));
       }
     } catch (e) {
-      emit(LiveCommentsError(message: 'خطأ في تحميل التعليقات: ${e.toString()}'));
+      emit(LiveCommentsError(message: 'live_comments_error_loading_detail'.trParams({'error': e.toString()})));
     }
   }
 
@@ -257,11 +258,11 @@ class LiveCommentsBloc extends Bloc<LiveCommentsEvent, LiveCommentsState> {
         add(RefreshLiveComments(postId: event.postId));
       } else {
         emit(LiveCommentsError(
-          message: result['message'] ?? 'خطأ في إضافة التعليق',
+          message: result['message'] ?? 'live_comments_error_adding'.tr,
         ));
       }
     } catch (e) {
-      emit(LiveCommentsError(message: 'خطأ في إضافة التعليق: ${e.toString()}'));
+      emit(LiveCommentsError(message: 'live_comments_error_adding_detail'.trParams({'error': e.toString()})));
     }
   }
 
@@ -310,7 +311,7 @@ class LiveCommentsBloc extends Bloc<LiveCommentsEvent, LiveCommentsState> {
         if (state is LiveCommentsLoaded) {
           final currentState = state as LiveCommentsLoaded;
           emit(currentState.copyWith(
-            error: result['message'] ?? 'خطأ في التفاعل مع التعليق',
+            error: result['message'] ?? 'live_comments_error_reacting'.tr,
           ));
         }
       }
@@ -318,7 +319,7 @@ class LiveCommentsBloc extends Bloc<LiveCommentsEvent, LiveCommentsState> {
       if (state is LiveCommentsLoaded) {
         final currentState = state as LiveCommentsLoaded;
         emit(currentState.copyWith(
-          error: 'خطأ في التفاعل: ${e.toString()}',
+          error: 'live_comments_error_reacting_detail'.trParams({'error': e.toString()}),
         ));
       }
     }
@@ -515,10 +516,10 @@ class LiveStatsBloc extends Bloc<LiveStatsEvent, LiveStatsState> {
         final stats = LiveStatsModel.fromJson(statsData);
         emit(LiveStatsLoaded(stats: stats));
       } else {
-        emit(LiveStatsError(message: result['message'] ?? 'خطأ في تحميل الإحصائيات'));
+        emit(LiveStatsError(message: result['message'] ?? 'live_stats_error_loading'.tr));
       }
     } catch (e) {
-      emit(LiveStatsError(message: 'خطأ في تحميل الإحصائيات: ${e.toString()}'));
+      emit(LiveStatsError(message: 'live_stats_error_loading_detail'.trParams({'error': e.toString()})));
     }
   }
 

@@ -277,7 +277,7 @@ class _MyAffiliatesPageState extends State<MyAffiliatesPage> {
                                 ),
                                 const SizedBox(height: 4),
                                 const Text(
-                                  '\$0.00',
+                                  '₹ 0.00',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 28,

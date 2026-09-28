@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 
 import '../../../../core/network/api_client.dart';
 import '../../../../core/config/app_config.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/design_tokens.dart';
 import '../../../feed/data/models/post.dart';
 import '../../../feed/presentation/widgets/course_card.dart';
 import '../../../auth/application/auth_notifier.dart';
@@ -55,6 +57,9 @@ class _MyCoursesPageState extends State<MyCoursesPage>
   }
 
   void _onTabChanged() {
+    if (!_tabController.indexIsChanging) {
+      setState(() {});
+    }
     if (_tabController.index == 0 &&
         _enrolledCourses.isEmpty &&
         !_isLoadingEnrolled) {
@@ -164,21 +169,25 @@ class _MyCoursesPageState extends State<MyCoursesPage>
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Get.isDarkMode
-          ? const Color(0xFF121212)
-          : Colors.grey[50],
       appBar: AppBar(
         title: Text(
           'my_courses'.tr,
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: [
-            Tab(icon: const Icon(Iconsax.book), text: 'my_courses_enrolled'.tr),
-            Tab(icon: const Icon(Iconsax.edit), text: 'my_courses_created'.tr),
-          ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(56),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(
+              Spacing.lg,
+              0,
+              Spacing.lg,
+              Spacing.sm,
+            ),
+            child: _buildCoursesTabBar(isDark),
+          ),
         ),
         actions: [
           IconButton(
@@ -224,6 +233,104 @@ class _MyCoursesPageState extends State<MyCoursesPage>
     );
   }
 
+  /// Standard scrollable pill tab bar shared across the app.
+  Widget _buildCoursesTabBar(bool isDark) {
+    final tabs = [
+      (icon: Iconsax.book, label: 'my_courses_enrolled'.tr),
+      (icon: Iconsax.edit, label: 'my_courses_created'.tr),
+    ];
+    final unselectedColor = isDark
+        ? Colors.white.withValues(alpha: 0.65)
+        : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.65);
+
+    return AnimatedBuilder(
+      animation: _tabController,
+      builder: (context, _) {
+        return Row(
+          children: List.generate(tabs.length, (index) {
+            final tab = tabs[index];
+            final isSelected = _tabController.index == index;
+
+            return Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(
+                  right: index == tabs.length - 1 ? 0 : Spacing.sm,
+                ),
+                child: GestureDetector(
+                  onTap: () => _tabController.animateTo(index),
+                  child: AnimatedContainer(
+                    duration: AnimDurations.medium,
+                    curve: CurvesToken.standard,
+                    height: 40,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      gradient: isSelected ? AppColors.primaryGradient : null,
+                      border: isSelected
+                          ? null
+                          : Border.all(
+                              color: isDark
+                                  ? AppColors.dividerDark
+                                  : AppColors.dividerLight,
+                            ),
+                      borderRadius: BorderRadius.circular(Radii.pill),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          tab.icon,
+                          size: 16,
+                          color: isSelected ? Colors.white : unselectedColor,
+                        ),
+                        const SizedBox(width: Spacing.xs),
+                        Flexible(
+                          child: Text(
+                            tab.label,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: isSelected ? Colors.white : unselectedColor,
+                              fontWeight: isSelected
+                                  ? FontWeight.w700
+                                  : FontWeight.w500,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }),
+        );
+      },
+    );
+  }
+
+  /// Soft gradient circle backdrop for empty/error state icons — matches
+  /// the treatment used across the other market/courses pages.
+  Widget _buildStateIcon({
+    required IconData icon,
+    required Color iconColor,
+    required List<Color> colors,
+  }) {
+    return Container(
+      width: 96,
+      height: 96,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: colors,
+        ),
+      ),
+      child: Icon(icon, size: 48, color: iconColor),
+    );
+  }
+
   Widget _buildCoursesList({
     required List<Post> courses,
     required bool isLoading,
@@ -233,46 +340,82 @@ class _MyCoursesPageState extends State<MyCoursesPage>
     required Future<void> Function() onRefresh,
   }) {
     if (isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    if (error != null) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Iconsax.warning_2, size: 64, color: Colors.red[300]),
-            const SizedBox(height: 16),
-            Text(
-              error,
-              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton.icon(
-              onPressed: onRefresh,
-              icon: const Icon(Iconsax.refresh),
-              label: Text('my_courses_retry'.tr),
-            ),
-          ],
+      return const Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
         ),
       );
     }
 
-    if (courses.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(emptyIcon, size: 64, color: Colors.grey[400]),
-            const SizedBox(height: 16),
-            Text(
-              emptyMessage,
-              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-              textAlign: TextAlign.center,
+    if (error != null) {
+      return Builder(
+        builder: (context) {
+          final isDark = Theme.of(context).brightness == Brightness.dark;
+          final mutedColor = isDark
+              ? AppColors.textSecondaryDark
+              : AppColors.textSecondaryLight;
+
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildStateIcon(
+                  icon: Iconsax.warning_2,
+                  iconColor: AppColors.error,
+                  colors: [
+                    AppColors.error.withValues(alpha: 0.18),
+                    AppColors.error.withValues(alpha: 0.08),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  error,
+                  style: TextStyle(fontSize: 16, color: mutedColor),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton.icon(
+                  onPressed: onRefresh,
+                  icon: const Icon(Iconsax.refresh),
+                  label: Text('my_courses_retry'.tr),
+                ),
+              ],
             ),
-          ],
-        ),
+          );
+        },
+      );
+    }
+
+    if (courses.isEmpty) {
+      return Builder(
+        builder: (context) {
+          final isDark = Theme.of(context).brightness == Brightness.dark;
+          final mutedColor = isDark
+              ? AppColors.textSecondaryDark
+              : AppColors.textSecondaryLight;
+
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildStateIcon(
+                  icon: emptyIcon,
+                  iconColor: AppColors.primary,
+                  colors: [
+                    AppColors.primary.withValues(alpha: 0.18),
+                    AppColors.secondary.withValues(alpha: 0.10),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  emptyMessage,
+                  style: TextStyle(fontSize: 16, color: mutedColor),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          );
+        },
       );
     }
 

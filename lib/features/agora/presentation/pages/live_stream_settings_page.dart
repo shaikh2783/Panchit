@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class LiveStreamSettingsPage extends StatefulWidget {
   const LiveStreamSettingsPage({Key? key}) : super(key: key);
@@ -15,20 +16,26 @@ class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
   bool _recordStream = false;
   bool _enableTips = false;
   bool _forSubscribers = false;
-  String _selectedCategory = 'عام';
-  
+  late String _selectedCategory;
+
   final List<String> _qualityOptions = ['480p', 'HD', 'Full HD', 'UHD'];
-  final List<String> _categories = [
-    'عام',
-    'ألعاب',
-    'تعليم',
-    'رياضة',
-    'طبخ',
-    'موسيقى',
-    'تقنية',
-    'فن',
-    'سفر',
+  List<String> get _categories => [
+    'live_category_general'.tr,
+    'live_category_gaming'.tr,
+    'live_category_education'.tr,
+    'live_category_sports'.tr,
+    'live_category_cooking'.tr,
+    'live_category_music'.tr,
+    'live_category_tech'.tr,
+    'live_category_art'.tr,
+    'live_category_travel'.tr,
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedCategory = 'live_category_general'.tr;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +44,9 @@ class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text(
-          'إعدادات البث المباشر',
-          style: TextStyle(
+        title: Text(
+          'live_settings_title'.tr,
+          style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
@@ -51,9 +58,9 @@ class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
         actions: [
           TextButton(
             onPressed: _saveSettings,
-            child: const Text(
-              'حفظ',
-              style: TextStyle(
+            child: Text(
+              'save'.tr,
+              style: const TextStyle(
                 color: Colors.blue,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -86,13 +93,13 @@ class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
 
   Widget _buildVideoSettings() {
     return _buildSettingsSection(
-      title: 'إعدادات الفيديو',
+      title: 'live_settings_video_section'.tr,
       icon: Icons.videocam,
       children: [
         _buildQualitySelector(),
         _buildSwitchTile(
-          title: 'تسجيل البث',
-          subtitle: 'احفظ البث للمشاهدة لاحقاً',
+          title: 'live_settings_recording_title'.tr,
+          subtitle: 'live_settings_recording_subtitle'.tr,
           value: _recordStream,
           onChanged: (value) => setState(() => _recordStream = value),
           icon: Icons.video_library,
@@ -103,19 +110,19 @@ class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
 
   Widget _buildPrivacySettings() {
     return _buildSettingsSection(
-      title: 'إعدادات الخصوصية',
+      title: 'live_settings_privacy_section'.tr,
       icon: Icons.privacy_tip,
       children: [
         _buildSwitchTile(
-          title: 'بث خاص',
-          subtitle: 'محدود للمدعوين فقط',
+          title: 'live_settings_private_title'.tr,
+          subtitle: 'live_settings_private_subtitle'.tr,
           value: _isPrivate,
           onChanged: (value) => setState(() => _isPrivate = value),
           icon: Icons.lock,
         ),
         _buildSwitchTile(
-          title: 'للمشتركين فقط',
-          subtitle: 'متاح للمشتركين في قناتك فقط',
+          title: 'live_settings_subscribers_only_title'.tr,
+          subtitle: 'live_settings_subscribers_only_subtitle'.tr,
           value: _forSubscribers,
           onChanged: (value) => setState(() => _forSubscribers = value),
           icon: Icons.subscriptions,
@@ -126,19 +133,19 @@ class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
 
   Widget _buildInteractionSettings() {
     return _buildSettingsSection(
-      title: 'إعدادات التفاعل',
+      title: 'live_settings_interaction_section'.tr,
       icon: Icons.chat,
       children: [
         _buildSwitchTile(
-          title: 'السماح بالتعليقات',
-          subtitle: 'المشاهدون يمكنهم التعليق',
+          title: 'live_settings_allow_comments_title'.tr,
+          subtitle: 'live_settings_allow_comments_subtitle'.tr,
           value: _allowComments,
           onChanged: (value) => setState(() => _allowComments = value),
           icon: Icons.chat_bubble,
         ),
         _buildSwitchTile(
-          title: 'السماح بالتفاعلات',
-          subtitle: 'إعجاب، حب، غضب، إلخ',
+          title: 'live_settings_allow_reactions_title'.tr,
+          subtitle: 'live_settings_allow_reactions_subtitle'.tr,
           value: _allowReactions,
           onChanged: (value) => setState(() => _allowReactions = value),
           icon: Icons.thumb_up,
@@ -149,20 +156,20 @@ class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
 
   Widget _buildMonetizationSettings() {
     return _buildSettingsSection(
-      title: 'إعدادات الربح',
+      title: 'live_settings_monetization_section'.tr,
       icon: Icons.monetization_on,
       children: [
         _buildSwitchTile(
-          title: 'تفعيل النصائح',
-          subtitle: 'المشاهدون يمكنهم إرسال نصائح مالية',
+          title: 'live_settings_enable_tips_title'.tr,
+          subtitle: 'live_settings_enable_tips_subtitle'.tr,
           value: _enableTips,
           onChanged: (value) => setState(() => _enableTips = value),
-          icon: Icons.attach_money,
+          icon: Icons.currency_rupee,
         ),
         if (_enableTips) ...[
           const SizedBox(height: 12),
           _buildInfoCard(
-            'سيتم استلام النصائح في محفظتك الإلكترونية. يمكنك سحبها في أي وقت من إعدادات الحساب.',
+            'live_settings_tips_info'.tr,
             Icons.info,
             Colors.blue,
           ),
@@ -173,7 +180,7 @@ class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
 
   Widget _buildCategorySettings() {
     return _buildSettingsSection(
-      title: 'تصنيف البث',
+      title: 'live_settings_category_title'.tr,
       icon: Icons.category,
       children: [
         Container(
@@ -212,34 +219,34 @@ class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
 
   Widget _buildAdvancedSettings() {
     return _buildSettingsSection(
-      title: 'إعدادات متقدمة',
+      title: 'live_settings_advanced_section'.tr,
       icon: Icons.settings,
       children: [
         _buildActionTile(
-          title: 'إدارة المحظورين',
-          subtitle: 'قائمة المستخدمين المحظورين من البث',
+          title: 'live_settings_banned_users_title'.tr,
+          subtitle: 'live_settings_banned_users_subtitle'.tr,
           icon: Icons.block,
           onTap: () {
             // Navigate to blocked users management
-            _showComingSoonDialog('إدارة المحظورين');
+            _showComingSoonDialog('live_settings_banned_users_title'.tr);
           },
         ),
         _buildActionTile(
-          title: 'مفاتيح البث',
-          subtitle: 'إعداد البث من برامج خارجية',
+          title: 'live_settings_stream_keys_title'.tr,
+          subtitle: 'live_settings_stream_keys_subtitle'.tr,
           icon: Icons.key,
           onTap: () {
             // Navigate to stream keys
-            _showComingSoonDialog('مفاتيح البث');
+            _showComingSoonDialog('live_settings_stream_keys_title'.tr);
           },
         ),
         _buildActionTile(
-          title: 'إحصائيات مفصلة',
-          subtitle: 'تحليل أداء البثوث السابقة',
+          title: 'live_settings_detailed_stats_title'.tr,
+          subtitle: 'live_settings_detailed_stats_subtitle'.tr,
           icon: Icons.analytics,
           onTap: () {
             // Navigate to detailed analytics
-            _showComingSoonDialog('الإحصائيات المفصلة');
+            _showComingSoonDialog('live_settings_detailed_stats_title'.tr);
           },
         ),
       ],
@@ -292,9 +299,9 @@ class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'جودة البث',
-            style: TextStyle(
+          Text(
+            'live_settings_quality_label'.tr,
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.w500,
@@ -464,8 +471,8 @@ class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('تم حفظ الإعدادات بنجاح'),
+      SnackBar(
+        content: Text('live_settings_saved_success'.tr),
         backgroundColor: Colors.green,
         behavior: SnackBarBehavior.floating,
       ),
@@ -477,18 +484,18 @@ class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFF2A2A2A),
-        title: const Text(
-          'قريباً',
-          style: TextStyle(color: Colors.white),
+        title: Text(
+          'coming_soon'.tr,
+          style: const TextStyle(color: Colors.white),
         ),
         content: Text(
-          'ميزة "$feature" ستكون متاحة في التحديث القادم.',
+          'live_settings_feature_coming_message'.trParams({'feature': feature}),
           style: const TextStyle(color: Colors.white70),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('موافق'),
+            child: Text('ok'.tr),
           ),
         ],
       ),

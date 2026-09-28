@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:snginepro/core/theme/app_colors.dart';
 import 'package:snginepro/features/reels/data/models/music_model.dart';
 import 'package:snginepro/features/reels/presentation/widgets/wave_slider.dart';
 
-const Color _accentColor = Color(0xFFE1306C);
+const Color _accentColor = AppColors.brandPink;
 const Color _sheetColor = Color(0xFF161618);
 const Color _surfaceColor = Color(0xFF242428);
 
