@@ -598,73 +598,70 @@ class _MenuPageState extends State<MenuPage> {
             const SizedBox(height: 12),
 
             // ================== ADVERTISING SECTION ==================
-            Visibility(
-              visible: Platform.isAndroid == true,
-              child: Container(
-                margin: const EdgeInsets.only(bottom: 8),
-                child: GestureDetector(
-                  onTap: () => _toggleSection('advertising'),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 4,
-                        height: 20,
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFFFFD54F), Color(0xFFF57F17)],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                          ),
-                          borderRadius: BorderRadius.circular(2),
+            Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              child: GestureDetector(
+                onTap: () => _toggleSection('advertising'),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 4,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFFFFD54F), Color(0xFFF57F17)],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
                         ),
+                        borderRadius: BorderRadius.circular(2),
                       ),
-                      const SizedBox(width: 12),
-                      const Icon(
-                        Iconsax.flash,
-                        size: 20,
+                    ),
+                    const SizedBox(width: 12),
+                    const Icon(
+                      Iconsax.flash,
+                      size: 20,
+                      color: Color(0xFFF57F17),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'advertising'.tr,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                         color: Color(0xFFF57F17),
+                        letterSpacing: 0.5,
                       ),
-                      const SizedBox(width: 8),
-                      Text(
-                        'advertising'.tr,
-                        style: const TextStyle(
-                          fontSize: 18,
+                    ),
+                    const Spacer(),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF57F17).withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Text(
+                        '5',
+                        style: TextStyle(
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFFF57F17),
-                          letterSpacing: 0.5,
                         ),
                       ),
-                      const Spacer(),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF57F17).withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Text(
-                          '5',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFFF57F17),
-                          ),
-                        ),
+                    ),
+                    const SizedBox(width: 8),
+                    AnimatedRotation(
+                      turns: _isAdvertisingExpanded ? 0.5 : 0,
+                      duration: const Duration(milliseconds: 300),
+                      child: const Icon(
+                        Icons.keyboard_arrow_down,
+                        color: Color(0xFFF57F17),
+                        size: 24,
                       ),
-                      const SizedBox(width: 8),
-                      AnimatedRotation(
-                        turns: _isAdvertisingExpanded ? 0.5 : 0,
-                        duration: const Duration(milliseconds: 300),
-                        child: const Icon(
-                          Icons.keyboard_arrow_down,
-                          color: Color(0xFFF57F17),
-                          size: 24,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
