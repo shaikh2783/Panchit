@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 class CreatePostRequest {
   CreatePostRequest({
     this.message,

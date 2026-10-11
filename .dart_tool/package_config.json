@@ -1004,6 +1004,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "sandbox_digilocker_sdk",
+      "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/sandbox_digilocker_sdk-1.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
       "name": "share_plus",
       "rootUri": "file:///Users/shaikhasfak/.pub-cache/hosted/pub.dev/share_plus-12.0.1",
       "packageUri": "lib/",

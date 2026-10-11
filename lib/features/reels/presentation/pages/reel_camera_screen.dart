@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:snginepro/core/theme/app_colors.dart';
 import 'package:snginepro/features/reels/data/models/music_model.dart';
 import 'package:snginepro/features/reels/data/services/music_api_service.dart';
 import 'package:snginepro/features/reels/data/services/reel_audio_merge_service.dart';
@@ -12,7 +13,7 @@ import 'package:snginepro/features/reels/presentation/pages/reel_edit_screen.dar
 import 'package:video_thumbnail/video_thumbnail.dart' as vt;
 import 'package:snginepro/features/reels/presentation/pages/selected_music_sheet.dart';
 import 'dart:async';
-const Color _accentColor = Color(0xFFE1306C);
+const Color _accentColor = AppColors.brandPink;
 class _CameraEffect {
   final String id;
   final String label;
@@ -646,7 +647,7 @@ class _ReelCameraScreenState extends State<ReelCameraScreen> {
                                     decoration: const BoxDecoration(
                                       gradient: LinearGradient(
                                         colors: [
-                                          Color(0xFFE1306C),
+                                          AppColors.brandPink,
                                           Color(0xFF833AB4),
                                           Color(0xFFFCAF45),
                                         ],

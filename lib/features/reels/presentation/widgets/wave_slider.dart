@@ -3,9 +3,10 @@ import 'dart:math' as math;
 
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
+import 'package:snginepro/core/theme/app_colors.dart';
 import 'package:snginepro/features/reels/data/models/music_model.dart';
 
-const Color _accentColor = Color(0xFFE1306C);
+const Color _accentColor = AppColors.brandPink;
 
 class WaveSliderController {
   WaveSliderController({

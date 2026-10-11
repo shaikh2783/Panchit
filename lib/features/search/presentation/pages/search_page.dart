@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
-import 'package:get/get.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/network/api_client.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../feed/data/models/post.dart';
 import '../../../feed/presentation/widgets/post_card.dart';
 import '../../../friends/presentation/widgets/add_friend_button.dart';
@@ -27,21 +27,20 @@ class SearchPage extends StatefulWidget {
   State<SearchPage> createState() => _SearchPageState();
 }
 
-class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
+class _SearchPageState extends State<SearchPage> {
   late final SearchApiService _searchService;
   late final TextEditingController _searchController;
-  late final TabController _tabController;
-  
+
   // البحث والنتائج
   String _currentQuery = '';
   SearchType _currentTab = SearchType.users;
   bool _isSearching = false;
   bool _hasSearched = false;
-  
+
   // النتائج
   List<Post> _posts = [];
   List<SearchResult> _results = [];
-  
+
   // Pagination
   int _currentPage = 1;
   bool _isLoadingMore = false;
@@ -53,38 +52,33 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     super.initState();
     _searchService = SearchApiService(context.read<ApiClient>());
     _searchController = TextEditingController();
-    _tabController = TabController(length: SearchType.values.length, vsync: this);
     _scrollController = ScrollController();
-    
-    _tabController.addListener(_onTabChanged);
+
     _scrollController.addListener(_onScroll);
   }
 
   @override
   void dispose() {
     _searchController.dispose();
-    _tabController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
 
-  void _onTabChanged() {
-    if (!_tabController.indexIsChanging) return;
-    
-    final newTab = SearchType.values[_tabController.index];
-    if (newTab != _currentTab) {
-      setState(() {
-        _currentTab = newTab;
-      });
-      
-      if (_currentQuery.isNotEmpty && _hasSearched) {
-        _search(reset: true);
-      }
+  void _selectTab(SearchType type) {
+    if (type == _currentTab) return;
+
+    setState(() {
+      _currentTab = type;
+    });
+
+    if (_currentQuery.isNotEmpty && _hasSearched) {
+      _search(reset: true);
     }
   }
 
   void _onScroll() {
-    if (_scrollController.offset >= _scrollController.position.maxScrollExtent - 200) {
+    if (_scrollController.offset >=
+        _scrollController.position.maxScrollExtent - 200) {
       if (_hasMore && !_isLoadingMore && !_isSearching) {
         _loadMore();
       }
@@ -124,13 +118,19 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         }
 
         if (response.success && response.results.isNotEmpty) {
-          if (_currentTab == SearchType.posts || _currentTab == SearchType.blogs) {
+          if (_currentTab == SearchType.posts ||
+              _currentTab == SearchType.blogs) {
             // تحويل النتائج إلى Post objects للاستخدام مع PostCard
-            final newPosts = response.results.map((json) => Post.fromJson(json)).toList();
+            final newPosts = response.results
+                .map((json) => Post.fromJson(json))
+                .toList();
             _posts.addAll(newPosts);
           } else {
             // استخدام SearchResult models للأنواع الأخرى
-            final newResults = SearchResultFactory.fromJsonList(response.results, _currentTab.key);
+            final newResults = SearchResultFactory.fromJsonList(
+              response.results,
+              _currentTab.key,
+            );
             _results.addAll(newResults);
           }
         }
@@ -182,24 +182,29 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Get.isDarkMode;
-    
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: isDarkMode ? const Color(0xFF121212) : const Color(0xFFF8F9FA),
+      backgroundColor: isDarkMode
+          ? AppColors.backgroundDark
+          : AppColors.backgroundLight,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: isDarkMode ? const Color(0xFF1A1A1A) : Colors.white,
+        backgroundColor: isDarkMode
+            ? AppColors.surfaceDark
+            : AppColors.surfaceLight,
         title: Row(
           children: [
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.blue.withValues(alpha: 0.1),
+                color: AppColors.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
+              child: const Icon(
                 Iconsax.search_normal,
-                color: Colors.blue,
+                color: AppColors.primary,
                 size: 18,
               ),
             ),
@@ -207,7 +212,9 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
             Text(
               'Search',
               style: TextStyle(
-                color: isDarkMode ? Colors.white : Colors.grey[900],
+                color: isDarkMode
+                    ? AppColors.textPrimaryDark
+                    : AppColors.textPrimaryLight,
                 fontWeight: FontWeight.w600,
                 fontSize: 18,
               ),
@@ -220,105 +227,159 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
             icon: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.blue.withValues(alpha: 0.1),
+                color: AppColors.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
                 Iconsax.discover_1,
-                color: Colors.blue,
+                color: AppColors.primary,
                 size: 18,
               ),
             ),
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const DiscoverPage()),
-            ),
+            onPressed: () => Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (_) => const DiscoverPage())),
           ),
           const SizedBox(width: 4),
         ],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(48),
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            child: TabBar(
-              controller: _tabController,
-              isScrollable: true,
-              indicator: BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              indicatorSize: TabBarIndicatorSize.tab,
-              labelStyle: const TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 13,
-              ),
-              unselectedLabelStyle: const TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 13,
-              ),
-              labelColor: Colors.white,
-              unselectedLabelColor: isDarkMode ? Colors.grey[400] : Colors.grey[600],
-              dividerColor: Colors.transparent,
-              tabs: SearchType.values.map((type) => Tab(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Text(type.title),
-                ),
-              )).toList(),
-            ),
-          ),
-        ),
       ),
       body: Column(
         children: [
+          // Type filter bar
+          _buildTypeTabBar(isDarkMode),
+
           // Search Bar
-          _buildSearchBar(),
-          
+          _buildSearchBar(isDarkMode),
+
           // Results
-          Expanded(
-            child: _buildSearchResults(),
-          ),
+          Expanded(child: _buildSearchResults(isDarkMode)),
         ],
       ),
     );
   }
 
-  Widget _buildSearchBar() {
-    final isDarkMode = Get.isDarkMode;
-    
+  IconData _iconForSearchType(SearchType type) {
+    switch (type) {
+      case SearchType.users:
+        return Iconsax.user;
+      case SearchType.posts:
+        return Iconsax.document_text;
+      case SearchType.pages:
+        return Iconsax.document;
+      case SearchType.groups:
+        return Iconsax.people;
+      case SearchType.events:
+        return Iconsax.calendar;
+      case SearchType.blogs:
+        return Iconsax.document_text_1;
+    }
+  }
+
+  Widget _buildTypeTabBar(bool isDarkMode) {
+    final cs = Theme.of(context).colorScheme;
+    final borderColor = isDarkMode
+        ? AppColors.dividerDark
+        : AppColors.dividerLight;
+
+    return Container(
+      height: 48,
+      margin: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+      decoration: BoxDecoration(
+        color: isDarkMode ? AppColors.surfaceDark : AppColors.backgroundLight,
+        borderRadius: BorderRadius.circular(32),
+      ),
+      padding: const EdgeInsets.all(4),
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        itemCount: SearchType.values.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 4),
+        itemBuilder: (context, index) {
+          final type = SearchType.values[index];
+          final isSelected = _currentTab == type;
+
+          return GestureDetector(
+            onTap: () => _selectTab(type),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 220),
+              curve: Curves.easeInOut,
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+              decoration: BoxDecoration(
+                border: Border.all(color: borderColor),
+                gradient: isSelected ? AppColors.primaryGradient : null,
+                borderRadius: BorderRadius.circular(28),
+                boxShadow: isDarkMode
+                    ? AppColors.darkShadow
+                    : AppColors.lightShadow,
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    _iconForSearchType(type),
+                    size: 15,
+                    color: isSelected
+                        ? Colors.white
+                        : (isDarkMode
+                              ? Colors.white.withValues(alpha: 0.55)
+                              : cs.onSurface.withValues(alpha: 0.55)),
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    type.title,
+                    style: TextStyle(
+                      color: isSelected
+                          ? Colors.white
+                          : (isDarkMode
+                                ? Colors.white.withValues(alpha: 0.7)
+                                : cs.onSurface.withValues(alpha: 0.75)),
+                      fontWeight: isSelected
+                          ? FontWeight.w700
+                          : FontWeight.w500,
+                      fontSize: 13,
+                      letterSpacing: isSelected ? 0.1 : 0,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildSearchBar(bool isDarkMode) {
     return Container(
       margin: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDarkMode ? const Color(0xFF1A1A1A) : Colors.white,
+        color: isDarkMode ? AppColors.surfaceDark : AppColors.surfaceLight,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isDarkMode 
-            ? Colors.grey.withValues(alpha: 0.2)
-            : Colors.grey.withValues(alpha: 0.3),
+          color: isDarkMode ? AppColors.dividerDark : AppColors.dividerLight,
           width: 1,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDarkMode ? 0.3 : 0.08),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: isDarkMode ? AppColors.darkShadow : AppColors.lightShadow,
       ),
       child: TextField(
         controller: _searchController,
         style: TextStyle(
-          color: isDarkMode ? Colors.white : Colors.grey[900],
+          color: isDarkMode
+              ? AppColors.textPrimaryDark
+              : AppColors.textPrimaryLight,
           fontSize: 16,
         ),
         decoration: InputDecoration(
           hintText: 'Search for ${_currentTab.title.toLowerCase()}...',
           hintStyle: TextStyle(
-            color: isDarkMode ? Colors.grey[500] : Colors.grey[600],
+            color: isDarkMode
+                ? AppColors.textTertiaryDark
+                : AppColors.textTertiaryLight,
             fontSize: 16,
           ),
-          prefixIcon: Icon(
+          prefixIcon: const Icon(
             Iconsax.search_normal,
-            color: Colors.blue,
+            color: AppColors.primary,
             size: 20,
           ),
           suffixIcon: _currentQuery.isNotEmpty
@@ -327,19 +388,26 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                   icon: Container(
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                      color: Colors.grey.withValues(alpha: 0.2),
+                      color: isDarkMode
+                          ? AppColors.hoverDark
+                          : AppColors.hoverLight,
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
                       Iconsax.close_circle,
-                      color: Colors.grey[600],
+                      color: isDarkMode
+                          ? AppColors.textSecondaryDark
+                          : AppColors.textSecondaryLight,
                       size: 16,
                     ),
                   ),
                 )
               : null,
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+          contentPadding: const EdgeInsets.symmetric(
+            vertical: 16,
+            horizontal: 20,
+          ),
         ),
         onSubmitted: _onSearchSubmitted,
         textInputAction: TextInputAction.search,
@@ -347,25 +415,29 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildSearchResults() {
+  Widget _buildSearchResults(bool isDarkMode) {
     if (!_hasSearched) {
       return _buildEmptyState(
+        isDarkMode: isDarkMode,
         icon: Iconsax.search_normal,
         title: 'Start Searching',
-        subtitle: 'Enter search terms to find ${_currentTab.title.toLowerCase()}',
+        subtitle:
+            'Enter search terms to find ${_currentTab.title.toLowerCase()}',
       );
     }
 
     if (_isSearching && (_posts.isEmpty && _results.isEmpty)) {
-      return _buildLoadingState();
+      return _buildLoadingState(isDarkMode);
     }
 
-    final isEmpty = (_currentTab == SearchType.posts || _currentTab == SearchType.blogs) 
-        ? _posts.isEmpty 
+    final isEmpty =
+        (_currentTab == SearchType.posts || _currentTab == SearchType.blogs)
+        ? _posts.isEmpty
         : _results.isEmpty;
 
     if (isEmpty && !_isSearching) {
       return _buildEmptyState(
+        isDarkMode: isDarkMode,
         icon: Iconsax.search_status,
         title: 'No Results Found',
         subtitle: 'Try different keywords or check your spelling',
@@ -373,175 +445,81 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     }
 
     if (_currentTab == SearchType.posts || _currentTab == SearchType.blogs) {
-      return _buildPostsList();
+      return _buildPostsList(isDarkMode);
     } else {
-      return _buildResultsList();
+      return _buildResultsList(isDarkMode);
     }
   }
 
-  Widget _buildPostsList() {
-    final isDarkMode = Get.isDarkMode;
-    
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: isDarkMode 
-            ? [
-                Colors.black.withValues(alpha: 0.8),
-                Colors.black,
-              ]
-            : [
-                Colors.white.withValues(alpha: 0.8),
-                const Color(0xFFF5F6FA),
-              ],
-        ),
-      ),
-      child: ListView.builder(
-        controller: _scrollController,
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        itemCount:_posts.length + (_isLoadingMore ? 1 : 0),
-        itemBuilder: (context, index) {
-          // No ads - original behavior
-          if (index == _posts.length) {
-            return Container(
-              padding: const EdgeInsets.all(20),
-              child: Center(
-                child: Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.blue.withValues(alpha: 0.3),
-                        Colors.purple.withValues(alpha: 0.3),
-                      ],
-                    ),
-                    shape: BoxShape.circle,
-                  ),
-                  child: CircularProgressIndicator(
-                    color: isDarkMode ? Colors.white : Colors.grey[700],
-                    strokeWidth: 2,
-                  ),
-                ),
+  Widget _buildPostsList(bool isDarkMode) {
+    return ListView.builder(
+      controller: _scrollController,
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      itemCount: _posts.length + (_isLoadingMore ? 1 : 0),
+      itemBuilder: (context, index) {
+        // No ads - original behavior
+        if (index == _posts.length) {
+          return Padding(
+            padding: const EdgeInsets.all(20),
+            child: Center(
+              child: CircularProgressIndicator(
+                color: AppColors.primary,
+                strokeWidth: 2,
               ),
-            );
-          }
-
-          final post = _posts[index];
-          return Container(
-            margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: isDarkMode 
-                    ? Colors.black.withValues(alpha: 0.3)
-                    : Colors.grey.withValues(alpha: 0.2),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: PostCard(
-              post: post,
             ),
           );
-        },
-      ),
+        }
+
+        final post = _posts[index];
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: isDarkMode
+                ? AppColors.darkShadow
+                : AppColors.lightShadow,
+          ),
+          child: PostCard(post: post),
+        );
+      },
     );
   }
 
-  Widget _buildResultsList() {
-    final isDarkMode = Get.isDarkMode;
-    
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: isDarkMode 
-            ? [
-                Colors.black.withValues(alpha: 0.8),
-                Colors.black,
-              ]
-            : [
-                Colors.white.withValues(alpha: 0.8),
-                const Color(0xFFF5F6FA),
-              ],
-        ),
-      ),
-      child: ListView.builder(
-        controller: _scrollController,
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        itemCount: _results.length + (_isLoadingMore ? 1 : 0),
-        itemBuilder: (context, index) {
-          if (index == _results.length) {
-            return Container(
-              padding: const EdgeInsets.all(20),
-              child: Center(
-                child: Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.blue.withValues(alpha: 0.3),
-                        Colors.purple.withValues(alpha: 0.3),
-                      ],
-                    ),
-                    shape: BoxShape.circle,
-                  ),
-                  child: CircularProgressIndicator(
-                    color: isDarkMode ? Colors.white : Colors.grey[700],
-                    strokeWidth: 2,
-                  ),
-                ),
+  Widget _buildResultsList(bool isDarkMode) {
+    return ListView.builder(
+      controller: _scrollController,
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      itemCount: _results.length + (_isLoadingMore ? 1 : 0),
+      itemBuilder: (context, index) {
+        if (index == _results.length) {
+          return Padding(
+            padding: const EdgeInsets.all(20),
+            child: Center(
+              child: CircularProgressIndicator(
+                color: AppColors.primary,
+                strokeWidth: 2,
               ),
-            );
-          }
+            ),
+          );
+        }
 
-          final result = _results[index];
-          return _buildResultCard(result);
-        },
-      ),
+        final result = _results[index];
+        return _buildResultCard(result, isDarkMode);
+      },
     );
   }
 
-  Widget _buildResultCard(SearchResult result) {
-    final isDarkMode = Get.isDarkMode;
-    
+  Widget _buildResultCard(SearchResult result, bool isDarkMode) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: isDarkMode 
-            ? [
-                Colors.white.withValues(alpha: 0.1),
-                Colors.white.withValues(alpha: 0.05),
-              ]
-            : [
-                Colors.white.withValues(alpha: 0.9),
-                Colors.white.withValues(alpha: 0.7),
-              ],
-        ),
+        color: isDarkMode ? AppColors.cardDark : AppColors.cardLight,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isDarkMode 
-            ? Colors.white.withValues(alpha: 0.1)
-            : Colors.grey.withValues(alpha: 0.3),
+          color: isDarkMode ? AppColors.dividerDark : AppColors.dividerLight,
           width: 1,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: isDarkMode 
-              ? Colors.black.withValues(alpha: 0.3)
-              : Colors.grey.withValues(alpha: 0.2),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: isDarkMode ? AppColors.darkShadow : AppColors.lightShadow,
       ),
       child: Material(
         color: Colors.transparent,
@@ -552,7 +530,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                _buildResultAvatar(result),
+                _buildResultAvatar(result, isDarkMode),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Column(
@@ -565,7 +543,9 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                               result.title,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: isDarkMode ? Colors.white : Colors.grey[800],
+                                color: isDarkMode
+                                    ? AppColors.textPrimaryDark
+                                    : AppColors.textPrimaryLight,
                                 fontSize: 16,
                               ),
                             ),
@@ -575,13 +555,13 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                             Container(
                               padding: const EdgeInsets.all(4),
                               decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  colors: [Colors.blue, Colors.cyan],
-                                ),
+                                color: AppColors.info,
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.blue.withValues(alpha: 0.3),
+                                    color: AppColors.info.withValues(
+                                      alpha: 0.3,
+                                    ),
                                     blurRadius: 6,
                                     offset: const Offset(0, 2),
                                   ),
@@ -602,9 +582,9 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          color: isDarkMode 
-                            ? Colors.white.withValues(alpha: 0.7)
-                            : Colors.grey[600],
+                          color: isDarkMode
+                              ? AppColors.textSecondaryDark
+                              : AppColors.textSecondaryLight,
                           fontSize: 14,
                           height: 1.3,
                         ),
@@ -613,7 +593,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                   ),
                 ),
                 const SizedBox(width: 12),
-                _buildActionButton(result),
+                _buildActionButton(result, isDarkMode),
               ],
             ),
           ),
@@ -622,21 +602,26 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildResultAvatar(SearchResult result) {
-    final isDarkMode = Get.isDarkMode;
-    
+  Widget _buildResultAvatar(SearchResult result, bool isDarkMode) {
+    final placeholderColor = isDarkMode
+        ? AppColors.hoverDark
+        : AppColors.hoverLight;
+    final placeholderIconColor = isDarkMode
+        ? AppColors.textSecondaryDark
+        : AppColors.textSecondaryLight;
+
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         gradient: LinearGradient(
           colors: [
-            Colors.blue.withValues(alpha: 0.3),
-            Colors.purple.withValues(alpha: 0.3),
+            AppColors.primary.withValues(alpha: 0.25),
+            AppColors.secondary.withValues(alpha: 0.25),
           ],
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.blue.withValues(alpha: 0.3),
+            color: AppColors.primary.withValues(alpha: 0.2),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -655,23 +640,11 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                   errorWidget: (context, url, error) => Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        colors: isDarkMode 
-                          ? [
-                              Colors.grey.withValues(alpha: 0.3),
-                              Colors.grey.withValues(alpha: 0.1),
-                            ]
-                          : [
-                              Colors.grey.withValues(alpha: 0.5),
-                              Colors.grey.withValues(alpha: 0.3),
-                            ],
-                      ),
+                      color: placeholderColor,
                     ),
                     child: Icon(
                       _getIconForType(result.type),
-                      color: isDarkMode 
-                        ? Colors.white.withValues(alpha: 0.8)
-                        : Colors.grey[600],
+                      color: placeholderIconColor,
                       size: 24,
                     ),
                   ),
@@ -680,23 +653,11 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
             : Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    colors: isDarkMode 
-                      ? [
-                          Colors.grey.withValues(alpha: 0.3),
-                          Colors.grey.withValues(alpha: 0.1),
-                        ]
-                      : [
-                          Colors.grey.withValues(alpha: 0.5),
-                          Colors.grey.withValues(alpha: 0.3),
-                        ],
-                  ),
+                  color: placeholderColor,
                 ),
                 child: Icon(
                   _getIconForType(result.type),
-                  color: isDarkMode 
-                    ? Colors.white.withValues(alpha: 0.8)
-                    : Colors.grey[600],
+                  color: placeholderIconColor,
                   size: 24,
                 ),
               ),
@@ -706,15 +667,20 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
 
   IconData _getIconForType(String type) {
     switch (type) {
-      case 'user': return Iconsax.user;
-      case 'page': return Iconsax.document;
-      case 'group': return Iconsax.people;
-      case 'event': return Iconsax.calendar;
-      default: return Iconsax.search_normal;
+      case 'user':
+        return Iconsax.user;
+      case 'page':
+        return Iconsax.document;
+      case 'group':
+        return Iconsax.people;
+      case 'event':
+        return Iconsax.calendar;
+      default:
+        return Iconsax.search_normal;
     }
   }
 
-  Widget _buildActionButton(SearchResult result) {
+  Widget _buildActionButton(SearchResult result, bool isDarkMode) {
     switch (result.type) {
       case 'user':
         final user = result as SearchUser;
@@ -724,7 +690,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         return _buildPageActionButton(page);
       case 'group':
         final group = result as SearchGroup;
-        return _buildGroupActionButton(group);
+        return _buildGroupActionButton(group, isDarkMode);
       default:
         return const SizedBox.shrink();
     }
@@ -759,16 +725,11 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   Widget _buildPageActionButton(SearchPageResult page) {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Colors.green.withValues(alpha: 0.8),
-            Colors.teal.withValues(alpha: 0.8),
-          ],
-        ),
+        color: AppColors.success,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.green.withValues(alpha: 0.3),
+            color: AppColors.success.withValues(alpha: 0.3),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -780,9 +741,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => PageProfilePage.fromId(
-                pageId: page.pageId,
-              ),
+              builder: (context) => PageProfilePage.fromId(pageId: page.pageId),
             ),
           );
         },
@@ -804,23 +763,11 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildGroupActionButton(SearchGroup _group) {
+  Widget _buildGroupActionButton(SearchGroup _group, bool isDarkMode) {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Colors.grey.withValues(alpha: 0.7),
-            Colors.blueGrey.withValues(alpha: 0.7),
-          ],
-        ),
+        color: isDarkMode ? AppColors.dividerDark : AppColors.dividerLight,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.15),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
       ),
       child: TextButton(
         onPressed: () {
@@ -837,12 +784,14 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        child: const Text(
+        child: Text(
           'Unavailable',
           style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: Colors.white,
+            color: isDarkMode
+                ? AppColors.textSecondaryDark
+                : AppColors.textSecondaryLight,
           ),
         ),
       ),
@@ -857,10 +806,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ProfilePage(
-                userId: result.userId,
-                username: result.username,
-              ),
+              builder: (context) =>
+                  ProfilePage(userId: result.userId, username: result.username),
             ),
           );
         }
@@ -871,9 +818,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => PageProfilePage.fromId(
-                pageId: result.pageId,
-              ),
+              builder: (context) =>
+                  PageProfilePage.fromId(pageId: result.pageId),
             ),
           );
         }
@@ -888,9 +834,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
             MaterialPageRoute(
               builder: (context) => BlocProvider(
                 create: (context) => GroupPostsBloc(groupsRepository),
-                child: GroupProfilePage(
-                  groupId: result.groupId,
-                ),
+                child: GroupProfilePage(groupId: result.groupId),
               ),
             ),
           );
@@ -915,202 +859,111 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     }
   }
 
-  Widget _buildLoadingState() {
-    final isDarkMode = Get.isDarkMode;
-    
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: isDarkMode 
-            ? [
-                Colors.black.withValues(alpha: 0.8),
-                Colors.black,
-              ]
-            : [
-                Colors.white.withValues(alpha: 0.8),
-                const Color(0xFFF5F6FA),
-              ],
-        ),
-      ),
-      child: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: 8,
-        itemBuilder: (context, index) {
-          if (_currentTab == SearchType.posts || _currentTab == SearchType.blogs) {
-            return Container(
-              margin: const EdgeInsets.symmetric(vertical: 8),
+  Widget _buildLoadingState(bool isDarkMode) {
+    final skeletonColor = isDarkMode
+        ? AppColors.hoverDark
+        : AppColors.hoverLight;
+    final cardColor = isDarkMode ? AppColors.cardDark : AppColors.cardLight;
+    final borderColor = isDarkMode
+        ? AppColors.dividerDark
+        : AppColors.dividerLight;
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: 8,
+      itemBuilder: (context, index) {
+        if (_currentTab == SearchType.posts ||
+            _currentTab == SearchType.blogs) {
+          return Container(
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            decoration: BoxDecoration(
+              color: cardColor,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: borderColor),
+            ),
+            child: Container(
+              height: 180,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: isDarkMode 
-                    ? [
-                        Colors.white.withValues(alpha: 0.1),
-                        Colors.white.withValues(alpha: 0.05),
-                      ]
-                    : [
-                        Colors.white.withValues(alpha: 0.9),
-                        Colors.white.withValues(alpha: 0.7),
-                      ],
-                ),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: isDarkMode 
-                    ? Colors.white.withValues(alpha: 0.1)
-                    : Colors.grey.withValues(alpha: 0.3),
+              ),
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: AppColors.primary,
+                  strokeWidth: 2,
                 ),
               ),
-              child: Container(
-                height: 180,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: const Center(
-                  child: CircularProgressIndicator(
-                    color: Colors.blue,
-                    strokeWidth: 2,
+            ),
+          );
+        } else {
+          return Container(
+            margin: const EdgeInsets.symmetric(vertical: 6),
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: cardColor,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: borderColor),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 52,
+                  height: 52,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: skeletonColor,
                   ),
                 ),
-              ),
-            );
-          } else {
-            return Container(
-              margin: const EdgeInsets.symmetric(vertical: 6),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: isDarkMode 
-                    ? [
-                        Colors.white.withValues(alpha: 0.1),
-                        Colors.white.withValues(alpha: 0.05),
-                      ]
-                    : [
-                        Colors.white.withValues(alpha: 0.9),
-                        Colors.white.withValues(alpha: 0.7),
-                      ],
-                ),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: isDarkMode 
-                    ? Colors.white.withValues(alpha: 0.1)
-                    : Colors.grey.withValues(alpha: 0.3),
-                ),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 52,
-                    height: 52,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        colors: isDarkMode 
-                          ? [
-                              Colors.grey.withValues(alpha: 0.3),
-                              Colors.grey.withValues(alpha: 0.1),
-                            ]
-                          : [
-                              Colors.grey.withValues(alpha: 0.4),
-                              Colors.grey.withValues(alpha: 0.2),
-                            ],
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 16,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: skeletonColor,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: 16,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: isDarkMode 
-                                ? [
-                                    Colors.grey.withValues(alpha: 0.3),
-                                    Colors.grey.withValues(alpha: 0.1),
-                                  ]
-                                : [
-                                    Colors.grey.withValues(alpha: 0.4),
-                                    Colors.grey.withValues(alpha: 0.2),
-                                  ],
-                            ),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
+                      const SizedBox(height: 8),
+                      Container(
+                        height: 12,
+                        width: 150,
+                        decoration: BoxDecoration(
+                          color: skeletonColor,
+                          borderRadius: BorderRadius.circular(6),
                         ),
-                        const SizedBox(height: 8),
-                        Container(
-                          height: 12,
-                          width: 150,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: isDarkMode 
-                                ? [
-                                    Colors.grey.withValues(alpha: 0.2),
-                                    Colors.grey.withValues(alpha: 0.05),
-                                  ]
-                                : [
-                                    Colors.grey.withValues(alpha: 0.3),
-                                    Colors.grey.withValues(alpha: 0.15),
-                                  ],
-                            ),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            );
-          }
-        },
-      ),
+                ),
+              ],
+            ),
+          );
+        }
+      },
     );
   }
 
   Widget _buildEmptyState({
+    required bool isDarkMode,
     required IconData icon,
     required String title,
     required String subtitle,
   }) {
-    final isDarkMode = Get.isDarkMode;
-    
     return Center(
       child: Container(
         margin: const EdgeInsets.all(32),
         padding: const EdgeInsets.all(32),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: isDarkMode 
-              ? [
-                  Colors.white.withValues(alpha: 0.1),
-                  Colors.white.withValues(alpha: 0.05),
-                ]
-              : [
-                  Colors.white.withValues(alpha: 0.9),
-                  Colors.white.withValues(alpha: 0.7),
-                ],
-          ),
+          color: isDarkMode ? AppColors.cardDark : AppColors.cardLight,
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: isDarkMode 
-              ? Colors.white.withValues(alpha: 0.1)
-              : Colors.grey.withValues(alpha: 0.3),
+            color: isDarkMode ? AppColors.dividerDark : AppColors.dividerLight,
             width: 1,
           ),
-          boxShadow: [
-            BoxShadow(
-              color: isDarkMode 
-                ? Colors.black.withValues(alpha: 0.3)
-                : Colors.grey.withValues(alpha: 0.2),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
-            ),
-          ],
+          boxShadow: isDarkMode ? AppColors.darkShadow : AppColors.lightShadow,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -1120,14 +973,14 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Colors.blue.withValues(alpha: 0.3),
-                    Colors.purple.withValues(alpha: 0.3),
+                    AppColors.primary.withValues(alpha: 0.3),
+                    AppColors.secondary.withValues(alpha: 0.3),
                   ],
                 ),
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.blue.withValues(alpha: 0.3),
+                    color: AppColors.primary.withValues(alpha: 0.3),
                     blurRadius: 15,
                     offset: const Offset(0, 8),
                   ),
@@ -1136,14 +989,18 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
               child: Icon(
                 icon,
                 size: 48,
-                color: isDarkMode ? Colors.white : Colors.grey[700],
+                color: isDarkMode
+                    ? AppColors.textPrimaryDark
+                    : AppColors.textPrimaryLight,
               ),
             ),
             const SizedBox(height: 24),
             Text(
               title,
               style: TextStyle(
-                color: isDarkMode ? Colors.white : Colors.grey[800],
+                color: isDarkMode
+                    ? AppColors.textPrimaryDark
+                    : AppColors.textPrimaryLight,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
@@ -1153,9 +1010,9 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
             Text(
               subtitle,
               style: TextStyle(
-                color: isDarkMode 
-                  ? Colors.white.withValues(alpha: 0.7)
-                  : Colors.grey[600],
+                color: isDarkMode
+                    ? AppColors.textSecondaryDark
+                    : AppColors.textSecondaryLight,
                 fontSize: 16,
                 height: 1.5,
               ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:snginepro/core/theme/app_colors.dart';
 import 'package:snginepro/features/reels/data/services/music_api_service.dart';
 import 'package:snginepro/features/reels/presentation/pages/reel_camera_screen.dart';
 import 'package:snginepro/features/reels/presentation/pages/reel_gallery_trim_screen.dart';
@@ -144,10 +145,10 @@ class _ReelEntrySheet extends StatelessWidget {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: const Color(0xFFE1306C).withOpacity(0.15),
+                color: AppColors.brandPink.withOpacity(0.15),
                 shape: BoxShape.circle,
               ),
-              child: Icon(icon, color: const Color(0xFFE1306C), size: 26),
+              child: Icon(icon, color: AppColors.brandPink, size: 26),
             ),
             const SizedBox(width: 16),
             Expanded(

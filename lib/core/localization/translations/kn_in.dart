@@ -1,346 +1,356 @@
 // Kannada Translations
 const Map<String, String> knIN = {
-    "login": "ಲಾಗಿನ್",
-    "logout": "ಲಾಗ್ಔಟ್",
-    "email": "ಇಮೇಲ್",
-    "password": "ಪಾಸ್ವರ್ಡ್",
-    "forgot_password": "ಪಾಸ್ವರ್ಡ್ ಮರೆತಿರಾ?",
-    "register": "ನೋಂದಣಿ",
-    "welcome": "ಸ್ವಾಗತ",
-    "sign_in": "ಸೈನ್ ಇನ್ ಮಾಡಿ",
-    "sign_up": "ಸೈನ್ ಅಪ್ ಮಾಡಿ",
-    "create_account": "ಖಾತೆ ರಚಿಸಿ",
-    "already_have_account": "ಇದಲ್ಲೇ ಖಾತೆ ಇದೆಯೆ?",
-    "dont_have_account": "ಖಾತೆ ಇಲ್ಲವೇ?",
-    "first_name": "ಮೊದಲ ಹೆಸರು",
-    "last_name": "ಕೊನೆಯ ಹೆಸರು",
-    "username": "ಬಳಕೆದಾರ ಹೆಸರು",
-    "confirm_password": "ಪಾಸ್ವರ್ಡ್ ದೃಢೀಕರಿಸಿ",
-    "gender": "ಲಿಂಗ",
-    "male": "ಪುರುಷ",
-    "female": "ಸ್ತ್ರೀ",
-    "birthdate": "ಜನ್ಮದಿನ",
-    "optional": "ಐಚ್ಛಿಕ",
-    "join_community": "ನಮ್ಮ ಸಮುದಾಯದಲ್ಲಿ ಸೇರಿ",
-    "start_journey": "ನಮ್ಮ ಜೊತೆಗೆ ನಿಮ್ಮ ಪ್ರಯಾಣವನ್ನು ಪ್ರಾರಂಭಿಸಿ",
-    "creating_account": "ಖಾತೆ ರಚಿಸಲಾಗುತ್ತಿದೆ...",
-    "contact_admin": "ನಿರ್ವಾಹಕವನ್ನು ಸಂಪರ್ಕಿಸಿ",
-    "welcome_back": "ಹಿಂದಿರುಗಿ ಸ್ವಾಗತ!",
-    "sign_in_continue": "ನಿಮ್ಮ ಪ್ರಯಾಣವನ್ನು ಮುಂದುವರಿಸಲು ಸೈನ್ ಇನ್ ಮಾಡಿ",
-    "email_username": "ಇಮೇಲ್ ಅಥವಾ ಬಳಕೆದಾರ ಹೆಸರು",
-    "enter_email_username": "ನಿಮ್ಮ ಇಮೇಲ್ ಅಥವಾ ಬಳಕೆದಾರ ಹೆಸರು ನಮೂದಿಸಿ",
-    "enter_password": "ನಿಮ್ಮ ಪಾಸ್ವರ್ಡ್ ನಮೂದಿಸಿ",
-    "enter_first_name": "ನಿಮ್ಮ ಮೊದಲ ಹೆಸರನ್ನು ನಮೂದಿಸಿ",
-    "enter_last_name": "ನಿಮ್ಮ ಕೊನೆಯ ಹೆಸರನ್ನು ನಮೂದಿಸಿ",
-    "enter_username": "ನಿಮ್ಮ ಬಳಕೆದಾರ ಹೆಸರನ್ನು ನಮೂದಿಸಿ",
-    "enter_email": "ನಿಮ್ಮ ಇಮೇಲ್ ವಿಳಾಸ ನಮೂದಿಸಿ",
-    "confirm_your_password": "ನಿಮ್ಮ ಪಾಸ್ವರ್ಡ್ ದೃಢೀಕರಿಸಿ",
-    "select_gender": "ನಿಮ್ಮ ಲಿಂಗ ಆಯ್ಕೆಮಾಡಿ",
-    "select_birthdate": "ನಿಮ್ಮ ಜನ್ಮ ದಿನಾಂಕ ಆಯ್ಕೆಮಾಡಿ",
-    "first_name_required": "ಮೊದಲ ಹೆಸರು ಅಗತ್ಯವಿದೆ",
-    "last_name_required": "ಕೊನೆಯ ಹೆಸರು ಅಗತ್ಯವಿದೆ",
-    "username_required": "ಬಳಕೆದಾರ ಹೆಸರು ಅಗತ್ಯವಿದೆ",
-    "email_required": "ಇಮೇಲ್ ಅಗತ್ಯವಿದೆ",
-    "password_required": "ಪಾಸ್ವರ್ಡ್ ಅಗತ್ಯವಿದೆ",
-    "password_min_length": "ಪಾಸ್ವರ್ಡ್ ಕನಿಷ್ಠ 6 ಅಕ್ಷರಗಳಿರಬೇಕು",
-    "passwords_not_match": "ಪಾಸ್ವರ್ಡ್ ಹೊಂದಿಕೆಯಾಗುತ್ತಿಲ್ಲ",
-    "invalid_email": "ದಯವಿಟ್ಟು ಮಾನ್ಯ ಇಮೇಲ್ ನಮೂದಿಸಿ",
-    "invalid_url": "ದಯವಿಟ್ಟು ಮಾನ್ಯ URL ನಮೂದಿಸಿ (http/https)",
-    "username_alphanumeric": "ಬಳಕೆದಾರ ಹೆಸರು ಲೆಟರ್, ಸಂಖ್ಯೆಗಳು ಮತ್ತು ಅಂಡರ್ಸ್ಕೋರ್ ಮಾತ್ರ ಇರಬಹುದು",
-    "account_created_successfully": "ಖಾತೆ ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ! ಸ್ವಾಗತ Panchit! 🎉",
-    "registration_failed": "ನೋಂದಣಿ ವಿಫಲವಾಗಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
-    "email_username_required": "ಇಮೇಲ್ ಅಥವಾ ಬಳಕೆದಾರ ಹೆಸರು ಅಗತ್ಯವಿದೆ",
-    "sign_in_with_google": "Google ಮೂಲಕ ಸೈನ್ ಇನ್ ಮಾಡಿ",
-    "sign_in_with_apple": "Apple ಮೂಲಕ ಸೈನ್ ಇನ್ ಮಾಡಿ",
-    "getting_started": "ಪ್ರಾರಂಭಿಸುತ್ತಿದೆ",
-    "complete_profile": "ಪ್ರಾರಂಭಿಸಲು ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಸಂಪೂರ್ಣ ಮಾಡಿ",
-    "where_do_you_live": "ನೀವು ಎಲ್ಲಿದ್ದೀರಾ?",
-    "location_description": "ದಯವಿಟ್ಟು ನಿಮ್ಮ ಸ್ಥಳ ಹಂಚಿ, ಹತ್ತಿರದ ಜನರೊಂದಿಗೆ ಸಂಪರ್ಕಕ್ಕೆ ಬರಲು",
-    "what_do_you_do": "ನೀವು ಏನು ಮಾಡುತ್ತೀರಿ?",
-    "work_description": "ನಿಮ್ಮ ವೃತ್ತಿ ಅಥವಾ ಉದ್ಯೋಗ ಹಂಚಿ",
-    "what_did_you_study": "ನೀವು ಯಾವ ವಿಷಯ ಅಧ್ಯಯನ ಮಾಡಿದ್ದೀರಿ?",
-    "education_description": "ನಿಮ್ಮ ಶೈಕ್ಷಣಿಕ ಹಿನ್ನೆಲೆ ಹಂಚಿ",
-    "work": "ಕೆಲಸ",
-    "education": "ಶಿಕ್ಷಣ",
-    "skip": "ಸ್ಕಿಪ್",
-    "home": "ಮುಖಪುಟ",
-    "profile": "ಪ್ರೊಫೈಲ್",
-    "notifications": "ಅಧಿಸೂಚನೆಗಳು",
-    "messages": "ಸಂದೇಶಗಳು",
-    "search": "ಹುಡುಕು",
-    "menu": "ಮೆನು",
-    "settings": "ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
-    "quick_actions": "ದ್ರುತ ಕ್ರಿಯೆಗಳು",
-    "saved_posts": "ಉಳಿಸಲಾಗಿದ ಪೋಸ್ಟ್‌ಗಳು",
-    "albums": "ಆಲ್ಬಂಗಳು",
-    "my_articles": "ನನ್ನ ಲೇಖನಗಳು",
-    "my_blogs": "ನನ್ನ ಲೇಖನಗಳು",
-    "my_products": "ನನ್ನ ಉತ್ಪನ್ನಗಳು",
-    "groups": "ಗುಂಪುಗಳು",
-    "pages": "ಪೇಜ್‌ಗಳು",
-    "explore": "ಅನ್ವೇಷಿಸಿ",
-    "feed": "ಫೀಡ್",
-    "view_profile": "ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ವೀಕ್ಷಿಸಿ",
-    "points": "ಅಂಕಗಳು",
-    "followers": "ಅನುವರ್ತಕರು",
-    "following": "ಅನುಸರಿಸುತ್ತಿದ್ದಾರೆ",
-    "coming_soon": "ಶೀಘ್ರದಲ್ಲೇ ಬರುತ್ತಿದೆ",
-    "language": "ಭಾಷೆ",
-    "language_switch_success": "ಭಾಷೆ ಯಶಸ್ವಿಯಾಗಿ ಬದಲಾಗಿದೆ",
-    "theme": "ಥೀಮ್",
-    "light_mode": "ಬೆಳಕು ಮೋಡ್",
-    "dark_mode": "ಮರೆತ ಮೋಡ್",
-    "light_mode_enabled": "ಬೆಳಕು ಮೋಡ್ ಸಕ್ರಿಯವಾಗಿದೆ",
-    "dark_mode_enabled": "ಮರೆತ ಮೋಡ್ ಸಕ್ರಿಯವಾಗಿದೆ",
-    "clean_bright_interface": "ಶುದ್ಧ ಮತ್ತು ಪ್ರಕಾಶಮಾನವಾದ ಇಂಟರ್ಫೇಸ್",
-    "easy_eyes_interface": "ಕಣ್ಣುಗಳಿಗೆ ಸುಲಭವಾದ ಇಂಟರ್ಫೇಸ್",
-    "create_post": "ಪೋಸ್ಟ್ ರಚಿಸಿ",
-    "edit_post": "ಪೋಸ್ಟ್ ಸಂಪಾದಿಸಿ",
-    "delete_post": "ಪೋಸ್ಟ್ ಅಳಿಸಿ",
-    "share_post": "ಪೋಸ್ಟ್ ಹಂಚಿ",
-    "like": "ಇಷ್ಟಪಟ್ಟಿದೆ",
-    "comment": "ಟಿಪ್ಪಣಿ",
-    "comments": "ಟಿಪ್ಪಣಿಗಳು",
-    "comments_disabled": "ಈ ಪೋಸ್ಟ್‌ಗೆ ಟಿಪ್ಪಣಿಗಳನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ",
-    "show_more": "ಹೆಚ್ಚು ತೋರಿಸಿ",
-    "show_less": "ಕೆಲವು ಕಡಿಮೆ ತೋರಿಸಿ",
-    "edit": "ಸಂಪಾದನೆ ಮಾಡಿ",
-    "ad_type_page": "ಪುಟ",
-    "ad_type_group": "ಗುಂಪು",
-    "ad_type_event": "ಇವೆಂಟ್",
-    "ad_type_post": "ಪೋಸ್ಟ್",
-    "ad_type_link": "ಲಿಂಕ್",
-    "could_not_open_url": "URL ತೆರೆಯಲಾಗಲಿಲ್ಲ",
-    "could_not_open_url_with_error": "URL ತೆರೆಯಲಾಗಲಿಲ್ಲ: @error",
-    "adult_confirm_mark_title": "🔞 ಪ್ರೌಢ ವಿಷಯ ಎಂದು ಗುರುತಿಸಲು?",
-    "adult_confirm_remove_title": "18+ ಲೇಬಲ್ ತೆಗೆದುಹಾಕಲು?",
-    "adult_confirm_action_mark": "18+ ಗುರುತಿಸಿ",
-    "adult_confirm_action_remove": "18+ ತೆಗೆದುಹಾಕಿ",
-    "delete": "ಅಳಿಸಿ",
-    "report": "ರಿಪೋರ್ಟ್",
-    "share": "ಹಂಚಿಕೊಳ್ಳಿ",
-    "save": "ಸೇವ್ ಮಾಡಿ",
-    "cancel": "ರದ್ದುಮಾಡಿ",
-    "ok": "ಒಕೆ",
-    "loading": "ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ...",
-    "error": "ದೋಷ",
-    "success": "ಯಶಸ್ವಿ",
-    "changes_saved_successfully": "ಬದಲಾವಣೆಗಳನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಉಳಿಸಲಾಗಿದೆ!",
-    "failed_to_save_changes_with_error": "ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಲು ವಿಫಲವಾಗಿದೆ: @error",
-    "loading_categories": "ವರ್ಗಗಳು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ...",
-    "loading_countries": "ದೇಶಗಳು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ...",
-    "loading_languages": "ಭಾಷೆಗಳು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ...",
-    "basic_settings": "ಮೂಲಭೂತ ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
-    "page_information": "ಪುಟ ಮಾಹಿತಿ",
-    "call_to_action_button": "ಕಾಲ್-ಟು-ಆಕ್ಷನ್ ಬಟನ್",
-    "button_text": "ಬಟನ್ ಪಠ್ಯ",
-    "button_text_hint": "ಉದಾ: ವೆಬ್‌ಸೈಟ್ ಗೆ ಭೇಟಿ ನೀಡಿ, ಈಗ ಬುಕ್ ಮಾಡಿ",
-    "button_url": "ಬಟನ್ URL",
-    "button_url_hint": "https://example.com",
-    "button_color": "ಬಟನ್ ಬಣ್ಣ",
-    "social_media_links": "ಸೋಶಿಯಲ್ ಮೀಡಿಯಾ ಲಿಂಕ್‌ಗಳು",
-    "info_tab": "ಮಾಹಿತಿ",
-    "action_tab": "ಕ್ರಿಯೆ",
-    "social_tab": "ಸಾಮಾಜಿಕ",
-    "vkontakte_link": "VKಲಿಂಕ್",
-    "color_light": "ಲೈಟ್",
-    "color_primary": "ಪ್ರೈಮರಿ",
-    "color_success": "ಯಶಸ್ಸು",
-    "color_info": "ಮಾಹಿತಿ",
-    "color_warning": "ಎಚ್ಚರಿಕೆ",
-    "color_danger": "ಆಪತ್ತು",
-    "delete_page": "ಪುಟ ಅಳಿಸಿ",
-    "warning_action_cannot_be_undone": "ಎಚ್ಚರಿಕೆ: ಈ ಕ್ರಿಯೆಯನ್ನು ಹಿಂದಿರುಗಿಸಲಾಗುವುದಿಲ್ಲ!",
-    "deleting_page_will_remove": "ಈ ಪುಟ ಅಳಿಸುವುದರಿಂದ ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಲಾಗುತ್ತದೆ:",
-    "delete_page_warning_posts": "ಈ ಪುಟದಲ್ಲಿ ಪ್ರಕಟಿತ ಎಲ್ಲಾ ಪೋಸ್ಟ್‌ಗಳು",
-    "delete_page_warning_media": "ಎಲ್ಲಾ ಫೋಟೋಗಳು ಮತ್ತು ವೀಡಿಯೋಗಳು",
-    "delete_page_warning_members_admins": "ಎಲ್ಲಾ ಪುಟ ಸದಸ್ಯರು ಮತ್ತು ಆಡ್ಮಿನ್‌ಗಳು",
-    "delete_page_warning_likes_followers": "ಎಲ್ಲಾ ಲೈಕ್ಸ್ ಮತ್ತು ಫಾಲೋವರ್ಸ್",
-    "delete_page_warning_settings_info": "ಪುಟ ಸೆಟ್ಟಿಂಗ್‌ಗಳು ಮತ್ತು ಮಾಹಿತಿ",
-    "delete_page_irreversible_note": "ಈ ಕ್ರಿಯೆ ಶಾಶ್ವತವಾಗಿದೆ ಮತ್ತು ಹಿಂಪಡೆಯಲಾಗುವುದಿಲ್ಲ. ಈ ಪುಟವನ್ನು ಅಳಿಸಲು ನಿಜವಾಗಿಯೂ ಬಯಸುವುದೇ ಎಂದು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ.",
-    "delete_page_permanently": "ಪುಟವನ್ನು ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಿ",
-    "delete_page_confirmation_title": "ಪುಟ ಅಳಿಸೋಣ?",
-    "delete_page_confirmation_message": "ನೀವು ನಿಜವಾಗಿಯೂ '@title' ಅಳಿಸಲು ಬಯಸುತ್ತೀರಾ? ಈ ಕ್ರಿಯೆಯನ್ನು ಹಿಂದಿರುಗಿಸಲಾಗುವುದಿಲ್ಲ ಮತ್ತು ಎಲ್ಲಾ ಪುಟ ಡೇಟಾ ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಲಾಗುವುದು.",
-    "page_deleted_successfully": "ಪುಟ ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಲಾಗಿದೆ",
-    "failed_to_delete_page_with_error": "ಪುಟ ಅಳಿಸಲು ವಿಫಲವಾಗಿದೆ: @error",
-    "monetization_info_text": "ಮೋನಿಟೈಜೇಶನ್ ನಿಮ್ಮ ಪುಟಕ್ಕೆ ಜಾಹೀರಾತುಗಳು ಮತ್ತು ಇತರ ವೈಶಿಷ್ಟ್ಯಗಳಿಂದ ಆದಾಯವನ್ನು ಸಂಪಾದಿಸಲು ಅನುಮತಿಸುತ್ತದೆ.",
-    "page_title": "ಪುಟ ಶೀರ್ಷಿಕೆ",
-    "no_data": "ಡೇಟಾ ಲಭ್ಯವಿಲ್ಲ",
-    "disabled": "ನಿಷ್ಕ್ರಿಯ",
-    "enabled": "ಸಕ್ರಿಯ",
-    "audio_file": "ಆಡಿಯೋ ಫೈಲ್",
-    "download": "ಡೌನ್‌ಲೋಡ್",
-    "audio_info": "ಆಡಿಯೋ ಮಾಹಿತಿ",
-    "category": "ವರ್ಗ",
-    "condition": "ಸ್ಥಿತಿ",
-    "location": "ಸ್ಥಳ",
-    "type": "ಪ್ರಕಾರ",
-    "stock": "ಸ್ಟಾಕ್",
-    "description": "ವಿವರಣೆ",
-    "not_available": "ಲಭ್ಯವಿಲ್ಲ",
-    "pieces_available": "{count} ತುಂಡುಗಳು ಲಭ್ಯವಿವೆ",
-    "chat_with_seller": "ಚಾಟ್ ಮಾಡಿ",
-    "by": "ಮೂಲಕ",
-    "blogs": "ಬ್ಲಾಗ್‌ಗಳು",
-    "blog_post": "ಲೇಖ",
-    "blogs_search_hint": "ಲೇಖಗಳನ್ನು ಹುಡುಕಿ...",
-    "tags": "ಟ್ಯಾಗ್‌ಗಳು",
-    "create_blog": "ಲೇಖ ರಚಿಸಿ",
-    "create_first_blog": "ನಿಮ್ಮ ಮೊದಲ ಲೇಖನವನ್ನು ರಚಿಸುವುದರಿಂದ ಪ್ರಾರಂಭಿಸಿ",
-    "blog_title": "ಶೀರ್ಷಿಕೆ",
-    "blog_title_hint": "ವಿವರಣಾತ್ಮಕ ಶೀರ್ಷಿಕೆಯನ್ನು ನಮೂದಿಸಿ",
-    "blog_content": "ವಿಷಯ (HTML)",
-    "blog_content_hint": "ಲೇಖದ HTML ಶರೀರವನ್ನು ಬರೆಯಿರಿ",
-    "blog_cover": "ಕವರ್ ಚಿತ್ರ",
-    "blog_cover_hint": "ಅಪ್ಲೋಡ್ ಮಾಡಲಾದ ಚಿತ್ರ ಮೂಲ ಅಥವಾ URL ಅನ್ನು ಪೇಸ್ಟ್ ಮಾಡಿ (ಐಚ್ಛಿಕ)",
-    "blog_category": "ವರ್ಗ",
-    "blog_tags": "ಟ್ಯಾಗ್‌ಗಳು",
-    "add_tag_hint": "ಕಾಮಾದಿಂದ ವಿಭಜಿತ ಟ್ಯಾಗ್‌ಗಳನ್ನು ಟೈಪ್ ಮಾಡಿ ಮತ್ತು + ಒತ್ತಿ",
-    "pick_image": "ಚಿತ್ರವನ್ನು ಆರಿಸಿ",
-    "replace_image": "ಚಿತ್ರವನ್ನು ಬದಲಾಯಿಸಿ",
-    "remove": "ತೆಗೆದುಹಾಕಿ",
-    "uploading": "ಅಪ್ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ",
-    "no_cover_selected": "ಯಾವುದೇ ಕವರ್ ಆಯ್ಕೆ ಮಾಡಲಾಗಿಲ್ಲ",
-    "upload_failed": "ಅಪ್ಲೋಡ್ ವಿಫಲವಾಗಿದೆ",
-    "publish_to": "ಪ್ರಕಾಶಿಸಲು",
-    "timeline": "ಟೈಮ್‌ಲೈನ್",
-    "page": "ಪುಟ",
-    "group": "ಗುಂಪು",
-    "event": "ಇವೆಂಟ್",
-    "tips_enabled": "ಟಿಪ್ಸ್ ಸಕ್ರಿಯವಾಗಿದೆ",
-    "for_subscriptions": "ಸದಸ್ಯತೆಗಾಗಿ",
-    "is_paid": "ಪಾವತಿಸಿದ ವಿಷಯ",
-    "post_price": "ಬೆಲೆ",
-    "paid_text": "ಪಾವತಿಸಿದ ಪೂರ್ವावलೋಕನ ಪಠ್ಯ",
-    "blog_created_successfully": "ಲೇಖ ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ",
-    "blog_updated_successfully": "ಲೇಖ ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ",
-    "blog_deleted_successfully": "ಲೇಖ ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಲಾಗಿದೆ",
-    "edit_blog": "ಲೇಖ ಸಂಪಾದಿಸಿ",
-    "delete_blog": "ಲೇಖ ಅಳಿಸಿ",
-    "delete_blog_confirm": "ನೀವು ಈ ಲೇಖನವನ್ನು ಅಳಿಸಲು ನಿಜವಾಗಿಯೂ ಬಯಸುತ್ತೀರಾ? ಈ ಕ್ರಿಯೆಯನ್ನು ಹಿಂದಿರುಗಿಸಲಾಗುವುದಿಲ್ಲ.",
-    "add_tag": "ಟ್ಯಾಗ್ ಸೇರಿಸಿ",
-    "required": "ಅವಶ್ಯಕ ಕ್ಷೇತ್ರ",
-    "publish": "ಪ್ರಕಶಿಸಿ",
-    "try_different_search": "ಬೇರೊಂದು ಹುಡುಕಾಟ ಅಥವಾ ಫಿಲ್ಟರ್ ಪ್ರಯತ್ನಿಸಿ",
-    "filter": "ಫಿಲ್ಟರ್",
-    // Post Actions
-        'post_saved_successfully': 'ಪೋಸ್ಟ್ ಯಶಸ್ವಿಯಾಗಿ ಉಳಿಸಲಾಗಿದೆ',
-'post_removed_from_saved': 'ಪೋಸ್ಟ್ ಉಳಿಸಿದ ಪಟ್ಟಿಯಿಂದ ತೆಗೆದುಹಾಕಲಾಗಿದೆ',
-'post_pinned_to_profile': 'ಪೋಸ್ಟ್ ಪ್ರೊಫೈಲ್‌ಗೆ ಪಿನ್ ಮಾಡಲಾಗಿದೆ',
-'post_unpinned_from_profile': 'ಪೋಸ್ಟ್ ಪ್ರೊಫೈಲ್‌ನಿಂದ ಅನ್‌ಪಿನ್ ಮಾಡಲಾಗಿದೆ',
-'post_hidden_from_timeline': 'ಪೋಸ್ಟ್ ಟೈಮ್‌ಲೈನ್‌ನಿಂದ ಮರೆಮಾಡಲಾಗಿದೆ',
-'post_unhidden_on_timeline': 'ಪೋಸ್ಟ್ ಟೈಮ್‌ಲೈನ್‌ನಲ್ಲಿ ಮತ್ತೆ ತೋರಿಸಲಾಗಿದೆ',
-'post_deleted_successfully': 'ಪೋಸ್ಟ್ ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಲಾಗಿದೆ',
-'post_updated_successfully': 'ಪೋಸ್ಟ್ ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ',
-'comments_enabled': 'ಟಿಪ್ಪಣಿಗಳನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ',
-'action_completed_successfully': 'ಕ್ರಿಯೆ ಯಶಸ್ವಿಯಾಗಿ ಪೂರ್ಣಗೊಂಡಿದೆ',
-'comments_disabled_message': 'ಈ ಪೋಸ್ಟ್‌ಗೆ ಟಿಪ್ಪಣಿಗಳು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ',
+  "login": "ಲಾಗಿನ್",
+  "logout": "ಲಾಗ್ಔಟ್",
+  "email": "ಇಮೇಲ್",
+  "password": "ಪಾಸ್ವರ್ಡ್",
+  "forgot_password": "ಪಾಸ್ವರ್ಡ್ ಮರೆತಿರಾ?",
+  "register": "ನೋಂದಣಿ",
+  "welcome": "ಸ್ವಾಗತ",
+  "sign_in": "ಸೈನ್ ಇನ್ ಮಾಡಿ",
+  "sign_up": "ಸೈನ್ ಅಪ್ ಮಾಡಿ",
+  "create_account": "ಖಾತೆ ರಚಿಸಿ",
+  "already_have_account": "ಇದಲ್ಲೇ ಖಾತೆ ಇದೆಯೆ?",
+  "dont_have_account": "ಖಾತೆ ಇಲ್ಲವೇ?",
+  "first_name": "ಮೊದಲ ಹೆಸರು",
+  "last_name": "ಕೊನೆಯ ಹೆಸರು",
+  "username": "ಬಳಕೆದಾರ ಹೆಸರು",
+  "confirm_password": "ಪಾಸ್ವರ್ಡ್ ದೃಢೀಕರಿಸಿ",
+  "gender": "ಲಿಂಗ",
+  "male": "ಪುರುಷ",
+  "female": "ಸ್ತ್ರೀ",
+  "birthdate": "ಜನ್ಮದಿನ",
+  "optional": "ಐಚ್ಛಿಕ",
+  "join_community": "ನಮ್ಮ ಸಮುದಾಯದಲ್ಲಿ ಸೇರಿ",
+  "start_journey": "ನಮ್ಮ ಜೊತೆಗೆ ನಿಮ್ಮ ಪ್ರಯಾಣವನ್ನು ಪ್ರಾರಂಭಿಸಿ",
+  "creating_account": "ಖಾತೆ ರಚಿಸಲಾಗುತ್ತಿದೆ...",
+  "contact_admin": "ನಿರ್ವಾಹಕವನ್ನು ಸಂಪರ್ಕಿಸಿ",
+  "welcome_back": "ಹಿಂದಿರುಗಿ ಸ್ವಾಗತ!",
+  "sign_in_continue": "ನಿಮ್ಮ ಪ್ರಯಾಣವನ್ನು ಮುಂದುವರಿಸಲು ಸೈನ್ ಇನ್ ಮಾಡಿ",
+  "email_username": "ಇಮೇಲ್ ಅಥವಾ ಬಳಕೆದಾರ ಹೆಸರು",
+  "enter_email_username": "ನಿಮ್ಮ ಇಮೇಲ್ ಅಥವಾ ಬಳಕೆದಾರ ಹೆಸರು ನಮೂದಿಸಿ",
+  "enter_password": "ನಿಮ್ಮ ಪಾಸ್ವರ್ಡ್ ನಮೂದಿಸಿ",
+  "enter_first_name": "ನಿಮ್ಮ ಮೊದಲ ಹೆಸರನ್ನು ನಮೂದಿಸಿ",
+  "enter_last_name": "ನಿಮ್ಮ ಕೊನೆಯ ಹೆಸರನ್ನು ನಮೂದಿಸಿ",
+  "enter_username": "ನಿಮ್ಮ ಬಳಕೆದಾರ ಹೆಸರನ್ನು ನಮೂದಿಸಿ",
+  "enter_email": "ನಿಮ್ಮ ಇಮೇಲ್ ವಿಳಾಸ ನಮೂದಿಸಿ",
+  "confirm_your_password": "ನಿಮ್ಮ ಪಾಸ್ವರ್ಡ್ ದೃಢೀಕರಿಸಿ",
+  "select_gender": "ನಿಮ್ಮ ಲಿಂಗ ಆಯ್ಕೆಮಾಡಿ",
+  "select_birthdate": "ನಿಮ್ಮ ಜನ್ಮ ದಿನಾಂಕ ಆಯ್ಕೆಮಾಡಿ",
+  "first_name_required": "ಮೊದಲ ಹೆಸರು ಅಗತ್ಯವಿದೆ",
+  "last_name_required": "ಕೊನೆಯ ಹೆಸರು ಅಗತ್ಯವಿದೆ",
+  "username_required": "ಬಳಕೆದಾರ ಹೆಸರು ಅಗತ್ಯವಿದೆ",
+  "email_required": "ಇಮೇಲ್ ಅಗತ್ಯವಿದೆ",
+  "password_required": "ಪಾಸ್ವರ್ಡ್ ಅಗತ್ಯವಿದೆ",
+  "password_min_length": "ಪಾಸ್ವರ್ಡ್ ಕನಿಷ್ಠ 6 ಅಕ್ಷರಗಳಿರಬೇಕು",
+  "passwords_not_match": "ಪಾಸ್ವರ್ಡ್ ಹೊಂದಿಕೆಯಾಗುತ್ತಿಲ್ಲ",
+  "invalid_email": "ದಯವಿಟ್ಟು ಮಾನ್ಯ ಇಮೇಲ್ ನಮೂದಿಸಿ",
+  "invalid_url": "ದಯವಿಟ್ಟು ಮಾನ್ಯ URL ನಮೂದಿಸಿ (http/https)",
+  "username_alphanumeric":
+      "ಬಳಕೆದಾರ ಹೆಸರು ಲೆಟರ್, ಸಂಖ್ಯೆಗಳು ಮತ್ತು ಅಂಡರ್ಸ್ಕೋರ್ ಮಾತ್ರ ಇರಬಹುದು",
+  "account_created_successfully":
+      "ಖಾತೆ ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ! ಸ್ವಾಗತ Panchit! 🎉",
+  "registration_failed": "ನೋಂದಣಿ ವಿಫಲವಾಗಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+  "email_username_required": "ಇಮೇಲ್ ಅಥವಾ ಬಳಕೆದಾರ ಹೆಸರು ಅಗತ್ಯವಿದೆ",
+  "sign_in_with_google": "Google ಮೂಲಕ ಸೈನ್ ಇನ್ ಮಾಡಿ",
+  "sign_in_with_apple": "Apple ಮೂಲಕ ಸೈನ್ ಇನ್ ಮಾಡಿ",
+  "getting_started": "ಪ್ರಾರಂಭಿಸುತ್ತಿದೆ",
+  "complete_profile": "ಪ್ರಾರಂಭಿಸಲು ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಸಂಪೂರ್ಣ ಮಾಡಿ",
+  "where_do_you_live": "ನೀವು ಎಲ್ಲಿದ್ದೀರಾ?",
+  "location_description":
+      "ದಯವಿಟ್ಟು ನಿಮ್ಮ ಸ್ಥಳ ಹಂಚಿ, ಹತ್ತಿರದ ಜನರೊಂದಿಗೆ ಸಂಪರ್ಕಕ್ಕೆ ಬರಲು",
+  "what_do_you_do": "ನೀವು ಏನು ಮಾಡುತ್ತೀರಿ?",
+  "work_description": "ನಿಮ್ಮ ವೃತ್ತಿ ಅಥವಾ ಉದ್ಯೋಗ ಹಂಚಿ",
+  "what_did_you_study": "ನೀವು ಯಾವ ವಿಷಯ ಅಧ್ಯಯನ ಮಾಡಿದ್ದೀರಿ?",
+  "education_description": "ನಿಮ್ಮ ಶೈಕ್ಷಣಿಕ ಹಿನ್ನೆಲೆ ಹಂಚಿ",
+  "work": "ಕೆಲಸ",
+  "education": "ಶಿಕ್ಷಣ",
+  "skip": "ಸ್ಕಿಪ್",
+  "home": "ಮುಖಪುಟ",
+  "profile": "ಪ್ರೊಫೈಲ್",
+  "notifications": "ಅಧಿಸೂಚನೆಗಳು",
+  "messages": "ಸಂದೇಶಗಳು",
+  "search": "ಹುಡುಕು",
+  "menu": "ಮೆನು",
+  "settings": "ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+  "quick_actions": "ದ್ರುತ ಕ್ರಿಯೆಗಳು",
+  "saved_posts": "ಉಳಿಸಲಾಗಿದ ಪೋಸ್ಟ್‌ಗಳು",
+  "albums": "ಆಲ್ಬಂಗಳು",
+  "my_articles": "ನನ್ನ ಲೇಖನಗಳು",
+  "my_blogs": "ನನ್ನ ಲೇಖನಗಳು",
+  "my_products": "ನನ್ನ ಉತ್ಪನ್ನಗಳು",
+  "groups": "ಗುಂಪುಗಳು",
+  "pages": "ಪೇಜ್‌ಗಳು",
+  "explore": "ಅನ್ವೇಷಿಸಿ",
+  "feed": "ಫೀಡ್",
+  "view_profile": "ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ವೀಕ್ಷಿಸಿ",
+  "points": "ಅಂಕಗಳು",
+  "followers": "ಅನುವರ್ತಕರು",
+  "following": "ಅನುಸರಿಸುತ್ತಿದ್ದಾರೆ",
+  "coming_soon": "ಶೀಘ್ರದಲ್ಲೇ ಬರುತ್ತಿದೆ",
+  "language": "ಭಾಷೆ",
+  "language_switch_success": "ಭಾಷೆ ಯಶಸ್ವಿಯಾಗಿ ಬದಲಾಗಿದೆ",
+  "theme": "ಥೀಮ್",
+  "light_mode": "ಬೆಳಕು ಮೋಡ್",
+  "dark_mode": "ಮರೆತ ಮೋಡ್",
+  "light_mode_enabled": "ಬೆಳಕು ಮೋಡ್ ಸಕ್ರಿಯವಾಗಿದೆ",
+  "dark_mode_enabled": "ಮರೆತ ಮೋಡ್ ಸಕ್ರಿಯವಾಗಿದೆ",
+  "clean_bright_interface": "ಶುದ್ಧ ಮತ್ತು ಪ್ರಕಾಶಮಾನವಾದ ಇಂಟರ್ಫೇಸ್",
+  "easy_eyes_interface": "ಕಣ್ಣುಗಳಿಗೆ ಸುಲಭವಾದ ಇಂಟರ್ಫೇಸ್",
+  "create_post": "ಪೋಸ್ಟ್ ರಚಿಸಿ",
+  "edit_post": "ಪೋಸ್ಟ್ ಸಂಪಾದಿಸಿ",
+  "delete_post": "ಪೋಸ್ಟ್ ಅಳಿಸಿ",
+  "share_post": "ಪೋಸ್ಟ್ ಹಂಚಿ",
+  "like": "ಇಷ್ಟಪಟ್ಟಿದೆ",
+  "comment": "ಟಿಪ್ಪಣಿ",
+  "comments": "ಟಿಪ್ಪಣಿಗಳು",
+  "comments_disabled": "ಈ ಪೋಸ್ಟ್‌ಗೆ ಟಿಪ್ಪಣಿಗಳನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ",
+  "show_more": "ಹೆಚ್ಚು ತೋರಿಸಿ",
+  "show_less": "ಕೆಲವು ಕಡಿಮೆ ತೋರಿಸಿ",
+  "edit": "ಸಂಪಾದನೆ ಮಾಡಿ",
+  "ad_type_page": "ಪುಟ",
+  "ad_type_group": "ಗುಂಪು",
+  "ad_type_event": "ಇವೆಂಟ್",
+  "ad_type_post": "ಪೋಸ್ಟ್",
+  "ad_type_link": "ಲಿಂಕ್",
+  "could_not_open_url": "URL ತೆರೆಯಲಾಗಲಿಲ್ಲ",
+  "could_not_open_url_with_error": "URL ತೆರೆಯಲಾಗಲಿಲ್ಲ: @error",
+  "adult_confirm_mark_title": "🔞 ಪ್ರೌಢ ವಿಷಯ ಎಂದು ಗುರುತಿಸಲು?",
+  "adult_confirm_remove_title": "18+ ಲೇಬಲ್ ತೆಗೆದುಹಾಕಲು?",
+  "adult_confirm_action_mark": "18+ ಗುರುತಿಸಿ",
+  "adult_confirm_action_remove": "18+ ತೆಗೆದುಹಾಕಿ",
+  "delete": "ಅಳಿಸಿ",
+  "report": "ರಿಪೋರ್ಟ್",
+  "share": "ಹಂಚಿಕೊಳ್ಳಿ",
+  "save": "ಸೇವ್ ಮಾಡಿ",
+  "cancel": "ರದ್ದುಮಾಡಿ",
+  "ok": "ಒಕೆ",
+  "loading": "ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ...",
+  "error": "ದೋಷ",
+  "success": "ಯಶಸ್ವಿ",
+  "changes_saved_successfully": "ಬದಲಾವಣೆಗಳನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಉಳಿಸಲಾಗಿದೆ!",
+  "failed_to_save_changes_with_error":
+      "ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಲು ವಿಫಲವಾಗಿದೆ: @error",
+  "loading_categories": "ವರ್ಗಗಳು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ...",
+  "loading_countries": "ದೇಶಗಳು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ...",
+  "loading_languages": "ಭಾಷೆಗಳು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ...",
+  "basic_settings": "ಮೂಲಭೂತ ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+  "page_information": "ಪುಟ ಮಾಹಿತಿ",
+  "call_to_action_button": "ಕಾಲ್-ಟು-ಆಕ್ಷನ್ ಬಟನ್",
+  "button_text": "ಬಟನ್ ಪಠ್ಯ",
+  "button_text_hint": "ಉದಾ: ವೆಬ್‌ಸೈಟ್ ಗೆ ಭೇಟಿ ನೀಡಿ, ಈಗ ಬುಕ್ ಮಾಡಿ",
+  "button_url": "ಬಟನ್ URL",
+  "button_url_hint": "https://example.com",
+  "button_color": "ಬಟನ್ ಬಣ್ಣ",
+  "social_media_links": "ಸೋಶಿಯಲ್ ಮೀಡಿಯಾ ಲಿಂಕ್‌ಗಳು",
+  "info_tab": "ಮಾಹಿತಿ",
+  "action_tab": "ಕ್ರಿಯೆ",
+  "social_tab": "ಸಾಮಾಜಿಕ",
+  "vkontakte_link": "VKಲಿಂಕ್",
+  "color_light": "ಲೈಟ್",
+  "color_primary": "ಪ್ರೈಮರಿ",
+  "color_success": "ಯಶಸ್ಸು",
+  "color_info": "ಮಾಹಿತಿ",
+  "color_warning": "ಎಚ್ಚರಿಕೆ",
+  "color_danger": "ಆಪತ್ತು",
+  "delete_page": "ಪುಟ ಅಳಿಸಿ",
+  "warning_action_cannot_be_undone":
+      "ಎಚ್ಚರಿಕೆ: ಈ ಕ್ರಿಯೆಯನ್ನು ಹಿಂದಿರುಗಿಸಲಾಗುವುದಿಲ್ಲ!",
+  "deleting_page_will_remove": "ಈ ಪುಟ ಅಳಿಸುವುದರಿಂದ ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಲಾಗುತ್ತದೆ:",
+  "delete_page_warning_posts": "ಈ ಪುಟದಲ್ಲಿ ಪ್ರಕಟಿತ ಎಲ್ಲಾ ಪೋಸ್ಟ್‌ಗಳು",
+  "delete_page_warning_media": "ಎಲ್ಲಾ ಫೋಟೋಗಳು ಮತ್ತು ವೀಡಿಯೋಗಳು",
+  "delete_page_warning_members_admins": "ಎಲ್ಲಾ ಪುಟ ಸದಸ್ಯರು ಮತ್ತು ಆಡ್ಮಿನ್‌ಗಳು",
+  "delete_page_warning_likes_followers": "ಎಲ್ಲಾ ಲೈಕ್ಸ್ ಮತ್ತು ಫಾಲೋವರ್ಸ್",
+  "delete_page_warning_settings_info": "ಪುಟ ಸೆಟ್ಟಿಂಗ್‌ಗಳು ಮತ್ತು ಮಾಹಿತಿ",
+  "delete_page_irreversible_note":
+      "ಈ ಕ್ರಿಯೆ ಶಾಶ್ವತವಾಗಿದೆ ಮತ್ತು ಹಿಂಪಡೆಯಲಾಗುವುದಿಲ್ಲ. ಈ ಪುಟವನ್ನು ಅಳಿಸಲು ನಿಜವಾಗಿಯೂ ಬಯಸುವುದೇ ಎಂದು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ.",
+  "delete_page_permanently": "ಪುಟವನ್ನು ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಿ",
+  "delete_page_confirmation_title": "ಪುಟ ಅಳಿಸೋಣ?",
+  "delete_page_confirmation_message":
+      "ನೀವು ನಿಜವಾಗಿಯೂ '@title' ಅಳಿಸಲು ಬಯಸುತ್ತೀರಾ? ಈ ಕ್ರಿಯೆಯನ್ನು ಹಿಂದಿರುಗಿಸಲಾಗುವುದಿಲ್ಲ ಮತ್ತು ಎಲ್ಲಾ ಪುಟ ಡೇಟಾ ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಲಾಗುವುದು.",
+  "page_deleted_successfully": "ಪುಟ ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಲಾಗಿದೆ",
+  "failed_to_delete_page_with_error": "ಪುಟ ಅಳಿಸಲು ವಿಫಲವಾಗಿದೆ: @error",
+  "monetization_info_text":
+      "ಮೋನಿಟೈಜೇಶನ್ ನಿಮ್ಮ ಪುಟಕ್ಕೆ ಜಾಹೀರಾತುಗಳು ಮತ್ತು ಇತರ ವೈಶಿಷ್ಟ್ಯಗಳಿಂದ ಆದಾಯವನ್ನು ಸಂಪಾದಿಸಲು ಅನುಮತಿಸುತ್ತದೆ.",
+  "page_title": "ಪುಟ ಶೀರ್ಷಿಕೆ",
+  "no_data": "ಡೇಟಾ ಲಭ್ಯವಿಲ್ಲ",
+  "disabled": "ನಿಷ್ಕ್ರಿಯ",
+  "enabled": "ಸಕ್ರಿಯ",
+  "audio_file": "ಆಡಿಯೋ ಫೈಲ್",
+  "download": "ಡೌನ್‌ಲೋಡ್",
+  "audio_info": "ಆಡಿಯೋ ಮಾಹಿತಿ",
+  "category": "ವರ್ಗ",
+  "condition": "ಸ್ಥಿತಿ",
+  "location": "ಸ್ಥಳ",
+  "type": "ಪ್ರಕಾರ",
+  "stock": "ಸ್ಟಾಕ್",
+  "description": "ವಿವರಣೆ",
+  "not_available": "ಲಭ್ಯವಿಲ್ಲ",
+  "pieces_available": "{count} ತುಂಡುಗಳು ಲಭ್ಯವಿವೆ",
+  "chat_with_seller": "ಚಾಟ್ ಮಾಡಿ",
+  "by": "ಮೂಲಕ",
+  "blogs": "ಬ್ಲಾಗ್‌ಗಳು",
+  "blog_post": "ಲೇಖ",
+  "blogs_search_hint": "ಲೇಖಗಳನ್ನು ಹುಡುಕಿ...",
+  "tags": "ಟ್ಯಾಗ್‌ಗಳು",
+  "create_blog": "ಲೇಖ ರಚಿಸಿ",
+  "create_first_blog": "ನಿಮ್ಮ ಮೊದಲ ಲೇಖನವನ್ನು ರಚಿಸುವುದರಿಂದ ಪ್ರಾರಂಭಿಸಿ",
+  "blog_title": "ಶೀರ್ಷಿಕೆ",
+  "blog_title_hint": "ವಿವರಣಾತ್ಮಕ ಶೀರ್ಷಿಕೆಯನ್ನು ನಮೂದಿಸಿ",
+  "blog_content": "ವಿಷಯ (HTML)",
+  "blog_content_hint": "ಲೇಖದ HTML ಶರೀರವನ್ನು ಬರೆಯಿರಿ",
+  "blog_cover": "ಕವರ್ ಚಿತ್ರ",
+  "blog_cover_hint":
+      "ಅಪ್ಲೋಡ್ ಮಾಡಲಾದ ಚಿತ್ರ ಮೂಲ ಅಥವಾ URL ಅನ್ನು ಪೇಸ್ಟ್ ಮಾಡಿ (ಐಚ್ಛಿಕ)",
+  "blog_category": "ವರ್ಗ",
+  "blog_tags": "ಟ್ಯಾಗ್‌ಗಳು",
+  "add_tag_hint": "ಕಾಮಾದಿಂದ ವಿಭಜಿತ ಟ್ಯಾಗ್‌ಗಳನ್ನು ಟೈಪ್ ಮಾಡಿ ಮತ್ತು + ಒತ್ತಿ",
+  "pick_image": "ಚಿತ್ರವನ್ನು ಆರಿಸಿ",
+  "replace_image": "ಚಿತ್ರವನ್ನು ಬದಲಾಯಿಸಿ",
+  "remove": "ತೆಗೆದುಹಾಕಿ",
+  "uploading": "ಅಪ್ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ",
+  "no_cover_selected": "ಯಾವುದೇ ಕವರ್ ಆಯ್ಕೆ ಮಾಡಲಾಗಿಲ್ಲ",
+  "upload_failed": "ಅಪ್ಲೋಡ್ ವಿಫಲವಾಗಿದೆ",
+  "publish_to": "ಪ್ರಕಾಶಿಸಲು",
+  "timeline": "ಟೈಮ್‌ಲೈನ್",
+  "page": "ಪುಟ",
+  "group": "ಗುಂಪು",
+  "event": "ಇವೆಂಟ್",
+  "tips_enabled": "ಟಿಪ್ಸ್ ಸಕ್ರಿಯವಾಗಿದೆ",
+  "for_subscriptions": "ಸದಸ್ಯತೆಗಾಗಿ",
+  "is_paid": "ಪಾವತಿಸಿದ ವಿಷಯ",
+  "post_price": "ಬೆಲೆ",
+  "paid_text": "ಪಾವತಿಸಿದ ಪೂರ್ವावलೋಕನ ಪಠ್ಯ",
+  "blog_created_successfully": "ಲೇಖ ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ",
+  "blog_updated_successfully": "ಲೇಖ ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ",
+  "blog_deleted_successfully": "ಲೇಖ ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಲಾಗಿದೆ",
+  "edit_blog": "ಲೇಖ ಸಂಪಾದಿಸಿ",
+  "delete_blog": "ಲೇಖ ಅಳಿಸಿ",
+  "delete_blog_confirm":
+      "ನೀವು ಈ ಲೇಖನವನ್ನು ಅಳಿಸಲು ನಿಜವಾಗಿಯೂ ಬಯಸುತ್ತೀರಾ? ಈ ಕ್ರಿಯೆಯನ್ನು ಹಿಂದಿರುಗಿಸಲಾಗುವುದಿಲ್ಲ.",
+  "add_tag": "ಟ್ಯಾಗ್ ಸೇರಿಸಿ",
+  "required": "ಅವಶ್ಯಕ ಕ್ಷೇತ್ರ",
+  "publish": "ಪ್ರಕಶಿಸಿ",
+  "try_different_search": "ಬೇರೊಂದು ಹುಡುಕಾಟ ಅಥವಾ ಫಿಲ್ಟರ್ ಪ್ರಯತ್ನಿಸಿ",
+  "filter": "ಫಿಲ್ಟರ್",
+  // Post Actions
+  'post_saved_successfully': 'ಪೋಸ್ಟ್ ಯಶಸ್ವಿಯಾಗಿ ಉಳಿಸಲಾಗಿದೆ',
+  'post_removed_from_saved': 'ಪೋಸ್ಟ್ ಉಳಿಸಿದ ಪಟ್ಟಿಯಿಂದ ತೆಗೆದುಹಾಕಲಾಗಿದೆ',
+  'post_pinned_to_profile': 'ಪೋಸ್ಟ್ ಪ್ರೊಫೈಲ್‌ಗೆ ಪಿನ್ ಮಾಡಲಾಗಿದೆ',
+  'post_unpinned_from_profile': 'ಪೋಸ್ಟ್ ಪ್ರೊಫೈಲ್‌ನಿಂದ ಅನ್‌ಪಿನ್ ಮಾಡಲಾಗಿದೆ',
+  'post_hidden_from_timeline': 'ಪೋಸ್ಟ್ ಟೈಮ್‌ಲೈನ್‌ನಿಂದ ಮರೆಮಾಡಲಾಗಿದೆ',
+  'post_unhidden_on_timeline': 'ಪೋಸ್ಟ್ ಟೈಮ್‌ಲೈನ್‌ನಲ್ಲಿ ಮತ್ತೆ ತೋರಿಸಲಾಗಿದೆ',
+  'post_deleted_successfully': 'ಪೋಸ್ಟ್ ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಲಾಗಿದೆ',
+  'post_updated_successfully': 'ಪೋಸ್ಟ್ ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ',
+  'comments_enabled': 'ಟಿಪ್ಪಣಿಗಳನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ',
+  'action_completed_successfully': 'ಕ್ರಿಯೆ ಯಶಸ್ವಿಯಾಗಿ ಪೂರ್ಣಗೊಂಡಿದೆ',
+  'comments_disabled_message': 'ಈ ಪೋಸ್ಟ್‌ಗೆ ಟಿಪ್ಪಣಿಗಳು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ',
 
-// Settings
-'arabic': 'ಅರೇಬಿಕ್',
-'english': 'ಇಂಗ್ಲಿಷ್',
-'french': 'ಫ್ರೆಂಚ್',
-'spanish': 'ಸ್ಪ್ಯಾನಿಷ್',
-'portuguese': 'ಪೋರ್ಚುಗೀಸ್',
-'portuguese_br': 'ಪೋರ್ಚುಗೀಸ್ (ಬ್ರೆಜಿಲ್)',
-'german': 'ಜರ್ಮನ್',
-'turkish': 'ಟರ್ಕಿಷ್',
-'dutch': 'ಡಚ್',
-'italian': 'ಇಟಾಲಿಯನ್',
-'russian': 'ರಷ್ಯನ್',
-'romanian': 'ರೊಮೇನಿಯನ್',
-'greek': 'ಗ್ರೀಕ್',
-'privacy': 'ಗೌಪ್ಯತೆ',
+  // Settings
+  'arabic': 'ಅರೇಬಿಕ್',
+  'english': 'ಇಂಗ್ಲಿಷ್',
+  'french': 'ಫ್ರೆಂಚ್',
+  'spanish': 'ಸ್ಪ್ಯಾನಿಷ್',
+  'portuguese': 'ಪೋರ್ಚುಗೀಸ್',
+  'portuguese_br': 'ಪೋರ್ಚುಗೀಸ್ (ಬ್ರೆಜಿಲ್)',
+  'german': 'ಜರ್ಮನ್',
+  'turkish': 'ಟರ್ಕಿಷ್',
+  'dutch': 'ಡಚ್',
+  'italian': 'ಇಟಾಲಿಯನ್',
+  'russian': 'ರಷ್ಯನ್',
+  'romanian': 'ರೊಮೇನಿಯನ್',
+  'greek': 'ಗ್ರೀಕ್',
+  'privacy': 'ಗೌಪ್ಯತೆ',
 
-// Language Settings
-'choose_language': 'ನಿಮ್ಮ ಇಷ್ಟದ ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ',
-'language_changed': 'ಭಾಷೆ ಯಶಸ್ವಿಯಾಗಿ ಬದಲಾಯಿಸಲಾಗಿದೆ',
-'switch_to_arabic': 'ಅರೇಬಿಕ್‌ಗೆ ಬದಲಾಯಿಸಿ',
-'switch_to_english': 'ಇಂಗ್ಲಿಷ್‌ಗೆ ಬದಲಾಯಿಸಿ',
+  // Language Settings
+  'choose_language': 'ನಿಮ್ಮ ಇಷ್ಟದ ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+  'language_changed': 'ಭಾಷೆ ಯಶಸ್ವಿಯಾಗಿ ಬದಲಾಯಿಸಲಾಗಿದೆ',
+  'switch_to_arabic': 'ಅರೇಬಿಕ್‌ಗೆ ಬದಲಾಯಿಸಿ',
+  'switch_to_english': 'ಇಂಗ್ಲಿಷ್‌ಗೆ ಬದಲಾಯಿಸಿ',
 
-// Demo & Examples
-'translation_demo': 'ಅನುವಾದ ಡೆಮೊ',
-'current_language': 'ಪ್ರಸ್ತುತ ಭಾಷೆ',
+  // Demo & Examples
+  'translation_demo': 'ಅನುವಾದ ಡೆಮೊ',
+  'current_language': 'ಪ್ರಸ್ತುತ ಭಾಷೆ',
 
-// Actions & Buttons
-'apply': 'ಅನ್ವಯಿಸಿ',
-'confirm': 'ದೃಢೀಕರಿಸಿ',
-'close': 'ಮುಚ್ಚಿ',
-'continue': 'ಮುಂದುವರಿಸಿ',
-'back': 'ಹಿಂದೆ',
-'next': 'ಮುಂದೆ',
-'finish': 'ಮುಗಿಸಿ',
+  // Actions & Buttons
+  'apply': 'ಅನ್ವಯಿಸಿ',
+  'confirm': 'ದೃಢೀಕರಿಸಿ',
+  'close': 'ಮುಚ್ಚಿ',
+  'continue': 'ಮುಂದುವರಿಸಿ',
+  'back': 'ಹಿಂದೆ',
+  'next': 'ಮುಂದೆ',
+  'finish': 'ಮುಗಿಸಿ',
 
-// Status Messages
-'loading_please_wait': 'ಲೋಡ್ ಆಗುತ್ತಿದೆ, ದಯವಿಟ್ಟು ನಿರೀಕ್ಷಿಸಿ...',
-'operation_successful': 'ಕಾರ್ಯ ಯಶಸ್ವಿಯಾಗಿ ಪೂರ್ಣಗೊಂಡಿದೆ',
-'operation_failed': 'ಕಾರ್ಯ ವಿಫಲವಾಗಿದೆ',
-'try_again': 'ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
-'no_internet_connection': 'ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕ ಇಲ್ಲ',
-'server_error': 'ಸರ್ವರ್ ದೋಷ ಸಂಭವಿಸಿದೆ',
+  // Status Messages
+  'loading_please_wait': 'ಲೋಡ್ ಆಗುತ್ತಿದೆ, ದಯವಿಟ್ಟು ನಿರೀಕ್ಷಿಸಿ...',
+  'operation_successful': 'ಕಾರ್ಯ ಯಶಸ್ವಿಯಾಗಿ ಪೂರ್ಣಗೊಂಡಿದೆ',
+  'operation_failed': 'ಕಾರ್ಯ ವಿಫಲವಾಗಿದೆ',
+  'try_again': 'ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
+  'no_internet_connection': 'ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕ ಇಲ್ಲ',
+  'server_error': 'ಸರ್ವರ್ ದೋಷ ಸಂಭವಿಸಿದೆ',
 
-// Post Related
-'post_options': 'ಪೋಸ್ಟ್ ಆಯ್ಕೆಗಳು',
-'post_menu': 'ಪೋಸ್ಟ್ ಮೆನು',
-'hide_post': 'ಪೋಸ್ಟ್ ಮರೆಮಾಡಿ',
-'unhide_post': 'ಪೋಸ್ಟ್ ತೋರಿಸಿ',
-'save_post': 'ಪೋಸ್ಟ್ ಉಳಿಸಿ',
-'unsave_post': 'ಉಳಿಸಿದುದರಿಂದ ತೆಗೆದುಹಾಕಿ',
-'pin_post': 'ಪ್ರೊಫೈಲ್‌ಗೆ ಪಿನ್ ಮಾಡಿ',
-'unpin_post': 'ಪ್ರೊಫೈಲ್‌ನಿಂದ ಅನ್‌ಪಿನ್ ಮಾಡಿ',
-'copy_link': 'ಲಿಂಕ್ ನಕಲಿಸಿ',
-'report_post': 'ಪೋಸ್ಟ್ ವರದಿ ಮಾಡಿ',
+  // Post Related
+  'post_options': 'ಪೋಸ್ಟ್ ಆಯ್ಕೆಗಳು',
+  'post_menu': 'ಪೋಸ್ಟ್ ಮೆನು',
+  'hide_post': 'ಪೋಸ್ಟ್ ಮರೆಮಾಡಿ',
+  'unhide_post': 'ಪೋಸ್ಟ್ ತೋರಿಸಿ',
+  'save_post': 'ಪೋಸ್ಟ್ ಉಳಿಸಿ',
+  'unsave_post': 'ಉಳಿಸಿದುದರಿಂದ ತೆಗೆದುಹಾಕಿ',
+  'pin_post': 'ಪ್ರೊಫೈಲ್‌ಗೆ ಪಿನ್ ಮಾಡಿ',
+  'unpin_post': 'ಪ್ರೊಫೈಲ್‌ನಿಂದ ಅನ್‌ಪಿನ್ ಮಾಡಿ',
+  'copy_link': 'ಲಿಂಕ್ ನಕಲಿಸಿ',
+  'report_post': 'ಪೋಸ್ಟ್ ವರದಿ ಮಾಡಿ',
 
-// Time & Dates
-'just_now': 'ಇದೀಗ',
-'minutes_ago': 'ನಿಮಿಷಗಳ ಹಿಂದೆ',
-'hours_ago': 'ಗಂಟೆಗಳ ಹಿಂದೆ',
-'days_ago': 'ದಿನಗಳ ಹಿಂದೆ',
-'weeks_ago': 'ವಾರಗಳ ಹಿಂದೆ',
-'months_ago': 'ತಿಂಗಳುಗಳ ಹಿಂದೆ',
-'years_ago': 'ವರ್ಷಗಳ ಹಿಂದೆ',
+  // Time & Dates
+  'just_now': 'ಇದೀಗ',
+  'minutes_ago': 'ನಿಮಿಷಗಳ ಹಿಂದೆ',
+  'hours_ago': 'ಗಂಟೆಗಳ ಹಿಂದೆ',
+  'days_ago': 'ದಿನಗಳ ಹಿಂದೆ',
+  'weeks_ago': 'ವಾರಗಳ ಹಿಂದೆ',
+  'months_ago': 'ತಿಂಗಳುಗಳ ಹಿಂದೆ',
+  'years_ago': 'ವರ್ಷಗಳ ಹಿಂದೆ',
 
-// Discover Page
-'discover': 'ಅನ್ವೇಷಿಸಿ',
-'login_required': 'ಲಾಗಿನ್ ಅಗತ್ಯವಿದೆ',
-'failed_to_load_content': 'ವಿಷಯವನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
-'login_personalized_content':
-'ವೈಯಕ್ತಿಕ ವಿಷಯವನ್ನು ವೀಕ್ಷಿಸಲು ದಯವಿಟ್ಟು ಲಾಗಿನ್ ಮಾಡಿ',
-'merits_remaining_message': 'ನಿಮ್ಮ ಬಳಿ %s ಮೆರಿಟ್ಸ್ ಉಳಿದಿವೆ',
-'merits_total': 'ಒಟ್ಟು',
-'merits_spent': 'ಖರ್ಚು ಮಾಡಿದವು',
-'view_profile_button': 'ಪ್ರೊಫೈಲ್ ನೋಡಿ',
-'premium_members_subtitle': 'ಪ್ರೀಮಿಯಂ ಸದಸ್ಯರು',
-'premium_pages_subtitle': 'ಪ್ರೀಮಿಯಂ ಪುಟಗಳು',
-'trending_section_subtitle': 'ಈಗ ಟ್ರೆಂಡ್ ಆಗುತ್ತಿರುವುದು',
-'people_you_may_know_subtitle': 'ನೀವು ತಿಳಿದಿರಬಹುದಾದ ಜನರು',
-'pages_to_discover_subtitle': 'ಅನ್ವೇಷಿಸಲು ಪುಟಗಳು',
-'groups_to_join_subtitle': 'ಸೇರಲು ಗುಂಪುಗಳು',
-'events_to_attend_subtitle': 'ಹಾಜರಾಗಲು ಈವೆಂಟ್‌ಗಳು',
-'page_likes_label': '%s ಲೈಕ್ಸ್',
-'visit_page_button': 'ಪುಟ ನೋಡಿ',
-'trending_label': 'ಟ್ರೆಂಡಿಂಗ್',
-'hashtag_posts_label': '%s ಪೋಸ್ಟ್‌ಗಳು',
-'mutual_friends_label': '%s ಸಾಮಾನ್ಯ',
-'add_friend_button': 'ಮಿತ್ರರನ್ನು ಸೇರಿಸಿ',
-'like_page_button': 'ಪುಟ ಲೈಕ್ ಮಾಡಿ',
-'privacy_public': 'ಸಾರ್ವಜನಿಕ',
-'privacy_private': 'ಖಾಸಗಿ',
-'group_members_label': '%s ಸದಸ್ಯರು',
-'join_group_button': 'ಗುಂಪಿಗೆ ಸೇರಿ',
-'request_to_join_button': 'ಸೇರಲು ವಿನಂತಿಸಿ',
-'event_going_label': '%s ಹೋಗುತ್ತಿದ್ದಾರೆ',
-'interested_button': 'ಆಸಕ್ತಿ ಇದೆ',
-'trending_badge_label': 'ಟ್ರೆಂಡಿಂಗ್',
-'merits_section_title': 'ಮೆರಿಟ್ ಬ್ಯಾಲೆನ್ಸ್',
-'pro_users_section_title': 'ವಿಶೇಷ ಬಳಕೆದಾರರು',
-'pro_pages_section_title': 'ವಿಶೇಷ ಪುಟಗಳು',
-'trending_section_title': 'ಟ್ರೆಂಡಿಂಗ್',
-'suggested_friends_section_title': 'ಶಿಫಾರಸು ಮಾಡಿದ ಸ್ನೇಹಿತರು',
-'suggested_pages_section_title': 'ಶಿಫಾರಸು ಮಾಡಿದ ಪುಟಗಳು',
-'suggested_groups_section_title': 'ಶಿಫಾರಸು ಮಾಡಿದ ಗುಂಪುಗಳು',
-'suggested_events_section_title': 'ಶಿಫಾರಸು ಮಾಡಿದ ಈವೆಂಟ್‌ಗಳು',
-// Feelings - Actions
+  // Discover Page
+  'discover': 'ಅನ್ವೇಷಿಸಿ',
+  'login_required': 'ಲಾಗಿನ್ ಅಗತ್ಯವಿದೆ',
+  'failed_to_load_content': 'ವಿಷಯವನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+  'login_personalized_content':
+      'ವೈಯಕ್ತಿಕ ವಿಷಯವನ್ನು ವೀಕ್ಷಿಸಲು ದಯವಿಟ್ಟು ಲಾಗಿನ್ ಮಾಡಿ',
+  'merits_remaining_message': 'ನಿಮ್ಮ ಬಳಿ %s ಮೆರಿಟ್ಸ್ ಉಳಿದಿವೆ',
+  'merits_total': 'ಒಟ್ಟು',
+  'merits_spent': 'ಖರ್ಚು ಮಾಡಿದವು',
+  'view_profile_button': 'ಪ್ರೊಫೈಲ್ ನೋಡಿ',
+  'premium_members_subtitle': 'ಪ್ರೀಮಿಯಂ ಸದಸ್ಯರು',
+  'premium_pages_subtitle': 'ಪ್ರೀಮಿಯಂ ಪುಟಗಳು',
+  'trending_section_subtitle': 'ಈಗ ಟ್ರೆಂಡ್ ಆಗುತ್ತಿರುವುದು',
+  'people_you_may_know_subtitle': 'ನೀವು ತಿಳಿದಿರಬಹುದಾದ ಜನರು',
+  'pages_to_discover_subtitle': 'ಅನ್ವೇಷಿಸಲು ಪುಟಗಳು',
+  'groups_to_join_subtitle': 'ಸೇರಲು ಗುಂಪುಗಳು',
+  'events_to_attend_subtitle': 'ಹಾಜರಾಗಲು ಈವೆಂಟ್‌ಗಳು',
+  'page_likes_label': '%s ಲೈಕ್ಸ್',
+  'visit_page_button': 'ಪುಟ ನೋಡಿ',
+  'trending_label': 'ಟ್ರೆಂಡಿಂಗ್',
+  'hashtag_posts_label': '%s ಪೋಸ್ಟ್‌ಗಳು',
+  'mutual_friends_label': '%s ಸಾಮಾನ್ಯ',
+  'add_friend_button': 'ಮಿತ್ರರನ್ನು ಸೇರಿಸಿ',
+  'like_page_button': 'ಪುಟ ಲೈಕ್ ಮಾಡಿ',
+  'privacy_public': 'ಸಾರ್ವಜನಿಕ',
+  'privacy_private': 'ಖಾಸಗಿ',
+  'group_members_label': '%s ಸದಸ್ಯರು',
+  'join_group_button': 'ಗುಂಪಿಗೆ ಸೇರಿ',
+  'request_to_join_button': 'ಸೇರಲು ವಿನಂತಿಸಿ',
+  'event_going_label': '%s ಹೋಗುತ್ತಿದ್ದಾರೆ',
+  'interested_button': 'ಆಸಕ್ತಿ ಇದೆ',
+  'trending_badge_label': 'ಟ್ರೆಂಡಿಂಗ್',
+  'merits_section_title': 'ಮೆರಿಟ್ ಬ್ಯಾಲೆನ್ಸ್',
+  'pro_users_section_title': 'ವಿಶೇಷ ಬಳಕೆದಾರರು',
+  'pro_pages_section_title': 'ವಿಶೇಷ ಪುಟಗಳು',
+  'trending_section_title': 'ಟ್ರೆಂಡಿಂಗ್',
+  'suggested_friends_section_title': 'ಶಿಫಾರಸು ಮಾಡಿದ ಸ್ನೇಹಿತರು',
+  'suggested_pages_section_title': 'ಶಿಫಾರಸು ಮಾಡಿದ ಪುಟಗಳು',
+  'suggested_groups_section_title': 'ಶಿಫಾರಸು ಮಾಡಿದ ಗುಂಪುಗಳು',
+  'suggested_events_section_title': 'ಶಿಫಾರಸು ಮಾಡಿದ ಈವೆಂಟ್‌ಗಳು',
+  // Feelings - Actions
   'feeling_action': 'ನಾನು ಅನುಭವಿಸುತ್ತಿದ್ದೇನೆ',
   'listening_to_action': 'ನಾನು ಕೇಳುತ್ತಿದ್ದೇನೆ',
   'watching_action': 'ನಾನು ನೋಡುತ್ತಿದ್ದೇನೆ',
@@ -353,7 +363,7 @@ const Map<String, String> knIN = {
   'celebrating_action': 'ನಾನು ಆಚರಿಸುತ್ತಿದ್ದೇನೆ',
   'looking_for_action': 'ನಾನು ಹುಡುಕುತ್ತಿದ್ದೇನೆ',
 
-// Placeholders
+  // Placeholders
   'feeling_placeholder': 'ನೀವು ಹೇಗೆ ಅನುಭವಿಸುತ್ತಿದ್ದೀರಾ?',
   'listening_to_placeholder': 'ನೀವು ಏನು ಕೇಳುತ್ತಿದ್ದೀರಾ?',
   'watching_placeholder': 'ನೀವು ಏನು ನೋಡುತ್ತಿದ್ದೀರಾ?',
@@ -366,7 +376,7 @@ const Map<String, String> knIN = {
   'celebrating_placeholder': 'ನೀವು ಏನು ಆಚರಿಸುತ್ತಿದ್ದೀರಾ?',
   'looking_for_placeholder': 'ನೀವು ಏನು ಹುಡುಕುತ್ತಿದ್ದೀರಾ?',
 
-// Emotions
+  // Emotions
   'emotion_happy': 'ಸಂತೋಷ',
   'emotion_loved': 'ಪ್ರೀತಿಸಲ್ಪಟ್ಟಂತೆ ಅನಿಸುತ್ತಿದೆ',
   'emotion_satisfied': 'ತೃಪ್ತ',
@@ -382,14 +392,14 @@ const Map<String, String> knIN = {
   'emotion_shocked': 'ಆಶ್ಚರ್ಯಗೊಂಡ',
   'emotion_down': 'ಮನಸ್ಸು ಕುಗ್ಗಿದೆ',
   'emotion_confounded': 'ತಲೆಸುತ್ತು',
-// Feelings - Interface
+  // Feelings - Interface
   'feelings_activity_title': 'ಭಾವನೆಗಳು ಮತ್ತು ಚಟುವಟಿಕೆಗಳು',
   'choose_feeling_or_activity': 'ಭಾವನೆ ಅಥವಾ ಚಟುವಟಿಕೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ',
   'select_a_feeling': 'ಒಂದು ಭಾವನೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ',
   'apply_button': 'ಅನ್ವಯಿಸಿ',
   'clear_button': 'ಸ್ಪಷ್ಟಗೊಳಿಸಿ',
 
-// Create Post Page
+  // Create Post Page
   'create_post_title': 'ಪೋಸ್ಟ್ ರಚಿಸಿ',
   'create_post_button': 'ಪೋಸ್ಟ್ ಮಾಡಿ',
   'post_as_user': '@name ಆಗಿ ಪೋಸ್ಟ್ ಮಾಡಿ',
@@ -413,12 +423,12 @@ const Map<String, String> knIN = {
   'option_number': 'ಆಯ್ಕೆ @count',
   'post_successfully_created': 'ಪೋಸ್ಟ್ ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ',
   'post_published_video_processing':
-  'ಪೋಸ್ಟ್ ಪ್ರಕಟಿಸಲಾಗಿದೆ! ವೀಡಿಯೊ ಪ್ರಕ್ರಿಯೆಯಲ್ಲಿದೆ ಮತ್ತು ಶೀಘ್ರದಲ್ಲೇ ಕಾಣಿಸುತ್ತದೆ',
+      'ಪೋಸ್ಟ್ ಪ್ರಕಟಿಸಲಾಗಿದೆ! ವೀಡಿಯೊ ಪ್ರಕ್ರಿಯೆಯಲ್ಲಿದೆ ಮತ್ತು ಶೀಘ್ರದಲ್ಲೇ ಕಾಣಿಸುತ್ತದೆ',
   'please_write_text_or_add_content':
-  'ದಯವಿಟ್ಟು ಪಠ್ಯವನ್ನು ಬರೆಯಿರಿ ಅಥವಾ ವಿಷಯವನ್ನು ಸೇರಿಸಿ (ಫೋಟೋ/ವೀಡಿಯೊ/ಆಡಿಯೊ)',
+      'ದಯವಿಟ್ಟು ಪಠ್ಯವನ್ನು ಬರೆಯಿರಿ ಅಥವಾ ವಿಷಯವನ್ನು ಸೇರಿಸಿ (ಫೋಟೋ/ವೀಡಿಯೊ/ಆಡಿಯೊ)',
   'colored_posts_not_enabled': 'ಬಣ್ಣದ ಪೋಸ್ಟ್‌ಗಳು ಸಕ್ರಿಯವಾಗಿಲ್ಲ',
   'colored_posts_not_enabled_description':
-  'ಈ ವೈಶಿಷ್ಟ್ಯವನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಲು ನಿರ್ವಾಹಕರನ್ನು ಸಂಪರ್ಕಿಸಿ',
+      'ಈ ವೈಶಿಷ್ಟ್ಯವನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಲು ನಿರ್ವಾಹಕರನ್ನು ಸಂಪರ್ಕಿಸಿ',
   'no_patterns_available': 'ಯಾವುದೇ ಪ್ಯಾಟರ್ನ್ ಲಭ್ಯವಿಲ್ಲ',
   'no_patterns_description': 'ಸೆಟ್ಟಿಂಗ್‌ಗಳಲ್ಲಿ ಬಣ್ಣದ ಪ್ಯಾಟರ್ನ್ ಕಂಡುಬಂದಿಲ್ಲ',
   'choose_background': 'ಹಿನ್ನಲೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ',
@@ -434,7 +444,7 @@ const Map<String, String> knIN = {
   'friends_only': 'ಸ್ನೇಹಿತರು ಮಾತ್ರ',
   'only_you': 'ನೀವು ಮಾತ್ರ',
 
-// Post Type Labels
+  // Post Type Labels
   'post_type_text': 'ಪಠ್ಯ',
   'post_type_photos': 'ಫೋಟೋಗಳು',
   'post_type_album': 'ಆಲ್ಬಮ್',
@@ -447,7 +457,7 @@ const Map<String, String> knIN = {
   'post_type_colored': 'ಬಣ್ಣದ',
   'post_type_offer': 'ಆಫರ್',
   'post_type_job': 'ಉದ್ಯೋಗ',
-// Events
+  // Events
   'events': 'ಈವೆಂಟ್‌ಗಳು',
   'my_events': 'ನನ್ನ ಈವೆಂಟ್‌ಗಳು',
   'suggested_events': 'ಶಿಫಾರಸು ಮಾಡಿದ ಈವೆಂಟ್‌ಗಳು',
@@ -492,16 +502,15 @@ const Map<String, String> knIN = {
   'organizer': 'ಆಯೋಜಕ',
   'event_privacy': 'ಈವೆಂಟ್ ಗೌಪ್ಯತೆ',
   'try_different_category':
-  'ಬೇರೆ ವರ್ಗವನ್ನು ಪ್ರಯತ್ನಿಸಿ ಅಥವಾ ಹೊಸ ಈವೆಂಟ್‌ಗಳನ್ನು ಕಾಯಿರಿ',
+      'ಬೇರೆ ವರ್ಗವನ್ನು ಪ್ರಯತ್ನಿಸಿ ಅಥವಾ ಹೊಸ ಈವೆಂಟ್‌ಗಳನ್ನು ಕಾಯಿರಿ',
   'no_going_events': 'ನೀವು ಯಾವುದೇ ಈವೆಂಟ್‌ಗೆ ಹೋಗುತ್ತಿಲ್ಲ',
-  'join_events_to_see_them_here':
-  'ಈವೆಂಟ್‌ಗೆ ಸೇರಿಸಿದರೆ ಅವು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ',
+  'join_events_to_see_them_here': 'ಈವೆಂಟ್‌ಗೆ ಸೇರಿಸಿದರೆ ಅವು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ',
   'no_interested_events': 'ನೀವು ಯಾವುದೇ ಈವೆಂಟ್‌ನಲ್ಲಿ ಆಸಕ್ತಿ ತೋರಿಸಿಲ್ಲ',
   'mark_events_interested':
-  'ಈವೆಂಟ್‌ನಲ್ಲಿ ಆಸಕ್ತಿ ತೋರಿಸಿದರೆ ಅವು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ',
+      'ಈವೆಂಟ್‌ನಲ್ಲಿ ಆಸಕ್ತಿ ತೋರಿಸಿದರೆ ಅವು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ',
   'no_invitations': 'ಯಾವುದೇ ಆಹ್ವಾನಗಳಿಲ್ಲ',
   'wait_for_friends_invitations':
-  'ಸ್ನೇಹಿತರು ಆಹ್ವಾನಿಸಿದಾಗ ಅವು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ',
+      'ಸ್ನೇಹಿತರು ಆಹ್ವಾನಿಸಿದಾಗ ಅವು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ',
   'no_my_events': 'ನೀವು ಇನ್ನೂ ಯಾವುದೇ ಈವೆಂಟ್ ರಚಿಸಿಲ್ಲ',
   'create_first_event': 'ನಿಮ್ಮ ಮೊದಲ ಈವೆಂಟ್ ರಚಿಸಲು + ಬಟನ್ ಒತ್ತಿರಿ',
   'searching_for': 'ಹುಡುಕಲಾಗುತ್ತಿದೆ: {query}',
@@ -516,11 +525,10 @@ const Map<String, String> knIN = {
   'no_going_members': 'ಹೋಗುತ್ತಿರುವ ಸದಸ್ಯರು ಇಲ್ಲ',
   'no_interested_members': 'ಆಸಕ್ತ ಸದಸ್ಯರು ಇಲ್ಲ',
   'remove_member': 'ಸದಸ್ಯರನ್ನು ತೆಗೆದುಹಾಕಿ',
-  'remove_member_confirmation':
-  '{name} ಅವರನ್ನು ಈವೆಂಟ್‌ನಿಂದ ತೆಗೆದುಹಾಕಬೇಕೆ?',
+  'remove_member_confirmation': '{name} ಅವರನ್ನು ಈವೆಂಟ್‌ನಿಂದ ತೆಗೆದುಹಾಕಬೇಕೆ?',
   'retry': 'ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
   'feature_coming_soon': 'ಫೀಚರ್ ಶೀಘ್ರದಲ್ಲೇ ಬರಲಿದೆ',
-// Market
+  // Market
   'market_title': 'ಮಾರುಕಟ್ಟೆ',
   'market_products': 'ಉತ್ಪನ್ನಗಳು',
   'market_add_product': 'ಉತ್ಪನ್ನ ಸೇರಿಸಿ',
@@ -542,7 +550,7 @@ const Map<String, String> knIN = {
   'market_submit_product': 'ಉತ್ಪನ್ನವನ್ನು ಸಲ್ಲಿಸಿ',
   'market_category': 'ವರ್ಗ',
   'market_digital_hint':
-  'ನೀವು ಡಿಜಿಟಲ್ ಉತ್ಪನ್ನವನ್ನು ಮಾರಾಟಿಸುತ್ತಿದ್ದರೆ ಈ ಆಯ್ಕೆಯನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ',
+      'ನೀವು ಡಿಜಿಟಲ್ ಉತ್ಪನ್ನವನ್ನು ಮಾರಾಟಿಸುತ್ತಿದ್ದರೆ ಈ ಆಯ್ಕೆಯನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ',
   'market_download_url': 'ಡೌನ್‌ಲೋಡ್ URL',
   'market_upload_file': 'ನಿಮ್ಮ ಫೈಲ್ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ',
   'market_file_none': 'ಯಾವುದೇ ಫೈಲ್ ಆಯ್ಕೆ ಮಾಡಿಲ್ಲ',
@@ -557,12 +565,13 @@ const Map<String, String> knIN = {
   'market_in_stock': 'ಸ್ಟಾಕ್ ಲಭ್ಯವಿದೆ',
   'market_cart': 'ಕಾರ್ಟ್',
   'market_cart_empty': 'ಶಾಪಿಂಗ್ ಕಾರ್ಟ್ ಖಾಲಿಯಾಗಿದೆ',
-  'market_empty_cart_subtitle': 'ನಿಮ್ಮ ಕಾರ್ಟ್‌ಗೆ ಉತ್ಪನ್ನಗಳನ್ನು ಸೇರಿಸಲು ಪ್ರಾರಂಭಿಸಿ',
+  'market_empty_cart_subtitle':
+      'ನಿಮ್ಮ ಕಾರ್ಟ್‌ಗೆ ಉತ್ಪನ್ನಗಳನ್ನು ಸೇರಿಸಲು ಪ್ರಾರಂಭಿಸಿ',
   'market_checkout': 'ಚೆಕ್‌ಔಟ್',
   'market_total': 'ಒಟ್ಟು',
   'market_clear_cart': 'ಕಾರ್ಟ್ ಖಾಲಿ ಮಾಡಿ',
   'market_clear_cart_confirm':
-  'ನೀವು ಕಾರ್ಟ್‌ನಲ್ಲಿನ ಎಲ್ಲಾ ಐಟಂಗಳನ್ನು ತೆಗೆದುಹಾಕಲು ಖಚಿತವೇ?',
+      'ನೀವು ಕಾರ್ಟ್‌ನಲ್ಲಿನ ಎಲ್ಲಾ ಐಟಂಗಳನ್ನು ತೆಗೆದುಹಾಕಲು ಖಚಿತವೇ?',
   'market_remove_item': 'ಕಾರ್ಟ್‌ನಿಂದ ತೆಗೆದುಹಾಕಿ',
   'market_digital': 'ಡಿಜಿಟಲ್',
   'market_browse_products': 'ಉತ್ಪನ್ನಗಳನ್ನು ವೀಕ್ಷಿಸಿ',
@@ -587,14 +596,14 @@ const Map<String, String> knIN = {
   'market_status_delivered': 'ವಿತರಣೆಯಾಗಿದೆ',
   'market_status_cancelled': 'ರದ್ದುಪಡಿಸಲಾಗಿದೆ',
 
-// Checkout form
+  // Checkout form
   'full_name': 'ಪೂರ್ಣ ಹೆಸರು',
   'phone_number': 'ಫೋನ್ ಸಂಖ್ಯೆ',
   'address': 'ವಿಳಾಸ',
   'city': 'ನಗರ',
   'zip_code': 'ಪಿನ್ ಕೋಡ್',
   'country': 'ದೇಶ',
-// Jobs
+  // Jobs
   'jobs': 'ಉದ್ಯೋಗಗಳು',
   'my_jobs': 'ನನ್ನ ಉದ್ಯೋಗಗಳು',
   'job_details': 'ಉದ್ಯೋಗ ವಿವರಗಳು',
@@ -630,7 +639,7 @@ const Map<String, String> knIN = {
   'work_experience': 'ಕೆಲಸದ ಅನುಭವ',
   'call': 'ಕಾಲ್',
 
-// Funding
+  // Funding
   'funding': 'ಹಣಸಹಾಯ',
   'funding_details': 'ಹಣಸಹಾಯ ವಿವರಗಳು',
   'create_funding': 'ಹಣಸಹಾಯ ರಚಿಸಿ',
@@ -661,7 +670,7 @@ const Map<String, String> knIN = {
   'cover_image_required': 'ಕವರ್ ಚಿತ್ರ ಅಗತ್ಯವಿದೆ',
   'min_3_chars': 'ಕನಿಷ್ಠ 3 ಅಕ್ಷರಗಳು ಅಗತ್ಯ',
   'min_16_chars': 'ಕನಿಷ್ಠ 16 ಅಕ್ಷರಗಳು ಅಗತ್ಯ',
-// Offers
+  // Offers
   'offers': 'ಆಫರ್‌ಗಳು',
   'my_offers': 'ನನ್ನ ಆಫರ್‌ಗಳು',
   'offer_details': 'ಆಫರ್ ವಿವರಗಳು',
@@ -682,7 +691,7 @@ const Map<String, String> knIN = {
   'add_more': 'ಇನ್ನಷ್ಟು ಸೇರಿಸಿ',
   'upload_photos': 'ಫೋಟೋಗಳನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ',
 
-// Ads / Campaigns
+  // Ads / Campaigns
   'my_campaigns': 'ನನ್ನ ಅಭಿಯಾನಗಳು',
   'ads_campaigns_title': 'ಜಾಹೀರಾತು ಅಭಿಯಾನಗಳು',
   'campaign_details': 'ಅಭಿಯಾನ ವಿವರಗಳು',
@@ -700,7 +709,7 @@ const Map<String, String> knIN = {
   'campaign_deleted_successfully': 'ಅಭಿಯಾನ ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಲಾಗಿದೆ',
   'no_campaigns_found': 'ಯಾವುದೇ ಅಭಿಯಾನಗಳು ಕಂಡುಬಂದಿಲ್ಲ',
 
-// Boost System
+  // Boost System
   'boost_post': 'ಪೋಸ್ಟ್ ಬೂಸ್ಟ್ ಮಾಡಿ',
   'boost_page': 'ಪುಟ ಬೂಸ್ಟ್ ಮಾಡಿ',
   'boosted': 'ಬೂಸ್ಟ್ ಮಾಡಲಾಗಿದೆ',
@@ -722,7 +731,7 @@ const Map<String, String> knIN = {
   'my_boosted_pages': 'ನನ್ನ ಬೂಸ್ಟ್ ಪುಟಗಳು',
   'no_boosted_posts': 'ಯಾವುದೇ ಬೂಸ್ಟ್ ಪೋಸ್ಟ್‌ಗಳು ಇಲ್ಲ',
   'no_boosted_pages': 'ಯಾವುದೇ ಬೂಸ್ಟ್ ಪುಟಗಳು ಇಲ್ಲ',
-// Feed & Menu Page
+  // Feed & Menu Page
   'news_feed': 'ಸುದ್ದಿ ಫೀಡ್',
   'recent_updates': 'ಇತ್ತೀಚಿನ ನವೀಕರಣಗಳು',
   'popular_posts': 'ಜನಪ್ರಿಯ ಪೋಸ್ಟ್‌ಗಳು',
@@ -747,7 +756,7 @@ const Map<String, String> knIN = {
   'watch': 'ನೋಡಿ',
   'reels': 'ರೀಲ್ಸ್',
 
-// Home Page
+  // Home Page
   'loading_posts': 'ಪೋಸ್ಟ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ...',
   'connection_error': 'ಸಂಪರ್ಕ ದೋಷ',
   'no_posts': 'ಇನ್ನೂ ಯಾವುದೇ ಪೋಸ್ಟ್ ಇಲ್ಲ',
@@ -763,67 +772,52 @@ const Map<String, String> knIN = {
   'search_placeholder': 'ಹುಡುಕಿ...',
   'view_all': 'ಎಲ್ಲವನ್ನೂ ನೋಡಿ',
 
-// Settings Page
+  // Settings Page
   'customize_experience': 'ನಿಮ್ಮ ಅನುಭವವನ್ನು ವೈಯಕ್ತಿಕಗೊಳಿಸಿ',
   'customize_experience_subtitle':
-  'ಗೌಪ್ಯತೆ, ಅಧಿಸೂಚನೆಗಳು ಮತ್ತು ಖಾತೆಯನ್ನು ನಿರ್ವಹಿಸಿ',
+      'ಗೌಪ್ಯತೆ, ಅಧಿಸೂಚನೆಗಳು ಮತ್ತು ಖಾತೆಯನ್ನು ನಿರ್ವಹಿಸಿ',
   'privacy_security': 'ಗೌಪ್ಯತೆ ಮತ್ತು ಭದ್ರತೆ',
   'privacy_settings_subtitle':
-  'ನಿಮ್ಮ ಮಾಹಿತಿಯನ್ನು ಯಾರು ನೋಡಬಹುದು ಎಂಬುದನ್ನು ನಿಯಂತ್ರಿಸಿ',
+      'ನಿಮ್ಮ ಮಾಹಿತಿಯನ್ನು ಯಾರು ನೋಡಬಹುದು ಎಂಬುದನ್ನು ನಿಯಂತ್ರಿಸಿ',
   'change_password': 'ಪಾಸ್‌ವರ್ಡ್ ಬದಲಾಯಿಸಿ',
-  'change_password_subtitle':
-  'ನಿಮ್ಮ ಖಾತೆಯ ಭದ್ರತೆಯನ್ನು ನವೀಕರಿಸಿ',
+  'change_password_subtitle': 'ನಿಮ್ಮ ಖಾತೆಯ ಭದ್ರತೆಯನ್ನು ನವೀಕರಿಸಿ',
   'two_factor_auth': 'ಎರಡು ಹಂತದ ದೃಢೀಕರಣ',
-  'two_factor_auth_subtitle':
-  'ಹೆಚ್ಚುವರಿ ಭದ್ರತೆಯನ್ನು ಸೇರಿಸಿ',
+  'two_factor_auth_subtitle': 'ಹೆಚ್ಚುವರಿ ಭದ್ರತೆಯನ್ನು ಸೇರಿಸಿ',
   'manage_sessions': 'ಸೆಷನ್‌ಗಳನ್ನು ನಿರ್ವಹಿಸಿ',
-  'manage_sessions_subtitle':
-  'ಸಕ್ರಿಯ ಸೆಷನ್‌ಗಳನ್ನು ನಿಯಂತ್ರಿಸಿ',
+  'manage_sessions_subtitle': 'ಸಕ್ರಿಯ ಸೆಷನ್‌ಗಳನ್ನು ನಿಯಂತ್ರಿಸಿ',
   'blocked_users': 'ನಿರ್ಬಂಧಿತ ಬಳಕೆದಾರರು',
-  'blocked_users_subtitle':
-  'ನಿರ್ಬಂಧಿತ ಬಳಕೆದಾರರನ್ನು ನಿರ್ವಹಿಸಿ',
+  'blocked_users_subtitle': 'ನಿರ್ಬಂಧಿತ ಬಳಕೆದಾರರನ್ನು ನಿರ್ವಹಿಸಿ',
   'account': 'ಖಾತೆ',
   'my_information': 'ನನ್ನ ಮಾಹಿತಿ',
-  'my_information_subtitle':
-  'ನಿಮ್ಮ ವೈಯಕ್ತಿಕ ಮಾಹಿತಿಯನ್ನು ನವೀಕರಿಸಿ',
+  'my_information_subtitle': 'ನಿಮ್ಮ ವೈಯಕ್ತಿಕ ಮಾಹಿತಿಯನ್ನು ನವೀಕರಿಸಿ',
   'my_addresses': 'ನನ್ನ ವಿಳಾಸಗಳು',
-  'my_addresses_subtitle':
-  'ಉಳಿಸಿದ ವಿಳಾಸಗಳನ್ನು ನಿರ್ವಹಿಸಿ',
+  'my_addresses_subtitle': 'ಉಳಿಸಿದ ವಿಳಾಸಗಳನ್ನು ನಿರ್ವಹಿಸಿ',
   'verification': 'ಪರಿಶೀಲನೆ',
-  'verification_subtitle':
-  'ನಿಮ್ಮ ಖಾತೆಯ ಗುರುತನ್ನು ಪರಿಶೀಲಿಸಿ',
+  'verification_subtitle': 'ನಿಮ್ಮ ಖಾತೆಯ ಗುರುತನ್ನು ಪರಿಶೀಲಿಸಿ',
   'switch_to_light_mode': 'ಲೈಟ್ ಮೋಡ್‌ಗೆ ಬದಲಾಯಿಸಿ',
   'switch_to_dark_mode': 'ಡಾರ್ಕ್ ಮೋಡ್‌ಗೆ ಬದಲಾಯಿಸಿ',
   'appearance_preferences': 'ರೂಪ ಮತ್ತು ಆದ್ಯತೆಗಳು',
   'display_settings': 'ಡಿಸ್ಪ್ಲೇ ಮತ್ತು ಅಪ್‌ನ ರೂಪ',
   'language_region': 'ಭಾಷೆ ಮತ್ತು ಪ್ರದೇಶ ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
   'cache_settings': 'ಕ್ಯಾಶ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
-  'cache_settings_subtitle':
-  'ಕ್ಯಾಶ್ ಮತ್ತು ಸಂಗ್ರಹಣೆಯನ್ನು ತೆರವುಗೊಳಿಸಿ',
+  'cache_settings_subtitle': 'ಕ್ಯಾಶ್ ಮತ್ತು ಸಂಗ್ರಹಣೆಯನ್ನು ತೆರವುಗೊಳಿಸಿ',
   'monetization_settings': 'ಆದಾಯ',
-  'monetization_settings_subtitle':
-  'ಆದಾಯ ಮತ್ತು ಪಾವತಿ ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
+  'monetization_settings_subtitle': 'ಆದಾಯ ಮತ್ತು ಪಾವತಿ ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
   'market_settings': 'ಮಾರ್ಕೆಟ್',
-  'market_settings_subtitle':
-  'ಮಾರ್ಕೆಟ್‌ಪ್ಲೇಸ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
+  'market_settings_subtitle': 'ಮಾರ್ಕೆಟ್‌ಪ್ಲೇಸ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
   'bank_settings': 'ಬ್ಯಾಂಕ್',
-  'bank_settings_subtitle':
-  'ಬ್ಯಾಂಕ್ ಖಾತೆ ಮತ್ತು ಪಾವತಿಗಳು',
+  'bank_settings_subtitle': 'ಬ್ಯಾಂಕ್ ಖಾತೆ ಮತ್ತು ಪಾವತಿಗಳು',
   'funding_settings': 'ಫಂಡಿಂಗ್',
-  'funding_settings_subtitle':
-  'ಫಂಡಿಂಗ್ ಆದ್ಯತೆಗಳು',
+  'funding_settings_subtitle': 'ಫಂಡಿಂಗ್ ಆದ್ಯತೆಗಳು',
   'about_app': 'ಆ್ಯಪ್ ಬಗ್ಗೆ ಮತ್ತು ಸಹಾಯ',
   'developer_info': 'ಡೆವಲಪರ್ ಮಾಹಿತಿ',
-  'developer_info_subtitle':
-  'ಆ್ಯಪ್ ಆವೃತ್ತಿ ಮತ್ತು ಡೆವಲಪರ್ ವಿವರಗಳು',
+  'developer_info_subtitle': 'ಆ್ಯಪ್ ಆವೃತ್ತಿ ಮತ್ತು ಡೆವಲಪರ್ ವಿವರಗಳು',
   'report_bug': 'ಬಗ್ ವರದಿ ಮಾಡಿ',
-  'report_bug_subtitle':
-  'ಸಮಸ್ಯೆಗಳನ್ನು ವರದಿ ಮಾಡಿ ನಮಗೆ ಸುಧಾರಣೆಗೆ ಸಹಾಯ ಮಾಡಿ',
+  'report_bug_subtitle': 'ಸಮಸ್ಯೆಗಳನ್ನು ವರದಿ ಮಾಡಿ ನಮಗೆ ಸುಧಾರಣೆಗೆ ಸಹಾಯ ಮಾಡಿ',
   'danger_zone': 'ಅಪಾಯ ವಲಯ',
   'delete_account': 'ಖಾತೆ ಅಳಿಸಿ',
-  'delete_account_subtitle':
-  'ನಿಮ್ಮ ಖಾತೆಯನ್ನು ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಿ',
-// Additional Settings
+  'delete_account_subtitle': 'ನಿಮ್ಮ ಖಾತೆಯನ್ನು ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಿ',
+  // Additional Settings
   'notification_settings': 'ಅಧಿಸೂಚನೆ ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
   'notification_settings_subtitle': 'ಅಲರ್ಟ್‌ಗಳು ಮತ್ತು ಅಧಿಸೂಚನೆಗಳನ್ನು ನಿರ್ವಹಿಸಿ',
   'membership_monetization': 'ಸದಸ್ಯತ್ವ ಮತ್ತು ಆದಾಯ',
@@ -859,7 +853,7 @@ const Map<String, String> knIN = {
   'cache_management': 'ಕ್ಯಾಶ್ ನಿರ್ವಹಣೆ',
   'cache_management_subtitle': 'ವೀಡಿಯೊ ಕ್ಯಾಶ್ ಮತ್ತು ಸ್ಟೋರೇಜ್ ನಿರ್ವಹಿಸಿ',
 
-// Cache Settings Page
+  // Cache Settings Page
   'cache_settings_title': 'ಕ್ಯಾಶ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
   'cache_manage_title': 'ಕ್ಯಾಶ್ ನಿರ್ವಹಿಸಿ',
   'cache_manage_subtitle': 'ವೀಡಿಯೊ ಕ್ಯಾಶ್ ಮತ್ತು ಸ್ಟೋರೇಜ್ ನಿಯಂತ್ರಿಸಿ',
@@ -888,16 +882,16 @@ const Map<String, String> knIN = {
   'delete_all_cached_videos': 'ಎಲ್ಲಾ ಕ್ಯಾಶ್ ವೀಡಿಯೊಗಳನ್ನು ಅಳಿಸಿ',
   'clear_cache_title': 'ಕ್ಯಾಶ್ ತೆರವುಗೊಳಿಸಿ',
   'clear_cache_confirmation':
-  'ನೀವು ಎಲ್ಲಾ ಕ್ಯಾಶ್ ವೀಡಿಯೊಗಳನ್ನು ಅಳಿಸಲು ಖಚಿತವಾಗಿದ್ದೀರಾ?',
+      'ನೀವು ಎಲ್ಲಾ ಕ್ಯಾಶ್ ವೀಡಿಯೊಗಳನ್ನು ಅಳಿಸಲು ಖಚಿತವಾಗಿದ್ದೀರಾ?',
   'cache_cleared_success_message': '✅ ಕ್ಯಾಶ್ ಯಶಸ್ವಿಯಾಗಿ ತೆರವುಗೊಳಿಸಲಾಗಿದೆ',
   'cache_pro_tips_title': 'ಪ್ರೊ ಟಿಪ್ಸ್',
   'cache_pro_tips_body':
-  '• ಪ್ರೀ-ಕ್ಯಾಶ್ ವೇಗವಾದ ಪ್ಲೇಬ್ಯಾಕ್‌ಗಾಗಿ ಬರುವ ವೀಡಿಯೊಗಳನ್ನು ಉಳಿಸುತ್ತದೆ\n'
+      '• ಪ್ರೀ-ಕ್ಯಾಶ್ ವೇಗವಾದ ಪ್ಲೇಬ್ಯಾಕ್‌ಗಾಗಿ ಬರುವ ವೀಡಿಯೊಗಳನ್ನು ಉಳಿಸುತ್ತದೆ\n'
       '• ವೀಡಿಯೊಗಳು @days ದಿನಗಳ ನಂತರ ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಅಳಿಸಲಾಗುತ್ತವೆ\n'
       '• WiFi ಮೋಡ್ ಮೊಬೈಲ್ ಡೇಟಾವನ್ನು ಉಳಿಸುತ್ತದೆ\n'
       '• ಕ್ಯಾಶ್ ಅನ್ನು ಯಾವಾಗ ಬೇಕಾದರೂ ಕೈಯಾರೆ ತೆರವುಗೊಳಿಸಬಹುದು',
 
-// Menu Page
+  // Menu Page
   'menu_view_profile': 'ಪ್ರೊಫೈಲ್ ವೀಕ್ಷಿಸಿ',
   'menu_points': 'ಪಾಯಿಂಟ್‌ಗಳು',
   'menu_followers': 'ಅನುಯಾಯಿಗಳು',
@@ -908,7 +902,7 @@ const Map<String, String> knIN = {
   'menu_sign_out_cancel': 'ರದ್ದುಮಾಡಿ',
   'menu_sign_out_success': 'ಯಶಸ್ವಿಯಾಗಿ ಸೈನ್ ಔಟ್ ಮಾಡಲಾಗಿದೆ',
 
-// Profile Page
+  // Profile Page
   'profile_retry': 'ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
   'profile_not_found': 'ಪ್ರೊಫೈಲ್ ಕಂಡುಬಂದಿಲ್ಲ',
   'profile_error_loading_friends': 'ಸ್ನೇಹಿತರನ್ನು ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ',
@@ -969,8 +963,7 @@ const Map<String, String> knIN = {
   'profile_blurred': 'ಮಸುಕಾದ',
   'profile_block_user': 'ಬಳಕೆದಾರರನ್ನು ಬ್ಲಾಕ್ ಮಾಡಿ',
   'profile_unblock_user': 'ಬಳಕೆದಾರರನ್ನು ಅನ್‌ಬ್ಲಾಕ್ ಮಾಡಿ',
-  'profile_block_warning':
-  'ಈ ಬಳಕೆದಾರರು ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಅನ್ನು ನೋಡಲು ಸಾಧ್ಯವಿಲ್ಲ',
+  'profile_block_warning': 'ಈ ಬಳಕೆದಾರರು ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಅನ್ನು ನೋಡಲು ಸಾಧ್ಯವಿಲ್ಲ',
   'profile_cannot_block_self': 'ನೀವು ನಿಮ್ಮನ್ನು ಬ್ಲಾಕ್ ಮಾಡಲು ಸಾಧ್ಯವಿಲ್ಲ',
   'profile_unblocked_success': 'ಬಳಕೆದಾರರನ್ನು ಅನ್‌ಬ್ಲಾಕ್ ಮಾಡಲಾಗಿದೆ',
   'profile_blocked_success': 'ಬಳಕೆದಾರರನ್ನು ಬ್ಲಾಕ್ ಮಾಡಲಾಗಿದೆ',
@@ -982,11 +975,11 @@ const Map<String, String> knIN = {
   'application': 'ಅಪ್ಲಿಕೇಶನ್',
   'theme_subtitle': 'ಲೈಟ್ / ಡಾರ್ಕ್ ಮೋಡ್',
   'language_subtitle': 'ಇಂಗ್ಲಿಷ್ / ಅರೇಬಿಕ್',
-// Reviews
+  // Reviews
   'post_reviews_title': 'ವಿಮರ್ಶೆಗಳು (@count)',
   'add_review_title': 'ನಿಮ್ಮ ವಿಮರ್ಶೆಯನ್ನು ಸೇರಿಸಿ',
   'add_review_placeholder':
-  'ಈ ಪೋಸ್ಟ್ ಕುರಿತು ನಿಮ್ಮ ಅಭಿಪ್ರಾಯವನ್ನು ಹಂಚಿಕೊಳ್ಳಿ (ಐಚ್ಛಿಕ)',
+      'ಈ ಪೋಸ್ಟ್ ಕುರಿತು ನಿಮ್ಮ ಅಭಿಪ್ರಾಯವನ್ನು ಹಂಚಿಕೊಳ್ಳಿ (ಐಚ್ಛಿಕ)',
   'submit_review': 'ವಿಮರ್ಶೆ ಸಲ್ಲಿಸಿ',
   'review_added_success': 'ವಿಮರ್ಶೆ ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿಸಲಾಗಿದೆ',
   'review_deleted_success': 'ವಿಮರ್ಶೆ ಅಳಿಸಲಾಗಿದೆ',
@@ -1005,7 +998,7 @@ const Map<String, String> knIN = {
   'review_owner_cannot_rate': 'ನೀವು ನಿಮ್ಮದೇ ಪೋಸ್ಟ್‌ಗೆ ರೇಟಿಂಗ್ ನೀಡಲು ಸಾಧ್ಯವಿಲ್ಲ',
   'load_more_reviews': 'ಹೆಚ್ಚು ವಿಮರ್ಶೆಗಳನ್ನು ಲೋಡ್ ಮಾಡಿ',
 
-// Support
+  // Support
   'support': 'ಬೆಂಬಲ',
   'report_issue': 'ಸಮಸ್ಯೆಯನ್ನು ವರದಿ ಮಾಡಿ',
   'report_issue_subtitle': 'ಸಮಸ್ಯೆಯ ವೀಡಿಯೊವನ್ನು ಕಳುಹಿಸಿ',
@@ -1016,9 +1009,9 @@ const Map<String, String> knIN = {
   'delete_account_title': 'ಖಾತೆಯನ್ನು ಅಳಿಸಿ',
   'delete_account_confirm': 'ನೀವು ಖಂಡಿತವಾಗಿಯೂ ನಿಮ್ಮ ಖಾತೆಯನ್ನು ಅಳಿಸಲು ಬಯಸುವಿರಾ?',
   'delete_account_warning':
-  'ಈ ಕ್ರಿಯೆಯನ್ನು ಹಿಂಪಡೆಯಲಾಗುವುದಿಲ್ಲ. ನಿಮ್ಮ ಎಲ್ಲಾ ಡೇಟಾ ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಲಾಗುತ್ತದೆ.',
+      'ಈ ಕ್ರಿಯೆಯನ್ನು ಹಿಂಪಡೆಯಲಾಗುವುದಿಲ್ಲ. ನಿಮ್ಮ ಎಲ್ಲಾ ಡೇಟಾ ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಲಾಗುತ್ತದೆ.',
 
-// Privacy Settings Page
+  // Privacy Settings Page
   'privacy_settings_title': 'ಗೌಪ್ಯತಾ ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
   'privacy_tab': 'ಗೌಪ್ಯತೆ',
   'notifications_tab': 'ಅಧಿಸೂಚನೆಗಳು',
@@ -1030,7 +1023,7 @@ const Map<String, String> knIN = {
   'issue': 'ಸಮಸ್ಯೆ',
   'fix': 'ಪರಿಹಾರ',
 
-// Privacy Sections
+  // Privacy Sections
   'profile_information': 'ಪ್ರೊಫೈಲ್ ಮಾಹಿತಿ',
   'basic_info': 'ಮೂಲ ಮಾಹಿತಿ',
   'work_info': 'ಕೆಲಸದ ಮಾಹಿತಿ',
@@ -1052,11 +1045,11 @@ const Map<String, String> knIN = {
   'enable_tips': 'ಟಿಪ್ಸ್ ಸಕ್ರಿಯಗೊಳಿಸಿ',
   'hide_friend_suggestions': 'ಸ್ನೇಹಿತರ ಸಲಹೆಗಳನ್ನು ಮರೆಮಾಡಿ',
 
-// Privacy Options
+  // Privacy Options
   'public': 'ಸಾರ್ವಜನಿಕ',
   'only_me': 'ನನ್ನಷ್ಟೇ',
 
-// Notifications Section
+  // Notifications Section
   'email_notifications': 'ಇಮೇಲ್ ಅಧಿಸೂಚನೆಗಳು',
   'post_likes': 'ಪೋಸ್ಟ್ ಲೈಕ್‌ಗಳು',
   'post_comments': 'ಪೋಸ್ಟ್ ಕಾಮೆಂಟ್‌ಗಳು',
@@ -1069,7 +1062,7 @@ const Map<String, String> knIN = {
   'notifications_sound': 'ಅಧಿಸೂಚನೆ ಧ್ವನಿ',
   'chat_sound': 'ಚಾಟ್ ಧ್ವನಿ',
 
-// Blocked Users Page
+  // Blocked Users Page
   'blocked_users_title': 'ಬ್ಲಾಕ್ ಮಾಡಿದ ಬಳಕೆದಾರರು',
   'no_blocked_users': 'ಯಾವುದೇ ಬ್ಲಾಕ್ ಮಾಡಿದ ಬಳಕೆದಾರರು ಇಲ್ಲ',
   'unblock': 'ಅನ್‌ಬ್ಲಾಕ್ ಮಾಡಿ',
@@ -1077,11 +1070,10 @@ const Map<String, String> knIN = {
   'user_unblocked_successfully': 'ಬಳಕೆದಾರರನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಅನ್‌ಬ್ಲಾಕ್ ಮಾಡಲಾಗಿದೆ',
   'failed_to_unblock_user': 'ಬಳಕೆದಾರರನ್ನು ಅನ್‌ಬ್ಲಾಕ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
 
-// Change Password Page
+  // Change Password Page
   'change_password_title': 'ಪಾಸ್ವರ್ಡ್ ಬದಲಾಯಿಸಿ',
   'secure_your_account': 'ನಿಮ್ಮ ಖಾತೆಯನ್ನು ಸುರಕ್ಷಿತಗೊಳಿಸಿ',
-  'secure_account_description':
-  'ನಿಮ್ಮ ಖಾತೆಯ ಸುರಕ್ಷತೆಗೆ ಬಲವಾದ ಪಾಸ್ವರ್ಡ್ ರಚಿಸಿ',
+  'secure_account_description': 'ನಿಮ್ಮ ಖಾತೆಯ ಸುರಕ್ಷತೆಗೆ ಬಲವಾದ ಪಾಸ್ವರ್ಡ್ ರಚಿಸಿ',
   'security_tip': 'ಸುರಕ್ಷತಾ ಸಲಹೆ',
   'never_share_password': 'ನಿಮ್ಮ ಪಾಸ್ವರ್ಡ್ ಯಾರೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಬೇಡಿ',
   'current_password': 'ಪ್ರಸ್ತುತ ಪಾಸ್ವರ್ಡ್',
@@ -1107,8 +1099,8 @@ const Map<String, String> knIN = {
   'include_numbers_symbols': 'ಸಂಖ್ಯೆಗಳು ಮತ್ತು ಚಿಹ್ನೆಗಳು ಸೇರಿಸಿ',
   'avoid_common_passwords': 'ಸಾಮಾನ್ಯ ಪಾಸ್ವರ್ಡ್‌ಗಳನ್ನು ತಪ್ಪಿಸಿ',
   'failed_change_password':
-  'ಪಾಸ್ವರ್ಡ್ ಬದಲಾಯಿಸಲು ವಿಫಲವಾಗಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
-// Manage Sessions Page
+      'ಪಾಸ್ವರ್ಡ್ ಬದಲಾಯಿಸಲು ವಿಫಲವಾಗಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
+  // Manage Sessions Page
   'manage_sessions_title': 'ಸೆಷನ್‌ಗಳನ್ನು ನಿರ್ವಹಿಸಿ',
   'sign_out_all_devices': 'ಎಲ್ಲಾ ಸಾಧನಗಳಿಂದ ಸೈನ್ ಔಟ್ ಮಾಡಿ',
   'active_sessions': 'ಸಕ್ರಿಯ ಸೆಷನ್‌ಗಳು',
@@ -1120,7 +1112,7 @@ const Map<String, String> knIN = {
   'sign_out_device_confirm': 'ನೀವು ಖಂಡಿತವಾಗಿಯೂ ಸೈನ್ ಔಟ್ ಮಾಡಲು ಬಯಸುವಿರಾ?',
   'sign_out_all_title': 'ಎಲ್ಲಾ ಸಾಧನಗಳಿಂದ ಸೈನ್ ಔಟ್ ಮಾಡಿ',
   'sign_out_all_confirm':
-  'ನೀವು ಖಂಡಿತವಾಗಿಯೂ ಎಲ್ಲಾ ಇತರ ಸಾಧನಗಳಿಂದ ಸೈನ್ ಔಟ್ ಮಾಡಲು ಬಯಸುವಿರಾ?',
+      'ನೀವು ಖಂಡಿತವಾಗಿಯೂ ಎಲ್ಲಾ ಇತರ ಸಾಧನಗಳಿಂದ ಸೈನ್ ಔಟ್ ಮಾಡಲು ಬಯಸುವಿರಾ?',
   'active_sessions_text': 'ಸಕ್ರಿಯ ಸೆಷನ್‌ಗಳು',
   'sign_out': 'ಸೈನ್ ಔಟ್',
   'sign_out_all': 'ಎಲ್ಲಿಂದಲೂ ಸೈನ್ ಔಟ್',
@@ -1131,7 +1123,7 @@ const Map<String, String> knIN = {
   'other': 'ಇತರೆ',
   'signed_in_only_this': 'ನೀವು ಈ ಸಾಧನದಲ್ಲೇ ಮಾತ್ರ ಸೈನ್ ಇನ್ ಆಗಿದ್ದೀರಿ',
 
-// Addresses Page
+  // Addresses Page
   'error_loading_addresses': 'ವಿಳಾಸಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ದೋಷ',
   'delete_address_title': 'ವಿಳಾಸವನ್ನು ಅಳಿಸಿ',
   'delete_address_confirm': 'ನೀವು ಖಂಡಿತವಾಗಿಯೂ ಈ ವಿಳಾಸವನ್ನು ಅಳಿಸಲು ಬಯಸುವಿರಾ?',
@@ -1152,17 +1144,17 @@ const Map<String, String> knIN = {
   'address_details': 'ವಿಳಾಸ ವಿವರಗಳು',
   'address_details_required': 'ವಿಳಾಸ ವಿವರಗಳು ಅಗತ್ಯವಿದೆ',
 
-// Verification Page
+  // Verification Page
   'verification_center': 'ಸತ್ಯಾಪನ ಕೇಂದ್ರ',
   'identity_verification_request': 'ಗುರುತಿನ ಸತ್ಯಾಪನ ವಿನಂತಿ',
   'get_blue_checkmark':
-  'ನಿಮ್ಮ ಖಾತೆಯ ವಿಶ್ವಾಸಾರ್ಹತೆಯನ್ನು ಹೆಚ್ಚಿಸಲು ಬ್ಲೂ ಟಿಕ್ ಪಡೆಯಿರಿ',
+      'ನಿಮ್ಮ ಖಾತೆಯ ವಿಶ್ವಾಸಾರ್ಹತೆಯನ್ನು ಹೆಚ್ಚಿಸಲು ಬ್ಲೂ ಟಿಕ್ ಪಡೆಯಿರಿ',
   'account_is_verified': 'ನಿಮ್ಮ ಖಾತೆ ಸತ್ಯಾಪಿತವಾಗಿದೆ',
   'enjoy_verified_features':
-  'ನೀವು ಈಗ ಎಲ್ಲಾ ಸತ್ಯಾಪಿತ ಖಾತೆ ವೈಶಿಷ್ಟ್ಯಗಳನ್ನು ಬಳಸಬಹುದು',
+      'ನೀವು ಈಗ ಎಲ್ಲಾ ಸತ್ಯಾಪಿತ ಖಾತೆ ವೈಶಿಷ್ಟ್ಯಗಳನ್ನು ಬಳಸಬಹುದು',
   'request_under_review': 'ವಿನಂತಿ ಪರಿಶೀಲನೆಯಲ್ಲಿದೆ',
   'team_reviewing_info':
-  'ನಮ್ಮ ತಂಡ ನಿಮ್ಮ ಮಾಹಿತಿಯನ್ನು ಪರಿಶೀಲಿಸುತ್ತಿದೆ. ಶೀಘ್ರದಲ್ಲೇ ಪ್ರತಿಕ್ರಿಯೆ ದೊರೆಯಲಿದೆ',
+      'ನಮ್ಮ ತಂಡ ನಿಮ್ಮ ಮಾಹಿತಿಯನ್ನು ಪರಿಶೀಲಿಸುತ್ತಿದೆ. ಶೀಘ್ರದಲ್ಲೇ ಪ್ರತಿಕ್ರಿಯೆ ದೊರೆಯಲಿದೆ',
   'what_to_verify': 'ನೀವು ಏನನ್ನು ಸತ್ಯಾಪಿಸಲು ಬಯಸುತ್ತೀರಿ?',
   'request_message': 'ವಿನಂತಿ ಸಂದೇಶ',
   'why_verified': 'ಈ ಖಾತೆಯನ್ನು ಏಕೆ ಸತ್ಯಾಪಿಸಬೇಕು?',
@@ -1178,41 +1170,39 @@ const Map<String, String> knIN = {
   'field_required': 'ಈ ಕ್ಷೇತ್ರ ಅಗತ್ಯವಿದೆ',
   'send_verification_request': 'ಸತ್ಯಾಪನ ವಿನಂತಿಯನ್ನು ಕಳುಹಿಸಿ',
   'request_under_review_message':
-  'ನಿಮ್ಮ ವಿನಂತಿ ಪರಿಶೀಲನೆಯಲ್ಲಿದೆ. ಶೀಘ್ರದಲ್ಲೇ ನಿಮಗೆ ತಿಳಿಸಲಾಗುತ್ತದೆ',
+      'ನಿಮ್ಮ ವಿನಂತಿ ಪರಿಶೀಲನೆಯಲ್ಲಿದೆ. ಶೀಘ್ರದಲ್ಲೇ ನಿಮಗೆ ತಿಳಿಸಲಾಗುತ್ತದೆ',
   'attach_photo_passport':
-  'ದಯವಿಟ್ಟು ವೈಯಕ್ತಿಕ ಫೋಟೋ ಮತ್ತು ಪಾಸ್‌ಪೋರ್ಟ್ ಅನ್ನು ಲಗತ್ತಿಸಿ',
+      'ದಯವಿಟ್ಟು ವೈಯಕ್ತಿಕ ಫೋಟೋ ಮತ್ತು ಪಾಸ್‌ಪೋರ್ಟ್ ಅನ್ನು ಲಗತ್ತಿಸಿ',
   'request_sent_successfully': 'ವಿನಂತಿಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಕಳುಹಿಸಲಾಗಿದೆ',
 
-// Monetization Settings Page
+  // Monetization Settings Page
   'subscribers': 'ಚಂದಾದಾರರು',
   'plans': 'ಯೋಜನೆಗಳು',
   'enable_monetization': 'ಮೋನೆಟೈಸೇಶನ್ ಸಕ್ರಿಯಗೊಳಿಸಿ',
   'monetization_active': 'ನಿಮ್ಮ ವಿಷಯದ ಮೋನೆಟೈಸೇಶನ್ ಸಕ್ರಿಯವಾಗಿದೆ',
   'enable_to_earn': 'ಆದಾಯ ಆರಂಭಿಸಲು ಸಕ್ರಿಯಗೊಳಿಸಿ',
   'verification_required_monetization':
-  'ಮೋನೆಟೈಸೇಶನ್ ಸಕ್ರಿಯಗೊಳಿಸಲು ಖಾತೆ ಸತ್ಯಾಪನ ಅಗತ್ಯವಿದೆ',
+      'ಮೋನೆಟೈಸೇಶನ್ ಸಕ್ರಿಯಗೊಳಿಸಲು ಖಾತೆ ಸತ್ಯಾಪನ ಅಗತ್ಯವಿದೆ',
   'chat_price': 'ಚಾಟ್ ಬೆಲೆ',
   'call_price': 'ಕಾಲ್ ಬೆಲೆ',
   'save_settings': 'ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ಉಳಿಸಿ',
   'subscription_plans': 'ಚಂದಾದಾರಿಕೆ ಯೋಜನೆಗಳು',
   'no_subscription_plans': 'ಈಗ ಯಾವುದೇ ಚಂದಾದಾರಿಕೆ ಯೋಜನೆಗಳಿಲ್ಲ',
   'monetization_not_available': 'ಮೋನೆಟೈಸೇಶನ್ ಲಭ್ಯವಿಲ್ಲ',
-  'no_permission_monetize':
-  'ನೀವು ವಿಷಯವನ್ನು ಮೋನೆಟೈಸ್ ಮಾಡಲು ಅನುಮತಿ ಹೊಂದಿಲ್ಲ',
+  'no_permission_monetize': 'ನೀವು ವಿಷಯವನ್ನು ಮೋನೆಟೈಸ್ ಮಾಡಲು ಅನುಮತಿ ಹೊಂದಿಲ್ಲ',
   'failed_load_settings': 'ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
   'enter_valid_prices': 'ದಯವಿಟ್ಟು ಮಾನ್ಯ ಬೆಲೆಗಳನ್ನು ನಮೂದಿಸಿ',
   'minimum_price_is': 'ಕನಿಷ್ಠ ಬೆಲೆ',
   'per': 'ಪ್ರತಿ',
 
-// Monetization Payments Page
+  // Monetization Payments Page
   'your_balance': 'ನಿಮ್ಮ ಬ್ಯಾಲೆನ್ಸ್',
   'withdrawal_request': 'ಹಿಂಪಡೆದಿನ ವಿನಂತಿ',
-  'amount_usd': 'ಮೊತ್ತ (USD)',
+  'amount_usd': 'ಮೊತ್ತ',
   'minimum_withdrawal_amount': 'ಕನಿಷ್ಠ ಹಿಂಪಡೆದಿನ ಮೊತ್ತ ₹50',
   'payment_method': 'ಪಾವತಿ ವಿಧಾನ',
   'transfer_to': 'ಟ್ರಾನ್ಸ್‌ಫರ್ ಮಾಡಿ',
-  'transfer_to_hint':
-  'ನಿಮ್ಮ ಪಾವತಿ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ (ಇಮೇಲ್, ಖಾತೆ ಇತ್ಯಾದಿ)',
+  'transfer_to_hint': 'ನಿಮ್ಮ ಪಾವತಿ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ (ಇಮೇಲ್, ಖಾತೆ ಇತ್ಯಾದಿ)',
   'request_withdrawal': 'ಹಿಂಪಡೆದಿನ ವಿನಂತಿ ಸಲ್ಲಿಸಿ',
   'withdrawal_history': 'ಹಿಂಪಡೆದಿನ ಇತಿಹಾಸ',
   'no_transactions_yet': 'ಇನ್ನೂ ಯಾವುದೇ ವಹಿವಾಟುಗಳು ನಡೆದಿಲ್ಲ',
@@ -1226,23 +1216,22 @@ const Map<String, String> knIN = {
   'method': 'ವಿಧಾನ',
   'date': 'ದಿನಾಂಕ',
 
-// Monetization Earnings Page
+  // Monetization Earnings Page
   'my_earnings': 'ನನ್ನ ಆದಾಯ',
   'total_earnings': 'ಒಟ್ಟು ಆದಾಯ',
   'subscription': 'ಚಂದಾದಾರಿಕೆ',
   'no_earnings_yet': 'ಇನ್ನೂ ಯಾವುದೇ ಆದಾಯವಿಲ್ಲ',
-  'earnings_will_appear_here':
-  'ಚಂದಾದಾರಿಕೆಗಳಿಂದ ಆಗುವ ಆದಾಯ ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತದೆ',
+  'earnings_will_appear_here': 'ಚಂದಾದಾರಿಕೆಗಳಿಂದ ಆಗುವ ಆದಾಯ ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತದೆ',
   'subscription_label': 'ಚಂದಾದಾರಿಕೆ',
   'commission': 'ಕಮಿಷನ್',
-// Affiliates Page
+  // Affiliates Page
   'affiliates_system': 'ಅಫಿಲಿಯೇಟ್ ವ್ಯವಸ್ಥೆ',
   'earn_per_referral':
-  'ಪ್ರತಿ ರೆಫರಲ್‌ಗೆ ₹0.15 (ಮಟ್ಟ 1), ₹0.10 (ಮಟ್ಟ 2), ₹0.05 (ಮಟ್ಟ 3) ವರೆಗೆ ಸಂಪಾದಿಸಿ.',
+      'ಪ್ರತಿ ರೆಫರಲ್‌ಗೆ ₹0.15 (ಮಟ್ಟ 1), ₹0.10 (ಮಟ್ಟ 2), ₹0.05 (ಮಟ್ಟ 3) ವರೆಗೆ ಸಂಪಾದಿಸಿ.',
   'paid_when_register':
-  'ಹೊಸ ಬಳಕೆದಾರರು ನೋಂದಣಿ ಮಾಡಿ ಪ್ಯಾಕೇಜ್ ಖರೀದಿಸಿದಾಗ ಅಥವಾ ಮೋನೆಟೈಸ್ ಮಾಡಿದಾಗ ಪಾವತಿ ಸಿಗುತ್ತದೆ',
+      'ಹೊಸ ಬಳಕೆದಾರರು ನೋಂದಣಿ ಮಾಡಿ ಪ್ಯಾಕೇಜ್ ಖರೀದಿಸಿದಾಗ ಅಥವಾ ಮೋನೆಟೈಸ್ ಮಾಡಿದಾಗ ಪಾವತಿ ಸಿಗುತ್ತದೆ',
   'withdraw_or_transfer':
-  'ನೀವು ಹಣವನ್ನು ಹಿಂಪಡೆಯಬಹುದು ಅಥವಾ ವಾಲೆಟ್‌ಗೆ ವರ್ಗಾಯಿಸಬಹುದು',
+      'ನೀವು ಹಣವನ್ನು ಹಿಂಪಡೆಯಬಹುದು ಅಥವಾ ವಾಲೆಟ್‌ಗೆ ವರ್ಗಾಯಿಸಬಹುದು',
   'your_affiliate_link': 'ನಿಮ್ಮ ಅಫಿಲಿಯೇಟ್ ಲಿಂಕ್',
   'referral_link_copied': 'ರೆಫರಲ್ ಲಿಂಕ್ ನಕಲಿಸಲಾಗಿದೆ',
   'referral_link_share': 'ರೆಫರಲ್ ಲಿಂಕ್ ಹಂಚಿಕೊಳ್ಳಲು ಸಿದ್ಧವಾಗಿದೆ',
@@ -1256,7 +1245,7 @@ const Map<String, String> knIN = {
   'joined': 'ಸೇರಿದ್ದಾರೆ',
   'currency': 'ಕರೆನ್ಸಿ',
 
-// Points Page
+  // Points Page
   'points_rewards': 'ಪಾಯಿಂಟ್‌ಗಳು ಮತ್ತು ಬಹುಮಾನಗಳು',
   'pts': 'ಪಾಯಿಂಟ್‌ಗಳು',
   'total_points': 'ಒಟ್ಟು ಪಾಯಿಂಟ್‌ಗಳು',
@@ -1274,12 +1263,13 @@ const Map<String, String> knIN = {
   'min_amount': 'ಕನಿಷ್ಠ ಮೊತ್ತ',
   'recent_transactions': 'ಇತ್ತೀಚಿನ ವಹಿವಾಟುಗಳು',
   'no_transactions_yet_points': 'ಇನ್ನೂ ಯಾವುದೇ ವಹಿವಾಟುಗಳಿಲ್ಲ',
-  'start_earning_points': 'ಎಂಗೇಜ್‌ಮೆಂಟ್ ಮೂಲಕ ಪಾಯಿಂಟ್‌ಗಳನ್ನು ಸಂಪಾದಿಸಲು ಪ್ರಾರಂಭಿಸಿ',
+  'start_earning_points':
+      'ಎಂಗೇಜ್‌ಮೆಂಟ್ ಮೂಲಕ ಪಾಯಿಂಟ್‌ಗಳನ್ನು ಸಂಪಾದಿಸಲು ಪ್ರಾರಂಭಿಸಿ',
 
-// Points Payments
+  // Points Payments
   'minimum_withdrawal': 'ಕನಿಷ್ಠ ಹಿಂಪಡೆ',
   'enter_payment_details':
-  'ನಿಮ್ಮ ಪಾವತಿ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ (ಇಮೇಲ್, ಖಾತೆ ಇತ್ಯಾದಿ)',
+      'ನಿಮ್ಮ ಪಾವತಿ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ (ಇಮೇಲ್, ಖಾತೆ ಇತ್ಯಾದಿ)',
   'minimum_withdrawal_amount_50': 'ಕನಿಷ್ಠ ಹಿಂಪಡೆ ಮೊತ್ತ ₹50',
   'please_enter_transfer_details': 'ದಯವಿಟ್ಟು ವರ್ಗಾವಣೆ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ',
   'request_submitted': 'ವಿನಂತಿ ಸಲ್ಲಿಸಲಾಗಿದೆ',
@@ -1287,11 +1277,10 @@ const Map<String, String> knIN = {
   'no_withdrawals_yet': 'ಇನ್ನೂ ಯಾವುದೇ ಹಿಂಪಡೆಗಳಿಲ್ಲ',
 
   'unknown': 'ಅಜ್ಞಾತ',
-  'minimum_withdrawal_request_info':
-  'ಕನಿಷ್ಠ ಹಿಂಪಡೆ ವಿನಂತಿ ಮೊತ್ತ ₹50',
+  'minimum_withdrawal_request_info': 'ಕನಿಷ್ಠ ಹಿಂಪಡೆ ವಿನಂತಿ ಮೊತ್ತ ₹50',
   'id': 'ಐಡಿ',
 
-// Bank Settings
+  // Bank Settings
   'refresh': 'ರಿಫ್ರೆಶ್',
   'bank_information': 'ಬ್ಯಾಂಕ್ ಮಾಹಿತಿ',
   'bank_name': 'ಬ್ಯಾಂಕ್ ಹೆಸರು',
@@ -1306,14 +1295,12 @@ const Map<String, String> knIN = {
   'transfer_history': 'ವರ್ಗಾವಣೆ ಇತಿಹಾಸ',
   'view_all_transfers': 'ಎಲ್ಲಾ ವರ್ಗಾವಣೆಗಳನ್ನು ವೀಕ್ಷಿಸಿ',
   'failed_to_load': 'ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
-  'check_connection_try_again':
-  'ದಯವಿಟ್ಟು ಸಂಪರ್ಕ ಪರಿಶೀಲಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
+  'check_connection_try_again': 'ದಯವಿಟ್ಟು ಸಂಪರ್ಕ ಪರಿಶೀಲಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
   'bank_transfers_disabled': 'ಬ್ಯಾಂಕ್ ವರ್ಗಾವಣೆ ನಿಷ್ಕ್ರಿಯವಾಗಿದೆ',
-  'bank_transfers_not_available':
-  'ಈ ಸಮಯದಲ್ಲಿ ಬ್ಯಾಂಕ್ ವರ್ಗಾವಣೆ ಲಭ್ಯವಿಲ್ಲ',
+  'bank_transfers_not_available': 'ಈ ಸಮಯದಲ್ಲಿ ಬ್ಯಾಂಕ್ ವರ್ಗಾವಣೆ ಲಭ್ಯವಿಲ್ಲ',
   'copied_to_clipboard': 'ಕ್ಲಿಪ್‌ಬೋರ್ಡ್‌ಗೆ ನಕಲಿಸಲಾಗಿದೆ',
 
-// Market Settings
+  // Market Settings
   'market_balance': 'ಮಾರ್ಕೆಟ್ ಬ್ಯಾಲೆನ್ಸ್',
   'ready_to_withdraw': 'ಹಿಂಪಡೆಯಲು ಸಿದ್ಧ',
   'need_more': '@amount ಇನ್ನಷ್ಟು ಬೇಕು',
@@ -1327,8 +1314,7 @@ const Map<String, String> knIN = {
   'total_paid': 'ಒಟ್ಟು ಪಾವತಿ',
   'current_balance': 'ಪ್ರಸ್ತುತ ಬ್ಯಾಲೆನ್ಸ್',
   'market_not_enabled': 'ಮಾರ್ಕೆಟ್ ಸಕ್ರಿಯಗೊಳಿಸಲಾಗಿಲ್ಲ',
-  'no_market_permission':
-  'ನಿಮ್ಮ ಖಾತೆಗೆ ಮಾರ್ಕೆಟ್ ಬಳಸುವ ಅನುಮತಿ ಇಲ್ಲ',
+  'no_market_permission': 'ನಿಮ್ಮ ಖಾತೆಗೆ ಮಾರ್ಕೆಟ್ ಬಳಸುವ ಅನುಮತಿ ಇಲ್ಲ',
   'transfer_to_wallet': 'ವಾಲೆಟ್‌ಗೆ ವರ್ಗಾಯಿಸಿ',
   'available': 'ಲಭ್ಯವಿದೆ',
   'enter_amount': 'ಮೊತ್ತ ನಮೂದಿಸಿ',
@@ -1340,19 +1326,17 @@ const Map<String, String> knIN = {
   'bank_transfer': 'ಬ್ಯಾಂಕ್ ವರ್ಗಾವಣೆ',
   'stripe': 'ಸ್ಟ್ರೈಪ್',
 
-// Funding Settings
+  // Funding Settings
   'funding_settings_title': 'ಫಂಡಿಂಗ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
   'funding_balance': 'ಫಂಡಿಂಗ್ ಬ್ಯಾಲೆನ್ಸ್',
   'transfer_wallet_enabled': '💡 ವಾಲೆಟ್‌ಗೆ ವರ್ಗಾವಣೆ ಸಕ್ರಿಯವಾಗಿದೆ',
   'funding_disabled': 'ಫಂಡಿಂಗ್ ನಿಷ್ಕ್ರಿಯವಾಗಿದೆ',
-  'funding_not_enabled_message':
-  'ನಿಮ್ಮ ಖಾತೆಗೆ ಫಂಡಿಂಗ್ ಸಕ್ರಿಯಗೊಳಿಸಲಾಗಿಲ್ಲ',
-  'failed_load_funding':
-  'ಫಂಡಿಂಗ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+  'funding_not_enabled_message': 'ನಿಮ್ಮ ಖಾತೆಗೆ ಫಂಡಿಂಗ್ ಸಕ್ರಿಯಗೊಳಿಸಲಾಗಿಲ್ಲ',
+  'failed_load_funding': 'ಫಂಡಿಂಗ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
   'moneypoolscash': 'MoneyPoolsCash',
   'bank': 'ಬ್ಯಾಂಕ್',
 
-// Notifications
+  // Notifications
   'notifications_title': 'ಅಧಿಸೂಚನೆಗಳು',
   'notifications_mark_all_read': 'ಎಲ್ಲವನ್ನೂ ಓದಲಾಗಿದೆ ಎಂದು ಗುರುತಿಸಿ',
   'notifications_mark_read': 'ಓದಲಾಗಿದೆ ಎಂದು ಗುರುತಿಸಿ',
@@ -1360,49 +1344,48 @@ const Map<String, String> knIN = {
   'notifications_connection_error': 'ಸಂಪರ್ಕ ದೋಷ',
   'notifications_try_again': 'ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
   'notifications_empty_title': 'ಯಾವುದೇ ಅಧಿಸೂಚನೆಗಳಿಲ್ಲ',
-  'notifications_empty_subtitle': 'ನವೀಕರಣಗಳು ಮತ್ತು ಎಚ್ಚರಿಕೆಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ',
+  'notifications_empty_subtitle':
+      'ನವೀಕರಣಗಳು ಮತ್ತು ಎಚ್ಚರಿಕೆಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ',
   'notifications_empty_hint': 'ಹೊಸ ಚಟುವಟಿಕೆಗಾಗಿ ಸಂಪರ್ಕದಲ್ಲಿರಿ!',
   'notifications_success': 'ಯಶಸ್ವಿ',
   'notifications_marked_success':
-  'ಎಲ್ಲಾ ಅಧಿಸೂಚನೆಗಳನ್ನು ಓದಲಾಗಿದೆ ಎಂದು ಗುರುತಿಸಲಾಗಿದೆ',
+      'ಎಲ್ಲಾ ಅಧಿಸೂಚನೆಗಳನ್ನು ಓದಲಾಗಿದೆ ಎಂದು ಗುರುತಿಸಲಾಗಿದೆ',
   'notifications_error': 'ದೋಷ',
   'notifications_mark_error':
-  'ಅಧಿಸೂಚನೆಗಳನ್ನು ಓದಲಾಗಿದೆ ಎಂದು ಗುರುತಿಸಲು ವಿಫಲವಾಗಿದೆ',
+      'ಅಧಿಸೂಚನೆಗಳನ್ನು ಓದಲಾಗಿದೆ ಎಂದು ಗುರುತಿಸಲು ವಿಫಲವಾಗಿದೆ',
 
-// Friend Requests
+  // Friend Requests
   'friend_requests_title': 'ಮಿತ್ರ ವಿನಂತಿಗಳು',
   'friend_requests_received': 'ಸ್ವೀಕರಿಸಿದವು',
   'friend_requests_sent': 'ಕಳುಹಿಸಿದವು',
   'friend_requests_empty_received_title': 'ಯಾವುದೇ ಮಿತ್ರ ವಿನಂತಿಗಳಿಲ್ಲ',
   'friend_requests_empty_received_subtitle':
-  'ಯಾರಾದರೂ ನಿಮಗೆ ಮಿತ್ರ ವಿನಂತಿ ಕಳುಹಿಸಿದಾಗ ಅದು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತದೆ.',
+      'ಯಾರಾದರೂ ನಿಮಗೆ ಮಿತ್ರ ವಿನಂತಿ ಕಳುಹಿಸಿದಾಗ ಅದು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತದೆ.',
   'friend_requests_empty_sent_title': 'ಯಾವುದೇ ಕಳುಹಿಸಿದ ವಿನಂತಿಗಳಿಲ್ಲ',
   'friend_requests_empty_sent_subtitle':
-  'ನೀವು ಕಳುಹಿಸಿದ ಮಿತ್ರ ವಿನಂತಿಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.',
+      'ನೀವು ಕಳುಹಿಸಿದ ಮಿತ್ರ ವಿನಂತಿಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.',
   'friend_requests_accept': 'ಸ್ವೀಕರಿಸಿ',
   'friend_requests_decline': 'ನಿರಾಕರಿಸಿ',
   'friend_requests_cancel': 'ರದ್ದುಮಾಡಿ',
   'friend_requests_sent_time': '@time ರಂದು ಕಳುಹಿಸಲಾಗಿದೆ',
   'friend_requests_accept_success':
-  '@name ಅವರ ಮಿತ್ರ ವಿನಂತಿಯನ್ನು ಸ್ವೀಕರಿಸಲಾಗಿದೆ',
-  'friend_requests_accept_error':
-  'ವಿನಂತಿಯನ್ನು ಸ್ವೀಕರಿಸಲು ವಿಫಲವಾಗಿದೆ: @message',
+      '@name ಅವರ ಮಿತ್ರ ವಿನಂತಿಯನ್ನು ಸ್ವೀಕರಿಸಲಾಗಿದೆ',
+  'friend_requests_accept_error': 'ವಿನಂತಿಯನ್ನು ಸ್ವೀಕರಿಸಲು ವಿಫಲವಾಗಿದೆ: @message',
   'friend_requests_decline_success':
-  '@name ಅವರ ಮಿತ್ರ ವಿನಂತಿಯನ್ನು ನಿರಾಕರಿಸಲಾಗಿದೆ',
+      '@name ಅವರ ಮಿತ್ರ ವಿನಂತಿಯನ್ನು ನಿರಾಕರಿಸಲಾಗಿದೆ',
   'friend_requests_decline_error':
-  'ವಿನಂತಿಯನ್ನು ನಿರಾಕರಿಸಲು ವಿಫಲವಾಗಿದೆ: @message',
+      'ವಿನಂತಿಯನ್ನು ನಿರಾಕರಿಸಲು ವಿಫಲವಾಗಿದೆ: @message',
   'friend_requests_cancel_success':
-  '@name ಗೆ ಕಳುಹಿಸಿದ ವಿನಂತಿಯನ್ನು ರದ್ದುಮಾಡಲಾಗಿದೆ',
-  'friend_requests_cancel_error':
-  'ವಿನಂತಿಯನ್ನು ರದ್ದುಮಾಡಲು ವಿಫಲವಾಗಿದೆ: @message',
+      '@name ಗೆ ಕಳುಹಿಸಿದ ವಿನಂತಿಯನ್ನು ರದ್ದುಮಾಡಲಾಗಿದೆ',
+  'friend_requests_cancel_error': 'ವಿನಂತಿಯನ್ನು ರದ್ದುಮಾಡಲು ವಿಫಲವಾಗಿದೆ: @message',
   'friend_requests_accept_error_general':
-  'ವಿನಂತಿಯನ್ನು ಸ್ವೀಕರಿಸುವಾಗ ದೋಷ: @error',
+      'ವಿನಂತಿಯನ್ನು ಸ್ವೀಕರಿಸುವಾಗ ದೋಷ: @error',
   'friend_requests_decline_error_general':
-  'ವಿನಂತಿಯನ್ನು ನಿರಾಕರಿಸುವಾಗ ದೋಷ: @error',
+      'ವಿನಂತಿಯನ್ನು ನಿರಾಕರಿಸುವಾಗ ದೋಷ: @error',
   'friend_requests_cancel_error_general':
-  'ವಿನಂತಿಯನ್ನು ರದ್ದುಮಾಡುವಾಗ ದೋಷ: @error',
+      'ವಿನಂತಿಯನ್ನು ರದ್ದುಮಾಡುವಾಗ ದೋಷ: @error',
 
-// Home
+  // Home
   'home_create_story': 'ಕಥೆ ರಚಿಸಿ',
   'home_composer_placeholder': 'ನಿಮ್ಮ ಮನಸ್ಸಿನಲ್ಲಿ ಏನಿದೆ, @name?',
   'home_live': 'ಲೈವ್',
@@ -1410,7 +1393,7 @@ const Map<String, String> knIN = {
   'home_event': 'ಈವೆಂಟ್',
   'home_loading_more': 'ಇನ್ನಷ್ಟು ಪೋಸ್ಟ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ...',
 
-// Post Menu
+  // Post Menu
   'post_menu_options': 'ಪೋಸ್ಟ್ ಆಯ್ಕೆಗಳು',
   'post_menu_save': 'ಪೋಸ್ಟ್ ಉಳಿಸಿ',
   'post_menu_save_subtitle': 'ಉಳಿಸಿದ ಅಂಶಗಳಿಗೆ ಸೇರಿಸಿ',
@@ -1425,64 +1408,57 @@ const Map<String, String> knIN = {
   'post_menu_report': 'ಪೋಸ್ಟ್ ವರದಿ ಮಾಡಿ',
   'post_menu_report_subtitle': 'ಈ ಪೋಸ್ಟ್ ಬಗ್ಗೆ ನನಗೆ ಚಿಂತೆ ಇದೆ',
   'post_menu_report_success':
-  'ವರದಿಗೆ ಧನ್ಯವಾದಗಳು. ನಾವು ಶೀಘ್ರದಲ್ಲೇ ಪರಿಶೀಲಿಸುತ್ತೇವೆ.',
+      'ವರದಿಗೆ ಧನ್ಯವಾದಗಳು. ನಾವು ಶೀಘ್ರದಲ್ಲೇ ಪರಿಶೀಲಿಸುತ್ತೇವೆ.',
   'post_menu_report_error': 'ವರದಿ ಸಲ್ಲಿಸಲು ವಿಫಲವಾಗಿದೆ',
-  'post_menu_report_already':
-  'ನೀವು ಈಗಾಗಲೇ ಈ ಪೋಸ್ಟ್ ಅನ್ನು ವರದಿ ಮಾಡಿದ್ದೀರಿ',
-  'post_menu_report_network_error':
-  'ನೆಟ್ವರ್ಕ್ ದೋಷ. ದಯವಿಟ್ಟು ಸಂಪರ್ಕ ಪರಿಶೀಲಿಸಿ',
-  'post_menu_report_server_error':
-  'ಸರ್ವರ್ ದೋಷ. ದಯವಿಟ್ಟು ನಂತರ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
+  'post_menu_report_already': 'ನೀವು ಈಗಾಗಲೇ ಈ ಪೋಸ್ಟ್ ಅನ್ನು ವರದಿ ಮಾಡಿದ್ದೀರಿ',
+  'post_menu_report_network_error': 'ನೆಟ್ವರ್ಕ್ ದೋಷ. ದಯವಿಟ್ಟು ಸಂಪರ್ಕ ಪರಿಶೀಲಿಸಿ',
+  'post_menu_report_server_error': 'ಸರ್ವರ್ ದೋಷ. ದಯವಿಟ್ಟು ನಂತರ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
   'post_menu_pin': 'ಪ್ರೊಫೈಲ್‌ಗೆ ಪಿನ್ ಮಾಡಿ',
   'post_menu_pin_subtitle': 'ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಮೇಲ್ಭಾಗದಲ್ಲಿ ಪಿನ್ ಮಾಡಿ',
   'post_menu_unpin': 'ಪ್ರೊಫೈಲ್‌ನಿಂದ ಅನ್ಪಿನ್ ಮಾಡಿ',
   'post_menu_unpin_subtitle': 'ಪ್ರೊಫೈಲ್ ಮೇಲ್ಭಾಗದಿಂದ ತೆಗೆದುಹಾಕಿ',
   'post_menu_enable_comments': 'ಕಾಮೆಂಟ್‌ಗಳನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ',
-  'post_menu_enable_comments_subtitle':
-  'ಜನರಿಗೆ ಕಾಮೆಂಟ್ ಮಾಡಲು ಅನುಮತಿಸಿ',
+  'post_menu_enable_comments_subtitle': 'ಜನರಿಗೆ ಕಾಮೆಂಟ್ ಮಾಡಲು ಅನುಮತಿಸಿ',
   'post_menu_disable_comments': 'ಕಾಮೆಂಟ್‌ಗಳನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಿ',
-  'post_menu_disable_comments_subtitle':
-  'ಜನರು ಕಾಮೆಂಟ್ ಮಾಡುವುದನ್ನು ತಡೆಯಿರಿ',
+  'post_menu_disable_comments_subtitle': 'ಜನರು ಕಾಮೆಂಟ್ ಮಾಡುವುದನ್ನು ತಡೆಯಿರಿ',
   'post_menu_edit': 'ಪೋಸ್ಟ್ ಸಂಪಾದಿಸಿ',
   'post_menu_edit_subtitle': 'ನಿಮ್ಮ ಪೋಸ್ಟ್ ವಿಷಯವನ್ನು ಬದಲಾಯಿಸಿ',
   'post_menu_unmark_adult': 'ವಯಸ್ಕ ವಿಷಯವನ್ನು ತೆಗೆದುಹಾಕಿ',
-  'post_menu_unmark_adult_subtitle':
-  '18+ ಲೇಬಲ್ ಮತ್ತು ಬ್ಲರ್ ತೆಗೆದುಹಾಕಿ',
+  'post_menu_unmark_adult_subtitle': '18+ ಲೇಬಲ್ ಮತ್ತು ಬ್ಲರ್ ತೆಗೆದುಹಾಕಿ',
   'post_menu_mark_adult': 'ವಯಸ್ಕ ವಿಷಯ ಎಂದು ಗುರುತಿಸಿ',
   'post_menu_mark_adult_subtitle':
-  '18+ ಎಂದು ಗುರುತಿಸಿ ಮತ್ತು ಫೋಟೋಗಳನ್ನು ಬ್ಲರ್ ಮಾಡಿ',
+      '18+ ಎಂದು ಗುರುತಿಸಿ ಮತ್ತು ಫೋಟೋಗಳನ್ನು ಬ್ಲರ್ ಮಾಡಿ',
   'post_menu_delete': 'ಪೋಸ್ಟ್ ಅಳಿಸಿ',
   'post_menu_delete_subtitle': 'ಈ ಪೋಸ್ಟ್ ಅನ್ನು ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಿ',
   'post_menu_delete_title': 'ಪೋಸ್ಟ್ ಅಳಿಸಿ',
   'post_menu_delete_confirm':
-  'ನೀವು ಖಚಿತವಾಗಿಯೂ ಈ ಪೋಸ್ಟ್ ಅನ್ನು ಅಳಿಸಲು ಬಯಸುತ್ತೀರಾ? ಈ ಕ್ರಿಯೆಯನ್ನು ಹಿಂತಿರುಗಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ.',
+      'ನೀವು ಖಚಿತವಾಗಿಯೂ ಈ ಪೋಸ್ಟ್ ಅನ್ನು ಅಳಿಸಲು ಬಯಸುತ್ತೀರಾ? ಈ ಕ್ರಿಯೆಯನ್ನು ಹಿಂತಿರುಗಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ.',
   'post_menu_cancel': 'ರದ್ದುಮಾಡಿ',
   'post_menu_delete_button': 'ಅಳಿಸಿ',
 
-// Events & Live
+  // Events & Live
   'groups_no_longer_available': 'ಗುಂಪುಗಳು ಇನ್ನು ಲಭ್ಯವಿಲ್ಲ.',
   'event_action_created': 'ಒಂದು ಈವೆಂಟ್ ರಚಿಸಿದರು',
-  'event_action_updated_cover':
-  'ಈವೆಂಟ್ ಕವರ್ ಫೋಟೋವನ್ನು ಅಪ್ಡೇಟ್ ಮಾಡಿದರು',
+  'event_action_updated_cover': 'ಈವೆಂಟ್ ಕವರ್ ಫೋಟೋವನ್ನು ಅಪ್ಡೇಟ್ ಮಾಡಿದರು',
   'event_action_posted_in': '@event ನಲ್ಲಿ ಪೋಸ್ಟ್ ಮಾಡಿದರು',
   'live_action_is_live': 'ಈಗ ಲೈವ್ ಆಗಿದ್ದಾರೆ',
   'live_action_was_live': 'ಲೈವ್ ಆಗಿದ್ದರು',
 
-// Time
+  // Time
   'time_today': 'ಇಂದು',
   'time_tomorrow': 'ನಾಳೆ',
   'time_period_am': 'AM',
   'time_period_pm': 'PM',
 
-// Offers
+  // Offers
   'offer_discount_buy_get': '@buy ಖರೀದಿಸಿ ಮತ್ತು @get ಪಡೆಯಿರಿ',
   'offer_discount_spend_get':
-  '@spend ಖರ್ಚು ಮಾಡಿ ಮತ್ತು @amount ರಿಯಾಯಿತಿ ಪಡೆಯಿರಿ',
+      '@spend ಖರ್ಚು ಮಾಡಿ ಮತ್ತು @amount ರಿಯಾಯಿತಿ ಪಡೆಯಿರಿ',
   'offer_special': 'ವಿಶೇಷ ಆಫರ್',
 
-// Misc
+  // Misc
   'recording_coming_soon':
-  'ರೆಕಾರ್ಡಿಂಗ್ ಪ್ಲೇಬ್ಯಾಕ್ ವೈಶಿಷ್ಟ್ಯ ಶೀಘ್ರದಲ್ಲೇ ಬರುತ್ತಿದೆ!',
+      'ರೆಕಾರ್ಡಿಂಗ್ ಪ್ಲೇಬ್ಯಾಕ್ ವೈಶಿಷ್ಟ್ಯ ಶೀಘ್ರದಲ್ಲೇ ಬರುತ್ತಿದೆ!',
   'vote_singular': 'ಮತ',
   'vote_plural': 'ಮತಗಳು',
   'link_open_failed': 'ಲಿಂಕ್ ತೆರೆಯಲು ವಿಫಲವಾಗಿದೆ: @error',
@@ -1496,41 +1472,37 @@ const Map<String, String> knIN = {
   'action_review': 'ವಿಮರ್ಶೆ',
   'action_tip': 'ಟಿಪ್',
   'action_share': 'ಹಂಚಿಕೆ',
-  'share_feature_coming':
-  'ಹಂಚಿಕೆ ವೈಶಿಷ್ಟ್ಯ ಶೀಘ್ರದಲ್ಲೇ ಬರುತ್ತಿದೆ!',
-// Courses
+  'share_feature_coming': 'ಹಂಚಿಕೆ ವೈಶಿಷ್ಟ್ಯ ಶೀಘ್ರದಲ್ಲೇ ಬರುತ್ತಿದೆ!',
+  // Courses
   'my_courses_enrolled': 'ನೋಂದಾಯಿತ',
   'my_courses_created': 'ರಚಿಸಿದವು',
   'my_courses_create': 'ಕೋರ್ಸ್ ರಚಿಸಿ',
   'my_courses_no_enrolled': 'ಈಗಾಗಲೇ ಯಾವುದೇ ನೋಂದಾಯಿತ ಕೋರ್ಸ್ ಇಲ್ಲ',
   'my_courses_no_created': 'ಈಗಾಗಲೇ ಯಾವುದೇ ರಚಿಸಿದ ಕೋರ್ಸ್ ಇಲ್ಲ',
   'my_courses_load_enrolled_error':
-  'ನೋಂದಾಯಿತ ಕೋರ್ಸ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
-  'my_courses_load_created_error':
-  'ರಚಿಸಿದ ಕೋರ್ಸ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+      'ನೋಂದಾಯಿತ ಕೋರ್ಸ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+  'my_courses_load_created_error': 'ರಚಿಸಿದ ಕೋರ್ಸ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
   'my_courses_retry': 'ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
 
   'transactions': 'ವಹಿವಾಟುಗಳು',
 
-// Friend Request Dialog
+  // Friend Request Dialog
   'friend_request_title': 'ಮಿತ್ರ ವಿನಂತಿ',
-  'accept_or_decline':
-  'ಈ ಮಿತ್ರ ವಿನಂತಿಯನ್ನು ಸ್ವೀಕರಿಸಬೇಕಾ ಅಥವಾ ನಿರಾಕರಿಸಬೇಕಾ?',
+  'accept_or_decline': 'ಈ ಮಿತ್ರ ವಿನಂತಿಯನ್ನು ಸ್ವೀಕರಿಸಬೇಕಾ ಅಥವಾ ನಿರಾಕರಿಸಬೇಕಾ?',
   'decline_button': 'ನಿರಾಕರಿಸಿ',
   'accept_button': 'ಸ್ವೀಕರಿಸಿ',
   'remove_friend_title': 'ಮಿತ್ರರನ್ನು ತೆಗೆದುಹಾಕಿ',
-  'are_you_sure_remove':
-  'ನೀವು ಖಚಿತವಾಗಿಯೂ ಈ ಮಿತ್ರರನ್ನು ತೆಗೆದುಹಾಕಲು ಬಯಸುತ್ತೀರಾ?',
+  'are_you_sure_remove': 'ನೀವು ಖಚಿತವಾಗಿಯೂ ಈ ಮಿತ್ರರನ್ನು ತೆಗೆದುಹಾಕಲು ಬಯಸುತ್ತೀರಾ?',
   'remove_button': 'ತೆಗೆದುಹಾಕಿ',
 
-// Subscription Dialog
+  // Subscription Dialog
   'subscription_required': '🔒 ಚಂದಾದಾರಿಕೆ ಅಗತ್ಯ',
   'need_subscription_to_boost':
-  'ಪೋಸ್ಟ್ ಬೂಸ್ಟ್ ಮಾಡಲು ಚಂದಾದಾರಿಕೆ ಅಗತ್ಯ.\nಪ್ಯಾಕೇಜ್ ಪುಟಕ್ಕೆ ಹೋಗಬೇಕೇ?',
+      'ಪೋಸ್ಟ್ ಬೂಸ್ಟ್ ಮಾಡಲು ಚಂದಾದಾರಿಕೆ ಅಗತ್ಯ.\nಪ್ಯಾಕೇಜ್ ಪುಟಕ್ಕೆ ಹೋಗಬೇಕೇ?',
   'cancel_action': 'ರದ್ದುಮಾಡಿ',
   'show_packages_button': 'ಪ್ಯಾಕೇಜ್‌ಗಳನ್ನು ನೋಡಿ',
 
-// General UI
+  // General UI
   'enter_email_or_username': 'ನಿಮ್ಮ ಇಮೇಲ್ ಅಥವಾ ಬಳಕೆದಾರಹೆಸರು ನಮೂದಿಸಿ',
   'enter_password_text': 'ನಿಮ್ಮ ಪಾಸ್‌ವರ್ಡ್ ನಮೂದಿಸಿ',
   'details_button': 'ವಿವರಗಳು',
@@ -1540,17 +1512,15 @@ const Map<String, String> knIN = {
   'withdraw_funds_title': 'ಹಣವನ್ನು ಹಿಂತೆಗೆದುಕೊಳ್ಳಿ',
   'submit_request_button': 'ಅರ್ಜಿಯನ್ನು ಸಲ್ಲಿಸಿ',
 
-// Page Settings
+  // Page Settings
   'page_settings': 'ಪುಟ ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
   'enable_page_tips_title': 'ಪುಟ ಟಿಪ್‌ಗಳನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ',
-  'allow_users_send_tips_desc':
-  'ಬಳಕೆದಾರರಿಗೆ ಈ ಪುಟಕ್ಕೆ ಟಿಪ್ ಕಳುಹಿಸಲು ಅನುಮತಿಸಿ',
+  'allow_users_send_tips_desc': 'ಬಳಕೆದಾರರಿಗೆ ಈ ಪುಟಕ್ಕೆ ಟಿಪ್ ಕಳುಹಿಸಲು ಅನುಮತಿಸಿ',
   'enable_monetization_page_title': 'ಮೋನೆಟೈಜೆಷನ್ ಸಕ್ರಿಯಗೊಳಿಸಿ',
-  'allow_page_earn_money_desc':
-  'ಈ ಪುಟವು ವಿಷಯದಿಂದ ಆದಾಯ ಗಳಿಸಲು ಅನುಮತಿಸಿ',
+  'allow_page_earn_money_desc': 'ಈ ಪುಟವು ವಿಷಯದಿಂದ ಆದಾಯ ಗಳಿಸಲು ಅನುಮತಿಸಿ',
   'delete_permanently_button': 'ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಿ',
 
-// Verification & Creation
+  // Verification & Creation
   'request_verification_title': 'ಪರಿಶೀಲನೆ ವಿನಂತಿ',
   'take_photo_button': 'ಫೋಟೋ ತೆಗೆದುಕೊಳ್ಳಿ',
   'choose_from_gallery_button': 'ಗ್ಯಾಲರಿಯಿಂದ ಆಯ್ಕೆಮಾಡಿ',
@@ -1563,21 +1533,21 @@ const Map<String, String> knIN = {
   'select_country_placeholder': 'ದೇಶವನ್ನು ಆಯ್ಕೆಮಾಡಿ',
   'select_language_placeholder': 'ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ',
 
-// Photos & Albums
+  // Photos & Albums
   'photos_page_title': 'ಫೋಟೋಗಳು',
   'load_more_button': 'ಇನ್ನಷ್ಟು ಲೋಡ್ ಮಾಡಿ',
   'albums_page_title': 'ಆಲ್ಬಮ್‌ಗಳು',
   'no_people_found': 'ಯಾವುದೇ ವ್ಯಕ್ತಿಗಳು ಕಂಡುಬಂದಿಲ್ಲ',
   'people_page_title': 'ಜನ',
 
-// Courses & Details
+  // Courses & Details
   'edit_course_button': 'ಸಂಪಾದಿಸಿ',
   'course_enrollment_title': 'ಕೋರ್ಸ್ ನೋಂದಣಿ',
   'course_enrollment_cancel': 'ರದ್ದುಮಾಡಿ',
   'course_enrollment_confirm': 'ನೋಂದಾಯಿಸಿ',
   'course_details_button': 'ವಿವರಗಳು',
 
-// Audio Controls
+  // Audio Controls
   'restart_from_beginning': 'ಆರಂಭದಿಂದ ಮರುಪ್ರಾರಂಭಿಸಿ',
   'download_button': 'ಡೌನ್‌ಲೋಡ್',
   'share_button_action': 'ಹಂಚಿಕೊಳ್ಳಿ',
@@ -1585,13 +1555,13 @@ const Map<String, String> knIN = {
   'audio_information_title': 'ಆಡಿಯೋ ವಿವರಗಳು',
   'close_button': 'ಮುಚ್ಚಿ',
 
-// Reactions & Status
+  // Reactions & Status
   'all_reactions': 'ಎಲ್ಲಾ',
   'retry_button': 'ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
   'following_status': 'ಅನುಸರಿಸುತ್ತಿದ್ದಾರೆ',
   'follow_status': 'ಅನುಸರಿಸಿ',
 
-// Wallet & Payment
+  // Wallet & Payment
   'recharge_wallet_title': 'ವಾಲೆಟ್ ರಿಚಾರ್ಜ್ ಮಾಡಿ',
   'filter_by_country_title': 'ದೇಶದ ಆಧಾರದಲ್ಲಿ ಫಿಲ್ಟರ್ ಮಾಡಿ',
   'watch_page_title': 'ನೋಡಿ',
@@ -1609,7 +1579,7 @@ const Map<String, String> knIN = {
   'wallet_balance_updated_at': 'ನವೀಕರಿಸಲಾಗಿದೆ @date',
   'post_details_title': 'ಪೋಸ್ಟ್ ವಿವರಗಳು',
 
-// Market Withdrawals & Movies
+  // Market Withdrawals & Movies
   'market_withdrawals_title': 'ಮಾರ್ಕೆಟ್ ಹಿಂಪಡೆಯುವಿಕೆಗಳು',
   'movie_detail_title': 'ಚಿತ್ರ',
   'invalid_youtube_url': 'ಅಮಾನ್ಯ YouTube URL',
@@ -1622,7 +1592,7 @@ const Map<String, String> knIN = {
   'going_button_event': 'ಹೋಗುತ್ತಿದ್ದಾರೆ',
   'remaining_label': 'ಉಳಿದಿದೆ',
 
-// Job & Event UI
+  // Job & Event UI
   'per_hour_option': 'ಪ್ರತಿ ಗಂಟೆ',
   'per_day_option': 'ಪ್ರತಿ ದಿನ',
   'per_week_option': 'ಪ್ರತಿ ವಾರ',
@@ -1633,9 +1603,8 @@ const Map<String, String> knIN = {
   'temporary_option': 'ತಾತ್ಕಾಲಿಕ',
   'internship_option': 'ಇಂಟರ್ನ್‌ಶಿಪ್',
   'online_event': 'ಆನ್‌ಲೈನ್ ಈವೆಂಟ್',
-  'this_event_held_online':
-  'ಈ ಈವೆಂಟ್ ಆನ್‌ಲೈನ್‌ನಲ್ಲಿ ಆಯೋಜಿಸಲಾಗುತ್ತದೆ',
-// Page Links
+  'this_event_held_online': 'ಈ ಈವೆಂಟ್ ಆನ್‌ಲೈನ್‌ನಲ್ಲಿ ಆಯೋಜಿಸಲಾಗುತ್ತದೆ',
+  // Page Links
   'facebook_link': 'Facebook',
   'twitter_link': 'Twitter',
   'youtube_link': 'YouTube',
@@ -1643,15 +1612,15 @@ const Map<String, String> knIN = {
   'linkedin_link': 'LinkedIn',
   'vk_link': 'VK',
 
-// Page Actions
+  // Page Actions
   'invite_friends_label': 'ಮಿತ್ರರನ್ನು ಆಹ್ವಾನಿಸಿ',
   'manage_admins_label': 'ಅಡ್ಮಿನ್‌ಗಳನ್ನು ನಿರ್ವಹಿಸಿ',
 
-// Event Dialog
+  // Event Dialog
   'delete_event_confirm_message':
-  'ನೀವು ಖಚಿತವಾಗಿಯೂ ಈ ಈವೆಂಟ್ ಅನ್ನು ಅಳಿಸಲು ಬಯಸುತ್ತೀರಾ?',
+      'ನೀವು ಖಚಿತವಾಗಿಯೂ ಈ ಈವೆಂಟ್ ಅನ್ನು ಅಳಿಸಲು ಬಯಸುತ್ತೀರಾ?',
 
-// Misc
+  // Misc
   'see_details_button': 'ವಿವರಗಳನ್ನು ನೋಡಿ',
   'confirmed_button': 'ದೃಢೀಕರಿಸಿ',
   'recommended_badge': 'ಶಿಫಾರಸು ಮಾಡಿದ',
@@ -1666,22 +1635,22 @@ const Map<String, String> knIN = {
   'course_candidates_title': 'ಅಭ್ಯರ್ಥಿಗಳು',
   'event_members_label': 'ಸದಸ್ಯರು',
 
-// Invite Event
+  // Invite Event
   'invite_to_event': '@eventTitle ಗೆ ಮಿತ್ರರನ್ನು ಆಹ್ವಾನಿಸಿ',
   'invite_button': 'ಆಹ್ವಾನಿಸಿ',
 
-// Reports
+  // Reports
   'please_select_reason': 'ದಯವಿಟ್ಟು ವರದಿ ಮಾಡುವ ಕಾರಣವನ್ನು ಆಯ್ಕೆಮಾಡಿ',
   'report_submitted_success':
-  'ವರದಿ ಯಶಸ್ವಿಯಾಗಿ ಸಲ್ಲಿಸಲಾಗಿದೆ. ನಮ್ಮ ಸಮುದಾಯವನ್ನು ಸುರಕ್ಷಿತವಾಗಿರಿಸಲು ಸಹಾಯ ಮಾಡಿದಕ್ಕಾಗಿ ಧನ್ಯವಾದಗಳು.',
+      'ವರದಿ ಯಶಸ್ವಿಯಾಗಿ ಸಲ್ಲಿಸಲಾಗಿದೆ. ನಮ್ಮ ಸಮುದಾಯವನ್ನು ಸುರಕ್ಷಿತವಾಗಿರಿಸಲು ಸಹಾಯ ಮಾಡಿದಕ್ಕಾಗಿ ಧನ್ಯವಾದಗಳು.',
   'report_submit_error': 'ವರದಿ ಸಲ್ಲಿಸಲು ವಿಫಲವಾಗಿದೆ: @error',
   'report_title_dialog': '@contentType ವರದಿ ಮಾಡಿ',
 
-// Error Messages
+  // Error Messages
   'error_loading': 'ದೋಷ: @message',
   'connection_error_text': 'ಕನೆಕ್ಷನ್ ದೋಷ',
 
-// Page Profile
+  // Page Profile
   'page_update_pictures_title': 'ಚಿತ್ರಗಳನ್ನು ನವೀಕರಿಸಿ',
   'live_stream': 'ಲೈವ್ ಸ್ಟ್ರೀಮ್',
   'likes_label': 'ಲೈಕ್ಸ್',
@@ -1691,19 +1660,18 @@ const Map<String, String> knIN = {
   'page_like_failed': 'ಪುಟವನ್ನು @action ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
   'page_no_posts_title': 'ಈಗ ಯಾವುದೇ ಪೋಸ್ಟ್‌ಗಳು ಇಲ್ಲ',
   'page_no_posts_subtitle':
-  'ಈ ಪುಟದಿಂದ ಪ್ರಕಟಿಸಲಾದ ಪೋಸ್ಟ್‌ಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.',
+      'ಈ ಪುಟದಿಂದ ಪ್ರಕಟಿಸಲಾದ ಪೋಸ್ಟ್‌ಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.',
   'page_no_photos_title': 'ಯಾವುದೇ ಫೋಟೋಗಳಿಲ್ಲ',
   'page_no_photos_subtitle':
-  'ಈ ಪುಟದಿಂದ ಪೋಸ್ಟ್ ಮಾಡಲಾದ ಫೋಟೋಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.',
+      'ಈ ಪುಟದಿಂದ ಪೋಸ್ಟ್ ಮಾಡಲಾದ ಫೋಟೋಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.',
   'page_no_videos_title': 'ಯಾವುದೇ ವೀಡಿಯೊಗಳಿಲ್ಲ',
   'page_no_videos_subtitle':
-  'ಈ ಪುಟದಿಂದ ಪೋಸ್ಟ್ ಮಾಡಲಾದ ವೀಡಿಯೊಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.',
+      'ಈ ಪುಟದಿಂದ ಪೋಸ್ಟ್ ಮಾಡಲಾದ ವೀಡಿಯೊಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.',
   'page_no_reviews_title': 'ಈಗ ಯಾವುದೇ ವಿಮರ್ಶೆಗಳಿಲ್ಲ',
   'page_no_reviews_subtitle':
-  'ಬಳಕೆದಾರರು ವಿಮರ್ಶೆಗಳನ್ನು ನೀಡಿದಾಗ, ಅವು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.',
+      'ಬಳಕೆದಾರರು ವಿಮರ್ಶೆಗಳನ್ನು ನೀಡಿದಾಗ, ಅವು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.',
   'page_no_events_title': 'ಯಾವುದೇ ಈವೆಂಟ್ ಇಲ್ಲ',
-  'page_no_events_subtitle':
-  'ಈ ಪುಟದಿಂದ ರಚಿಸಲಾದ ಈವೆಂಟ್‌ಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.',
+  'page_no_events_subtitle': 'ಈ ಪುಟದಿಂದ ರಚಿಸಲಾದ ಈವೆಂಟ್‌ಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.',
   'page_tab_timeline': 'ಟೈಮ್‌ಲೈನ್',
   'page_tab_about': 'ಮಾಹಿತಿ',
   'page_tab_photos': 'ಚಿತ್ರಗಳು',
@@ -1714,32 +1682,31 @@ const Map<String, String> knIN = {
   'contact_information_title': 'ಸಂಪರ್ಕ ಮಾಹಿತಿ',
 
   'page_no_info_title': 'ಯಾವುದೇ ಮಾಹಿತಿ ಇಲ್ಲ',
-  'page_no_info_subtitle':
-  'ಲಭ್ಯವಾಗುವಾಗ, ಪುಟದ ಮಾಹಿತಿ ಇಲ್ಲಿ ಪ್ರದರ್ಶಿಸಲಾಗುತ್ತದೆ.',
+  'page_no_info_subtitle': 'ಲಭ್ಯವಾಗುವಾಗ, ಪುಟದ ಮಾಹಿತಿ ಇಲ್ಲಿ ಪ್ರದರ್ಶಿಸಲಾಗುತ್ತದೆ.',
 
-// Group Profile
+  // Group Profile
   'cancel_group_request_title': 'ಅರ್ಜಿಯನ್ನು ರದ್ದುಮಾಡಿ',
   'cancel_group_request_message':
-  'ನೀವು ಈ ಗುಂಪಿಗೆ ಸಲ್ಲಿಸಿದ ಸದಸ್ಯತ್ವ ವಿನಂತಿಯನ್ನು ರದ್ದುಮಾಡಲು ಬಯಸುತ್ತೀರಾ?',
+      'ನೀವು ಈ ಗುಂಪಿಗೆ ಸಲ್ಲಿಸಿದ ಸದಸ್ಯತ್ವ ವಿನಂತಿಯನ್ನು ರದ್ದುಮಾಡಲು ಬಯಸುತ್ತೀರಾ?',
   'group_request_cancelled_success':
-  'ಸದಸ್ಯತ್ವ ವಿನಂತಿ ಯಶಸ್ವಿಯಾಗಿ ರದ್ದುಮಾಡಲಾಗಿದೆ',
+      'ಸದಸ್ಯತ್ವ ವಿನಂತಿ ಯಶಸ್ವಿಯಾಗಿ ರದ್ದುಮಾಡಲಾಗಿದೆ',
   'group_request_cancel_failed':
-  'ವಿನಂತಿಯನ್ನು ರದ್ದುಮಾಡಲು ವಿಫಲವಾಗಿದೆ, ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
+      'ವಿನಂತಿಯನ್ನು ರದ್ದುಮಾಡಲು ವಿಫಲವಾಗಿದೆ, ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
   'error_occurred_with_message': 'ದೋಷ ಸಂಭವಿಸಿದೆ: @error',
   'group_not_available': 'ಗುಂಪು ಲಭ್ಯವಿಲ್ಲ',
   'group_secret_no_access':
-  'ಇದು ಗುಪ್ತ ಗುಂಪಾಗಿದೆ ಮತ್ತು ನೀವು ಇದನ್ನು ಪ್ರವೇಶಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ',
+      'ಇದು ಗುಪ್ತ ಗುಂಪಾಗಿದೆ ಮತ್ತು ನೀವು ಇದನ್ನು ಪ್ರವೇಶಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ',
   'group_may_be_deleted':
-  'ಗುಂಪು ಅಳಿಸಲ್ಪಟ್ಟಿರಬಹುದು ಅಥವಾ ಅದರ ಸೆಟ್ಟಿಂಗ್‌ಗಳು ಬದಲಾಯಿಸಲ್ಪಟ್ಟಿವೆ',
+      'ಗುಂಪು ಅಳಿಸಲ್ಪಟ್ಟಿರಬಹುದು ಅಥವಾ ಅದರ ಸೆಟ್ಟಿಂಗ್‌ಗಳು ಬದಲಾಯಿಸಲ್ಪಟ್ಟಿವೆ',
   'group_no_access_permission':
-  'ಗುಂಪು ಅಳಿಸಲ್ಪಟ್ಟಿರಬಹುದು ಅಥವಾ ನಿಮಗೆ ಪ್ರವೇಶ ಅನುಮತಿ ಇಲ್ಲ',
+      'ಗುಂಪು ಅಳಿಸಲ್ಪಟ್ಟಿರಬಹುದು ಅಥವಾ ನಿಮಗೆ ಪ್ರವೇಶ ಅನುಮತಿ ಇಲ್ಲ',
   'back_button': 'ಹಿಂದೆ',
   'group_secret': 'ಗುಪ್ತ ಗುಂಪು',
   'group_closed': 'ಮುಚ್ಚಿದ ಗುಂಪು',
   'group_member_to_see_secret':
-  'ಈ ಗುಪ್ತ ಗುಂಪಿನ ವಿಷಯವನ್ನು ನೋಡಲು ನೀವು ಸದಸ್ಯರಾಗಿರಬೇಕು',
+      'ಈ ಗುಪ್ತ ಗುಂಪಿನ ವಿಷಯವನ್ನು ನೋಡಲು ನೀವು ಸದಸ್ಯರಾಗಿರಬೇಕು',
   'group_member_to_see_posts':
-  'ಈ ಗುಂಪಿನ ಪೋಸ್ಟ್‌ಗಳನ್ನು ನೋಡಲು ನೀವು ಸದಸ್ಯರಾಗಿರಬೇಕು',
+      'ಈ ಗುಂಪಿನ ಪೋಸ್ಟ್‌ಗಳನ್ನು ನೋಡಲು ನೀವು ಸದಸ್ಯರಾಗಿರಬೇಕು',
   'group_request_join': 'ಸೇರಲು ವಿನಂತಿಸಿ',
   'group_join': 'ಗುಂಪಿಗೆ ಸೇರಿ',
   'group_privacy': 'ಗೌಪ್ಯತೆ',
@@ -1749,9 +1716,9 @@ const Map<String, String> knIN = {
   'group_members': 'ಸದಸ್ಯರು',
   'group_request_pending': 'ನಿಮ್ಮ ವಿನಂತಿ ಪರಿಶೀಲನೆಯಲ್ಲಿದೆ',
   'group_request_sent_secret':
-  'ನಿಮ್ಮ ವಿನಂತಿಯನ್ನು ಗುಪ್ತ ಗುಂಪಿನ ಅಡ್ಮಿನ್‌ಗೆ ಕಳುಹಿಸಲಾಗಿದೆ.\nಅನುಮೋದನೆಯಾದ ನಂತರ ನಿಮಗೆ ಮಾಹಿತಿ ನೀಡಲಾಗುತ್ತದೆ.',
+      'ನಿಮ್ಮ ವಿನಂತಿಯನ್ನು ಗುಪ್ತ ಗುಂಪಿನ ಅಡ್ಮಿನ್‌ಗೆ ಕಳುಹಿಸಲಾಗಿದೆ.\nಅನುಮೋದನೆಯಾದ ನಂತರ ನಿಮಗೆ ಮಾಹಿತಿ ನೀಡಲಾಗುತ್ತದೆ.',
   'group_request_sent':
-  'ನಿಮ್ಮ ವಿನಂತಿಯನ್ನು ಗುಂಪಿನ ಅಡ್ಮಿನ್‌ಗೆ ಕಳುಹಿಸಲಾಗಿದೆ.\nಅನುಮೋದನೆಯಾದ ನಂತರ ನಿಮಗೆ ಮಾಹಿತಿ ನೀಡಲಾಗುತ್ತದೆ.',
+      'ನಿಮ್ಮ ವಿನಂತಿಯನ್ನು ಗುಂಪಿನ ಅಡ್ಮಿನ್‌ಗೆ ಕಳುಹಿಸಲಾಗಿದೆ.\nಅನುಮೋದನೆಯಾದ ನಂತರ ನಿಮಗೆ ಮಾಹಿತಿ ನೀಡಲಾಗುತ್ತದೆ.',
   'group_cancel_request': 'ವಿನಂತಿಯನ್ನು ರದ್ದುಮಾಡಿ',
   'group_settings': 'ಗುಂಪು ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
   'group_posts_label': 'ಪೋಸ್ಟ್‌ಗಳು',
@@ -1776,12 +1743,12 @@ const Map<String, String> knIN = {
   'group_no_events': 'ಯಾವುದೇ ಈವೆಂಟ್ ಇಲ್ಲ',
   'group_pending_review': 'ಪರಿಶೀಲನೆಯಲ್ಲಿದೆ',
   'group_leave': 'ಗುಂಪನ್ನು ಬಿಡಿ',
-// Group Card
+  // Group Card
   'group_leave_button': 'ಬಿಡಿ',
   'group_pending_status': 'ಬಾಕಿಯಿದೆ',
   'group_join_button': 'ಸೇರಿರಿ',
 
-// Groups Page
+  // Groups Page
   'groups_page_title': 'ಗುಂಪುಗಳು',
   'groups_search_tooltip': 'ಗುಂಪು ಹುಡುಕಿ',
   'groups_create_tooltip': 'ಗುಂಪು ರಚಿಸಿ',
@@ -1793,7 +1760,7 @@ const Map<String, String> knIN = {
   'groups_join_failed': 'ಗುಂಪಿಗೆ ಸೇರಲು ವಿಫಲವಾಗಿದೆ',
   'groups_leave_confirm_title': 'ಬಿಡುವಿಕೆಗೆ ದೃಢೀಕರಣ',
   'groups_leave_confirm_message':
-  'ನೀವು ಖಚಿತವಾಗಿಯೂ "@title" ಗುಂಪನ್ನು ಬಿಡಲು ಬಯಸುತ್ತೀರಾ?',
+      'ನೀವು ಖಚಿತವಾಗಿಯೂ "@title" ಗುಂಪನ್ನು ಬಿಡಲು ಬಯಸುತ್ತೀರಾ?',
   'groups_leave_success': 'ಗುಂಪನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಬಿಡಲಾಗಿದೆ',
   'groups_leave_failed': 'ಗುಂಪನ್ನು ಬಿಡಲು ವಿಫಲವಾಗಿದೆ',
   'groups_load_failed': 'ಗುಂಪುಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
@@ -1801,7 +1768,7 @@ const Map<String, String> knIN = {
   'groups_empty_managed': 'ನಿರ್ವಹಿಸಲಾದ ಗುಂಪುಗಳಿಲ್ಲ',
   'groups_empty_suggested': 'ಯಾವುದೇ ಶಿಫಾರಸು ಮಾಡಿದ ಗುಂಪುಗಳಿಲ್ಲ',
 
-// Edit Group Page
+  // Edit Group Page
   'edit_group_title': 'ಗುಂಪನ್ನು ಸಂಪಾದಿಸಿ',
   'edit_group_tab_settings': 'ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
   'edit_group_tab_info': 'ಮಾಹಿತಿ',
@@ -1812,7 +1779,7 @@ const Map<String, String> knIN = {
   'edit_group_username_label': 'ಬಳಕೆದಾರ ಹೆಸರು *',
   'edit_group_username_hint': 'ಉದಾಹರಣೆ: flutter_devs_uae',
   'edit_group_username_helper':
-  'ಇಂಗ್ಲಿಷ್ ಅಕ್ಷರಗಳು, ಸಂಖ್ಯೆಗಳು ಮತ್ತು ಅಂಡರ್‌ಸ್ಕೋರ್ ಮಾತ್ರ',
+      'ಇಂಗ್ಲಿಷ್ ಅಕ್ಷರಗಳು, ಸಂಖ್ಯೆಗಳು ಮತ್ತು ಅಂಡರ್‌ಸ್ಕೋರ್ ಮಾತ್ರ',
   'edit_group_category_label': 'ವರ್ಗ *',
   'edit_group_loading': 'ಲೋಡ್ ಆಗುತ್ತಿದೆ...',
   'edit_group_country_label': 'ದೇಶ',
@@ -1822,13 +1789,11 @@ const Map<String, String> knIN = {
   'edit_group_privacy_label': 'ಗೌಪ್ಯತೆ',
   'edit_group_privacy_public': 'ಸಾರ್ವಜನಿಕ',
   'edit_group_privacy_public_desc':
-  'ಯಾರಾದರೂ ಗುಂಪು ಮತ್ತು ಪೋಸ್ಟ್‌ಗಳನ್ನು ನೋಡಬಹುದು',
+      'ಯಾರಾದರೂ ಗುಂಪು ಮತ್ತು ಪೋಸ್ಟ್‌ಗಳನ್ನು ನೋಡಬಹುದು',
   'edit_group_privacy_closed': 'ಮುಚ್ಚಿದ',
-  'edit_group_privacy_closed_desc':
-  'ಸದಸ್ಯರು ಮಾತ್ರ ಪೋಸ್ಟ್‌ಗಳನ್ನು ನೋಡಬಹುದು',
+  'edit_group_privacy_closed_desc': 'ಸದಸ್ಯರು ಮಾತ್ರ ಪೋಸ್ಟ್‌ಗಳನ್ನು ನೋಡಬಹುದು',
   'edit_group_privacy_secret': 'ಗುಪ್ತ',
-  'edit_group_privacy_secret_desc':
-  'ಅನುಮೋದಿತ ಸದಸ್ಯರು ಮಾತ್ರ',
+  'edit_group_privacy_secret_desc': 'ಅನುಮೋದಿತ ಸದಸ್ಯರು ಮಾತ್ರ',
   'edit_group_description_label': 'ವಿವರಣೆ',
   'edit_group_description_hint': 'ಗುಂಪಿನ ವಿವರವನ್ನು ಬರೆಯಿರಿ...',
   'edit_group_website_label': 'ವೆಬ್‌ಸೈಟ್',
@@ -1839,14 +1804,14 @@ const Map<String, String> knIN = {
   'edit_group_uploading': 'ಅಪ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ...',
   'edit_group_danger_zone_title': 'ಅಪಾಯದ ವಿಭಾಗ',
   'edit_group_danger_zone_desc':
-  'ಈ ವಿಭಾಗದ ಕ್ರಿಯೆಗಳು ಅಪಾಯಕಾರಿ ಮತ್ತು ಹಿಂತಿರುಗಿಸಲಾಗುವುದಿಲ್ಲ',
+      'ಈ ವಿಭಾಗದ ಕ್ರಿಯೆಗಳು ಅಪಾಯಕಾರಿ ಮತ್ತು ಹಿಂತಿರುಗಿಸಲಾಗುವುದಿಲ್ಲ',
   'edit_group_info_section': 'ಗುಂಪಿನ ಮಾಹಿತಿ',
   'edit_group_members': 'ಸದಸ್ಯರು',
   'edit_group_creation_date': 'ರಚಿಸಿದ ದಿನಾಂಕ',
   'edit_group_privacy': 'ಗೌಪ್ಯತೆ',
   'edit_group_delete_title': 'ಗುಂಪನ್ನು ಅಳಿಸಿ',
   'edit_group_delete_message':
-  'ನೀವು ಖಚಿತವಾಗಿಯೂ "@title" ಗುಂಪನ್ನು ಅಳಿಸಲು ಬಯಸುತ್ತೀರಾ?\n\nಅಳಿಸಲಾಗುವುದು:\n• ಎಲ್ಲಾ ಪೋಸ್ಟ್‌ಗಳು\n• ಎಲ್ಲಾ ಸದಸ್ಯರು\n• ಎಲ್ಲಾ ಡೇಟಾ\n\nಈ ಕ್ರಿಯೆಯನ್ನು ಹಿಂತಿರುಗಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ!',
+      'ನೀವು ಖಚಿತವಾಗಿಯೂ "@title" ಗುಂಪನ್ನು ಅಳಿಸಲು ಬಯಸುತ್ತೀರಾ?\n\nಅಳಿಸಲಾಗುವುದು:\n• ಎಲ್ಲಾ ಪೋಸ್ಟ್‌ಗಳು\n• ಎಲ್ಲಾ ಸದಸ್ಯರು\n• ಎಲ್ಲಾ ಡೇಟಾ\n\nಈ ಕ್ರಿಯೆಯನ್ನು ಹಿಂತಿರುಗಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ!',
   'edit_group_delete_permanently': 'ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಿ',
   'edit_group_delete_button': 'ಗುಂಪನ್ನು ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಿ',
   'edit_group_deleting': 'ಅಳಿಸಲಾಗುತ್ತಿದೆ...',
@@ -1854,24 +1819,19 @@ const Map<String, String> knIN = {
   'edit_group_save_failed': 'ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಲು ವಿಫಲವಾಗಿದೆ',
   'edit_group_delete_success': 'ಗುಂಪು ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಲಾಗಿದೆ',
   'edit_group_delete_failed': 'ಗುಂಪನ್ನು ಅಳಿಸಲು ವಿಫಲವಾಗಿದೆ',
-  'edit_group_picture_upload_success':
-  'ಗುಂಪಿನ ಚಿತ್ರ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಲೋಡ್ ಆಗಿದೆ',
+  'edit_group_picture_upload_success': 'ಗುಂಪಿನ ಚಿತ್ರ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಲೋಡ್ ಆಗಿದೆ',
   'edit_group_picture_upload_failed':
-  'ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ: @error',
-  'edit_group_cover_upload_success':
-  'ಕವರ್ ಚಿತ್ರ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಲೋಡ್ ಆಗಿದೆ',
-  'edit_group_cover_upload_failed':
-  'ಕವರ್ ಅಪ್‌ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ: @error',
-  'edit_group_image_pick_error':
-  'ಚಿತ್ರವನ್ನು ಆಯ್ಕೆಮಾಡುವಲ್ಲಿ ದೋಷ: @error',
+      'ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ: @error',
+  'edit_group_cover_upload_success': 'ಕವರ್ ಚಿತ್ರ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಲೋಡ್ ಆಗಿದೆ',
+  'edit_group_cover_upload_failed': 'ಕವರ್ ಅಪ್‌ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ: @error',
+  'edit_group_image_pick_error': 'ಚಿತ್ರವನ್ನು ಆಯ್ಕೆಮಾಡುವಲ್ಲಿ ದೋಷ: @error',
   'edit_group_picture_section_title': 'ಗುಂಪಿನ ಚಿತ್ರ',
   'edit_group_picture_section_subtitle':
-  'ಗುಂಪಿನ ಪ್ರೊಫೈಲ್ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ',
+      'ಗುಂಪಿನ ಪ್ರೊಫೈಲ್ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ',
   'edit_group_cover_section_title': 'ಕವರ್ ಚಿತ್ರ',
-  'edit_group_cover_section_subtitle':
-  'ಗುಂಪಿನ ಕವರ್ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ',
+  'edit_group_cover_section_subtitle': 'ಗುಂಪಿನ ಕವರ್ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ',
 
-// My Pages Page
+  // My Pages Page
   'my_pages_title': 'ಪುಟಗಳು',
   'my_pages_tab_my_pages': 'ನನ್ನ ಪುಟಗಳು',
   'my_pages_tab_liked': 'ಲೈಕ್ ಮಾಡಿದವು',
@@ -1887,22 +1847,21 @@ const Map<String, String> knIN = {
   'my_pages_boosted_button': 'ಬೂಸ್ಟ್ ಮಾಡಲಾಗಿದೆ',
   'my_pages_empty_my_pages_title': 'ಯಾವುದೇ ಪುಟಗಳಿಲ್ಲ',
   'my_pages_empty_my_pages_subtitle':
-  'ಇಲ್ಲಿ ಕಾಣಿಸಿಕೊಳ್ಳಲು ಪುಟಗಳನ್ನು ರಚಿಸಿ ಅಥವಾ ನಿರ್ವಹಿಸಿ.',
+      'ಇಲ್ಲಿ ಕಾಣಿಸಿಕೊಳ್ಳಲು ಪುಟಗಳನ್ನು ರಚಿಸಿ ಅಥವಾ ನಿರ್ವಹಿಸಿ.',
   'my_pages_empty_liked_title': 'ಯಾವುದೇ ಲೈಕ್ ಮಾಡಿದ ಪುಟಗಳಿಲ್ಲ',
-  'my_pages_empty_liked_subtitle':
-  'ನೀವು ಲೈಕ್ ಮಾಡಿದ ಪುಟಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.',
+  'my_pages_empty_liked_subtitle': 'ನೀವು ಲೈಕ್ ಮಾಡಿದ ಪುಟಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.',
   'my_pages_empty_suggested_title': 'ಯಾವುದೇ ಶಿಫಾರಸು ಇಲ್ಲ',
   'my_pages_empty_suggested_subtitle':
-  'ಲಭ್ಯವಾದಾಗ ಶಿಫಾರಸು ಮಾಡಿದ ಪುಟಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.',
+      'ಲಭ್ಯವಾದಾಗ ಶಿಫಾರಸು ಮಾಡಿದ ಪುಟಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.',
 
-// Movies List Page
+  // Movies List Page
   'movies_select_genre': 'ಶೈಲಿಯನ್ನು ಆಯ್ಕೆಮಾಡಿ',
   'movies_unknown_genre': 'ಅಜ್ಞಾತ',
   'movies_search_hint': 'ಶೀರ್ಷಿಕೆ ಅಥವಾ ಕೀವರ್ಡ್ ನಮೂದಿಸಿ',
   'movies_apply_filter': 'ಅನ್ವಯಿಸಿ',
   'movies_empty': 'ಯಾವುದೇ ಚಿತ್ರಗಳು ಲಭ್ಯವಿಲ್ಲ',
 
-// Movie Detail Page
+  // Movie Detail Page
   'movie_not_found': 'ಚಿತ್ರ ಕಂಡುಬಂದಿಲ್ಲ',
   'movie_overview': 'ಸಾರಾಂಶ',
   'movie_cast': 'ನಟರು',
@@ -1917,15 +1876,14 @@ const Map<String, String> knIN = {
   'movie_purchasing': 'ಖರೀದಿ ನಡೆಯುತ್ತಿದೆ...',
   'movie_watch': 'ವೀಕ್ಷಿಸಿ',
 
-// Course Create Page
+  // Course Create Page
   'course_create_title': 'ಕೋರ್ಸ್ ರಚಿಸಿ',
   'course_create_success': 'ಕೋರ್ಸ್ ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ',
   'course_create_failed': 'ಕೋರ್ಸ್ ರಚಿಸಲು ವಿಫಲವಾಗಿದೆ',
   'course_title_label': 'ಕೋರ್ಸ್ ಶೀರ್ಷಿಕೆ *',
   'course_title_hint': 'ಉದಾಹರಣೆ: Flutter ಅಪ್ಲಿಕೇಶನ್ ಅಭಿವೃದ್ಧಿ ಕೋರ್ಸ್',
   'course_description_label': 'ಕೋರ್ಸ್ ವಿವರಣೆ *',
-  'course_description_hint':
-  'ಕೋರ್ಸ್‌ಗಾಗಿ ವಿವರವಾದ ವಿವರಣೆ ಬರೆಯಿರಿ...',
+  'course_description_hint': 'ಕೋರ್ಸ್‌ಗಾಗಿ ವಿವರವಾದ ವಿವರಣೆ ಬರೆಯಿರಿ...',
   'course_location_label': 'ಸ್ಥಳ *',
   'course_location_hint': 'ಉದಾಹರಣೆ: ರಿಯಾದ್ - ಸೌದಿ ಅರೇಬಿಯಾ ಅಥವಾ ಆನ್‌ಲೈನ್',
   'course_start_date': 'ಪ್ರಾರಂಭ ದಿನಾಂಕ',
@@ -1943,7 +1901,7 @@ const Map<String, String> knIN = {
   'course_cover_label': 'ಕವರ್ ಚಿತ್ರ',
   'course_cover_tap': 'ಕವರ್ ಚಿತ್ರ ಆಯ್ಕೆ ಮಾಡಲು ಟ್ಯಾಪ್ ಮಾಡಿ',
   'course_cover_upload_fail': 'ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
-// Share Post Dialog
+  // Share Post Dialog
   'share_post_title': 'ಪೋಸ್ಟ್ ಹಂಚಿಕೊಳ್ಳಿ',
   'share_to_label': 'ಹಂಚಿಕೊಳ್ಳಿ',
   'share_to_timeline': 'ಟೈಮ್‌ಲೈನ್',
@@ -1971,12 +1929,12 @@ const Map<String, String> knIN = {
   'error_deleting_post': 'ಪೋಸ್ಟ್ ಅಳಿಸಲು ವಿಫಲವಾಗಿದೆ',
   'report_feature_coming': 'ರಿಪೋರ್ಟ್ ವೈಶಿಷ್ಟ್ಯ ಶೀಘ್ರದಲ್ಲೇ ಬರಲಿದೆ',
   'we_will_send_verification_code':
-  'ನಿಮ್ಮ ಪಾಸ್ವರ್ಡ್ ರೀಸೆಟ್ ಮಾಡಲು ನಾವು ನಿಮ್ಮ ಇಮೇಲ್‌ಗೆ ಪರಿಶೀಲನಾ ಕೋಡ್ ಕಳುಹಿಸುತ್ತೇವೆ',
+      'ನಿಮ್ಮ ಪಾಸ್ವರ್ಡ್ ರೀಸೆಟ್ ಮಾಡಲು ನಾವು ನಿಮ್ಮ ಇಮೇಲ್‌ಗೆ ಪರಿಶೀಲನಾ ಕೋಡ್ ಕಳುಹಿಸುತ್ತೇವೆ',
   'email_or_username': 'ಇಮೇಲ್ ಅಥವಾ ಬಳಕೆದಾರ ಹೆಸರು',
   'send_code': 'ಕೋಡ್ ಕಳುಹಿಸಿ',
   'enter_verification_code': 'ಪರಿಶೀಲನಾ ಕೋಡ್ ನಮೂದಿಸಿ',
   'we_sent_code_to_your_email':
-  'ನಾವು ನಿಮ್ಮ ಇಮೇಲ್ ವಿಳಾಸಕ್ಕೆ 6 ಅಂಕಿಯ ಕೋಡ್ ಕಳುಹಿಸಿದ್ದೇವೆ',
+      'ನಾವು ನಿಮ್ಮ ಇಮೇಲ್ ವಿಳಾಸಕ್ಕೆ 6 ಅಂಕಿಯ ಕೋಡ್ ಕಳುಹಿಸಿದ್ದೇವೆ',
   'enter_all_digits': 'ದಯವಿಟ್ಟು ಎಲ್ಲಾ 6 ಅಂಕಿಗಳನ್ನು ನಮೂದಿಸಿ',
   'resend_code_in': 'ಕೋಡ್ ಮರುಕಳುಹಿಸಿ',
   'seconds': 'ಸೆಕೆಂಡುಗಳು',
@@ -1984,7 +1942,7 @@ const Map<String, String> knIN = {
   'verify_code': 'ಕೋಡ್ ಪರಿಶೀಲಿಸಿ',
   'create_new_password': 'ಹೊಸ ಪಾಸ್ವರ್ಡ್ ರಚಿಸಿ',
   'enter_strong_password':
-  'ದಯವಿಟ್ಟು ಕನಿಷ್ಠ 8 ಅಕ್ಷರಗಳಿರುವ ಬಲವಾದ ಪಾಸ್ವರ್ಡ್ ನಮೂದಿಸಿ',
+      'ದಯವಿಟ್ಟು ಕನಿಷ್ಠ 8 ಅಕ್ಷರಗಳಿರುವ ಬಲವಾದ ಪಾಸ್ವರ್ಡ್ ನಮೂದಿಸಿ',
   'password_too_short': 'ಪಾಸ್ವರ್ಡ್ ಕನಿಷ್ಠ 8 ಅಕ್ಷರಗಳಿರಬೇಕು',
   'reset_password': 'ಪಾಸ್ವರ್ಡ್ ರೀಸೆಟ್ ಮಾಡಿ',
   'skip_all': 'ಎಲ್ಲವನ್ನೂ ಬಿಟ್ಟುಬಿಡಿ',
@@ -1997,8 +1955,7 @@ const Map<String, String> knIN = {
   'field_of_study': 'ಅಧ್ಯಯನ ಕ್ಷೇತ್ರ',
   'field_of_study_hint': 'ಉದಾಹರಣೆ: ಕಂಪ್ಯೂಟರ್ ಸೈನ್ಸ್',
   'add_profile_photo': 'ಪ್ರೊಫೈಲ್ ಫೋಟೋ ಸೇರಿಸಿ',
-  'profile_photo_description':
-  'ಫೋಟೋ ಸೇರಿಸಿ যাতে ಜನರು ನಿಮ್ಮನ್ನು ಗುರುತಿಸಬಹುದು',
+  'profile_photo_description': 'ಫೋಟೋ ಸೇರಿಸಿ যাতে ಜನರು ನಿಮ್ಮನ್ನು ಗುರುತಿಸಬಹುದು',
   'tap_to_change_photo': 'ಫೋಟೋ ಬದಲಾಯಿಸಲು ಟ್ಯಾಪ್ ಮಾಡಿ',
   'choose_photo_source': 'ಫೋಟೋ ಮೂಲ ಆಯ್ಕೆಮಾಡಿ',
   'camera': 'ಕ್ಯಾಮೆರಾ',
@@ -2013,11 +1970,10 @@ const Map<String, String> knIN = {
 
   'delete_story': 'ಸ್ಟೋರಿ ಅಳಿಸಿ',
   'delete_story_confirmation':
-  'ನೀವು ಖಚಿತವಾಗಿಯೂ ನಿಮ್ಮ ಸ್ಟೋರಿಯನ್ನು ಅಳಿಸಲು ಬಯಸುತ್ತೀರಾ? ಈ ಕ್ರಿಯೆಯನ್ನು ಹಿಂತಿರುಗಿಸಲಾಗುವುದಿಲ್ಲ.',
+      'ನೀವು ಖಚಿತವಾಗಿಯೂ ನಿಮ್ಮ ಸ್ಟೋರಿಯನ್ನು ಅಳಿಸಲು ಬಯಸುತ್ತೀರಾ? ಈ ಕ್ರಿಯೆಯನ್ನು ಹಿಂತಿರುಗಿಸಲಾಗುವುದಿಲ್ಲ.',
   'story_deleted_successfully': 'ಸ್ಟೋರಿ ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಲಾಗಿದೆ',
 
-
-// Time
+  // Time
   'second_ago': 'ಒಂದು ಸೆಕೆಂಡ್ ಹಿಂದೆ',
   'seconds_ago': 'ಸೆಕೆಂಡುಗಳ ಹಿಂದೆ',
   'minute_ago': 'ಒಂದು ನಿಮಿಷ ಹಿಂದೆ',
@@ -2027,17 +1983,17 @@ const Map<String, String> knIN = {
   'month_ago': 'ಒಂದು ತಿಂಗಳು ಹಿಂದೆ',
   'year_ago': 'ಒಂದು ವರ್ಷ ಹಿಂದೆ',
 
-// Buttons / Common Actions
+  // Buttons / Common Actions
   'send_now': 'ಈಗ ಕಳುಹಿಸಿ',
   'send_message': 'ಸಂದೇಶ ಕಳುಹಿಸಿ',
   'more_options': 'ಹೆಚ್ಚು ಆಯ್ಕೆಗಳು',
   'anonymous_user': 'ಅಜ್ಞಾತ ಬಳಕೆದಾರ',
 
-// Status
+  // Status
   'status_updated': 'ಸ್ಥಿತಿ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಡೇಟ್ ಆಗಿದೆ',
   'sold': 'ಮಾರಾಟವಾಗಿದೆ',
 
-// Chat / Call
+  // Chat / Call
   'video_call': 'ವೀಡಿಯೊ ಕರೆ',
   'audio_call': 'ಆಡಿಯೊ ಕರೆ',
   'mute': 'ಮ್ಯೂಟ್',
@@ -2048,7 +2004,7 @@ const Map<String, String> knIN = {
   'answer': 'ಉತ್ತರಿಸಿ',
   'decline': 'ನಿರಾಕರಿಸಿ',
 
-// AI
+  // AI
   'ai_assistant': 'ಎಐ ಸಹಾಯಕ',
   'ai_typing': 'ಟೈಪ್ ಮಾಡುತ್ತಿದೆ...',
   'ai_error': 'ದೋಷ',
@@ -2056,10 +2012,10 @@ const Map<String, String> knIN = {
   'ai_clear_chat': 'ಚಾಟ್ ತೆರವುಗೊಳಿಸಿ',
   'ai_coming_soon': 'ಶೀಘ್ರದಲ್ಲೇ ಬರಲಿದೆ...',
 
-// Theme
+  // Theme
   'switched_to_light_mode': 'ಲೈಟ್ ಮೋಡ್‌ಗೆ ಬದಲಾಯಿಸಲಾಗಿದೆ',
   'switched_to_dark_mode': 'ಡಾರ್ಕ್ ಮೋಡ್‌ಗೆ ಬದಲಾಯಿಸಲಾಗಿದೆ',
-// Cart / Orders
+  // Cart / Orders
   'shopping_cart': 'ಶಾಪಿಂಗ್ ಕಾರ್ಟ್',
   'checkout': 'ಚೆಕ್‌ಔಟ್',
   'orders': 'ಆರ್ಡರ್‌ಗಳು',
@@ -2071,30 +2027,31 @@ const Map<String, String> knIN = {
   'enter_description': 'ಇಲ್ಲಿ ವಿವರಣೆ ನಮೂದಿಸಿ',
   'preview': 'ಪೂರ್ವವೀಕ್ಷಣೆ',
   'chat_seller_privacy_restricted':
-  'ಮಾರಾಟಗಾರರು ಚಾಟ್ ಗೌಪ್ಯತಾ ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ನಿರ್ಬಂಧಿಸಿದ್ದಾರೆ',
+      'ಮಾರಾಟಗಾರರು ಚಾಟ್ ಗೌಪ್ಯತಾ ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ನಿರ್ಬಂಧಿಸಿದ್ದಾರೆ',
   'cannot_chat_with_yourself': 'ನೀವು ನಿಮ್ಮನ್ನೇ ಸಂದೇಶ ಕಳುಹಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ',
   'no_posts_found': 'ಯಾವುದೇ ಪೋಸ್ಟ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ',
 
   'send_merits_title': 'ಮೆರಿಟ್ ಪಾಯಿಂಟ್‌ಗಳನ್ನು ಕಳುಹಿಸಿ',
   'send_merits_subtitle': 'ಇತರರಿಗಾಗಿ ನಿಮ್ಮ ಮೆಚ್ಚುಗೆಯನ್ನು ಹಂಚಿಕೊಳ್ಳಿ',
   'send_merits_info':
-  'ಇತರರ ಮೌಲ್ಯಯುತ ಕೊಡುಗೆಗಳಿಗೆ ಮೆಚ್ಚುಗೆ ಸೂಚಿಸಲು ಮೆರಿಟ್ ಪಾಯಿಂಟ್‌ಗಳನ್ನು ಕಳುಹಿಸಿ',
+      'ಇತರರ ಮೌಲ್ಯಯುತ ಕೊಡುಗೆಗಳಿಗೆ ಮೆಚ್ಚುಗೆ ಸೂಚಿಸಲು ಮೆರಿಟ್ ಪಾಯಿಂಟ್‌ಗಳನ್ನು ಕಳುಹಿಸಿ',
   'merits_available': '%s ಪಾಯಿಂಟ್‌ಗಳು ಲಭ್ಯವಿವೆ',
   'send_merits_coming_soon': 'ಶೀಘ್ರದಲ್ಲೇ – ಮೆರಿಟ್ ಕಳುಹಿಸುವ ಪುಟ',
   'failed_to_pick_file': 'ಫೈಲ್ ಆಯ್ಕೆ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
   'no_created_events': 'ನೀವು ಇನ್ನೂ ಯಾವುದೇ ಈವೆಂಟ್ ರಚಿಸಿಲ್ಲ',
   'create_your_first_event':
-  'ನಿಮ್ಮ ಮೊದಲ ಈವೆಂಟ್ ರಚಿಸಲು + ಬಟನ್ ಮೇಲೆ ಟ್ಯಾಪ್ ಮಾಡಿ!',
+      'ನಿಮ್ಮ ಮೊದಲ ಈವೆಂಟ್ ರಚಿಸಲು + ಬಟನ್ ಮೇಲೆ ಟ್ಯಾಪ್ ಮಾಡಿ!',
   'search_products': 'ಉತ್ಪನ್ನಗಳನ್ನು ಹುಡುಕಿ...',
   'edit_product': 'ಉತ್ಪನ್ನ ಸಂಪಾದಿಸಿ',
   'mark_as_sold': 'ಮಾರಾಟವಾದಂತೆ ಗುರುತಿಸಿ',
   'mark_as_unsold': 'ಲಭ್ಯವಿರುವಂತೆ ಗುರುತಿಸಿ',
   'are_you_sure_mark_product_sold':
-  'ನೀವು ಖಚಿತವಾಗಿಯೂ ಈ ಉತ್ಪನ್ನವನ್ನು ಮಾರಾಟವಾಗಿದೆ ಎಂದು ಗುರುತಿಸಲು ಬಯಸುತ್ತೀರಾ?',
-  'product_marked_sold': 'ಉತ್ಪನ್ನವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಮಾರಾಟವಾಗಿದೆ ಎಂದು ಗುರುತಿಸಲಾಗಿದೆ',
-  'product_marked_unsold':
-  'ಉತ್ಪನ್ನವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಲಭ್ಯವಿರುವಂತೆ ಗುರುತಿಸಲಾಗಿದೆ',
-  'error_marking_product_sold': 'ಉತ್ಪನ್ನವನ್ನು ಮಾರಾಟವಾಗಿದೆ ಎಂದು ಗುರುತಿಸುವಲ್ಲಿ ದೋಷ',
+      'ನೀವು ಖಚಿತವಾಗಿಯೂ ಈ ಉತ್ಪನ್ನವನ್ನು ಮಾರಾಟವಾಗಿದೆ ಎಂದು ಗುರುತಿಸಲು ಬಯಸುತ್ತೀರಾ?',
+  'product_marked_sold':
+      'ಉತ್ಪನ್ನವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಮಾರಾಟವಾಗಿದೆ ಎಂದು ಗುರುತಿಸಲಾಗಿದೆ',
+  'product_marked_unsold': 'ಉತ್ಪನ್ನವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಲಭ್ಯವಿರುವಂತೆ ಗುರುತಿಸಲಾಗಿದೆ',
+  'error_marking_product_sold':
+      'ಉತ್ಪನ್ನವನ್ನು ಮಾರಾಟವಾಗಿದೆ ಎಂದು ಗುರುತಿಸುವಲ್ಲಿ ದೋಷ',
   'error_marking_product_unsold': 'ಉತ್ಪನ್ನವನ್ನು ಲಭ್ಯವಿರುವಂತೆ ಗುರುತಿಸುವಲ್ಲಿ ದೋಷ',
   'market_status_refunded': 'ರಿಫಂಡ್ ಮಾಡಲಾಗಿದೆ',
   'change_status': 'ಸ್ಥಿತಿ ಬದಲಾಯಿಸಿ',
@@ -2103,12 +2060,12 @@ const Map<String, String> knIN = {
   'video': 'ವೀಡಿಯೊ',
   'image': 'ಚಿತ್ರ',
 
-// Ads Sorting
+  // Ads Sorting
   'ads_sort_newest': 'ಇತ್ತೀಚಿನ',
   'ads_sort_top_spend': 'ಅತಿ ಹೆಚ್ಚು ಖರ್ಚು',
   'ads_sort_ending_soon': 'ಶೀಘ್ರ ಮುಕ್ತಾಯವಾಗುತ್ತಿದೆ',
 
-// Filter Chips
+  // Filter Chips
   'filter_newsfeed': 'ಮುಖಪುಟ',
   'filter_popular': 'ಜನಪ್ರಿಯ',
   'filter_discover': 'ಹುಡುಕಿ',
@@ -2118,72 +2075,74 @@ const Map<String, String> knIN = {
   'profile_no_videos': 'ಯಾವುದೇ ವೀಡಿಯೊಗಳಿಲ್ಲ',
   'profile_videos_load_error': 'ವೀಡಿಯೊಗಳನ್ನು ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ',
 
-// Notifications
+  // Notifications
   'notification_started_following': 'ನಿಮ್ಮನ್ನು ಫಾಲೋ ಮಾಡಲು ಪ್ರಾರಂಭಿಸಿದ್ದಾರೆ',
   'notification_friend_request_sent': 'ನಿಮಗೆ ಸ್ನೇಹ ವಿನಂತಿಯನ್ನು ಕಳುಹಿಸಿದ್ದಾರೆ',
-  'notification_friend_request_accepted': 'ನಿಮ್ಮ ಸ್ನೇಹ ವಿನಂತಿಯನ್ನು ಸ್ವೀಕರಿಸಿದ್ದಾರೆ',
+  'notification_friend_request_accepted':
+      'ನಿಮ್ಮ ಸ್ನೇಹ ವಿನಂತಿಯನ್ನು ಸ್ವೀಕರಿಸಿದ್ದಾರೆ',
   'notification_commented_post': 'ನಿಮ್ಮ ಪೋಸ್ಟ್‌ಗೆ ಕಾಮೆಂಟ್ ಮಾಡಿದ್ದಾರೆ',
-  'notification_reacted_like_to_post': 'ನಿಮ್ಮ ಪೋಸ್ಟ್‌ಗೆ ಲೈಕ್ ಪ್ರತಿಕ್ರಿಯೆ ನೀಡಿದ್ದಾರೆ',
-  'notification_reacted_love_to_post': 'ನಿಮ್ಮ ಪೋಸ್ಟ್‌ಗೆ ಲವ್ ಪ್ರತಿಕ್ರಿಯೆ ನೀಡಿದ್ದಾರೆ',
-  'notification_reacted_haha_to_post': 'ನಿಮ್ಮ ಪೋಸ್ಟ್‌ಗೆ ಹಾಹಾ ಪ್ರತಿಕ್ರಿಯೆ ನೀಡಿದ್ದಾರೆ',
-  'notification_reacted_wow_to_post': 'ನಿಮ್ಮ ಪೋಸ್ಟ್‌ಗೆ ವಾವ್ ಪ್ರತಿಕ್ರಿಯೆ ನೀಡಿದ್ದಾರೆ',
-  'notification_reacted_sad_to_post': 'ನಿಮ್ಮ ಪೋಸ್ಟ್‌ಗೆ ಸ್ಯಾಡ್ ಪ್ರತಿಕ್ರಿಯೆ ನೀಡಿದ್ದಾರೆ',
-  'notification_reacted_angry_to_post': 'ನಿಮ್ಮ ಪೋಸ್ಟ್‌ಗೆ ಆಂಗ್ರಿ ಪ್ರತಿಕ್ರಿಯೆ ನೀಡಿದ್ದಾರೆ',
+  'notification_reacted_like_to_post':
+      'ನಿಮ್ಮ ಪೋಸ್ಟ್‌ಗೆ ಲೈಕ್ ಪ್ರತಿಕ್ರಿಯೆ ನೀಡಿದ್ದಾರೆ',
+  'notification_reacted_love_to_post':
+      'ನಿಮ್ಮ ಪೋಸ್ಟ್‌ಗೆ ಲವ್ ಪ್ರತಿಕ್ರಿಯೆ ನೀಡಿದ್ದಾರೆ',
+  'notification_reacted_haha_to_post':
+      'ನಿಮ್ಮ ಪೋಸ್ಟ್‌ಗೆ ಹಾಹಾ ಪ್ರತಿಕ್ರಿಯೆ ನೀಡಿದ್ದಾರೆ',
+  'notification_reacted_wow_to_post':
+      'ನಿಮ್ಮ ಪೋಸ್ಟ್‌ಗೆ ವಾವ್ ಪ್ರತಿಕ್ರಿಯೆ ನೀಡಿದ್ದಾರೆ',
+  'notification_reacted_sad_to_post':
+      'ನಿಮ್ಮ ಪೋಸ್ಟ್‌ಗೆ ಸ್ಯಾಡ್ ಪ್ರತಿಕ್ರಿಯೆ ನೀಡಿದ್ದಾರೆ',
+  'notification_reacted_angry_to_post':
+      'ನಿಮ್ಮ ಪೋಸ್ಟ್‌ಗೆ ಆಂಗ್ರಿ ಪ್ರತಿಕ್ರಿಯೆ ನೀಡಿದ್ದಾರೆ',
   'notification_shared_your_post': 'ನಿಮ್ಮ ಪೋಸ್ಟ್ ಅನ್ನು ಹಂಚಿಕೊಂಡಿದ್ದಾರೆ',
-  'notification_group_join_request':
-  'ನಿಮ್ಮ ಗುಂಪಿನಲ್ಲಿ ಸೇರಲು ವಿನಂತಿಸಿದ್ದಾರೆ',
+  'notification_group_join_request': 'ನಿಮ್ಮ ಗುಂಪಿನಲ್ಲಿ ಸೇರಲು ವಿನಂತಿಸಿದ್ದಾರೆ',
   'notification_group_join_approved':
-  'ನಿಮ್ಮ ಗುಂಪಿಗೆ ಸೇರಲು ವಿನಂತಿಯನ್ನು ಅನುಮೋದಿಸಿದ್ದಾರೆ',
-  'notification_mentioned_you_post': 'ನಿಮ್ಮನ್ನು ಒಂದು ಪೋಸ್ಟ್‌ನಲ್ಲಿ ಉಲ್ಲೇಖಿಸಿದ್ದಾರೆ',
+      'ನಿಮ್ಮ ಗುಂಪಿಗೆ ಸೇರಲು ವಿನಂತಿಯನ್ನು ಅನುಮೋದಿಸಿದ್ದಾರೆ',
+  'notification_mentioned_you_post':
+      'ನಿಮ್ಮನ್ನು ಒಂದು ಪೋಸ್ಟ್‌ನಲ್ಲಿ ಉಲ್ಲೇಖಿಸಿದ್ದಾರೆ',
   'notification_mentioned_you_comment':
-  'ನಿಮ್ಮನ್ನು ಒಂದು ಕಾಮೆಂಟ್‌ನಲ್ಲಿ ಉಲ್ಲೇಖಿಸಿದ್ದಾರೆ',
+      'ನಿಮ್ಮನ್ನು ಒಂದು ಕಾಮೆಂಟ್‌ನಲ್ಲಿ ಉಲ್ಲೇಖಿಸಿದ್ದಾರೆ',
   'notification_posted_on_wall': 'ನಿಮ್ಮ ವಾಲ್‌ನಲ್ಲಿ ಪೋಸ್ಟ್ ಮಾಡಿದ್ದಾರೆ',
   'notification_replied_comment': 'ನಿಮ್ಮ ಕಾಮೆಂಟ್‌ಗೆ ಉತ್ತರಿಸಿದ್ದಾರೆ',
   'notification_page_invitation':
-  'ನಿಮಗೆ ಒಂದು ಪುಟವನ್ನು ಲೈಕ್ ಮಾಡಲು ಆಹ್ವಾನಿಸಿದ್ದಾರೆ',
-  'notification_group_invitation':
-  'ನಿಮಗೆ ಒಂದು ಗುಂಪಿಗೆ ಸೇರಲು ಆಹ್ವಾನಿಸಿದ್ದಾರೆ',
-  'notification_event_invitation':
-  'ನಿಮಗೆ ಒಂದು ಈವೆಂಟ್‌ಗೆ ಆಹ್ವಾನಿಸಿದ್ದಾರೆ',
+      'ನಿಮಗೆ ಒಂದು ಪುಟವನ್ನು ಲೈಕ್ ಮಾಡಲು ಆಹ್ವಾನಿಸಿದ್ದಾರೆ',
+  'notification_group_invitation': 'ನಿಮಗೆ ಒಂದು ಗುಂಪಿಗೆ ಸೇರಲು ಆಹ್ವಾನಿಸಿದ್ದಾರೆ',
+  'notification_event_invitation': 'ನಿಮಗೆ ಒಂದು ಈವೆಂಟ್‌ಗೆ ಆಹ್ವಾನಿಸಿದ್ದಾರೆ',
   'notification_tagged_photo': 'ನಿಮ್ಮನ್ನು ಒಂದು ಫೋಟೋದಲ್ಲಿ ಟ್ಯಾಗ್ ಮಾಡಿದ್ದಾರೆ',
   'notification_birthday': 'ಇಂದು ಜನ್ಮದಿನ ಆಚರಿಸುತ್ತಿದ್ದಾರೆ',
 
   'your_addresses': 'ನಿಮ್ಮ ವಿಳಾಸಗಳು',
   'edit_group_danger_zone': 'ಅಪಾಯ ಪ್ರದೇಶ',
   'edit_group_danger_warning':
-  'ಈ ವಿಭಾಗದಲ್ಲಿ ಮಾಡಿದ ಕ್ರಿಯೆಗಳು ಅಪಾಯಕಾರಿ ಮತ್ತು ಹಿಂತಿರುಗಿಸಲಾಗುವುದಿಲ್ಲ',
+      'ಈ ವಿಭಾಗದಲ್ಲಿ ಮಾಡಿದ ಕ್ರಿಯೆಗಳು ಅಪಾಯಕಾರಿ ಮತ್ತು ಹಿಂತಿರುಗಿಸಲಾಗುವುದಿಲ್ಲ',
 
-// Group Pending Requests Page
+  // Group Pending Requests Page
   'pending_requests_title': 'ಸೇರಲು ವಿನಂತಿಗಳು',
   'pending_requests_refresh': 'ರಿಫ್ರೆಶ್',
   'pending_requests_load_failed': 'ವಿನಂತಿಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
   'pending_requests_accepted': '@name ಅವರನ್ನು ಗುಂಪಿಗೆ ಸ್ವೀಕರಿಸಲಾಗಿದೆ',
   'pending_requests_accept_failed':
-  'ವಿನಂತಿಯನ್ನು ಸ್ವೀಕರಿಸಲು ವಿಫಲವಾಗಿದೆ, ದಯವಿಟ್ಟು ಮರುಪ್ರಯತ್ನಿಸಿ',
+      'ವಿನಂತಿಯನ್ನು ಸ್ವೀಕರಿಸಲು ವಿಫಲವಾಗಿದೆ, ದಯವಿಟ್ಟು ಮರುಪ್ರಯತ್ನಿಸಿ',
   'pending_requests_decline_title': 'ವಿನಂತಿಯನ್ನು ತಿರಸ್ಕರಿಸಿ',
   'pending_requests_decline_message':
-  '@name ಅವರ ಗುಂಪಿಗೆ ಸೇರುವ ವಿನಂತಿಯನ್ನು ನೀವು ತಿರಸ್ಕರಿಸಲು ಬಯಸುತ್ತೀರಾ?',
+      '@name ಅವರ ಗುಂಪಿಗೆ ಸೇರುವ ವಿನಂತಿಯನ್ನು ನೀವು ತಿರಸ್ಕರಿಸಲು ಬಯಸುತ್ತೀರಾ?',
   'pending_requests_declined': '@name ಅವರ ವಿನಂತಿಯನ್ನು ತಿರಸ್ಕರಿಸಲಾಗಿದೆ',
   'pending_requests_decline_failed':
-  'ವಿನಂತಿಯನ್ನು ತಿರಸ್ಕರಿಸಲು ವಿಫಲವಾಗಿದೆ, ದಯವಿಟ್ಟು ಮರುಪ್ರಯತ್ನಿಸಿ',
+      'ವಿನಂತಿಯನ್ನು ತಿರಸ್ಕರಿಸಲು ವಿಫಲವಾಗಿದೆ, ದಯವಿಟ್ಟು ಮರುಪ್ರಯತ್ನಿಸಿ',
   'pending_requests_retry': 'ಮರುಪ್ರಯತ್ನಿಸಿ',
   'pending_requests_empty': 'ಯಾವುದೇ ಬಾಕಿ ವಿನಂತಿಗಳಿಲ್ಲ',
-  'pending_requests_empty_subtitle':
-  'ಎಲ್ಲಾ ವಿನಂತಿಗಳನ್ನು ಪ್ರಕ್ರಿಯೆಗೊಳಿಸಲಾಗಿದೆ',
+  'pending_requests_empty_subtitle': 'ಎಲ್ಲಾ ವಿನಂತಿಗಳನ್ನು ಪ್ರಕ್ರಿಯೆಗೊಳಿಸಲಾಗಿದೆ',
   'pending_requests_date': 'ವಿನಂತಿ ದಿನಾಂಕ',
   'pending_requests_accept': 'ಸ್ವೀಕರಿಸಿ',
   'pending_requests_decline': 'ತಿರಸ್ಕರಿಸಿ',
 
-// Group Privacy Types
+  // Group Privacy Types
   'group_privacy_public': 'ಸಾರ್ವಜನಿಕ',
-  'group_privacy_public_desc':
-  'ತಕ್ಷಣ ಸೇರಬಹುದು, ಎಲ್ಲರಿಗೂ ಕಾಣಿಸುತ್ತದೆ',
-  'group_privacy_closed_desc':
-  'ಸೇರಲು ವಿನಂತಿ ಅಗತ್ಯ, ಹುಡುಕಾಟದಲ್ಲಿ ಕಾಣಿಸುತ್ತದೆ',
+  'group_privacy_public_desc': 'ತಕ್ಷಣ ಸೇರಬಹುದು, ಎಲ್ಲರಿಗೂ ಕಾಣಿಸುತ್ತದೆ',
+  'group_privacy_closed_desc': 'ಸೇರಲು ವಿನಂತಿ ಅಗತ್ಯ, ಹುಡುಕಾಟದಲ್ಲಿ ಕಾಣಿಸುತ್ತದೆ',
   'group_privacy_secret_desc':
-  'ಸೇರಲು ವಿನಂತಿ ಅಗತ್ಯ, ಹುಡುಕಾಟದಿಂದ ಮರೆಮಾಡಲ್ಪಡುತ್ತದೆ',
+      'ಸೇರಲು ವಿನಂತಿ ಅಗತ್ಯ, ಹುಡುಕಾಟದಿಂದ ಮರೆಮಾಡಲ್ಪಡುತ್ತದೆ',
 
-// Groups Search Page
+  // Groups Search Page
   'groups_search_title': 'ಗುಂಪುಗಳನ್ನು ಹುಡುಕಿ',
   'groups_search_clear_filters': 'ಫಿಲ್ಟರ್‌ಗಳನ್ನು ತೆರವುಗೊಳಿಸಿ',
   'groups_search_hint': 'ಗುಂಪುಗಳನ್ನು ಹುಡುಕಿ...',
@@ -2191,10 +2150,10 @@ const Map<String, String> knIN = {
   'groups_search_category_label': 'ವರ್ಗ: @id',
   'groups_search_empty_title': 'ಗುಂಪುಗಳನ್ನು ಹುಡುಕಿ',
   'groups_search_empty_subtitle':
-  'ಗುಂಪುಗಳನ್ನು ಹುಡುಕಲು ಹುಡುಕಾಟ ಅಥವಾ ಫಿಲ್ಟರ್ ಬಳಸಿ',
+      'ಗುಂಪುಗಳನ್ನು ಹುಡುಕಲು ಹುಡುಕಾಟ ಅಥವಾ ಫಿಲ್ಟರ್ ಬಳಸಿ',
   'groups_search_no_results': 'ಯಾವುದೇ ಫಲಿತಾಂಶಗಳಿಲ್ಲ',
   'groups_search_no_results_subtitle':
-  'ಬೇರೆ ಕೀವರ್ಡ್ ಪ್ರಯತ್ನಿಸಿ ಅಥವಾ ಫಿಲ್ಟರ್‌ಗಳನ್ನು ಬದಲಾಯಿಸಿ',
+      'ಬೇರೆ ಕೀವರ್ಡ್ ಪ್ರಯತ್ನಿಸಿ ಅಥವಾ ಫಿಲ್ಟರ್‌ಗಳನ್ನು ಬದಲಾಯಿಸಿ',
   'groups_search_filter_title': 'ಫಿಲ್ಟರ್',
   'groups_search_clear_all': 'ಎಲ್ಲವನ್ನೂ ತೆರವುಗೊಳಿಸಿ',
   'groups_search_category': 'ವರ್ಗ',
@@ -2202,7 +2161,7 @@ const Map<String, String> knIN = {
   'groups_search_privacy': 'ಗೋಪನೀಯತೆ',
   'groups_search_apply_filters': 'ಫಿಲ್ಟರ್ ಅನ್ವಯಿಸಿ',
 
-// Group Invite Friends Page
+  // Group Invite Friends Page
   'invite_friends_title': 'ಮಿತ್ರರನ್ನು ಆಹ್ವಾನಿಸಿ',
   'invite_friends_select_all': 'ಎಲ್ಲವನ್ನೂ ಆಯ್ಕೆಮಾಡಿ',
   'invite_friends_deselect_all': 'ಎಲ್ಲವನ್ನೂ ತೆಗೆದುಹಾಕಿ',
@@ -2212,26 +2171,18 @@ const Map<String, String> knIN = {
   'invite_friends_retry': 'ಮರುಪ್ರಯತ್ನಿಸಿ',
   'invite_friends_no_results': 'ಯಾವುದೇ ಫಲಿತಾಂಶಗಳಿಲ್ಲ',
   'invite_friends_no_friends': 'ಆಹ್ವಾನಿಸಲು ಯಾವುದೇ ಮಿತ್ರರು ಇಲ್ಲ',
-  'invite_friends_try_different_search':
-  'ಬೇರೆ ಕೀವರ್ಡ್ ಪ್ರಯತ್ನಿಸಿ',
-  'invite_friends_all_members':
-  'ನಿಮ್ಮ ಎಲ್ಲಾ ಮಿತ್ರರು ಈಗಾಗಲೇ ಸದಸ್ಯರಾಗಿದ್ದಾರೆ',
+  'invite_friends_try_different_search': 'ಬೇರೆ ಕೀವರ್ಡ್ ಪ್ರಯತ್ನಿಸಿ',
+  'invite_friends_all_members': 'ನಿಮ್ಮ ಎಲ್ಲಾ ಮಿತ್ರರು ಈಗಾಗಲೇ ಸದಸ್ಯರಾಗಿದ್ದಾರೆ',
   'invite_friends_invited_label': 'ಆಹ್ವಾನಿಸಲಾಗಿದೆ',
   'invite_friends_sending': 'ಕಳುಹಿಸಲಾಗುತ್ತಿದೆ...',
-  'invite_friends_send_button':
-  'ಆಹ್ವಾನ ಕಳುಹಿಸಿ (@count)',
-  'invite_friends_select_friends':
-  'ದಯವಿಟ್ಟು ಆಹ್ವಾನಿಸಲು ಮಿತ್ರರನ್ನು ಆಯ್ಕೆಮಾಡಿ',
-  'invite_friends_success':
-  '@count ಆಹ್ವಾನಗಳನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಕಳುಹಿಸಲಾಗಿದೆ',
-  'invite_friends_partial_success':
-  '@success ಕಳುಹಿಸಲಾಗಿದೆ, @failed ವಿಫಲವಾಗಿದೆ',
-  'invite_friends_all_failed':
-  'ಎಲ್ಲಾ ಆಹ್ವಾನಗಳು ವಿಫಲವಾದವು',
-  'invite_friends_send_error':
-  'ಆಹ್ವಾನ ಕಳುಹಿಸುವಲ್ಲಿ ವಿಫಲವಾಗಿದೆ: @error',
+  'invite_friends_send_button': 'ಆಹ್ವಾನ ಕಳುಹಿಸಿ (@count)',
+  'invite_friends_select_friends': 'ದಯವಿಟ್ಟು ಆಹ್ವಾನಿಸಲು ಮಿತ್ರರನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+  'invite_friends_success': '@count ಆಹ್ವಾನಗಳನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಕಳುಹಿಸಲಾಗಿದೆ',
+  'invite_friends_partial_success': '@success ಕಳುಹಿಸಲಾಗಿದೆ, @failed ವಿಫಲವಾಗಿದೆ',
+  'invite_friends_all_failed': 'ಎಲ್ಲಾ ಆಹ್ವಾನಗಳು ವಿಫಲವಾದವು',
+  'invite_friends_send_error': 'ಆಹ್ವಾನ ಕಳುಹಿಸುವಲ್ಲಿ ವಿಫಲವಾಗಿದೆ: @error',
 
-// Profile Page Stats & Buttons
+  // Profile Page Stats & Buttons
   'profile_stat_posts': 'ಪೋಸ್ಟ್‌ಗಳು',
   'profile_stat_photos': 'ಫೋಟೋಗಳು',
   'profile_stat_friends': 'ಮಿತ್ರರು',
@@ -2239,65 +2190,54 @@ const Map<String, String> knIN = {
   'profile_following': 'ಫಾಲೋ ಮಾಡುತ್ತಿದ್ದೀರಿ',
   'profile_follow': 'ಫಾಲೋ ಮಾಡಿ',
   'profile_no_posts': 'ಇನ್ನೂ ಯಾವುದೇ ಪೋಸ್ಟ್‌ಗಳಿಲ್ಲ',
-  'profile_allow_interaction':
-  'ಈ ಬಳಕೆದಾರರಿಗೆ ನಿಮ್ಮೊಂದಿಗೆ ಸಂವಹನ ಮಾಡಲು ಅನುಮತಿಸಿ',
+  'profile_allow_interaction': 'ಈ ಬಳಕೆದಾರರಿಗೆ ನಿಮ್ಮೊಂದಿಗೆ ಸಂವಹನ ಮಾಡಲು ಅನುಮತಿಸಿ',
   'profile_prevent_interaction':
-  'ಈ ಬಳಕೆದಾರರು ನಿಮ್ಮೊಂದಿಗೆ ಸಂವಹನ ಮಾಡದಂತೆ ತಡೆಹಿಡಿಯಿರಿ',
-  'profile_user_blocked_success':
-  'ಬಳಕೆದಾರರನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಬ್ಲಾಕ್ ಮಾಡಲಾಗಿದೆ',
+      'ಈ ಬಳಕೆದಾರರು ನಿಮ್ಮೊಂದಿಗೆ ಸಂವಹನ ಮಾಡದಂತೆ ತಡೆಹಿಡಿಯಿರಿ',
+  'profile_user_blocked_success': 'ಬಳಕೆದಾರರನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಬ್ಲಾಕ್ ಮಾಡಲಾಗಿದೆ',
   'profile_user_unblocked_success':
-  'ಬಳಕೆದಾರರನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಅನ್ಬ್ಲಾಕ್ ಮಾಡಲಾಗಿದೆ',
+      'ಬಳಕೆದಾರರನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಅನ್ಬ್ಲಾಕ್ ಮಾಡಲಾಗಿದೆ',
   'profile_invalid_user_id': 'ಅಮಾನ್ಯ ಬಳಕೆದಾರ ID',
   'profile_failed_open_chat': 'ಚಾಟ್ ತೆರೆಯಲು ವಿಫಲವಾಗಿದೆ',
-  'profile_must_be_friend':
-  'ಮೊದಲು ಮಿತ್ರರಾಗಿರಬೇಕು',
+  'profile_must_be_friend': 'ಮೊದಲು ಮಿತ್ರರಾಗಿರಬೇಕು',
 
-// Group Members Page
+  // Group Members Page
   'group_members_title': 'ಗುಂಪು ಸದಸ್ಯರು',
   'group_members_tab_all': 'ಎಲ್ಲರೂ',
   'group_members_tab_admins': 'ಆಡ್ಮಿನ್‌ಗಳು',
   'group_members_tab_members': 'ಸದಸ್ಯರು',
-  'group_members_error_loading':
-  'ಸದಸ್ಯರನ್ನು ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ: @error',
+  'group_members_error_loading': 'ಸದಸ್ಯರನ್ನು ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ: @error',
   'group_members_no_members': 'ಯಾವುದೇ ಸದಸ್ಯರು ಇಲ್ಲ',
   'group_members_user_default': 'ಬಳಕೆದಾರ',
   'group_members_admin_badge': 'ಆಡ್ಮಿನ್',
   'group_members_make_admin': 'ಆಡ್ಮಿನ್ ಮಾಡಿ',
-  'group_members_remove_admin':
-  'ಆಡ್ಮಿನ್ ಅನುಮತಿಗಳನ್ನು ತೆಗೆದುಹಾಕಿ',
+  'group_members_remove_admin': 'ಆಡ್ಮಿನ್ ಅನುಮತಿಗಳನ್ನು ತೆಗೆದುಹಾಕಿ',
   'group_members_remove_member': 'ಸದಸ್ಯರನ್ನು ತೆಗೆದುಹಾಕಿ',
   'group_members_make_admin_title': 'ಆಡ್ಮಿನ್ ಮಾಡಿ',
   'group_members_make_admin_confirm':
-  '@name ಅವರನ್ನು ಈ ಗುಂಪಿನ ಆಡ್ಮಿನ್ ಆಗಿ ಮಾಡಬೇಕೆ?',
+      '@name ಅವರನ್ನು ಈ ಗುಂಪಿನ ಆಡ್ಮಿನ್ ಆಗಿ ಮಾಡಬೇಕೆ?',
   'group_members_cancel': 'ರದ್ದುಮಾಡಿ',
   'group_members_confirm': 'ದೃಢೀಕರಿಸಿ',
-  'group_members_make_admin_success':
-  'ಸದಸ್ಯರನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಆಡ್ಮಿನ್ ಮಾಡಲಾಗಿದೆ',
-  'group_members_feature_development':
-  'ಈ ವೈಶಿಷ್ಟ್ಯ ಅಭಿವೃದ್ಧಿಯಲ್ಲಿದೆ',
-  'group_members_make_admin_failed':
-  'ಆಡ್ಮಿನ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
-  'group_members_remove_admin_title':
-  'ಆಡ್ಮಿನ್ ಅನುಮತಿಗಳನ್ನು ತೆಗೆದುಹಾಕಿ',
+  'group_members_make_admin_success': 'ಸದಸ್ಯರನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಆಡ್ಮಿನ್ ಮಾಡಲಾಗಿದೆ',
+  'group_members_feature_development': 'ಈ ವೈಶಿಷ್ಟ್ಯ ಅಭಿವೃದ್ಧಿಯಲ್ಲಿದೆ',
+  'group_members_make_admin_failed': 'ಆಡ್ಮಿನ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+  'group_members_remove_admin_title': 'ಆಡ್ಮಿನ್ ಅನುಮತಿಗಳನ್ನು ತೆಗೆದುಹಾಕಿ',
   'group_members_remove_admin_confirm':
-  '@name ಅವರಿಂದ ಆಡ್ಮಿನ್ ಅನುಮತಿಗಳನ್ನು ತೆಗೆದುಹಾಕಿ ಅವರನ್ನು ಸಾಮಾನ್ಯ ಸದಸ್ಯರನ್ನಾಗಿ ಮಾಡಬೇಕೆ?',
-  'group_members_remove_permissions':
-  'ಅನುಮತಿಗಳನ್ನು ತೆಗೆದುಹಾಕಿ',
+      '@name ಅವರಿಂದ ಆಡ್ಮಿನ್ ಅನುಮತಿಗಳನ್ನು ತೆಗೆದುಹಾಕಿ ಅವರನ್ನು ಸಾಮಾನ್ಯ ಸದಸ್ಯರನ್ನಾಗಿ ಮಾಡಬೇಕೆ?',
+  'group_members_remove_permissions': 'ಅನುಮತಿಗಳನ್ನು ತೆಗೆದುಹಾಕಿ',
   'group_members_remove_admin_success':
-  'ಆಡ್ಮಿನ್ ಅನುಮತಿಗಳನ್ನು ಯಶಸ್ವಿಯಾಗಿ ತೆಗೆದುಹಾಕಲಾಗಿದೆ',
+      'ಆಡ್ಮಿನ್ ಅನುಮತಿಗಳನ್ನು ಯಶಸ್ವಿಯಾಗಿ ತೆಗೆದುಹಾಕಲಾಗಿದೆ',
   'group_members_remove_admin_failed':
-  'ಆಡ್ಮಿನ್ ಅನುಮತಿಗಳನ್ನು ತೆಗೆದುಹಾಕಲು ವಿಫಲವಾಗಿದೆ',
-  'group_members_remove_member_title':
-  'ಸದಸ್ಯರನ್ನು ತೆಗೆದುಹಾಕಿ',
+      'ಆಡ್ಮಿನ್ ಅನುಮತಿಗಳನ್ನು ತೆಗೆದುಹಾಕಲು ವಿಫಲವಾಗಿದೆ',
+  'group_members_remove_member_title': 'ಸದಸ್ಯರನ್ನು ತೆಗೆದುಹಾಕಿ',
   'group_members_remove_member_confirm':
-  '@name ಅವರನ್ನು ಗುಂಪಿನಿಂದ ತೆಗೆದುಹಾಕಬೇಕೆ?',
+      '@name ಅವರನ್ನು ಗುಂಪಿನಿಂದ ತೆಗೆದುಹಾಕಬೇಕೆ?',
   'group_members_remove': 'ತೆಗೆದುಹಾಕಿ',
   'group_members_remove_member_success':
-  'ಸದಸ್ಯರನ್ನು ಯಶಸ್ವಿಯಾಗಿ ತೆಗೆದುಹಾಕಲಾಗಿದೆ',
+      'ಸದಸ್ಯರನ್ನು ಯಶಸ್ವಿಯಾಗಿ ತೆಗೆದುಹಾಕಲಾಗಿದೆ',
   'group_members_remove_member_failed':
-  'ದೋಷ: ಸದಸ್ಯರನ್ನು ತೆಗೆದುಹಾಕಲು ವಿಫಲವಾಗಿದೆ',
+      'ದೋಷ: ಸದಸ್ಯರನ್ನು ತೆಗೆದುಹಾಕಲು ವಿಫಲವಾಗಿದೆ',
 
-// Product Conditions & Status
+  // Product Conditions & Status
   'product_condition_new': 'ಹೊಸದು',
   'product_condition_like_new': 'ಹೊಸದಂತಿದೆ',
   'product_condition_excellent': 'ಅತ್ಯುತ್ತಮ',
@@ -2311,62 +2251,45 @@ const Map<String, String> knIN = {
   'product_type_physical': 'ಭೌತಿಕ ಉತ್ಪನ್ನ',
   'cashfree': 'Cashfree',
   'razorpay': 'Razorpay',
-  'no_payment_methods_available':
-  'ಯಾವುದೇ ಪಾವತಿ ವಿಧಾನಗಳು ಲಭ್ಯವಿಲ್ಲ',
-  'notifications_deleted':
-  'ಅಧಿಸೂಚನೆ ಅಳಿಸಲಾಗಿದೆ',
+  'no_payment_methods_available': 'ಯಾವುದೇ ಪಾವತಿ ವಿಧಾನಗಳು ಲಭ್ಯವಿಲ್ಲ',
+  'notifications_deleted': 'ಅಧಿಸೂಚನೆ ಅಳಿಸಲಾಗಿದೆ',
   'wallet_balance': 'ವಾಲೆಟ್ ಶೇಷ',
-  'wallet_balance_available':
-  'ಲಭ್ಯವಿರುವ ವಾಲೆಟ್ ಶೇಷ',
-  'wallet_balance_current':
-  'ಪ್ರಸ್ತುತ ವಾಲೆಟ್ ಶೇಷ',
+  'wallet_balance_available': 'ಲಭ್ಯವಿರುವ ವಾಲೆಟ್ ಶೇಷ',
+  'wallet_balance_current': 'ಪ್ರಸ್ತುತ ವಾಲೆಟ್ ಶೇಷ',
   'wallet_order_total': 'ಒಟ್ಟು ಆರ್ಡರ್ ಮೊತ್ತ',
   'wallet_insufficient_for_checkout':
-  'ವಾಲೆಟ್ ಶೇಷ ಸಾಕಷ್ಟಿಲ್ಲ, ದಯವಿಟ್ಟು ಚೆಕ್‌ಔಟ್ ಮೊದಲು ರಿಚಾರ್ಜ್ ಮಾಡಿ',
+      'ವಾಲೆಟ್ ಶೇಷ ಸಾಕಷ್ಟಿಲ್ಲ, ದಯವಿಟ್ಟು ಚೆಕ್‌ಔಟ್ ಮೊದಲು ರಿಚಾರ್ಜ್ ಮಾಡಿ',
   'market_cart_not_ready':
-  'ಕಾರ್ಟ್ ಇನ್ನೂ ಸಿದ್ಧವಾಗಿಲ್ಲ, ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
+      'ಕಾರ್ಟ್ ಇನ್ನೂ ಸಿದ್ಧವಾಗಿಲ್ಲ, ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
   'market_create_product': 'ಉತ್ಪನ್ನವನ್ನು ರಚಿಸಿ',
   'page_no_products_title': 'ಯಾವುದೇ ಉತ್ಪನ್ನಗಳಿಲ್ಲ',
   'page_no_products_subtitle':
-  'ಈ ಪುಟದಲ್ಲಿ ಪೋಸ್ಟ್ ಮಾಡಲಾದ ಉತ್ಪನ್ನಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.',
+      'ಈ ಪುಟದಲ್ಲಿ ಪೋಸ್ಟ್ ಮಾಡಲಾದ ಉತ್ಪನ್ನಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.',
   'page_tab_products': 'ಉತ್ಪನ್ನಗಳು',
   'group_tab_products': 'ಉತ್ಪನ್ನಗಳು',
   'group_no_products': 'ಯಾವುದೇ ಉತ್ಪನ್ನಗಳಿಲ್ಲ',
   'share_external': 'ಬಾಹ್ಯವಾಗಿ ಹಂಚಿಕೊಳ್ಳಿ',
-  'share_external_subtitle':
-  'ಇತರೆ ಅಪ್ಲಿಕೇಶನ್‌ಗಳ ಮೂಲಕ ಹಂಚಿಕೊಳ್ಳಿ',
-  'share_on_social_media':
-  'ಸಾಮಾಜಿಕ ಮಾಧ್ಯಮದಲ್ಲಿ ಹಂಚಿಕೊಳ್ಳಿ',
-  'share_post_subject':
-  'ಈ ಪೋಸ್ಟ್ ಅನ್ನು ನೋಡಿ',
-  'share_external_success':
-  'ಯಶಸ್ವಿಯಾಗಿ ಹಂಚಲಾಗಿದೆ',
-  'share_external_error':
-  'ಹಂಚಿಕೊಳ್ಳಲು ವಿಫಲವಾಗಿದೆ',
+  'share_external_subtitle': 'ಇತರೆ ಅಪ್ಲಿಕೇಶನ್‌ಗಳ ಮೂಲಕ ಹಂಚಿಕೊಳ್ಳಿ',
+  'share_on_social_media': 'ಸಾಮಾಜಿಕ ಮಾಧ್ಯಮದಲ್ಲಿ ಹಂಚಿಕೊಳ್ಳಿ',
+  'share_post_subject': 'ಈ ಪೋಸ್ಟ್ ಅನ್ನು ನೋಡಿ',
+  'share_external_success': 'ಯಶಸ್ವಿಯಾಗಿ ಹಂಚಲಾಗಿದೆ',
+  'share_external_error': 'ಹಂಚಿಕೊಳ್ಳಲು ವಿಫಲವಾಗಿದೆ',
 
-// Create Reel Page
+  // Create Reel Page
   'create_reel': 'ರೀಲ್ ರಚಿಸಿ',
   'publish_reel': 'ಪ್ರಕಟಿಸಿ',
-  'video_uploaded_success':
-  '✅ ವೀಡಿಯೋ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್ಲೋಡ್ ಆಗಿದೆ',
-  'video_upload_failed':
-  '❌ ವೀಡಿಯೋ ಅಪ್ಲೋಡ್ ವಿಫಲವಾಗಿದೆ',
-  'select_video_first':
-  '⚠️ ದಯವಿಟ್ಟು ಮೊದಲು ಒಂದು ವೀಡಿಯೋ ಆಯ್ಕೆಮಾಡಿ',
-  'reel_published_success':
-  '🎉 ರೀಲ್ ಯಶಸ್ವಿಯಾಗಿ ಪ್ರಕಟಿಸಲಾಗಿದೆ!',
-  'reel_publish_failed':
-  '❌ ರೀಲ್ ಪ್ರಕಟಿಸಲು ವಿಫಲವಾಗಿದೆ',
-  'failed_to_create_reel':
-  'ರೀಲ್ ರಚಿಸಲು ವಿಫಲವಾಗಿದೆ',
-  'select_video_for_reel':
-  'ರೀಲ್‌ಗಾಗಿ ವೀಡಿಯೋ ಆಯ್ಕೆಮಾಡಿ',
+  'video_uploaded_success': '✅ ವೀಡಿಯೋ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್ಲೋಡ್ ಆಗಿದೆ',
+  'video_upload_failed': '❌ ವೀಡಿಯೋ ಅಪ್ಲೋಡ್ ವಿಫಲವಾಗಿದೆ',
+  'select_video_first': '⚠️ ದಯವಿಟ್ಟು ಮೊದಲು ಒಂದು ವೀಡಿಯೋ ಆಯ್ಕೆಮಾಡಿ',
+  'reel_published_success': '🎉 ರೀಲ್ ಯಶಸ್ವಿಯಾಗಿ ಪ್ರಕಟಿಸಲಾಗಿದೆ!',
+  'reel_publish_failed': '❌ ರೀಲ್ ಪ್ರಕಟಿಸಲು ವಿಫಲವಾಗಿದೆ',
+  'failed_to_create_reel': 'ರೀಲ್ ರಚಿಸಲು ವಿಫಲವಾಗಿದೆ',
+  'select_video_for_reel': 'ರೀಲ್‌ಗಾಗಿ ವೀಡಿಯೋ ಆಯ್ಕೆಮಾಡಿ',
   'select_video': 'ವೀಡಿಯೋ ಆಯ್ಕೆಮಾಡಿ',
   'uploading_video': 'ವೀಡಿಯೋ ಅಪ್ಲೋಡ್ ಆಗುತ್ತಿದೆ...',
-  'add_reel_description':
-  'ರೀಲ್ ವಿವರಣೆ ಸೇರಿಸಿ...',
+  'add_reel_description': 'ರೀಲ್ ವಿವರಣೆ ಸೇರಿಸಿ...',
 
-// Edit Profile Page
+  // Edit Profile Page
   'edit_profile': 'ಪ್ರೊಫೈಲ್ ಸಂಪಾದಿಸಿ',
   'tab_basic': 'ಮೂಲ ಮಾಹಿತಿ',
   'tab_work': 'ಕೆಲಸ',
@@ -2375,159 +2298,132 @@ const Map<String, String> knIN = {
   'tab_social': 'ಸಾಮಾಜಿಕ',
   'tab_photos': 'ಫೋಟೋಗಳು',
 
-// Basic Info
+  // Basic Info
   'first_name_label': 'ಮೊದಲ ಹೆಸರು',
   'last_name_label': 'ಕೊನೆಯ ಹೆಸರು',
   'birthdate_label': 'ಜನ್ಮ ದಿನಾಂಕ',
   'website_label': 'ವೆಬ್‌ಸೈಟ್',
   'save_button': 'ಉಳಿಸಿ',
 
-// Work Info
+  // Work Info
   'job_title_label': 'ಹುದ್ದೆ',
   'enter_job_title': 'ಹುದ್ದೆ ನಮೂದಿಸಿ',
   'company_label': 'ಕಂಪನಿ',
   'company_website_label': 'ಕಂಪನಿ ವೆಬ್‌ಸೈಟ್',
 
-// Location
+  // Location
   'current_city_label': 'ಪ್ರಸ್ತುತ ನಗರ',
   'hometown_label': 'ಸ್ವಗ್ರಾಮ',
 
-// Education
+  // Education
   'major_label': 'ಮುಖ್ಯ ವಿಷಯ',
   'educational_institution_label': 'ಶೈಕ್ಷಣಿಕ ಸಂಸ್ಥೆ',
   'graduation_year_label': 'ಪದವಿ ಪಡೆದ ವರ್ಷ',
 
-// Photos
+  // Photos
   'profile_picture': 'ಪ್ರೊಫೈಲ್ ಚಿತ್ರ',
   'cover_photo': 'ಕವರ್ ಫೋಟೋ',
   'tap_to_add_cover': 'ಕವರ್ ಫೋಟೋ ಸೇರಿಸಲು ಟ್ಯಾಪ್ ಮಾಡಿ',
   'choose_image': 'ಚಿತ್ರ ಆಯ್ಕೆಮಾಡಿ',
 
-// Password Dialog
+  // Password Dialog
   'confirm_password_label': 'ಪಾಸ್ವರ್ಡ್ ದೃಢೀಕರಿಸಿ',
   'change': 'ಬದಲಿಸಿ',
   'new_password_too_short': 'ಹೊಸ ಪಾಸ್ವರ್ಡ್ ತುಂಬಾ ಚಿಕ್ಕದಾಗಿದೆ',
 
-// Country Picker
+  // Country Picker
   'country_label': 'ದೇಶ',
   'loading_text': 'ಲೋಡ್ ಆಗುತ್ತಿದೆ…',
   'select_country': 'ದೇಶ ಆಯ್ಕೆಮಾಡಿ',
   'search_country': 'ದೇಶ ಹುಡುಕಿ…',
 
-// Error Messages
+  // Error Messages
   'error_loading_countries': 'ದೇಶಗಳನ್ನು ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ',
   'error_uploading_image': 'ಚಿತ್ರ ಅಪ್ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ',
   'error_uploading_cover': 'ಕವರ್ ಫೋಟೋ ಅಪ್ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ',
 
-// Messenger Messages
+  // Messenger Messages
   'empty_message': 'ಖಾಲಿ ಸಂದೇಶ',
   'send': 'ಕಳುಹಿಸಿ',
-  'say_hello':
-  'ಸಂಭಾಷಣೆ ಪ್ರಾರಂಭಿಸಲು ನಮಸ್ಕಾರ ಹೇಳಿ',
+  'say_hello': 'ಸಂಭಾಷಣೆ ಪ್ರಾರಂಭಿಸಲು ನಮಸ್ಕಾರ ಹೇಳಿ',
   'delete_conversation': 'ಸಂಭಾಷಣೆ ಅಳಿಸಿ',
   'conversation_deleted': 'ಸಂಭಾಷಣೆ ಅಳಿಸಲಾಗಿದೆ',
-  'failed_to_delete_conversation':
-  'ಸಂಭಾಷಣೆ ಅಳಿಸಲು ವಿಫಲವಾಗಿದೆ',
+  'failed_to_delete_conversation': 'ಸಂಭಾಷಣೆ ಅಳಿಸಲು ವಿಫಲವಾಗಿದೆ',
   'failed_to_open_chat': 'ಚಾಟ್ ತೆರೆಯಲು ವಿಫಲವಾಗಿದೆ',
   'chat_privacy_friends_only':
-  'ಮಾರಾಟಗಾರರನ್ನು ಸಂಪರ್ಕಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ – ಸ್ನೇಹಿತರಿಗಷ್ಟೇ ಅನುಮತಿ ಇದೆ',
+      'ಮಾರಾಟಗಾರರನ್ನು ಸಂಪರ್ಕಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ – ಸ್ನೇಹಿತರಿಗಷ್ಟೇ ಅನುಮತಿ ಇದೆ',
   'chat_privacy_following_only':
-  'ಮಾರಾಟಗಾರರನ್ನು ಸಂಪರ್ಕಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ – ಮೊದಲು ಫಾಲೋ ಮಾಡಬೇಕು',
+      'ಮಾರಾಟಗಾರರನ್ನು ಸಂಪರ್ಕಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ – ಮೊದಲು ಫಾಲೋ ಮಾಡಬೇಕು',
   'chat_privacy_settings_prevent':
-  'ಈ ಸಮಯದಲ್ಲಿ ಮಾರಾಟಗಾರರನ್ನು ಸಂಪರ್ಕಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ',
-  'cannot_chat_with_user':
-  'ಈ ಬಳಕೆದಾರರೊಂದಿಗೆ ಚಾಟ್ ಮಾಡಲು ಸಾಧ್ಯವಿಲ್ಲ',
-  'user_blocked_you':
-  'ಈ ಬಳಕೆದಾರರು ನಿಮ್ಮನ್ನು ಬ್ಲಾಕ್ ಮಾಡಿದ್ದಾರೆ',
+      'ಈ ಸಮಯದಲ್ಲಿ ಮಾರಾಟಗಾರರನ್ನು ಸಂಪರ್ಕಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ',
+  'cannot_chat_with_user': 'ಈ ಬಳಕೆದಾರರೊಂದಿಗೆ ಚಾಟ್ ಮಾಡಲು ಸಾಧ್ಯವಿಲ್ಲ',
+  'user_blocked_you': 'ಈ ಬಳಕೆದಾರರು ನಿಮ್ಮನ್ನು ಬ್ಲಾಕ್ ಮಾಡಿದ್ದಾರೆ',
   'failed_to_play_audio': 'ಆಡಿಯೋ ಪ್ಲೇ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
   'failed_to_load_image': 'ಚಿತ್ರ ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
   'no_image_url': 'ಚಿತ್ರ URL ಲಭ್ಯವಿಲ್ಲ',
-  'required_permissions_not_granted':
-  'ಅಗತ್ಯ ಅನುಮತಿಗಳನ್ನು ನೀಡಲಾಗಿಲ್ಲ',
+  'required_permissions_not_granted': 'ಅಗತ್ಯ ಅನುಮತಿಗಳನ್ನು ನೀಡಲಾಗಿಲ್ಲ',
   'app_id_empty': 'App ID ಖಾಲಿಯಾಗಿದೆ',
   'channel_name_empty': 'ಚಾನೆಲ್ ಹೆಸರು ಖಾಲಿಯಾಗಿದೆ',
   'token_empty': 'ಟೋಕನ್ ಖಾಲಿಯಾಗಿದೆ',
   'uid_zero': 'UID ಶೂನ್ಯವಾಗಿದೆ',
-  'agora_engine_null':
-  'ಪ್ರಾರಂಭದ ನಂತರ Agora ಎಂಜಿನ್ ಶೂನ್ಯವಾಗಿದೆ',
+  'agora_engine_null': 'ಪ್ರಾರಂಭದ ನಂತರ Agora ಎಂಜಿನ್ ಶೂನ್ಯವಾಗಿದೆ',
   'call_user_busy': 'ಬಳಕೆದಾರರು ವ್ಯಸ್ತರಾಗಿದ್ದಾರೆ',
-  'waiting_for_participant':
-  'ಭಾಗವಹಿಸುವವರಿಗಾಗಿ ಕಾಯಲಾಗುತ್ತಿದೆ...',
+  'waiting_for_participant': 'ಭಾಗವಹಿಸುವವರಿಗಾಗಿ ಕಾಯಲಾಗುತ್ತಿದೆ...',
   'turn_on_camera': 'ಕ್ಯಾಮೆರಾ ಆನ್ ಮಾಡಿ',
   'turn_off_camera': 'ಕ್ಯಾಮೆರಾ ಆಫ್ ಮಾಡಿ',
   'switch_camera': 'ಕ್ಯಾಮೆರಾ ಬದಲಿಸಿ',
-  'starting_video_call':
-  'ವೀಡಿಯೋ ಕಾಲ್ ಪ್ರಾರಂಭವಾಗುತ್ತಿದೆ...',
-  'starting_audio_call':
-  'ಆಡಿಯೋ ಕಾಲ್ ಪ್ರಾರಂಭವಾಗುತ್ತಿದೆ...',
+  'starting_video_call': 'ವೀಡಿಯೋ ಕಾಲ್ ಪ್ರಾರಂಭವಾಗುತ್ತಿದೆ...',
+  'starting_audio_call': 'ಆಡಿಯೋ ಕಾಲ್ ಪ್ರಾರಂಭವಾಗುತ್ತಿದೆ...',
   'cannot_start_call': 'ಕಾಲ್ ಪ್ರಾರಂಭಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ',
   'call_start_failed': 'ಕಾಲ್ ಪ್ರಾರಂಭಿಸಲು ವಿಫಲವಾಗಿದೆ',
   'user_busy_now': 'ಬಳಕೆದಾರರು ಈಗ ವ್ಯಸ್ತರಾಗಿದ್ದಾರೆ',
-  'must_be_friends_to_call':
-  'ಕಾಲ್ ಮಾಡಲು ಮೊದಲು ಸ್ನೇಹಿತರಾಗಿರಬೇಕು',
+  'must_be_friends_to_call': 'ಕಾಲ್ ಮಾಡಲು ಮೊದಲು ಸ್ನೇಹಿತರಾಗಿರಬೇಕು',
   'user_not_found': 'ಬಳಕೆದಾರರು ಕಂಡುಬಂದಿಲ್ಲ',
-  'allow_microphone_only':
-  'ದಯವಿಟ್ಟು ಮೈಕ್ರೊಫೋನ್ ಅನುಮತಿ ನೀಡಿ',
-  'allow_microphone_camera':
-  'ದಯವಿಟ್ಟು ಮೈಕ್ರೊಫೋನ್ ಮತ್ತು ಕ್ಯಾಮೆರಾ ಅನುಮತಿ ನೀಡಿ',
+  'allow_microphone_only': 'ದಯವಿಟ್ಟು ಮೈಕ್ರೊಫೋನ್ ಅನುಮತಿ ನೀಡಿ',
+  'allow_microphone_camera': 'ದಯವಿಟ್ಟು ಮೈಕ್ರೊಫೋನ್ ಮತ್ತು ಕ್ಯಾಮೆರಾ ಅನುಮತಿ ನೀಡಿ',
   'user_offline': 'ಬಳಕೆದಾರರು ಆಫ್‌ಲೈನ್‌ನಲ್ಲಿದ್ದಾರೆ',
   'tap_to_stop': 'ನಿಲ್ಲಿಸಲು ಟ್ಯಾಪ್ ಮಾಡಿ',
   'permission_required': 'ಅನುಮತಿ ಅಗತ್ಯ',
-  'microphone_permission_required':
-  'ಮೈಕ್ರೊಫೋನ್ ಅನುಮತಿ ಅಗತ್ಯ',
-  'failed_to_start_recording':
-  'ರೆಕಾರ್ಡಿಂಗ್ ಪ್ರಾರಂಭಿಸಲು ವಿಫಲವಾಗಿದೆ',
+  'microphone_permission_required': 'ಮೈಕ್ರೊಫೋನ್ ಅನುಮತಿ ಅಗತ್ಯ',
+  'failed_to_start_recording': 'ರೆಕಾರ್ಡಿಂಗ್ ಪ್ರಾರಂಭಿಸಲು ವಿಫಲವಾಗಿದೆ',
   'recording_failed': 'ರೆಕಾರ್ಡಿಂಗ್ ವಿಫಲವಾಗಿದೆ',
-  'failed_to_upload_voice':
-  'ವಾಯ್ಸ್ ನೋಟ್ಸ್ ಅಪ್ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
-  'failed_to_send_voice':
-  'ವಾಯ್ಸ್ ನೋಟ್ಸ್ ಕಳುಹಿಸಲು ವಿಫಲವಾಗಿದೆ',
-  'voice_sent_successfully':
-  'ವಾಯ್ಸ್ ನೋಟ್ಸ್ ಯಶಸ್ವಿಯಾಗಿ ಕಳುಹಿಸಲಾಗಿದೆ',
+  'failed_to_upload_voice': 'ವಾಯ್ಸ್ ನೋಟ್ಸ್ ಅಪ್ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+  'failed_to_send_voice': 'ವಾಯ್ಸ್ ನೋಟ್ಸ್ ಕಳುಹಿಸಲು ವಿಫಲವಾಗಿದೆ',
+  'voice_sent_successfully': 'ವಾಯ್ಸ್ ನೋಟ್ಸ್ ಯಶಸ್ವಿಯಾಗಿ ಕಳುಹಿಸಲಾಗಿದೆ',
   'your_story': 'ನಿಮ್ಮ ಕಥೆ',
   'online': 'ಆನ್‌ಲೈನ್',
   'call_cancelled': 'ಕಾಲ್ ರದ್ದುಗೊಂಡಿದೆ',
-  'failed_to_answer_call_with_error':
-  'ಕಾಲ್‌ಗೆ ಉತ್ತರಿಸಲು ವಿಫಲವಾಗಿದೆ: @error',
-  'failed_to_decline_call_with_error':
-  'ಕಾಲ್ ತಿರಸ್ಕರಿಸಲು ವಿಫಲವಾಗಿದೆ: @error',
+  'failed_to_answer_call_with_error': 'ಕಾಲ್‌ಗೆ ಉತ್ತರಿಸಲು ವಿಫಲವಾಗಿದೆ: @error',
+  'failed_to_decline_call_with_error': 'ಕಾಲ್ ತಿರಸ್ಕರಿಸಲು ವಿಫಲವಾಗಿದೆ: @error',
   'incoming_video_call': 'ಬರುವ ವೀಡಿಯೋ ಕಾಲ್',
   'incoming_audio_call': 'ಬರುವ ಆಡಿಯೋ ಕಾಲ್',
-  'video_call_in_progress':
-  'ವೀಡಿಯೋ ಕಾಲ್ ನಡೆಯುತ್ತಿದೆ...',
-  'audio_call_in_progress':
-  'ಆಡಿಯೋ ಕಾಲ್ ನಡೆಯುತ್ತಿದೆ...',
+  'video_call_in_progress': 'ವೀಡಿಯೋ ಕಾಲ್ ನಡೆಯುತ್ತಿದೆ...',
+  'audio_call_in_progress': 'ಆಡಿಯೋ ಕಾಲ್ ನಡೆಯುತ್ತಿದೆ...',
 
   'call_ended': 'ಕಾಲ್ ಮುಕ್ತಾಯವಾಗಿದೆ',
   'user_busy': 'ಬಳಕೆದಾರರು ವ್ಯಸ್ತರಾಗಿದ್ದಾರೆ',
   'outgoing_video_call': 'ಹೊರ ಹೋಗುವ ವೀಡಿಯೋ ಕಾಲ್',
   'outgoing_audio_call': 'ಹೊರ ಹೋಗುವ ಆಡಿಯೋ ಕಾಲ್',
   'start_chat': 'ಚಾಟ್ ಪ್ರಾರಂಭಿಸಿ',
-  'failed_to_load_friends':
-  'ಮಿತ್ರರ ಪಟ್ಟಿಯನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
-  'no_friends_found':
-  'ಚಾಟ್ ಪ್ರಾರಂಭಿಸಲು ಯಾವುದೇ ಮಿತ್ರರು ಇಲ್ಲ',
-  'failed_to_start_conversation':
-  'ಸಂಭಾಷಣೆ ಪ್ರಾರಂಭಿಸಲು ವಿಫಲವಾಗಿದೆ',
+  'failed_to_load_friends': 'ಮಿತ್ರರ ಪಟ್ಟಿಯನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+  'no_friends_found': 'ಚಾಟ್ ಪ್ರಾರಂಭಿಸಲು ಯಾವುದೇ ಮಿತ್ರರು ಇಲ್ಲ',
+  'failed_to_start_conversation': 'ಸಂಭಾಷಣೆ ಪ್ರಾರಂಭಿಸಲು ವಿಫಲವಾಗಿದೆ',
   'shared_media': 'ಹಂಚಿದ ಮಾಧ್ಯಮ',
-  'shared_media_conversation':
-  'ಸಂಭಾಷಣೆಯ ಮಾಧ್ಯಮ',
+  'shared_media_conversation': 'ಸಂಭಾಷಣೆಯ ಮಾಧ್ಯಮ',
   'conversation_info': 'ಸಂಭಾಷಣೆ ಮಾಹಿತಿ',
   'shared_images': 'ಹಂಚಿದ ಚಿತ್ರಗಳು',
   'shared_voice_notes': 'ಹಂಚಿದ ವಾಯ್ಸ್ ನೋಟ್ಸ್',
   'blocked': 'ಬ್ಲಾಕ್ ಮಾಡಲಾಗಿದೆ',
   'are_you_sure_block_user':
-  'ನೀವು ನಿಜವಾಗಿಯೂ ಈ ಬಳಕೆದಾರರನ್ನು ಬ್ಲಾಕ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಾ?',
+      'ನೀವು ನಿಜವಾಗಿಯೂ ಈ ಬಳಕೆದಾರರನ್ನು ಬ್ಲಾಕ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಾ?',
   'are_you_sure_unblock_user':
-  'ನೀವು ನಿಜವಾಗಿಯೂ ಈ ಬಳಕೆದಾರರನ್ನು ಅನ್ಬ್ಲಾಕ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಾ?',
-  'user_blocked_successfully':
-  'ಬಳಕೆದಾರರನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಬ್ಲಾಕ್ ಮಾಡಲಾಗಿದೆ',
-  'failed_to_block_user':
-  'ಬಳಕೆದಾರರನ್ನು ಬ್ಲಾಕ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
+      'ನೀವು ನಿಜವಾಗಿಯೂ ಈ ಬಳಕೆದಾರರನ್ನು ಅನ್ಬ್ಲಾಕ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಾ?',
+  'user_blocked_successfully': 'ಬಳಕೆದಾರರನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಬ್ಲಾಕ್ ಮಾಡಲಾಗಿದೆ',
+  'failed_to_block_user': 'ಬಳಕೆದಾರರನ್ನು ಬ್ಲಾಕ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
   'no_media_found': 'ಈಗ ಯಾವುದೇ ಮಾಧ್ಯಮ ಇಲ್ಲ',
   'last_seen': 'ಕೊನೆಯ ಬಾರಿ ಕಂಡದ್ದು: @time',
   'tap_to_play': 'ಪ್ಲೇ ಮಾಡಲು ಟ್ಯಾಪ್ ಮಾಡಿ',
-// Comments Section
+  // Comments Section
   'error_loading_comments': 'ಟಿಪ್ಪಣಿಗಳನ್ನು ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ',
   'no_comments_yet': 'ಇನ್ನೂ ಯಾವುದೇ ಟಿಪ್ಪಣಿಗಳು ಇಲ್ಲ',
   'be_first_to_comment': 'ಮೊದಲ ಟಿಪ್ಪಣಿ ಮಾಡಿ',
@@ -2548,8 +2444,7 @@ const Map<String, String> knIN = {
   'edit_comment': 'ಸಂಪಾದಿಸಿ',
   'delete_comment': 'ಅಳಿಸಿ',
   'delete_comment_title': 'ಟಿಪ್ಪಣಿ ಅಳಿಸಿ',
-  'delete_comment_message':
-  'ನೀವು ನಿಜವಾಗಿಯೂ ಈ ಟಿಪ್ಪಣಿಯನ್ನು ಅಳಿಸಲು ಬಯಸುತ್ತೀರಾ?',
+  'delete_comment_message': 'ನೀವು ನಿಜವಾಗಿಯೂ ಈ ಟಿಪ್ಪಣಿಯನ್ನು ಅಳಿಸಲು ಬಯಸುತ್ತೀರಾ?',
   'comment_deleted': 'ಟಿಪ್ಪಣಿ ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಲಾಗಿದೆ',
   'comment_updated': 'ಟಿಪ್ಪಣಿ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್ಡೇಟ್ ಮಾಡಲಾಗಿದೆ',
   'failed_delete_comment': 'ಟಿಪ್ಪಣಿ ಅಳಿಸಲು ವಿಫಲವಾಗಿದೆ',
@@ -2559,39 +2454,43 @@ const Map<String, String> knIN = {
   'show_more_replies_count': 'ಹೆಚ್ಚಿನ ಉತ್ತರಗಳನ್ನು ತೋರಿಸಿ (@count)',
   'voice_recording_saved': 'ಧ್ವನಿ ರೆಕಾರ್ಡಿಂಗ್ ಉಳಿಸಲಾಗಿದೆ',
   'failed_ai_response': 'AI ಪ್ರತಿಕ್ರಿಯೆ ಪಡೆಯಲು ವಿಫಲವಾಯಿತು',
-  'microphone_permission_settings': 'ದಯವಿಟ್ಟು ಸೆಟ್ಟಿಂಗ್‌ಗಳಿಂದ ಮೈಕ್ರೋಫೋನ್ ಅನುಮತಿ ನೀಡಿ',
+  'microphone_permission_settings':
+      'ದಯವಿಟ್ಟು ಸೆಟ್ಟಿಂಗ್‌ಗಳಿಂದ ಮೈಕ್ರೋಫೋನ್ ಅನುಮತಿ ನೀಡಿ',
   'time_just_now': 'ಈಗ',
   'time_minutes_short': '@count ನಿ.',
   'time_hours_short': '@count ಗಂ.',
   'time_days_short': '@count ದಿ.',
   'ai_bot_help': 'AI ಬಾಟ್ ಸಹಾಯ',
 
-// Auth - Login/Signup
+  // Auth - Login/Signup
   'welcome_back_user': 'ಮತ್ತೆ ಸ್ವಾಗತ, @name! 🎉',
   'login_success': 'ಲಾಗಿನ್ ಯಶಸ್ವಿಯಾಗಿದೆ.',
   'login_failed': 'ಲಾಗಿನ್ ವಿಫಲವಾಗಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
   'or': 'ಅಥವಾ',
-  'google_sign_in_disabled':
-  'Google ಸೈನ್-ಇನ್ ಪ್ರಸ್ತುತ ಅಶಕ್ತಗೊಳಿಸಲಾಗಿದೆ',
+  'google_sign_in_disabled': 'Google ಸೈನ್-ಇನ್ ಪ್ರಸ್ತುತ ಅಶಕ್ತಗೊಳಿಸಲಾಗಿದೆ',
   'google_sign_in_failed': 'Google ಸೈನ್-ಇನ್ ವಿಫಲವಾಗಿದೆ',
+  'i_agree_to': 'ನಾನು ಒಪ್ಪುತ್ತೇನೆ',
+  'terms_and_conditions': 'ನಿಯಮಗಳು ಮತ್ತು ಷರತ್ತುಗಳು',
+  'and': 'ಮತ್ತು',
+  'privacy_policy': 'ಗೌಪ್ಯತಾ ನೀತಿ',
 
-// Onboarding
+  // Onboarding
   'onboarding_connect_title': 'ಮಿತ್ರರೊಂದಿಗೆ ಸಂಪರ್ಕ ಸಾಧಿಸಿ',
   'onboarding_connect_desc':
-  'ನಿಮ್ಮ ಆಸಕ್ತಿಗಳು ಮತ್ತು ಹವ್ಯಾಸಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳುವ ಜನರೊಂದಿಗೆ ಅರ್ಥಪೂರ್ಣ ಸಂಪರ್ಕಗಳನ್ನು ನಿರ್ಮಿಸಿ.',
+      'ನಿಮ್ಮ ಆಸಕ್ತಿಗಳು ಮತ್ತು ಹವ್ಯಾಸಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳುವ ಜನರೊಂದಿಗೆ ಅರ್ಥಪೂರ್ಣ ಸಂಪರ್ಕಗಳನ್ನು ನಿರ್ಮಿಸಿ.',
   'onboarding_share_title': 'ನಿಮ್ಮ ಕಥೆಯನ್ನು ಹಂಚಿಕೊಳ್ಳಿ',
   'onboarding_share_desc':
-  'ಪೋಸ್ಟ್‌ಗಳು, ಫೋಟೋಗಳು, ವೀಡಿಯೋಗಳು ಮತ್ತು ಕಥೆಗಳ ಮೂಲಕ ನಿಮ್ಮನ್ನು ನಿಮ್ಮ ಸಮುದಾಯದೊಂದಿಗೆ ವ್ಯಕ್ತಪಡಿಸಿ.',
+      'ಪೋಸ್ಟ್‌ಗಳು, ಫೋಟೋಗಳು, ವೀಡಿಯೋಗಳು ಮತ್ತು ಕಥೆಗಳ ಮೂಲಕ ನಿಮ್ಮನ್ನು ನಿಮ್ಮ ಸಮುದಾಯದೊಂದಿಗೆ ವ್ಯಕ್ತಪಡಿಸಿ.',
   'onboarding_discover_title': 'ಹೊಸ ವಿಷಯಗಳನ್ನು ಅನ್ವೇಷಿಸಿ',
   'onboarding_discover_desc':
-  'ಟ್ರೆಂಡಿಂಗ್ ವಿಷಯಗಳನ್ನು ಕಂಡುಹಿಡಿಯಿರಿ, ಗುಂಪುಗಳಲ್ಲಿ ಸೇರಿ ಮತ್ತು ನಿಮಗೆ ಹೊಂದುವ ವಿಷಯಗಳನ್ನು ಅನ್ವೇಷಿಸಿ.',
+      'ಟ್ರೆಂಡಿಂಗ್ ವಿಷಯಗಳನ್ನು ಕಂಡುಹಿಡಿಯಿರಿ, ಗುಂಪುಗಳಲ್ಲಿ ಸೇರಿ ಮತ್ತು ನಿಮಗೆ ಹೊಂದುವ ವಿಷಯಗಳನ್ನು ಅನ್ವೇಷಿಸಿ.',
   'onboarding_secure_title': 'ಸುರಕ್ಷಿತ ಮತ್ತು ಭದ್ರ',
   'onboarding_secure_desc':
-  'ನಿಮ್ಮ ಗೌಪ್ಯತೆ ನಮಗೆ ಮುಖ್ಯ. ನಾವು ಉನ್ನತ ಭದ್ರತಾ ಕ್ರಮಗಳೊಂದಿಗೆ ನಿಮ್ಮ ಡೇಟಾವನ್ನು ರಕ್ಷಿಸುತ್ತೇವೆ.',
+      'ನಿಮ್ಮ ಗೌಪ್ಯತೆ ನಮಗೆ ಮುಖ್ಯ. ನಾವು ಉನ್ನತ ಭದ್ರತಾ ಕ್ರಮಗಳೊಂದಿಗೆ ನಿಮ್ಮ ಡೇಟಾವನ್ನು ರಕ್ಷಿಸುತ್ತೇವೆ.',
   'onboarding_next': 'ಮುಂದೆ',
   'onboarding_get_started': 'ಪ್ರಾರಂಭಿಸಿ',
 
-// Relationship Status
+  // Relationship Status
   'relationship_single': 'ಅವಿವಾಹಿತ',
   'relationship_in_relationship': 'ಸಂಬಂಧದಲ್ಲಿದ್ದಾರೆ',
   'relationship_married': 'ವಿವಾಹಿತ',
@@ -2600,62 +2499,58 @@ const Map<String, String> knIN = {
   'relationship_divorced': 'ವಿಚ್ಛೇದಿತ',
   'relationship_widowed': 'ವಿಧವೆ / ವಿಧುರ',
 
-// Gender Options
+  // Gender Options
   'gender_male': 'ಪುರುಷ',
   'gender_female': 'ಮಹಿಳೆ',
   'gender_other': 'ಇತರೆ',
   'gender_all': 'ಎಲ್ಲಾ',
   'relationship_all': 'ಎಲ್ಲಾ',
 
-// Profile Labels
+  // Profile Labels
   'select_birth_date': 'ಜನ್ಮ ದಿನಾಂಕ ಆಯ್ಕೆಮಾಡಿ',
   'about_you': 'ನಿಮ್ಮ ಬಗ್ಗೆ',
 
-// AI Chat
+  // AI Chat
   'ai_connected': 'ಸಂಪರ್ಕಿಸಲಾಗಿದೆ',
   'ai_warning': 'ಎಚ್ಚರಿಕೆ',
   'ai_disabled': 'ಸೆಟ್ಟಿಂಗ್‌ಗಳಲ್ಲಿ AI ವೈಶಿಷ್ಟ್ಯ ಅಶಕ್ತಗೊಳಿಸಲಾಗಿದೆ',
-  'ai_key_missing':
-  'ದಯವಿಟ್ಟು App_Settings.dart ನಲ್ಲಿ AI ಕೀ ಅನ್ನು ಅಪ್ಡೇಟ್ ಮಾಡಿ',
+  'ai_key_missing': 'ದಯವಿಟ್ಟು App_Settings.dart ನಲ್ಲಿ AI ಕೀ ಅನ್ನು ಅಪ್ಡೇಟ್ ಮಾಡಿ',
   'ai_okay': 'ಸರಿ',
   'ai_regenerate': 'ಉತ್ತರವನ್ನು ಮರುಸೃಷ್ಟಿಸಿ',
   'ai_settings': 'ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
   'ai_clear_confirm_title': 'ಚಾಟ್ ಕ್ಲಿಯರ್ ಮಾಡಿ',
   'ai_clear_confirm_message':
-  'ನೀವು ನಿಜವಾಗಿಯೂ ಎಲ್ಲಾ ಸಂದೇಶಗಳನ್ನು ಅಳಿಸಲು ಬಯಸುತ್ತೀರಾ?',
+      'ನೀವು ನಿಜವಾಗಿಯೂ ಎಲ್ಲಾ ಸಂದೇಶಗಳನ್ನು ಅಳಿಸಲು ಬಯಸುತ್ತೀರಾ?',
   'ai_cancel': 'ರದ್ದು ಮಾಡಿ',
   'ai_clear': 'ಕ್ಲಿಯರ್ ಮಾಡಿ',
   'ai_settings_title': 'ಚಾಟ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
   'ai_more_settings_soon': 'ಹೆಚ್ಚುವರಿ ಸೆಟ್ಟಿಂಗ್‌ಗಳು ಶೀಘ್ರದಲ್ಲೇ ಲಭ್ಯವಾಗುತ್ತವೆ',
   'ai_hello_message': 'ನಮಸ್ಕಾರ! ನಾನು ನಿಮ್ಮ AI ಸಹಾಯಕ',
-  'ai_help_message':
-  'ನೀವು ಏನೇ ಕೇಳಿದರೂ, ನಿಮಗೆ ಸಹಾಯ ಮಾಡಲು ನನಗೆ ಸಂತೋಷ',
+  'ai_help_message': 'ನೀವು ಏನೇ ಕೇಳಿದರೂ, ನಿಮಗೆ ಸಹಾಯ ಮಾಡಲು ನನಗೆ ಸಂತೋಷ',
   'ai_suggestion_what_is_ai': 'ಕೃತಕ ಬುದ್ಧಿಮತ್ತೆ ಎಂದರೇನು?',
   'ai_suggestion_write_story': 'ನನಗೆ ಒಂದು ಚಿಕ್ಕ ಕಥೆ ಬರೆಯಿರಿ',
   'ai_suggestion_programming_tips': 'ಪ್ರೋಗ್ರಾಮಿಂಗ್ ಸಲಹೆಗಳು',
   'ai_input_hint': 'ನಿಮ್ಮ ಸಂದೇಶವನ್ನು ಇಲ್ಲಿ ಬರೆಯಿರಿ...',
   'ai_publish_as_post': 'ಪೋಸ್ಟ್ ಆಗಿ ಪ್ರಕಟಿಸಿ',
   'ai_publish_confirm':
-  'ನೀವು ಈ ವಿಷಯವನ್ನು ನಿಮ್ಮ ಖಾತೆಯಲ್ಲಿ ಪ್ರಕಟಿಸಲು ಬಯಸುತ್ತೀರಾ?',
+      'ನೀವು ಈ ವಿಷಯವನ್ನು ನಿಮ್ಮ ಖಾತೆಯಲ್ಲಿ ಪ್ರಕಟಿಸಲು ಬಯಸುತ್ತೀರಾ?',
   'ai_publish': 'ಪ್ರಕಟಿಸಿ',
   'ai_publishing': 'ಪ್ರಕಟಿಸಲಾಗುತ್ತಿದೆ...',
-  'ai_publish_success':
-  'ವಿಷಯವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಪ್ರಕಟಿಸಲಾಗಿದೆ! 🎉',
+  'ai_publish_success': 'ವಿಷಯವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಪ್ರಕಟಿಸಲಾಗಿದೆ! 🎉',
   'ai_publish_failed': 'ವಿಷಯ ಪ್ರಕಟಿಸಲು ವಿಫಲವಾಗಿದೆ',
-  'ai_post_published_message':
-  '✅ ಪೋಸ್ಟ್ ಯಶಸ್ವಿಯಾಗಿ ಪ್ರಕಟಿಸಲಾಗಿದೆ!',
+  'ai_post_published_message': '✅ ಪೋಸ್ಟ್ ಯಶಸ್ವಿಯಾಗಿ ಪ್ರಕಟಿಸಲಾಗಿದೆ!',
   'ai_view_post': 'ಪೋಸ್ಟ್ ನೋಡಿ',
   'ai_go_to_post': 'ಪೋಸ್ಟ್‌ಗೆ ಹೋಗಿ',
 
-// Chat Page
+  // Chat Page
   'are_you_sure': 'ನೀವು ಖಚಿತವಾಗಿದ್ದೀರಾ?',
   'suitable_for_daytime_use': 'ಹಗಲು ಬಳಕೆಗೆ ಸೂಕ್ತ',
   'suitable_for_nighttime_use': 'ರಾತ್ರಿ ಬಳಕೆಗೆ ಸೂಕ್ತ',
 
-// URL Launcher
+  // URL Launcher
   'cannot_open_url': 'URL ತೆರೆಯಲು ಸಾಧ್ಯವಿಲ್ಲ',
 
-// Group Profile Page
+  // Group Profile Page
   'group_secret_error': 'ಇದು ಒಂದು ರಹಸ್ಯ ಗುಂಪಾಗಿದೆ',
   'group_not_found_error': 'ಗುಂಪು ಕಂಡುಬಂದಿಲ್ಲ',
   'login_required_error': 'ಮೊದಲು ಲಾಗಿನ್ ಮಾಡಬೇಕು',
@@ -2663,26 +2558,21 @@ const Map<String, String> knIN = {
   'group_left_success': 'ಗುಂಪನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಬಿಟ್ಟಿದ್ದೀರಿ',
   'group_join_request_sent': 'ಗುಂಪಿಗೆ ಸೇರಲು ವಿನಂತಿ ಕಳುಹಿಸಲಾಗಿದೆ',
 
-// AI Bot
+  // AI Bot
   'ai_bot_hello': 'ನಮಸ್ಕಾರ! ನಾನು ನಿಮಗೆ ಹೇಗೆ ಸಹಾಯ ಮಾಡಬಹುದು? 😊',
-  'ai_bot_service_unavailable':
-  'ಕ್ಷಮಿಸಿ, AI ಸೇವೆ ಪ್ರಸ್ತುತ ಲಭ್ಯವಿಲ್ಲ.',
+  'ai_bot_service_unavailable': 'ಕ್ಷಮಿಸಿ, AI ಸೇವೆ ಪ್ರಸ್ತುತ ಲಭ್ಯವಿಲ್ಲ.',
   'ai_bot_question_too_long':
-  'ಕ್ಷಮಿಸಿ, ಪ್ರಶ್ನೆ ತುಂಬಾ ಉದ್ದವಾಗಿದೆ. ಗರಿಷ್ಠ @max ಅಕ್ಷರಗಳು.',
+      'ಕ್ಷಮಿಸಿ, ಪ್ರಶ್ನೆ ತುಂಬಾ ಉದ್ದವಾಗಿದೆ. ಗರಿಷ್ಠ @max ಅಕ್ಷರಗಳು.',
   'ai_bot_cannot_understand':
-  'ಕ್ಷಮಿಸಿ, ನಾನು ಪ್ರಶ್ನೆಯನ್ನು ಅರ್ಥಮಾಡಿಕೊಳ್ಳಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮರುಬರೆಯಿರಿ.',
-  'ai_bot_api_key_error':
-  'API ಕೀ ದೋಷ. ದಯವಿಟ್ಟು ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ಪರಿಶೀಲಿಸಿ.',
+      'ಕ್ಷಮಿಸಿ, ನಾನು ಪ್ರಶ್ನೆಯನ್ನು ಅರ್ಥಮಾಡಿಕೊಳ್ಳಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮರುಬರೆಯಿರಿ.',
+  'ai_bot_api_key_error': 'API ಕೀ ದೋಷ. ದಯವಿಟ್ಟು ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ಪರಿಶೀಲಿಸಿ.',
   'ai_bot_rate_limit':
-  'ಕ್ಷಮಿಸಿ, ಮಿತಿಯನ್ನು ಮೀರಿ ಹೋಗಲಾಗಿದೆ. ನಂತರ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
-  'ai_bot_service_error':
-  'ಕ್ಷಮಿಸಿ, ಸೇವೆಯಲ್ಲಿ ದೋಷ ಸಂಭವಿಸಿದೆ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
-  'ai_bot_no_internet':
-  'ಕ್ಷಮಿಸಿ, ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕ ಇಲ್ಲ.',
+      'ಕ್ಷಮಿಸಿ, ಮಿತಿಯನ್ನು ಮೀರಿ ಹೋಗಲಾಗಿದೆ. ನಂತರ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
+  'ai_bot_service_error': 'ಕ್ಷಮಿಸಿ, ಸೇವೆಯಲ್ಲಿ ದೋಷ ಸಂಭವಿಸಿದೆ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
+  'ai_bot_no_internet': 'ಕ್ಷಮಿಸಿ, ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕ ಇಲ್ಲ.',
   'ai_bot_unexpected_error':
-  'ಕ್ಷಮಿಸಿ, ಅನಿರೀಕ್ಷಿತ ದೋಷ ಸಂಭವಿಸಿದೆ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
-  'ai_bot_daily_limit':
-  'ಕ್ಷಮಿಸಿ, ಇಂದು ನಿಮ್ಮ AI ಮಿತಿಯನ್ನು ಮುಗಿಸಿದ್ದೀರಿ.',
+      'ಕ್ಷಮಿಸಿ, ಅನಿರೀಕ್ಷಿತ ದೋಷ ಸಂಭವಿಸಿದೆ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
+  'ai_bot_daily_limit': 'ಕ್ಷಮಿಸಿ, ಇಂದು ನಿಮ್ಮ AI ಮಿತಿಯನ್ನು ಮುಗಿಸಿದ್ದೀರಿ.',
   'ai_bot_replied': '✨ @username ಉತ್ತರಿಸಿದ್ದಾರೆ!',
   'ai_bot_reply_failed': '⚠️ ಬಾಟ್ ಉತ್ತರ ಸೃಷ್ಟಿಸಲು ವಿಫಲವಾಗಿದೆ',
   'ai_bot_info_title': 'ನಮಸ್ಕಾರ! ನಾನು @username 🤖',
@@ -2691,15 +2581,14 @@ const Map<String, String> knIN = {
   'ai_bot_info_answer_questions': '• ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಿಸುವುದು',
   'ai_bot_info_provide_info': '• ಉಪಯುಕ್ತ ಮಾಹಿತಿಯನ್ನು ನೀಡುವುದು',
   'ai_bot_info_usage':
-  'ಬಳಕೆ: ಕಾಮೆಂಟ್‌ನಲ್ಲಿ @ ನನ್ನ ಹೆಸರನ್ನು ಬರಿಸಿ ಮತ್ತು ಪ್ರಶ್ನೆ ಬರೆಯಿರಿ',
-  'ai_bot_info_example':
-  'ಉದಾಹರಣೆ: @username ಈ ಸುದ್ದಿ ಸತ್ಯವೇ?',
+      'ಬಳಕೆ: ಕಾಮೆಂಟ್‌ನಲ್ಲಿ @ ನನ್ನ ಹೆಸರನ್ನು ಬರಿಸಿ ಮತ್ತು ಪ್ರಶ್ನೆ ಬರೆಯಿರಿ',
+  'ai_bot_info_example': 'ಉದಾಹರಣೆ: @username ಈ ಸುದ್ದಿ ಸತ್ಯವೇ?',
   'ai_bot_tip_title': 'ಸಲಹೆ:',
   'ai_bot_tip_body':
-  '• ಉತ್ತಮ ಉತ್ತರಕ್ಕಾಗಿ ಸ್ಪಷ್ಟ ಪ್ರಶ್ನೆ ಕೇಳಿ\n• ಸುದ್ದಿಯನ್ನು ಬಾಟ್ ಮೂಲಕ ಪರಿಶೀಲಿಸಬಹುದು\n• ಬಾಟ್ AI ಆಧಾರಿತವಾಗಿದೆ ಮತ್ತು ಕಲಿಯುತ್ತಿರುತ್ತದೆ',
+      '• ಉತ್ತಮ ಉತ್ತರಕ್ಕಾಗಿ ಸ್ಪಷ್ಟ ಪ್ರಶ್ನೆ ಕೇಳಿ\n• ಸುದ್ದಿಯನ್ನು ಬಾಟ್ ಮೂಲಕ ಪರಿಶೀಲಿಸಬಹುದು\n• ಬಾಟ್ AI ಆಧಾರಿತವಾಗಿದೆ ಮತ್ತು ಕಲಿಯುತ್ತಿರುತ್ತದೆ',
   'ai_bot_understood': 'ಅರ್ಥವಾಯಿತು',
   'ai_bot_try_now': 'ಈಗ ಪ್ರಯತ್ನಿಸಿ',
-// Page Admins
+  // Page Admins
   'page_admins_title': 'ಪುಟ ನಿರ್ವಾಹಕರು',
   'page_admins_failed_load': 'ಲೈಕ್ ಮಾಡಿದವರನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
   'page_admins_removed_admin': '@name ಅವರನ್ನು ನಿರ್ವಾಹಕರಿಂದ ತೆಗೆದುಹಾಕಲಾಗಿದೆ',
@@ -2707,55 +2596,50 @@ const Map<String, String> knIN = {
   'page_admins_error_operation': 'ಕ್ರಿಯೆಯ ವೇಳೆ ದೋಷ ಸಂಭವಿಸಿದೆ',
   'page_admins_no_likers': 'ಯಾವುದೇ ಲೈಕರ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ',
   'page_admins_promote_hint':
-  'ನೀವು ಪುಟವನ್ನು ಲೈಕ್ ಮಾಡಿದವರನ್ನು ನಿರ್ವಾಹಕರಾಗಿಸಬಹುದು',
+      'ನೀವು ಪುಟವನ್ನು ಲೈಕ್ ಮಾಡಿದವರನ್ನು ನಿರ್ವಾಹಕರಾಗಿಸಬಹುದು',
   'page_admins_badge_admin': 'ನಿರ್ವಾಹಕ',
   'page_admins_remove_tooltip': 'ನಿರ್ವಾಹಕ ಸ್ಥಾನದಿಂದ ತೆಗೆದುಹಾಕಿ',
   'page_admins_add_tooltip': 'ನಿರ್ವಾಹಕರಾಗಿ ನೇಮಕ ಮಾಡಿ',
 
-// Invite Friends to Page
+  // Invite Friends to Page
   'page_invite_title': 'ಮಿತ್ರರನ್ನು ಆಹ್ವಾನಿಸಿ',
   'page_invite_failed_load': 'ಮಿತ್ರರನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ',
   'page_invite_success': '@name ಅವರಿಗೆ ಆಹ್ವಾನ ಕಳುಹಿಸಲಾಗಿದೆ',
   'page_invite_failed': '@name ಅವರನ್ನು ಆಹ್ವಾನಿಸಲು ವಿಫಲವಾಗಿದೆ',
-  'page_invite_error':
-  'ಆಹ್ವಾನ ಕಳುಹಿಸುವಾಗ ದೋಷ ಸಂಭವಿಸಿದೆ',
+  'page_invite_error': 'ಆಹ್ವಾನ ಕಳುಹಿಸುವಾಗ ದೋಷ ಸಂಭವಿಸಿದೆ',
   'page_invite_empty_title': 'ಆಹ್ವಾನಿಸಲು ಯಾವುದೇ ಮಿತ್ರರು ಇಲ್ಲ',
   'page_invite_empty_body':
-  'ನಿಮ್ಮ ಎಲ್ಲಾ ಮಿತ್ರರು ಈಗಾಗಲೇ ಸದಸ್ಯರಾಗಿದ್ದಾರೆ ಅಥವಾ ಆಹ್ವಾನಿಸಲ್ಪಟ್ಟಿದ್ದಾರೆ',
+      'ನಿಮ್ಮ ಎಲ್ಲಾ ಮಿತ್ರರು ಈಗಾಗಲೇ ಸದಸ್ಯರಾಗಿದ್ದಾರೆ ಅಥವಾ ಆಹ್ವಾನಿಸಲ್ಪಟ್ಟಿದ್ದಾರೆ',
   'page_invite_invited': 'ಆಹ್ವಾನಿಸಲಾಗಿದೆ',
   'page_invite_cta': 'ಆಹ್ವಾನಿಸಿ',
 
-// Create Group
+  // Create Group
   'create_group_title': 'ಗುಂಪು ರಚಿಸಿ',
   'create_group_cta': 'ರಚಿಸಿ',
   'create_group_title_label': 'ಗುಂಪಿನ ಶೀರ್ಷಿಕೆ *',
-  'create_group_title_hint':
-  'ಉದಾಹರಣೆ: UAE ನಲ್ಲಿ Flutter ಡೆವಲಪರ್‌ಗಳು',
+  'create_group_title_hint': 'ಉದಾಹರಣೆ: UAE ನಲ್ಲಿ Flutter ಡೆವಲಪರ್‌ಗಳು',
   'create_group_title_required': 'ಶೀರ್ಷಿಕೆ ಅಗತ್ಯವಿದೆ',
-  'create_group_title_min':
-  'ಶೀರ್ಷಿಕೆ ಕನಿಷ್ಠ 3 ಅಕ್ಷರಗಳಿರಬೇಕು',
+  'create_group_title_min': 'ಶೀರ್ಷಿಕೆ ಕನಿಷ್ಠ 3 ಅಕ್ಷರಗಳಿರಬೇಕು',
   'create_group_username_label': 'ಬಳಕೆದಾರ ಹೆಸರು *',
   'create_group_username_hint': 'ಉದಾಹರಣೆ: flutter_devs_uae',
   'create_group_username_helper':
-  'ಇಂಗ್ಲಿಷ್ ಅಕ್ಷರಗಳು, ಸಂಖ್ಯೆಗಳು ಮತ್ತು ಅಂಡರ್‌ಸ್ಕೋರ್ ಮಾತ್ರ',
+      'ಇಂಗ್ಲಿಷ್ ಅಕ್ಷರಗಳು, ಸಂಖ್ಯೆಗಳು ಮತ್ತು ಅಂಡರ್‌ಸ್ಕೋರ್ ಮಾತ್ರ',
   'create_group_username_required': 'ಬಳಕೆದಾರ ಹೆಸರು ಅಗತ್ಯವಿದೆ',
-  'create_group_username_min':
-  'ಬಳಕೆದಾರ ಹೆಸರು ಕನಿಷ್ಠ 3 ಅಕ್ಷರಗಳಿರಬೇಕು',
+  'create_group_username_min': 'ಬಳಕೆದಾರ ಹೆಸರು ಕನಿಷ್ಠ 3 ಅಕ್ಷರಗಳಿರಬೇಕು',
   'create_group_username_invalid':
-  'ಇಂಗ್ಲಿಷ್ ಅಕ್ಷರಗಳು, ಸಂಖ್ಯೆಗಳು ಮತ್ತು ಅಂಡರ್‌ಸ್ಕೋರ್ ಮಾತ್ರ',
+      'ಇಂಗ್ಲಿಷ್ ಅಕ್ಷರಗಳು, ಸಂಖ್ಯೆಗಳು ಮತ್ತು ಅಂಡರ್‌ಸ್ಕೋರ್ ಮಾತ್ರ',
   'create_group_description_label': 'ವಿವರಣೆ (ಐಚ್ಛಿಕ)',
-  'create_group_description_hint':
-  'ಗುಂಪಿಗಾಗಿ ವಿವರಣೆ ಬರೆಯಿರಿ...',
+  'create_group_description_hint': 'ಗುಂಪಿಗಾಗಿ ವಿವರಣೆ ಬರೆಯಿರಿ...',
   'create_group_privacy_label': 'ಗೌಪ್ಯತೆ *',
   'create_group_privacy_public': 'ಸಾರ್ವಜನಿಕ',
   'create_group_privacy_public_desc':
-  'ಯಾರಾದರೂ ಗುಂಪು ಮತ್ತು ಪೋಸ್ಟ್‌ಗಳನ್ನು ನೋಡಬಹುದು',
+      'ಯಾರಾದರೂ ಗುಂಪು ಮತ್ತು ಪೋಸ್ಟ್‌ಗಳನ್ನು ನೋಡಬಹುದು',
   'create_group_privacy_closed': 'ಮುಚ್ಚಿದ',
   'create_group_privacy_closed_desc':
-  'ಗುಂಪು ಎಲ್ಲರೂ ನೋಡಬಹುದು, ಪೋಸ್ಟ್‌ಗಳನ್ನು ಸದಸ್ಯರು ಮಾತ್ರ',
+      'ಗುಂಪು ಎಲ್ಲರೂ ನೋಡಬಹುದು, ಪೋಸ್ಟ್‌ಗಳನ್ನು ಸದಸ್ಯರು ಮಾತ್ರ',
   'create_group_privacy_secret': 'ರಹಸ್ಯ',
   'create_group_privacy_secret_desc':
-  'ಅನುಮೋದಿತ ಸದಸ್ಯರು ಮಾತ್ರ ಗುಂಪು ಮತ್ತು ಪೋಸ್ಟ್‌ಗಳನ್ನು ನೋಡಬಹುದು',
+      'ಅನುಮೋದಿತ ಸದಸ್ಯರು ಮಾತ್ರ ಗುಂಪು ಮತ್ತು ಪೋಸ್ಟ್‌ಗಳನ್ನು ನೋಡಬಹುದು',
   'create_group_category_label': 'ವರ್ಗ *',
   'create_group_category_tech': 'ತಂತ್ರಜ್ಞಾನ',
   'create_group_category_sports': 'ಕ್ರೀಡೆ',
@@ -2765,13 +2649,12 @@ const Map<String, String> knIN = {
   'create_group_button': 'ಗುಂಪು ರಚಿಸಿ',
   'create_group_creating': 'ರಚಿಸಲಾಗುತ್ತಿದೆ...',
   'create_group_note':
-  'ಗುಂಪು ರಚಿಸಿದ ನಂತರ ನೀವು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಮಾಡರೇಟರ್ ಆಗುತ್ತೀರಿ',
+      'ಗುಂಪು ರಚಿಸಿದ ನಂತರ ನೀವು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಮಾಡರೇಟರ್ ಆಗುತ್ತೀರಿ',
   'create_group_success': 'ಗುಂಪು ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ',
-  'create_group_failed':
-  'ಗುಂಪು ರಚಿಸಲು ವಿಫಲವಾಗಿದೆ, ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
+  'create_group_failed': 'ಗುಂಪು ರಚಿಸಲು ವಿಫಲವಾಗಿದೆ, ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
   'create_group_error': 'ದೋಷ ಸಂಭವಿಸಿದೆ: @error',
 
-// Course Card
+  // Course Card
   'course_free': 'ಉಚಿತ',
   'course_candidates': 'ಅಭ್ಯರ್ಥಿಗಳು (@count)',
   'course_enroll_button': 'ನೋಂದಣಿ ಮಾಡಿ',
@@ -2810,7 +2693,7 @@ const Map<String, String> knIN = {
   'course_month_november': 'ನವೆಂಬರ್',
   'course_month_december': 'ಡಿಸೆಂಬರ್',
 
-// Discover Page - Merits Send Dialog
+  // Discover Page - Merits Send Dialog
   'merit_category_select': 'ಮೆರಿಟ್ ವರ್ಗವನ್ನು ಆಯ್ಕೆಮಾಡಿ',
   'merit_category_hint': 'ಪಟ್ಟಿಯಿಂದ ಆಯ್ಕೆಮಾಡಿ',
   'merit_recipients_select': 'ಸ್ವೀಕರಿಸುವವರನ್ನು ಆಯ್ಕೆಮಾಡಿ',
@@ -2830,7 +2713,7 @@ const Map<String, String> knIN = {
   'merit_image_selected': 'ಚಿತ್ರ ಆಯ್ಕೆಮಾಡಲಾಗಿದೆ',
   'merit_badge': 'ಮೆರಿಟ್ ಬ್ಯಾಡ್ಜ್',
 
-// Product
+  // Product
   'product_name': 'ಉತ್ಪನ್ನದ ಹೆಸರು',
   'enter_product_name': 'ಉತ್ಪನ್ನದ ಹೆಸರನ್ನು ನಮೂದಿಸಿ',
   'price': 'ಬೆಲೆ',
@@ -2848,22 +2731,21 @@ const Map<String, String> knIN = {
   'error_updating_product': 'ಉತ್ಪನ್ನ ಅಪ್ಡೇಟ್ ಮಾಡುವಲ್ಲಿ ದೋಷ',
   'invalid_product_data': 'ಅಮಾನ್ಯ ಉತ್ಪನ್ನ ಡೇಟಾ',
   'product_name_required': 'ಉತ್ಪನ್ನದ ಹೆಸರು ಅಗತ್ಯವಿದೆ',
-  'valid_price_required':
-  'ಬೆಲೆ ಅಗತ್ಯವಿದೆ ಮತ್ತು 0 ಕ್ಕಿಂತ ಹೆಚ್ಚು ಇರಬೇಕು',
+  'valid_price_required': 'ಬೆಲೆ ಅಗತ್ಯವಿದೆ ಮತ್ತು 0 ಕ್ಕಿಂತ ಹೆಚ್ಚು ಇರಬೇಕು',
   'valid_quantity_required':
-  'ಪ್ರಮಾಣ ಅಗತ್ಯವಿದೆ ಮತ್ತು 0 ಅಥವಾ ಅದಕ್ಕಿಂತ ಹೆಚ್ಚು ಇರಬೇಕು',
+      'ಪ್ರಮಾಣ ಅಗತ್ಯವಿದೆ ಮತ್ತು 0 ಅಥವಾ ಅದಕ್ಕಿಂತ ಹೆಚ್ಚು ಇರಬೇಕು',
 
-// Cart Page
+  // Cart Page
   'product': 'ಉತ್ಪನ್ನ',
   'clear_cart': 'ಕಾರ್ಟ್ ಖಾಲಿ ಮಾಡಿ',
   'are_you_sure_clear_cart':
-  'ನೀವು ನಿಜವಾಗಿಯೂ ಎಲ್ಲಾ ಉತ್ಪನ್ನಗಳನ್ನು ತೆಗೆದುಹಾಕಲು ಬಯಸುತ್ತೀರಾ?',
+      'ನೀವು ನಿಜವಾಗಿಯೂ ಎಲ್ಲಾ ಉತ್ಪನ್ನಗಳನ್ನು ತೆಗೆದುಹಾಕಲು ಬಯಸುತ್ತೀರಾ?',
 
   'loading_cart': 'ಕಾರ್ಟ್ ಲೋಡ್ ಆಗುತ್ತಿದೆ...',
 
   'your_cart_is_empty': 'ನಿಮ್ಮ ಕಾರ್ಟ್ ಖಾಲಿಯಾಗಿದೆ',
   'no_products_added':
-  'ನಿಮ್ಮ ಕಾರ್ಟ್‌ಗೆ ಇನ್ನೂ ಯಾವುದೇ ಉತ್ಪನ್ನಗಳನ್ನು ಸೇರಿಸಲಾಗಿಲ್ಲ.\nಈಗಲೇ ಉತ್ಪನ್ನಗಳನ್ನು ಸೇರಿಸಿ',
+      'ನಿಮ್ಮ ಕಾರ್ಟ್‌ಗೆ ಇನ್ನೂ ಯಾವುದೇ ಉತ್ಪನ್ನಗಳನ್ನು ಸೇರಿಸಲಾಗಿಲ್ಲ.\nಈಗಲೇ ಉತ್ಪನ್ನಗಳನ್ನು ಸೇರಿಸಿ',
   'explore_products': 'ಉತ್ಪನ್ನಗಳನ್ನು ವೀಕ್ಷಿಸಿ',
   'order_summary': 'ಆರ್ಡರ್ ಸಾರಾಂಶ',
   'number_of_products': 'ಉತ್ಪನ್ನಗಳ ಸಂಖ್ಯೆ',
@@ -2871,7 +2753,7 @@ const Map<String, String> knIN = {
   'seller': 'ಮಾರಾಟಗಾರ',
   'free': 'ಉಚಿತ',
 
-// Orders Page
+  // Orders Page
   'my_orders': 'ನನ್ನ ಆರ್ಡರ್‌ಗಳು',
   'my_sales': 'ನನ್ನ ಮಾರಾಟ',
   'order_number': 'ಆರ್ಡರ್ #',
@@ -2884,7 +2766,7 @@ const Map<String, String> knIN = {
   'items': 'ವಸ್ತುಗಳು',
   'no_orders_found': 'ಯಾವುದೇ ಆರ್ಡರ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ',
   'no_orders_message':
-  'ನೀವು ಇನ್ನೂ ಯಾವುದೇ ಆರ್ಡರ್ ಮಾಡಿಲ್ಲ.\nಈಗಲೇ ಶಾಪಿಂಗ್ ಪ್ರಾರಂಭಿಸಿ!',
+      'ನೀವು ಇನ್ನೂ ಯಾವುದೇ ಆರ್ಡರ್ ಮಾಡಿಲ್ಲ.\nಈಗಲೇ ಶಾಪಿಂಗ್ ಪ್ರಾರಂಭಿಸಿ!',
   'view_details': 'ವಿವರಗಳನ್ನು ವೀಕ್ಷಿಸಿ',
   'order_status_placed': 'ಇಡಲಾಗಿದೆ',
   'order_status_shipped': 'ಕಳುಹಿಸಲಾಗಿದೆ',
@@ -2896,12 +2778,14 @@ const Map<String, String> knIN = {
   'buyer': 'ಖರೀದಿದಾರ',
   'n_a': 'ಅನ್ವಯಿಸುವುದಿಲ್ಲ',
   'no_shipping_address': 'ಯಾವುದೇ ಶಿಪ್ಪಿಂಗ್ ವಿಳಾಸ ಲಭ್ಯವಿಲ್ಲ',
-  "failed_to_initialize_stream_engine": "ಸ್ಟ್ರೀಮಿಂಗ್ ಎಂಜಿನ್ ಪ್ರಾರಂಭಿಸಲು ವಿಫಲವಾಗಿದೆ",
+  "failed_to_initialize_stream_engine":
+      "ಸ್ಟ್ರೀಮಿಂಗ್ ಎಂಜಿನ್ ಪ್ರಾರಂಭಿಸಲು ವಿಫಲವಾಗಿದೆ",
   "stream_title_required": "ಸ್ಟ್ರೀಮ್ ಶೀರ್ಷಿಕೆಯನ್ನು ನಮೂದಿಸಬೇಕು",
   "failed_to_join_stream_channel": "ಸ್ಟ್ರೀಮಿಂಗ್ ಚಾನೆಲ್‌ಗೆ ಸೇರುವಲ್ಲಿ ವಿಫಲವಾಗಿದೆ",
   "stream_ended_successfully": "ಸ್ಟ್ರೀಮ್ ಯಶಸ್ವಿಯಾಗಿ ಮುಕ್ತಾಯಗೊಂಡಿದೆ",
   "failed_to_end_stream": "ಸ್ಟ್ರೀಮ್ ಮುಕ್ತಾಯಗೊಳಿಸಲು ವಿಫಲವಾಗಿದೆ",
-  "stream_created_successfully_no_agora_token": "ಸ್ಟ್ರೀಮ್ ಯಶಸ್ವಿಯಾಗಿ ಸೃಷ್ಟಿಸಲಾಗಿದೆ! (Agora ಟೋಕನ್ ಇಲ್ಲದೆ)",
+  "stream_created_successfully_no_agora_token":
+      "ಸ್ಟ್ರೀಮ್ ಯಶಸ್ವಿಯಾಗಿ ಸೃಷ್ಟಿಸಲಾಗಿದೆ! (Agora ಟೋಕನ್ ಇಲ್ಲದೆ)",
   "stream_created_successfully": "ಸ್ಟ್ರೀಮ್ ಯಶಸ್ವಿಯಾಗಿ ಸೃಷ್ಟಿಸಲಾಗಿದೆ!",
   "live_stream_active_professional": "ಪ್ರೊಫೆಷನಲ್ ಲೈವ್ ಸ್ಟ್ರೀಮ್",
   "live": "LIVE",
@@ -2910,18 +2794,22 @@ const Map<String, String> knIN = {
   "stream_title_label_required": "ಸ್ಟ್ರೀಮ್ ಶೀರ್ಷಿಕೆ *",
   "stream_title_hint": "ಸ್ಟ್ರೀಮ್‌ಗೆ ಆಕರ್ಷಕ ಶೀರ್ಷಿಕೆಯನ್ನು ಬರೆಯಿರಿ",
   "stream_description": "ಸ್ಟ್ರೀಮ್ ವಿವರಣೆ",
-  "stream_description_hint_optional": "ಸ್ಟ್ರೀಮ್‌ಗೆ ಸಂಕ್ಷಿಪ್ತ ವಿವರಣೆಯನ್ನು ಬರೆಯಿರಿ (ಐಚ್ಛಿಕ)",
+  "stream_description_hint_optional":
+      "ಸ್ಟ್ರೀಮ್‌ಗೆ ಸಂಕ್ಷಿಪ್ತ ವಿವರಣೆಯನ್ನು ಬರೆಯಿರಿ (ಐಚ್ಛಿಕ)",
   "creating_live_start": "ಲೈವ್ ಸ್ಟ್ರೀಮ್ ಪ್ರಾರಂಭಿಸಿ",
   "live_chat": "ಲೈವ್ ಚಾಟ್",
   "now": "ಈಗ",
   "start_chat_exclamation": "ಚಾಟ್ ಆರಂಭಿಸಿ!",
   "write_your_comment": "ನಿಮ್ಮ ಕಾಮೆಂಟ್ ಬರೆಯಿರಿ...",
-  "live_stream_data_incomplete": "ಪ್ರತಿಕ್ರಿಯೆಯಲ್ಲಿ ಲೈವ್ ಸ್ಟ್ರೀಮ್ ಡೇಟಾ ಅಪೂರ್ಣವಾಗಿದೆ",
+  "live_stream_data_incomplete":
+      "ಪ್ರತಿಕ್ರಿಯೆಯಲ್ಲಿ ಲೈವ್ ಸ್ಟ್ರೀಮ್ ಡೇಟಾ ಅಪೂರ್ಣವಾಗಿದೆ",
   "must_login_first": "ಮೊದಲು ಲಾಗಿನ್ ಮಾಡಬೇಕು",
   "connection_error_check_internet": "ಸಂಪರ್ಕ ದೋಷ, ಇಂಟರ್ನೆಟ್ ಪರಿಶೀಲಿಸಿ",
-  "no_permission_create_live_stream": "ಲೈವ್ ಸ್ಟ್ರೀಮ್ ಸೃಷ್ಟಿಸಲು ನಿಮಗೆ ಅನುಮತಿ ಇಲ್ಲ",
+  "no_permission_create_live_stream":
+      "ಲೈವ್ ಸ್ಟ್ರೀಮ್ ಸೃಷ್ಟಿಸಲು ನಿಮಗೆ ಅನುಮತಿ ಇಲ್ಲ",
   "no_reels_available": "ಈಗ ಯಾವುದೇ ರೀಲ್ಸ್ ಲಭ್ಯವಿಲ್ಲ.",
-  "record_or_upload_video_help": "ಸಮಸ್ಯೆಯನ್ನು ಅರ್ಥಮಾಡಿಕೊಳ್ಳಲು ಮತ್ತು ಬೇಗ ಸರಿಪಡಿಸಲು, ಸಮಸ್ಯೆ ತೋರಿಸುವ ವಿಡಿಯೋವನ್ನು ದಾಖಲಿಸಿ ಅಥವಾ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ.",
+  "record_or_upload_video_help":
+      "ಸಮಸ್ಯೆಯನ್ನು ಅರ್ಥಮಾಡಿಕೊಳ್ಳಲು ಮತ್ತು ಬೇಗ ಸರಿಪಡಿಸಲು, ಸಮಸ್ಯೆ ತೋರಿಸುವ ವಿಡಿಯೋವನ್ನು ದಾಖಲಿಸಿ ಅಥವಾ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ.",
   "issue_title": "ಸಮಸ್ಯೆಯ ಶೀರ್ಷಿಕೆ",
   "brief_description": "ಸಮಸ್ಯೆಯ ಸಂಕ್ಷಿಪ್ತ ವಿವರಣೆ",
   "additional_details_optional": "ಹೆಚ್ಚುವರಿ ವಿವರಗಳು (ಐಚ್ಛಿಕ)",
@@ -2930,7 +2818,8 @@ const Map<String, String> knIN = {
   "tap_to_add_video": "ವಿಡಿಯೋ ಸೇರಿಸಲು ಟ್ಯಾಪ್ ಮಾಡಿ",
   "max_2_minutes_50mb": "ಗರಿಷ್ಠ 2 ನಿಮಿಷಗಳು, 50MB",
   "submit_report": "ವರದಿ ಸಲ್ಲಿಸಿ",
-  "video_file_too_large_max_50mb": "ವಿಡಿಯೋ ಫೈಲ್ ತುಂಬಾ ದೊಡ್ಡದು. ಗರಿಷ್ಠ ಗಾತ್ರ 50MB.",
+  "video_file_too_large_max_50mb":
+      "ವಿಡಿಯೋ ಫೈಲ್ ತುಂಬಾ ದೊಡ್ಡದು. ಗರಿಷ್ಠ ಗಾತ್ರ 50MB.",
   "failed_to_load_video": "ವಿಡಿಯೋ ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ:",
   "select_video_source": "ವಿಡಿಯೋ ಮೂಲವನ್ನು ಆಯ್ಕೆಮಾಡಿ",
   "record_video": "ವಿಡಿಯೋ ರೆಕಾರ್ಡ್ ಮಾಡಿ",
@@ -2939,33 +2828,37 @@ const Map<String, String> knIN = {
   "select_existing_video": "ಈಗಿರುವ ವಿಡಿಯೋ ಆಯ್ಕೆಮಾಡಿ",
   "please_enter_issue_title": "ದಯವಿಟ್ಟು ಸಮಸ್ಯೆಗೆ ಶೀರ್ಷಿಕೆ ನಮೂದಿಸಿ",
   "please_attach_issue_video": "ದಯವಿಟ್ಟು ಸಮಸ್ಯೆ ತೋರಿಸುವ ವಿಡಿಯೋವನ್ನು ಲಗತ್ತಿಸಿ",
-  "must_be_logged_in_submit_bug_report": "ಬಗ್ ರಿಪೋರ್ಟ್ ಸಲ್ಲಿಸಲು ನೀವು ಲಾಗಿನ್ ಆಗಿರಬೇಕು",
+  "must_be_logged_in_submit_bug_report":
+      "ಬಗ್ ರಿಪೋರ್ಟ್ ಸಲ್ಲಿಸಲು ನೀವು ಲಾಗಿನ್ ಆಗಿರಬೇಕು",
   "failed_to_upload_video": "ವಿಡಿಯೋ ಅಪ್‌ಲೋಡ್ ವಿಫಲವಾಗಿದೆ",
   "report_submitted": "ವರದಿ ಸಲ್ಲಿಸಲಾಗಿದೆ!",
-  "thank_you_help_improve_app": "ಆಪ್ ಅನ್ನು ಸುಧಾರಿಸಲು ಸಹಾಯ ಮಾಡಿದಕ್ಕಾಗಿ ಧನ್ಯವಾದಗಳು. ನಾವು ನಿಮ್ಮ ವರದಿಯನ್ನು ಪರಿಶೀಲಿಸಿ ಶೀಘ್ರದಲ್ಲೇ ನಿಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸುತ್ತೇವೆ.",
+  "thank_you_help_improve_app":
+      "ಆಪ್ ಅನ್ನು ಸುಧಾರಿಸಲು ಸಹಾಯ ಮಾಡಿದಕ್ಕಾಗಿ ಧನ್ಯವಾದಗಳು. ನಾವು ನಿಮ್ಮ ವರದಿಯನ್ನು ಪರಿಶೀಲಿಸಿ ಶೀಘ್ರದಲ್ಲೇ ನಿಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸುತ್ತೇವೆ.",
   "failed_to_submit_report": "ವರದಿ ಸಲ್ಲಿಸಲು ವಿಫಲವಾಗಿದೆ:",
-  "no_products_for_user_currently":"ಈ ಬಳಕೆದಾರರಿಗೆ ಇದೀಗ ಯಾವುದೇ ಉತ್ಪನ್ನಗಳು ಲಭ್ಯವಿಲ್ಲ.",
+  "no_products_for_user_currently":
+      "ಈ ಬಳಕೆದಾರರಿಗೆ ಇದೀಗ ಯಾವುದೇ ಉತ್ಪನ್ನಗಳು ಲಭ್ಯವಿಲ್ಲ.",
   "search_conversations": "ಸಂಭಾಷಣೆಗಳಲ್ಲಿ ಹುಡುಕಿ",
   "no_conversations": "ಯಾವುದೇ ಸಂಭಾಷಣೆಗಳಿಲ್ಲ",
   "messenger": "ಮೆಸೆಂಜರ್",
   "type_message": "ಒಂದು ಸಂದೇಶವನ್ನು ಬರೆಯಿರಿ...",
-  "fetch_story_failed":"ಕಥೆಗಳನ್ನು ಪಡೆಯಲು ವಿಫಲವಾಗಿದೆ",
-  "create_story_failed":"ಕಥೆ ರಚಿಸಲು ವಿಫಲವಾಗಿದೆ",
-  "create_story_error":"ಕಥೆ ರಚಿಸುವಲ್ಲಿ ದೋಷ",
-  "delete_story_failed":"ಕಥೆಯನ್ನು ಅಳಿಸಲು ವಿಫಲವಾಗಿದೆ",
-  "delete_story_error":"ಕಥೆಯನ್ನು ಅಳಿಸುವಲ್ಲಿ ದೋಷ",
-  "video_story_created_success":"✅ ವೀಡಿಯೊ ಸ್ಟೋರಿ ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ",
-  "photo_story_created_success":"✅ ಫೋಟೋ ಸ್ಟೋರಿ ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ",
-  "create_story_error_prefix":"ಸ್ಟೋರಿ ರಚಿಸುವಲ್ಲಿ ದೋಷ:",
-  "video_upload_error_prefix":"ವೀಡಿಯೊ ಅಪ್‌ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ:",
-  "publishing":"ಪ್ರಕಟಿಸಲಾಗುತ್ತಿದೆ...",
-  "add_to_your_story":"ನಿಮ್ಮ ಸ್ಟೋರಿಗೆ ಸೇರಿಸಿ",
-  "share_moments":"ನಿಮ್ಮ ಕ್ಷಣಗಳನ್ನು ಸ್ನೇಹಿತರೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಿ",
-  "share_photo_option":"ಗ್ಯಾಲರಿಯಿಂದ ಫೋಟೋ ಹಂಚಿಕೊಳ್ಳಿ ಅಥವಾ ಹೊಸದನ್ನು ತೆಗೆದುಕೊಳ್ಳಿ",
-  "share_video_option":"ಗ್ಯಾಲರಿಯಿಂದ ವೀಡಿಯೊ ಹಂಚಿಕೊಳ್ಳಿ ಅಥವಾ ಹೊಸದನ್ನು ದಾಖಲಿಸಿ",
-  "video_ready":"ವೀಡಿಯೊ ಹಂಚಿಕೊಳ್ಳಲು ಸಿದ್ಧವಾಗಿದೆ",
-  "photo_ready":"ಫೋಟೋ ಹಂಚಿಕೊಳ್ಳಲು ಸಿದ್ಧವಾಗಿದೆ",
-  "choose_another":"ಮತ್ತೊಂದು ಆಯ್ಕೆಮಾಡಿ",
+  "fetch_story_failed": "ಕಥೆಗಳನ್ನು ಪಡೆಯಲು ವಿಫಲವಾಗಿದೆ",
+  "create_story_failed": "ಕಥೆ ರಚಿಸಲು ವಿಫಲವಾಗಿದೆ",
+  "create_story_error": "ಕಥೆ ರಚಿಸುವಲ್ಲಿ ದೋಷ",
+  "delete_story_failed": "ಕಥೆಯನ್ನು ಅಳಿಸಲು ವಿಫಲವಾಗಿದೆ",
+  "delete_story_error": "ಕಥೆಯನ್ನು ಅಳಿಸುವಲ್ಲಿ ದೋಷ",
+  "video_story_created_success": "✅ ವೀಡಿಯೊ ಸ್ಟೋರಿ ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ",
+  "photo_story_created_success": "✅ ಫೋಟೋ ಸ್ಟೋರಿ ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ",
+  "create_story_error_prefix": "ಸ್ಟೋರಿ ರಚಿಸುವಲ್ಲಿ ದೋಷ:",
+  "video_upload_error_prefix": "ವೀಡಿಯೊ ಅಪ್‌ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ:",
+  "publishing": "ಪ್ರಕಟಿಸಲಾಗುತ್ತಿದೆ...",
+  "add_to_your_story": "ನಿಮ್ಮ ಸ್ಟೋರಿಗೆ ಸೇರಿಸಿ",
+  "share_moments": "ನಿಮ್ಮ ಕ್ಷಣಗಳನ್ನು ಸ್ನೇಹಿತರೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಿ",
+  "share_photo_option":
+      "ಗ್ಯಾಲರಿಯಿಂದ ಫೋಟೋ ಹಂಚಿಕೊಳ್ಳಿ ಅಥವಾ ಹೊಸದನ್ನು ತೆಗೆದುಕೊಳ್ಳಿ",
+  "share_video_option": "ಗ್ಯಾಲರಿಯಿಂದ ವೀಡಿಯೊ ಹಂಚಿಕೊಳ್ಳಿ ಅಥವಾ ಹೊಸದನ್ನು ದಾಖಲಿಸಿ",
+  "video_ready": "ವೀಡಿಯೊ ಹಂಚಿಕೊಳ್ಳಲು ಸಿದ್ಧವಾಗಿದೆ",
+  "photo_ready": "ಫೋಟೋ ಹಂಚಿಕೊಳ್ಳಲು ಸಿದ್ಧವಾಗಿದೆ",
+  "choose_another": "ಮತ್ತೊಂದು ಆಯ್ಕೆಮಾಡಿ",
 
   // Reels module
   'use_camera_music_filters': 'ಸಂಗೀತ ಮತ್ತು ಫಿಲ್ಟರ್‌ಗಳೊಂದಿಗೆ ಕ್ಯಾಮೆರಾ ಬಳಸಿ',
@@ -2978,7 +2871,8 @@ const Map<String, String> knIN = {
   'sound': 'ಸೌಂಡ್',
   'could_not_load_video': 'ಈ ವೀಡಿಯೊ ಲೋಡ್ ಆಗಲಿಲ್ಲ',
   'choose_another_video': 'ದಯವಿಟ್ಟು ನಿಮ್ಮ ಗ್ಯಾಲರಿಯಿಂದ ಬೇರೆ ವೀಡಿಯೊ ಆಯ್ಕೆಮಾಡಿ.',
-  'could_not_prepare_clip': 'ಆಯ್ದ ಕ್ಲಿಪ್ ಸಿದ್ಧಪಡಿಸಲು ಆಗಲಿಲ್ಲ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
+  'could_not_prepare_clip':
+      'ಆಯ್ದ ಕ್ಲಿಪ್ ಸಿದ್ಧಪಡಿಸಲು ಆಗಲಿಲ್ಲ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
   'select_clip': 'ಕ್ಲಿಪ್ ಆಯ್ಕೆಮಾಡಿ',
   'select_clip_duration': 'ಕ್ಲಿಪ್ ಅವಧಿ ಆಯ್ಕೆಮಾಡಿ',
   'max_30_sec': 'ಗರಿಷ್ಠ 30 ಸೆಕೆಂಡ್',
@@ -3031,19 +2925,24 @@ const Map<String, String> knIN = {
   "competition_details": "ಸ್ಪರ್ಧೆಯ ವಿವರಗಳು",
   "competition_load_failed": "ಸ್ಪರ್ಧೆಯನ್ನು ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ",
   "competition_cancelled_msg": "ಈ ಸ್ಪರ್ಧೆಯನ್ನು ರದ್ದುಮಾಡಲಾಗಿದೆ.",
-  "competition_voting_entries_closed": "ಮತದಾನ ನಡೆಯುತ್ತಿದೆ. ನೋಂದಾವಣೆ ಮುಚ್ಚಲಾಗಿದೆ.",
+  "competition_voting_entries_closed":
+      "ಮತದಾನ ನಡೆಯುತ್ತಿದೆ. ನೋಂದಾವಣೆ ಮುಚ್ಚಲಾಗಿದೆ.",
   "competition_starts_soon": "ಶೀಘ್ರದಲ್ಲೇ ಪ್ರಾರಂಭವಾಗುತ್ತದೆ",
-  "competition_registration_not_started_msg": "ನೋಂದಾವಣೆ ಇನ್ನೂ ಪ್ರಾರಂಭವಾಗಿಲ್ಲ. ಅಧಿಸೂಚನೆಗಳನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ, ಸ್ಪರ್ಧೆ ತೆರೆದಾಗ ನಾವು ನಿಮ್ಮನ್ನು ನೆನಪಿಸುತ್ತೇವೆ.",
+  "competition_registration_not_started_msg":
+      "ನೋಂದಾವಣೆ ಇನ್ನೂ ಪ್ರಾರಂಭವಾಗಿಲ್ಲ. ಅಧಿಸೂಚನೆಗಳನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ, ಸ್ಪರ್ಧೆ ತೆರೆದಾಗ ನಾವು ನಿಮ್ಮನ್ನು ನೆನಪಿಸುತ್ತೇವೆ.",
   "competition_notify_me": "ನನಗೆ ಅಧಿಸೂಚಿಸಿ",
   "later": "ನಂತರ",
   "competition_registration_closed": "ಈ ಸ್ಪರ್ಧೆಗೆ ನೋಂದಾವಣೆ ಮುಚ್ಚಲಾಗಿದೆ.",
   "competition_reminder_enabled": "ಸ್ಪರ್ಧೆಯ ಜ್ಞಾಪನೆ ಸಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ.",
   "competition_already_joined": "ನೀವು ಈಗಾಗಲೇ ಈ ಸ್ಪರ್ಧೆಯಲ್ಲಿ ಭಾಗವಹಿಸಿದ್ದೀರಿ.",
   "competition_insufficient_balance_title": "ಅಸಮರ್ಪಕ ಬ್ಯಾಲೆನ್ಸ್",
-  "competition_insufficient_balance_msg": "ಅಸಮರ್ಪಕ ಬ್ಯಾಲೆನ್ಸ್. ಭಾಗವಹಿಸಲು ನಿಮ್ಮ ವಾಲೆಟ್ ರಿಚಾರ್ಜ್ ಮಾಡಿ.",
+  "competition_insufficient_balance_msg":
+      "ಅಸಮರ್ಪಕ ಬ್ಯಾಲೆನ್ಸ್. ಭಾಗವಹಿಸಲು ನಿಮ್ಮ ವಾಲೆಟ್ ರಿಚಾರ್ಜ್ ಮಾಡಿ.",
   "competition_payment_title": "ಸ್ಪರ್ಧೆಯ ಪ್ರವೇಶ ಪಾವತಿ",
-  "competition_payment_review_msg": "ನಿಮ್ಮ ಸ್ಪರ್ಧೆ ಪೋಸ್ಟ್ ಅಪ್ಲೋಡ್ ಮಾಡುವ ಮೊದಲು ನಿಮ್ಮ ವಾಲೆಟ್‌ನಿಂದ ಪ್ರವೇಶ ಶುಲ್ಕ ಪಾವತಿಯನ್ನು ಪರಿಶೀಲಿಸಿ.",
-  "competition_payment_low_balance_msg": "ನಿಮ್ಮ ವಾಲೆಟ್ ಬ್ಯಾಲೆನ್ಸ್ ಕಡಿಮೆ ಇದೆ. ಮೊದಲು ರಿಚಾರ್ಜ್ ಮಾಡಿ, ನಂತರ ಅಪ್ಲೋಡ್ ಮುಂದುವರಿಸಿ.",
+  "competition_payment_review_msg":
+      "ನಿಮ್ಮ ಸ್ಪರ್ಧೆ ಪೋಸ್ಟ್ ಅಪ್ಲೋಡ್ ಮಾಡುವ ಮೊದಲು ನಿಮ್ಮ ವಾಲೆಟ್‌ನಿಂದ ಪ್ರವೇಶ ಶುಲ್ಕ ಪಾವತಿಯನ್ನು ಪರಿಶೀಲಿಸಿ.",
+  "competition_payment_low_balance_msg":
+      "ನಿಮ್ಮ ವಾಲೆಟ್ ಬ್ಯಾಲೆನ್ಸ್ ಕಡಿಮೆ ಇದೆ. ಮೊದಲು ರಿಚಾರ್ಜ್ ಮಾಡಿ, ನಂತರ ಅಪ್ಲೋಡ್ ಮುಂದುವರಿಸಿ.",
   "competition_current_balance": "ಪ್ರಸ್ತುತ ಬ್ಯಾಲೆನ್ಸ್",
   "competition_balance_after_payment": "ಪಾವತಿ ನಂತರ ಬ್ಯಾಲೆನ್ಸ್",
   "competition_balance_shortfall": "ಬ್ಯಾಲೆನ್ಸ್ ಕೊರತೆ",
@@ -3074,10 +2973,12 @@ const Map<String, String> knIN = {
   "competition_prize_distribution": "ಬಹುಮಾನ ವಿತರಣೆ",
   "competition_no_prizes": "ಬಹುಮಾನದ ವಿವರಗಳು ಇನ್ನೂ ಲಭ್ಯವಿಲ್ಲ.",
   "competition_leaderboard": "ಲೀಡರ್‌ಬೋರ್ಡ್",
-  "competition_leaderboard_empty": "ನೋಂದಾವಣೆಗಳು ಲಭ್ಯವಾದ ನಂತರ ಲೀಡರ್‌ಬೋರ್ಡ್ ಕಾಣಿಸುತ್ತದೆ.",
+  "competition_leaderboard_empty":
+      "ನೋಂದಾವಣೆಗಳು ಲಭ್ಯವಾದ ನಂತರ ಲೀಡರ್‌ಬೋರ್ಡ್ ಕಾಣಿಸುತ್ತದೆ.",
   "competition_participant_default": "ಭಾಗವಹಿಸುವವರು",
   "competition_winners": "ವಿಜೇತರು",
-  "competition_winners_empty": "ಸ್ಪರ್ಧೆ ಮುಗಿದ ನಂತರ ವಿಜೇತರ ವಿವರಗಳು ಗೋಚರಿಸುತ್ತವೆ.",
+  "competition_winners_empty":
+      "ಸ್ಪರ್ಧೆ ಮುಗಿದ ನಂತರ ವಿಜೇತರ ವಿವರಗಳು ಗೋಚರಿಸುತ್ತವೆ.",
   "competition_participant_posts": "ಭಾಗವಹಿಸುವವರ ಪೋಸ್ಟ್‌ಗಳು",
   "competition_my_entry": "My Entry",
   "competition_no_entry_yet": "Your entry could not be loaded. Try refreshing.",
@@ -3094,6 +2995,25 @@ const Map<String, String> knIN = {
   "competition_opens_in": "ತೆರೆಯುತ್ತದೆ",
   "competition_opening_soon": "ಶೀಘ್ರದಲ್ಲೇ ತೆರೆಯುತ್ತದೆ",
   "competition_rank_prefix": "ಶ್ರೇಣಿ #",
+
+  // Competition KYC gate
+  "kyc_required_title": "ಗುರುತು ಪರಿಶೀಲನೆ ಅಗತ್ಯವಿದೆ",
+  "kyc_required_message":
+      "ಸ್ಪರ್ಧೆಗಳಲ್ಲಿ ಭಾಗವಹಿಸಲು, ದಯವಿಟ್ಟು ಆಧಾರ್ ಬಳಸಿ ನಿಮ್ಮ KYC ಪೂರ್ಣಗೊಳಿಸಿ.",
+  "kyc_verify_aadhaar": "ಆಧಾರ್ ಪರಿಶೀಲಿಸಿ",
+  "kyc_not_now": "ಈಗ ಬೇಡ",
+  "kyc_status_check_failed":
+      "KYC ಸ್ಥಿತಿ ಪರಿಶೀಲಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+  "kyc_session_failed":
+      "ಆಧಾರ್ ಪರಿಶೀಲನೆ ಪ್ರಾರಂಭಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+  "kyc_verification_failed":
+      "ಆಧಾರ್ ಪರಿಶೀಲನೆಯನ್ನು ಖಚಿತಪಡಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+  "kyc_config_missing": "ಆಧಾರ್ ಪರಿಶೀಲನೆ ಸದ್ಯಕ್ಕೆ ಲಭ್ಯವಿಲ್ಲ.",
+  "kyc_consent_title": "ಆಧಾರ್ ವಿವರಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳಿ",
+  "kyc_consent_message":
+      "Panchit ನಿಮ್ಮ ಗುರುತನ್ನು ಪರಿಶೀಲಿಸಲು DigiLocker ಅನ್ನು ಬಳಸುತ್ತದೆ. ನಿಮ್ಮ ಆಧಾರ್ OTP ಮತ್ತು ವಿವರಗಳನ್ನು DigiLocker ನಿರ್ವಹಿಸುತ್ತದೆ, Panchit ಅಲ್ಲ.",
+  "kyc_consent_checkbox_label":
+      "KYC ಪರಿಶೀಲನೆಗಾಗಿ DigiLocker ಮೂಲಕ ನನ್ನ ಆಧಾರ್ ವಿವರಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳಲು ನಾನು ಒಪ್ಪುತ್ತೇನೆ.",
 
   // Competition Entry Page
   "entry_title": "ಸ್ಪರ್ಧೆಯ ನೋಂದಾವಣೆ",
@@ -3112,18 +3032,22 @@ const Map<String, String> knIN = {
   "entry_edit_title": "Edit Entry",
   "entry_edit_create_title": "Edit your competition entry",
   "entry_registration_closed": "ಸ್ಪರ್ಧೆಯ ನೋಂದಾವಣೆ ಇನ್ನು ಮುಕ್ತವಾಗಿಲ್ಲ.",
-  "entry_no_content": "ನಿಮ್ಮ ನೋಂದಾವಣೆ ಸಲ್ಲಿಸುವ ಮೊದಲು ಪಠ್ಯ, ಚಿತ್ರ ಅಥವಾ ವೀಡಿಯೊ ಸೇರಿಸಿ.",
+  "entry_no_content":
+      "ನಿಮ್ಮ ನೋಂದಾವಣೆ ಸಲ್ಲಿಸುವ ಮೊದಲು ಪಠ್ಯ, ಚಿತ್ರ ಅಥವಾ ವೀಡಿಯೊ ಸೇರಿಸಿ.",
   "entry_confirm_title": "ನೋಂದಾವಣೆ ದೃಢೀಕರಿಸಿ",
-  "entry_deduction_msg": "ಸಲ್ಲಿಸಿದ ನಂತರ ನಿಮ್ಮ ವಾಲೆಟ್‌ನಿಂದ ಕಡಿತಗೊಳಿಸಲಾಗುತ್ತದೆ. ನಿಮ್ಮ ನೋಂದಾವಣೆ ಸ್ಪರ್ಧೆ ಪೋಸ್ಟ್ ಆಗಿ ಪ್ರಕಟಿಸಲಾಗುತ್ತದೆ.",
+  "entry_deduction_msg":
+      "ಸಲ್ಲಿಸಿದ ನಂತರ ನಿಮ್ಮ ವಾಲೆಟ್‌ನಿಂದ ಕಡಿತಗೊಳಿಸಲಾಗುತ್ತದೆ. ನಿಮ್ಮ ನೋಂದಾವಣೆ ಸ್ಪರ್ಧೆ ಪೋಸ್ಟ್ ಆಗಿ ಪ್ರಕಟಿಸಲಾಗುತ್ತದೆ.",
   "entry_image_upload_failed": "ಚಿತ್ರ ಅಪ್‌ಲೋಡ್ ವಿಫಲವಾಗಿದೆ.",
   "entry_video_upload_failed": "ವೀಡಿಯೊ ಅಪ್‌ಲೋಡ್ ವಿಫಲವಾಗಿದೆ.",
-  "entry_video_not_allowed": "ಈ ಸ್ಪರ್ಧೆಗೆ ವೀಡಿಯೊ ನೋಂದಾವಣೆಗಳನ್ನು ಅನುಮತಿಸಲಾಗಿಲ್ಲ.",
+  "entry_video_not_allowed":
+      "ಈ ಸ್ಪರ್ಧೆಗೆ ವೀಡಿಯೊ ನೋಂದಾವಣೆಗಳನ್ನು ಅನುಮತಿಸಲಾಗಿಲ್ಲ.",
   "entry_image_required": "ಈ ಸ್ಪರ್ಧೆಗೆ ಕನಿಷ್ಠ ಒಂದು ಚಿತ್ರ ಆಯ್ಕೆಮಾಡಿ.",
   "entry_image_not_allowed": "ಈ ಸ್ಪರ್ಧೆಗೆ ಚಿತ್ರ ನೋಂದಾವಣೆಗಳನ್ನು ಅನುಮತಿಸಲಾಗಿಲ್ಲ.",
   "entry_video_required": "ಈ ಸ್ಪರ್ಧೆಗೆ ವೀಡಿಯೊ ಆಯ್ಕೆಮಾಡಿ.",
   "entry_text_only": "ಈ ಸ್ಪರ್ಧೆಗೆ ಪಠ್ಯ ನೋಂದಾವಣೆಗಳು ಮಾತ್ರ ಅನುಮತಿಸಲಾಗಿದೆ.",
   "entry_text_required": "ಮುಂದುವರಿಯುವ ಮೊದಲು ನಿಮ್ಮ ಪಠ್ಯ ನಮೂದಿಸಿ.",
-  "entry_media_type_only": "ಈ ಸ್ಪರ್ಧೆ @type ನೋಂದಾವಣೆಗಳನ್ನು ಮಾತ್ರ ಸ್ವೀಕರಿಸುತ್ತದೆ.",
+  "entry_media_type_only":
+      "ಈ ಸ್ಪರ್ಧೆ @type ನೋಂದಾವಣೆಗಳನ್ನು ಮಾತ್ರ ಸ್ವೀಕರಿಸುತ್ತದೆ.",
   "entry_summary_video": "ಆಯ್ಕೆಮಾಡಿದ ಮಾಧ್ಯಮ: 1 ವೀಡಿಯೊ",
   "entry_summary_images": "ಆಯ್ಕೆಮಾಡಿದ ಮಾಧ್ಯಮ: @count ಚಿತ್ರ(ಗಳು)",
   "entry_summary_text": "ಆಯ್ಕೆಮಾಡಿದ ನೋಂದಾವಣೆ: ಪಠ್ಯ",
@@ -3157,7 +3081,8 @@ const Map<String, String> knIN = {
   // My Competitions Page
   "my_competitions_title": "ನನ್ನ ಸ್ಪರ್ಧೆಗಳು",
   "my_competitions_empty_title": "ಇನ್ನೂ ಯಾವುದೇ ಸ್ಪರ್ಧೆಗೆ ಸೇರಿಲ್ಲ",
-  "my_competitions_empty_msg": "ನಿಮ್ಮ ಸಕ್ರಿಯ, ಪೂರ್ಣಗೊಂಡ, ಗೆದ್ದ ಮತ್ತು ಮರುಪಾವತಿಸಿದ ಸ್ಪರ್ಧೆಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.",
+  "my_competitions_empty_msg":
+      "ನಿಮ್ಮ ಸಕ್ರಿಯ, ಪೂರ್ಣಗೊಂಡ, ಗೆದ್ದ ಮತ್ತು ಮರುಪಾವತಿಸಿದ ಸ್ಪರ್ಧೆಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.",
   "my_competitions_load_failed": "ನಿಮ್ಮ ಸ್ಪರ್ಧೆಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ",
 
   // Competition Leaderboard Page
@@ -3165,10 +3090,12 @@ const Map<String, String> knIN = {
   "leaderboard_empty_title": "ಇನ್ನೂ ಯಾವುದೇ ಲೀಡರ್‌ಬೋರ್ಡ್ ಇಲ್ಲ",
   "leaderboard_empty_msg": "ಬಳಕೆದಾರರು ಸೇರಿದ ನಂತರ ನಮೂದುಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.",
   "leaderboard_load_failed": "ಲೀಡರ್‌ಬೋರ್ಡ್ ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ",
-  "leaderboard_stats": "ಇಷ್ಟಗಳು: @likes • ಕಾಮೆಂಟ್‌ಗಳು: @comments • ಪ್ರತಿಕ್ರಿಯೆಗಳು: @reactions",
+  "leaderboard_stats":
+      "ಇಷ್ಟಗಳು: @likes • ಕಾಮೆಂಟ್‌ಗಳು: @comments • ಪ್ರತಿಕ್ರಿಯೆಗಳು: @reactions",
   "leaderboard_voting_ends_on": "ಮತದಾನ ಮುಗಿಯುತ್ತದೆ: @date",
   "leaderboard_voting_ended_on": "ಮತದಾನ ಮುಗಿದಿದೆ: @date",
-  "leaderboard_winners_after_voting": "ಮತದಾನ ಮುಗಿದ ನಂತರ ವಿಜೇತರನ್ನು ಘೋಷಿಸಲಾಗುವುದು",
+  "leaderboard_winners_after_voting":
+      "ಮತದಾನ ಮುಗಿದ ನಂತರ ವಿಜೇತರನ್ನು ಘೋಷಿಸಲಾಗುವುದು",
 
   // Competition Widgets
   "widget_registration_ends_in": "ನೋಂದಣಿ ಮುಕ್ತಾಯವಾಗಲಿದೆ",
@@ -3188,6 +3115,127 @@ const Map<String, String> knIN = {
   "widget_refund": "ಮರುಪಾವತಿ: @status",
   "widget_timer_unavailable": "ಟೈಮರ್ ಲಭ್ಯವಿಲ್ಲ",
   "hub_no_filtered_competitions": "\"@category\" ಸ್ಪರ್ಧೆಗಳಿಲ್ಲ",
-  "hub_no_filtered_msg": "ಈ ವಿಭಾಗಕ್ಕೆ ಯಾವುದೇ ಸ್ಪರ್ಧೆಗಳು ಹೊಂದಿಕೆಯಾಗುತ್ತಿಲ್ಲ. ಬೇರೆ ಫಿಲ್ಟರ್ ಪ್ರಯತ್ನಿಸಿ.",
-  "hub_clear_filter": "ಫಿಲ್ಟರ್ ತೆರವುಗೊಳಿಸಿ"
+  "hub_no_filtered_msg":
+      "ಈ ವಿಭಾಗಕ್ಕೆ ಯಾವುದೇ ಸ್ಪರ್ಧೆಗಳು ಹೊಂದಿಕೆಯಾಗುತ್ತಿಲ್ಲ. ಬೇರೆ ಫಿಲ್ಟರ್ ಪ್ರಯತ್ನಿಸಿ.",
+  "hub_clear_filter": "ಫಿಲ್ಟರ್ ತೆರವುಗೊಳಿಸಿ",
+
+  // Live Streaming (Agora)
+  "live_comment_unknown_initial": "U",
+  "time_ago_minutes_short": "@countm",
+  "time_ago_hours_short": "@counth",
+  "time_ago_days_short": "@countd",
+
+  "live_category_general": "ಸಾಮಾನ್ಯ",
+  "live_category_gaming": "ಗೇಮಿಂಗ್",
+  "live_category_education": "ಶಿಕ್ಷಣ",
+  "live_category_sports": "ಕ್ರೀಡೆ",
+  "live_category_cooking": "ಅಡುಗೆ",
+  "live_category_music": "ಸಂಗೀತ",
+  "live_category_tech": "ತಂತ್ರಜ್ಞಾನ",
+  "live_category_art": "ಕಲೆ",
+  "live_category_travel": "ಪ್ರಯಾಣ",
+
+  "live_settings_title": "ಲೈವ್ ಸ್ಟ್ರೀಮ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+  "live_settings_video_section": "ವೀಡಿಯೊ ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+  "live_settings_recording_title": "ಸ್ಟ್ರೀಮ್ ರೆಕಾರ್ಡ್ ಮಾಡಿ",
+  "live_settings_recording_subtitle": "ನಂತರ ವೀಕ್ಷಿಸಲು ಸ್ಟ್ರೀಮ್ ಉಳಿಸಿ",
+  "live_settings_privacy_section": "ಗೌಪ್ಯತೆ ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+  "live_settings_private_title": "ಖಾಸಗಿ ಸ್ಟ್ರೀಮ್",
+  "live_settings_private_subtitle": "ಆಹ್ವಾನಿತ ವೀಕ್ಷಕರಿಗೆ ಮಾತ್ರ ಸೀಮಿತ",
+  "live_settings_subscribers_only_title": "ಚಂದಾದಾರರಿಗೆ ಮಾತ್ರ",
+  "live_settings_subscribers_only_subtitle":
+      "ನಿಮ್ಮ ಚಾನೆಲ್‌ನ ಚಂದಾದಾರರಿಗೆ ಮಾತ್ರ ಲಭ್ಯವಿದೆ",
+  "live_settings_interaction_section": "ಸಂವಹನ ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+  "live_settings_allow_comments_title": "ಕಾಮೆಂಟ್‌ಗಳನ್ನು ಅನುಮತಿಸಿ",
+  "live_settings_allow_comments_subtitle": "ವೀಕ್ಷಕರು ಕಾಮೆಂಟ್ ಮಾಡಬಹುದು",
+  "live_settings_allow_reactions_title": "ಪ್ರತಿಕ್ರಿಯೆಗಳನ್ನು ಅನುಮತಿಸಿ",
+  "live_settings_allow_reactions_subtitle": "ಇಷ್ಟ, ಪ್ರೀತಿ, ಕೋಪ ಇತ್ಯಾದಿ",
+  "live_settings_monetization_section": "ಆದಾಯೀಕರಣ ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+  "live_settings_enable_tips_title": "ಟಿಪ್ಸ್ ಸಕ್ರಿಯಗೊಳಿಸಿ",
+  "live_settings_enable_tips_subtitle": "ವೀಕ್ಷಕರು ಹಣದ ಟಿಪ್ಸ್ ಕಳುಹಿಸಬಹುದು",
+  "live_settings_tips_info":
+      "ಟಿಪ್ಸ್ ನಿಮ್ಮ ಡಿಜಿಟಲ್ ವ್ಯಾಲೆಟ್‌ನಲ್ಲಿ ಸ್ವೀಕರಿಸಲಾಗುತ್ತದೆ. ಖಾತೆ ಸೆಟ್ಟಿಂಗ್‌ಗಳಿಂದ ನೀವು ಅವುಗಳನ್ನು ಯಾವಾಗ ಬೇಕಾದರೂ ಹಿಂಪಡೆಯಬಹುದು.",
+  "live_settings_category_title": "ಸ್ಟ್ರೀಮ್ ವರ್ಗ",
+  "live_settings_advanced_section": "ಸುಧಾರಿತ ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+  "live_settings_banned_users_title": "ನಿಷೇಧಿತ ಬಳಕೆದಾರರನ್ನು ನಿರ್ವಹಿಸಿ",
+  "live_settings_banned_users_subtitle":
+      "ಸ್ಟ್ರೀಮ್‌ನಿಂದ ನಿಷೇಧಿಸಲಾದ ಬಳಕೆದಾರರ ಪಟ್ಟಿ",
+  "live_settings_stream_keys_title": "ಸ್ಟ್ರೀಮ್ ಕೀಗಳು",
+  "live_settings_stream_keys_subtitle":
+      "ಬಾಹ್ಯ ಸಾಫ್ಟ್‌ವೇರ್‌ನಿಂದ ಸ್ಟ್ರೀಮಿಂಗ್ ಹೊಂದಿಸಿ",
+  "live_settings_detailed_stats_title": "ವಿವರವಾದ ಅಂಕಿಅಂಶಗಳು",
+  "live_settings_detailed_stats_subtitle":
+      "ಹಿಂದಿನ ಸ್ಟ್ರೀಮ್‌ಗಳ ಕಾರ್ಯಕ್ಷಮತೆಯನ್ನು ವಿಶ್ಲೇಷಿಸಿ",
+  "live_settings_quality_label": "ಸ್ಟ್ರೀಮ್ ಗುಣಮಟ್ಟ",
+  "live_settings_saved_success": "ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಉಳಿಸಲಾಗಿದೆ",
+  "live_settings_feature_coming_message":
+      "\"@feature\" ವೈಶಿಷ್ಟ್ಯವು ಮುಂಬರುವ ಅಪ್‌ಡೇಟ್‌ನಲ್ಲಿ ಲಭ್ಯವಿರುತ್ತದೆ.",
+
+  "live_options_title": "ಲೈವ್ ಸ್ಟ್ರೀಮ್",
+  "live_options_hero_title": "ಲೈವ್ ಸ್ಟ್ರೀಮ್ ಪ್ರಾರಂಭಿಸಿ",
+  "live_options_hero_subtitle":
+      "ನಿಮ್ಮ ಫಾಲೋವರ್‌ಗಳೊಂದಿಗೆ ನಿಮ್ಮ ಕ್ಷಣಗಳನ್ನು ನೈಜ ಸಮಯದಲ್ಲಿ ಹಂಚಿಕೊಳ್ಳಿ",
+  "live_options_quick_title": "ತ್ವರಿತ ಸ್ಟ್ರೀಮ್",
+  "live_options_quick_subtitle":
+      "ಡೀಫಾಲ್ಟ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳೊಂದಿಗೆ ತಕ್ಷಣ ಸ್ಟ್ರೀಮಿಂಗ್ ಪ್ರಾರಂಭಿಸಿ",
+  "live_options_advanced_title": "ಸುಧಾರಿತ ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+  "live_options_advanced_subtitle":
+      "ಸ್ಟ್ರೀಮ್ ಗುಣಮಟ್ಟ ಮತ್ತು ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ಕಸ್ಟಮೈಸ್ ಮಾಡಿ",
+  "live_options_schedule_title": "ಸ್ಟ್ರೀಮ್ ಅನ್ನು ಶೆಡ್ಯೂಲ್ ಮಾಡಿ",
+  "live_options_schedule_subtitle": "ಭವಿಷ್ಯದ ಸ್ಟ್ರೀಮ್‌ಗಾಗಿ ದಿನಾಂಕ ಹೊಂದಿಸಿ",
+  "live_options_connection_tip":
+      "ಉತ್ತಮ ಸ್ಟ್ರೀಮಿಂಗ್ ಗುಣಮಟ್ಟಕ್ಕಾಗಿ ಬಲವಾದ ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕ ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ",
+  "live_options_schedule_coming_message":
+      "ಸ್ಟ್ರೀಮ್ ಶೆಡ್ಯೂಲಿಂಗ್ ವೈಶಿಷ್ಟ್ಯವು ಮುಂಬರುವ ಅಪ್‌ಡೇಟ್‌ನಲ್ಲಿ ಲಭ್ಯವಿರುತ್ತದೆ.",
+
+  "live_controls_camera_off": "ಕ್ಯಾಮೆರಾ ಆಫ್ ಮಾಡಿ",
+  "live_controls_camera_on": "ಕ್ಯಾಮೆರಾ ಆನ್ ಮಾಡಿ",
+  "live_controls_mic_off": "ಮೈಕ್ ಆಫ್ ಮಾಡಿ",
+  "live_controls_mic_on": "ಮೈಕ್ ಆನ್ ಮಾಡಿ",
+  "live_controls_switch_camera": "ಕ್ಯಾಮೆರಾ ಬದಲಿಸಿ",
+  "live_controls_end_stream": "ಸ್ಟ್ರೀಮ್ ಅಂತ್ಯಗೊಳಿಸಿ",
+
+  "live_comments_header": "ಲೈವ್ ಕಾಮೆಂಟ್‌ಗಳು",
+  "live_comments_empty":
+      "ಇನ್ನೂ ಯಾವುದೇ ಕಾಮೆಂಟ್‌ಗಳಿಲ್ಲ\nಕಾಮೆಂಟ್ ಮಾಡುವ ಮೊದಲ ವ್ಯಕ್ತಿಯಾಗಿ!",
+  "live_comments_start_watching": "ಲೈವ್ ಕಾಮೆಂಟ್‌ಗಳನ್ನು ವೀಕ್ಷಿಸಲು ಪ್ರಾರಂಭಿಸಿ",
+  "live_comments_hint": "ಕಾಮೆಂಟ್ ಸೇರಿಸಿ...",
+
+  "live_comments_error_loading": "ಕಾಮೆಂಟ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ",
+  "live_comments_error_loading_detail":
+      "ಕಾಮೆಂಟ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ: @error",
+  "live_comments_error_adding": "ಕಾಮೆಂಟ್ ಸೇರಿಸುವಲ್ಲಿ ದೋಷ",
+  "live_comments_error_adding_detail": "ಕಾಮೆಂಟ್ ಸೇರಿಸುವಲ್ಲಿ ದೋಷ: @error",
+  "live_comments_error_reacting": "ಕಾಮೆಂಟ್‌ಗೆ ಪ್ರತಿಕ್ರಿಯಿಸುವಲ್ಲಿ ದೋಷ",
+  "live_comments_error_reacting_detail": "ಪ್ರತಿಕ್ರಿಯಿಸುವಲ್ಲಿ ದೋಷ: @error",
+  "live_stats_error_loading": "ಅಂಕಿಅಂಶಗಳನ್ನು ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ",
+  "live_stats_error_loading_detail": "ಅಂಕಿಅಂಶಗಳನ್ನು ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ: @error",
+
+  "live_api_error_create_stream": "ಸ್ಟ್ರೀಮ್ ರಚಿಸಲು ವಿಫಲವಾಗಿದೆ: @message",
+  "live_api_error_create_stream_generic":
+      "ಲೈವ್ ಸ್ಟ್ರೀಮ್ ರಚಿಸಲು ವಿಫಲವಾಗಿದೆ: @error",
+  "live_api_error_fetch_comments": "ಕಾಮೆಂಟ್‌ಗಳನ್ನು ಪಡೆಯಲು ವಿಫಲವಾಗಿದೆ: @error",
+  "live_api_error_add_comment": "ಕಾಮೆಂಟ್ ಸೇರಿಸಲು ವಿಫಲವಾಗಿದೆ: @error",
+  "live_api_error_react_comment":
+      "ಕಾಮೆಂಟ್‌ಗೆ ಪ್ರತಿಕ್ರಿಯಿಸಲು ವಿಫಲವಾಗಿದೆ: @error",
+  "live_api_error_delete_comment": "ಕಾಮೆಂಟ್ ಅಳಿಸಲು ವಿಫಲವಾಗಿದೆ: @error",
+  "live_api_error_edit_comment": "ಕಾಮೆಂಟ್ ಸಂಪಾದಿಸಲು ವಿಫಲವಾಗಿದೆ: @error",
+  "live_api_error_send_reaction": "ಪ್ರತಿಕ್ರಿಯೆ ಕಳುಹಿಸಲು ವಿಫಲವಾಗಿದೆ: @error",
+  "live_api_error_start_stream": "ಲೈವ್ ಸ್ಟ್ರೀಮ್ ಪ್ರಾರಂಭಿಸಲು ವಿಫಲವಾಗಿದೆ: @error",
+  "live_api_error_end_stream": "ಲೈವ್ ಸ್ಟ್ರೀಮ್ ಕೊನೆಗೊಳಿಸಲು ವಿಫಲವಾಗಿದೆ: @error",
+  "live_api_error_fetch_list": "ಸ್ಟ್ರೀಮ್ ಪಟ್ಟಿಯನ್ನು ಪಡೆಯಲು ವಿಫಲವಾಗಿದೆ: @error",
+  "live_api_trial_join_maintenance":
+      "ಪ್ರಾಯೋಗಿಕ ಸೇರ್ಪಡೆ - ಬ್ಯಾಕೆಂಡ್ ನಿರ್ವಹಣೆಯಲ್ಲಿದೆ",
+  "live_api_all_endpoints_failed": "ಎಲ್ಲಾ ಎಂಡ್‌ಪಾಯಿಂಟ್‌ಗಳು ವಿಫಲವಾಗಿವೆ",
+  "live_api_trial_join_error_ignored":
+      "ಪ್ರಾಯೋಗಿಕ ಸೇರ್ಪಡೆ (ಬ್ಯಾಕೆಂಡ್ ದೋಷವನ್ನು ನಿರ್ಲಕ್ಷಿಸಲಾಗಿದೆ)",
+  "live_api_error_join_stream": "ಸ್ಟ್ರೀಮ್‌ಗೆ ಸೇರಲು ವಿಫಲವಾಗಿದೆ: @error",
+  "live_api_left_locally": "ಸ್ಥಳೀಯವಾಗಿ ಬಿಡಲಾಗಿದೆ",
+  "live_api_error_fetch_updates": "ಅಪ್‌ಡೇಟ್‌ಗಳನ್ನು ಪಡೆಯಲು ವಿಫಲವಾಗಿದೆ: @error",
+  "live_api_error_upload_file": "ಫೈಲ್ ಅಪ್‌ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ: @error",
+  "live_api_error_agora_token": "Agora ಟೋಕನ್ ಪಡೆಯಲು ವಿಫಲವಾಗಿದೆ: @error",
+  "live_api_error_fetch_active":
+      "ಸಕ್ರಿಯ ಸ್ಟ್ರೀಮ್‌ಗಳನ್ನು ಪಡೆಯಲು ವಿಫಲವಾಗಿದೆ: @error",
+  "live_api_error_fetch_posts":
+      "ಲೈವ್ ಸ್ಟ್ರೀಮ್ ಪೋಸ್ಟ್‌ಗಳನ್ನು ಪಡೆಯಲು ವಿಫಲವಾಗಿದೆ: @error",
 };
