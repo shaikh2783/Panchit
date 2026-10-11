@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import '../../../../core/network/api_client.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/design_tokens.dart';
 import '../../data/models/group.dart';
 import '../../data/models/groups_response.dart';
 import '../../data/repositories/groups_repository.dart';
@@ -375,83 +377,15 @@ class _GroupsPageState extends State<GroupsPage>
           ),
         ],
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(48),
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            child: TabBar(
-              controller: _tabController,
-              indicator: BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              indicatorSize: TabBarIndicatorSize.tab,
-              labelStyle: const TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 13,
-              ),
-              unselectedLabelStyle: const TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 13,
-              ),
-              labelColor: Colors.white,
-              unselectedLabelColor: isDark
-                  ? Colors.grey[400]
-                  : Colors.grey[600],
-              dividerColor: Colors.transparent,
-              tabs: [
-                Tab(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('groups_tab_joined'.tr),
-                      if (_stats != null && _stats!.totalJoined > 0) ...[
-                        const SizedBox(width: 4),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 6,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Text(
-                            '${_stats!.totalJoined}',
-                            style: const TextStyle(fontSize: 10),
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-                Tab(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('groups_tab_managed'.tr),
-                      if (_stats != null && _stats!.totalManaged > 0) ...[
-                        const SizedBox(width: 4),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 6,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Text(
-                            '${_stats!.totalManaged}',
-                            style: const TextStyle(fontSize: 10),
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-                Tab(text: 'groups_tab_suggested'.tr),
-              ],
+          preferredSize: const Size.fromHeight(56),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(
+              Spacing.lg,
+              0,
+              Spacing.lg,
+              Spacing.sm,
             ),
+            child: _buildGroupsTabBar(isDark),
           ),
         ),
       ),
@@ -479,6 +413,113 @@ class _GroupsPageState extends State<GroupsPage>
                 ),
               ],
             ),
+    );
+  }
+
+  /// Standard scrollable pill tab bar shared across the app.
+  Widget _buildGroupsTabBar(bool isDark) {
+    final tabs = [
+      (
+        icon: Iconsax.people,
+        label: 'groups_tab_joined'.tr,
+        count: _stats?.totalJoined,
+      ),
+      (
+        icon: Iconsax.crown,
+        label: 'groups_tab_managed'.tr,
+        count: _stats?.totalManaged,
+      ),
+      (icon: Iconsax.flash_1, label: 'groups_tab_suggested'.tr, count: null),
+    ];
+    final unselectedColor = isDark
+        ? Colors.white.withValues(alpha: 0.65)
+        : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.65);
+
+    return AnimatedBuilder(
+      animation: _tabController,
+      builder: (context, _) {
+        return Row(
+          children: List.generate(tabs.length, (index) {
+            final tab = tabs[index];
+            final isSelected = _tabController.index == index;
+
+            return Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(
+                  right: index == tabs.length - 1 ? 0 : Spacing.sm,
+                ),
+                child: GestureDetector(
+                  onTap: () => _tabController.animateTo(index),
+                  child: AnimatedContainer(
+                    duration: AnimDurations.medium,
+                    curve: CurvesToken.standard,
+                    height: 40,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      gradient: isSelected ? AppColors.primaryGradient : null,
+                      border: isSelected
+                          ? null
+                          : Border.all(
+                              color: isDark
+                                  ? AppColors.dividerDark
+                                  : AppColors.dividerLight,
+                            ),
+                      borderRadius: BorderRadius.circular(Radii.pill),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          tab.icon,
+                          size: 16,
+                          color: isSelected ? Colors.white : unselectedColor,
+                        ),
+                        const SizedBox(width: Spacing.xs),
+                        Flexible(
+                          child: Text(
+                            tab.label,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: isSelected ? Colors.white : unselectedColor,
+                              fontWeight: isSelected
+                                  ? FontWeight.w700
+                                  : FontWeight.w500,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                        if (tab.count != null && tab.count! > 0) ...[
+                          const SizedBox(width: Spacing.xxs),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? Colors.white.withOpacity(0.2)
+                                  : unselectedColor.withOpacity(0.15),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              '${tab.count}',
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: isSelected ? Colors.white : unselectedColor,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }),
+        );
+      },
     );
   }
 
