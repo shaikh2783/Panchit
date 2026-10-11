@@ -88,7 +88,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
         if (mounted) {
           ScaffoldMessenger.of(
             context,
-          ).showSnackBar(const SnackBar(content: Text('Uploading image...')));
+          ).showSnackBar(SnackBar(content: Text('uploading_image'.tr)));
         }
         final apiService = context.read<CommentsApiService>();
         imagePath = await apiService.uploadImage(_selectedImage!);
@@ -99,7 +99,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
           });
           ScaffoldMessenger.of(
             context,
-          ).showSnackBar(SnackBar(content: Text('Failed to upload image: $e')));
+          ).showSnackBar(SnackBar(content: Text('${'failed_upload_image'.tr}: $e')));
         }
         return;
       }
@@ -110,7 +110,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
       try {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Uploading voice recording...')),
+            SnackBar(content: Text('uploading_voice'.tr)),
           );
         }
         final apiService = context.read<CommentsApiService>();
@@ -121,7 +121,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
             _isSendingComment = false;
           });
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to upload recording: $e')),
+            SnackBar(content: Text('${'failed_upload_voice'.tr}: $e')),
           );
         }
         return;
@@ -279,7 +279,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to get AI response: $e'),
+            content: Text('${'failed_ai_response'.tr}: $e'),
             backgroundColor: Colors.orange,
           ),
         );
@@ -396,7 +396,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
         });
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text('Voice recording saved')));
+        ).showSnackBar(SnackBar(content: Text('voice_recording_saved'.tr)));
       }
     } else {
       if (await _audioRecorder.hasPermission()) {
@@ -423,15 +423,15 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
         } catch (e) {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Failed to start recording: $e')),
+              SnackBar(content: Text('${'recording_failed'.tr}: $e')),
             );
           }
         }
       } else {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Please grant microphone permission from settings'),
+            SnackBar(
+              content: Text('microphone_permission_settings'.tr),
             ),
           );
         }
@@ -468,10 +468,10 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
   String _formatRelative(DateTime time) {
     final now = DateTime.now();
     final diff = now.difference(time);
-    if (diff.inSeconds < 60) return 'Now';
-    if (diff.inMinutes < 60) return '${diff.inMinutes} د';
-    if (diff.inHours < 24) return '${diff.inHours} س';
-    if (diff.inDays < 7) return '${diff.inDays} يوم';
+    if (diff.inSeconds < 60) return 'time_just_now'.tr;
+    if (diff.inMinutes < 60) return 'time_minutes_short'.trParams({'count': diff.inMinutes.toString()});
+    if (diff.inHours < 24) return 'time_hours_short'.trParams({'count': diff.inHours.toString()});
+    if (diff.inDays < 7) return 'time_days_short'.trParams({'count': diff.inDays.toString()});
     return '${time.year}/${time.month}/${time.day}';
   }
 
@@ -573,7 +573,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                         IconButton(
                           onPressed: () => _showAIBotInfo(context),
                           icon: const Icon(Icons.smart_toy_outlined),
-                          tooltip: 'AI Bot Help',
+                          tooltip: 'ai_bot_help'.tr,
                         ),
                       IconButton(
                         onPressed: () => Navigator.pop(context),
@@ -816,7 +816,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                                                           total,
                                                         ),
                                                     child: Text(
-                                                      'Show more replies (${total - visible})',
+                                                      'show_more_replies_count'.trParams({'count': (total - visible).toString()}),
                                                       style: theme
                                                           .textTheme
                                                           .bodySmall,
@@ -1012,7 +1012,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                'Recording... ${_formatDuration(_recordingDuration)}',
+                                '${'recording'.tr} ${_formatDuration(_recordingDuration)}',
                                 style: const TextStyle(
                                   color: Colors.red,
                                   fontWeight: FontWeight.bold,
@@ -1200,17 +1200,17 @@ class _CommentTileState extends State<_CommentTile> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('حذف التعليق'),
-        content: const Text('هل أنت متأكد من حذف هذا التعليق؟'),
+        title: Text('delete_comment_title'.tr),
+        content: Text('delete_comment_message'.tr),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('إلغاء'),
+            child: Text('cancel'.tr),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('حذف'),
+            child: Text('delete_comment'.tr),
           ),
         ],
       ),
@@ -1586,7 +1586,7 @@ class _CommentTileState extends State<_CommentTile> {
                                             ? _getReactionText(
                                                 comment.iReaction!,
                                               )
-                                            : 'Like',
+                                            : 'like'.tr,
                                         style: theme.textTheme.bodySmall
                                             ?.copyWith(
                                               fontWeight: widget.isLiked
@@ -1691,7 +1691,7 @@ class _CommentTileState extends State<_CommentTile> {
 
   String _getReactionText(String reaction) {
     final reactionModel = ReactionsService.instance.getReactionByName(reaction);
-    return reactionModel?.title ?? 'Like';
+    return reactionModel?.title ?? 'like'.tr;
   }
 
   Color? _getReactionColor(String? reaction) {

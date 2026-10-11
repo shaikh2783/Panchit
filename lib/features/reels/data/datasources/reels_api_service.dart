@@ -31,4 +31,36 @@ class ReelsApiService {
     }
     return reelsResponse;
   }
+
+  /// All reels using [soundId] (docs/reels_backend_api.md §20). The endpoint
+  /// is not implemented on the backend yet (docs/reels_backend_gaps.md gap 2)
+  /// — callers must degrade gracefully when this throws.
+  Future<ReelsBySoundResponse> fetchReelsBySound({
+    required int soundId,
+    int offset = 0,
+    int limit = 18,
+  }) async {
+    final endpoint = configCfgP('reels_by_sound');
+    if (endpoint.isEmpty) {
+      throw ApiException('reels_by_sound endpoint not configured');
+    }
+
+    final response = await _client.get(
+      endpoint,
+      queryParameters: {
+        'sound_id': '$soundId',
+        'offset': '$offset',
+        'limit': '$limit',
+      },
+    );
+
+    final parsed = ReelsBySoundResponse.fromJson(response);
+    if (!parsed.isSuccess) {
+      throw ApiException(
+        'Failed to fetch reels for sound $soundId',
+        details: response,
+      );
+    }
+    return parsed;
+  }
 }

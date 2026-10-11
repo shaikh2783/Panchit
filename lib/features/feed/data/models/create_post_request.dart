@@ -4,6 +4,7 @@ class CreatePostRequest {
     this.message,
     this.handle = 'me',
     this.privacy = 'public',
+    this.competitionId,
     this.photos,
     this.video,
     this.album,
@@ -30,6 +31,7 @@ class CreatePostRequest {
   final String? message;
   final String handle; // me, page_id, group_id, event_id
   final String privacy; // public, friends, private
+  final int? competitionId;
   final List<PhotoData>? photos; // List of photo objects with source and blur
   final Map<String, dynamic>? video; // Video data object from upload response
   final AlbumData? album;
@@ -76,6 +78,10 @@ class CreatePostRequest {
 
     if (message != null && message!.isNotEmpty) {
       json['message'] = message;
+    }
+
+    if (competitionId != null && competitionId! > 0) {
+      json['competition_id'] = competitionId;
     }
 
     if (photos != null && photos!.isNotEmpty) {

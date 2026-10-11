@@ -21,19 +21,19 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
     with TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
-  
+
   late AnimationController _slideController;
   late Animation<Offset> _slideAnimation;
 
   @override
   void initState() {
     super.initState();
-    
+
     _slideController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    
+
     _slideAnimation = Tween<Offset>(
       begin: const Offset(1.0, 0.0),
       end: Offset.zero,
@@ -160,7 +160,7 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
                       ),
                     );
                   }
-                  
+
                   if (state is LiveCommentsError) {
                     return Center(
                       child: Padding(
@@ -176,7 +176,7 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
                       ),
                     );
                   }
-                  
+
                   if (state is LiveCommentsLoaded) {
                     if (state.comments.isEmpty) {
                       return Center(
@@ -193,7 +193,7 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
                         ),
                       );
                     }
-                    
+
                     return ListView.builder(
                       key: ValueKey('comments_${state.comments.length}'),
                       controller: _scrollController,
@@ -208,7 +208,7 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
                       },
                     );
                   }
-                  
+
                   return Center(
                     child: Text(
                       'live_comments_start_watching'.tr,
@@ -278,22 +278,22 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
                   BlocBuilder<LiveCommentsBloc, LiveCommentsState>(
                     builder: (context, state) {
                       final isAdding = state is LiveCommentAdding;
-                      
+
                       return IconButton(
                         onPressed: isAdding ? null : _addComment,
                         icon: isAdding
                             ? const SizedBox(
-                                width: 16,
-                                height: 16,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  valueColor: AlwaysStoppedAnimation(Colors.white),
-                                ),
-                              )
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation(Colors.white),
+                          ),
+                        )
                             : const Icon(
-                                Icons.send,
-                                color: Colors.blue,
-                              ),
+                          Icons.send,
+                          color: Colors.blue,
+                        ),
                       );
                     },
                   ),
@@ -328,15 +328,15 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
                     : null,
                 child: comment.userAvatar.isEmpty
                     ? Text(
-                        comment.userName.isNotEmpty 
-                            ? comment.userName[0].toUpperCase()
-                            : '?',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )
+                  comment.userName.isNotEmpty
+                      ? comment.userName[0].toUpperCase()
+                      : '?',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
                     : null,
               ),
               const SizedBox(width: 8),
@@ -361,7 +361,7 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
             ],
           ),
           const SizedBox(height: 4),
-          
+
           // Comment text
           Text(
             comment.text,
@@ -370,7 +370,7 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
               fontSize: 14,
             ),
           ),
-          
+
           // Image if available
           if (comment.imageUrl != null) ...[
             const SizedBox(height: 8),
@@ -407,7 +407,7 @@ class _LiveCommentsWidgetState extends State<LiveCommentsWidget>
       final dateTime = DateTime.parse(time);
       final now = DateTime.now();
       final difference = now.difference(dateTime);
-      
+
       if (difference.inMinutes < 1) {
         return 'now'.tr;
       } else if (difference.inMinutes < 60) {

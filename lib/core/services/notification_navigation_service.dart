@@ -4,6 +4,8 @@ import 'package:snginepro/features/feed/presentation/pages/post_detail_page.dart
 import 'package:snginepro/features/notifications/presentation/pages/notifications_page.dart';
 import 'package:snginepro/features/profile/presentation/pages/profile_page.dart';
 import 'package:snginepro/features/settings/presentation/pages/manage_sessions_page.dart';
+import 'package:snginepro/features/competitions/presentation/pages/competition_detail_page.dart';
+import 'package:snginepro/features/wallet/presentation/pages/wallet_page.dart';
 
 /// خدمة التنقل من الإشعارات
 /// تتعامل مع جميع أنواع الإشعارات المدعومة في النظام
@@ -174,6 +176,20 @@ class NotificationNavigationService {
           Get.to(() => const NotificationsPage());
           break;
 
+        case 'competitions':
+        case 'competition':
+          if (pathSegments.length > 1) {
+            final competitionId = int.tryParse(pathSegments[1]) ?? 0;
+            if (competitionId > 0) {
+              Get.to(() => CompetitionDetailPage(competitionId: competitionId));
+            }
+          }
+          break;
+
+        case 'wallet':
+          Get.to(() => const WalletPage());
+          break;
+
         case 'settings':
           if (pathSegments.length > 1 && pathSegments[1] == 'sessions') {
             Get.to(() => const ManageSessionsPage());
@@ -270,6 +286,35 @@ class NotificationNavigationService {
       case 'notification':
       case 'system_notification':
         Get.to(() => const NotificationsPage());
+        break;
+
+      case 'competition_started':
+      case 'competition_cancelled':
+      case 'competition_voting_started':
+      case 'competition_winner':
+        final competitionId = int.tryParse(
+              (data['competition_id'] ?? data['id'] ?? data['node_id'])
+                      ?.toString() ??
+                  '',
+            ) ??
+            0;
+        if (competitionId > 0) {
+          Get.to(() => CompetitionDetailPage(competitionId: competitionId));
+        } else {
+          Get.to(() => const NotificationsPage());
+        }
+        break;
+
+      case 'competition_refund':
+        final refundCompetitionId = int.tryParse(
+              (data['competition_id'] ?? data['id'])?.toString() ?? '',
+            ) ??
+            0;
+        if (refundCompetitionId > 0) {
+          Get.to(() => CompetitionDetailPage(competitionId: refundCompetitionId));
+        } else {
+          Get.to(() => const WalletPage());
+        }
         break;
         
       // إشعارات أخرى

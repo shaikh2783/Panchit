@@ -11,7 +11,7 @@ class LiveStreamApiService {
   LiveStreamApiService(this._apiClient);
 
   /// إنشاء بث مباشر جديد - يتبع live-streaming-api.md
-  /// POST /data/live/create  
+  /// POST /data/live/create
   /// Returns: {live_id, post_id, channel_name, post: {...}}
   Future<Map<String, dynamic>> createLiveStream({
     String? agoraChannelName,
@@ -47,25 +47,25 @@ class LiveStreamApiService {
         body: body,
       );
 
-      
+
       // طباعة تفاصيل للمطور
 
       // التحقق من نجاح الاستجابة
       if (response['post_id'] != null || (response['status'] == 'success' && response['data'] != null)) {
-        
+
         // البنية الجديدة المحدثة من Backend ✅
         if (response['status'] == 'success' && response['data'] != null) {
           final data = response['data'];
-          
+
           // استخراج agora_token و agora_uid من البنية الجديدة
           String? agoraToken;
           int? agoraUid;
-          
+
           if (data['post'] != null && data['post']['agora_config'] != null) {
             agoraToken = data['post']['agora_config']['agora_token'];
             agoraUid = data['post']['agora_config']['agora_uid'];
           }
-          
+
           // تنسيق البيانات للـ BLoC
           return {
             'live_id': data['live_id'],
@@ -77,10 +77,10 @@ class LiveStreamApiService {
             'post': data['post'],
           };
         }
-        
+
         // Fallback للبنية القديمة (إذا لم يكتمل الإصلاح)
         final postId = response['post_id'];
-        
+
         final formattedResponse = {
           'post_id': postId,
           'live_id': postId,
@@ -88,7 +88,7 @@ class LiveStreamApiService {
           'status': 'success',
           'backend_fixed': false,
         };
-        
+
         return formattedResponse;
       } else if (response['status'] == 'success' && response['data'] != null) {
         return response['data'];
@@ -110,7 +110,7 @@ class LiveStreamApiService {
     int? offset,
   }) async {
     try {
-      
+
       // استخدام الـ endpoint الصحيح من المبرمج
       // ✅ تم تأكيده: GET /apis/php/data/live/comments?post_id=51
       final queryParams = {
@@ -118,14 +118,14 @@ class LiveStreamApiService {
         if (lastCommentId != null) 'last_comment_id': lastCommentId,
         if (offset != null) 'offset': offset.toString(),
       };
-      
+
       final response = await _apiClient.get(
         configCfgP('live_comments'),
         queryParameters: queryParams,
       );
-      
+
       return response;
-      
+
     } catch (e) {
       throw Exception('live_api_error_fetch_comments'.trParams({'error': e.toString()}));
     }
@@ -144,7 +144,7 @@ class LiveStreamApiService {
   }) async {
     try {
       // استخدام endpoint منفصل كما في التوثيق
-      
+
       final response = await _apiClient.post(
         configCfgP('live_comment'),
         body: {
@@ -157,9 +157,9 @@ class LiveStreamApiService {
           if (stickerUrl != null) 'sticker': stickerUrl,
         },
       );
-      
+
       return response;
-      
+
     } catch (e) {
       throw Exception('live_api_error_add_comment'.trParams({'error': e.toString()}));
     }
@@ -255,10 +255,10 @@ class LiveStreamApiService {
     required String postId, // تغيير من liveId إلى postId
   }) async {
     try {
-      
+
       // ✅ Backend تم إصلاحه! استخدام API الحقيقي
       const bool useMockData = false;
-      
+
       if (useMockData) {
         // البيانات التجريبية معطلة الآن
         final randomCount = (DateTime.now().millisecond % 5) + 2;
@@ -272,33 +272,33 @@ class LiveStreamApiService {
           }
         };
       }
-      
+
       // الكود الحقيقي - تم تفعيله!
       List<String> endpointsToTry = [
         configCfgP('live_stats'),    // هذا يعمل! ✅
         configCfgP('live_stats'),  // احتياطي
         configCfgP('live_stats'),        // احتياطي
       ];
-      
+
       for (String endpoint in endpointsToTry) {
         try {
-          
+
           final response = await _apiClient.get(
             endpoint,
             queryParameters: {
               'post_id': postId,
             },
           );
-          
+
           return response;
-          
+
         } catch (e) {
           continue;
         }
       }
-      
+
       throw Exception('All stats endpoints failed');
-      
+
     } catch (e) {
       // إرجاع بيانات افتراضية في حالة الخطأ
       return {
@@ -344,14 +344,14 @@ class LiveStreamApiService {
     required String postId,
   }) async {
     try {
-      
+
       final response = await _apiClient.post(
         configCfgP('live_end'),
         body: {
           'post_id': postId,
         },
       );
-      
+
       return response;
     } catch (e) {
       throw Exception('live_api_error_end_stream'.trParams({'error': e.toString()}));
@@ -406,16 +406,16 @@ class LiveStreamApiService {
       }
       
       // الكود الحقيقي - سيتم تفعيله عند إصلاح Backend
-      
+
       List<String> endpointsToTry = [
         configCfgP('live_data'),
         configCfgP('live_join'),
         configCfgP('live_join'),
       ];
-      
+
       for (String endpoint in endpointsToTry) {
         try {
-          
+
           final response = await _apiClient.post(
             endpoint,
             body: {
@@ -423,19 +423,18 @@ class LiveStreamApiService {
               'post_id': postId,
             },
           );
-          
+
           return response;
-          
+
         } catch (e) {
           continue;
         }
       }
-      
+
       throw Exception('live_api_all_endpoints_failed'.tr);
-      
     } catch (e) {
       // Fallback للبيانات التجريبية
-      if (e.toString().contains('no longer exists') || 
+      if (e.toString().contains('no longer exists') ||
           e.toString().contains('500') ||
           e.toString().contains('set_time')) {
         return {
@@ -458,7 +457,7 @@ class LiveStreamApiService {
     required String postId,
   }) async {
     try {
-      
+
       // ✅ استخدام الـ endpoint الذي أصلحه المبرمج
       final response = await _apiClient.post(
         configCfgP('live_data'),
@@ -467,9 +466,9 @@ class LiveStreamApiService {
           'post_id': postId,
         },
       );
-      
+
       return response;
-      
+
     } catch (e) {
       // Return success for graceful cleanup
       return {'status': 'success', 'message': 'live_api_left_locally'.tr};
@@ -524,7 +523,7 @@ class LiveStreamApiService {
     String role = 'audience', // publisher أو audience
   }) async {
     try {
-      
+
       final response = await _apiClient.get(
         configCfgP('live_agora_token'),
         queryParameters: {
@@ -532,27 +531,27 @@ class LiveStreamApiService {
           'role': role,
         },
       );
-      
+
       return response;
     } catch (e) {
       throw Exception('live_api_error_agora_token'.trParams({'error': e.toString()}));
     }
   }
 
-  /// جلب البثوث النشطة - حسب live-streaming-api.md  
+  /// جلب البثوث النشطة - حسب live-streaming-api.md
   /// GET /data/live/active
   Future<Map<String, dynamic>> getActiveLiveStreams({
     int limit = 10,
   }) async {
     try {
-      
+
       final response = await _apiClient.get(
         configCfgP('live_active'),
         queryParameters: {
           'limit': limit.toString(),
         },
       );
-      
+
       return response;
     } catch (e) {
       throw Exception('live_api_error_fetch_active'.trParams({'error': e.toString()}));
@@ -566,7 +565,7 @@ class LiveStreamApiService {
     int limit = 10,
   }) async {
     try {
-      
+
       final response = await _apiClient.get(
         configCfgP('live_posts'),
         queryParameters: {
@@ -574,7 +573,7 @@ class LiveStreamApiService {
           'limit': limit.toString(),
         },
       );
-      
+
       return response;
     } catch (e) {
       throw Exception('live_api_error_fetch_posts'.trParams({'error': e.toString()}));

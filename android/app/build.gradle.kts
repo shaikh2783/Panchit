@@ -80,6 +80,8 @@ android {
             } else {
                 signingConfigs.getByName("debug")
             }
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 file("proguard-rules.pro")
@@ -93,6 +95,17 @@ dependencies {
     implementation("com.google.android.play:feature-delivery:2.1.0")
     implementation("com.google.android.play:feature-delivery-ktx:2.1.0")
     implementation("com.google.android.gms:play-services-tasks:18.2.0")
+}
+
+// The ffmpeg_kit_flutter_new plugin pins the full-gpl FFmpeg flavor (~70 MB
+// per ABI). The app only stream-copies, encodes AAC, and trims via libx264 —
+// all covered by the much smaller min-gpl flavor. Same Java API, so the
+// plugin works unchanged.
+configurations.all {
+    resolutionStrategy.dependencySubstitution {
+        substitute(module("com.antonkarpenko:ffmpeg-kit-full-gpl"))
+            .using(module("com.antonkarpenko:ffmpeg-kit-min-gpl:1.1.0"))
+    }
 }
 
 

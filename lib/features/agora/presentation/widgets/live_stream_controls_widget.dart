@@ -110,20 +110,20 @@ class LiveStreamControlsWidget extends StatelessWidget {
           height: 56,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: isDestructive 
+            color: isDestructive
                 ? Colors.red
-                : isActive 
-                    ? Colors.white
-                    : Colors.white.withOpacity(0.3),
+                : isActive
+                ? Colors.white
+                : Colors.white.withOpacity(0.3),
           ),
           child: IconButton(
             icon: Icon(
               icon,
-              color: isDestructive 
+              color: isDestructive
                   ? Colors.white
-                  : isActive 
-                      ? Colors.black
-                      : Colors.white,
+                  : isActive
+                  ? Colors.black
+                  : Colors.white,
             ),
             onPressed: onPressed,
           ),

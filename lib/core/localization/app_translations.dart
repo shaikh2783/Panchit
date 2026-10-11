@@ -29,7 +29,6 @@ class AppTranslations extends Translations {
     'or_IN': orIN,
     'ta_IN': taIN,
     'te_IN': teIN,
-
     // Urdu
     'ur_PK': urPK,
   };

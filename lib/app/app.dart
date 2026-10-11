@@ -11,6 +11,7 @@ import 'package:snginepro/core/config/dynamic_app_config_provider.dart';
 import 'package:snginepro/core/config/dynamic_app_config_service.dart';
 import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/core/theme/app_theme.dart';
+import 'package:snginepro/core/theme/theme_controller.dart';
 import 'package:snginepro/core/localization/app_translations.dart';
 import 'package:snginepro/core/localization/localization_controller.dart';
 import 'package:snginepro/features/ads/domain/ads_repository.dart';
@@ -55,6 +56,10 @@ import 'package:snginepro/features/profile/data/services/profile_api_service.dar
 import 'package:snginepro/features/reels/application/reels_notifier.dart';
 import 'package:snginepro/features/reels/application/bloc/reels_bloc.dart';
 import 'package:snginepro/features/reels/data/datasources/reels_api_service.dart';
+import 'package:snginepro/features/reels/data/services/audio_extraction_service.dart';
+import 'package:snginepro/features/reels/data/services/music_api_service.dart';
+import 'package:snginepro/features/reels/data/services/reel_upload_service.dart';
+import 'package:snginepro/features/reels/data/services/reels_management_api_service.dart';
 import 'package:snginepro/features/reels/domain/reels_repository.dart';
 // Groups module removed; strip group-related imports
 import 'package:snginepro/features/events/application/bloc/events_bloc.dart';
@@ -86,6 +91,8 @@ import 'package:snginepro/features/feed/data/services/share_api_service.dart';
 import 'package:snginepro/features/feed/domain/share_repository.dart';
 import 'package:snginepro/features/feed/data/services/reviews_api_service.dart';
 import 'package:snginepro/features/feed/domain/reviews_repository.dart';
+import 'package:snginepro/features/competitions/data/services/competition_api_service.dart';
+import 'package:snginepro/features/kyc/data/services/kyc_api_service.dart';
 import 'package:snginepro/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:snginepro/features/ai_chat/providers/ai_chat_provider.dart';
 
@@ -93,9 +100,9 @@ class App extends StatelessWidget {
   const App({super.key, required this.sharedPreferences});
 
   final SharedPreferences sharedPreferences;
-  
+
   /// Global NavigatorKey للتحكم في الملاحة من الخارج (الإشعارات)
-  static final GlobalKey<NavigatorState> navigatorKey = 
+  static final GlobalKey<NavigatorState> navigatorKey =
       GlobalKey<NavigatorState>();
 
   @override
@@ -108,12 +115,13 @@ class App extends StatelessWidget {
           value: globalApiClient, // Use the global instance with auth token
         ),
         Provider<SystemSettingsApiService>(
-          create: (context) => SystemSettingsApiService(context.read<ApiClient>()),
+          create: (context) =>
+              SystemSettingsApiService(context.read<ApiClient>()),
         ),
         ChangeNotifierProvider<SystemSettingsProvider>(
-          create: (context) => SystemSettingsProvider(
-            context.read<SystemSettingsApiService>(),
-          )..initialize(),
+          create: (context) =>
+              SystemSettingsProvider(context.read<SystemSettingsApiService>())
+                ..initialize(),
         ),
         Provider<AuthStorage>(
           create: (context) => AuthStorage(context.read<SharedPreferences>()),
@@ -166,6 +174,16 @@ class App extends StatelessWidget {
         ),
         Provider<ReelsRepository>(
           create: (context) => ReelsRepository(context.read<ReelsApiService>()),
+        ),
+        Provider<MusicApiService>(
+          create: (context) => MusicApiService(context.read<ApiClient>()),
+        ),
+        Provider<ReelsManagementApiService>(
+          create: (context) =>
+              ReelsManagementApiService(context.read<ApiClient>()),
+        ),
+        Provider<AudioExtractionService>(
+          create: (_) => AudioExtractionService(),
         ),
 
         // Events Service
@@ -249,6 +267,12 @@ class App extends StatelessWidget {
           create: (context) =>
               WalletRepository(context.read<WalletApiService>()),
         ),
+        Provider<CompetitionApiService>(
+          create: (context) => CompetitionApiService(context.read<ApiClient>()),
+        ),
+        Provider<KycApiService>(
+          create: (context) => KycApiService(context.read<ApiClient>()),
+        ),
 
         // Ads / Campaigns
         Provider<AdsApiService>(
@@ -279,7 +303,8 @@ class App extends StatelessWidget {
           create: (context) => ReviewsApiService(context.read<ApiClient>()),
         ),
         Provider<ReviewsRepository>(
-          create: (context) => ReviewsRepository(context.read<ReviewsApiService>()),
+          create: (context) =>
+              ReviewsRepository(context.read<ReviewsApiService>()),
         ),
 
         // Dynamic App Config Service
@@ -333,6 +358,24 @@ class App extends StatelessWidget {
         ),
         ChangeNotifierProvider<ReelsNotifier>(
           create: (context) => ReelsNotifier(context.read<ReelsRepository>()),
+        ),
+        Provider<ReelUploadService>(
+          create: (context) {
+            final auth = context.read<AuthNotifier>();
+            return ReelUploadService(
+              postsService: context.read<PostsApiService>(),
+              musicService: context.read<MusicApiService>(),
+              audioExtractor: context.read<AudioExtractionService>(),
+              usernameProvider: () {
+                final user = auth.currentUser;
+                final username =
+                    user?['user_name'] ??
+                    user?['username'] ??
+                    user?['first_name'];
+                return username?.toString();
+              },
+            );
+          },
         ),
 
         // Dynamic App Config Provider
@@ -418,19 +461,23 @@ class App extends StatelessWidget {
           ),
         ],
         child: GetBuilder<LocalizationController>(
-          builder: (localizationController) => GetMaterialApp(
-            title: 'Panchit',
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            themeMode: ThemeMode.dark,
-            home: const _AuthSwitcher(),
-            defaultTransition: GetTransitions.Transition.cupertino,
-            transitionDuration: const Duration(milliseconds: 300),
-            // GetX Internationalization
-            translations: AppTranslations(),
-            locale: localizationController.currentLocale,
-            fallbackLocale: const Locale('en', 'US'), // English as fallback
+          builder: (localizationController) => Obx(
+            () => GetMaterialApp(
+              title: 'Panchit',
+              debugShowCheckedModeBanner: false,
+              theme: AppTheme.lightTheme,
+              darkTheme: AppTheme.darkTheme,
+              themeMode: Get.find<ThemeController>().isDarkMode
+                  ? ThemeMode.dark
+                  : ThemeMode.light,
+              home: const _AuthSwitcher(),
+              defaultTransition: GetTransitions.Transition.cupertino,
+              transitionDuration: const Duration(milliseconds: 300),
+              // GetX Internationalization
+              translations: AppTranslations(),
+              locale: localizationController.currentLocale,
+              fallbackLocale: const Locale('en', 'US'), // English as fallback
+            ),
           ),
         ),
       ),

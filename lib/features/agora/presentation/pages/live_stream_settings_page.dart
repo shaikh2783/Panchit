@@ -164,7 +164,7 @@ class _LiveStreamSettingsPageState extends State<LiveStreamSettingsPage> {
           subtitle: 'live_settings_enable_tips_subtitle'.tr,
           value: _enableTips,
           onChanged: (value) => setState(() => _enableTips = value),
-          icon: Icons.attach_money,
+          icon: Icons.currency_rupee,
         ),
         if (_enableTips) ...[
           const SizedBox(height: 12),

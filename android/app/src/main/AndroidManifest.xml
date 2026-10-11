@@ -28,7 +28,8 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"
-        android:hardwareAccelerated="true">
+        android:hardwareAccelerated="true"
+        android:largeHeap="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -72,7 +73,7 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-            
+
         <!-- AdMob App ID -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
@@ -88,13 +89,13 @@
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
-        
+
         <!-- Email intent -->
         <intent>
             <action android:name="android.intent.action.SENDTO" />
             <data android:scheme="mailto" />
         </intent>
-        
+
         <!-- HTTP/HTTPS intents for web links, WhatsApp, Telegram -->
         <intent>
             <action android:name="android.intent.action.VIEW" />
@@ -104,7 +105,7 @@
             <action android:name="android.intent.action.VIEW" />
             <data android:scheme="https" />
         </intent>
-        
+
         <!-- Telephone intent (optional, for future use) -->
         <intent>
             <action android:name="android.intent.action.DIAL" />

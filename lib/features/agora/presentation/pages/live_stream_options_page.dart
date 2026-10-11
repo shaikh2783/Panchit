@@ -10,7 +10,7 @@ class LiveStreamOptionsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
       appBar: AppBar(
@@ -32,7 +32,7 @@ class LiveStreamOptionsPage extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 20),
-            
+
             // Header
             Container(
               width: double.infinity,
@@ -95,9 +95,9 @@ class LiveStreamOptionsPage extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 32),
-            
+
             // Quick Start Option
             _buildOptionCard(
               context: context,
@@ -115,9 +115,9 @@ class LiveStreamOptionsPage extends StatelessWidget {
                 );
               },
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Advanced Options
             _buildOptionCard(
               context: context,
@@ -138,10 +138,10 @@ class LiveStreamOptionsPage extends StatelessWidget {
                 );
               },
             ),
-            
+
             const SizedBox(height: 16),
-            
-            // Scheduled Stream Option  
+
+            // Scheduled Stream Option
             _buildOptionCard(
               context: context,
               title: 'live_options_schedule_title'.tr,
@@ -154,14 +154,14 @@ class LiveStreamOptionsPage extends StatelessWidget {
                 _showComingSoonDialog(context);
               },
             ),
-            
+
             const Spacer(),
-            
+
             // Tips
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: isDark 
+                color: isDark
                     ? Colors.white.withOpacity(0.03)
                     : Colors.grey.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
@@ -200,7 +200,7 @@ class LiveStreamOptionsPage extends StatelessWidget {
     required VoidCallback onTap,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Card(
       elevation: 8,
       shadowColor: Colors.black.withOpacity(0.1),
@@ -215,15 +215,15 @@ class LiveStreamOptionsPage extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             gradient: LinearGradient(
-              colors: isDark 
+              colors: isDark
                   ? [
-                      Colors.white.withOpacity(0.05),
-                      Colors.white.withOpacity(0.02),
-                    ]
+                Colors.white.withOpacity(0.05),
+                Colors.white.withOpacity(0.02),
+              ]
                   : [
-                      Colors.white,
-                      Colors.grey.withOpacity(0.05),
-                    ],
+                Colors.white,
+                Colors.grey.withOpacity(0.05),
+              ],
             ),
           ),
           child: Row(

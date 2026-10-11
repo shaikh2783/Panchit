@@ -714,7 +714,12 @@ class _ChatPageState extends State<ChatPage> {
           Iconsax.arrow_left_2,
           color: isDark ? Colors.white : Colors.black,
         ),
-        onPressed: () => Get.back(),
+        // This page can be pushed via a plain Navigator.push (see
+        // conversations_page.dart being opened with MaterialPageRoute from
+        // home_page.dart), so Get.back() can fall out of sync with the real
+        // Navigator and silently no-op. Navigator.of(context).pop() always
+        // targets the Navigator that actually holds this route.
+        onPressed: () => Navigator.of(context).pop(),
       ),
       title: InkWell(
         onTap: _openConversationInfo, // فتح الملف الشخصي

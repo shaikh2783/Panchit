@@ -1,7 +1,6 @@
-import 'dart:convert';
 import '../../../../core/network/api_client.dart';
 import '../../../../main.dart' show configCfgP;
-import 'package:flutter/foundation.dart';
+import '../models/create_post_request.dart';
 
 /// خدمة إدارة المنشورات - حفظ، تثبيت، إخفاء، حذف، تفاعل، تعديل
 class PostManagementApiService {
@@ -75,6 +74,11 @@ class PostManagementApiService {
     String? text,
     String? privacy,
     String? location,
+    List<PhotoData>? photos,
+    Map<String, dynamic>? video,
+    String? postType,
+    bool replaceMedia = false,
+    bool removeMedia = false,
   }) async {
     try {
       
@@ -85,6 +89,11 @@ class PostManagementApiService {
       if (text != null) body['text'] = text;
       if (privacy != null) body['privacy'] = privacy;
       if (location != null) body['location'] = location;
+      if (photos != null && photos.isNotEmpty) body['photos'] = photos.map((p) => p.toJson()).toList();
+      if (video != null) body['video'] = video;
+      if (postType != null && postType.isNotEmpty) body['post_type'] = postType;
+      if (replaceMedia) body['replace_media'] = 1;
+      if (removeMedia) body['remove_media'] = 1;
       
 
       final response = await _apiClient.post(
