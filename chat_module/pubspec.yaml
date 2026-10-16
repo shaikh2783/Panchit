@@ -1,0 +1,61 @@
+name: chat_module
+description: "In-process messenger module embedded inside the EximBuzz app."
+publish_to: 'none'
+version: 1.0.0
+
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  audio_session:
+    path: ../packages/audio_session
+  crypto: ^3.0.6
+  encrypt: ^5.0.3
+  cached_network_image: ^3.4.1
+  flutter_widget_from_html: ^0.17.2
+  flutter_svg: ^2.3.0
+  flutter_cache_manager: ^3.4.1
+  geolocator: ^14.0.2
+  get: ^4.7.3
+  http: ^1.6.0
+  image_picker: ^1.2.2
+  google_fonts: ^8.1.0
+  just_audio: ^0.10.5
+  path_provider: ^2.1.5
+  agora_rtc_engine:
+    path: ../packages/agora_rtc_engine
+  permission_handler: ^12.0.1
+  record: ^6.2.1
+  shared_preferences: ^2.5.5
+  url_launcher: ^6.3.2
+  video_player: ^2.10.0
+  wakelock:
+    path: ../third_party/wakelock
+  webview_flutter: ^4.13.1
+  onesignal_flutter:
+    path: ../packages/onesignal_flutter
+  flutter_local_notifications:
+    path: ../third_party/flutter_local_notifications
+  file_picker:
+    path: ../packages/file_picker
+  flutter_webrtc: ^1.5.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/branding/
+    - assets/audio/
+    - assets/icons/nav/
+    - assets/icons/chat/

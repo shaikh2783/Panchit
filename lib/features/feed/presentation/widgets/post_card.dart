@@ -66,8 +66,7 @@ import 'package:snginepro/features/competitions/presentation/pages/competition_d
 import 'package:snginepro/features/competitions/presentation/widgets/competition_widgets.dart';
 import 'package:snginepro/features/feed/presentation/widgets/share_post_dialog.dart';
 import 'package:snginepro/features/feed/presentation/widgets/post_reviews_bottom_sheet.dart';
-import 'package:snginepro/features/messenger/presentation/pages/chat_page.dart';
-import 'package:snginepro/features/messenger/data/services/messenger_api_service.dart';
+import 'package:snginepro/core/utils/chat_module_launcher.dart';
 import 'package:snginepro/features/market/application/bloc/cart/cart_bloc.dart';
 import 'package:snginepro/features/market/application/bloc/cart/cart_event.dart';
 import 'package:snginepro/features/market/presentation/pages/cart_page.dart';
@@ -331,10 +330,10 @@ class _PostCardState extends State<PostCard>
     await _adsTrackingService.trackAdView(_currentPost.campaignId!);
   }
 
-  // Open chat with seller (post author)
+  // Open chat with post author via chat_module
   Future<void> _messageSeller() async {
-    final sellerId = _currentPost.authorId;
-    if (sellerId == null || sellerId.isEmpty) {
+    final authorId = int.tryParse(_currentPost.authorId ?? '');
+    if (authorId == null) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Failed to open chat')),
@@ -342,39 +341,10 @@ class _PostCardState extends State<PostCard>
       return;
     }
 
-    try {
-      final apiClient = context.read<ApiClient>();
-      final messengerService = MessengerApiService(apiClient);
-      final conversation = await messengerService.getOrCreateConversation(
-        userId: sellerId,
-      );
-
-      if (!mounted) return;
-      if (conversation == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed to open chat'),
-            backgroundColor: Colors.red,
-          ),
-        );
-        return;
-      }
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => ChatPage(
-            conversationId: conversation.conversationId,
-            otherUser: conversation.otherUser,
-          ),
-        ),
-      );
-    } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
-      );
-    }
+    await ChatModuleLauncher.openUserConversation(
+      context,
+      targetUserId: authorId,
+    );
   }
 
   // Track ad click

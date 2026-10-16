@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../domain/share_repository.dart';
 import '../../data/models/post.dart';
 import '../../../../main.dart' show cfgP;
+import '../../../../core/utils/chat_module_launcher.dart';
 
 /// Dialog لاختيار نوع المشاركة
 class SharePostDialog extends StatefulWidget {
@@ -168,6 +169,35 @@ class _SharePostDialogState extends State<SharePostDialog> {
       if (mounted) {
         setState(() => _isLoading = false);
       }
+    }
+  }
+
+  /// مشاركة المنشور في محادثة عبر chat_module
+  Future<void> _shareToChat() async {
+    final dialogRoute = ModalRoute.of(context);
+    final postUrl = '${cfgP.first['w1']}/posts/${widget.post.id}';
+    final thumbnail = (widget.post.photos?.isNotEmpty ?? false)
+        ? widget.post.photos!.first.source
+        : (widget.post.ogImage ?? '');
+
+    await ChatModuleLauncher.shareToChat(
+      context,
+      shareDraft: ChatSharedDraftModel(
+        messageType: 'shared_post',
+        postId: widget.post.id,
+        reelId: 0,
+        productPostId: 0,
+        itemType: '',
+        title: widget.post.text,
+        thumbnail: thumbnail,
+        url: postUrl,
+        authorName: widget.post.authorName,
+        draftMessage: '',
+      ),
+    );
+
+    if (mounted && dialogRoute != null) {
+      Navigator.of(context).removeRoute(dialogRoute);
     }
   }
 
@@ -442,7 +472,14 @@ class _SharePostDialogState extends State<SharePostDialog> {
                       isSelected: _selectedShareType == 'event',
                       onTap: () => setState(() => _selectedShareType = 'event'),
                     ),
-               
+                    const SizedBox(height: 8),
+                    _ShareTypeOption(
+                      icon: Iconsax.message,
+                      title: 'share_to_chat'.tr,
+                      isSelected: false,
+                      onTap: _shareToChat,
+                    ),
+
 
                     // قسم المشاركة على التطبيقات الاجتماعية
                     const SizedBox(height: 12),

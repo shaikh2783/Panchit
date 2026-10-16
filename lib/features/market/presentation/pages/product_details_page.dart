@@ -10,9 +10,7 @@ import '../../domain/market_repository.dart';
 import '../../application/bloc/cart/cart_bloc.dart';
 import '../../application/bloc/cart/cart_event.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:snginepro/core/network/api_client.dart';
-import 'package:snginepro/features/messenger/data/services/messenger_api_service.dart';
-import 'package:snginepro/features/messenger/presentation/pages/chat_page.dart';
+import 'package:snginepro/core/utils/chat_module_launcher.dart';
 
 /// Product Details Page - صفحة تفاصيل المنتج
 /// 
@@ -98,13 +96,25 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   Future<void> _contactSeller() async {
     if (_product == null) return;
 
-    final sellerId = _product!.seller.userId;
-    
+    final sellerId = int.tryParse(_product!.seller.userId);
+    if (sellerId == null) {
+      Get.snackbar(
+        'error'.tr,
+        'failed_to_open_chat'.tr,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
     // Check if user is trying to chat with themselves
     final authNotifier = context.read<AuthNotifier>();
     final currentUser = authNotifier.currentUser;
-    final currentUserId = currentUser?['user_id'] as int?;
-    
+    final currentUserId = int.tryParse(
+      (currentUser?['user_id'] ?? currentUser?['id'])?.toString() ?? '',
+    );
+
     if (currentUserId != null && currentUserId == sellerId) {
       Get.snackbar(
         'error'.tr,
@@ -116,86 +126,10 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       return;
     }
 
-    // Show loading
-    Get.dialog(
-      Center(
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child: const CircularProgressIndicator(),
-        ),
-      ),
-      barrierDismissible: false,
+    await ChatModuleLauncher.openUserConversation(
+      context,
+      targetUserId: sellerId,
     );
-
-    try {
-      // Get or create conversation with seller
-      final apiClient = context.read<ApiClient>();
-      final messengerService = MessengerApiService(apiClient);
-
-      final conversation = await messengerService.getOrCreateConversation(
-        userId: sellerId.toString(),
-      );
-
-      Get.back(); // Close loading dialog
-
-      if (conversation == null) {
-        Get.snackbar(
-          'error'.tr,
-          'chat_privacy_settings_prevent'.tr,
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
-        return;
-      }
-
-      // Navigate to chat page
-      Get.to(
-        () => ChatPage(
-          conversationId: conversation.conversationId,
-          otherUser: conversation.otherUser,
-        ),
-      );
-    } catch (e) {
-      Get.back(); // Close loading dialog
-
-      // Parse error message
-      String errorMessage = 'failed_to_open_chat'.tr;
-      final errorStr = e.toString().toLowerCase();
-
-      if (errorStr.contains('403')) {
-        if (errorStr.contains('friends only') ||
-            errorStr.contains('صداقة فقط') ||
-            errorStr.contains('chat privacy is set to friends')) {
-          errorMessage = 'chat_privacy_friends_only'.tr;
-        } else if (errorStr.contains('following') ||
-            errorStr.contains('متابعين')) {
-          errorMessage = 'chat_privacy_following_only'.tr;
-        } else if (errorStr.contains('لا يمكنك') || 
-            errorStr.contains('cannot') ||
-            errorStr.contains('not allowed')) {
-          errorMessage = 'chat_seller_privacy_restricted'.tr;
-        } else {
-          errorMessage = 'chat_privacy_settings_prevent'.tr;
-        }
-      } else if (errorStr.contains('not found') ||
-          errorStr.contains('غير موجود')) {
-        errorMessage = 'user_not_found'.tr;
-      }
-
-      Get.snackbar(
-        'error'.tr,
-        errorMessage,
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        duration: const Duration(seconds: 4),
-      );
-    }
   }
 
   @override

@@ -23,7 +23,9 @@ import 'package:snginepro/features/feed/presentation/pages/reels_page.dart';
 import 'package:snginepro/features/reels/application/bloc/reels_bloc.dart';
 import 'package:snginepro/features/search/presentation/pages/search_page.dart';
 import 'package:snginepro/features/agora/presentation/pages/professional_live_stream_wrapper.dart';
-import 'package:snginepro/features/messenger/presentation/pages/conversations_page.dart';
+import 'package:chat_module/app/app_root.dart';
+import 'package:chat_module/app/bootstrap/app_bootstrap.dart';
+import 'package:chat_module/app/core/controllers/session_controller.dart';
 import 'package:snginepro/features/discover/data/services/homepage_widgets_api_service.dart';
 import 'package:snginepro/features/friends/data/services/friends_api_service.dart';
 import 'package:snginepro/core/network/api_client.dart';
@@ -1559,15 +1561,45 @@ class HomePageState extends State<HomePage> {
         ),
         _AppBarAction(
           icon: Iconsax.message,
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const ConversationsPage()),
-            );
-          },
+          onTap: () => _openMessenger(context),
         ),
         const SizedBox(width: 12),
       ],
     );
+  }
+
+  Future<void> _openMessenger(BuildContext context) async {
+    final authNotifier = context.read<AuthNotifier>();
+    final token = authNotifier.authToken;
+    final user = authNotifier.currentUser;
+    final userId = int.tryParse(
+      (user?['user_id'] ?? user?['id'])?.toString() ?? '',
+    );
+    if (token == null || token.isEmpty || userId == null) {
+      return;
+    }
+
+    try {
+      await AppBootstrap.ensureInitialized();
+      await Get.find<SessionController>().attachExternalSession(
+        token: token,
+        userId: userId,
+        userName: (user?['user_fullname'] ?? user?['name'])?.toString(),
+        userPicture: (user?['user_picture'] ?? user?['avatar'])?.toString(),
+      );
+    } catch (e, st) {
+      debugPrint('[_openMessenger] failed: $e\n$st');
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Unable to open messenger. Please try again.')),
+      );
+      return;
+    }
+
+    if (!context.mounted) return;
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (context) => const AppRoot()));
   }
 
   Widget _buildFilterBar() {

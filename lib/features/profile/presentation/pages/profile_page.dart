@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:snginepro/features/messenger/data/models/conversation_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:snginepro/core/theme/app_colors.dart';
@@ -25,8 +24,7 @@ import 'package:snginepro/features/photos/presentation/pages/user_albums_page.da
 import 'package:snginepro/features/blocking/data/services/blocking_service.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/providers/system_settings_provider.dart';
-import '../../../messenger/data/services/messenger_api_service.dart';
-import '../../../messenger/presentation/pages/chat_page.dart';
+import '../../../../core/utils/chat_module_launcher.dart';
 
 import '../../data/models/user_profile_model.dart' as profile_models;
 import '../../data/models/profile_completion_model.dart';
@@ -906,92 +904,10 @@ class _ProfilePageState extends State<ProfilePage>
       return;
     }
 
-    // Show loading
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    Get.dialog(
-      Center(
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: isDark ? AppColors.surfaceDark : Colors.white,
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child: const CircularProgressIndicator(),
-        ),
-      ),
-      barrierDismissible: false,
+    await ChatModuleLauncher.openUserConversation(
+      context,
+      targetUserId: userId,
     );
-
-    try {
-      // Get or create conversation with this user
-      final apiClient = context.read<ApiClient>();
-      final messengerService = MessengerApiService(apiClient);
-
-      final conversation = await messengerService.getOrCreateConversation(
-        userId: userId.toString(),
-      );
-
-      Get.back(); // Close loading dialog
-
-      if (conversation == null &&
-          _profileData?.relationship.isFriend == false) {
-        Get.snackbar(
-          'error'.tr,
-          'profile_must_be_friend'.tr,
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
-        return;
-      }
-      UserPreview otherUser = UserPreview(
-        userId: userId,
-        username: _profileData?.profile.username ?? "",
-        firstName: _profileData?.profile.firstName ?? "",
-        lastName: _profileData?.profile.lastName ?? "",
-        avatar: _profileData?.profile.picture ?? "",
-        isVerified: _profileData?.profile.isVerified ?? false,
-        link: _profileData?.profile.socialLinks.website,
-      );
-      // Navigate to chat page with the real conversation
-      Get.to(
-        () => ChatPage(
-          conversationId: conversation?.conversationId ?? "0",
-          otherUser: conversation?.otherUser ?? otherUser,
-        ),
-      );
-    } catch (e) {
-      Get.back(); // Close loading dialog
-
-      // Parse error message
-      String errorMessage = 'failed_to_open_chat'.tr;
-      final errorStr = e.toString();
-
-      if (errorStr.contains('403')) {
-        if (errorStr.contains('friends only') ||
-            errorStr.contains('صداقة فقط')) {
-          errorMessage = 'chat_privacy_friends_only'.tr;
-        } else if (errorStr.contains('following') ||
-            errorStr.contains('متابعين')) {
-          errorMessage = 'chat_privacy_following_only'.tr;
-        } else {
-          errorMessage = 'cannot_chat_with_user'.tr;
-        }
-      } else if (errorStr.contains('404')) {
-        errorMessage = 'user_not_found'.tr;
-      } else if (errorStr.contains('blocked') || errorStr.contains('محظور')) {
-        errorMessage = 'user_blocked_you'.tr;
-      }
-
-      Get.snackbar(
-        'error'.tr,
-        errorMessage,
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        duration: const Duration(seconds: 4),
-      );
-    }
   }
 
   Future<void> _toggleBlockUser() async {

@@ -9,6 +9,15 @@
 # packages, and plugins designed to encourage good coding practices.
 include: package:flutter_lints/flutter.yaml
 
+analyzer:
+  exclude:
+    # Vendored path-dependency packages (own pub packages with their own
+    # analysis context); their test/codegen-only files pull in dev
+    # dependencies (mockito, pigeon) not present at the root, which isn't
+    # a real problem since those files aren't compiled into the app.
+    - packages/**
+    - third_party/**
+
 linter:
   # The lint rules applied to this project can be customized in the
   # section below to disable rules from the `package:flutter_lints/flutter.yaml`
