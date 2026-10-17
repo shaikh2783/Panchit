@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:video_player/video_player.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:snginepro/features/feed/presentation/pages/story_editor_page.dart';
 import 'package:snginepro/features/stories/application/bloc/stories_bloc.dart';
 
 class CreateStoryPage extends StatefulWidget {
@@ -62,6 +63,55 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
         _videoController = controller;
       });
     } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${'create_story_error_prefix'.tr}: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  /// يفتح محرر القصة (قص، نصوص، رموز) ويطبّق النتيجة عند الحفظ
+  Future<void> _openEditor() async {
+    if (_mediaFile == null) return;
+
+    final editedPath = await Navigator.push<String>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => StoryEditorPage(mediaFile: _mediaFile!, isVideo: _isVideo),
+        fullscreenDialog: true,
+      ),
+    );
+
+    if (editedPath != null && mounted) {
+      await _applyEditedMedia(editedPath);
+    }
+  }
+
+  Future<void> _applyEditedMedia(String path) async {
+    if (!_isVideo) {
+      setState(() => _mediaFile = XFile(path));
+      return;
+    }
+
+    final newController = CachedVideoPlayerPlus.file(File(path));
+    try {
+      await newController.initialize();
+      newController.controller.setLooping(true);
+      newController.controller.play();
+
+      final oldController = _videoController;
+      setState(() {
+        _mediaFile = XFile(path);
+        _videoController = newController;
+      });
+      oldController?.controller.dispose();
+      oldController?.dispose();
+    } catch (e) {
+      newController.dispose();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -199,57 +249,73 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ),
-            // زر المشاركة
+            // زر التعديل وزر المشاركة
             if (_mediaFile != null)
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: _isLoading
-                        ? [Colors.grey.shade600, Colors.grey.shade700]
-                        : [
-                            Theme.of(context).primaryColor,
-                            Theme.of(context).primaryColor.withOpacity(0.8),
-                          ],
-                  ),
-                  borderRadius: BorderRadius.circular(25),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Theme.of(context).primaryColor.withOpacity(0.4),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
+              Row(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.4),
+                      shape: BoxShape.circle,
                     ),
-                  ],
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: _isLoading ? null : _createStory,
-                    borderRadius: BorderRadius.circular(25),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            _isVideo ? Iconsax.video : Iconsax.send_2,
-                            color: Colors.white,
-                            size: 20,
+                    child: IconButton(
+                      icon: const Icon(Iconsax.edit_2, color: Colors.white, size: 24),
+                      tooltip: 'edit_story_tooltip'.tr,
+                      onPressed: _isLoading ? null : _openEditor,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: _isLoading
+                            ? [Colors.grey.shade600, Colors.grey.shade700]
+                            : [
+                                Theme.of(context).primaryColor,
+                                Theme.of(context).primaryColor.withOpacity(0.8),
+                              ],
+                      ),
+                      borderRadius: BorderRadius.circular(25),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Theme.of(context).primaryColor.withOpacity(0.4),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: _isLoading ? null : _createStory,
+                        borderRadius: BorderRadius.circular(25),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                _isVideo ? Iconsax.video : Iconsax.send_2,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'share_button'.tr,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'share_button'.tr,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
           ],
         ),

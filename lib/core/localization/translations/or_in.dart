@@ -2815,6 +2815,20 @@ const Map<String, String> orIN = {
   "photo_ready":"ଫଟୋ ସେୟାର ପାଇଁ ପ୍ରସ୍ତୁତ",
   "choose_another":"ଅନ୍ୟଟି ବାଛନ୍ତୁ",
 
+  // Story Editor
+  "edit_story_tooltip":"ସମ୍ପାଦନ କରନ୍ତୁ",
+  "add_text_overlay_title":"ଟେକ୍ସଟ୍ ଯୋଡନ୍ତୁ",
+  "type_something":"କିଛି ଟାଇପ୍ କରନ୍ତୁ...",
+  "add_button":"ଯୋଡନ୍ତୁ",
+  "crop_tool_label":"କ୍ରପ୍",
+  "text_tool_label":"ଟେକ୍ସଟ୍",
+  "sticker_tool_label":"ଷ୍ଟିକର",
+  "crop_aspect_original":"ମୂଳ",
+  "crop_aspect_square":"ବର୍ଗ",
+  "crop_aspect_portrait":"ପୋର୍ଟ୍ରେଟ୍",
+  "text_overlay_label":"ଟେକ୍ସଟ୍",
+  "sticker_overlay_label":"ଷ୍ଟିକର",
+
   // Competition Detail Page
   "competition_details": "ପ୍ରତିଯୋଗିତା ବିବରଣୀ",
   "competition_load_failed": "ପ୍ରତିଯୋଗିତା ଲୋଡ୍ ହୋଇ ପାରିଲା ନାହିଁ",

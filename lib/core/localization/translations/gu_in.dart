@@ -2799,6 +2799,20 @@ const Map<String, String> guIN = {
   "photo_ready":"ફોટો શેર કરવા માટે તૈયાર",
   "choose_another":"બીજું પસંદ કરો",
 
+  // Story Editor
+  "edit_story_tooltip":"સંપાદિત કરો",
+  "add_text_overlay_title":"ટેક્સ્ટ ઉમેરો",
+  "type_something":"કંઈક ટાઈપ કરો...",
+  "add_button":"ઉમેરો",
+  "crop_tool_label":"ક્રોપ",
+  "text_tool_label":"ટેક્સ્ટ",
+  "sticker_tool_label":"સ્ટીકર",
+  "crop_aspect_original":"મૂળ",
+  "crop_aspect_square":"ચોરસ",
+  "crop_aspect_portrait":"પોટ્રેટ",
+  "text_overlay_label":"ટેક્સ્ટ",
+  "sticker_overlay_label":"સ્ટીકર",
+
   // Competition Detail Page
   "competition_details": "સ્પર્ધાની વિગતો",
   "competition_load_failed": "સ્પર્ધા લોડ કરવામાં અસમર્થ",

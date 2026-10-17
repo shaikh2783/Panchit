@@ -2948,6 +2948,20 @@ const Map<String, String> hiIN = {
   "photo_ready":"फोटो साझा करने के लिए तैयार",
   "choose_another":"दूसरा चुनें",
 
+  // Story Editor
+  "edit_story_tooltip":"संपादित करें",
+  "add_text_overlay_title":"टेक्स्ट जोड़ें",
+  "type_something":"कुछ लिखें...",
+  "add_button":"जोड़ें",
+  "crop_tool_label":"क्रॉप",
+  "text_tool_label":"टेक्स्ट",
+  "sticker_tool_label":"स्टिकर",
+  "crop_aspect_original":"मूल",
+  "crop_aspect_square":"वर्ग",
+  "crop_aspect_portrait":"पोर्ट्रेट",
+  "text_overlay_label":"टेक्स्ट",
+  "sticker_overlay_label":"स्टिकर",
+
   // Competition Detail Page
   "competition_details": "प्रतियोगिता विवरण",
   "competition_load_failed": "प्रतियोगिता लोड करने में असमर्थ",

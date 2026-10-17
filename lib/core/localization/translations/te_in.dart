@@ -2842,6 +2842,20 @@ const Map<String, String> teIN = {
   "photo_ready":"ఫోటో పంచుకోవడానికి సిద్ధంగా ఉంది",
   "choose_another":"ఇంకొకటి ఎంచుకోండి",
 
+  // Story Editor
+  "edit_story_tooltip":"సవరించు",
+  "add_text_overlay_title":"టెక్స్ట్ జోడించండి",
+  "type_something":"ఏదైనా టైప్ చేయండి...",
+  "add_button":"జోడించు",
+  "crop_tool_label":"క్రాప్",
+  "text_tool_label":"టెక్స్ట్",
+  "sticker_tool_label":"స్టికర్",
+  "crop_aspect_original":"అసలు",
+  "crop_aspect_square":"చతురస్రం",
+  "crop_aspect_portrait":"పోర్ట్రెయిట్",
+  "text_overlay_label":"టెక్స్ట్",
+  "sticker_overlay_label":"స్టికర్",
+
   // Competition Detail Page
   "competition_details": "పోటీ వివరాలు",
   "competition_load_failed": "పోటీని లోడ్ చేయడం సాధ్యం కాలేదు",

@@ -2816,6 +2816,20 @@ const Map<String, String> arSA = {
   "photo_ready":"الصورة جاهزة للمشاركة",
   "choose_another":"اختر خيارًا آخر",
 
+  // Story Editor
+  "edit_story_tooltip":"تعديل",
+  "add_text_overlay_title":"إضافة نص",
+  "type_something":"اكتب شيئًا...",
+  "add_button":"إضافة",
+  "crop_tool_label":"قص",
+  "text_tool_label":"نص",
+  "sticker_tool_label":"ملصق",
+  "crop_aspect_original":"الأصلي",
+  "crop_aspect_square":"مربع",
+  "crop_aspect_portrait":"عمودي",
+  "text_overlay_label":"نص",
+  "sticker_overlay_label":"ملصق",
+
   // Reels module
   'use_camera_music_filters': 'استخدم الكاميرا مع الموسيقى والفلاتر',
   'upload_from_gallery': 'رفع من المعرض',

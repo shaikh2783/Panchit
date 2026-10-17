@@ -3062,6 +3062,20 @@ const Map<String, String> mrIN = {
   "photo_ready":"फोटो शेअर करण्यासाठी तयार",
   "choose_another":"दुसरे निवडा",
 
+  // Story Editor
+  "edit_story_tooltip":"संपादित करा",
+  "add_text_overlay_title":"मजकूर जोडा",
+  "type_something":"काहीतरी टाइप करा...",
+  "add_button":"जोडा",
+  "crop_tool_label":"क्रॉप",
+  "text_tool_label":"मजकूर",
+  "sticker_tool_label":"स्टिकर",
+  "crop_aspect_original":"मूळ",
+  "crop_aspect_square":"चौरस",
+  "crop_aspect_portrait":"पोर्ट्रेट",
+  "text_overlay_label":"मजकूर",
+  "sticker_overlay_label":"स्टिकर",
+
   // Reels module
   'use_camera_music_filters': 'संगीत आणि फिल्टरसह कॅमेरा वापरा',
   'upload_from_gallery': 'गॅलरीमधून अपलोड करा',

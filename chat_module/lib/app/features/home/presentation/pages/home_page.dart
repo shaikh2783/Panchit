@@ -22,7 +22,6 @@ import '../../../groups_chat/presentation/controllers/groups_chat_controller.dar
 import '../../../groups_chat/presentation/pages/group_chat_page.dart';
 import '../../../groups_chat/utils/groups_chat_logger.dart';
 import '../../../settings/presentation/pages/settings_page.dart';
-import '../widgets/stories_section.dart';
 import '../controllers/home_controller.dart';
 import '../controllers/profile_controller.dart';
 
@@ -208,7 +207,6 @@ class _ChatsTab extends StatelessWidget {
                       _SearchBar(controller: homeController),
                       if (!isSearchActive) ...[
                         const SizedBox(height: 12),
-                        const StoriesSection(),
                       ],
                     ],
                   ),

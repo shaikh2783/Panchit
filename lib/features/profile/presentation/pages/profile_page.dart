@@ -446,15 +446,29 @@ class _ProfilePageState extends State<ProfilePage>
                   Stack(
                     clipBehavior: Clip.none,
                     children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white, width: 3),
+                      GestureDetector(
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => _FullScreenImageViewer(
+                              imageUrl: profile.picture,
+                              heroTag: 'profile-picture-${profile.id}',
+                            ),
+                          ),
                         ),
-                        child: CircleAvatar(
-                          radius: 50,
-                          backgroundImage: CachedNetworkImageProvider(
-                            profile.picture,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 3),
+                          ),
+                          child: Hero(
+                            tag: 'profile-picture-${profile.id}',
+                            child: CircleAvatar(
+                              radius: 50,
+                              backgroundImage: CachedNetworkImageProvider(
+                                profile.picture,
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -3555,6 +3569,136 @@ class _PhotoViewerPageState extends State<_PhotoViewerPage> {
                 ),
               ),
             ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FullScreenImageViewer extends StatefulWidget {
+  final String imageUrl;
+  final String heroTag;
+
+  const _FullScreenImageViewer({required this.imageUrl, required this.heroTag});
+
+  @override
+  State<_FullScreenImageViewer> createState() =>
+      _FullScreenImageViewerState();
+}
+
+class _FullScreenImageViewerState extends State<_FullScreenImageViewer>
+    with SingleTickerProviderStateMixin {
+  static const double _minScale = 1.0;
+  static const double _maxScale = 5.0;
+  static const double _doubleTapScale = 2.5;
+
+  final TransformationController _transformationController =
+      TransformationController();
+  late final AnimationController _animationController;
+  Animation<Matrix4>? _zoomAnimation;
+  TapDownDetails? _doubleTapDetails;
+  bool _uiVisible = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController =
+        AnimationController(
+          vsync: this,
+          duration: const Duration(milliseconds: 220),
+        )..addListener(() {
+          if (_zoomAnimation != null) {
+            _transformationController.value = _zoomAnimation!.value;
+          }
+        });
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    _transformationController.dispose();
+    super.dispose();
+  }
+
+  void _animateTo(Matrix4 end) {
+    _zoomAnimation = Matrix4Tween(
+      begin: _transformationController.value,
+      end: end,
+    ).animate(
+      CurveTween(curve: Curves.easeOutCubic).animate(_animationController),
+    );
+    _animationController.forward(from: 0);
+  }
+
+  void _handleDoubleTap() {
+    final currentScale = _transformationController.value
+        .getMaxScaleOnAxis();
+    if (currentScale > _minScale + 0.05) {
+      _animateTo(Matrix4.identity());
+    } else {
+      final position = _doubleTapDetails!.localPosition;
+      final end = Matrix4.identity()
+        ..translateByDouble(
+          -position.dx * (_doubleTapScale - 1),
+          -position.dy * (_doubleTapScale - 1),
+          0,
+          1,
+        )
+        ..scaleByDouble(
+          _doubleTapScale,
+          _doubleTapScale,
+          _doubleTapScale,
+          1,
+        );
+      _animateTo(end);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Stack(
+        children: [
+          GestureDetector(
+            onTap: () => setState(() => _uiVisible = !_uiVisible),
+            onDoubleTapDown: (details) => _doubleTapDetails = details,
+            onDoubleTap: _handleDoubleTap,
+            child: Center(
+              child: Hero(
+                tag: widget.heroTag,
+                child: InteractiveViewer(
+                  transformationController: _transformationController,
+                  minScale: _minScale,
+                  maxScale: _maxScale,
+                  child: CachedNetworkImage(
+                    imageUrl: widget.imageUrl,
+                    fit: BoxFit.contain,
+                    placeholder: (context, url) => const SizedBox(
+                      width: 48,
+                      height: 48,
+                      child: CircularProgressIndicator(),
+                    ),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error, color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          AnimatedOpacity(
+            opacity: _uiVisible ? 1 : 0,
+            duration: const Duration(milliseconds: 200),
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                child: IconButton(
+                  icon: const Icon(Icons.close, color: Colors.white),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

@@ -28,6 +28,7 @@ import 'package:chat_module/app/bootstrap/app_bootstrap.dart';
 import 'package:chat_module/app/core/controllers/session_controller.dart';
 import 'package:snginepro/features/discover/data/services/homepage_widgets_api_service.dart';
 import 'package:snginepro/features/friends/data/services/friends_api_service.dart';
+import 'package:snginepro/features/friends/presentation/pages/suggested_friends_page.dart';
 import 'package:snginepro/core/network/api_client.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:snginepro/features/profile/presentation/pages/profile_page.dart';
@@ -679,6 +680,30 @@ class _SuggestedFriendsRailState extends State<_SuggestedFriendsRail> {
                         ),
                   ),
                 ],
+              ),
+              GestureDetector(
+                onTap: () async {
+                  final result = await Navigator.push<Set<int>>(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => SuggestedFriendsPage(
+                        people: widget.people,
+                        mediaResolver: widget.mediaResolver,
+                        initiallyAdded: _added,
+                      ),
+                    ),
+                  );
+                  if (mounted && result != null) {
+                    setState(() => _added.addAll(result));
+                  }
+                },
+                child: Text(
+                  'view_all'.tr,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
               ),
             ],
           ),

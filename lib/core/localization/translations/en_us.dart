@@ -933,6 +933,8 @@ const Map<String, String> enUS = {
   'logout_confirm': 'Are you sure you want to logout?',
   'search_placeholder': 'Search...',
   'view_all': 'View All',
+  'failed_to_send_request': 'Failed to send request',
+  'no_more_suggestions': 'No more suggestions right now',
 
   // Settings Page
   'customize_experience': 'Customize Your Experience',
@@ -2839,6 +2841,20 @@ const Map<String, String> enUS = {
   "video_ready":"Video ready to share",
   "photo_ready":"Photo ready to share",
   "choose_another":"Choose Another",
+
+  // Story Editor
+  "edit_story_tooltip":"Edit",
+  "add_text_overlay_title":"Add Text",
+  "type_something":"Type something...",
+  "add_button":"Add",
+  "crop_tool_label":"Crop",
+  "text_tool_label":"Text",
+  "sticker_tool_label":"Sticker",
+  "crop_aspect_original":"Original",
+  "crop_aspect_square":"Square",
+  "crop_aspect_portrait":"Portrait",
+  "text_overlay_label":"Text",
+  "sticker_overlay_label":"Sticker",
 
   // Competition Detail Page
   'competition_details': 'Competition Details',

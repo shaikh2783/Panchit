@@ -3030,6 +3030,20 @@ const Map<String, String> mlIN = {
   "photo_ready":"ഫോട്ടോ പങ്കിടാൻ തയ്യാറാണ്",
   "choose_another":"മറ്റൊന്ന് തിരഞ്ഞെടുക്കുക",
 
+  // Story Editor
+  "edit_story_tooltip":"എഡിറ്റ് ചെയ്യുക",
+  "add_text_overlay_title":"ടെക്സ്റ്റ് ചേർക്കുക",
+  "type_something":"എന്തെങ്കിലും ടൈപ്പ് ചെയ്യുക...",
+  "add_button":"ചേർക്കുക",
+  "crop_tool_label":"ക്രോപ്പ്",
+  "text_tool_label":"ടെക്സ്റ്റ്",
+  "sticker_tool_label":"സ്റ്റിക്കർ",
+  "crop_aspect_original":"ഒറിജിനൽ",
+  "crop_aspect_square":"സ്ക്വയർ",
+  "crop_aspect_portrait":"പോർട്രെയിറ്റ്",
+  "text_overlay_label":"ടെക്സ്റ്റ്",
+  "sticker_overlay_label":"സ്റ്റിക്കർ",
+
   // Reels module
   'use_camera_music_filters': 'മ്യൂസിക്കും ഫിൽട്ടറുകളും സഹിതം ക്യാമറ ഉപയോഗിക്കുക',
   'upload_from_gallery': 'ഗാലറിയിൽ നിന്ന് അപ്‌ലോഡ് ചെയ്യുക',

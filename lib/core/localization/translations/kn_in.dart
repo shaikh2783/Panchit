@@ -2860,6 +2860,20 @@ const Map<String, String> knIN = {
   "photo_ready": "ಫೋಟೋ ಹಂಚಿಕೊಳ್ಳಲು ಸಿದ್ಧವಾಗಿದೆ",
   "choose_another": "ಮತ್ತೊಂದು ಆಯ್ಕೆಮಾಡಿ",
 
+  // Story Editor
+  "edit_story_tooltip": "ಸಂಪಾದಿಸಿ",
+  "add_text_overlay_title": "ಪಠ್ಯ ಸೇರಿಸಿ",
+  "type_something": "ಏನಾದರೂ ಟೈಪ್ ಮಾಡಿ...",
+  "add_button": "ಸೇರಿಸಿ",
+  "crop_tool_label": "ಕ್ರಾಪ್",
+  "text_tool_label": "ಪಠ್ಯ",
+  "sticker_tool_label": "ಸ್ಟಿಕರ್",
+  "crop_aspect_original": "ಮೂಲ",
+  "crop_aspect_square": "ಚೌಕ",
+  "crop_aspect_portrait": "ಪೋರ್ಟ್ರೇಟ್",
+  "text_overlay_label": "ಪಠ್ಯ",
+  "sticker_overlay_label": "ಸ್ಟಿಕರ್",
+
   // Reels module
   'use_camera_music_filters': 'ಸಂಗೀತ ಮತ್ತು ಫಿಲ್ಟರ್‌ಗಳೊಂದಿಗೆ ಕ್ಯಾಮೆರಾ ಬಳಸಿ',
   'upload_from_gallery': 'ಗ್ಯಾಲರಿಯಿಂದ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ',

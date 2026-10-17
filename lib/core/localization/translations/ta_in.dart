@@ -2805,6 +2805,20 @@ const Map<String, String> taIN = {
   "photo_ready":"புகைப்படம் பகிர தயாராக உள்ளது",
   "choose_another":"மற்றொன்றைத் தேர்வு செய்யவும்",
 
+  // Story Editor
+  "edit_story_tooltip":"திருத்து",
+  "add_text_overlay_title":"உரை சேர்க்கவும்",
+  "type_something":"ஏதாவது தட்டச்சு செய்யவும்...",
+  "add_button":"சேர்",
+  "crop_tool_label":"கிராப்",
+  "text_tool_label":"உரை",
+  "sticker_tool_label":"ஸ்டிக்கர்",
+  "crop_aspect_original":"மூலம்",
+  "crop_aspect_square":"சதுரம்",
+  "crop_aspect_portrait":"போர்ட்ரெய்ட்",
+  "text_overlay_label":"உரை",
+  "sticker_overlay_label":"ஸ்டிக்கர்",
+
   // Competition Detail Page
   "competition_details": "போட்டி விவரங்கள்",
   "competition_load_failed": "போட்டியை ஏற்ற முடியவில்லை",
