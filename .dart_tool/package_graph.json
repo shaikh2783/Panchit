@@ -8,6 +8,7 @@
       "version": "1.0.15+20",
       "dependencies": [
         "agora_rtc_engine",
+        "app_links",
         "audio_waveforms",
         "audioplayers",
         "cached_network_image",
@@ -738,6 +739,16 @@
         "http_parser",
         "meta",
         "web"
+      ]
+    },
+    {
+      "name": "app_links",
+      "version": "6.4.1",
+      "dependencies": [
+        "app_links_linux",
+        "app_links_platform_interface",
+        "app_links_web",
+        "flutter"
       ]
     },
     {
@@ -2361,6 +2372,32 @@
       "dependencies": [
         "flutter",
         "meta",
+        "plugin_platform_interface"
+      ]
+    },
+    {
+      "name": "app_links_web",
+      "version": "1.0.5",
+      "dependencies": [
+        "app_links_platform_interface",
+        "flutter",
+        "flutter_web_plugins",
+        "web"
+      ]
+    },
+    {
+      "name": "app_links_linux",
+      "version": "1.0.4",
+      "dependencies": [
+        "app_links_platform_interface",
+        "flutter"
+      ]
+    },
+    {
+      "name": "app_links_platform_interface",
+      "version": "2.0.4",
+      "dependencies": [
+        "flutter",
         "plugin_platform_interface"
       ]
     }

@@ -27,6 +27,13 @@ class NotificationNavigationService {
     }
   }
 
+  /// التعامل مع رابط عميق وارد من Android App Links / iOS Universal Links
+  /// (ومن أي مخطط مخصص مثل sngine://) عبر حزمة app_links.
+  /// يعاد استخدام نفس منطق قائمة الانتظار والتنقل المستخدم مع الإشعارات.
+  static void handleDeepLink(Uri uri) {
+    handleNotification({'url': uri.toString()});
+  }
+
   /// معالجة التنقل من بيانات الإشعار
   static void handleNotification(Map<String, dynamic> data) {
     // في حالة الفتح البارد (التطبيق مغلق) نخزن الطلب حتى يصبح الـ Navigator جاهز
@@ -150,8 +157,10 @@ class NotificationNavigationService {
       final firstSegment = pathSegments[0];
       
       switch (firstSegment) {
-        // 📄 منشورات
+        // 📄 منشورات (وكذلك الريلز، فهي تُشارك بنفس رابط /posts/<id>)
         case 'posts':
+        case 'reels':
+        case 'reel':
           if (pathSegments.length > 1) {
             final postId = pathSegments[1];
             final id = int.tryParse(postId) ?? 0;
@@ -161,7 +170,7 @@ class NotificationNavigationService {
             }
           }
           break;
-          
+
         // 👤 ملفات شخصية
         case 'users':
         case 'profile':

@@ -1261,6 +1261,10 @@ class _ProfilePageState extends State<ProfilePage>
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
+        if (_profileData?.kyc != null) ...[
+          _buildKycSection(_profileData!.kyc!),
+          const SizedBox(height: 16),
+        ],
         if (competitionBadges.isNotEmpty) ...[
           _buildCompetitionAchievementsSection(competitionBadges),
           const SizedBox(height: 16),
@@ -1538,6 +1542,116 @@ class _ProfilePageState extends State<ProfilePage>
 
   /// Competition Achievements: one card, clean rows separated by dividers,
   /// sourced from [profile_models.Badge]s that reference a competition.
+  /// Shows whether the profile's identity (KYC) has been verified.
+  /// Government-ID details returned alongside the status (name, DOB,
+  /// address) are deliberately never rendered here — only the pass/fail
+  /// state and the verification date are shown.
+  Widget _buildKycSection(profile_models.KycInfo kyc) {
+    final isVerified = kyc.isVerified;
+    final cs = Theme.of(context).colorScheme;
+    final statusColor = isVerified ? Colors.green : Colors.orange;
+
+    return _InfoCard(
+      title: 'kyc_section_title'.tr,
+      icon: Iconsax.shield_tick,
+      children: [
+        Row(
+          children: [
+            Icon(
+              isVerified ? Iconsax.verify : Iconsax.shield_cross,
+              color: statusColor,
+              size: 20,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                isVerified
+                    ? 'kyc_status_verified'.tr
+                    : 'kyc_status_not_verified'.tr,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: statusColor,
+                ),
+              ),
+            ),
+            if (!isVerified)
+              IconButton(
+                visualDensity: VisualDensity.compact,
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                icon: Icon(Iconsax.info_circle, color: statusColor, size: 20),
+                tooltip: 'kyc_required_competition_title'.tr,
+                onPressed: _showKycRequiredForCompetitionsDialog,
+              ),
+          ],
+        ),
+        if (isVerified && (kyc.verifiedAt?.isNotEmpty ?? false)) ...[
+          const SizedBox(height: 8),
+          Text(
+            '${'kyc_verified_on'.tr}: ${kyc.verifiedAt}',
+            style: TextStyle(
+              fontSize: 13,
+              color: cs.onSurface.withValues(alpha: 0.6),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  /// Explains why KYC matters (competition entry is gated behind it) and
+  /// lets the user jump straight to verifying, or dismiss for later.
+  void _showKycRequiredForCompetitionsDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        icon: const Icon(Iconsax.shield_cross, color: Colors.orange, size: 36),
+        title: Text(
+          'kyc_required_competition_title'.tr,
+          textAlign: TextAlign.center,
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'kyc_required_competition_message'.tr,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'kyc_verify_anytime_hint'.tr,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(
+                  dialogContext,
+                ).colorScheme.onSurface.withValues(alpha: 0.6),
+              ),
+            ),
+          ],
+        ),
+        actionsAlignment: MainAxisAlignment.spaceBetween,
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text('later'.tr),
+          ),
+          FilledButton(
+            onPressed: () {
+              Navigator.of(dialogContext).pop();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const CompetitionsHubPage()),
+              );
+            },
+            child: Text('kyc_verify_now'.tr),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildCompetitionAchievementsSection(
     List<profile_models.Badge> competitionBadges,
   ) {

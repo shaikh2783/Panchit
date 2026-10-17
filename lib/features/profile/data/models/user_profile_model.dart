@@ -387,6 +387,60 @@ class Address {
   }
 }
 
+/// Identity details DigiLocker/Sandbox returned for a completed KYC, nested
+/// under [KycInfo.profile]. Kept separate from [UserProfile] since this is
+/// government-ID PII and must never be shown to anyone other than the
+/// profile's own owner.
+class KycProfile {
+  final String? name;
+  final String? dateOfBirth;
+  final String? gender;
+  final String? fullAddress;
+
+  KycProfile({this.name, this.dateOfBirth, this.gender, this.fullAddress});
+
+  factory KycProfile.fromJson(Map<String, dynamic> json) {
+    return KycProfile(
+      name: json['name'],
+      dateOfBirth: json['date_of_birth'],
+      gender: json['gender'],
+      fullAddress: json['full_address'],
+    );
+  }
+}
+
+/// KYC (identity verification) status embedded in the profile response, used
+/// to show a verified/not-verified indicator in the profile's About section.
+class KycInfo {
+  final bool completed;
+  final String status;
+  final String? verifiedAt;
+  final String? provider;
+  final KycProfile? profile;
+
+  KycInfo({
+    required this.completed,
+    required this.status,
+    this.verifiedAt,
+    this.provider,
+    this.profile,
+  });
+
+  factory KycInfo.fromJson(Map<String, dynamic> json) {
+    return KycInfo(
+      completed: json['kyc_completed'] == true,
+      status: json['kyc_status']?.toString() ?? 'not_started',
+      verifiedAt: json['verified_at'],
+      provider: json['provider'],
+      profile: json['profile'] != null
+          ? KycProfile.fromJson(json['profile'])
+          : null,
+    );
+  }
+
+  bool get isVerified => completed && status == 'verified';
+}
+
 class UserProfileResponse {
   final UserProfile profile;
   final ProfileStats stats;
@@ -395,6 +449,7 @@ class UserProfileResponse {
   final List<Address> addresses;
   final Map<String, String?> socialLinks;
   final List<String> achievementTags;
+  final KycInfo? kyc;
 
   UserProfileResponse({
     required this.profile,
@@ -404,6 +459,7 @@ class UserProfileResponse {
     required this.addresses,
     required this.socialLinks,
     this.achievementTags = const <String>[],
+    this.kyc,
   });
 
   factory UserProfileResponse.fromJson(Map<String, dynamic> json) {
@@ -425,6 +481,7 @@ class UserProfileResponse {
             data['achievement_tags'] ??
             data['category_tags'],
       ),
+      kyc: data['kyc'] != null ? KycInfo.fromJson(data['kyc']) : null,
     );
   }
 }

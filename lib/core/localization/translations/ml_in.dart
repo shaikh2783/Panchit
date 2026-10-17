@@ -3044,6 +3044,16 @@ const Map<String, String> mlIN = {
   "text_overlay_label":"ടെക്സ്റ്റ്",
   "sticker_overlay_label":"സ്റ്റിക്കർ",
 
+  // KYC status card on the profile's About tab
+  "kyc_section_title":"ഐഡന്റിറ്റി പരിശോധന",
+  "kyc_status_verified":"ഐഡന്റിറ്റി പരിശോധിച്ചു",
+  "kyc_status_not_verified":"പരിശോധിച്ചിട്ടില്ല",
+  "kyc_verified_on":"പരിശോധിച്ച തീയതി",
+  "kyc_required_competition_title":"നിങ്ങളുടെ ഐഡന്റിറ്റി പരിശോധിക്കുക",
+  "kyc_required_competition_message":"KYC പരിശോധന കൂടാതെ നിങ്ങൾക്ക് ഒരു മത്സരത്തിലും പങ്കെടുക്കാൻ കഴിയില്ല.",
+  "kyc_verify_anytime_hint":"ഒരു മത്സരത്തിൽ പങ്കെടുക്കാൻ ആഗ്രഹിക്കുമ്പോൾ നിങ്ങൾക്ക് നിങ്ങളുടെ ഐഡന്റിറ്റി പരിശോധിക്കാം.",
+  "kyc_verify_now":"ഇപ്പോൾ പരിശോധിക്കുക",
+
   // Reels module
   'use_camera_music_filters': 'മ്യൂസിക്കും ഫിൽട്ടറുകളും സഹിതം ക്യാമറ ഉപയോഗിക്കുക',
   'upload_from_gallery': 'ഗാലറിയിൽ നിന്ന് അപ്‌ലോഡ് ചെയ്യുക',

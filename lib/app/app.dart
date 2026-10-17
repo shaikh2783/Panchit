@@ -16,6 +16,7 @@ import 'package:snginepro/core/localization/app_translations.dart';
 import 'package:snginepro/core/localization/localization_controller.dart';
 import 'package:snginepro/features/ads/domain/ads_repository.dart';
 import 'package:snginepro/features/auth/application/auth_notifier.dart';
+import 'package:snginepro/core/services/deep_link_service.dart';
 import 'package:snginepro/core/services/notification_navigation_service.dart';
 import 'package:snginepro/features/auth/application/bloc/auth_bloc.dart';
 import 'package:snginepro/features/auth/application/bloc/auth_events.dart';
@@ -499,9 +500,10 @@ class _AuthSwitcherState extends State<_AuthSwitcher> {
   void initState() {
     super.initState();
     _checkOnboarding();
-    // تفعيل التنقل من الإشعارات بعد بناء أول widget
+    // تفعيل التنقل من الإشعارات والروابط العميقة بعد بناء أول widget
     WidgetsBinding.instance.addPostFrameCallback((_) {
       NotificationNavigationService.markAppReady();
+      DeepLinkService.init();
     });
   }
 

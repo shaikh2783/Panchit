@@ -9,6 +9,34 @@
             </list>
           </value>
         </entry>
+        <entry key="app_links">
+          <value>
+            <list>
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/app_links-6.4.1/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="app_links_linux">
+          <value>
+            <list>
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/app_links_linux-1.0.4/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="app_links_platform_interface">
+          <value>
+            <list>
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/app_links_platform_interface-2.0.4/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="app_links_web">
+          <value>
+            <list>
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/app_links_web-1.0.5/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="archive">
           <value>
             <list>
@@ -1714,6 +1742,10 @@
     </properties>
     <CLASSES>
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/ansicolor-2.0.3/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/app_links-6.4.1/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/app_links_linux-1.0.4/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/app_links_platform_interface-2.0.4/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/app_links_web-1.0.5/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/archive-4.0.7/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/args-2.7.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/asn1lib-1.6.5/lib" />

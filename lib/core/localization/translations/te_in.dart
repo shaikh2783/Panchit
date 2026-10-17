@@ -2856,6 +2856,16 @@ const Map<String, String> teIN = {
   "text_overlay_label":"టెక్స్ట్",
   "sticker_overlay_label":"స్టికర్",
 
+  // KYC status card on the profile's About tab
+  "kyc_section_title":"గుర్తింపు ధృవీకరణ",
+  "kyc_status_verified":"గుర్తింపు ధృవీకరించబడింది",
+  "kyc_status_not_verified":"ధృవీకరించబడలేదు",
+  "kyc_verified_on":"ధృవీకరించిన తేదీ",
+  "kyc_required_competition_title":"మీ గుర్తింపును ధృవీకరించండి",
+  "kyc_required_competition_message":"కేవైసీ ధృవీకరణ లేకుండా మీరు ఏ పోటీలోనూ పాల్గొనలేరు.",
+  "kyc_verify_anytime_hint":"మీరు ఒక పోటీలో పాల్గొనాలనుకున్నప్పుడు మీ గుర్తింపును ధృవీకరించుకోవచ్చు.",
+  "kyc_verify_now":"ఇప్పుడే ధృవీకరించండి",
+
   // Competition Detail Page
   "competition_details": "పోటీ వివరాలు",
   "competition_load_failed": "పోటీని లోడ్ చేయడం సాధ్యం కాలేదు",

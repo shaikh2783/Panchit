@@ -2813,6 +2813,16 @@ const Map<String, String> guIN = {
   "text_overlay_label":"ટેક્સ્ટ",
   "sticker_overlay_label":"સ્ટીકર",
 
+  // KYC status card on the profile's About tab
+  "kyc_section_title":"ઓળખ ચકાસણી",
+  "kyc_status_verified":"ઓળખ ચકાસાયેલ",
+  "kyc_status_not_verified":"ચકાસાયેલ નથી",
+  "kyc_verified_on":"ચકાસણીની તારીખ",
+  "kyc_required_competition_title":"તમારી ઓળખ ચકાસો",
+  "kyc_required_competition_message":"KYC ચકાસણી વિના તમે કોઈપણ સ્પર્ધામાં ભાગ લઈ શકતા નથી.",
+  "kyc_verify_anytime_hint":"જ્યારે પણ તમારે સ્પર્ધામાં ભાગ લેવો હોય ત્યારે તમે તમારી ઓળખ ચકાસી શકો છો.",
+  "kyc_verify_now":"હમણાં ચકાસો",
+
   // Competition Detail Page
   "competition_details": "સ્પર્ધાની વિગતો",
   "competition_load_failed": "સ્પર્ધા લોડ કરવામાં અસમર્થ",

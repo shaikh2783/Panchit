@@ -86,6 +86,8 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/geolocator_apple-2.3.14" />
       <root url="file://$PROJECT_DIR$/third_party/wakelock" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/geolocator_android-5.1.1+1" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/app_links_web-1.0.5" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/app_links-6.4.1" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

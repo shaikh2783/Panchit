@@ -2829,6 +2829,16 @@ const Map<String, String> orIN = {
   "text_overlay_label":"ଟେକ୍ସଟ୍",
   "sticker_overlay_label":"ଷ୍ଟିକର",
 
+  // KYC status card on the profile's About tab
+  "kyc_section_title":"ପରିଚୟ ଯାଞ୍ଚ",
+  "kyc_status_verified":"ପରିଚୟ ଯାଞ୍ଚ ହୋଇଛି",
+  "kyc_status_not_verified":"ଯାଞ୍ଚ ହୋଇନାହିଁ",
+  "kyc_verified_on":"ଯାଞ୍ଚ ତାରିଖ",
+  "kyc_required_competition_title":"ଆପଣଙ୍କର ପରିଚୟ ଯାଞ୍ଚ କରନ୍ତୁ",
+  "kyc_required_competition_message":"KYC ଯାଞ୍ଚ ବିନା ଆପଣ କୌଣସି ପ୍ରତିଯୋଗିତାରେ ଅଂଶଗ୍ରହଣ କରିପାରିବେ ନାହିଁ।",
+  "kyc_verify_anytime_hint":"ଆପଣ ଯେତେବେଳେ ଏକ ପ୍ରତିଯୋଗିତାରେ ଅଂଶଗ୍ରହଣ କରିବାକୁ ଚାହାଁନ୍ତି, ସେତେବେଳେ ଆପଣ ଆପଣଙ୍କର ପରିଚୟ ଯାଞ୍ଚ କରିପାରିବେ।",
+  "kyc_verify_now":"ବର୍ତ୍ତମାନ ଯାଞ୍ଚ କରନ୍ତୁ",
+
   // Competition Detail Page
   "competition_details": "ପ୍ରତିଯୋଗିତା ବିବରଣୀ",
   "competition_load_failed": "ପ୍ରତିଯୋଗିତା ଲୋଡ୍ ହୋଇ ପାରିଲା ନାହିଁ",

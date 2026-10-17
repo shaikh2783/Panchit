@@ -2830,6 +2830,16 @@ const Map<String, String> arSA = {
   "text_overlay_label":"نص",
   "sticker_overlay_label":"ملصق",
 
+  // KYC status card on the profile's About tab
+  "kyc_section_title":"التحقق من الهوية",
+  "kyc_status_verified":"تم التحقق من الهوية",
+  "kyc_status_not_verified":"لم يتم التحقق",
+  "kyc_verified_on":"تاريخ التحقق",
+  "kyc_required_competition_title":"تحقق من هويتك",
+  "kyc_required_competition_message":"بدون التحقق من KYC، لا يمكنك المشاركة في أي مسابقة.",
+  "kyc_verify_anytime_hint":"يمكنك التحقق من هويتك في أي وقت تريد المشاركة فيه في مسابقة.",
+  "kyc_verify_now":"تحقق الآن",
+
   // Reels module
   'use_camera_music_filters': 'استخدم الكاميرا مع الموسيقى والفلاتر',
   'upload_from_gallery': 'رفع من المعرض',

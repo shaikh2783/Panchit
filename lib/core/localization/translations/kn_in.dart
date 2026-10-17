@@ -2874,6 +2874,16 @@ const Map<String, String> knIN = {
   "text_overlay_label": "ಪಠ್ಯ",
   "sticker_overlay_label": "ಸ್ಟಿಕರ್",
 
+  // KYC status card on the profile's About tab
+  "kyc_section_title": "ಗುರುತಿನ ಪರಿಶೀಲನೆ",
+  "kyc_status_verified": "ಗುರುತು ಪರಿಶೀಲಿಸಲಾಗಿದೆ",
+  "kyc_status_not_verified": "ಪರಿಶೀಲಿಸಲಾಗಿಲ್ಲ",
+  "kyc_verified_on": "ಪರಿಶೀಲಿಸಿದ ದಿನಾಂಕ",
+  "kyc_required_competition_title": "ನಿಮ್ಮ ಗುರುತನ್ನು ಪರಿಶೀಲಿಸಿ",
+  "kyc_required_competition_message": "KYC ಪರಿಶೀಲನೆ ಇಲ್ಲದೆ ನೀವು ಯಾವುದೇ ಸ್ಪರ್ಧೆಯಲ್ಲಿ ಭಾಗವಹಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ.",
+  "kyc_verify_anytime_hint": "ನೀವು ಸ್ಪರ್ಧೆಯಲ್ಲಿ ಭಾಗವಹಿಸಲು ಬಯಸಿದಾಗ ನಿಮ್ಮ ಗುರುತನ್ನು ಪರಿಶೀಲಿಸಬಹುದು.",
+  "kyc_verify_now": "ಈಗ ಪರಿಶೀಲಿಸಿ",
+
   // Reels module
   'use_camera_music_filters': 'ಸಂಗೀತ ಮತ್ತು ಫಿಲ್ಟರ್‌ಗಳೊಂದಿಗೆ ಕ್ಯಾಮೆರಾ ಬಳಸಿ',
   'upload_from_gallery': 'ಗ್ಯಾಲರಿಯಿಂದ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ',

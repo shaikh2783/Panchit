@@ -2853,6 +2853,16 @@ const Map<String, String> bnIN = {
   "text_overlay_label": "টেক্সট",
   "sticker_overlay_label": "স্টিকার",
 
+  // KYC status card on the profile's About tab
+  "kyc_section_title": "পরিচয় যাচাই",
+  "kyc_status_verified": "পরিচয় যাচাই হয়েছে",
+  "kyc_status_not_verified": "যাচাই হয়নি",
+  "kyc_verified_on": "যাচাইয়ের তারিখ",
+  "kyc_required_competition_title": "আপনার পরিচয় যাচাই করুন",
+  "kyc_required_competition_message": "KYC যাচাই ছাড়া আপনি কোনো প্রতিযোগিতায় অংশগ্রহণ করতে পারবেন না।",
+  "kyc_verify_anytime_hint": "আপনি যখনই কোনো প্রতিযোগিতায় অংশগ্রহণ করতে চান, তখন আপনার পরিচয় যাচাই করতে পারেন।",
+  "kyc_verify_now": "এখনই যাচাই করুন",
+
   // Competition Detail Page
   "competition_details": "প্রতিযোগিতার বিবরণ",
   "competition_load_failed": "প্রতিযোগিতা লোড করা সম্ভব হয়নি",

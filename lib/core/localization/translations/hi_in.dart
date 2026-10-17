@@ -2962,6 +2962,16 @@ const Map<String, String> hiIN = {
   "text_overlay_label":"टेक्स्ट",
   "sticker_overlay_label":"स्टिकर",
 
+  // KYC status card on the profile's About tab
+  "kyc_section_title":"पहचान सत्यापन",
+  "kyc_status_verified":"पहचान सत्यापित",
+  "kyc_status_not_verified":"सत्यापित नहीं",
+  "kyc_verified_on":"सत्यापित तिथि",
+  "kyc_required_competition_title":"अपनी पहचान सत्यापित करें",
+  "kyc_required_competition_message":"KYC सत्यापन के बिना आप किसी भी प्रतियोगिता में भाग नहीं ले सकते।",
+  "kyc_verify_anytime_hint":"जब भी आप किसी प्रतियोगिता में भाग लेना चाहें, आप अपनी पहचान सत्यापित कर सकते हैं।",
+  "kyc_verify_now":"अभी सत्यापित करें",
+
   // Competition Detail Page
   "competition_details": "प्रतियोगिता विवरण",
   "competition_load_failed": "प्रतियोगिता लोड करने में असमर्थ",

@@ -2941,6 +2941,18 @@ const Map<String, String> enUS = {
   'kyc_name_mismatch_message': 'The name on your Aadhaar card does not match your Panchit profile name. Please retry with the correct Aadhaar account.',
   'kyc_retry_verification': 'Retry Verification',
 
+  // KYC status card on the profile's About tab
+  'kyc_section_title': 'Identity Verification',
+  'kyc_status_verified': 'Identity Verified',
+  'kyc_status_not_verified': 'Not Verified',
+  'kyc_verified_on': 'Verified on',
+  'kyc_required_competition_title': 'Verify Your Identity',
+  'kyc_required_competition_message':
+      'Without KYC verification, you cannot participate in any competition.',
+  'kyc_verify_anytime_hint':
+      'You can verify your identity whenever you want to participate in a competition.',
+  'kyc_verify_now': 'Verify Now',
+
   // Competition Entry Page
   'entry_title': 'Competition Entry',
   'entry_view_details': 'View Details',

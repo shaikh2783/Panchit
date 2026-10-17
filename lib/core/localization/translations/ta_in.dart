@@ -2819,6 +2819,16 @@ const Map<String, String> taIN = {
   "text_overlay_label":"உரை",
   "sticker_overlay_label":"ஸ்டிக்கர்",
 
+  // KYC status card on the profile's About tab
+  "kyc_section_title":"அடையாள சரிபார்ப்பு",
+  "kyc_status_verified":"அடையாளம் சரிபார்க்கப்பட்டது",
+  "kyc_status_not_verified":"சரிபார்க்கப்படவில்லை",
+  "kyc_verified_on":"சரிபார்த்த தேதி",
+  "kyc_required_competition_title":"உங்கள் அடையாளத்தை சரிபார்க்கவும்",
+  "kyc_required_competition_message":"KYC சரிபார்ப்பு இல்லாமல் நீங்கள் எந்தப் போட்டியிலும் பங்கேற்க முடியாது.",
+  "kyc_verify_anytime_hint":"நீங்கள் ஒரு போட்டியில் பங்கேற்க விரும்பும்போது உங்கள் அடையாளத்தை சரிபார்க்கலாம்.",
+  "kyc_verify_now":"இப்போது சரிபார்க்கவும்",
+
   // Competition Detail Page
   "competition_details": "போட்டி விவரங்கள்",
   "competition_load_failed": "போட்டியை ஏற்ற முடியவில்லை",

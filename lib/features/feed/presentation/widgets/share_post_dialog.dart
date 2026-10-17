@@ -36,6 +36,11 @@ class _SharePostDialogState extends State<SharePostDialog> {
   List<Map<String, dynamic>> _groups = [];
   List<Map<String, dynamic>> _events = [];
 
+  /// Reels get a visibly different share link (`/reels/<id>`) so a tapped
+  /// link can be routed straight to the reel experience instead of the
+  /// generic post one; regular posts keep `/posts/<id>`.
+  String get _sharePath => widget.post.postType == 'reel' ? 'reels' : 'posts';
+
   @override
   void initState() {
     super.initState();
@@ -175,7 +180,7 @@ class _SharePostDialogState extends State<SharePostDialog> {
   /// مشاركة المنشور في محادثة عبر chat_module
   Future<void> _shareToChat() async {
     final dialogRoute = ModalRoute.of(context);
-    final postUrl = '${cfgP.first['w1']}/posts/${widget.post.id}';
+    final postUrl = '${cfgP.first['w1']}/$_sharePath/${widget.post.id}';
     final thumbnail = (widget.post.photos?.isNotEmpty ?? false)
         ? widget.post.photos!.first.source
         : (widget.post.ogImage ?? '');
@@ -205,7 +210,7 @@ class _SharePostDialogState extends State<SharePostDialog> {
   Future<void> _shareExternal() async {
     try {
       // بناء رابط المنشور
-      final postUrl = '${cfgP.first['w1']}/posts/${widget.post.id}';
+      final postUrl = '${cfgP.first['w1']}/$_sharePath/${widget.post.id}';
       
       // نص المشاركة
       String shareText = widget.post.text.isNotEmpty 
@@ -244,7 +249,7 @@ class _SharePostDialogState extends State<SharePostDialog> {
   /// مشاركة على WhatsApp
   Future<void> _shareOnWhatsApp() async {
     try {
-      final postUrl = '${cfgP.first['w1']}/posts/${widget.post.id}';
+      final postUrl = '${cfgP.first['w1']}/$_sharePath/${widget.post.id}';
       final shareText = widget.post.text.isNotEmpty 
           ? '${widget.post.text}\n\n$postUrl' 
           : postUrl;
@@ -273,7 +278,7 @@ class _SharePostDialogState extends State<SharePostDialog> {
   /// مشاركة على Telegram
   Future<void> _shareOnTelegram() async {
     try {
-      final postUrl = '${cfgP.first['w1']}/posts/${widget.post.id}';
+      final postUrl = '${cfgP.first['w1']}/$_sharePath/${widget.post.id}';
       final shareText = widget.post.text.isNotEmpty 
           ? widget.post.text
           : 'Check this out!';
@@ -302,7 +307,7 @@ class _SharePostDialogState extends State<SharePostDialog> {
   /// مشاركة على Facebook
   Future<void> _shareOnFacebook() async {
     try {
-      final postUrl = '${cfgP.first['w1']}/posts/${widget.post.id}';
+      final postUrl = '${cfgP.first['w1']}/$_sharePath/${widget.post.id}';
       final fbUrl = Uri.parse('https://www.facebook.com/sharer/sharer.php?u=${Uri.encodeComponent(postUrl)}');
       
       if (await canLaunchUrl(fbUrl)) {
@@ -327,7 +332,7 @@ class _SharePostDialogState extends State<SharePostDialog> {
   /// مشاركة على Twitter/X
   Future<void> _shareOnTwitter() async {
     try {
-      final postUrl = '${cfgP.first['w1']}/posts/${widget.post.id}';
+      final postUrl = '${cfgP.first['w1']}/$_sharePath/${widget.post.id}';
       String shareText = widget.post.text.isNotEmpty 
           ? widget.post.text 
           : 'Check this out!';
@@ -356,7 +361,7 @@ class _SharePostDialogState extends State<SharePostDialog> {
   /// مشاركة عبر SMS
   Future<void> _shareViaSMS() async {
     try {
-      final postUrl = '${cfgP.first['w1']}/posts/${widget.post.id}';
+      final postUrl = '${cfgP.first['w1']}/$_sharePath/${widget.post.id}';
       String shareText = widget.post.text.isNotEmpty 
           ? '${widget.post.text}\n\n$postUrl' 
           : postUrl;

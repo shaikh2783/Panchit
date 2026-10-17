@@ -3076,6 +3076,16 @@ const Map<String, String> mrIN = {
   "text_overlay_label":"मजकूर",
   "sticker_overlay_label":"स्टिकर",
 
+  // KYC status card on the profile's About tab
+  "kyc_section_title":"ओळख पडताळणी",
+  "kyc_status_verified":"ओळख पडताळली",
+  "kyc_status_not_verified":"पडताळणी झालेली नाही",
+  "kyc_verified_on":"रोजी पडताळले",
+  "kyc_required_competition_title":"तुमची ओळख पडताळा",
+  "kyc_required_competition_message":"केवायसी पडताळणीशिवाय तुम्ही कोणत्याही स्पर्धेत सहभागी होऊ शकत नाही.",
+  "kyc_verify_anytime_hint":"तुम्हाला जेव्हा एखाद्या स्पर्धेत सहभागी व्हायचे असेल तेव्हा तुम्ही तुमची ओळख पडताळू शकता.",
+  "kyc_verify_now":"आता पडताळा",
+
   // Reels module
   'use_camera_music_filters': 'संगीत आणि फिल्टरसह कॅमेरा वापरा',
   'upload_from_gallery': 'गॅलरीमधून अपलोड करा',
