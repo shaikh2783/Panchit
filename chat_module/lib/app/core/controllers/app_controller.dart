@@ -8,8 +8,8 @@ class AppController extends GetxController {
   AppController(this._preferences);
 
   final ChatAppPreferences _preferences;
-  // New installs open in the light reference design. People can still choose
-  // system or dark explicitly from Settings.
+  // Defaults to whatever the host app (see home_page.dart) is already
+  // showing until the user explicitly picks a mode from Settings.
   final themeMode = ThemeMode.light.obs;
   final appDisplayName = defaultAppName.obs;
   final appDisplayLogo = defaultAppLogo.obs;
@@ -23,11 +23,19 @@ class AppController extends GetxController {
 
   void _loadSavedThemeMode() {
     final saved = _preferences.getThemeModeValue()?.trim().toLowerCase();
-    themeMode.value = switch (saved) {
-      'dark' => ThemeMode.dark,
-      'system' => ThemeMode.system,
-      _ => ThemeMode.light,
-    };
+    if (saved != null) {
+      themeMode.value = switch (saved) {
+        'dark' => ThemeMode.dark,
+        'system' => ThemeMode.system,
+        _ => ThemeMode.light,
+      };
+      return;
+    }
+
+    // No explicit choice made from inside chat yet: follow the host app's
+    // current dark/light mode instead of defaulting to light.
+    final hostIsDark = _preferences.getHostDarkMode() ?? Get.isDarkMode;
+    themeMode.value = hostIsDark ? ThemeMode.dark : ThemeMode.light;
   }
 
   Future<void> toggleThemeMode(bool isDark) async {
@@ -42,6 +50,11 @@ class AppController extends GetxController {
       ThemeMode.system => 'system',
     };
     await _preferences.setThemeModeValue(stored);
+    // Keep the host app's own theme switch (home_page.dart / ThemeController)
+    // in sync so the choice made here isn't reverted on the next app launch.
+    if (mode != ThemeMode.system) {
+      await _preferences.setHostDarkMode(mode == ThemeMode.dark);
+    }
     Get.changeThemeMode(themeMode.value);
   }
 

@@ -20,6 +20,10 @@ class ChatAppPreferences {
   static const String activeTimelineBridgeKey = 'chat_active_timeline_bridge';
   static const String localeKey = 'chat_app_locale';
   static const String themeModeKey = 'chat_theme_mode';
+  // Unprefixed on purpose: this is the host app's own dark/light switch key
+  // (see lib/core/theme/theme_controller.dart in the host app). Chat reads
+  // and writes it directly so both apps always agree on light vs dark.
+  static const String hostDarkModeKey = 'theme_mode';
   static const String oneSignalRegisteredSubscriptionIdKey =
       'chat_onesignal_registered_subscription_id';
   static const String oneSignalRegisteredUserIdKey =
@@ -103,6 +107,12 @@ class ChatAppPreferences {
 
   Future<bool> setThemeModeValue(String value) {
     return _preferences.setString(themeModeKey, value);
+  }
+
+  bool? getHostDarkMode() => _preferences.getBool(hostDarkModeKey);
+
+  Future<bool> setHostDarkMode(bool isDark) {
+    return _preferences.setBool(hostDarkModeKey, isDark);
   }
 
   String? getOneSignalRegisteredSubscriptionId() =>
