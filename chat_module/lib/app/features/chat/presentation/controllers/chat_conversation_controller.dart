@@ -345,6 +345,18 @@ class ChatConversationController extends GetxController {
       clearReplySelection();
       _scrollToBottom();
     } catch (error) {
+      // `sendMessage` can throw after the server has already written the
+      // message -- e.g. a dropped connection while reading the response, or
+      // a malformed-but-2xx body -- so a thrown exception here does not
+      // necessarily mean the send failed. Re-check the conversation before
+      // telling the user it failed and re-populating the input, otherwise a
+      // message that actually landed gets shown as an error and risks being
+      // sent twice.
+      if (await _reconcileAfterSendFailure(text)) {
+        clearReplySelection();
+        _scrollToBottom();
+        return;
+      }
       inputController.text = text;
       inputController.selection = TextSelection.fromPosition(
         TextPosition(offset: inputController.text.length),
@@ -354,6 +366,41 @@ class ChatConversationController extends GetxController {
     } finally {
       isSending.value = false;
     }
+  }
+
+  /// Returns true if [sentText] turns out to already be the latest message
+  /// from the current user once the conversation is refreshed, meaning the
+  /// earlier exception happened after the message was actually delivered.
+  ///
+  /// Retries a few times with a short delay: the same transient condition
+  /// that broke the original send (e.g. a slow backend response) can still
+  /// be in effect for the first re-check, so a single immediate attempt
+  /// isn't always enough to catch a message that lands a couple of seconds
+  /// late.
+  Future<bool> _reconcileAfterSendFailure(String sentText) async {
+    const attempts = 3;
+    const retryDelay = Duration(seconds: 2);
+    for (var attempt = 0; attempt < attempts; attempt++) {
+      if (attempt > 0) {
+        await Future.delayed(retryDelay);
+      }
+      try {
+        await _loadLatestMessages(forceScroll: true);
+      } catch (_) {
+        continue;
+      }
+      if (messages.isEmpty) {
+        continue;
+      }
+      final latest = messages.last;
+      final myUserId = _preferences.getUserId() ?? 0;
+      if (myUserId != 0 &&
+          latest.userId == myUserId &&
+          latest.text.trim() == sentText.trim()) {
+        return true;
+      }
+    }
+    return false;
   }
 
   Future<void> pickAndSendPhoto() async {
