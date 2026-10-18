@@ -12,6 +12,7 @@ class ReelsApiService {
     int limit = 10,
     int offset = 0,
     String source = 'all',
+    List<String>? categories,
   }) async {
     final response = await _client.get(
       configCfgP('reels'),
@@ -19,6 +20,8 @@ class ReelsApiService {
         'offset': '$offset',
         'limit': '$limit',
         'source': source,
+        if (categories != null && categories.isNotEmpty)
+          'category': categories.join(','),
       },
     );
 

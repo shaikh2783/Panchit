@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:get/get.dart';
 
+import 'package:snginepro/core/SharedPreferences.dart';
 import 'package:snginepro/core/config/app_config.dart';
 import 'package:snginepro/core/localization/localization_controller.dart';
 import 'package:snginepro/core/theme/app_colors.dart';
@@ -87,6 +88,10 @@ class _ReelsPageState extends State<ReelsPage> {
   /// session, and any failure is swallowed — it must never affect the UI.
   Future<void> _reportReelView(Post post) async {
     if (!_reportedViewIds.add(post.id)) return;
+    final category = post.video?.categoryName;
+    if (category != null && category.trim().isNotEmpty) {
+      unawaited(SharedP.recordReelCategoryInterest(category));
+    }
     try {
       await context.read<ReelsManagementApiService>().recordView(post.id);
     } catch (_) {}
@@ -225,13 +230,28 @@ class _ReelsTopOverlay extends StatelessWidget {
 
               const SizedBox(width: 8),
 
-              Text(
-                'reels'.tr,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: -0.2,
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: () {
+                    context.read<ReelsBloc>().add(RefreshReelsEvent());
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 4,
+                      vertical: 2,
+                    ),
+                    child: Text(
+                      'reels'.tr,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: -0.2,
+                      ),
+                    ),
+                  ),
                 ),
               ),
 
@@ -1129,6 +1149,13 @@ class _ActionsRailState extends State<_ActionsRail> {
     try {
       final isCurrentlyReacting = _currentPost.myReaction == reaction;
 
+      if (!isCurrentlyReacting) {
+        final category = _currentPost.video?.categoryName;
+        if (category != null && category.trim().isNotEmpty) {
+          unawaited(SharedP.recordReelCategoryInterest(category));
+        }
+      }
+
       // Update UI immediately (Optimistic Update)
       setState(() {
         if (isCurrentlyReacting) {
@@ -1165,6 +1192,13 @@ class _ActionsRailState extends State<_ActionsRail> {
   Future<void> _handleReaction() async {
     try {
       final isCurrentlyLiked = _currentPost.myReaction != null;
+
+      if (!isCurrentlyLiked) {
+        final category = _currentPost.video?.categoryName;
+        if (category != null && category.trim().isNotEmpty) {
+          unawaited(SharedP.recordReelCategoryInterest(category));
+        }
+      }
 
       // Update UI immediately (Optimistic Update)
       setState(() {

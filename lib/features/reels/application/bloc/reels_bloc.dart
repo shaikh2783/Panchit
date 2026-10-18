@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:snginepro/core/SharedPreferences.dart';
 import 'package:snginepro/features/feed/data/models/post.dart';
 import 'package:snginepro/features/reels/domain/reels_repository.dart';
 import 'package:snginepro/core/network/api_exception.dart';
@@ -122,19 +123,22 @@ class ReelsBloc extends Bloc<ReelsEvent, ReelsState> {
   int _currentPage = 0;
   final int _pageSize = 10;
   String _currentSource = 'all';
+  List<String> _currentCategories = [];
 
   Future<void> _onLoadReels(LoadReelsEvent event, Emitter<ReelsState> emit) async {
     try {
       emit(ReelsLoadingState());
       _currentPage = 0;
       _currentSource = event.source;
-      
+      _currentCategories = await SharedP.getRecentReelCategories();
+
       final response = await _repository.fetchReels(
         limit: _pageSize,
         offset: _currentPage,
         source: _currentSource,
+        categories: _currentCategories,
       );
-      
+
       emit(ReelsLoadedState(
         reels: response.reels,
         source: _currentSource,
@@ -149,19 +153,21 @@ class ReelsBloc extends Bloc<ReelsEvent, ReelsState> {
 
   Future<void> _onRefreshReels(RefreshReelsEvent event, Emitter<ReelsState> emit) async {
     if (state is! ReelsLoadedState) return;
-    
+
     final currentState = state as ReelsLoadedState;
     try {
       emit(currentState.copyWith(isRefreshing: true));
       _currentPage = 0;
       _currentSource = event.source;
-      
+      _currentCategories = await SharedP.getRecentReelCategories();
+
       final response = await _repository.fetchReels(
         limit: _pageSize,
         offset: _currentPage,
         source: _currentSource,
+        categories: _currentCategories,
       );
-      
+
       emit(ReelsLoadedState(
         reels: response.reels,
         source: _currentSource,
@@ -178,18 +184,19 @@ class ReelsBloc extends Bloc<ReelsEvent, ReelsState> {
 
   Future<void> _onLoadMoreReels(LoadMoreReelsEvent event, Emitter<ReelsState> emit) async {
     if (state is! ReelsLoadedState) return;
-    
+
     final currentState = state as ReelsLoadedState;
     if (!currentState.hasMore || currentState.isLoadingMore) return;
 
     try {
       emit(currentState.copyWith(isLoadingMore: true));
       _currentPage++;
-      
+
       final response = await _repository.fetchReels(
         limit: _pageSize,
         offset: _currentPage,
         source: _currentSource,
+        categories: _currentCategories,
       );
       
       final updatedReels = List<Post>.from(currentState.reels)..addAll(response.reels);

@@ -10,11 +10,13 @@ class ReelsRepository {
     int limit = 10,
     int offset = 0,
     String source = 'all',
+    List<String>? categories,
   }) {
     return _apiService.fetchReels(
       limit: limit,
       offset: offset,
       source: source,
+      categories: categories,
     );
   }
 }
