@@ -324,23 +324,12 @@ class SettingsContent extends StatelessWidget {
 
   String _localizedLanguageLabel(AppLanguage language) {
     final code = language.code.toLowerCase();
-    final countryCode = language.countryCode?.toLowerCase() ?? '';
     if (code == 'ar') return AppTranslations.settingsArabic.tr;
-    if (code == 'fr') return AppTranslations.settingsFrench.tr;
-    if (code == 'es') return AppTranslations.settingsSpanish.tr;
-    if (code == 'pt' && countryCode == 'br') {
-      return AppTranslations.settingsPortugueseBrazil.tr;
-    }
-    if (code == 'pt') return AppTranslations.settingsPortuguese.tr;
-    if (code == 'de') return AppTranslations.settingsGerman.tr;
-    if (code == 'tr') return AppTranslations.settingsTurkish.tr;
-    if (code == 'nl') return AppTranslations.settingsDutch.tr;
-    if (code == 'it') return AppTranslations.settingsItalian.tr;
-    if (code == 'ru') return AppTranslations.settingsRussian.tr;
-    if (code == 'ro') return AppTranslations.settingsRomanian.tr;
-    if (code == 'el') return AppTranslations.settingsGreek.tr;
-    if (code == 'uk') return AppTranslations.settingsUkrainian.tr;
-    return AppTranslations.settingsEnglish.tr;
+    if (code == 'en') return AppTranslations.settingsEnglish.tr;
+    // The remaining host-app languages (bn, gu, hi, kn, ml, mr, or, ta, te,
+    // ur) don't have a translated "settings_*" key yet, so show the
+    // language's own native name instead of mislabeling it as English.
+    return language.label;
   }
 }
 

@@ -24,6 +24,11 @@ class ChatAppPreferences {
   // (see lib/core/theme/theme_controller.dart in the host app). Chat reads
   // and writes it directly so both apps always agree on light vs dark.
   static const String hostDarkModeKey = 'theme_mode';
+  // Unprefixed on purpose: this is the host app's own language switch key
+  // (see lib/core/localization/localization_controller.dart in the host
+  // app). Chat reads and writes it directly so both apps always agree on
+  // the active language.
+  static const String hostLanguageKey = 'app_language';
   static const String oneSignalRegisteredSubscriptionIdKey =
       'chat_onesignal_registered_subscription_id';
   static const String oneSignalRegisteredUserIdKey =
@@ -113,6 +118,12 @@ class ChatAppPreferences {
 
   Future<bool> setHostDarkMode(bool isDark) {
     return _preferences.setBool(hostDarkModeKey, isDark);
+  }
+
+  String? getHostLanguage() => _preferences.getString(hostLanguageKey);
+
+  Future<bool> setHostLanguage(String value) {
+    return _preferences.setString(hostLanguageKey, value);
   }
 
   String? getOneSignalRegisteredSubscriptionId() =>

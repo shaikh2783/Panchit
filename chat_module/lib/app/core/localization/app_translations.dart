@@ -1,19 +1,17 @@
 import 'package:get/get.dart';
 
 import 'lang/ar.dart';
-import 'lang/de.dart';
-import 'lang/el.dart';
+import 'lang/bn.dart';
 import 'lang/en.dart';
-import 'lang/es.dart';
-import 'lang/fr.dart';
-import 'lang/it.dart';
-import 'lang/nl.dart';
-import 'lang/pt.dart';
-import 'lang/pt_br.dart';
-import 'lang/ro.dart';
-import 'lang/ru.dart';
-import 'lang/tr.dart';
-import 'lang/uk.dart';
+import 'lang/gu.dart';
+import 'lang/hi.dart';
+import 'lang/kn.dart';
+import 'lang/ml.dart';
+import 'lang/mr.dart';
+import 'lang/or.dart';
+import 'lang/ta.dart';
+import 'lang/te.dart';
+import 'lang/ur.dart';
 
 class AppTranslations extends Translations {
   static const String appName = 'Messanger';
@@ -173,18 +171,6 @@ class AppTranslations extends Translations {
   static const String settingsLanguage = 'settings_language';
   static const String settingsArabic = 'settings_arabic';
   static const String settingsEnglish = 'settings_english';
-  static const String settingsFrench = 'settings_french';
-  static const String settingsSpanish = 'settings_spanish';
-  static const String settingsPortuguese = 'settings_portuguese';
-  static const String settingsGerman = 'settings_german';
-  static const String settingsTurkish = 'settings_turkish';
-  static const String settingsDutch = 'settings_dutch';
-  static const String settingsItalian = 'settings_italian';
-  static const String settingsRussian = 'settings_russian';
-  static const String settingsRomanian = 'settings_romanian';
-  static const String settingsPortugueseBrazil = 'settings_portuguese_brazil';
-  static const String settingsGreek = 'settings_greek';
-  static const String settingsUkrainian = 'settings_ukrainian';
   static const String settingsTheme = 'settings_theme';
   static const String settingsDarkMode = 'settings_dark_mode';
   static const String settingsLightMode = 'settings_light_mode';
@@ -778,17 +764,15 @@ class AppTranslations extends Translations {
   Map<String, Map<String, String>> get keys => {
     'ar': ar,
     'en': en,
-    'fr': fr,
-    'es': es,
-    'pt': pt,
-    'de': de,
-    'tr': tr,
-    'nl': nl,
-    'it': it,
-    'ru': ru,
-    'ro': ro,
-    'pt_BR': ptBr,
-    'el': el,
-    'uk': uk,
+    'bn': bn,
+    'gu': gu,
+    'hi': hi,
+    'kn': kn,
+    'ml': ml,
+    'mr': mr,
+    'or': or,
+    'ta': ta,
+    'te': te,
+    'ur': ur,
   };
 }

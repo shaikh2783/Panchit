@@ -28,26 +28,21 @@ class ChatLocaleController extends GetxController {
 
   final ChatAppPreferences _preferences;
 
+  // Kept in lockstep with the host app's supported languages
+  // (lib/core/localization/translations/ and localization_controller.dart).
   static const List<AppLanguage> supportedLanguages = <AppLanguage>[
-    AppLanguage(code: 'en', label: 'English', apiCode: 'en_us'),
-    AppLanguage(code: 'ar', label: 'العربية', apiCode: 'ar_sa'),
-    AppLanguage(code: 'fr', label: 'Français', apiCode: 'fr_fr'),
-    AppLanguage(code: 'es', label: 'Español', apiCode: 'es_es'),
-    AppLanguage(code: 'pt', label: 'Português', apiCode: 'pt_pt'),
-    AppLanguage(code: 'de', label: 'Deutsch', apiCode: 'de_de'),
-    AppLanguage(code: 'tr', label: 'Türkçe', apiCode: 'tr_tr'),
-    AppLanguage(code: 'nl', label: 'Nederlands', apiCode: 'nl_nl'),
-    AppLanguage(code: 'it', label: 'Italiano', apiCode: 'it_it'),
-    AppLanguage(code: 'ru', label: 'Русский', apiCode: 'ru_ru'),
-    AppLanguage(code: 'ro', label: 'Română', apiCode: 'ro_ro'),
-    AppLanguage(code: 'uk', label: 'Українська', apiCode: 'uk_ua'),
-    AppLanguage(
-      code: 'pt',
-      countryCode: 'BR',
-      label: 'Português (Brasil)',
-      apiCode: 'pt_br',
-    ),
-    AppLanguage(code: 'el', label: 'Ελληνικά', apiCode: 'el_gr'),
+    AppLanguage(code: 'en', countryCode: 'US', label: 'English', apiCode: 'en_us'),
+    AppLanguage(code: 'ar', countryCode: 'SA', label: 'العربية', apiCode: 'ar_sa'),
+    AppLanguage(code: 'bn', countryCode: 'IN', label: 'বাংলা', apiCode: 'bn_in'),
+    AppLanguage(code: 'gu', countryCode: 'IN', label: 'ગુજરાતી', apiCode: 'gu_in'),
+    AppLanguage(code: 'hi', countryCode: 'IN', label: 'हिन्दी', apiCode: 'hi_in'),
+    AppLanguage(code: 'kn', countryCode: 'IN', label: 'ಕನ್ನಡ', apiCode: 'kn_in'),
+    AppLanguage(code: 'ml', countryCode: 'IN', label: 'മലയാളം', apiCode: 'ml_in'),
+    AppLanguage(code: 'mr', countryCode: 'IN', label: 'मराठी', apiCode: 'mr_in'),
+    AppLanguage(code: 'or', countryCode: 'IN', label: 'ଓଡ଼ିଆ', apiCode: 'or_in'),
+    AppLanguage(code: 'ta', countryCode: 'IN', label: 'தமிழ்', apiCode: 'ta_in'),
+    AppLanguage(code: 'te', countryCode: 'IN', label: 'తెలుగు', apiCode: 'te_in'),
+    AppLanguage(code: 'ur', countryCode: 'PK', label: 'اردو', apiCode: 'ur_pk'),
   ];
 
   Locale _currentLocale = const Locale('en');
@@ -78,6 +73,20 @@ class ChatLocaleController extends GetxController {
       }
     }
 
+    // No explicit choice made from inside chat yet: follow whatever
+    // language the host app (localization_controller.dart) is already
+    // showing instead of guessing from the device locale.
+    final hostSaved = _preferences.getHostLanguage()?.trim() ?? '';
+    if (hostSaved.isNotEmpty) {
+      final hostLocale = _parseSavedLocale(hostSaved);
+      if (hostLocale != null) {
+        _currentLocale = hostLocale;
+        Get.updateLocale(hostLocale);
+        update();
+        return;
+      }
+    }
+
     final deviceLocale = Get.deviceLocale ?? PlatformDispatcher.instance.locale;
     final fallback = _resolveSupportedLocale(deviceLocale);
     _currentLocale = fallback;
@@ -92,7 +101,11 @@ class ChatLocaleController extends GetxController {
     }
 
     _currentLocale = resolved;
-    await _preferences.setLocaleValue(_localeToStorageValue(resolved));
+    final stored = _localeToStorageValue(resolved);
+    await _preferences.setLocaleValue(stored);
+    // Keep the host app's own language switch in sync so the choice made
+    // here isn't reverted the next time the app launches normally.
+    await _preferences.setHostLanguage(stored);
     await Get.updateLocale(resolved);
     update();
   }
@@ -130,7 +143,7 @@ class ChatLocaleController extends GetxController {
         return language.locale;
       }
     }
-    return const Locale('en');
+    return supportedLanguages.first.locale;
   }
 
   Locale? _parseSavedLocale(String value) {
