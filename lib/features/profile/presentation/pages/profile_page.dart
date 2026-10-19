@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -3773,42 +3774,79 @@ class _FullScreenImageViewerState extends State<_FullScreenImageViewer>
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
+        fit: StackFit.expand,
         children: [
-          GestureDetector(
-            onTap: () => setState(() => _uiVisible = !_uiVisible),
-            onDoubleTapDown: (details) => _doubleTapDetails = details,
-            onDoubleTap: _handleDoubleTap,
-            child: Center(
-              child: Hero(
-                tag: widget.heroTag,
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final diameter = constraints.biggest.shortestSide * 0.9;
+
+              return GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => setState(() => _uiVisible = !_uiVisible),
+                onDoubleTapDown: (details) => _doubleTapDetails = details,
+                onDoubleTap: _handleDoubleTap,
                 child: InteractiveViewer(
                   transformationController: _transformationController,
                   minScale: _minScale,
                   maxScale: _maxScale,
-                  child: CachedNetworkImage(
-                    imageUrl: widget.imageUrl,
-                    fit: BoxFit.contain,
-                    placeholder: (context, url) => const SizedBox(
-                      width: 48,
-                      height: 48,
-                      child: CircularProgressIndicator(),
+                  onInteractionStart: (_) => _animationController.stop(),
+                  child: SizedBox(
+                    width: constraints.maxWidth,
+                    height: constraints.maxHeight,
+                    child: Center(
+                      child: Hero(
+                        tag: widget.heroTag,
+                        child: ClipOval(
+                          child: SizedBox.square(
+                            dimension: diameter,
+                            child: CachedNetworkImage(
+                              imageUrl: widget.imageUrl,
+                              fit: BoxFit.cover,
+                              placeholder: (_, __) => const ColoredBox(
+                                color: Colors.black,
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              errorWidget: (_, __, ___) => const ColoredBox(
+                                color: Colors.black,
+                                child: Center(
+                                  child: Icon(
+                                    Icons.error_outline,
+                                    color: Colors.white,
+                                    size: 40,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error, color: Colors.white),
                   ),
                 ),
-              ),
-            ),
+              );
+            },
           ),
-          AnimatedOpacity(
-            opacity: _uiVisible ? 1 : 0,
-            duration: const Duration(milliseconds: 200),
-            child: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                child: IconButton(
-                  icon: const Icon(Icons.close, color: Colors.white),
-                  onPressed: () => Navigator.pop(context),
+          Positioned(
+            top: 0,
+            left: 0,
+            child: IgnorePointer(
+              ignoring: !_uiVisible,
+              child: AnimatedOpacity(
+                opacity: _uiVisible ? 1 : 0,
+                duration: const Duration(milliseconds: 200),
+                child: SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: IconButton(
+                      tooltip: 'Close',
+                      icon: const Icon(Icons.close, color: Colors.white),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ),
                 ),
               ),
             ),
