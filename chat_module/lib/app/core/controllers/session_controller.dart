@@ -466,6 +466,10 @@ class SessionController extends GetxController {
     }
 
     if (_preferences.hasActiveSession() && _preferences.getUserId() == userId) {
+      // The host may have cleared this user's push registration on logout or
+      // account switch while the chat session stayed; re-register (deduped).
+      _syncOneSignal(userId: userId, requestPermission: false);
+      _syncFcm(userId: userId, requestPermission: false);
       return true;
     }
 

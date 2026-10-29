@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:snginepro/core/network/api_client.dart';
 import 'package:snginepro/core/network/api_exception.dart';
 
 import 'package:snginepro/core/services/onesignal_service.dart';
+import 'package:snginepro/core/utils/chat_module_launcher.dart';
 import 'package:snginepro/features/auth/data/models/auth_response.dart';
 import 'package:snginepro/features/auth/data/storage/auth_storage.dart';
 import 'package:snginepro/features/auth/domain/auth_repository.dart';
@@ -205,7 +208,13 @@ class AuthNotifier extends ChangeNotifier {
       _savedAccounts = await _storage.readAccounts();
       final activeStoredAccount = await _storage.readActiveAccount();
       if (activeStoredAccount != null) {
-        await _activateAccount(activeStoredAccount, notify: false);
+        // Cold start: chat registration from the earlier login persists, so
+        // don't boot chat_module on every launch.
+        await _activateAccount(
+          activeStoredAccount,
+          notify: false,
+          registerChatPush: false,
+        );
       }
     } catch (_) {
     } finally {
@@ -261,6 +270,7 @@ class AuthNotifier extends ChangeNotifier {
 
   Future<void> signOutCurrentAccount() async {
     // حذف OneSignal Player ID قبل تسجيل الخروج
+    await ChatModuleLauncher.clearPushRegistration();
     try {
       await _oneSignalService.removeOneSignalPlayerId();
       await _oneSignalService.logoutUser();
@@ -303,6 +313,7 @@ class AuthNotifier extends ChangeNotifier {
   }
 
   Future<void> signOutAllAccounts() async {
+    await ChatModuleLauncher.clearPushRegistration();
     try {
       await _oneSignalService.removeOneSignalPlayerId();
       await _oneSignalService.logoutUser();
@@ -460,7 +471,15 @@ class AuthNotifier extends ChangeNotifier {
   Future<void> _activateAccount(
     StoredAuthAccount account, {
     bool notify = true,
+    bool registerChatPush = true,
   }) async {
+    // Switching to a different user: drop the outgoing user's chat push
+    // registration while chat_module still holds that user's token.
+    final previousUserId = activeAccount?.userId;
+    if (previousUserId != null && previousUserId != account.userId) {
+      await ChatModuleLauncher.clearPushRegistration();
+    }
+
     _activeAccountId = account.accountId;
     _session = account.toSession();
     _apiClient.updateAuthToken(account.token);
@@ -473,6 +492,31 @@ class AuthNotifier extends ChangeNotifier {
     }
 
     _registerOneSignalInBackground();
+    if (registerChatPush) {
+      _registerChatPushInBackground(account);
+    }
+  }
+
+  /// Registers the device with the chat backend right away so chat pushes
+  /// arrive before the user first opens the messenger.
+  void _registerChatPushInBackground(StoredAuthAccount account) {
+    final user = account.user;
+    final userId = int.tryParse(
+      (account.userId ?? user?['user_id'] ?? user?['id'])?.toString() ?? '',
+    );
+    if (userId == null) {
+      return;
+    }
+    unawaited(
+      ChatModuleLauncher.registerPushForUser(
+        token: account.token,
+        userId: userId,
+        userName: account.displayName ??
+            (user?['user_fullname'] ?? user?['name'])?.toString(),
+        userPicture: account.avatarUrl ??
+            (user?['user_picture'] ?? user?['avatar'])?.toString(),
+      ),
+    );
   }
 
   Future<void> _persistActiveSession({

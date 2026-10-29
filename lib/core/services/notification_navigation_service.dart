@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+import 'package:snginepro/core/utils/chat_module_launcher.dart';
+import 'package:snginepro/features/auth/application/auth_notifier.dart';
 import 'package:snginepro/features/feed/presentation/pages/post_detail_page.dart';
 import 'package:snginepro/features/notifications/presentation/pages/notifications_page.dart';
 import 'package:snginepro/features/profile/presentation/pages/profile_page.dart';
@@ -199,6 +202,14 @@ class NotificationNavigationService {
           Get.to(() => const WalletPage());
           break;
 
+        // 💬 محادثات الدردشة: /messages/<conversation_id>
+        case 'messages':
+        case 'chat':
+          if (pathSegments.length > 1) {
+            _openChatConversation({'conversation_id': pathSegments[1]});
+          }
+          break;
+
         case 'settings':
           if (pathSegments.length > 1 && pathSegments[1] == 'sessions') {
             Get.to(() => const ManageSessionsPage());
@@ -326,9 +337,52 @@ class NotificationNavigationService {
         }
         break;
         
+      // 💬 رسائل الدردشة
+      case 'chat_message':
+      case 'chat':
+      case 'message':
+      case 'group_message':
+        _openChatConversation(data);
+        break;
+
       // إشعارات أخرى
       default:
         Get.to(() => const NotificationsPage());
+    }
+  }
+
+  static int? _parseId(dynamic value) {
+    final parsed = int.tryParse(value?.toString() ?? '');
+    return parsed != null && parsed > 0 ? parsed : null;
+  }
+
+  /// Opens the chat_module conversation referenced by a notification payload.
+  /// On a cold start the auth session may still be restoring, so wait briefly
+  /// for it before giving up.
+  static Future<void> _openChatConversation(Map<String, dynamic> data) async {
+    final conversationId = _parseId(data['conversation_id'] ?? data['cid']);
+    final groupId = _parseId(data['group_id']);
+    final userId = _parseId(
+      data['sender_id'] ?? data['from_user_id'] ?? data['user_id'],
+    );
+    if (conversationId == null && groupId == null && userId == null) {
+      return;
+    }
+
+    for (var attempt = 0; attempt < 20; attempt++) {
+      final context = navigatorKey.currentContext ?? Get.context;
+      if (context != null &&
+          context.mounted &&
+          context.read<AuthNotifier>().isAuthenticated) {
+        await ChatModuleLauncher.openConversation(
+          context,
+          conversationId: conversationId,
+          groupId: groupId,
+          userId: userId,
+        );
+        return;
+      }
+      await Future<void>.delayed(const Duration(milliseconds: 250));
     }
   }
 }

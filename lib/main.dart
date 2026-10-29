@@ -13,6 +13,8 @@ import 'package:snginepro/core/services/notification_navigation_service.dart';
 import 'package:snginepro/core/services/onesignal_service.dart';
 import 'package:snginepro/features/messenger/presentation/services/global_call_service.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:chat_module/app/data/services/one_signal_service.dart'
+    as chat_one_signal;
 import 'package:snginepro/features/settings/data/models/seeting.dart';
 import 'package:snginepro/license_fluttercrafters.dart';
 
@@ -109,6 +111,9 @@ Future<void> main() async {
 
   // Initialize OneSignal with app settings from API
   await _initializeOneSignal(apiClient);
+  // The host app owns the OneSignal SDK; chat_module only registers the
+  // subscription ID with its backend.
+  chat_one_signal.OneSignalService.hostManaged = true;
 
   // Initialize ReactionsService
   final reactionsApiService = ReactionsApiService(apiClient: apiClient);

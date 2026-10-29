@@ -14,6 +14,13 @@ class OneSignalService {
   final ChatModuleApiClient _apiClient;
   final ChatAppPreferences _preferences;
 
+  /// Set by a host app that already owns the OneSignal SDK (initialize,
+  /// login, logout, permission prompt). In that mode this service only
+  /// reports the current subscription ID to the chat backend, so it never
+  /// re-initializes the SDK with a different app ID or logs the host user
+  /// out of OneSignal when the chat session ends.
+  static bool hostManaged = false;
+
   bool _initialized = false;
   bool _observersAttached = false;
   int? _currentUserId;
@@ -22,6 +29,12 @@ class OneSignalService {
 
   Future<void> initialize() async {
     if (_initialized || !_isSupportedPlatform) {
+      return;
+    }
+
+    if (hostManaged) {
+      _initialized = true;
+      _attachObservers();
       return;
     }
 
@@ -56,9 +69,11 @@ class OneSignalService {
     }
 
     _currentUserId = userId;
-    await OneSignal.login(userId.toString());
+    if (!hostManaged) {
+      await OneSignal.login(userId.toString());
+    }
 
-    if (requestPermission) {
+    if (requestPermission && !hostManaged) {
       await _requestPermissionIfNeeded();
     }
 
@@ -90,7 +105,7 @@ class OneSignalService {
       }
     }
 
-    if (_initialized) {
+    if (_initialized && !hostManaged) {
       try {
         await OneSignal.logout();
       } catch (_) {}
