@@ -90,6 +90,7 @@ dependencies:
   sandbox_digilocker_sdk: ^1.0.1
   chat_module:
     path: chat_module
+  geolocator: ^14.0.2
 
 dev_dependencies:
   flutter_test:

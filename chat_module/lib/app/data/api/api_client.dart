@@ -10,6 +10,7 @@ import '../../../api_config.dart';
 import '../../../settings.dart';
 import '../../core/controllers/locale_controller.dart';
 import '../../core/storage/app_preferences.dart';
+import 'api_endpoints.dart';
 import 'api_exception.dart';
 
 class ChatModuleApiClient {
@@ -46,6 +47,7 @@ class ChatModuleApiClient {
     final encodedBody = jsonEncode(body ?? <String, dynamic>{});
 
     _logRequest(method: 'POST', uri: uri, headers: headers, body: encodedBody);
+    _logSendMessageForPostman(uri, headers, encodedBody);
 
     final response = await _httpClient.post(
       uri,
@@ -381,6 +383,31 @@ class ChatModuleApiClient {
         ? 'photo'
         : 'media';
     return 'Group $mediaKind upload API is missing on the server. Deploy the updated api-addon-messangr groups_chat router/controller files.';
+  }
+
+  /// Debug-only, unredacted dump of the chat send-message request so it can be
+  /// replayed in Postman. The x-signature is derived from x-timestamp, so replay
+  /// it with these exact headers shortly after the send.
+  void _logSendMessageForPostman(
+    Uri uri,
+    Map<String, String> headers,
+    String body,
+  ) {
+    if (!kDebugMode ||
+        uri.toString() != _resolveUri(ApiEndpoints.chatMessage).toString()) {
+      return;
+    }
+    debugPrint('[SEND MESSAGE] POST $uri');
+    headers.forEach(
+      (key, value) => debugPrint('[SEND MESSAGE] header $key: $value'),
+    );
+    debugPrint('[SEND MESSAGE] body: $body');
+    final curlHeaders = headers.entries
+        .map((e) => "-H '${e.key}: ${e.value}'")
+        .join(' ');
+    debugPrint(
+      "[SEND MESSAGE] curl: curl -X POST '$uri' $curlHeaders -d '$body'",
+    );
   }
 
   void _logRequest({

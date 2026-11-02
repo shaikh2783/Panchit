@@ -11,6 +11,7 @@ import 'package:snginepro/features/auth/data/storage/auth_storage.dart';
 import 'package:snginepro/features/auth/domain/auth_repository.dart';
 import 'package:snginepro/features/auth/domain/models/auth_session.dart';
 import 'package:snginepro/features/auth/domain/models/stored_auth_account.dart';
+import 'package:snginepro/features/feed/data/services/feed_personalization.dart';
 import 'package:snginepro/main.dart' show configCfgP;
 
 class AuthNotifier extends ChangeNotifier {
@@ -271,6 +272,7 @@ class AuthNotifier extends ChangeNotifier {
   Future<void> signOutCurrentAccount() async {
     // حذف OneSignal Player ID قبل تسجيل الخروج
     await ChatModuleLauncher.clearPushRegistration();
+    FeedPersonalization.instance.clear();
     try {
       await _oneSignalService.removeOneSignalPlayerId();
       await _oneSignalService.logoutUser();
@@ -314,6 +316,7 @@ class AuthNotifier extends ChangeNotifier {
 
   Future<void> signOutAllAccounts() async {
     await ChatModuleLauncher.clearPushRegistration();
+    FeedPersonalization.instance.clear();
     try {
       await _oneSignalService.removeOneSignalPlayerId();
       await _oneSignalService.logoutUser();
@@ -478,6 +481,7 @@ class AuthNotifier extends ChangeNotifier {
     final previousUserId = activeAccount?.userId;
     if (previousUserId != null && previousUserId != account.userId) {
       await ChatModuleLauncher.clearPushRegistration();
+      FeedPersonalization.instance.clear();
     }
 
     _activeAccountId = account.accountId;

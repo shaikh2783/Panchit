@@ -341,8 +341,10 @@ class NotificationNavigationService {
       case 'chat_message':
       case 'chat':
       case 'message':
-      case 'group_message':
         _openChatConversation(data);
+        break;
+      case 'group_message':
+        _openChatConversation(data, isGroupMessage: true);
         break;
 
       // إشعارات أخرى
@@ -359,7 +361,10 @@ class NotificationNavigationService {
   /// Opens the chat_module conversation referenced by a notification payload.
   /// On a cold start the auth session may still be restoring, so wait briefly
   /// for it before giving up.
-  static Future<void> _openChatConversation(Map<String, dynamic> data) async {
+  static Future<void> _openChatConversation(
+    Map<String, dynamic> data, {
+    bool isGroupMessage = false,
+  }) async {
     final conversationId = _parseId(data['conversation_id'] ?? data['cid']);
     final groupId = _parseId(data['group_id']);
     final userId = _parseId(
@@ -374,6 +379,15 @@ class NotificationNavigationService {
       if (context != null &&
           context.mounted &&
           context.read<AuthNotifier>().isAuthenticated) {
+        // group_message pushes only carry group_id (as a string, parsed
+        // above), so open the groups-chat screen from that id.
+        if (isGroupMessage && conversationId == null && groupId != null) {
+          await ChatModuleLauncher.openGroupChatById(
+            context,
+            groupId: groupId,
+          );
+          return;
+        }
         await ChatModuleLauncher.openConversation(
           context,
           conversationId: conversationId,

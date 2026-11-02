@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:get/get.dart';
+import 'package:snginepro/features/feed/data/services/feed_location_service.dart';
+import 'package:snginepro/features/feed/data/services/feed_personalization.dart';
 
 import 'package:flutter/material.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
@@ -928,19 +930,36 @@ class HomePageState extends State<HomePage> {
     return [];
   }
 
+  /// Asks for location once per login session. If granted, reloads the feed so
+  /// the next request carries the for-you location parameters. The feed has
+  /// already started loading, so a denial leaves it untouched.
+  Future<void> _requestFeedLocationOnce() async {
+    final personalization = FeedPersonalization.instance;
+    if (personalization.locationRequested) return;
+    personalization.locationRequested = true;
+    final status = await const FeedLocationService().requestAndUpdate();
+    if (status != FeedLocationStatus.granted || !mounted) return;
+    context.read<PostsBloc>().add(RefreshPostsEvent());
+  }
+
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController()..addListener(_onScroll);
     _suggestedFriendsFuture = _fetchSuggestedFriends();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // Restore saved interests first so the very first feed request has them.
+      await FeedPersonalization.instance.loadInterests();
+      if (!mounted) return;
       final postsBloc = context.read<PostsBloc>();
       if (postsBloc.state is PostsInitialState) {
         postsBloc.add(LoadPostsEvent());
         // 💰 تحميل منشور مدفوع عشوائي عند فتح الصفحة الرئيسية
         postsBloc.add(LoadPromotedPostEvent());
       }
+
+      _requestFeedLocationOnce();
 
       // 📖 تحميل القصص
       final storiesBloc = context.read<StoriesBloc>();

@@ -19,6 +19,10 @@
     <!-- OneSignal Push Notifications -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     
+    <!-- Location for the personalized "for you" feed -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <!-- Optional: For better audio quality -->
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -85,6 +89,11 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <!-- OneSignal notification accent colour (ARGB) -->
+        <meta-data
+            android:name="com.onesignal.NotificationAccentColor.DEFAULT"
+            android:value="FF7B00FF" />
 
         <!-- AdMob App ID -->
         <meta-data

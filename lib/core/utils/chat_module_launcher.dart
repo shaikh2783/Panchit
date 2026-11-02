@@ -15,6 +15,10 @@ import 'package:chat_module/app/features/chat/presentation/pages/open_conversati
     as chat_conversation;
 import 'package:chat_module/app/features/chat/presentation/pages/share_conversation_picker_page.dart'
     as chat_share;
+import 'package:chat_module/app/features/groups_chat/data/services/groups_chat_service.dart'
+    as chat_groups_service;
+import 'package:chat_module/app/features/groups_chat/presentation/pages/group_chat_page.dart'
+    as chat_group_page;
 
 import 'package:snginepro/features/auth/application/auth_notifier.dart';
 
@@ -150,6 +154,39 @@ class ChatModuleLauncher {
             chat_conversation.OpenConversationPage(groupId: groupId),
       ),
     );
+  }
+
+  /// Opens a groups-chat group by its id (the id carried by `group_message`
+  /// pushes). Loads the group first, since the group screen needs the full
+  /// group model. Falls back to [openConversation] if the group can't be
+  /// loaded, e.g. when the id belongs to a regular group conversation.
+  static Future<bool> openGroupChatById(
+    BuildContext context, {
+    required int groupId,
+  }) async {
+    if (groupId <= 0) return false;
+
+    final attached = await _attachSession(context);
+    if (!context.mounted) return false;
+    if (!attached) {
+      _showFailureSnackBar(context);
+      return false;
+    }
+
+    try {
+      final group = await get_x.Get.find<chat_groups_service.GroupsChatService>()
+          .fetchGroupDetails(groupId: groupId);
+      if (!context.mounted) return false;
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => chat_group_page.GroupChatPage(group: group),
+        ),
+      );
+      return true;
+    } catch (_) {
+      if (!context.mounted) return false;
+      return openConversation(context, groupId: groupId);
+    }
   }
 
   /// Opens a conversation by whichever identifier is available, preferring
