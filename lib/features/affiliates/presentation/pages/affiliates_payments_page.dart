@@ -201,7 +201,7 @@ class _AffiliatesPaymentsPageState extends State<AffiliatesPaymentsPage> {
               ),
               decoration: InputDecoration(
                 labelText: 'amount_usd'.tr,
-                prefixIcon: const Icon(Icons.attach_money),
+                prefixIcon: const Icon(Icons.currency_rupee),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),

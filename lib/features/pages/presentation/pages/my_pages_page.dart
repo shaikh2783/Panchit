@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 import 'package:snginepro/core/config/app_config.dart';
 import 'package:snginepro/core/theme/app_colors.dart';
+import 'package:snginepro/core/theme/design_tokens.dart';
 import 'package:snginepro/features/pages/application/pages_notifier.dart';
 import 'package:snginepro/features/pages/data/models/page.dart';
 import 'package:snginepro/features/pages/presentation/pages/page_profile_page.dart';
@@ -23,10 +24,10 @@ class _MyPagesPageState extends State<MyPagesPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
-  final _tabs = [
-    Tab(text: 'my_pages_tab_my_pages'.tr),
-    Tab(text: 'my_pages_tab_liked'.tr),
-    Tab(text: 'my_pages_tab_suggested'.tr),
+  final _tabs = const [
+    (icon: Iconsax.document, label: 'my_pages_tab_my_pages'),
+    (icon: Iconsax.heart, label: 'my_pages_tab_liked'),
+    (icon: Iconsax.flash_1, label: 'my_pages_tab_suggested'),
   ];
 
   @override
@@ -73,6 +74,78 @@ class _MyPagesPageState extends State<MyPagesPage>
 
   Future<void> _handleRefresh() => context.read<PagesNotifier>().refresh();
 
+  /// Standard scrollable pill tab bar shared across the app.
+  Widget _buildPagesTabBar(bool isDark) {
+    final unselectedColor = isDark
+        ? Colors.white.withValues(alpha: 0.65)
+        : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.65);
+
+    return AnimatedBuilder(
+      animation: _tabController,
+      builder: (context, _) {
+        return Row(
+          children: List.generate(_tabs.length, (index) {
+            final tab = _tabs[index];
+            final isSelected = _tabController.index == index;
+
+            return Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(
+                  right: index == _tabs.length - 1 ? 0 : Spacing.sm,
+                ),
+                child: GestureDetector(
+                  onTap: () => _tabController.animateTo(index),
+                  child: AnimatedContainer(
+                    duration: AnimDurations.medium,
+                    curve: CurvesToken.standard,
+                    height: 40,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      gradient: isSelected ? AppColors.primaryGradient : null,
+                      border: isSelected
+                          ? null
+                          : Border.all(
+                              color: isDark
+                                  ? AppColors.dividerDark
+                                  : AppColors.dividerLight,
+                            ),
+                      borderRadius: BorderRadius.circular(Radii.pill),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          tab.icon,
+                          size: 16,
+                          color: isSelected ? Colors.white : unselectedColor,
+                        ),
+                        const SizedBox(width: Spacing.xs),
+                        Flexible(
+                          child: Text(
+                            tab.label.tr,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: isSelected ? Colors.white : unselectedColor,
+                              fontWeight: isSelected
+                                  ? FontWeight.w700
+                                  : FontWeight.w500,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -112,25 +185,15 @@ class _MyPagesPageState extends State<MyPagesPage>
                   const SizedBox(width: 4),
                 ],
                 bottom: PreferredSize(
-                  preferredSize: const Size.fromHeight(48),
-                  child: Container(
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: TabBar(
-                      controller: _tabController,
-                      isScrollable: true,
-                      tabAlignment: TabAlignment.start,
-                      labelStyle: const TextStyle(fontWeight: FontWeight.w700),
-                      indicatorSize: TabBarIndicatorSize.label,
-                      indicator: UnderlineTabIndicator(
-                        borderSide: BorderSide(
-                          width: 3,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        insets: const EdgeInsets.only(bottom: 6),
-                      ),
-                      tabs: _tabs,
+                  preferredSize: const Size.fromHeight(56),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      Spacing.lg,
+                      0,
+                      Spacing.lg,
+                      Spacing.sm,
                     ),
+                    child: _buildPagesTabBar(isDark),
                   ),
                 ),
               ),

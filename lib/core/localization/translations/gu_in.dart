@@ -1193,7 +1193,7 @@ const Map<String, String> guIN = {
 
   "your_balance": "તમારું બેલેન્સ",
   "withdrawal_request": "વિનંતી માટે રકમ કાઢો",
-  "amount_usd": "રકમ (USD)",
+  "amount_usd": "રકમ",
   "minimum_withdrawal_amount": "ન્યૂનતમ વિથડ્રૉલ રકમ \$50 છે",
   "payment_method": "પેમેન્ટ મથાેડ",
   "transfer_to": "જમાવા માટે ટ્રાન્સફર કરો",
@@ -2293,6 +2293,10 @@ const Map<String, String> guIN = {
   'google_sign_in_disabled':
   'Google સાઇન-ઇન હાલમાં બંધ છે',
   'google_sign_in_failed': 'Google સાઇન-ઇન નિષ્ફળ',
+  'i_agree_to': 'હું સંમત છું',
+  'terms_and_conditions': 'નિયમો અને શરતો',
+  'and': 'અને',
+  'privacy_policy': 'ગોપનીયતા નીતિ',
 
 // Onboarding
   'onboarding_connect_title': 'મિત્રો સાથે જોડાઓ',
@@ -2862,6 +2866,19 @@ const Map<String, String> guIN = {
   "competition_opens_in": "ખુલ્લી થાય છે",
   "competition_opening_soon": "ટૂંક સમયમાં ખુલ્લી",
   "competition_rank_prefix": "ક્રમ #",
+
+  // Competition KYC gate
+  "kyc_required_title": "ઓળખ ચકાસણી જરૂરી છે",
+  "kyc_required_message": "સ્પર્ધાઓમાં ભાગ લેવા માટે, કૃપા કરીને આધારનો ઉપયોગ કરીને તમારું KYC પૂર્ણ કરો.",
+  "kyc_verify_aadhaar": "આધાર ચકાસો",
+  "kyc_not_now": "હમણાં નહીં",
+  "kyc_status_check_failed": "KYC સ્થિતિ તપાસી શકાઈ નથી. કૃપા કરીને ફરી પ્રયાસ કરો.",
+  "kyc_session_failed": "આધાર ચકાસણી શરૂ કરી શકાઈ નથી. કૃપા કરીને ફરી પ્રયાસ કરો.",
+  "kyc_verification_failed": "આધાર ચકાસણીની પુષ્ટિ કરી શકાઈ નથી. કૃપા કરીને ફરી પ્રયાસ કરો.",
+  "kyc_config_missing": "આધાર ચકાસણી હાલમાં ઉપલબ્ધ નથી.",
+  "kyc_consent_title": "આધાર વિગતો શેર કરો",
+  "kyc_consent_message": "Panchit તમારી ઓળખ ચકાસવા માટે DigiLocker નો ઉપયોગ કરે છે. તમારો આધાર OTP અને વિગતો DigiLocker દ્વારા સંભાળવામાં આવે છે, Panchit દ્વારા નહીં.",
+  "kyc_consent_checkbox_label": "હું KYC ચકાસણી માટે DigiLocker દ્વારા મારી આધાર વિગતો શેર કરવા સંમત છું.",
 
   // Competition Entry Page
   "entry_title": "સ્પર્ધા નોંધણી",

@@ -128,7 +128,7 @@ class _FriendRequestsPageState extends State<FriendRequestsPage>
                 'name': request.senderName,
               }),
             ),
-            backgroundColor: Colors.green,
+            backgroundColor: AppColors.success,
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -140,7 +140,7 @@ class _FriendRequestsPageState extends State<FriendRequestsPage>
                 'message': result.message,
               }),
             ),
-            backgroundColor: Colors.red,
+            backgroundColor: AppColors.error,
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -154,7 +154,7 @@ class _FriendRequestsPageState extends State<FriendRequestsPage>
               'error': e.toString(),
             }),
           ),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.error,
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -183,7 +183,7 @@ class _FriendRequestsPageState extends State<FriendRequestsPage>
                 'name': request.senderName,
               }),
             ),
-            backgroundColor: Colors.orange,
+            backgroundColor: AppColors.warning,
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -195,7 +195,7 @@ class _FriendRequestsPageState extends State<FriendRequestsPage>
                 'message': result.message,
               }),
             ),
-            backgroundColor: Colors.red,
+            backgroundColor: AppColors.error,
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -209,7 +209,7 @@ class _FriendRequestsPageState extends State<FriendRequestsPage>
               'error': e.toString(),
             }),
           ),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.error,
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -249,7 +249,7 @@ class _FriendRequestsPageState extends State<FriendRequestsPage>
                 'message': result.message,
               }),
             ),
-            backgroundColor: Colors.red,
+            backgroundColor: AppColors.error,
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -263,7 +263,7 @@ class _FriendRequestsPageState extends State<FriendRequestsPage>
               'error': e.toString(),
             }),
           ),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.error,
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -347,7 +347,9 @@ class _GradientAppBar extends StatelessWidget {
     final top = MediaQuery.of(context).padding.top;
 
     final Color p = AppColors.primary;
-    final Color a = isDark ? const Color(0xFF0F172A) : const Color(0xFFF5F7FB);
+    final Color a = isDark
+        ? AppColors.backgroundDark
+        : AppColors.backgroundLight;
 
     return Container(
       height: kToolbarHeight + 64 + top,
@@ -376,78 +378,124 @@ class _Tabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final onSurf = Theme.of(context).colorScheme.onSurface.withOpacity(0.7);
-    final primary = AppColors.primary;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final borderColor = isDark ? AppColors.dividerDark : AppColors.dividerLight;
 
-    return Container(
-      height: 44,
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor.withOpacity(0.75),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: onSurf.withOpacity(0.15)),
+    final tabs = [
+      (
+        icon: Iconsax.user_add,
+        label: 'friend_requests_received'.tr,
+        count: receivedCount,
       ),
-      child: TabBar(
-        controller: controller,
-        indicator: BoxDecoration(
-          color: primary.withOpacity(0.12),
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: primary.withOpacity(0.25)),
-        ),
-        splashBorderRadius: BorderRadius.circular(10),
-        labelColor: Theme.of(context).colorScheme.onSurface,
-        unselectedLabelColor: onSurf,
-        dividerColor: Colors.transparent,
-        tabs: [
-          _TabItem(
-            icon: Iconsax.user_add,
-            label: 'friend_requests_received'.tr,
-            count: receivedCount,
-          ),
-          _TabItem(
-            icon: Iconsax.user_minus,
-            label: 'friend_requests_sent'.tr,
-            count: sentCount,
-          ),
-        ],
+      (
+        icon: Iconsax.user_minus,
+        label: 'friend_requests_sent'.tr,
+        count: sentCount,
       ),
-    );
-  }
-}
+    ];
 
-class _TabItem extends StatelessWidget {
-  const _TabItem({
-    required this.icon,
-    required this.label,
-    required this.count,
-  });
-  final IconData icon;
-  final String label;
-  final int count;
-
-  @override
-  Widget build(BuildContext context) {
-    return Tab(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 18),
-          const SizedBox(width: 6),
-          Text(label),
-          const SizedBox(width: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(999),
-              border: Border.all(color: AppColors.primary.withOpacity(0.25)),
-            ),
-            child: Text(
-              '$count',
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-            ),
+    return AnimatedBuilder(
+      animation: controller,
+      builder: (context, _) {
+        return Container(
+          height: 48,
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.surfaceDark : AppColors.backgroundLight,
+            borderRadius: BorderRadius.circular(32),
           ),
-        ],
-      ),
+          padding: const EdgeInsets.all(4),
+          child: Row(
+            children: List.generate(tabs.length, (index) {
+              final tab = tabs[index];
+              final isSelected = controller.index == index;
+
+              return Expanded(
+                child: GestureDetector(
+                  onTap: () => controller.animateTo(index),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 220),
+                    curve: Curves.easeInOut,
+                    margin: const EdgeInsets.symmetric(horizontal: 2),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: borderColor),
+                      gradient: isSelected ? AppColors.primaryGradient : null,
+                      borderRadius: BorderRadius.circular(28),
+                      boxShadow: isSelected
+                          ? (isDark
+                                ? AppColors.darkShadow
+                                : AppColors.lightShadow)
+                          : null,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          tab.icon,
+                          size: 16,
+                          color: isSelected
+                              ? Colors.white
+                              : (isDark
+                                    ? Colors.white.withValues(alpha: 0.55)
+                                    : theme.colorScheme.onSurface.withValues(
+                                        alpha: 0.55,
+                                      )),
+                        ),
+                        const SizedBox(width: 6),
+                        Flexible(
+                          child: Text(
+                            tab.label,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: isSelected
+                                  ? Colors.white
+                                  : (isDark
+                                        ? Colors.white.withValues(alpha: 0.7)
+                                        : theme.colorScheme.onSurface
+                                              .withValues(alpha: 0.75)),
+                              fontWeight: isSelected
+                                  ? FontWeight.w700
+                                  : FontWeight.w500,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                        if (tab.count > 0) ...[
+                          const SizedBox(width: 6),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 7,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? Colors.white.withValues(alpha: 0.24)
+                                  : AppColors.primary.withValues(alpha: 0.15),
+                              borderRadius: BorderRadius.circular(999),
+                            ),
+                            child: Text(
+                              '${tab.count}',
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                                color: isSelected
+                                    ? Colors.white
+                                    : AppColors.primary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }),
+          ),
+        );
+      },
     );
   }
 }
@@ -582,17 +630,9 @@ class _ReceivedRequestCard extends StatelessWidget {
         color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isDark
-              ? Colors.white.withOpacity(0.08)
-              : Colors.black.withOpacity(0.06),
+          color: isDark ? AppColors.dividerDark : AppColors.dividerLight,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
-          ),
-        ],
+        boxShadow: isDark ? AppColors.darkShadow : AppColors.lightShadow,
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -607,7 +647,8 @@ class _ReceivedRequestCard extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ProfilePage(userId: request.senderId),
+                          builder: (context) =>
+                              ProfilePage(userId: request.senderId),
                         ),
                       );
                     }
@@ -625,7 +666,8 @@ class _ReceivedRequestCard extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ProfilePage(userId: request.senderId),
+                            builder: (context) =>
+                                ProfilePage(userId: request.senderId),
                           ),
                         );
                       }
@@ -680,7 +722,7 @@ class _ReceivedRequestCard extends StatelessWidget {
                     icon: const Icon(Iconsax.user_tick, size: 18),
                     label: Text('friend_requests_accept'.tr),
                     style: FilledButton.styleFrom(
-                      backgroundColor: Colors.green,
+                      backgroundColor: AppColors.success,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
@@ -696,8 +738,8 @@ class _ReceivedRequestCard extends StatelessWidget {
                     icon: const Icon(Iconsax.user_remove, size: 18),
                     label: Text('friend_requests_decline'.tr),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.red,
-                      side: const BorderSide(color: Colors.red),
+                      foregroundColor: AppColors.error,
+                      side: const BorderSide(color: AppColors.error),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -730,17 +772,9 @@ class _SentRequestCard extends StatelessWidget {
         color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isDark
-              ? Colors.white.withOpacity(0.08)
-              : Colors.black.withOpacity(0.06),
+          color: isDark ? AppColors.dividerDark : AppColors.dividerLight,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
-          ),
-        ],
+        boxShadow: isDark ? AppColors.darkShadow : AppColors.lightShadow,
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -752,7 +786,8 @@ class _SentRequestCard extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ProfilePage(userId: request.senderId),
+                      builder: (context) =>
+                          ProfilePage(userId: request.senderId),
                     ),
                   );
                 }
@@ -771,7 +806,8 @@ class _SentRequestCard extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ProfilePage(userId: request.senderId),
+                        builder: (context) =>
+                            ProfilePage(userId: request.senderId),
                       ),
                     );
                   }
@@ -787,47 +823,48 @@ class _SentRequestCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                  Text(
-                    '@${request.senderUsername}',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withOpacity(0.7),
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Icon(
-                        Iconsax.clock,
-                        size: 12,
+                    Text(
+                      '@${request.senderUsername}',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Theme.of(
                           context,
-                        ).colorScheme.onSurface.withOpacity(0.6),
+                        ).colorScheme.onSurface.withOpacity(0.7),
                       ),
-                      const SizedBox(width: 4),
-                      Text(
-                        'friend_requests_sent_time'.trParams({
-                          'time': request.timeAgo,
-                        }),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Icon(
+                          Iconsax.clock,
+                          size: 12,
                           color: Theme.of(
                             context,
                           ).colorScheme.onSurface.withOpacity(0.6),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                        const SizedBox(width: 4),
+                        Text(
+                          'friend_requests_sent_time'.trParams({
+                            'time': request.timeAgo,
+                          }),
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurface.withOpacity(0.6),
+                              ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
             TextButton.icon(
               onPressed: onCancel,
               icon: const Icon(Iconsax.close_circle, size: 16),
               label: Text('friend_requests_cancel'.tr),
               style: TextButton.styleFrom(
-                foregroundColor: Colors.red,
+                foregroundColor: AppColors.error,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 12,
                   vertical: 10,
@@ -857,12 +894,20 @@ class _Avatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final placeholderColor = isDark
+        ? AppColors.hoverDark
+        : AppColors.hoverLight;
+    final placeholderIconColor = isDark
+        ? AppColors.textSecondaryDark
+        : AppColors.textSecondaryLight;
+
     return Stack(
       clipBehavior: Clip.none,
       children: [
         CircleAvatar(
           radius: radius,
-          backgroundColor: Colors.grey[300],
+          backgroundColor: placeholderColor,
           child: avatar.isNotEmpty
               ? ClipOval(
                   child: CachedNetworkImage(
@@ -871,16 +916,16 @@ class _Avatar extends StatelessWidget {
                     height: radius * 2,
                     fit: BoxFit.cover,
                     placeholder: (context, url) => Container(
-                      color: Colors.grey[300],
-                      child: const Icon(Iconsax.user, color: Colors.grey),
+                      color: placeholderColor,
+                      child: Icon(Iconsax.user, color: placeholderIconColor),
                     ),
                     errorWidget: (context, url, error) => Container(
-                      color: Colors.grey[300],
-                      child: const Icon(Iconsax.user, color: Colors.grey),
+                      color: placeholderColor,
+                      child: Icon(Iconsax.user, color: placeholderIconColor),
                     ),
                   ),
                 )
-              : const Icon(Iconsax.user, size: 28, color: Colors.grey),
+              : Icon(Iconsax.user, size: 28, color: placeholderIconColor),
         ),
         if (verified)
           Positioned(
@@ -888,7 +933,7 @@ class _Avatar extends StatelessWidget {
             bottom: -2,
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: AppColors.info,
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: Theme.of(context).cardColor,
@@ -1001,9 +1046,10 @@ class _SkeletonList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final base = Theme.of(context).brightness == Brightness.dark
-        ? Colors.white.withOpacity(0.08)
-        : Colors.black.withOpacity(0.06);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final base = isDark ? AppColors.hoverDark : AppColors.hoverLight;
+    final cardColor = isDark ? AppColors.cardDark : AppColors.cardLight;
+    final borderColor = isDark ? AppColors.dividerDark : AppColors.dividerLight;
     return ListView.builder(
       padding: EdgeInsets.fromLTRB(
         16,
@@ -1016,9 +1062,9 @@ class _SkeletonList extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Theme.of(context).cardColor,
+          color: cardColor,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: base),
+          border: Border.all(color: borderColor),
         ),
         child: Row(
           children: [

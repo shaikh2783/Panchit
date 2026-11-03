@@ -5,12 +5,13 @@ import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
+import 'package:snginepro/core/theme/app_colors.dart';
 import 'package:snginepro/features/feed/data/models/post.dart';
 import 'package:snginepro/features/feed/presentation/widgets/video_reels_player.dart';
 import 'package:snginepro/features/reels/data/datasources/reels_api_service.dart';
 import 'package:snginepro/features/reels/presentation/widgets/use_sound_sheet.dart';
 
-const Color _kAccent = Color(0xFFE1306C);
+const Color _kAccent = AppColors.brandPink;
 const Color _kSurface = Color(0xFF111113);
 
 /// Load state of the audio-only preview player.

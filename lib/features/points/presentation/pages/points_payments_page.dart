@@ -176,7 +176,7 @@ class _PointsPaymentsPageState extends State<PointsPaymentsPage> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        '\$${double.tryParse(balance.toString())?.toStringAsFixed(2) ?? '0.00'}',
+                        '₹${double.tryParse(balance.toString())?.toStringAsFixed(2) ?? '0.00'}',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 32,
@@ -185,7 +185,7 @@ class _PointsPaymentsPageState extends State<PointsPaymentsPage> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '${'minimum_withdrawal'.tr}: \$${minWithdraw.toStringAsFixed(2)}',
+                        '${'minimum_withdrawal'.tr}: ₹${minWithdraw.toStringAsFixed(2)}',
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.8),
                           fontSize: 12,
@@ -218,7 +218,7 @@ class _PointsPaymentsPageState extends State<PointsPaymentsPage> {
               ),
               decoration: InputDecoration(
                 labelText: 'amount_usd'.tr,
-                prefixIcon: const Icon(Icons.attach_money),
+                prefixIcon: const Icon(Icons.currency_rupee),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),

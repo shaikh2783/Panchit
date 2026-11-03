@@ -7,6 +7,7 @@ import '../../application/bloc/cart/cart_event.dart';
 import '../../application/bloc/cart/cart_state.dart';
 import '../widgets/cart_item_card.dart';
 import 'checkout_page.dart';
+import '../../../../core/theme/app_colors.dart';
 
 /// Cart Page - صفحة سلة التسوق
 /// تصميم احترافي وحديث مع animations
@@ -19,7 +20,7 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
-  
+
   @override
   void initState() {
     super.initState();
@@ -27,7 +28,7 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
       duration: const Duration(milliseconds: 600),
       vsync: this,
     )..forward();
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final bloc = context.read<CartBloc>();
       if (bloc.state is CartInitial || bloc.state is CartError) {
@@ -44,10 +45,9 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Get.isDarkMode;
-    
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: isDark ? Colors.black87 : Colors.grey[50],
       appBar: _buildAppBar(context, isDark),
       body: BlocBuilder<CartBloc, CartState>(
         builder: (context, state) {
@@ -79,10 +79,10 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
       bottomNavigationBar: BlocBuilder<CartBloc, CartState>(
         builder: (context, state) {
           if (state is CartLoaded && state.cart.items.isNotEmpty) {
-            return _buildCheckoutBar(context, state.cart);
+            return _buildCheckoutBar(context, state.cart, isDark);
           }
           if (state is CartOperationSuccess && state.cart.items.isNotEmpty) {
-            return _buildCheckoutBar(context, state.cart);
+            return _buildCheckoutBar(context, state.cart, isDark);
           }
           // Hide checkout bar when cart is empty or in CartEmpty state
           return const SizedBox();
@@ -94,8 +94,6 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
   PreferredSizeWidget _buildAppBar(BuildContext context, bool isDark) {
     return AppBar(
       elevation: 0,
-      backgroundColor: isDark ? Colors.grey[900] : Colors.white,
-      surfaceTintColor: Colors.transparent,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -104,7 +102,9 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: isDark ? Colors.white : Colors.black87,
+              color: isDark
+                  ? AppColors.textPrimaryDark
+                  : AppColors.textPrimaryLight,
             ),
           ),
           BlocBuilder<CartBloc, CartState>(
@@ -120,7 +120,9 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.normal,
-                  color: isDark ? Colors.grey[400] : Colors.grey[600],
+                  color: isDark
+                      ? AppColors.textSecondaryDark
+                      : AppColors.textSecondaryLight,
                 ),
               );
             },
@@ -133,7 +135,7 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
           builder: (context, state) {
             final hasItems = (state is CartLoaded && state.cart.items.isNotEmpty) ||
                 (state is CartOperationSuccess && state.cart.items.isNotEmpty);
-            
+
             if (hasItems) {
               return Padding(
                 padding: const EdgeInsets.only(right: 8),
@@ -156,16 +158,16 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
                             },
                             child: Text(
                               'clear'.tr,
-                              style: const TextStyle(color: Colors.red),
+                              style: const TextStyle(color: AppColors.error),
                             ),
                           ),
                         ],
                       ),
                     );
                   },
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.delete_outline,
-                    color: Colors.red[isDark ? 400 : 600],
+                    color: AppColors.error,
                   ),
                 ),
               );
@@ -178,42 +180,46 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
   }
 
   Widget _buildLoadingState() {
-    final isDark = Get.isDarkMode;
-    
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(
-            strokeWidth: 3,
-            valueColor: AlwaysStoppedAnimation<Color>(
-              Colors.blue[isDark ? 400 : 600]!,
-            ),
+    return Builder(
+      builder: (context) {
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const CircularProgressIndicator(
+                strokeWidth: 3,
+                valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'loading_cart'.tr,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: isDark
+                      ? AppColors.textSecondaryDark
+                      : AppColors.textSecondaryLight,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
-          Text(
-            'loading_cart'.tr,
-            style: TextStyle(
-              fontSize: 16,
-              color: isDark ? Colors.grey[400] : Colors.grey[600],
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
   Widget _buildErrorState(BuildContext context, String message) {
-    final isDark = Get.isDarkMode;
-    
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
+          const Icon(
             Icons.error_outline,
             size: 64,
-            color: Colors.red[isDark ? 400 : 600],
+            color: AppColors.error,
           ),
           const SizedBox(height: 16),
           Text(
@@ -221,7 +227,9 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: isDark ? Colors.white : Colors.black87,
+              color: isDark
+                  ? AppColors.textPrimaryDark
+                  : AppColors.textPrimaryLight,
             ),
           ),
           const SizedBox(height: 8),
@@ -232,7 +240,9 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14,
-                color: isDark ? Colors.grey[400] : Colors.grey[600],
+                color: isDark
+                    ? AppColors.textSecondaryDark
+                    : AppColors.textSecondaryLight,
               ),
             ),
           ),
@@ -244,7 +254,6 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
             icon: const Icon(Icons.refresh),
             label: Text('try_again'.tr),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue[isDark ? 400 : 600],
               padding: const EdgeInsets.symmetric(
                 horizontal: 32,
                 vertical: 12,
@@ -257,8 +266,8 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
   }
 
   Widget _buildEmptyState(BuildContext context) {
-    final isDark = Get.isDarkMode;
-    
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Center(
       child: SingleChildScrollView(
         child: Column(
@@ -273,15 +282,15 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Colors.blue[isDark ? 400 : 500]!.withOpacity(0.2),
-                    Colors.blue[isDark ? 300 : 600]!.withOpacity(0.1),
+                    AppColors.primary.withValues(alpha: 0.18),
+                    AppColors.secondary.withValues(alpha: 0.10),
                   ],
                 ),
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.shopping_cart_outlined,
                 size: 60,
-                color: Colors.blue[isDark ? 400 : 600],
+                color: AppColors.primary,
               ),
             ),
             const SizedBox(height: 32),
@@ -290,7 +299,9 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.black87,
+                color: isDark
+                    ? AppColors.textPrimaryDark
+                    : AppColors.textPrimaryLight,
               ),
             ),
             const SizedBox(height: 12),
@@ -299,7 +310,9 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 15,
-                color: isDark ? Colors.grey[400] : Colors.grey[600],
+                color: isDark
+                    ? AppColors.textSecondaryDark
+                    : AppColors.textSecondaryLight,
                 height: 1.5,
               ),
             ),
@@ -315,7 +328,6 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
                   horizontal: 40,
                   vertical: 16,
                 ),
-                backgroundColor: Colors.blue[isDark ? 400 : 600],
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -328,8 +340,8 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
   }
 
   Widget _buildCartContent(BuildContext context, Cart cart) {
-    final isDark = Get.isDarkMode;
-    
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return RefreshIndicator(
       onRefresh: () async {
         context.read<CartBloc>().add(const LoadCartEvent());
@@ -371,7 +383,7 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
                       },
                     );
                   }
-                  
+
                   return Padding(
                     padding: const EdgeInsets.only(top: 16),
                     child: _buildSummaryCard(context, cart, isDark),
@@ -396,7 +408,7 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
     // حساب البيانات الصحيحة من items
     int totalQuantity = 0;
     double totalPrice = 0.0;
-    
+
     for (final item in cart.items) {
       totalQuantity += item.quantity;
       try {
@@ -406,33 +418,30 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
         // تجاهل الأخطاء في التحويل
       }
     }
-    
+
     final formattedTotal = totalPrice.toStringAsFixed(2);
-    
+    final dividerColor = isDark ? AppColors.dividerDark : AppColors.dividerLight;
+    final mutedColor =
+        isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight;
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.3 : 0.08),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: isDark ? AppColors.darkShadow : AppColors.lightShadow,
       ),
       child: Card(
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
-        color: isDark ? Colors.grey[850] : Colors.white,
+        color: isDark ? AppColors.cardDark : AppColors.cardLight,
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
               Container(
                 height: 1,
-                color: isDark ? Colors.grey[800] : Colors.grey[200],
+                color: dividerColor,
                 margin: const EdgeInsets.only(bottom: 20),
               ),
               Row(
@@ -443,7 +452,9 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: isDark ? Colors.white : Colors.black87,
+                      color: isDark
+                          ? AppColors.textPrimaryDark
+                          : AppColors.textPrimaryLight,
                     ),
                   ),
                 ],
@@ -454,26 +465,22 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
                 children: [
                   Text(
                     'number_of_products'.tr,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: isDark ? Colors.grey[400] : Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 14, color: mutedColor),
                   ),
                   Text(
                     '$totalQuantity ${'product'.tr}',
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: isDark ? Colors.grey[300] : Colors.grey[700],
+                      color: isDark
+                          ? AppColors.textPrimaryDark
+                          : AppColors.textPrimaryLight,
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 12),
-              Container(
-                height: 1,
-                color: isDark ? Colors.grey[800] : Colors.grey[200],
-              ),
+              Container(height: 1, color: dividerColor),
               const SizedBox(height: 12),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -483,15 +490,17 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: isDark ? Colors.grey[300] : Colors.grey[700],
+                      color: isDark
+                          ? AppColors.textPrimaryDark
+                          : AppColors.textPrimaryLight,
                     ),
                   ),
                   Text(
                     '$formattedTotal USD',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.green[isDark ? 400 : 600],
+                      color: AppColors.success,
                     ),
                   ),
                 ],
@@ -503,12 +512,10 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
     );
   }
 
-  Widget _buildCheckoutBar(BuildContext context, Cart cart) {
-    final isDark = Get.isDarkMode;
-    
+  Widget _buildCheckoutBar(BuildContext context, Cart cart, bool isDark) {
     // حساب البيانات الصحيحة من items
     double totalPrice = 0.0;
-    
+
     for (final item in cart.items) {
       try {
         final price = double.parse(item.productPrice);
@@ -517,21 +524,21 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
         // تجاهل الأخطاء في التحويل
       }
     }
-    
+
     final formattedTotal = totalPrice.toStringAsFixed(2);
-    
+
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? Colors.grey[900] : Colors.white,
+        color: isDark ? AppColors.cardDark : AppColors.cardLight,
         border: Border(
           top: BorderSide(
-            color: isDark ? Colors.grey[800]! : Colors.grey[200]!,
+            color: isDark ? AppColors.dividerDark : AppColors.dividerLight,
             width: 1,
           ),
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.3 : 0.1),
+            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.1),
             blurRadius: 12,
             offset: const Offset(0, -4),
           ),
@@ -553,16 +560,18 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
                         'total'.tr,
                         style: TextStyle(
                           fontSize: 14,
-                          color: isDark ? Colors.grey[400] : Colors.grey[600],
+                          color: isDark
+                              ? AppColors.textSecondaryDark
+                              : AppColors.textSecondaryLight,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         '$formattedTotal USD',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
-                          color: Colors.green[isDark ? 400 : 600],
+                          color: AppColors.success,
                         ),
                       ),
                     ],
@@ -588,21 +597,23 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
                             },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
-                        backgroundColor: Colors.green[isDark ? 400 : 600],
-                        disabledBackgroundColor: isDark ? Colors.grey[800] : Colors.grey[400],
+                        backgroundColor: AppColors.success,
+                        disabledBackgroundColor: isDark
+                            ? AppColors.dividerDark
+                            : AppColors.dividerLight,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                         elevation: isLoading ? 0 : 4,
                       ),
                       child: isLoading
-                          ? SizedBox(
+                          ? const SizedBox(
                               height: 20,
                               width: 20,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2.5,
                                 valueColor: AlwaysStoppedAnimation<Color>(
-                                  Colors.green[isDark ? 200 : 600]!,
+                                  Colors.white,
                                 ),
                               ),
                             )
@@ -625,4 +636,3 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
     );
   }
 }
-

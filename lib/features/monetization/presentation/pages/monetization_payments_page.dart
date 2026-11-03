@@ -158,7 +158,7 @@ class _MonetizationPaymentsPageState extends State<MonetizationPaymentsPage> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        '\$${balance.toStringAsFixed(2)}',
+                        '₹${balance.toStringAsFixed(2)}',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 32,
@@ -189,7 +189,7 @@ class _MonetizationPaymentsPageState extends State<MonetizationPaymentsPage> {
               ),
               decoration: InputDecoration(
                 labelText: 'amount_usd'.tr,
-                prefixIcon: const Icon(Icons.attach_money),
+                prefixIcon: const Icon(Icons.currency_rupee),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -376,7 +376,7 @@ class _MonetizationPaymentsPageState extends State<MonetizationPaymentsPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '\$${payment.amount.toStringAsFixed(2)}',
+                          '₹${payment.amount.toStringAsFixed(2)}',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
