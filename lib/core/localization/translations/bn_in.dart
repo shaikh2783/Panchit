@@ -2839,6 +2839,30 @@ const Map<String, String> bnIN = {
   "photo_ready": "ছবি শেয়ারের জন্য প্রস্তুত",
   "choose_another": "আরেকটি নির্বাচন করুন",
 
+  // Story Editor
+  "edit_story_tooltip": "সম্পাদনা করুন",
+  "add_text_overlay_title": "টেক্সট যোগ করুন",
+  "type_something": "কিছু লিখুন...",
+  "add_button": "যোগ করুন",
+  "crop_tool_label": "ক্রপ",
+  "text_tool_label": "টেক্সট",
+  "sticker_tool_label": "স্টিকার",
+  "crop_aspect_original": "মূল",
+  "crop_aspect_square": "বর্গক্ষেত্র",
+  "crop_aspect_portrait": "পোর্ট্রেট",
+  "text_overlay_label": "টেক্সট",
+  "sticker_overlay_label": "স্টিকার",
+
+  // KYC status card on the profile's About tab
+  "kyc_section_title": "পরিচয় যাচাই",
+  "kyc_status_verified": "পরিচয় যাচাই হয়েছে",
+  "kyc_status_not_verified": "যাচাই হয়নি",
+  "kyc_verified_on": "যাচাইয়ের তারিখ",
+  "kyc_required_competition_title": "আপনার পরিচয় যাচাই করুন",
+  "kyc_required_competition_message": "KYC যাচাই ছাড়া আপনি কোনো প্রতিযোগিতায় অংশগ্রহণ করতে পারবেন না।",
+  "kyc_verify_anytime_hint": "আপনি যখনই কোনো প্রতিযোগিতায় অংশগ্রহণ করতে চান, তখন আপনার পরিচয় যাচাই করতে পারেন।",
+  "kyc_verify_now": "এখনই যাচাই করুন",
+
   // Competition Detail Page
   "competition_details": "প্রতিযোগিতার বিবরণ",
   "competition_load_failed": "প্রতিযোগিতা লোড করা সম্ভব হয়নি",

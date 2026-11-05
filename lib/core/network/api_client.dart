@@ -179,7 +179,7 @@ class ApiClient {
     final response = await _withTimeout(_httpClient.get(uri, headers: finalHeaders));
 
     _log('⬅️ Status: ${response.statusCode}');
-    _log('⬅️ Response: ${_truncate(response.body)}');
+    // _log('⬅️ Response: ${_truncate(response.body)}');
 
     return _handleResponse(response);
   }

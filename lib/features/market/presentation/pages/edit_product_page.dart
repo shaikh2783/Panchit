@@ -443,7 +443,7 @@ class _EditProductPageState extends State<EditProductPage> {
 
   Future<void> _pickAndUploadDigitalFile() async {
     try {
-      final result = await FilePicker.platform.pickFiles(
+      final result = await FilePicker.pickFiles(
         type: FileType.custom,
         allowedExtensions: const ['txt', 'zip', 'json', 'docx', 'pdf'],
         allowMultiple: false,

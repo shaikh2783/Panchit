@@ -2805,6 +2805,30 @@ const Map<String, String> urPK = {
   "photo_ready":"تصویر شیئر کرنے کے لیے تیار ہے",
   "choose_another":"دوسرا منتخب کریں",
 
+  // Story Editor
+  "edit_story_tooltip":"ترمیم کریں",
+  "add_text_overlay_title":"ٹیکسٹ شامل کریں",
+  "type_something":"کچھ ٹائپ کریں...",
+  "add_button":"شامل کریں",
+  "crop_tool_label":"کراپ",
+  "text_tool_label":"ٹیکسٹ",
+  "sticker_tool_label":"اسٹیکر",
+  "crop_aspect_original":"اصل",
+  "crop_aspect_square":"مربع",
+  "crop_aspect_portrait":"پورٹریٹ",
+  "text_overlay_label":"ٹیکسٹ",
+  "sticker_overlay_label":"اسٹیکر",
+
+  // KYC status card on the profile's About tab
+  "kyc_section_title":"شناختی تصدیق",
+  "kyc_status_verified":"شناخت تصدیق شدہ",
+  "kyc_status_not_verified":"تصدیق نہیں ہوئی",
+  "kyc_verified_on":"تصدیق کی تاریخ",
+  "kyc_required_competition_title":"اپنی شناخت کی تصدیق کریں",
+  "kyc_required_competition_message":"KYC تصدیق کے بغیر آپ کسی بھی مقابلے میں حصہ نہیں لے سکتے۔",
+  "kyc_verify_anytime_hint":"جب بھی آپ کسی مقابلے میں حصہ لینا چاہیں، آپ اپنی شناخت کی تصدیق کر سکتے ہیں۔",
+  "kyc_verify_now":"ابھی تصدیق کریں",
+
   // Competition Detail Page
   "competition_details": "مقابلے کی تفصیلات",
   "competition_load_failed": "مقابلہ لوڈ کرنے میں ناکامی",

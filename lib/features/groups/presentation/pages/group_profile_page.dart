@@ -25,6 +25,7 @@ import 'package:snginepro/features/groups/data/services/group_products_service.d
 import 'package:snginepro/features/market/data/models/product.dart';
 import 'package:snginepro/features/market/presentation/pages/add_product_page.dart';
 import 'package:snginepro/core/utils/html_decoder.dart';
+import 'package:snginepro/core/utils/chat_module_launcher.dart';
 import 'package:snginepro/features/feed/presentation/pages/post_detail_page.dart';
 
 /// صفحة بروفايل المجموعة - بنفس تصميم صفحة الـ Page
@@ -999,6 +1000,16 @@ class _GroupProfilePageState extends State<GroupProfilePage>
                 overflow: TextOverflow.ellipsis,
               ),
               actions: [
+                // Message group button (only for group members)
+                if (_currentGroup!.membership?.isMember ?? false)
+                  IconButton(
+                    icon: const Icon(Iconsax.message),
+                    tooltip: 'message_group'.tr,
+                    onPressed: () => ChatModuleLauncher.openGroupConversation(
+                      context,
+                      groupId: _currentGroup!.groupId,
+                    ),
+                  ),
                 // Settings button (only for group admin)
                 if (_currentGroup!.membership?.isAdmin ?? false)
                   IconButton(

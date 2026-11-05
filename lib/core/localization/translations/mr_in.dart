@@ -3062,6 +3062,30 @@ const Map<String, String> mrIN = {
   "photo_ready":"फोटो शेअर करण्यासाठी तयार",
   "choose_another":"दुसरे निवडा",
 
+  // Story Editor
+  "edit_story_tooltip":"संपादित करा",
+  "add_text_overlay_title":"मजकूर जोडा",
+  "type_something":"काहीतरी टाइप करा...",
+  "add_button":"जोडा",
+  "crop_tool_label":"क्रॉप",
+  "text_tool_label":"मजकूर",
+  "sticker_tool_label":"स्टिकर",
+  "crop_aspect_original":"मूळ",
+  "crop_aspect_square":"चौरस",
+  "crop_aspect_portrait":"पोर्ट्रेट",
+  "text_overlay_label":"मजकूर",
+  "sticker_overlay_label":"स्टिकर",
+
+  // KYC status card on the profile's About tab
+  "kyc_section_title":"ओळख पडताळणी",
+  "kyc_status_verified":"ओळख पडताळली",
+  "kyc_status_not_verified":"पडताळणी झालेली नाही",
+  "kyc_verified_on":"रोजी पडताळले",
+  "kyc_required_competition_title":"तुमची ओळख पडताळा",
+  "kyc_required_competition_message":"केवायसी पडताळणीशिवाय तुम्ही कोणत्याही स्पर्धेत सहभागी होऊ शकत नाही.",
+  "kyc_verify_anytime_hint":"तुम्हाला जेव्हा एखाद्या स्पर्धेत सहभागी व्हायचे असेल तेव्हा तुम्ही तुमची ओळख पडताळू शकता.",
+  "kyc_verify_now":"आता पडताळा",
+
   // Reels module
   'use_camera_music_filters': 'संगीत आणि फिल्टरसह कॅमेरा वापरा',
   'upload_from_gallery': 'गॅलरीमधून अपलोड करा',
