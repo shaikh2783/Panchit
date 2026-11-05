@@ -28,37 +28,12 @@ class LocalizationController extends GetxController {
 
     // Urdu
     'ur_PK': Locale('ur', 'PK'),
-
-    // European
-    'fr_FR': Locale('fr', 'FR'),
-    'es_ES': Locale('es', 'ES'),
-    'pt_PT': Locale('pt', 'PT'),
-    'pt_BR': Locale('pt', 'BR'),
-    'de_DE': Locale('de', 'DE'),
-    'tr_TR': Locale('tr', 'TR'),
-    'nl_NL': Locale('nl', 'NL'),
-    'it_IT': Locale('it', 'IT'),
-    'ru_RU': Locale('ru', 'RU'),
-    'ro_RO': Locale('ro', 'RO'),
-    'el_GR': Locale('el', 'GR'),
   };
 
 
   static const Map<String, String> _languageAliases = {
     'en': 'en_US',
     'ar': 'ar_SA',
-    'fr': 'fr_FR',
-    'es': 'es_ES',
-    'pt': 'pt_PT',
-    'pt_br': 'pt_BR',
-    'de': 'de_DE',
-    'tr': 'tr_TR',
-    'nl': 'nl_NL',
-    'it': 'it_IT',
-    'ru': 'ru_RU',
-    'ro': 'ro_RO',
-    'el': 'el_GR',
-    'gr': 'el_GR',
   };
 
   final List<LanguageOption> languageOptions = const [
@@ -160,95 +135,6 @@ class LocalizationController extends GetxController {
       nameKey: 'urdu',
       nativeName: 'اردو',
       subtitle: 'اردو - Pakistan',
-    ),
-
-    LanguageOption(
-      code: 'fr_FR',
-      locale: Locale('fr', 'FR'),
-      flag: '🇫🇷',
-      nameKey: 'french',
-      nativeName: 'Français',
-      subtitle: 'Français - France',
-    ),
-    LanguageOption(
-      code: 'es_ES',
-      locale: Locale('es', 'ES'),
-      flag: '🇪🇸',
-      nameKey: 'spanish',
-      nativeName: 'Español',
-      subtitle: 'Español - España',
-    ),
-    LanguageOption(
-      code: 'pt_PT',
-      locale: Locale('pt', 'PT'),
-      flag: '🇵🇹',
-      nameKey: 'portuguese',
-      nativeName: 'Portuguese',
-      subtitle: 'Portuguese - Portugal',
-    ),
-    LanguageOption(
-      code: 'pt_BR',
-      locale: Locale('pt', 'BR'),
-      flag: '🇧🇷',
-      nameKey: 'portuguese_br',
-      nativeName: 'Portuguese (Brazil)',
-      subtitle: 'Portuguese - Brazil',
-    ),
-    LanguageOption(
-      code: 'de_DE',
-      locale: Locale('de', 'DE'),
-      flag: '🇩🇪',
-      nameKey: 'german',
-      nativeName: 'Deutsch',
-      subtitle: 'Deutsch - Deutschland',
-    ),
-    LanguageOption(
-      code: 'tr_TR',
-      locale: Locale('tr', 'TR'),
-      flag: '🇹🇷',
-      nameKey: 'turkish',
-      nativeName: 'Türkçe',
-      subtitle: 'Türkçe - Türkiye',
-    ),
-    LanguageOption(
-      code: 'nl_NL',
-      locale: Locale('nl', 'NL'),
-      flag: '🇳🇱',
-      nameKey: 'dutch',
-      nativeName: 'Nederlands',
-      subtitle: 'Nederlands - Nederland',
-    ),
-    LanguageOption(
-      code: 'it_IT',
-      locale: Locale('it', 'IT'),
-      flag: '🇮🇹',
-      nameKey: 'italian',
-      nativeName: 'Italiano',
-      subtitle: 'Italiano - Italia',
-    ),
-    LanguageOption(
-      code: 'ru_RU',
-      locale: Locale('ru', 'RU'),
-      flag: '🇷🇺',
-      nameKey: 'russian',
-      nativeName: 'Русский',
-      subtitle: 'Русский - Россия',
-    ),
-    LanguageOption(
-      code: 'ro_RO',
-      locale: Locale('ro', 'RO'),
-      flag: '🇷🇴',
-      nameKey: 'romanian',
-      nativeName: 'Română',
-      subtitle: 'Română - România',
-    ),
-    LanguageOption(
-      code: 'el_GR',
-      locale: Locale('el', 'GR'),
-      flag: '🇬🇷',
-      nameKey: 'greek',
-      nativeName: 'Ελληνικά',
-      subtitle: 'Ελληνικά - Ελλάδα',
     ),
   ];
 

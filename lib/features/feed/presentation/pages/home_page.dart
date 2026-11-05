@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:get/get.dart';
+import 'package:snginepro/features/feed/data/services/feed_location_service.dart';
+import 'package:snginepro/features/feed/data/services/feed_personalization.dart';
 
 import 'package:flutter/material.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
@@ -23,9 +25,12 @@ import 'package:snginepro/features/feed/presentation/pages/reels_page.dart';
 import 'package:snginepro/features/reels/application/bloc/reels_bloc.dart';
 import 'package:snginepro/features/search/presentation/pages/search_page.dart';
 import 'package:snginepro/features/agora/presentation/pages/professional_live_stream_wrapper.dart';
-import 'package:snginepro/features/messenger/presentation/pages/conversations_page.dart';
+import 'package:chat_module/app/app_root.dart';
+import 'package:chat_module/app/bootstrap/app_bootstrap.dart';
+import 'package:chat_module/app/core/controllers/session_controller.dart';
 import 'package:snginepro/features/discover/data/services/homepage_widgets_api_service.dart';
 import 'package:snginepro/features/friends/data/services/friends_api_service.dart';
+import 'package:snginepro/features/friends/presentation/pages/suggested_friends_page.dart';
 import 'package:snginepro/core/network/api_client.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:snginepro/features/profile/presentation/pages/profile_page.dart';
@@ -678,6 +683,30 @@ class _SuggestedFriendsRailState extends State<_SuggestedFriendsRail> {
                   ),
                 ],
               ),
+              GestureDetector(
+                onTap: () async {
+                  final result = await Navigator.push<Set<int>>(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => SuggestedFriendsPage(
+                        people: widget.people,
+                        mediaResolver: widget.mediaResolver,
+                        initiallyAdded: _added,
+                      ),
+                    ),
+                  );
+                  if (mounted && result != null) {
+                    setState(() => _added.addAll(result));
+                  }
+                },
+                child: Text(
+                  'view_all'.tr,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+              ),
             ],
           ),
         ),
@@ -901,19 +930,36 @@ class HomePageState extends State<HomePage> {
     return [];
   }
 
+  /// Asks for location once per login session. If granted, reloads the feed so
+  /// the next request carries the for-you location parameters. The feed has
+  /// already started loading, so a denial leaves it untouched.
+  Future<void> _requestFeedLocationOnce() async {
+    final personalization = FeedPersonalization.instance;
+    if (personalization.locationRequested) return;
+    personalization.locationRequested = true;
+    final status = await const FeedLocationService().requestAndUpdate();
+    if (status != FeedLocationStatus.granted || !mounted) return;
+    context.read<PostsBloc>().add(RefreshPostsEvent());
+  }
+
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController()..addListener(_onScroll);
     _suggestedFriendsFuture = _fetchSuggestedFriends();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // Restore saved interests first so the very first feed request has them.
+      await FeedPersonalization.instance.loadInterests();
+      if (!mounted) return;
       final postsBloc = context.read<PostsBloc>();
       if (postsBloc.state is PostsInitialState) {
         postsBloc.add(LoadPostsEvent());
         // 💰 تحميل منشور مدفوع عشوائي عند فتح الصفحة الرئيسية
         postsBloc.add(LoadPromotedPostEvent());
       }
+
+      _requestFeedLocationOnce();
 
       // 📖 تحميل القصص
       final storiesBloc = context.read<StoriesBloc>();
@@ -1559,15 +1605,45 @@ class HomePageState extends State<HomePage> {
         ),
         _AppBarAction(
           icon: Iconsax.message,
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const ConversationsPage()),
-            );
-          },
+          onTap: () => _openMessenger(context),
         ),
         const SizedBox(width: 12),
       ],
     );
+  }
+
+  Future<void> _openMessenger(BuildContext context) async {
+    final authNotifier = context.read<AuthNotifier>();
+    final token = authNotifier.authToken;
+    final user = authNotifier.currentUser;
+    final userId = int.tryParse(
+      (user?['user_id'] ?? user?['id'])?.toString() ?? '',
+    );
+    if (token == null || token.isEmpty || userId == null) {
+      return;
+    }
+
+    try {
+      await AppBootstrap.ensureInitialized();
+      await Get.find<SessionController>().attachExternalSession(
+        token: token,
+        userId: userId,
+        userName: (user?['user_fullname'] ?? user?['name'])?.toString(),
+        userPicture: (user?['user_picture'] ?? user?['avatar'])?.toString(),
+      );
+    } catch (e, st) {
+      debugPrint('[_openMessenger] failed: $e\n$st');
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Unable to open messenger. Please try again.')),
+      );
+      return;
+    }
+
+    if (!context.mounted) return;
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (context) => const AppRoot()));
   }
 
   Widget _buildFilterBar() {

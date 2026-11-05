@@ -309,7 +309,6 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
             }
 
             _showSuccessSnackBar('stream_created_successfully'.tr);
-
             // بدء تحديثات التعليقات والإحصائيات
             final commentsBloc = context.read<LiveCommentsBloc>();
             commentsBloc.add(LoadLiveComments(postId: _currentStreamId!));
@@ -481,7 +480,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
+               Text(
                 'setup_live_stream'.tr,
                 style: TextStyle(
                   fontSize: 24,
@@ -676,7 +675,7 @@ class _ProfessionalLiveStreamPageState extends State<ProfessionalLiveStreamPage>
                     children: [
                       const Icon(Icons.chat, color: Colors.white, size: 16),
                       const SizedBox(width: 8),
-                      Text(
+                       Text(
                         'live_chat'.tr,
                         style: TextStyle(
                           color: Colors.white,

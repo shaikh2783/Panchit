@@ -3030,6 +3030,30 @@ const Map<String, String> mlIN = {
   "photo_ready":"ഫോട്ടോ പങ്കിടാൻ തയ്യാറാണ്",
   "choose_another":"മറ്റൊന്ന് തിരഞ്ഞെടുക്കുക",
 
+  // Story Editor
+  "edit_story_tooltip":"എഡിറ്റ് ചെയ്യുക",
+  "add_text_overlay_title":"ടെക്സ്റ്റ് ചേർക്കുക",
+  "type_something":"എന്തെങ്കിലും ടൈപ്പ് ചെയ്യുക...",
+  "add_button":"ചേർക്കുക",
+  "crop_tool_label":"ക്രോപ്പ്",
+  "text_tool_label":"ടെക്സ്റ്റ്",
+  "sticker_tool_label":"സ്റ്റിക്കർ",
+  "crop_aspect_original":"ഒറിജിനൽ",
+  "crop_aspect_square":"സ്ക്വയർ",
+  "crop_aspect_portrait":"പോർട്രെയിറ്റ്",
+  "text_overlay_label":"ടെക്സ്റ്റ്",
+  "sticker_overlay_label":"സ്റ്റിക്കർ",
+
+  // KYC status card on the profile's About tab
+  "kyc_section_title":"ഐഡന്റിറ്റി പരിശോധന",
+  "kyc_status_verified":"ഐഡന്റിറ്റി പരിശോധിച്ചു",
+  "kyc_status_not_verified":"പരിശോധിച്ചിട്ടില്ല",
+  "kyc_verified_on":"പരിശോധിച്ച തീയതി",
+  "kyc_required_competition_title":"നിങ്ങളുടെ ഐഡന്റിറ്റി പരിശോധിക്കുക",
+  "kyc_required_competition_message":"KYC പരിശോധന കൂടാതെ നിങ്ങൾക്ക് ഒരു മത്സരത്തിലും പങ്കെടുക്കാൻ കഴിയില്ല.",
+  "kyc_verify_anytime_hint":"ഒരു മത്സരത്തിൽ പങ്കെടുക്കാൻ ആഗ്രഹിക്കുമ്പോൾ നിങ്ങൾക്ക് നിങ്ങളുടെ ഐഡന്റിറ്റി പരിശോധിക്കാം.",
+  "kyc_verify_now":"ഇപ്പോൾ പരിശോധിക്കുക",
+
   // Reels module
   'use_camera_music_filters': 'മ്യൂസിക്കും ഫിൽട്ടറുകളും സഹിതം ക്യാമറ ഉപയോഗിക്കുക',
   'upload_from_gallery': 'ഗാലറിയിൽ നിന്ന് അപ്‌ലോഡ് ചെയ്യുക',

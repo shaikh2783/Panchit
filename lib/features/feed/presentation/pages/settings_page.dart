@@ -1,3 +1,4 @@
+import 'package:snginepro/features/feed/presentation/pages/interest_picker_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -462,6 +463,20 @@ class SettingsPage extends StatelessWidget {
                   builder: (context) => const FundingSettingsPage(),
                 ),
               );
+            },
+          ),
+
+          const SizedBox(height: 22),
+
+          // Feed personalization
+          _SettingsTile(
+            title: 'Your interests',
+            subtitle: 'Choose topics for your "for you" feed',
+            icon: Icons.interests_rounded,
+            gradient: const [Color(0xFFFF8A65), Color(0xFFE64A19)],
+            onTap: () {
+              HapticFeedback.selectionClick();
+              Get.to(() => const InterestPickerPage());
             },
           ),
 

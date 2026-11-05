@@ -5,6 +5,7 @@ import 'package:snginepro/features/feed/data/models/create_post_request.dart';
 import 'package:snginepro/features/feed/data/models/posts_response.dart';
 import 'package:snginepro/features/feed/data/models/story.dart';
 import 'package:snginepro/features/feed/data/models/upload_file_data.dart';
+import 'package:snginepro/features/feed/data/services/feed_personalization.dart';
 import 'package:http_parser/http_parser.dart' as http_parser;
 import 'package:snginepro/main.dart';
 import 'package:flutter/foundation.dart';
@@ -41,6 +42,9 @@ class PostsApiService {
         'offset': '$offset',
         'type': type,
         'include_ads': includeAds,
+        // Only populated when the "for you" feed is enabled.
+        if (type == 'newsfeed')
+          ...FeedPersonalization.instance.toQueryParameters(),
       },
     );
 

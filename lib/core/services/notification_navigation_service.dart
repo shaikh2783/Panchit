@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+import 'package:snginepro/core/utils/chat_module_launcher.dart';
+import 'package:snginepro/features/auth/application/auth_notifier.dart';
 import 'package:snginepro/features/feed/presentation/pages/post_detail_page.dart';
 import 'package:snginepro/features/notifications/presentation/pages/notifications_page.dart';
 import 'package:snginepro/features/profile/presentation/pages/profile_page.dart';
@@ -25,6 +28,13 @@ class NotificationNavigationService {
       // استخدام microtask بدلاً من Future.delayed لتفادي تأخيرات غير ضرورية
       Future.microtask(() => _process(data));
     }
+  }
+
+  /// التعامل مع رابط عميق وارد من Android App Links / iOS Universal Links
+  /// (ومن أي مخطط مخصص مثل sngine://) عبر حزمة app_links.
+  /// يعاد استخدام نفس منطق قائمة الانتظار والتنقل المستخدم مع الإشعارات.
+  static void handleDeepLink(Uri uri) {
+    handleNotification({'url': uri.toString()});
   }
 
   /// معالجة التنقل من بيانات الإشعار
@@ -150,8 +160,10 @@ class NotificationNavigationService {
       final firstSegment = pathSegments[0];
       
       switch (firstSegment) {
-        // 📄 منشورات
+        // 📄 منشورات (وكذلك الريلز، فهي تُشارك بنفس رابط /posts/<id>)
         case 'posts':
+        case 'reels':
+        case 'reel':
           if (pathSegments.length > 1) {
             final postId = pathSegments[1];
             final id = int.tryParse(postId) ?? 0;
@@ -161,7 +173,7 @@ class NotificationNavigationService {
             }
           }
           break;
-          
+
         // 👤 ملفات شخصية
         case 'users':
         case 'profile':
@@ -188,6 +200,14 @@ class NotificationNavigationService {
 
         case 'wallet':
           Get.to(() => const WalletPage());
+          break;
+
+        // 💬 محادثات الدردشة: /messages/<conversation_id>
+        case 'messages':
+        case 'chat':
+          if (pathSegments.length > 1) {
+            _openChatConversation({'conversation_id': pathSegments[1]});
+          }
           break;
 
         case 'settings':
@@ -317,9 +337,66 @@ class NotificationNavigationService {
         }
         break;
         
+      // 💬 رسائل الدردشة
+      case 'chat_message':
+      case 'chat':
+      case 'message':
+        _openChatConversation(data);
+        break;
+      case 'group_message':
+        _openChatConversation(data, isGroupMessage: true);
+        break;
+
       // إشعارات أخرى
       default:
         Get.to(() => const NotificationsPage());
+    }
+  }
+
+  static int? _parseId(dynamic value) {
+    final parsed = int.tryParse(value?.toString() ?? '');
+    return parsed != null && parsed > 0 ? parsed : null;
+  }
+
+  /// Opens the chat_module conversation referenced by a notification payload.
+  /// On a cold start the auth session may still be restoring, so wait briefly
+  /// for it before giving up.
+  static Future<void> _openChatConversation(
+    Map<String, dynamic> data, {
+    bool isGroupMessage = false,
+  }) async {
+    final conversationId = _parseId(data['conversation_id'] ?? data['cid']);
+    final groupId = _parseId(data['group_id']);
+    final userId = _parseId(
+      data['sender_id'] ?? data['from_user_id'] ?? data['user_id'],
+    );
+    if (conversationId == null && groupId == null && userId == null) {
+      return;
+    }
+
+    for (var attempt = 0; attempt < 20; attempt++) {
+      final context = navigatorKey.currentContext ?? Get.context;
+      if (context != null &&
+          context.mounted &&
+          context.read<AuthNotifier>().isAuthenticated) {
+        // group_message pushes only carry group_id (as a string, parsed
+        // above), so open the groups-chat screen from that id.
+        if (isGroupMessage && conversationId == null && groupId != null) {
+          await ChatModuleLauncher.openGroupChatById(
+            context,
+            groupId: groupId,
+          );
+          return;
+        }
+        await ChatModuleLauncher.openConversation(
+          context,
+          conversationId: conversationId,
+          groupId: groupId,
+          userId: userId,
+        );
+        return;
+      }
+      await Future<void>.delayed(const Duration(milliseconds: 250));
     }
   }
 }

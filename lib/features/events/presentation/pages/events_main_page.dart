@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:snginepro/core/theme/app_colors.dart';
+import 'package:snginepro/core/theme/design_tokens.dart';
 import 'package:snginepro/core/utils/html_decoder.dart';
 import '../../application/bloc/events_bloc.dart';
 import '../../application/bloc/events_events.dart';
@@ -103,6 +105,7 @@ class _EventsMainPageState extends State<EventsMainPage>
   @override
   Widget build(BuildContext context) {
     final theme = Get.theme;
+    final isDark = Get.isDarkMode;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -118,32 +121,17 @@ class _EventsMainPageState extends State<EventsMainPage>
             tooltip: 'create_event'.tr,
           ),
         ],
-        bottom: TabBar(
-          controller: _tabController,
-          isScrollable: true,
-          tabAlignment: TabAlignment.start,
-          tabs: [
-            Tab(
-              icon: const Icon(Iconsax.discover),
-              text: 'discover'.tr,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(56),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(
+              Spacing.lg,
+              0,
+              Spacing.lg,
+              Spacing.sm,
             ),
-            Tab(
-              icon: const Icon(Iconsax.tick_circle),
-              text: 'going'.tr,
-            ),
-            Tab(
-              icon: const Icon(Iconsax.heart),
-              text: 'interested'.tr,
-            ),
-            Tab(
-              icon: const Icon(Iconsax.user_add),
-              text: 'invited'.tr,
-            ),
-            Tab(
-              icon: const Icon(Iconsax.calendar),
-              text: 'my_events'.tr,
-            ),
-          ],
+            child: _buildEventsTabBar(isDark),
+          ),
         ),
       ),
       body: TabBarView(
@@ -156,6 +144,83 @@ class _EventsMainPageState extends State<EventsMainPage>
           _buildTabContent('admin'),
         ],
       ),
+    );
+  }
+
+  /// Standard scrollable pill tab bar shared across the app.
+  Widget _buildEventsTabBar(bool isDark) {
+    final tabs = [
+      (icon: Iconsax.discover, label: 'discover'.tr),
+      (icon: Iconsax.tick_circle, label: 'going'.tr),
+      (icon: Iconsax.heart, label: 'interested'.tr),
+      (icon: Iconsax.user_add, label: 'invited'.tr),
+      (icon: Iconsax.calendar, label: 'my_events'.tr),
+    ];
+    final unselectedColor = isDark
+        ? Colors.white.withValues(alpha: 0.65)
+        : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.65);
+
+    return AnimatedBuilder(
+      animation: _tabController,
+      builder: (context, _) {
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: List.generate(tabs.length, (index) {
+              final tab = tabs[index];
+              final isSelected = _tabController.index == index;
+
+              return Padding(
+                padding: EdgeInsets.only(
+                  right: index == tabs.length - 1 ? 0 : Spacing.sm,
+                ),
+                child: GestureDetector(
+                  onTap: () => _tabController.animateTo(index),
+                  child: AnimatedContainer(
+                    duration: AnimDurations.medium,
+                    curve: CurvesToken.standard,
+                    height: 40,
+                    padding: const EdgeInsets.symmetric(horizontal: 14),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      gradient: isSelected ? AppColors.primaryGradient : null,
+                      border: isSelected
+                          ? null
+                          : Border.all(
+                              color: isDark
+                                  ? AppColors.dividerDark
+                                  : AppColors.dividerLight,
+                            ),
+                      borderRadius: BorderRadius.circular(Radii.pill),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          tab.icon,
+                          size: 16,
+                          color: isSelected ? Colors.white : unselectedColor,
+                        ),
+                        const SizedBox(width: Spacing.xs),
+                        Text(
+                          tab.label,
+                          style: TextStyle(
+                            color: isSelected ? Colors.white : unselectedColor,
+                            fontWeight: isSelected
+                                ? FontWeight.w700
+                                : FontWeight.w500,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }),
+          ),
+        );
+      },
     );
   }
 

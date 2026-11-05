@@ -694,7 +694,8 @@ class _VideoReelsPlayerState extends State<VideoReelsPlayer>
       case AppLifecycleState.inactive:
       case AppLifecycleState.detached:
         // إيقاف الفيديو عند إغلاق التطبيق أو مغادرة الصفحة
-        if (_controller?.controller.value.isPlaying == true) {
+        if (_isInitialized &&
+            _controller?.controller.value.isPlaying == true) {
           _pause();
         }
         break;
@@ -703,7 +704,8 @@ class _VideoReelsPlayerState extends State<VideoReelsPlayer>
         break;
       case AppLifecycleState.hidden:
         // إيقاف عند إخفاء التطبيق
-        if (_controller?.controller.value.isPlaying == true) {
+        if (_isInitialized &&
+            _controller?.controller.value.isPlaying == true) {
           _pause();
         }
         break;

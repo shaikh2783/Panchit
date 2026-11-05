@@ -37,7 +37,7 @@ class AppSettings {
 
   /// App ID الخاص بـ OneSignal
   /// احصل عليه من: https://app.onesignal.com/ > Settings > Keys & IDs
-  static const String oneSignalAppId = '4f06c127-3bc9-48be-b08e-fce0f8907d65';
+  static const String oneSignalAppId = '065047a8-ce38-4c20-8db7-e37682587418';
 
   // ==================== إعدادات AdMob (الإعلانات) ====================
   // احصل على App IDs و Ad Unit IDs من: https://apps.admob.com/
@@ -417,7 +417,7 @@ class AppSettings {
   /// التحقق من اكتمال إعدادات OneSignal
   static bool get isOneSignalConfigured {
     return oneSignalAppId.isNotEmpty &&
-        oneSignalAppId != '4f06c127-3bc9-48be-b08e-fce0f8907d65';
+        oneSignalAppId != 'YOUR_ONESIGNAL_APP_ID';
   }
 
   /// التحقق من صحة المبلغ للشحن
