@@ -949,6 +949,7 @@ const Map<String, String> mrIN = {
   'profile_birthday': 'जन्मदिन',
   'profile_social_links': 'सोशल लिंक्स',
   'profile_photos': 'फोटो',
+  'profile_showing_photos_of': '@total पैकी @count फोटो दाखवत आहे',
   'profile_albums': 'अल्बम्स',
   'profile_albums_menu': 'अल्बम्स',
   'profile_showing_photos': '@count फोटो दाखवत आहे',

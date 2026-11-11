@@ -5,6 +5,7 @@ import '../../../../../settings.dart';
 import '../../../../core/localization/app_translations.dart';
 import '../../../../core/theme/messenger_design.dart';
 import '../../../../core/widgets/messenger_ui.dart';
+import '../../data/models/chat_conversation_details.dart';
 import '../../data/models/chat_conversations_response.dart';
 import '../../data/models/chat_shared_draft.dart';
 import '../../data/services/chat_service.dart';
@@ -67,12 +68,33 @@ class _OpenConversationPageState extends State<OpenConversationPage> {
       'hasShareDraft=${widget.shareDraft?.isValid ?? false}',
     );
 
-    final details = await chatService.fetchConversation(
-      conversationId: widget.conversationId,
-      userId: widget.userId,
-      groupId: widget.groupId,
-      openToken: widget.openToken,
-    );
+    ChatConversationDetailsModel details;
+    try {
+      details = await chatService.fetchConversation(
+        conversationId: widget.conversationId,
+        userId: widget.userId,
+        groupId: widget.groupId,
+        openToken: widget.openToken,
+      );
+    } catch (error) {
+      final userId = widget.userId ?? 0;
+      final isUserOnly =
+          userId > 0 &&
+          widget.conversationId == null &&
+          widget.groupId == null &&
+          (widget.openToken ?? '').isEmpty;
+      if (!isUserOnly) rethrow;
+      // No conversation exists with this user yet: create one, then load it.
+      _logOpenConversation('no conversation with userId=$userId, creating');
+      final opened = await chatService.openConversation(
+        userId: userId,
+        createIfMissing: true,
+      );
+      if (opened.resolvedConversationId <= 0) rethrow;
+      details = await chatService.fetchConversation(
+        conversationId: opened.resolvedConversationId,
+      );
+    }
 
     final baseConversationId = details.resolvedConversationId > 0
         ? details.resolvedConversationId

@@ -10,7 +10,10 @@ import 'package:snginepro/core/SharedPreferences.dart';
 import 'package:snginepro/core/config/app_config.dart';
 import 'package:snginepro/core/localization/localization_controller.dart';
 import 'package:snginepro/core/theme/app_colors.dart';
+import 'package:provider/provider.dart';
 import 'package:snginepro/features/feed/data/models/post.dart';
+import 'package:snginepro/features/feed/domain/posts_repository.dart';
+import 'package:snginepro/features/feed/presentation/pages/post_detail_page.dart';
 import 'package:snginepro/features/feed/presentation/widgets/video_reels_player.dart';
 import 'package:snginepro/features/reels/application/bloc/reels_bloc.dart';
 import 'package:snginepro/features/reels/data/services/reels_management_api_service.dart';
@@ -39,7 +42,11 @@ const Color _kReelSurface = AppColors.surfaceDark;
 const double _kRightRailWidth = 72;
 
 class ReelsPage extends StatefulWidget {
-  const ReelsPage({super.key, this.initialIndex = 0});
+  const ReelsPage({super.key, this.initialIndex = 0, this.singlePost});
+
+  /// When set, only this reel is shown (autoplaying) and the shared feed
+  /// bloc is left untouched. Used for reels opened from a chat share.
+  final Post? singlePost;
 
   /// يبدأ من الريل المطلوب عند الفتح
   final int initialIndex;
@@ -58,9 +65,11 @@ class _ReelsPageState extends State<ReelsPage> {
     super.initState();
     _currentPage = widget.initialIndex;
     _pageController = PageController(initialPage: widget.initialIndex);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ReelsBloc>().add(LoadReelsEvent());
-    });
+    if (widget.singlePost == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.read<ReelsBloc>().add(LoadReelsEvent());
+      });
+    }
   }
 
   @override
@@ -112,6 +121,19 @@ class _ReelsPageState extends State<ReelsPage> {
   @override
   Widget build(BuildContext context) {
     final mediaResolver = context.read<AppConfig>().mediaAsset;
+
+    final single = widget.singlePost;
+    if (single != null) {
+      return _DarkScaffold(
+        child: _ReelView(
+          key: ValueKey(single.id),
+          post: single,
+          mediaResolver: mediaResolver,
+          isActive: true,
+          onDwell: () => _reportReelView(single),
+        ),
+      );
+    }
 
     return BlocBuilder<ReelsBloc, ReelsState>(
       builder: (context, state) {
@@ -189,6 +211,63 @@ class _ReelsPageState extends State<ReelsPage> {
         );
       },
     );
+  }
+}
+
+/// Loads a post by id and shows it as an autoplaying reel. Falls back to the
+/// regular post detail page if the post is not a video/reel.
+class SharedReelPage extends StatefulWidget {
+  const SharedReelPage({super.key, required this.postId});
+
+  final int postId;
+
+  @override
+  State<SharedReelPage> createState() => _SharedReelPageState();
+}
+
+class _SharedReelPageState extends State<SharedReelPage> {
+  Post? _post;
+  Object? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    setState(() => _error = null);
+    try {
+      final data = await context.read<PostsRepository>().fetchPost(
+        widget.postId,
+      );
+      final post = Post.fromJson(data);
+      if (!mounted) return;
+      if (!post.isVideoPost) {
+        Get.off(() => PostDetailPage(postId: widget.postId));
+        return;
+      }
+      setState(() => _post = post);
+    } catch (e) {
+      if (mounted) setState(() => _error = e);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final post = _post;
+    if (post != null) return ReelsPage(singlePost: post);
+    if (_error != null) {
+      return _DarkScaffold(
+        child: _ReelsMessage(
+          icon: Iconsax.warning_2,
+          message: _error.toString(),
+          actionLabel: 'try_again'.tr,
+          onAction: _load,
+        ),
+      );
+    }
+    return const _DarkScaffold(child: Center(child: CircularProgressIndicator()));
   }
 }
 

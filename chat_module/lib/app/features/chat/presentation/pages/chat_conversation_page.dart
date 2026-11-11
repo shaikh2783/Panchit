@@ -3086,6 +3086,16 @@ class _MessageBubble extends StatelessWidget {
   Future<void> _openSharedItem(BuildContext context) async {
     final item = message.sharedItem;
     if (item == null) {
+      // Shared message without a resolved item: fall back to message ids.
+      if (message.messageType == 'shared_reel') {
+        await TimelineLauncher.openReel(
+          context,
+          postId: message.postId > 0 ? message.postId : null,
+          reelId: message.reelId > 0 ? message.reelId : null,
+        );
+      } else if (message.postId > 0) {
+        await TimelineLauncher.openPost(context, postId: message.postId);
+      }
       return;
     }
     if (item.isPost) {

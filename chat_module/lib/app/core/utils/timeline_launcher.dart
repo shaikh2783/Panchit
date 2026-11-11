@@ -10,6 +10,16 @@ import '../../../../settings.dart';
 class TimelineLauncher {
   TimelineLauncher._();
 
+  /// Host-app hooks. When set, shared posts/reels open directly inside the
+  /// host app instead of going through an external custom-scheme link
+  /// (which is not registered on iOS and would fail).
+  static Future<void> Function(BuildContext context, int postId)?
+  hostOpenPost;
+  static Future<void> Function(BuildContext context, int postId)?
+  hostOpenReel;
+  static Future<void> Function(BuildContext context, int postId)?
+  hostOpenProduct;
+
   static Future<void> openNode(
     BuildContext context, {
     required String nodeType,
@@ -99,6 +109,11 @@ class TimelineLauncher {
     if (postId <= 0) {
       return;
     }
+    final hook = hostOpenPost;
+    if (hook != null) {
+      await hook(context, postId);
+      return;
+    }
     await _openTimeline(
       context,
       path: '/open/post',
@@ -115,6 +130,11 @@ class TimelineLauncher {
     required int postId,
   }) async {
     if (postId <= 0) {
+      return;
+    }
+    final hook = hostOpenProduct;
+    if (hook != null) {
+      await hook(context, postId);
       return;
     }
     await _openTimeline(
@@ -136,6 +156,12 @@ class TimelineLauncher {
     final resolvedPostId = postId ?? 0;
     final resolvedReelId = reelId ?? 0;
     if (resolvedPostId <= 0 && resolvedReelId <= 0) {
+      return;
+    }
+    final hook = hostOpenReel;
+    final hostId = resolvedPostId > 0 ? resolvedPostId : resolvedReelId;
+    if (hook != null) {
+      await hook(context, hostId);
       return;
     }
     await _openTimeline(

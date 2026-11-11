@@ -939,6 +939,7 @@ const Map<String, String> taIN = {
   'profile_birthday': 'பிறந்த நாள்',
   'profile_social_links': 'சமூக இணைப்புகள்',
   'profile_photos': 'புகைப்படங்கள்',
+  'profile_showing_photos_of': '@total இல் @count புகைப்படங்கள் காட்டப்படுகிறது',
   'profile_albums': 'ஆல்பங்கள்',
   'profile_albums_menu': 'ஆல்பங்கள்',
   'profile_showing_photos': '@count புகைப்படங்கள் காட்டப்படுகிறது',

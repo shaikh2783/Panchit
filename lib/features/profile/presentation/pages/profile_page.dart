@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:snginepro/core/theme/app_colors.dart';
+import 'package:snginepro/core/widgets/zoomable_image.dart';
 import 'package:snginepro/core/theme/design_tokens.dart';
 import 'package:snginepro/features/profile/data/services/profile_api_service.dart';
 import 'package:snginepro/features/profile/data/services/user_videos_service.dart';
@@ -707,7 +708,7 @@ class _ProfilePageState extends State<ProfilePage>
                   child: _buildActionButton(
                     icon: Iconsax.message,
                     label: 'send_message'.tr,
-                    onPressed: _openChat,
+                    onPressed: relationship.isFriend ? _openChat : null,
                     isPrimary: false,
                   ),
                 ),
@@ -730,7 +731,7 @@ class _ProfilePageState extends State<ProfilePage>
   Widget _buildActionButton({
     required IconData icon,
     required String label,
-    required VoidCallback onPressed,
+    required VoidCallback? onPressed,
     bool isPrimary = true,
   }) {
     return FilledButton.tonal(
@@ -903,7 +904,7 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   Future<void> _openChat() async {
-    if (_profileData == null) return;
+    if (_profileData == null || !_profileData!.relationship.isFriend) return;
 
     final profile = _profileData!.profile;
     final userId = int.tryParse(profile.id) ?? 0;
@@ -3051,7 +3052,10 @@ class _UserPhotosGridState extends State<_UserPhotosGrid> {
               ),
               const SizedBox(width: 6),
               Text(
-                'Showing ${_photos.length}${_totalCount > 0 ? ' of $_totalCount' : ''} photos',
+                (_totalCount > 0 ? 'profile_showing_photos_of' : 'profile_showing_photos').trParams({
+                  'count': '${_photos.length}',
+                  if (_totalCount > 0) 'total': '$_totalCount',
+                }),
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.outline,
                   fontSize: 12,
@@ -3439,7 +3443,10 @@ class _AlbumPhotosGridState extends State<_AlbumPhotosGrid> {
               ),
               const SizedBox(width: 6),
               Text(
-                'Showing ${_photos.length}${_totalCount > 0 ? ' of $_totalCount' : ''} photos',
+                (_totalCount > 0 ? 'profile_showing_photos_of' : 'profile_showing_photos').trParams({
+                  'count': '${_photos.length}',
+                  if (_totalCount > 0) 'total': '$_totalCount',
+                }),
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.outline,
                   fontSize: 12,
@@ -3563,6 +3570,7 @@ class _PhotoViewerPageState extends State<_PhotoViewerPage> {
   late final PageController _controller;
   late int _currentIndex;
   bool _uiVisible = true;
+  bool _zoomed = false;
 
   @override
   void initState() {
@@ -3586,30 +3594,28 @@ class _PhotoViewerPageState extends State<_PhotoViewerPage> {
         children: [
           PageView.builder(
             controller: _controller,
+            physics: _zoomed ? const NeverScrollableScrollPhysics() : null,
             onPageChanged: (i) => setState(() => _currentIndex = i),
             itemCount: photos.length,
             itemBuilder: (context, index) {
               final photo = photos[index];
-              return GestureDetector(
+              return ZoomableImage(
                 onTap: () => setState(() => _uiVisible = !_uiVisible),
-                child: Center(
-                  child: Hero(
-                    tag: photo.source,
-                    child: InteractiveViewer(
-                      minScale: 0.8,
-                      maxScale: 4,
-                      child: CachedNetworkImage(
-                        imageUrl: photo.source,
-                        fit: BoxFit.contain,
-                        placeholder: (context, url) => const SizedBox(
-                          width: 48,
-                          height: 48,
-                          child: CircularProgressIndicator(),
-                        ),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error, color: Colors.white),
-                      ),
+                onZoomChanged: (z) {
+                  if (_zoomed != z) setState(() => _zoomed = z);
+                },
+                child: Hero(
+                  tag: photo.source,
+                  child: CachedNetworkImage(
+                    imageUrl: photo.source,
+                    fit: BoxFit.contain,
+                    placeholder: (context, url) => const SizedBox(
+                      width: 48,
+                      height: 48,
+                      child: CircularProgressIndicator(),
                     ),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error, color: Colors.white),
                   ),
                 ),
               );

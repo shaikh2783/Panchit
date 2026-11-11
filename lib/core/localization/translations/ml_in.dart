@@ -949,6 +949,7 @@ const Map<String, String> mlIN = {
   'profile_birthday': 'ജന്മദിനം',
   'profile_social_links': 'സോഷ്യൽ ലിങ്കുകൾ',
   'profile_photos': 'ഫോട്ടോകൾ',
+  'profile_showing_photos_of': '@total ൽ @count ഫോട്ടോകൾ കാണിക്കുന്നു',
   'profile_albums': 'ആൽബങ്ങൾ',
   'profile_albums_menu': 'ആൽബങ്ങൾ',
   'profile_showing_photos': '@count ഫോട്ടോകൾ കാണിക്കുന്നു',

@@ -1006,9 +1006,10 @@ const Map<String, String> bnIN = {
 
   "profile_social_links": "সামাজিক লিংক",
   "profile_photos": "ছবি",
+  "profile_showing_photos": "@count টি ছবি দেখানো হচ্ছে",
+  "profile_showing_photos_of": "@total এর মধ্যে @count টি ছবি দেখানো হচ্ছে",
   "profile_albums": "অ্যালবাম",
   "profile_albums_menu": "অ্যালবাম",
-  "profile_showing_photos": "@count টি ছবি দেখানো হচ্ছে",
   "profile_total_photos": "মোট @total টি ছবি",
   "profile_no_photos": "কোনো ছবি পাওয়া যায়নি",
   "profile_no_photos_album": "এই অ্যালবামে কোনো ছবি নেই",

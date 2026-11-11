@@ -2184,7 +2184,7 @@ class ChatConversationController extends GetxController {
       final currentMaxExtent = scrollController.position.maxScrollExtent;
       final targetOffset =
           previousPixels + (currentMaxExtent - previousMaxExtent);
-      scrollController.jumpTo(targetOffset.clamp(0.0, currentMaxExtent));
+      scrollController.positions.last.jumpTo(targetOffset.clamp(0.0, currentMaxExtent));
       unawaited(
         ChatTraceLogger.log(
           'scroll',
@@ -2229,7 +2229,7 @@ class ChatConversationController extends GetxController {
         _releaseScrollPaginationLock();
         return;
       }
-      scrollController.animateTo(
+      scrollController.positions.last.animateTo(
         target,
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeOut,

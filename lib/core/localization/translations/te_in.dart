@@ -944,6 +944,7 @@ const Map<String, String> teIN = {
   'profile_birthday': 'పుట్టినరోజు',
   'profile_social_links': 'సోషియల్ లింకులు',
   'profile_photos': 'ఫోటోలు',
+  'profile_showing_photos_of': '@total లో @count ఫోటోలు చూపబడుతున్నాయి',
   'profile_albums': 'ఆల్బమ్‌లు',
   'profile_albums_menu': 'ఆల్బమ్‌లు',
   'profile_showing_photos': '@count ఫోటోలు చూపబడుతున్నాయి',

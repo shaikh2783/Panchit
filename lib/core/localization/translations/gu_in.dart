@@ -950,6 +950,7 @@ const Map<String, String> guIN = {
   "profile_birthday": "જન્મદિવસ",
   "profile_social_links": "સોશિયલ લિંક્સ",
   "profile_photos": "ફોટોઝ",
+  "profile_showing_photos_of": "@total માંથી @count ફોટોઝ દર્શાવી રહ્યાં છે",
   "profile_albums": "એલ્બમ્સ",
   "profile_albums_menu": "એલ્બમ્સ",
   "profile_showing_photos": "@count ફોટોઝ દર્શાવી રહ્યાં છે",

@@ -20,7 +20,12 @@ import 'package:chat_module/app/features/groups_chat/data/services/groups_chat_s
 import 'package:chat_module/app/features/groups_chat/presentation/pages/group_chat_page.dart'
     as chat_group_page;
 
+import 'package:chat_module/app/core/utils/timeline_launcher.dart'
+    as chat_timeline;
 import 'package:snginepro/features/auth/application/auth_notifier.dart';
+import 'package:snginepro/features/feed/presentation/pages/post_detail_page.dart';
+import 'package:snginepro/features/feed/presentation/pages/reels_page.dart';
+import 'package:snginepro/features/market/presentation/pages/product_details_page.dart';
 
 /// Single entry point for opening chat_module screens from anywhere in the
 /// host app. Mirrors the bootstrap/session-attach sequence already used in
@@ -29,7 +34,20 @@ import 'package:snginepro/features/auth/application/auth_notifier.dart';
 class ChatModuleLauncher {
   ChatModuleLauncher._();
 
+  static void registerHostNavigation() {
+    chat_timeline.TimelineLauncher.hostOpenPost = (context, postId) async {
+      await get_x.Get.to(() => PostDetailPage(postId: postId));
+    };
+    chat_timeline.TimelineLauncher.hostOpenReel = (context, postId) async {
+      await get_x.Get.to(() => SharedReelPage(postId: postId));
+    };
+    chat_timeline.TimelineLauncher.hostOpenProduct = (context, postId) async {
+      await get_x.Get.to(() => ProductDetailsPage(productId: '$postId'));
+    };
+  }
+
   static Future<bool> _attachSession(BuildContext context) async {
+    registerHostNavigation();
     final authNotifier = context.read<AuthNotifier>();
     final token = authNotifier.authToken;
     final user = authNotifier.currentUser;

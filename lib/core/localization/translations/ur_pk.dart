@@ -945,6 +945,7 @@ const Map<String, String> urPK = {
   'profile_birthday': 'سالگرہ',
   'profile_social_links': 'سوشل لنکس',
   'profile_photos': 'تصاویر',
+  'profile_showing_photos_of': '@total میں سے @count تصاویر دکھائی جا رہی ہیں',
   'profile_albums': 'البمز',
   'profile_albums_menu': 'البمز',
   'profile_showing_photos': '@count تصاویر دکھائی جا رہی ہیں',

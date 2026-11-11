@@ -1111,6 +1111,7 @@ const Map<String, String> enUS = {
   'profile_birthday': 'Birthday',
   'profile_social_links': 'Social Links',
   'profile_photos': 'Photos',
+  'profile_showing_photos_of': 'Showing @count of @total photos',
   'profile_albums': 'Albums',
   'profile_albums_menu': 'Albums',
   'profile_showing_photos': 'Showing @count photos',

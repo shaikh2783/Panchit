@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:snginepro/app/app.dart';
 import 'package:snginepro/App_Settings.dart' show AppSettings;
 import 'package:snginepro/core/SharedPreferences.dart';
+import 'package:snginepro/core/utils/chat_module_launcher.dart';
 import 'package:snginepro/core/theme/theme_controller.dart';
 import 'package:snginepro/core/localization/localization_controller.dart';
 import 'package:snginepro/core/network/api_client.dart';
@@ -160,6 +161,7 @@ Future<void> main() async {
   });
   // ============ UPDATE SYSTEM - END ============
 
+  ChatModuleLauncher.registerHostNavigation();
   runApp(App(sharedPreferences: sharedPreferences));
 }
 

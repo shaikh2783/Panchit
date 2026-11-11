@@ -942,6 +942,7 @@ const Map<String, String> knIN = {
   'profile_birthday': 'ಜನ್ಮದಿನ',
   'profile_social_links': 'ಸಾಮಾಜಿಕ ಲಿಂಕ್‌ಗಳು',
   'profile_photos': 'ಫೋಟೋಗಳು',
+  'profile_showing_photos_of': '@total ರಲ್ಲಿ @count ಫೋಟೋಗಳನ್ನು ತೋರಿಸಲಾಗುತ್ತಿದೆ',
   'profile_albums': 'ಆಲ್ಬಮ್‌ಗಳು',
   'profile_albums_menu': 'ಆಲ್ಬಮ್‌ಗಳು',
   'profile_showing_photos': '@count ಫೋಟೋಗಳನ್ನು ತೋರಿಸಲಾಗುತ್ತಿದೆ',

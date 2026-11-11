@@ -959,6 +959,7 @@ const Map<String, String> orIN = {
 'profile_birthday': 'ଜନ୍ମଦିନ',
 'profile_social_links': 'ସୋସିଆଲ୍ ଲିଙ୍କ୍‌ସ',
 'profile_photos': 'ଫଟୋ',
+'profile_showing_photos_of': '@total ମଧ୍ୟରୁ @count ଫଟୋ ଦେଖାଯାଉଛି',
 'profile_albums': 'ଆଲବମ୍‌ସ',
 'profile_albums_menu': 'ଆଲବମ୍‌ସ',
 'profile_showing_photos': '@count ଫଟୋ ଦେଖାଯାଉଛି',

@@ -942,6 +942,7 @@ const Map<String, String> hiIN = {
   'profile_birthday': 'जन्मदिन',
   'profile_social_links': 'सोशल लिंक',
   'profile_photos': 'फ़ोटो',
+  'profile_showing_photos_of': '@total में से @count फ़ोटो दिखा रहे हैं',
   'profile_albums': 'एल्बम',
   'profile_albums_menu': 'एल्बम',
   'profile_showing_photos': '@count फ़ोटो दिखा रहे हैं',
