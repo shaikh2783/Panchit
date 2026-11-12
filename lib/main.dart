@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:snginepro/app/app.dart';
 import 'package:snginepro/App_Settings.dart' show AppSettings;
 import 'package:snginepro/core/SharedPreferences.dart';
+import 'package:snginepro/core/utils/chat_module_launcher.dart';
 import 'package:snginepro/core/theme/theme_controller.dart';
 import 'package:snginepro/core/localization/localization_controller.dart';
 import 'package:snginepro/core/network/api_client.dart';
@@ -13,6 +14,8 @@ import 'package:snginepro/core/services/notification_navigation_service.dart';
 import 'package:snginepro/core/services/onesignal_service.dart';
 import 'package:snginepro/features/messenger/presentation/services/global_call_service.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:chat_module/app/data/services/one_signal_service.dart'
+    as chat_one_signal;
 import 'package:snginepro/features/settings/data/models/seeting.dart';
 import 'package:snginepro/license_fluttercrafters.dart';
 
@@ -109,6 +112,9 @@ Future<void> main() async {
 
   // Initialize OneSignal with app settings from API
   await _initializeOneSignal(apiClient);
+  // The host app owns the OneSignal SDK; chat_module only registers the
+  // subscription ID with its backend.
+  chat_one_signal.OneSignalService.hostManaged = true;
 
   // Initialize ReactionsService
   final reactionsApiService = ReactionsApiService(apiClient: apiClient);
@@ -155,6 +161,7 @@ Future<void> main() async {
   });
   // ============ UPDATE SYSTEM - END ============
 
+  ChatModuleLauncher.registerHostNavigation();
   runApp(App(sharedPreferences: sharedPreferences));
 }
 

@@ -933,6 +933,8 @@ const Map<String, String> enUS = {
   'logout_confirm': 'Are you sure you want to logout?',
   'search_placeholder': 'Search...',
   'view_all': 'View All',
+  'failed_to_send_request': 'Failed to send request',
+  'no_more_suggestions': 'No more suggestions right now',
 
   // Settings Page
   'customize_experience': 'Customize Your Experience',
@@ -1109,6 +1111,7 @@ const Map<String, String> enUS = {
   'profile_birthday': 'Birthday',
   'profile_social_links': 'Social Links',
   'profile_photos': 'Photos',
+  'profile_showing_photos_of': 'Showing @count of @total photos',
   'profile_albums': 'Albums',
   'profile_albums_menu': 'Albums',
   'profile_showing_photos': 'Showing @count photos',
@@ -2079,6 +2082,7 @@ const Map<String, String> enUS = {
       'Your join request has been sent to the group admins.\nYou will be notified when your request is approved.',
   'group_cancel_request': 'Cancel Request',
   'group_settings': 'Group Settings',
+  'message_group': 'Message Group',
   'group_posts_label': 'Posts',
   'group_invite_button': 'Invite',
   'group_members_button': 'Members',
@@ -2211,6 +2215,7 @@ const Map<String, String> enUS = {
   'share_to_page': 'Page',
   'share_to_group': 'Group',
   'share_to_event': 'Event',
+  'share_to_chat': 'Message',
   'share_external': 'Share Externally',
   'share_external_subtitle': 'Share via other apps',
   'share_on_social_media': 'Share on Social Media',
@@ -2838,6 +2843,20 @@ const Map<String, String> enUS = {
   "photo_ready":"Photo ready to share",
   "choose_another":"Choose Another",
 
+  // Story Editor
+  "edit_story_tooltip":"Edit",
+  "add_text_overlay_title":"Add Text",
+  "type_something":"Type something...",
+  "add_button":"Add",
+  "crop_tool_label":"Crop",
+  "text_tool_label":"Text",
+  "sticker_tool_label":"Sticker",
+  "crop_aspect_original":"Original",
+  "crop_aspect_square":"Square",
+  "crop_aspect_portrait":"Portrait",
+  "text_overlay_label":"Text",
+  "sticker_overlay_label":"Sticker",
+
   // Competition Detail Page
   'competition_details': 'Competition Details',
   'competition_load_failed': 'Unable to load competition',
@@ -2922,6 +2941,18 @@ const Map<String, String> enUS = {
   'kyc_name_mismatch_title': 'Name Mismatch',
   'kyc_name_mismatch_message': 'The name on your Aadhaar card does not match your Panchit profile name. Please retry with the correct Aadhaar account.',
   'kyc_retry_verification': 'Retry Verification',
+
+  // KYC status card on the profile's About tab
+  'kyc_section_title': 'Identity Verification',
+  'kyc_status_verified': 'Identity Verified',
+  'kyc_status_not_verified': 'Not Verified',
+  'kyc_verified_on': 'Verified on',
+  'kyc_required_competition_title': 'Verify Your Identity',
+  'kyc_required_competition_message':
+      'Without KYC verification, you cannot participate in any competition.',
+  'kyc_verify_anytime_hint':
+      'You can verify your identity whenever you want to participate in a competition.',
+  'kyc_verify_now': 'Verify Now',
 
   // Competition Entry Page
   'entry_title': 'Competition Entry',

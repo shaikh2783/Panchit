@@ -42,3 +42,11 @@
 # OneSignal — reflection-based initialization and notification handlers.
 -keep class com.onesignal.** { *; }
 -dontwarn com.onesignal.**
+
+# Google Sign-In / Play Services Auth — SafeParcelable CREATOR fields and
+# API client classes are reflection-accessed; without this, R8 silently
+# breaks sign-in in release builds (works fine in debug since it's unminified).
+-keep class com.google.android.gms.auth.** { *; }
+-keep class com.google.android.gms.common.** { *; }
+-keep class com.google.android.gms.signin.** { *; }
+-dontwarn com.google.android.gms.**

@@ -959,6 +959,7 @@ const Map<String, String> orIN = {
 'profile_birthday': 'ଜନ୍ମଦିନ',
 'profile_social_links': 'ସୋସିଆଲ୍ ଲିଙ୍କ୍‌ସ',
 'profile_photos': 'ଫଟୋ',
+'profile_showing_photos_of': '@total ମଧ୍ୟରୁ @count ଫଟୋ ଦେଖାଯାଉଛି',
 'profile_albums': 'ଆଲବମ୍‌ସ',
 'profile_albums_menu': 'ଆଲବମ୍‌ସ',
 'profile_showing_photos': '@count ଫଟୋ ଦେଖାଯାଉଛି',
@@ -2814,6 +2815,30 @@ const Map<String, String> orIN = {
   "video_ready":"ଭିଡିଓ ସେୟାର ପାଇଁ ପ୍ରସ୍ତୁତ",
   "photo_ready":"ଫଟୋ ସେୟାର ପାଇଁ ପ୍ରସ୍ତୁତ",
   "choose_another":"ଅନ୍ୟଟି ବାଛନ୍ତୁ",
+
+  // Story Editor
+  "edit_story_tooltip":"ସମ୍ପାଦନ କରନ୍ତୁ",
+  "add_text_overlay_title":"ଟେକ୍ସଟ୍ ଯୋଡନ୍ତୁ",
+  "type_something":"କିଛି ଟାଇପ୍ କରନ୍ତୁ...",
+  "add_button":"ଯୋଡନ୍ତୁ",
+  "crop_tool_label":"କ୍ରପ୍",
+  "text_tool_label":"ଟେକ୍ସଟ୍",
+  "sticker_tool_label":"ଷ୍ଟିକର",
+  "crop_aspect_original":"ମୂଳ",
+  "crop_aspect_square":"ବର୍ଗ",
+  "crop_aspect_portrait":"ପୋର୍ଟ୍ରେଟ୍",
+  "text_overlay_label":"ଟେକ୍ସଟ୍",
+  "sticker_overlay_label":"ଷ୍ଟିକର",
+
+  // KYC status card on the profile's About tab
+  "kyc_section_title":"ପରିଚୟ ଯାଞ୍ଚ",
+  "kyc_status_verified":"ପରିଚୟ ଯାଞ୍ଚ ହୋଇଛି",
+  "kyc_status_not_verified":"ଯାଞ୍ଚ ହୋଇନାହିଁ",
+  "kyc_verified_on":"ଯାଞ୍ଚ ତାରିଖ",
+  "kyc_required_competition_title":"ଆପଣଙ୍କର ପରିଚୟ ଯାଞ୍ଚ କରନ୍ତୁ",
+  "kyc_required_competition_message":"KYC ଯାଞ୍ଚ ବିନା ଆପଣ କୌଣସି ପ୍ରତିଯୋଗିତାରେ ଅଂଶଗ୍ରହଣ କରିପାରିବେ ନାହିଁ।",
+  "kyc_verify_anytime_hint":"ଆପଣ ଯେତେବେଳେ ଏକ ପ୍ରତିଯୋଗିତାରେ ଅଂଶଗ୍ରହଣ କରିବାକୁ ଚାହାଁନ୍ତି, ସେତେବେଳେ ଆପଣ ଆପଣଙ୍କର ପରିଚୟ ଯାଞ୍ଚ କରିପାରିବେ।",
+  "kyc_verify_now":"ବର୍ତ୍ତମାନ ଯାଞ୍ଚ କରନ୍ତୁ",
 
   // Competition Detail Page
   "competition_details": "ପ୍ରତିଯୋଗିତା ବିବରଣୀ",

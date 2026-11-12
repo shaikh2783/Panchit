@@ -1114,9 +1114,10 @@ const Map<String, String> arSA = {
   'profile_birthday': 'عيد الميلاد',
   'profile_social_links': 'الروابط الاجتماعية',
   'profile_photos': 'الصور',
+  'profile_showing_photos': 'عرض @count صورة',
+  'profile_showing_photos_of': 'عرض @count من @total صورة',
   'profile_albums': 'الألبومات',
   'profile_albums_menu': 'الألبومات',
-  'profile_showing_photos': 'عرض @count صور',
   'profile_total_photos': 'من @total صور',
   'profile_no_photos': 'لم يتم العثور على صور',
   'profile_no_photos_album': 'لا توجد صور في هذا الألبوم',
@@ -2815,6 +2816,30 @@ const Map<String, String> arSA = {
   "video_ready":"الفيديو جاهز للمشاركة",
   "photo_ready":"الصورة جاهزة للمشاركة",
   "choose_another":"اختر خيارًا آخر",
+
+  // Story Editor
+  "edit_story_tooltip":"تعديل",
+  "add_text_overlay_title":"إضافة نص",
+  "type_something":"اكتب شيئًا...",
+  "add_button":"إضافة",
+  "crop_tool_label":"قص",
+  "text_tool_label":"نص",
+  "sticker_tool_label":"ملصق",
+  "crop_aspect_original":"الأصلي",
+  "crop_aspect_square":"مربع",
+  "crop_aspect_portrait":"عمودي",
+  "text_overlay_label":"نص",
+  "sticker_overlay_label":"ملصق",
+
+  // KYC status card on the profile's About tab
+  "kyc_section_title":"التحقق من الهوية",
+  "kyc_status_verified":"تم التحقق من الهوية",
+  "kyc_status_not_verified":"لم يتم التحقق",
+  "kyc_verified_on":"تاريخ التحقق",
+  "kyc_required_competition_title":"تحقق من هويتك",
+  "kyc_required_competition_message":"بدون التحقق من KYC، لا يمكنك المشاركة في أي مسابقة.",
+  "kyc_verify_anytime_hint":"يمكنك التحقق من هويتك في أي وقت تريد المشاركة فيه في مسابقة.",
+  "kyc_verify_now":"تحقق الآن",
 
   // Reels module
   'use_camera_music_filters': 'استخدم الكاميرا مع الموسيقى والفلاتر',

@@ -942,6 +942,7 @@ const Map<String, String> hiIN = {
   'profile_birthday': 'जन्मदिन',
   'profile_social_links': 'सोशल लिंक',
   'profile_photos': 'फ़ोटो',
+  'profile_showing_photos_of': '@total में से @count फ़ोटो दिखा रहे हैं',
   'profile_albums': 'एल्बम',
   'profile_albums_menu': 'एल्बम',
   'profile_showing_photos': '@count फ़ोटो दिखा रहे हैं',
@@ -2947,6 +2948,30 @@ const Map<String, String> hiIN = {
   "video_ready":"वीडियो साझा करने के लिए तैयार",
   "photo_ready":"फोटो साझा करने के लिए तैयार",
   "choose_another":"दूसरा चुनें",
+
+  // Story Editor
+  "edit_story_tooltip":"संपादित करें",
+  "add_text_overlay_title":"टेक्स्ट जोड़ें",
+  "type_something":"कुछ लिखें...",
+  "add_button":"जोड़ें",
+  "crop_tool_label":"क्रॉप",
+  "text_tool_label":"टेक्स्ट",
+  "sticker_tool_label":"स्टिकर",
+  "crop_aspect_original":"मूल",
+  "crop_aspect_square":"वर्ग",
+  "crop_aspect_portrait":"पोर्ट्रेट",
+  "text_overlay_label":"टेक्स्ट",
+  "sticker_overlay_label":"स्टिकर",
+
+  // KYC status card on the profile's About tab
+  "kyc_section_title":"पहचान सत्यापन",
+  "kyc_status_verified":"पहचान सत्यापित",
+  "kyc_status_not_verified":"सत्यापित नहीं",
+  "kyc_verified_on":"सत्यापित तिथि",
+  "kyc_required_competition_title":"अपनी पहचान सत्यापित करें",
+  "kyc_required_competition_message":"KYC सत्यापन के बिना आप किसी भी प्रतियोगिता में भाग नहीं ले सकते।",
+  "kyc_verify_anytime_hint":"जब भी आप किसी प्रतियोगिता में भाग लेना चाहें, आप अपनी पहचान सत्यापित कर सकते हैं।",
+  "kyc_verify_now":"अभी सत्यापित करें",
 
   // Competition Detail Page
   "competition_details": "प्रतियोगिता विवरण",

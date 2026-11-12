@@ -942,6 +942,7 @@ const Map<String, String> knIN = {
   'profile_birthday': 'ಜನ್ಮದಿನ',
   'profile_social_links': 'ಸಾಮಾಜಿಕ ಲಿಂಕ್‌ಗಳು',
   'profile_photos': 'ಫೋಟೋಗಳು',
+  'profile_showing_photos_of': '@total ರಲ್ಲಿ @count ಫೋಟೋಗಳನ್ನು ತೋರಿಸಲಾಗುತ್ತಿದೆ',
   'profile_albums': 'ಆಲ್ಬಮ್‌ಗಳು',
   'profile_albums_menu': 'ಆಲ್ಬಮ್‌ಗಳು',
   'profile_showing_photos': '@count ಫೋಟೋಗಳನ್ನು ತೋರಿಸಲಾಗುತ್ತಿದೆ',
@@ -2859,6 +2860,30 @@ const Map<String, String> knIN = {
   "video_ready": "ವೀಡಿಯೊ ಹಂಚಿಕೊಳ್ಳಲು ಸಿದ್ಧವಾಗಿದೆ",
   "photo_ready": "ಫೋಟೋ ಹಂಚಿಕೊಳ್ಳಲು ಸಿದ್ಧವಾಗಿದೆ",
   "choose_another": "ಮತ್ತೊಂದು ಆಯ್ಕೆಮಾಡಿ",
+
+  // Story Editor
+  "edit_story_tooltip": "ಸಂಪಾದಿಸಿ",
+  "add_text_overlay_title": "ಪಠ್ಯ ಸೇರಿಸಿ",
+  "type_something": "ಏನಾದರೂ ಟೈಪ್ ಮಾಡಿ...",
+  "add_button": "ಸೇರಿಸಿ",
+  "crop_tool_label": "ಕ್ರಾಪ್",
+  "text_tool_label": "ಪಠ್ಯ",
+  "sticker_tool_label": "ಸ್ಟಿಕರ್",
+  "crop_aspect_original": "ಮೂಲ",
+  "crop_aspect_square": "ಚೌಕ",
+  "crop_aspect_portrait": "ಪೋರ್ಟ್ರೇಟ್",
+  "text_overlay_label": "ಪಠ್ಯ",
+  "sticker_overlay_label": "ಸ್ಟಿಕರ್",
+
+  // KYC status card on the profile's About tab
+  "kyc_section_title": "ಗುರುತಿನ ಪರಿಶೀಲನೆ",
+  "kyc_status_verified": "ಗುರುತು ಪರಿಶೀಲಿಸಲಾಗಿದೆ",
+  "kyc_status_not_verified": "ಪರಿಶೀಲಿಸಲಾಗಿಲ್ಲ",
+  "kyc_verified_on": "ಪರಿಶೀಲಿಸಿದ ದಿನಾಂಕ",
+  "kyc_required_competition_title": "ನಿಮ್ಮ ಗುರುತನ್ನು ಪರಿಶೀಲಿಸಿ",
+  "kyc_required_competition_message": "KYC ಪರಿಶೀಲನೆ ಇಲ್ಲದೆ ನೀವು ಯಾವುದೇ ಸ್ಪರ್ಧೆಯಲ್ಲಿ ಭಾಗವಹಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ.",
+  "kyc_verify_anytime_hint": "ನೀವು ಸ್ಪರ್ಧೆಯಲ್ಲಿ ಭಾಗವಹಿಸಲು ಬಯಸಿದಾಗ ನಿಮ್ಮ ಗುರುತನ್ನು ಪರಿಶೀಲಿಸಬಹುದು.",
+  "kyc_verify_now": "ಈಗ ಪರಿಶೀಲಿಸಿ",
 
   // Reels module
   'use_camera_music_filters': 'ಸಂಗೀತ ಮತ್ತು ಫಿಲ್ಟರ್‌ಗಳೊಂದಿಗೆ ಕ್ಯಾಮೆರಾ ಬಳಸಿ',

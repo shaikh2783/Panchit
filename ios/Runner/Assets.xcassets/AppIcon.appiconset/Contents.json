@@ -43,13 +43,13 @@
       "size" : "40x40"
     },
     {
-      "filename" : "logo_57pt_1x.png",
+      "filename" : "Icon-57pt@1x.png",
       "idiom" : "iphone",
       "scale" : "1x",
       "size" : "57x57"
     },
     {
-      "filename" : "logo_57pt_2x.png",
+      "filename" : "Icon-57pt@2x.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "57x57"
@@ -97,31 +97,31 @@
       "size" : "40x40"
     },
     {
-      "filename" : "icon-ios-40x40@2x 1.png",
+      "filename" : "Icon-App-40x40@2x 1.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "40x40"
     },
     {
-      "filename" : "logo_50pt_1x.png",
+      "filename" : "Icon-50pt@1x.png",
       "idiom" : "ipad",
       "scale" : "1x",
       "size" : "50x50"
     },
     {
-      "filename" : "logo_50pt_2x.png",
+      "filename" : "Icon-50pt@2x.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "50x50"
     },
     {
-      "filename" : "logo_72pt_1x.png",
+      "filename" : "Icon-72pt@1x.png",
       "idiom" : "ipad",
       "scale" : "1x",
       "size" : "72x72"
     },
     {
-      "filename" : "logo_72pt_2x.png",
+      "filename" : "Icon-72pt@2x.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "72x72"
@@ -145,7 +145,7 @@
       "size" : "83.5x83.5"
     },
     {
-      "filename" : "icon-mac-512x512@2x.png",
+      "filename" : "Icon-App-1024x1024@1x.png",
       "idiom" : "ios-marketing",
       "scale" : "1x",
       "size" : "1024x1024"

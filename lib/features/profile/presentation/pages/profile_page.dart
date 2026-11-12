@@ -1,11 +1,12 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:snginepro/features/messenger/data/models/conversation_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:snginepro/core/theme/app_colors.dart';
+import 'package:snginepro/core/widgets/zoomable_image.dart';
 import 'package:snginepro/core/theme/design_tokens.dart';
 import 'package:snginepro/features/profile/data/services/profile_api_service.dart';
 import 'package:snginepro/features/profile/data/services/user_videos_service.dart';
@@ -25,8 +26,7 @@ import 'package:snginepro/features/photos/presentation/pages/user_albums_page.da
 import 'package:snginepro/features/blocking/data/services/blocking_service.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/providers/system_settings_provider.dart';
-import '../../../messenger/data/services/messenger_api_service.dart';
-import '../../../messenger/presentation/pages/chat_page.dart';
+import '../../../../core/utils/chat_module_launcher.dart';
 
 import '../../data/models/user_profile_model.dart' as profile_models;
 import '../../data/models/profile_completion_model.dart';
@@ -448,15 +448,29 @@ class _ProfilePageState extends State<ProfilePage>
                   Stack(
                     clipBehavior: Clip.none,
                     children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white, width: 3),
+                      GestureDetector(
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => _FullScreenImageViewer(
+                              imageUrl: profile.picture,
+                              heroTag: 'profile-picture-${profile.id}',
+                            ),
+                          ),
                         ),
-                        child: CircleAvatar(
-                          radius: 50,
-                          backgroundImage: CachedNetworkImageProvider(
-                            profile.picture,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 3),
+                          ),
+                          child: Hero(
+                            tag: 'profile-picture-${profile.id}',
+                            child: CircleAvatar(
+                              radius: 50,
+                              backgroundImage: CachedNetworkImageProvider(
+                                profile.picture,
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -694,7 +708,7 @@ class _ProfilePageState extends State<ProfilePage>
                   child: _buildActionButton(
                     icon: Iconsax.message,
                     label: 'send_message'.tr,
-                    onPressed: _openChat,
+                    onPressed: relationship.isFriend ? _openChat : null,
                     isPrimary: false,
                   ),
                 ),
@@ -717,7 +731,7 @@ class _ProfilePageState extends State<ProfilePage>
   Widget _buildActionButton({
     required IconData icon,
     required String label,
-    required VoidCallback onPressed,
+    required VoidCallback? onPressed,
     bool isPrimary = true,
   }) {
     return FilledButton.tonal(
@@ -890,7 +904,7 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   Future<void> _openChat() async {
-    if (_profileData == null) return;
+    if (_profileData == null || !_profileData!.relationship.isFriend) return;
 
     final profile = _profileData!.profile;
     final userId = int.tryParse(profile.id) ?? 0;
@@ -906,92 +920,10 @@ class _ProfilePageState extends State<ProfilePage>
       return;
     }
 
-    // Show loading
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    Get.dialog(
-      Center(
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: isDark ? AppColors.surfaceDark : Colors.white,
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child: const CircularProgressIndicator(),
-        ),
-      ),
-      barrierDismissible: false,
+    await ChatModuleLauncher.openUserConversation(
+      context,
+      targetUserId: userId,
     );
-
-    try {
-      // Get or create conversation with this user
-      final apiClient = context.read<ApiClient>();
-      final messengerService = MessengerApiService(apiClient);
-
-      final conversation = await messengerService.getOrCreateConversation(
-        userId: userId.toString(),
-      );
-
-      Get.back(); // Close loading dialog
-
-      if (conversation == null &&
-          _profileData?.relationship.isFriend == false) {
-        Get.snackbar(
-          'error'.tr,
-          'profile_must_be_friend'.tr,
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
-        return;
-      }
-      UserPreview otherUser = UserPreview(
-        userId: userId,
-        username: _profileData?.profile.username ?? "",
-        firstName: _profileData?.profile.firstName ?? "",
-        lastName: _profileData?.profile.lastName ?? "",
-        avatar: _profileData?.profile.picture ?? "",
-        isVerified: _profileData?.profile.isVerified ?? false,
-        link: _profileData?.profile.socialLinks.website,
-      );
-      // Navigate to chat page with the real conversation
-      Get.to(
-        () => ChatPage(
-          conversationId: conversation?.conversationId ?? "0",
-          otherUser: conversation?.otherUser ?? otherUser,
-        ),
-      );
-    } catch (e) {
-      Get.back(); // Close loading dialog
-
-      // Parse error message
-      String errorMessage = 'failed_to_open_chat'.tr;
-      final errorStr = e.toString();
-
-      if (errorStr.contains('403')) {
-        if (errorStr.contains('friends only') ||
-            errorStr.contains('صداقة فقط')) {
-          errorMessage = 'chat_privacy_friends_only'.tr;
-        } else if (errorStr.contains('following') ||
-            errorStr.contains('متابعين')) {
-          errorMessage = 'chat_privacy_following_only'.tr;
-        } else {
-          errorMessage = 'cannot_chat_with_user'.tr;
-        }
-      } else if (errorStr.contains('404')) {
-        errorMessage = 'user_not_found'.tr;
-      } else if (errorStr.contains('blocked') || errorStr.contains('محظور')) {
-        errorMessage = 'user_blocked_you'.tr;
-      }
-
-      Get.snackbar(
-        'error'.tr,
-        errorMessage,
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        duration: const Duration(seconds: 4),
-      );
-    }
   }
 
   Future<void> _toggleBlockUser() async {
@@ -1331,6 +1263,10 @@ class _ProfilePageState extends State<ProfilePage>
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
+        if (_profileData?.kyc != null) ...[
+          _buildKycSection(_profileData!.kyc!),
+          const SizedBox(height: 16),
+        ],
         if (competitionBadges.isNotEmpty) ...[
           _buildCompetitionAchievementsSection(competitionBadges),
           const SizedBox(height: 16),
@@ -1608,6 +1544,116 @@ class _ProfilePageState extends State<ProfilePage>
 
   /// Competition Achievements: one card, clean rows separated by dividers,
   /// sourced from [profile_models.Badge]s that reference a competition.
+  /// Shows whether the profile's identity (KYC) has been verified.
+  /// Government-ID details returned alongside the status (name, DOB,
+  /// address) are deliberately never rendered here — only the pass/fail
+  /// state and the verification date are shown.
+  Widget _buildKycSection(profile_models.KycInfo kyc) {
+    final isVerified = kyc.isVerified;
+    final cs = Theme.of(context).colorScheme;
+    final statusColor = isVerified ? Colors.green : Colors.orange;
+
+    return _InfoCard(
+      title: 'kyc_section_title'.tr,
+      icon: Iconsax.shield_tick,
+      children: [
+        Row(
+          children: [
+            Icon(
+              isVerified ? Iconsax.verify : Iconsax.shield_cross,
+              color: statusColor,
+              size: 20,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                isVerified
+                    ? 'kyc_status_verified'.tr
+                    : 'kyc_status_not_verified'.tr,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: statusColor,
+                ),
+              ),
+            ),
+            if (!isVerified)
+              IconButton(
+                visualDensity: VisualDensity.compact,
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                icon: Icon(Iconsax.info_circle, color: statusColor, size: 20),
+                tooltip: 'kyc_required_competition_title'.tr,
+                onPressed: _showKycRequiredForCompetitionsDialog,
+              ),
+          ],
+        ),
+        if (isVerified && (kyc.verifiedAt?.isNotEmpty ?? false)) ...[
+          const SizedBox(height: 8),
+          Text(
+            '${'kyc_verified_on'.tr}: ${kyc.verifiedAt}',
+            style: TextStyle(
+              fontSize: 13,
+              color: cs.onSurface.withValues(alpha: 0.6),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  /// Explains why KYC matters (competition entry is gated behind it) and
+  /// lets the user jump straight to verifying, or dismiss for later.
+  void _showKycRequiredForCompetitionsDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        icon: const Icon(Iconsax.shield_cross, color: Colors.orange, size: 36),
+        title: Text(
+          'kyc_required_competition_title'.tr,
+          textAlign: TextAlign.center,
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'kyc_required_competition_message'.tr,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'kyc_verify_anytime_hint'.tr,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(
+                  dialogContext,
+                ).colorScheme.onSurface.withValues(alpha: 0.6),
+              ),
+            ),
+          ],
+        ),
+        actionsAlignment: MainAxisAlignment.spaceBetween,
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text('later'.tr),
+          ),
+          FilledButton(
+            onPressed: () {
+              Navigator.of(dialogContext).pop();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const CompetitionsHubPage()),
+              );
+            },
+            child: Text('kyc_verify_now'.tr),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildCompetitionAchievementsSection(
     List<profile_models.Badge> competitionBadges,
   ) {
@@ -3006,7 +3052,10 @@ class _UserPhotosGridState extends State<_UserPhotosGrid> {
               ),
               const SizedBox(width: 6),
               Text(
-                'Showing ${_photos.length}${_totalCount > 0 ? ' of $_totalCount' : ''} photos',
+                (_totalCount > 0 ? 'profile_showing_photos_of' : 'profile_showing_photos').trParams({
+                  'count': '${_photos.length}',
+                  if (_totalCount > 0) 'total': '$_totalCount',
+                }),
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.outline,
                   fontSize: 12,
@@ -3394,7 +3443,10 @@ class _AlbumPhotosGridState extends State<_AlbumPhotosGrid> {
               ),
               const SizedBox(width: 6),
               Text(
-                'Showing ${_photos.length}${_totalCount > 0 ? ' of $_totalCount' : ''} photos',
+                (_totalCount > 0 ? 'profile_showing_photos_of' : 'profile_showing_photos').trParams({
+                  'count': '${_photos.length}',
+                  if (_totalCount > 0) 'total': '$_totalCount',
+                }),
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.outline,
                   fontSize: 12,
@@ -3518,6 +3570,7 @@ class _PhotoViewerPageState extends State<_PhotoViewerPage> {
   late final PageController _controller;
   late int _currentIndex;
   bool _uiVisible = true;
+  bool _zoomed = false;
 
   @override
   void initState() {
@@ -3541,30 +3594,28 @@ class _PhotoViewerPageState extends State<_PhotoViewerPage> {
         children: [
           PageView.builder(
             controller: _controller,
+            physics: _zoomed ? const NeverScrollableScrollPhysics() : null,
             onPageChanged: (i) => setState(() => _currentIndex = i),
             itemCount: photos.length,
             itemBuilder: (context, index) {
               final photo = photos[index];
-              return GestureDetector(
+              return ZoomableImage(
                 onTap: () => setState(() => _uiVisible = !_uiVisible),
-                child: Center(
-                  child: Hero(
-                    tag: photo.source,
-                    child: InteractiveViewer(
-                      minScale: 0.8,
-                      maxScale: 4,
-                      child: CachedNetworkImage(
-                        imageUrl: photo.source,
-                        fit: BoxFit.contain,
-                        placeholder: (context, url) => const SizedBox(
-                          width: 48,
-                          height: 48,
-                          child: CircularProgressIndicator(),
-                        ),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error, color: Colors.white),
-                      ),
+                onZoomChanged: (z) {
+                  if (_zoomed != z) setState(() => _zoomed = z);
+                },
+                child: Hero(
+                  tag: photo.source,
+                  child: CachedNetworkImage(
+                    imageUrl: photo.source,
+                    fit: BoxFit.contain,
+                    placeholder: (context, url) => const SizedBox(
+                      width: 48,
+                      height: 48,
+                      child: CircularProgressIndicator(),
                     ),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error, color: Colors.white),
                   ),
                 ),
               );
@@ -3639,6 +3690,173 @@ class _PhotoViewerPageState extends State<_PhotoViewerPage> {
                 ),
               ),
             ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FullScreenImageViewer extends StatefulWidget {
+  final String imageUrl;
+  final String heroTag;
+
+  const _FullScreenImageViewer({required this.imageUrl, required this.heroTag});
+
+  @override
+  State<_FullScreenImageViewer> createState() =>
+      _FullScreenImageViewerState();
+}
+
+class _FullScreenImageViewerState extends State<_FullScreenImageViewer>
+    with SingleTickerProviderStateMixin {
+  static const double _minScale = 1.0;
+  static const double _maxScale = 5.0;
+  static const double _doubleTapScale = 2.5;
+
+  final TransformationController _transformationController =
+      TransformationController();
+  late final AnimationController _animationController;
+  Animation<Matrix4>? _zoomAnimation;
+  TapDownDetails? _doubleTapDetails;
+  bool _uiVisible = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController =
+        AnimationController(
+          vsync: this,
+          duration: const Duration(milliseconds: 220),
+        )..addListener(() {
+          if (_zoomAnimation != null) {
+            _transformationController.value = _zoomAnimation!.value;
+          }
+        });
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    _transformationController.dispose();
+    super.dispose();
+  }
+
+  void _animateTo(Matrix4 end) {
+    _zoomAnimation = Matrix4Tween(
+      begin: _transformationController.value,
+      end: end,
+    ).animate(
+      CurveTween(curve: Curves.easeOutCubic).animate(_animationController),
+    );
+    _animationController.forward(from: 0);
+  }
+
+  void _handleDoubleTap() {
+    final currentScale = _transformationController.value
+        .getMaxScaleOnAxis();
+    if (currentScale > _minScale + 0.05) {
+      _animateTo(Matrix4.identity());
+    } else {
+      final position = _doubleTapDetails!.localPosition;
+      final end = Matrix4.identity()
+        ..translateByDouble(
+          -position.dx * (_doubleTapScale - 1),
+          -position.dy * (_doubleTapScale - 1),
+          0,
+          1,
+        )
+        ..scaleByDouble(
+          _doubleTapScale,
+          _doubleTapScale,
+          _doubleTapScale,
+          1,
+        );
+      _animateTo(end);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final diameter = constraints.biggest.shortestSide * 0.9;
+
+              return GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => setState(() => _uiVisible = !_uiVisible),
+                onDoubleTapDown: (details) => _doubleTapDetails = details,
+                onDoubleTap: _handleDoubleTap,
+                child: InteractiveViewer(
+                  transformationController: _transformationController,
+                  minScale: _minScale,
+                  maxScale: _maxScale,
+                  onInteractionStart: (_) => _animationController.stop(),
+                  child: SizedBox(
+                    width: constraints.maxWidth,
+                    height: constraints.maxHeight,
+                    child: Center(
+                      child: Hero(
+                        tag: widget.heroTag,
+                        child: ClipOval(
+                          child: SizedBox.square(
+                            dimension: diameter,
+                            child: CachedNetworkImage(
+                              imageUrl: widget.imageUrl,
+                              fit: BoxFit.cover,
+                              placeholder: (_, __) => const ColoredBox(
+                                color: Colors.black,
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              errorWidget: (_, __, ___) => const ColoredBox(
+                                color: Colors.black,
+                                child: Center(
+                                  child: Icon(
+                                    Icons.error_outline,
+                                    color: Colors.white,
+                                    size: 40,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            child: IgnorePointer(
+              ignoring: !_uiVisible,
+              child: AnimatedOpacity(
+                opacity: _uiVisible ? 1 : 0,
+                duration: const Duration(milliseconds: 200),
+                child: SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: IconButton(
+                      tooltip: 'Close',
+                      icon: const Icon(Icons.close, color: Colors.white),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

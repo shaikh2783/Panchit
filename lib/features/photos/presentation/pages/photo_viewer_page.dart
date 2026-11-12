@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:snginepro/core/widgets/zoomable_image.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../data/models/user_photo.dart';
 
@@ -16,6 +17,7 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
   late final PageController _controller;
   late int _currentIndex;
   bool _uiVisible = true;
+  bool _zoomed = false;
 
   @override
   void initState() {
@@ -39,29 +41,28 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
         children: [
           PageView.builder(
             controller: _controller,
+            physics: _zoomed ? const NeverScrollableScrollPhysics() : null,
             onPageChanged: (i) => setState(() => _currentIndex = i),
             itemCount: photos.length,
             itemBuilder: (context, index) {
               final photo = photos[index];
-              return GestureDetector(
+              return ZoomableImage(
                 onTap: () => setState(() => _uiVisible = !_uiVisible),
-                child: Center(
-                  child: Hero(
-                    tag: photo.source,
-                    child: InteractiveViewer(
-                      minScale: 0.8,
-                      maxScale: 4,
-                      child: CachedNetworkImage(
-                        imageUrl: photo.source,
-                        fit: BoxFit.contain,
-                        placeholder: (context, url) => const SizedBox(
-                          width: 48,
-                          height: 48,
-                          child: CircularProgressIndicator(),
-                        ),
-                        errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.white),
-                      ),
+                onZoomChanged: (z) {
+                  if (_zoomed != z) setState(() => _zoomed = z);
+                },
+                child: Hero(
+                  tag: photo.source,
+                  child: CachedNetworkImage(
+                    imageUrl: photo.source,
+                    fit: BoxFit.contain,
+                    placeholder: (context, url) => const SizedBox(
+                      width: 48,
+                      height: 48,
+                      child: CircularProgressIndicator(),
                     ),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error, color: Colors.white),
                   ),
                 ),
               );
