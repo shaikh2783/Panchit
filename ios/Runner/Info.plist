@@ -41,6 +41,8 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Panchit uses the camera so you can take profile photos, record videos, and broadcast live video to other users.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Panchit uses your location to show local content and users near your current area.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Panchit uses your location while the app is open to show local content and users near your current area.</string>
 	<key>NSMicrophoneUsageDescription</key>
